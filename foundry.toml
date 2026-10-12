@@ -1,0 +1,9 @@
+
+[profile.default]
+src = "contracts"
+test = "tests/unit"
+out = "out"
+libs = ["lib"]
+solc = "0.8.37"
+optimizer = true
+optimizer_runs = 200

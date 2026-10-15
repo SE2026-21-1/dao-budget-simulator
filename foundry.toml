@@ -1,0 +1,13 @@
+
+[profile.default]
+src = "contracts"
+test = "tests"
+out = "out"
+libs = ["lib"]
+solc = "0.8.37"
+optimizer = true
+optimizer_runs = 200
+
+# Pin the current local EVM; TV4 must confirm compatibility before testnet.
+evm_version = "osaka"
+remappings = ["forge-std/=lib/forge-std/src/", "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"]

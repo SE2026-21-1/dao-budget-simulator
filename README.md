@@ -2,9 +2,10 @@
 
 ## Môi trường Foundry — TV4 Operation
 
-Cấu hình và thư viện được đồng bộ từ nhánh `feature/tv1-sc01`, commit
-`9a406fedfbac6c54237712a536b0700fdad9bb73`. Không sao chép contract, test hay
-fixture nghiệp vụ SC01 sang nhánh operation.
+Cấu hình, thư viện và bộ kiểm tra SC01 được đồng bộ từ nhánh `feature/tv1-sc01`,
+commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Gồm interface `ITreasury`,
+unit test selector, ABI chia sẻ, fixture tổng hợp và script kiểm tra fixture;
+chưa có triển khai Treasury, voting hoặc timelock.
 
 | Thành phần | Phiên bản |
 | --- | --- |
@@ -26,14 +27,18 @@ forge --version
 cast --version
 anvil --version
 forge build
+forge test -vv
+python3 scripts/check_sc01.py
 forge fmt --check
 ```
 
 Lần build đầu có mã Solidity cần mạng để tải compiler 0.8.37 nếu chưa có.
 Foundry tìm contract trong `contracts/`, test trong `tests/` và thư viện trong
 `lib/`. Remapping `forge-std/` và `@openzeppelin/contracts/` đã có trong
-`foundry.toml`. Khi bổ sung test, chạy `forge test`; nhánh hiện chưa có contract
-hoặc test nghiệp vụ, nên build trống không chứng minh tính đúng của ứng dụng.
+`foundry.toml`. Script kiểm tra ABI/fixture cần Python 3, không cần package bổ sung.
+Unit test bảo vệ selector `disburse(bytes32,address,uint256)`; script đối chiếu
+ABI compiler, calldata, descriptionHash và proposalId. Fixture là dữ liệu tổng hợp,
+không phải receipt on-chain. Các kiểm tra này chưa chứng minh luồng DAO end-to-end.
 
 Cấu hình `osaka` chỉ được xác minh bằng thực thi EVM local; cần kiểm tra hỗ trợ
 của testnet trước khi deploy. Không commit private key hoặc RPC secret:

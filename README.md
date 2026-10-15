@@ -2,9 +2,10 @@
 
 ## Môi trường Foundry — TV4 Operation
 
-Cấu hình, thư viện và bộ kiểm tra SC01 được đồng bộ từ nhánh `feature/tv1-sc01`,
-commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Gồm interface `ITreasury`,
-unit test selector, ABI chia sẻ, fixture tổng hợp và script kiểm tra fixture;
+Cấu hình, thư viện và dữ liệu tích hợp SC01 được đồng bộ từ nhánh `feature/tv1-sc01`,
+commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Interface `ITreasury`, ABI chia sẻ,
+fixture tổng hợp và script kiểm tra fixture được giữ làm chuẩn tích hợp.
+Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4;
 chưa có triển khai Treasury, voting hoặc timelock.
 
 | Thành phần | Phiên bản |
@@ -36,9 +37,16 @@ Lần build đầu có mã Solidity cần mạng để tải compiler 0.8.37 n�
 Foundry tìm contract trong `contracts/`, test trong `tests/` và thư viện trong
 `lib/`. Remapping `forge-std/` và `@openzeppelin/contracts/` đã có trong
 `foundry.toml`. Script kiểm tra ABI/fixture cần Python 3, không cần package bổ sung.
-Unit test bảo vệ selector `disburse(bytes32,address,uint256)`; script đối chiếu
-ABI compiler, calldata, descriptionHash và proposalId. Fixture là dữ liệu tổng hợp,
-không phải receipt on-chain. Các kiểm tra này chưa chứng minh luồng DAO end-to-end.
+Bộ test `tests/unit/OperationAbiCompatibility.t.sol` gồm:
+
+- `testFuzzDisbursementPayloadMatchesClientAbi`: đối chiếu calldata do interface
+  tạo với ABI công khai cho requestId, địa chỉ nhận và số lượng được fuzz.
+- `testBudgetDisbursedTopicMatchesIndexerAbi`: cố định topic0 của sự kiện
+  `BudgetDisbursed` để phát hiện thay đổi làm mất tương thích với indexer.
+
+Script Python đối chiếu ABI compiler, calldata, descriptionHash và proposalId.
+Fixture là dữ liệu tổng hợp, không phải receipt on-chain. Các kiểm tra này chưa
+chứng minh phân quyền Treasury, chống giải ngân lặp hay luồng DAO end-to-end.
 
 Cấu hình `osaka` chỉ được xác minh bằng thực thi EVM local; cần kiểm tra hỗ trợ
 của testnet trước khi deploy. Không commit private key hoặc RPC secret:

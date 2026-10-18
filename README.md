@@ -1,8 +1,24 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Hiện repository mới có nền tảng SC01;
-chưa có token, Treasury hoặc Governor triển khai, chưa chạy được demo end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Repository đã có nền tảng SC01 và
+hai token của SC02: GovernanceToken (GOV) và BudgetToken (BUD), kèm unit test.
+Chưa triển khai Treasury hoặc Governor, chưa chạy được demo end-to-end.
+
+## Trạng thái các task TV1
+
+| Task | Trạng thái |
+|---|---|
+| SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
+| SC02 — Token và voting power | Đã triển khai hai token và unit test; chờ review/tích hợp |
+| SC03 — Treasury và chống chi lặp | Chưa triển khai |
+| SC04 — Governor và giới hạn proposal | Chưa triển khai |
+| SC05 — Timelock và quyền sau deploy | Chưa triển khai |
+| SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
+| SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất; đã có unit test SC01/SC02 |
+| SC08 — Tích hợp local | Chưa thực hiện |
+| SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
+| SC10 — Testnet và bàn giao | Chưa thực hiện |
 
 ## Môi trường tái lập
 
@@ -25,15 +41,38 @@ forge fmt --check
 ```
 
 Lần build đầu cần mạng để tải compiler nếu máy chưa có Solidity 0.8.37.
-Để kiểm tra toàn bộ test khi các task tiếp theo được triển khai, dùng `forge test`.
+Để kiểm tra toàn bộ test hiện có, dùng `forge test`.
 Cấu hình tìm test trong `tests/` để nhận cả unit/invariant/attacks sau này.
 Không suy ra test thành công từ artifact `out/` có sẵn.
+
+## Unit test SC02
+
+Sau khi cài dependency và toolchain ở trên, chạy riêng từng token:
+
+```bash
+forge test --match-path 'tests/unit/GovernanceToken.t.sol' -vv
+forge test --match-path 'tests/unit/BudgetToken.t.sol' -vv
+```
+
+Hoặc chạy cả hai token, rồi toàn bộ test để kiểm tra cùng SC01:
+
+```bash
+forge test --match-path 'tests/unit/*Token.t.sol' -vv
+forge test
+```
+
+Test GOV kiểm tra nguồn cung/phân bổ, decimals, delegation, timestamp clock và
+checkpoint lịch sử. Test BUD kiểm tra nguồn cung, phân bổ demo, chuyển không phí,
+approve/transferFrom và allowance. Có test âm và fuzz test cho hai token.
+Constructor và trình tự phân bổ cho TV4 được mô tả trong
+[tài liệu SC02](docs/sc02-tokens.md).
 
 ## Tài liệu và chuẩn tích hợp
 
 - [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
 - [Phân công TV1](docs/requirements/TV1_Cong_viec_Smart_Contracts.md)
 - [Giao tiếp contract và quyết định chờ review](docs/contracts.md)
+- [SC02 — Token, constructor và phân bổ cho TV4](docs/sc02-tokens.md)
 - [ABI interface Treasury](shared/abi/ITreasury.json)
 - [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)
 

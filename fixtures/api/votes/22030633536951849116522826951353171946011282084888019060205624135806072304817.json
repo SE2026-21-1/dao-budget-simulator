@@ -1,0 +1,64 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v1",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": [
+    {
+      "proposalId": "22030633536951849116522826951353171946011282084888019060205624135806072304817",
+      "voter": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "support": 2,
+      "weight": "100000000000000000000",
+      "reason": "Participating without a position.",
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "transactionHash": "0x1028302ed07ddfc316ed7f45251c19d682f79e44aadcb7be81612d0d2ebf573d",
+      "transactionIndex": "23",
+      "logIndex": "0"
+    },
+    {
+      "proposalId": "22030633536951849116522826951353171946011282084888019060205624135806072304817",
+      "voter": "0x9999999999999999999999999999999999999999",
+      "support": 0,
+      "weight": "300000000000000000000",
+      "reason": "Prefer a smaller budget.",
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "transactionHash": "0xd3998cae140765c5b3702139ecf774e7fe1e838e935268a71316482bbee6ff2a",
+      "transactionIndex": "22",
+      "logIndex": "0"
+    },
+    {
+      "proposalId": "22030633536951849116522826951353171946011282084888019060205624135806072304817",
+      "voter": "0x8888888888888888888888888888888888888888",
+      "support": 1,
+      "weight": "400000000000000000000",
+      "reason": "Fund this DAO activity.",
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "transactionHash": "0xba84d67df08d333663672279b2982858385ff2e7394eb8818b799edc21526fb3",
+      "transactionIndex": "21",
+      "logIndex": "0"
+    }
+  ],
+  "pagination": {
+    "limit": 20,
+    "totalCount": 3,
+    "nextCursor": null
+  }
+}

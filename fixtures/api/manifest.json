@@ -1,0 +1,1400 @@
+{
+  "schemaVersion": 1,
+  "kind": "synthetic-be01-not-chain-evidence",
+  "generator": "node scripts/generate_be01_fixtures.mjs",
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v1",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "sc01ProposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545",
+  "notes": [
+    "All addresses, block/transaction hashes, timestamps, votes and operations are synthetic; no deployment, receipt or RPC was used.",
+    "Fixture cursors are unsigned base64url JSON for deterministic frontend mocks; a real server must authenticate cursors and validate snapshot availability.",
+    "States, description v1, requestId strategy and API contracts remain proposed for team review."
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals-page-1.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+      },
+      "status": 200,
+      "file": "proposals-page-2.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTA4IiwiNDIwIiwiMCIsIjU1NDk5NzYzOTI0MDIwMTg4NjU2OTE0NTkwMjQ2OTgwNzg0MjQyMjc3NTU3MTk0NDU1MjYzODU5MTYyNTUxOTY3NjAyMDk5MTY2ODc3Il0sInJldmlzaW9uIjoiZml4dHVyZS12MSJ9"
+      },
+      "status": 200,
+      "file": "proposals-page-3.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Pending"
+      },
+      "status": 200,
+      "file": "proposals-state-Pending.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Active"
+      },
+      "status": 200,
+      "file": "proposals-state-Active.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Succeeded"
+      },
+      "status": 200,
+      "file": "proposals-state-Succeeded.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Defeated"
+      },
+      "status": 200,
+      "file": "proposals-state-Defeated.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Queued"
+      },
+      "status": 200,
+      "file": "proposals-state-Queued.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Executed"
+      },
+      "status": 200,
+      "file": "proposals-state-Executed.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Canceled"
+      },
+      "status": 200,
+      "file": "proposals-state-Canceled.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545"
+      },
+      "status": 200,
+      "file": "proposals-search-sc01.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+      },
+      "status": 200,
+      "file": "proposals-search-unknown.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Pending",
+        "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545"
+      },
+      "status": 200,
+      "file": "proposals-empty.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/32591545501524741886300998079617704300347801580532258275547383289645120742286.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/89508748846712854880381606827102537391899834700810579959537338039711347612632",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/89508748846712854880381606827102537391899834700810579959537338039711347612632.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/89508748846712854880381606827102537391899834700810579959537338039711347612632/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/89508748846712854880381606827102537391899834700810579959537338039711347612632.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/19477088715769740831464268317643061630957495559092324291174135976174221879058",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/19477088715769740831464268317643061630957495559092324291174135976174221879058.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/19477088715769740831464268317643061630957495559092324291174135976174221879058/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/19477088715769740831464268317643061630957495559092324291174135976174221879058.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53093994076492376021876055550348592751106016792616561597831140967497993653535",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/53093994076492376021876055550348592751106016792616561597831140967497993653535.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53093994076492376021876055550348592751106016792616561597831140967497993653535/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/53093994076492376021876055550348592751106016792616561597831140967497993653535.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108495469119844371237420145230032640032361050006617331380158159418101342713095",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/108495469119844371237420145230032640032361050006617331380158159418101342713095.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108495469119844371237420145230032640032361050006617331380158159418101342713095/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/108495469119844371237420145230032640032361050006617331380158159418101342713095.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/109592718869719304233849373301950662183517335345167218280433315219954268217637",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/109592718869719304233849373301950662183517335345167218280433315219954268217637.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/109592718869719304233849373301950662183517335345167218280433315219954268217637/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/109592718869719304233849373301950662183517335345167218280433315219954268217637.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/38935648302576376925757069109581542416368224611140313896228550587014158298294",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/38935648302576376925757069109581542416368224611140313896228550587014158298294.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/38935648302576376925757069109581542416368224611140313896228550587014158298294/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/38935648302576376925757069109581542416368224611140313896228550587014158298294.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/80019898513876764763490044527620281149575770375255125241607979355810002984312",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/80019898513876764763490044527620281149575770375255125241607979355810002984312.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/80019898513876764763490044527620281149575770375255125241607979355810002984312/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/80019898513876764763490044527620281149575770375255125241607979355810002984312.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/17661794820529875750670042639616183094292354462857700074207973960641582429209",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/17661794820529875750670042639616183094292354462857700074207973960641582429209.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/17661794820529875750670042639616183094292354462857700074207973960641582429209/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/17661794820529875750670042639616183094292354462857700074207973960641582429209.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/79942828059524037667220706018330497552618373401701556504371567146404928800826",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/79942828059524037667220706018330497552618373401701556504371567146404928800826.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/79942828059524037667220706018330497552618373401701556504371567146404928800826/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/79942828059524037667220706018330497552618373401701556504371567146404928800826.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/44284302486408522194405579493150305348138755905522871236141110485380138647576",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/44284302486408522194405579493150305348138755905522871236141110485380138647576.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/44284302486408522194405579493150305348138755905522871236141110485380138647576/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/44284302486408522194405579493150305348138755905522871236141110485380138647576.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/62919421560706427511867785393743492618967928366205584631524501163231528325955",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/62919421560706427511867785393743492618967928366205584631524501163231528325955.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/62919421560706427511867785393743492618967928366205584631524501163231528325955/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/62919421560706427511867785393743492618967928366205584631524501163231528325955.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/104618812496106744674711393169724235314863297436185156901643739733957999992679",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/104618812496106744674711393169724235314863297436185156901643739733957999992679.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/104618812496106744674711393169724235314863297436185156901643739733957999992679/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/104618812496106744674711393169724235314863297436185156901643739733957999992679.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/22030633536951849116522826951353171946011282084888019060205624135806072304817",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/22030633536951849116522826951353171946011282084888019060205624135806072304817.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/22030633536951849116522826951353171946011282084888019060205624135806072304817/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/22030633536951849116522826951353171946011282084888019060205624135806072304817.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/81905383601894966428444840645919089100334123437868134068696730318858305104679",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/81905383601894966428444840645919089100334123437868134068696730318858305104679.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/81905383601894966428444840645919089100334123437868134068696730318858305104679/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/81905383601894966428444840645919089100334123437868134068696730318858305104679.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/16821109296248411135831662618839351397885492342973468770916821468182242796325",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/16821109296248411135831662618839351397885492342973468770916821468182242796325.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/16821109296248411135831662618839351397885492342973468770916821468182242796325/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/16821109296248411135831662618839351397885492342973468770916821468182242796325.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83503144282010908915437781722101746852138307949998360145427206077297086573625",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/83503144282010908915437781722101746852138307949998360145427206077297086573625.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83503144282010908915437781722101746852138307949998360145427206077297086573625/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/83503144282010908915437781722101746852138307949998360145427206077297086573625.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/27920712598248805558354331759865073966284289125154469391012655943529835505751",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/27920712598248805558354331759865073966284289125154469391012655943529835505751.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/27920712598248805558354331759865073966284289125154469391012655943529835505751/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/27920712598248805558354331759865073966284289125154469391012655943529835505751.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/84921088080816128327278342707603480686405702885063384999734790075160776784315",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/84921088080816128327278342707603480686405702885063384999734790075160776784315.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/84921088080816128327278342707603480686405702885063384999734790075160776784315/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/84921088080816128327278342707603480686405702885063384999734790075160776784315.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/37071798526103406707986546219884710505725996586083075201492946291028882407761",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/37071798526103406707986546219884710505725996586083075201492946291028882407761.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/37071798526103406707986546219884710505725996586083075201492946291028882407761/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/37071798526103406707986546219884710505725996586083075201492946291028882407761.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/106241497341559946191808438255735384706185120099735014637458501020353141051868",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/106241497341559946191808438255735384706185120099735014637458501020353141051868.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/106241497341559946191808438255735384706185120099735014637458501020353141051868/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/106241497341559946191808438255735384706185120099735014637458501020353141051868.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/86516874646728480206084176994228093319774272273950474306278259416289814173508",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/86516874646728480206084176994228093319774272273950474306278259416289814173508.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/86516874646728480206084176994228093319774272273950474306278259416289814173508/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/86516874646728480206084176994228093319774272273950474306278259416289814173508.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/85404788132851213005656162615890819365250398970188784419655747116274051271210",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/85404788132851213005656162615890819365250398970188784419655747116274051271210.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/85404788132851213005656162615890819365250398970188784419655747116274051271210/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/85404788132851213005656162615890819365250398970188784419655747116274051271210.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/76270100711505820165211150521788858490920951848593452922737176870383890668598",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/76270100711505820165211150521788858490920951848593452922737176870383890668598.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/76270100711505820165211150521788858490920951848593452922737176870383890668598/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/76270100711505820165211150521788858490920951848593452922737176870383890668598.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "transfers-page-1.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6bnVsbCwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjYwMDkiLCIxMDA5IiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjEifQ"
+      },
+      "status": 200,
+      "file": "transfers-page-2.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "direction": "in"
+      },
+      "status": 200,
+      "file": "transfers-direction-in-1.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "direction": "in",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6ImluIiwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjYwMDEiLCIxMDAxIiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjEifQ"
+      },
+      "status": 200,
+      "file": "transfers-direction-in-2.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "direction": "out"
+      },
+      "status": 200,
+      "file": "transfers-direction-out.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "direction": "self"
+      },
+      "status": 200,
+      "file": "transfers-direction-self.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/treasury/transfers",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "direction": "out",
+        "proposalId": "38935648302576376925757069109581542416368224611140313896228550587014158298294"
+      },
+      "status": 200,
+      "file": "transfers-empty.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/summary",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "summary.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "health-synced.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "health-lagging.json",
+      "scenario": "indexer-lagging"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 503,
+      "file": "health-not-ready.json",
+      "scenario": "no-checkpoint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/1e18",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 400,
+      "file": "error-invalid-proposal-id.json",
+      "scenario": "invalid-proposal-id"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/115792089237316195423570985008687907853269984665640564039457584007913129639935",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 404,
+      "file": "error-not-found.json",
+      "scenario": "unknown-id"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/115792089237316195423570985008687907853269984665640564039457584007913129639935/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 404,
+      "file": "error-not-found.json",
+      "scenario": "unknown-id"
+    },
+    {
+      "method": "GET",
+      "path": "/api/summary",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 503,
+      "file": "error-data-not-ready.json",
+      "scenario": "no-checkpoint"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Failed"
+      },
+      "status": 400,
+      "file": "error-invalid-argument.json",
+      "scenario": "invalid-state"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "cursor": "invalid!"
+      },
+      "status": 400,
+      "file": "error-invalid-cursor.json",
+      "scenario": "invalid-cursor"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "state": "Active",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+      },
+      "status": 400,
+      "file": "error-cursor-context-mismatch.json",
+      "scenario": "cursor-filter-changed"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1",
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+      },
+      "status": 409,
+      "file": "error-snapshot-invalidated.json",
+      "scenario": "snapshot-reorg-or-rebuild"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v1",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "lagging",
+      "headBlock": "9038",
+      "confirmedBlock": "9036",
+      "indexedBlock": "9000",
+      "lagBlocks": "36",
+      "lagSeconds": "432",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": {
+    "status": "degraded",
+    "database": "up",
+    "indexer": "lagging"
+  }
+}

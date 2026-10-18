@@ -1,0 +1,72 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v1",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": {
+    "proposalId": "108988646388491912983972495270906958785753766793916811189275126397017585597361",
+    "requestId": "0x6fbc23996b3b2815666cf5cc56c9b0c5ea90409e54682754a680af78f13dfe1b",
+    "proposer": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "recipient": "0x000000000000000000000000000000000000006b",
+    "amount": "27125000000000000000",
+    "description": "{\"version\":1,\"title\":\"Budget proposal 08\",\"body\":\"Synthetic request 8 funds a DAO activity for frontend development.\"}",
+    "descriptionHash": "0x20a1be4bcca4aa3fee0f031e2ab96c95599d2006e4bd12b2a3016aaaadc116ad",
+    "title": "Budget proposal 08",
+    "body": "Synthetic request 8 funds a DAO activity for frontend development.",
+    "targets": [
+      "0x1111111111111111111111111111111111111111"
+    ],
+    "values": [
+      "0"
+    ],
+    "calldatas": [
+      "0x6664ac916fbc23996b3b2815666cf5cc56c9b0c5ea90409e54682754a680af78f13dfe1b000000000000000000000000000000000000000000000000000000000000006b000000000000000000000000000000000000000000000001786f5bc91c788000"
+    ],
+    "snapshot": "1792298993",
+    "deadline": "1792299293",
+    "state": "Executed",
+    "stateSource": "synthetic",
+    "votes": {
+      "against": "300000000000000000000",
+      "for": "400000000000000000000",
+      "abstain": "100000000000000000000",
+      "quorum": "200000000000000000000"
+    },
+    "operation": {
+      "operationId": "0x105620ab25c403b8860dfa59300839ec681ce2d5d34b1fd944869c8b041b20ff",
+      "queuedAt": "1792299573",
+      "eta": "1792299693",
+      "status": "Done",
+      "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "salt": "0xaef86103de0a7776f708fa8cb507c31deffbe79162ff48246236619ce9d86dc9"
+    },
+    "created": {
+      "blockNumber": "8911",
+      "blockHash": "0xbe9de8b3848d563155f16ff9019feae93d4450f9887df27c89422e791a83089e",
+      "transactionHash": "0xfe72d1eb3bf2e0da577bff425b050dfa27f97d3f29de18a1bb93df89ca88b661",
+      "transactionIndex": "70",
+      "logIndex": "0"
+    },
+    "transactions": {
+      "created": "0xfe72d1eb3bf2e0da577bff425b050dfa27f97d3f29de18a1bb93df89ca88b661",
+      "queued": "0xe3f5dd9be2b805dd1d8e827bf877ec3c6b3b7249d638a350c62b9b7d02cd1024",
+      "executed": "0xeae2da96746de635832a6365e5faf1f8944f3a7d4bcd3f91439f29a3825e6cb5",
+      "canceled": null
+    }
+  }
+}

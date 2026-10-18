@@ -1,0 +1,26 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v1",
+    "asOfBlock": null,
+    "asOfBlockHash": null,
+    "asOfTimestamp": null,
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "not_ready",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": null,
+      "lagBlocks": null,
+      "lagSeconds": null,
+      "confirmations": "2",
+      "lastIndexedAt": null
+    }
+  },
+  "data": {
+    "status": "unavailable",
+    "database": "up",
+    "indexer": "not_ready"
+  }
+}

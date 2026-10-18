@@ -64,7 +64,7 @@ Mọi phản hồi dữ liệu có envelope:
     "asOfBlock": "1000",
     "asOfBlockHash": "0x0000000000000000000000000000000000000000000000000000000000000001",
     "asOfTimestamp": "1792300000",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "dataKind": "synthetic",
     "sync": {
       "status": "synced",
@@ -333,3 +333,22 @@ khóa riêng hay endpoint POST tạo proposal. Nội dung hiển thị dưới d
 TV1 cần review clock/quorum/ABI, salt operation và cách đối chiếu state tại H.
 TV3 cần review shape, nullability, cursor/filter, lỗi, tên trường và thông tin
 form. Chỉ chốt sau review; fixtures giúp phát triển UI trong thời gian chờ SC06.
+
+## 6. Metadata phục vụ kiểm tra fixture
+
+`fixtures/api/simulation.json` là dữ liệu tổng hợp offline, **không thêm endpoint**
+và không thay response shape. `blocks` là lịch number/hash/timestamp dùng chung;
+`sourceLogs` phân biệt log nguồn bằng sourceId, actor và thứ tự phát trong
+transaction. Checker dùng lịch đó để kiểm tra `snapshot = timestamp(block tạo) + 60`,
+`deadline = snapshot + 300`, vote đúng cửa sổ, queue sau kết quả, ETA và
+execute/cancel hợp lệ tại H. Không suy timestamp bằng block number.
+
+LogIndex là vị trí trên **toàn block**, khác transactionIndex. Hai log nguồn
+khác nhau trong cùng chain/blockHash không được cùng logIndex; logIndex tăng
+theo transactionIndex và thứ tự phát log trong transaction, có thể có khoảng
+trống khi thiếu một phần log. Các bản sao của cùng log trong list/detail/summary
+không phải log nguồn mới. Metadata chỉ mô hình hóa một phần event, không phải
+receipt hoặc bằng chứng hành vi smart contract thật.
+
+Sau sửa timeline/logIndex, fixture dùng revision `fixture-v2`; bỏ cursor v1.
+Hash input/proposalId của 45 proposal và operationId/salt vẫn giữ nguyên.

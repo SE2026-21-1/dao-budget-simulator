@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -25,11 +25,11 @@
       "support": 2,
       "weight": "100000000000000000000",
       "reason": "Participating without a position.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0xdb3bde8d94f749fc4f89587551a4e9583268929d3cca1aecea289d1da7870814",
       "transactionIndex": "73",
-      "logIndex": "0"
+      "blockNumber": "8959",
+      "blockHash": "0x701831d898a384edbe2feabeeeab5e3d911ec2e75be500e8dea00008a7daf984",
+      "logIndex": "2"
     },
     {
       "proposalId": "108988646388491912983972495270906958785753766793916811189275126397017585597361",
@@ -37,11 +37,11 @@
       "support": 0,
       "weight": "300000000000000000000",
       "reason": "Prefer a smaller budget.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0xefa8551ae45fd1aaac8ab44b249d83d4e070e8ad3bf61420d39a65090df73a7d",
       "transactionIndex": "72",
-      "logIndex": "0"
+      "blockNumber": "8959",
+      "blockHash": "0x701831d898a384edbe2feabeeeab5e3d911ec2e75be500e8dea00008a7daf984",
+      "logIndex": "1"
     },
     {
       "proposalId": "108988646388491912983972495270906958785753766793916811189275126397017585597361",
@@ -49,10 +49,10 @@
       "support": 1,
       "weight": "400000000000000000000",
       "reason": "Fund this DAO activity.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0x8800adecde8c7e54a05b0a7ccf5e6e4c575a7106f046720190c61734691cd3da",
       "transactionIndex": "71",
+      "blockNumber": "8959",
+      "blockHash": "0x701831d898a384edbe2feabeeeab5e3d911ec2e75be500e8dea00008a7daf984",
       "logIndex": "0"
     }
   ],

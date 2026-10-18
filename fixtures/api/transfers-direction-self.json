@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -27,10 +27,10 @@
       "direction": "self",
       "proposalId": null,
       "requestId": null,
-      "blockNumber": "8991",
-      "blockHash": "0x12dc35290ea267c50fa74d793b91e6cfb39a70edded8a5fed496b01ca7bd5cce",
       "transactionHash": "0x3135fefbec4b5e7ffa5f622c0dbb75065dfbbfb51ff087e111f64e80c6a2c3ca",
       "transactionIndex": "3001",
+      "blockNumber": "8999",
+      "blockHash": "0x42267f77bb3f8ab3998824f2b420e7edd1239df0200f4b3350cbef7ed4b0ec4c",
       "logIndex": "0"
     }
   ],

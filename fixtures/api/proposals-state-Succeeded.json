@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -50,58 +50,14 @@
       },
       "operation": null,
       "created": {
-        "blockNumber": "8969",
-        "blockHash": "0xbd7885ae8b9233a2e9a953415714617ee727463138f7aa5b12ff7d660e7f0891",
         "transactionHash": "0x3610fdb27de767b45506111054fe5131847f5445fe455acf1088f6a7b11c5ab9",
         "transactionIndex": "30",
+        "blockNumber": "8969",
+        "blockHash": "0xbd7885ae8b9233a2e9a953415714617ee727463138f7aa5b12ff7d660e7f0891",
         "logIndex": "0"
       },
       "transactions": {
         "created": "0x3610fdb27de767b45506111054fe5131847f5445fe455acf1088f6a7b11c5ab9",
-        "queued": null,
-        "executed": null,
-        "canceled": null
-      }
-    },
-    {
-      "proposalId": "74063100744080853293227172153640769429985691264546766934165477921437163108214",
-      "requestId": "0xf132d4cbca3db9c9ec149135346626f9b4c0d36baeb046027d56394f05a7f782",
-      "proposer": "0x9999999999999999999999999999999999999999",
-      "recipient": "0x0000000000000000000000000000000000000075",
-      "amount": "37000000000000000001",
-      "description": "{\"version\":1,\"title\":\"Budget proposal 18\",\"body\":\"Synthetic request 18 funds a DAO activity for frontend development.\"}",
-      "descriptionHash": "0xfc0e74e574a75a309bad5b9fc371b834bcc4fae12d942a3223fcd2f4289d765d",
-      "title": "Budget proposal 18",
-      "body": "Synthetic request 18 funds a DAO activity for frontend development.",
-      "targets": [
-        "0x1111111111111111111111111111111111111111"
-      ],
-      "values": [
-        "0"
-      ],
-      "calldatas": [
-        "0x6664ac91f132d4cbca3db9c9ec149135346626f9b4c0d36baeb046027d56394f05a7f7820000000000000000000000000000000000000000000000000000000000000075000000000000000000000000000000000000000000000002017a67f731740001"
-      ],
-      "snapshot": "1792298983",
-      "deadline": "1792299283",
-      "state": "Succeeded",
-      "stateSource": "synthetic",
-      "votes": {
-        "against": "300000000000000000000",
-        "for": "400000000000000000000",
-        "abstain": "100000000000000000000",
-        "quorum": "200000000000000000000"
-      },
-      "operation": null,
-      "created": {
-        "blockNumber": "8910",
-        "blockHash": "0x969f7d5e37b85313c0b64972212d2ab85d2019b6a38dbc9c8f0222b493def682",
-        "transactionHash": "0xc52043c044217988c1f23d3899e14d1fff5312f8a4e9e62949878b0b5624679d",
-        "transactionIndex": "170",
-        "logIndex": "0"
-      },
-      "transactions": {
-        "created": "0xc52043c044217988c1f23d3899e14d1fff5312f8a4e9e62949878b0b5624679d",
         "queued": null,
         "executed": null,
         "canceled": null
@@ -138,10 +94,10 @@
       },
       "operation": null,
       "created": {
-        "blockNumber": "8910",
-        "blockHash": "0x969f7d5e37b85313c0b64972212d2ab85d2019b6a38dbc9c8f0222b493def682",
         "transactionHash": "0x68d338e77230de2ce310b34bd6c4754fb10c771e16f1fc3d8e1417147c5df579",
         "transactionIndex": "100",
+        "blockNumber": "8935",
+        "blockHash": "0x76d8f19383fa12190b07a14e63ef1fd9463430b1700e619eab01100dc05a89c1",
         "logIndex": "0"
       },
       "transactions": {
@@ -152,15 +108,15 @@
       }
     },
     {
-      "proposalId": "103921571649423372573298024811741133800546787491444946568992743676545529726445",
-      "requestId": "0x3e04744256c53d28554147822e9c630c9ae72bb8b969d0da793d4145b49203e9",
-      "proposer": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "recipient": "0x0000000000000000000000000000000000000083",
-      "amount": "51125000000000000000",
-      "description": "{\"version\":1,\"title\":\"Budget proposal 32\",\"body\":\"Synthetic request 32 funds a DAO activity for frontend development.\"}",
-      "descriptionHash": "0x223c58a265a52d418e5496039eadb95a4745323d2aba38e62e41e010cd81eb8d",
-      "title": "Budget proposal 32",
-      "body": "Synthetic request 32 funds a DAO activity for frontend development.",
+      "proposalId": "74063100744080853293227172153640769429985691264546766934165477921437163108214",
+      "requestId": "0xf132d4cbca3db9c9ec149135346626f9b4c0d36baeb046027d56394f05a7f782",
+      "proposer": "0x9999999999999999999999999999999999999999",
+      "recipient": "0x0000000000000000000000000000000000000075",
+      "amount": "37000000000000000001",
+      "description": "{\"version\":1,\"title\":\"Budget proposal 18\",\"body\":\"Synthetic request 18 funds a DAO activity for frontend development.\"}",
+      "descriptionHash": "0xfc0e74e574a75a309bad5b9fc371b834bcc4fae12d942a3223fcd2f4289d765d",
+      "title": "Budget proposal 18",
+      "body": "Synthetic request 18 funds a DAO activity for frontend development.",
       "targets": [
         "0x1111111111111111111111111111111111111111"
       ],
@@ -168,10 +124,10 @@
         "0"
       ],
       "calldatas": [
-        "0x6664ac913e04744256c53d28554147822e9c630c9ae72bb8b969d0da793d4145b49203e90000000000000000000000000000000000000000000000000000000000000083000000000000000000000000000000000000000000000002c5807ca0cdd88000"
+        "0x6664ac91f132d4cbca3db9c9ec149135346626f9b4c0d36baeb046027d56394f05a7f7820000000000000000000000000000000000000000000000000000000000000075000000000000000000000000000000000000000000000002017a67f731740001"
       ],
-      "snapshot": "1792298969",
-      "deadline": "1792299269",
+      "snapshot": "1792298983",
+      "deadline": "1792299283",
       "state": "Succeeded",
       "stateSource": "synthetic",
       "votes": {
@@ -182,14 +138,14 @@
       },
       "operation": null,
       "created": {
-        "blockNumber": "8909",
-        "blockHash": "0xb8e6393e9833dde024443d3fc51880a67defee63d2baf8633ba9c55551e90d26",
-        "transactionHash": "0xa4a0856ec659e8d6fba9d37b5f8156d4f4120f1c87a304cb2190d1881a552683",
-        "transactionIndex": "310",
+        "transactionHash": "0xc52043c044217988c1f23d3899e14d1fff5312f8a4e9e62949878b0b5624679d",
+        "transactionIndex": "170",
+        "blockNumber": "8931",
+        "blockHash": "0xb83a8b673d19fb7c9fb57ff75dbf781f051347b36454f031d5981cd36e927bfc",
         "logIndex": "0"
       },
       "transactions": {
-        "created": "0xa4a0856ec659e8d6fba9d37b5f8156d4f4120f1c87a304cb2190d1881a552683",
+        "created": "0xc52043c044217988c1f23d3899e14d1fff5312f8a4e9e62949878b0b5624679d",
         "queued": null,
         "executed": null,
         "canceled": null
@@ -226,14 +182,58 @@
       },
       "operation": null,
       "created": {
-        "blockNumber": "8909",
-        "blockHash": "0xb8e6393e9833dde024443d3fc51880a67defee63d2baf8633ba9c55551e90d26",
         "transactionHash": "0xc57eaba3837cf205b79732b07d0fbf6a9137614e66ab301a3b45f26af70cbda7",
         "transactionIndex": "240",
+        "blockNumber": "8927",
+        "blockHash": "0x886028d8446581ed9251ec84771f97884c605b2f02190049919b27f52bf8aba8",
         "logIndex": "0"
       },
       "transactions": {
         "created": "0xc57eaba3837cf205b79732b07d0fbf6a9137614e66ab301a3b45f26af70cbda7",
+        "queued": null,
+        "executed": null,
+        "canceled": null
+      }
+    },
+    {
+      "proposalId": "103921571649423372573298024811741133800546787491444946568992743676545529726445",
+      "requestId": "0x3e04744256c53d28554147822e9c630c9ae72bb8b969d0da793d4145b49203e9",
+      "proposer": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "recipient": "0x0000000000000000000000000000000000000083",
+      "amount": "51125000000000000000",
+      "description": "{\"version\":1,\"title\":\"Budget proposal 32\",\"body\":\"Synthetic request 32 funds a DAO activity for frontend development.\"}",
+      "descriptionHash": "0x223c58a265a52d418e5496039eadb95a4745323d2aba38e62e41e010cd81eb8d",
+      "title": "Budget proposal 32",
+      "body": "Synthetic request 32 funds a DAO activity for frontend development.",
+      "targets": [
+        "0x1111111111111111111111111111111111111111"
+      ],
+      "values": [
+        "0"
+      ],
+      "calldatas": [
+        "0x6664ac913e04744256c53d28554147822e9c630c9ae72bb8b969d0da793d4145b49203e90000000000000000000000000000000000000000000000000000000000000083000000000000000000000000000000000000000000000002c5807ca0cdd88000"
+      ],
+      "snapshot": "1792298969",
+      "deadline": "1792299269",
+      "state": "Succeeded",
+      "stateSource": "synthetic",
+      "votes": {
+        "against": "300000000000000000000",
+        "for": "400000000000000000000",
+        "abstain": "100000000000000000000",
+        "quorum": "200000000000000000000"
+      },
+      "operation": null,
+      "created": {
+        "transactionHash": "0xa4a0856ec659e8d6fba9d37b5f8156d4f4120f1c87a304cb2190d1881a552683",
+        "transactionIndex": "310",
+        "blockNumber": "8923",
+        "blockHash": "0x448c409bf9bdec11005d8690c838fcdc3ed67920a6a8f8aa8cbb360e07f5bf29",
+        "logIndex": "0"
+      },
+      "transactions": {
+        "created": "0xa4a0856ec659e8d6fba9d37b5f8156d4f4120f1c87a304cb2190d1881a552683",
         "queued": null,
         "executed": null,
         "canceled": null
@@ -270,10 +270,10 @@
       },
       "operation": null,
       "created": {
-        "blockNumber": "8908",
-        "blockHash": "0x66efbc2c4cd51b175bc8e024fc29a95e7d53364d409ec3641f11d3a99ae36368",
         "transactionHash": "0x98a49c8d93cd8035e48f14dfcdd851faf439cf9834891b3b8c2c2fe80ef5deaa",
         "transactionIndex": "380",
+        "blockNumber": "8919",
+        "blockHash": "0xfac170702e9b3cb0f516c90d4e7e06b191a733382a147d72f9c51bc52ba12fc3",
         "logIndex": "0"
       },
       "transactions": {

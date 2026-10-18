@@ -5,7 +5,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -27,6 +27,9 @@
     "Fixture cursors are unsigned base64url JSON for deterministic frontend mocks; a real server must authenticate cursors and validate snapshot availability.",
     "States, description v1, requestId strategy and API contracts remain proposed for team review."
   ],
+  "metadataFiles": [
+    "simulation.json"
+  ],
   "routes": [
     {
       "method": "GET",
@@ -45,7 +48,7 @@
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYyIn0"
       },
       "status": 200,
       "file": "proposals-page-2.json",
@@ -57,7 +60,7 @@
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTA4IiwiNDIwIiwiMCIsIjU1NDk5NzYzOTI0MDIwMTg4NjU2OTE0NTkwMjQ2OTgwNzg0MjQyMjc3NTU3MTk0NDU1MjYzODU5MTYyNTUxOTY3NjAyMDk5MTY2ODc3Il0sInJldmlzaW9uIjoiZml4dHVyZS12MSJ9"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTIxIiwiMzMwIiwiMCIsIjc2MjcwMTAwNzExNTA1ODIwMTY1MjExMTUwNTIxNzg4ODU4NDkwOTIwOTUxODQ4NTkzNDUyOTIyNzM3MTc2ODcwMzgzODkwNjY4NTk4Il0sInJldmlzaW9uIjoiZml4dHVyZS12MiJ9"
       },
       "status": 200,
       "file": "proposals-page-3.json",
@@ -516,28 +519,6 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
       "path": "/api/proposals/16821109296248411135831662618839351397885492342973468770916821468182242796325",
       "query": {
         "chainId": "31337",
@@ -560,24 +541,24 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030",
+      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
+      "file": "proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030/votes",
+      "path": "/api/proposals/13626506023251648470670316606976019221104781737995554034528584725190424564002/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
+      "file": "votes/13626506023251648470670316606976019221104781737995554034528584725190424564002.json",
       "scenario": "default"
     },
     {
@@ -600,6 +581,28 @@
       },
       "status": 200,
       "file": "votes/83503144282010908915437781722101746852138307949998360145427206077297086573625.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/83062645732616064292024906422246128226080623456596309683058997420331072897030/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/83062645732616064292024906422246128226080623456596309683058997420331072897030.json",
       "scenario": "default"
     },
     {
@@ -670,24 +673,24 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361",
+      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
+      "file": "proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361/votes",
+      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
+      "file": "votes/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
       "scenario": "default"
     },
     {
@@ -714,156 +717,24 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545",
+      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
+      "file": "proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/41188251149770464419086128880638239388642337502157923625475508004855043094545/votes",
+      "path": "/api/proposals/108988646388491912983972495270906958785753766793916811189275126397017585597361/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/41188251149770464419086128880638239388642337502157923625475508004855043094545.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
-      "scenario": "default"
-    },
-    {
-      "method": "GET",
-      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807/votes",
-      "query": {
-        "chainId": "31337",
-        "deploymentId": "synthetic-local-v1"
-      },
-      "status": 200,
-      "file": "votes/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
+      "file": "votes/108988646388491912983972495270906958785753766793916811189275126397017585597361.json",
       "scenario": "default"
     },
     {
@@ -890,134 +761,134 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920",
+      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
+      "file": "proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920/votes",
+      "path": "/api/proposals/58528956821683266328548113320139019971536235412084292365597134090822498863807/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
+      "file": "votes/58528956821683266328548113320139019971536235412084292365597134090822498863807.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445",
+      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
+      "file": "proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445/votes",
+      "path": "/api/proposals/6290213498536444429977811737550473096206421491561731180149314588333138388460/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
+      "file": "votes/6290213498536444429977811737550473096206421491561731180149314588333138388460.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398",
+      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
+      "file": "proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398/votes",
+      "path": "/api/proposals/37176691793352832612623203880146219235927758675308785423979149714330767685273/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
+      "file": "votes/37176691793352832612623203880146219235927758675308785423979149714330767685273.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798",
+      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
+      "file": "proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798/votes",
+      "path": "/api/proposals/74063100744080853293227172153640769429985691264546766934165477921437163108214/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
+      "file": "votes/74063100744080853293227172153640769429985691264546766934165477921437163108214.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839",
+      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
+      "file": "proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839/votes",
+      "path": "/api/proposals/20665150826063963880947979686968509622690063332294929817377418803544971014944/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
+      "file": "votes/20665150826063963880947979686968509622690063332294929817377418803544971014944.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463",
+      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
+      "file": "proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463/votes",
+      "path": "/api/proposals/91006627694673569749790579520585889759774513432890796725866706856327920407034/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
+      "file": "votes/91006627694673569749790579520585889759774513432890796725866706856327920407034.json",
       "scenario": "default"
     },
     {
@@ -1044,112 +915,134 @@
     },
     {
       "method": "GET",
-      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877",
+      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "file": "proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877/votes",
+      "path": "/api/proposals/47401718471938095205683562171534821425165453959180600616786680304301823727463/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "file": "votes/47401718471938095205683562171534821425165453959180600616786680304301823727463.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266",
+      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "file": "proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266/votes",
+      "path": "/api/proposals/56847563502385571152589144677571352735140666592757066051308686825850542114839/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "file": "votes/56847563502385571152589144677571352735140666592757066051308686825850542114839.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342",
+      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "file": "proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342/votes",
+      "path": "/api/proposals/108072545960349793491559029088209382939550418726850470353506518021158605382798/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "file": "votes/108072545960349793491559029088209382939550418726850470353506518021158605382798.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573",
+      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "file": "proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573/votes",
+      "path": "/api/proposals/5419232181938349487072541505176188088258871241339401349707369311265009573398/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "file": "votes/5419232181938349487072541505176188088258871241339401349707369311265009573398.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588",
+      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "file": "proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
       "scenario": "default"
     },
     {
       "method": "GET",
-      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588/votes",
+      "path": "/api/proposals/103921571649423372573298024811741133800546787491444946568992743676545529726445/votes",
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1"
       },
       "status": 200,
-      "file": "votes/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "file": "votes/103921571649423372573298024811741133800546787491444946568992743676545529726445.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/53703263286797357953381258093462643672420886288908927577933985946844198629920/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/53703263286797357953381258093462643672420886288908927577933985946844198629920.json",
       "scenario": "default"
     },
     {
@@ -1176,6 +1069,116 @@
     },
     {
       "method": "GET",
+      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/6397441235010826673371384836003033783647047655666737848440907201055089588588/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/6397441235010826673371384836003033783647047655666737848440907201055089588588.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/40862228950905982500076178789215079827424568634791850823944606245076285726573/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/40862228950905982500076178789215079827424568634791850823944606245076285726573.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/58089432423121435753142442521765403670636524540555409062419306470704453156342/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/58089432423121435753142442521765403670636524540555409062419306470704453156342.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/99556382942669390668969410669282819056320270716367336338299428668301763881266/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/99556382942669390668969410669282819056320270716367336338299428668301763881266.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
+      "path": "/api/proposals/55499763924020188656914590246980784242277557194455263859162551967602099166877/votes",
+      "query": {
+        "chainId": "31337",
+        "deploymentId": "synthetic-local-v1"
+      },
+      "status": 200,
+      "file": "votes/55499763924020188656914590246980784242277557194455263859162551967602099166877.json",
+      "scenario": "default"
+    },
+    {
+      "method": "GET",
       "path": "/api/treasury/transfers",
       "query": {
         "chainId": "31337",
@@ -1191,7 +1194,7 @@
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6bnVsbCwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjYwMDkiLCIxMDA5IiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjEifQ"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6bnVsbCwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjg5MDUiLCIxMDA5IiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjIifQ"
       },
       "status": 200,
       "file": "transfers-page-2.json",
@@ -1216,7 +1219,7 @@
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
         "direction": "in",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6ImluIiwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjYwMDEiLCIxMDAxIiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjEifQ"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS90cmVhc3VyeS90cmFuc2ZlcnMiLCJmaWx0ZXJzIjp7ImRpcmVjdGlvbiI6ImluIiwicHJvcG9zYWxJZCI6bnVsbH0sImxpbWl0IjoyMCwib3JkZXIiOiJkZXNjOmJsb2NrTnVtYmVyLHRyYW5zYWN0aW9uSW5kZXgsbG9nSW5kZXgiLCJsYXN0IjpbIjg4OTciLCIxMDAxIiwiMCJdLCJyZXZpc2lvbiI6ImZpeHR1cmUtdjIifQ"
       },
       "status": 200,
       "file": "transfers-direction-in-2.json",
@@ -1378,7 +1381,7 @@
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
         "state": "Active",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYyIn0"
       },
       "status": 400,
       "file": "error-cursor-context-mismatch.json",
@@ -1390,7 +1393,7 @@
       "query": {
         "chainId": "31337",
         "deploymentId": "synthetic-local-v1",
-        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYxIn0"
+        "cursor": "eyJjaGFpbklkIjoiMzEzMzciLCJkZXBsb3ltZW50SWQiOiJzeW50aGV0aWMtbG9jYWwtdjEiLCJhc09mQmxvY2siOiI5MDAwIiwiYXNPZkJsb2NrSGFzaCI6IjB4OTU2Mjc3NGU5YmViZDNkY2Q5M2ZlNmU2ODVlZTljMGUzOWNkZWVkNGI3Mjc4NTQ5NjhhYzVhOTM1ZDE4OWFmNyIsImVuZHBvaW50IjoiL2FwaS9wcm9wb3NhbHMiLCJmaWx0ZXJzIjp7InN0YXRlIjpudWxsLCJwcm9wb3NhbElkIjpudWxsfSwibGltaXQiOjIwLCJvcmRlciI6ImRlc2M6YmxvY2tOdW1iZXIsdHJhbnNhY3Rpb25JbmRleCxsb2dJbmRleCxwcm9wb3NhbElkIiwibGFzdCI6WyI4OTcwIiwiOTAiLCIwIiwiMjc5MjA3MTI1OTgyNDg4MDU1NTgzNTQzMzE3NTk4NjUwNzM5NjYyODQyODkxMjUxNTQ0NjkzOTEwMTI2NTU5NDM1Mjk4MzU1MDU3NTEiXSwicmV2aXNpb24iOiJmaXh0dXJlLXYyIn0"
       },
       "status": 409,
       "file": "error-snapshot-invalidated.json",

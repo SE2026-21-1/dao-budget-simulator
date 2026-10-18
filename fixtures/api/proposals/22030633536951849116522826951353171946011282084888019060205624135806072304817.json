@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -49,10 +49,10 @@
     },
     "operation": null,
     "created": {
-      "blockNumber": "8994",
-      "blockHash": "0xdffb7889707395cc1ed92667509010c367ea7a3812757264bc22d9448326421b",
       "transactionHash": "0x6607facc70f912475efcfafb51634303989350177747219937028413a2b3a7f5",
       "transactionIndex": "20",
+      "blockNumber": "8990",
+      "blockHash": "0x99077ac6ff903d6a8f97e1d5d6201c0f0a917ab2a56dc4573c2f2f6f8132d3fc",
       "logIndex": "0"
     },
     "transactions": {

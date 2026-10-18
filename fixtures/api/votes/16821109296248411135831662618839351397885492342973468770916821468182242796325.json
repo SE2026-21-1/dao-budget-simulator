@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -25,11 +25,11 @@
       "support": 2,
       "weight": "100000000000000000000",
       "reason": "Participating without a position.",
-      "blockNumber": "9000",
-      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
       "transactionHash": "0xdae0f68fbfdc851613b125aee0f3ff347a725d4db6f908585c9db424a736b518",
       "transactionIndex": "233",
-      "logIndex": "0"
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "logIndex": "17"
     },
     {
       "proposalId": "16821109296248411135831662618839351397885492342973468770916821468182242796325",
@@ -37,11 +37,11 @@
       "support": 0,
       "weight": "300000000000000000000",
       "reason": "Prefer a smaller budget.",
-      "blockNumber": "9000",
-      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
       "transactionHash": "0x7eaee6e503c3f1204b52fec949a7c44970b00b2cb57b6fe37d9565833ef63fb6",
       "transactionIndex": "232",
-      "logIndex": "0"
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "logIndex": "16"
     },
     {
       "proposalId": "16821109296248411135831662618839351397885492342973468770916821468182242796325",
@@ -49,11 +49,11 @@
       "support": 1,
       "weight": "400000000000000000000",
       "reason": "Fund this DAO activity.",
-      "blockNumber": "9000",
-      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
       "transactionHash": "0x384d4c742bb92340154ef21724f5922f0f584e037f2859f190746bbf914f2d14",
       "transactionIndex": "231",
-      "logIndex": "0"
+      "blockNumber": "9000",
+      "blockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+      "logIndex": "15"
     }
   ],
   "pagination": {

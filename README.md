@@ -55,6 +55,12 @@ Kiểm tra fixture với Node.js (chỉ dùng thư viện chuẩn):
 node scripts/check_be01.mjs
 ```
 
+Checker đọc trực tiếp JSON và tự chạy regression cho logIndex toàn block,
+snapshot theo timestamp block tạo và thứ tự phát log. Metadata offline nằm ở
+`fixtures/api/simulation.json`; vẫn có 45 proposal, trang 20/20/5. Dữ liệu mới
+dùng revision `fixture-v2`; bỏ cursor v1. Hướng dẫn kiểm tra sinh lại xác định
+và các giới hạn đối chiếu hash nằm trong README fixture.
+
 Kiểm tra migration và ràng buộc bằng cụm PostgreSQL tạm độc lập trên Windows:
 
 ```powershell

@@ -16,8 +16,9 @@ node scripts/check_be01.mjs
 ```
 
 Script generate chỉ viết JSON trong `fixtures/api/`, không chạy server, ký giao
-dịch, gọi mạng hay xóa file. Script check chạy độc lập, đọc fixture hiện có và
-báo lỗi nếu thiếu/thừa JSON, nội dung bị sửa lệch hoặc không khớp generator.
+dịch, gọi mạng hay xóa file. Script check chạy độc lập trên JSON đã lưu, đối
+chiếu manifest, schema, quan hệ dữ liệu và timeline; không gọi lại generator
+để làm đáp án. Regression chạy tự động trong checker, chỉ sửa bản sao trong bộ nhớ.
 Node.js 24.15.0 đã chạy được hai lệnh này trên môi trường BE01 hiện tại.
 
 [manifest.json](manifest.json) ánh xạ từng request GET, query chính xác, HTTP
@@ -43,9 +44,10 @@ Query trong manifest luôn kèm `chainId=31337` và
 | `transfers-empty.json` | Lọc out + proposalId của proposal Pending nên chưa có giải ngân |
 | `health-synced/lagging/not-ready.json` | 200 đồng bộ, 200 chậm và 503 chưa có checkpoint |
 | `error-*.json` | ID sai, không tìm thấy, query/cursor sai, snapshot invalid và chưa sẵn sàng |
+| `simulation.json` | Metadata offline: lịch block/timestamp và 190 log nguồn để kiểm tra tọa độ và lifecycle; không phải endpoint |
 
 Mỗi data response dùng chung H=`9000`, hash của H trong `context`, timestamp
-`1792300000`, revision `fixture-v1`. Đây là mốc giả cố định để kiểm tra; không
+`1792300000`, revision `fixture-v2`. Đây là mốc giả cố định để kiểm tra; không
 liên quan tip của mạng local đang chạy. Health lagging vẫn phục vụ H này nhưng
 pipeline đã quan sát tip mới hơn. Khi chưa có checkpoint, context H/hash/timestamp
 và indexedBlock là null, không bịa ra một block dữ liệu.
@@ -58,6 +60,37 @@ filters chuẩn hóa, `limit:20`, `order`, tuple cuối và revision. Đây là 
 opaque cho mock; frontend chỉ dùng lại nguyên token. Server tương lai phải xác
 thực tính toàn vẹn, thời hạn và tính hợp lệ của snapshot, không tin dữ liệu
 base64url do client sửa. Đổi filter/scope/limit/H cần bỏ cursor và đọc trang đầu.
+
+## Lịch block và định danh log nguồn
+
+`simulation.json` có 105 header mô phỏng `{blockNumber, blockHash, timestamp}`.
+Mỗi timestamp được gán đúng một block, hash và timestamp duy nhất; timestamp
+tăng theo block, không giả định cách nhau 12 giây. Tất cả sự kiện đều ở block
+không vượt H. Timestamp, block/index và `emissionOrder` đều là chuỗi số nguyên.
+
+Generator chọn thời điểm tạo, vote và lifecycle, lập một lịch chung chính xác,
+rồi cấp tọa độ. Proposal lấy `snapshot = timestamp(block tạo) + 60` và
+`deadline = snapshot + 300`. Vote thỏa `snapshot < timestamp(block vote) <= deadline`.
+Queue sau deadline, đủ quorum và For > Against; `queuedAt` bằng timestamp
+block queue, ETA = queuedAt + 120. Execute từ ETA trở đi; cancel do creator
+khi clock chưa vượt snapshot, kể cả khi create và cancel ở cùng block.
+
+`sourceLogs` ghi mỗi log nguồn **một lần**, gồm `sourceId`, `eventName`,
+`proposalId`, `actor`, `emissionOrder` và năm tọa độ block/transaction/log.
+Metadata thêm nguồn queue/execute/cancel để kiểm tra các hash lifecycle trong detail.
+`emissionOrder` là thứ tự phát của các log được mô hình hóa trong cùng transaction;
+đây không phải receipt đầy đủ hoặc cam kết về tất cả event của implementation thật.
+
+Sau khi biết toàn bộ transaction, generator sắp theo block, transactionIndex,
+emissionOrder và cấp **logIndex cho toàn block**. Hai sourceId khác nhau không
+được chung `(chainId, blockHash, logIndex)`. TransactionIndex có thể có khoảng
+trống vì chỉ biểu diễn một phần transaction; checker cũng chấp nhận khoảng
+trống logIndex hợp lệ, nhưng bắt buộc đúng thứ tự. Hash transaction và
+`(blockHash, transactionIndex)` ánh xạ một-một.
+
+List/detail/filter/recentActivity chỉ là các bản sao hiển thị của cùng log;
+checker đối chiếu chúng với bản canonical thay vì đếm mỗi bản sao là log mới.
+Revision tăng lên `fixture-v2` vì tọa độ và cursor đã đổi; TV3 phải bỏ cursor v1.
 
 ## Tiền, ID và tình huống biên
 
@@ -124,3 +157,36 @@ quán, list/detail/summary, filter, cursor và không mất/trùng giữa các t
 Kiểm tra này không chứng minh migration PostgreSQL chạy được, dữ liệu chain
 đúng, hiệu năng HTTP hay indexer/reorg hoạt động. Các hạng mục đó có quy trình
 riêng trong [checklist BE01](../../docs/be01-checklist.md).
+
+## Kết quả sửa hai lỗi timeline/logIndex
+
+Chạy trên Node.js 24.15.0: **PASS** 123 JSON (122 file cũ + metadata), 45
+proposal 20/20/5, 105 block và 190 log nguồn. Giữ đủ bảy trạng thái và mọi ca
+biên; toàn bộ 45 proposalId/đầu vào hash và 13 operationId/salt/predecessor
+không đổi so với commit `09c6735`. Giữ nguyên SC01, BUD lẻ/1 wei, zero/self
+Transfer, requestId zero và hai proposal chung requestId với một lần chi.
+
+Bốn regression được chạy bằng cùng `validateTimeline` trên bản sao JSON:
+
+- Gán hai log khác transaction chung blockHash/logIndex: bị từ chối với `LOG_POSITION_COLLISION`.
+- Dịch snapshot của một proposal thêm 1 giây: bị từ chối với `SNAPSHOT_TIMESTAMP_MISMATCH`.
+- Đảo logIndex giữa transaction trước/sau: bị từ chối với `LOG_TRANSACTION_ORDER`.
+- Đảo logIndex của hai log trong cùng transaction: cũng bị từ chối vì sai emission order.
+
+Sinh lại lần hai đã đối chiếu SHA-256 và giữ nguyên byte của cả 123 JSON.
+Có thể kiểm tra lại trên PowerShell:
+
+```powershell
+$fixtureHashesBefore = Get-ChildItem fixtures/api -Recurse -File -Filter *.json | Sort-Object FullName | Get-FileHash -Algorithm SHA256 | Select-Object Path,Hash | ConvertTo-Json -Compress
+node scripts/generate_be01_fixtures.mjs
+$fixtureHashesAfter = Get-ChildItem fixtures/api -Recurse -File -Filter *.json | Sort-Object FullName | Get-FileHash -Algorithm SHA256 | Select-Object Path,Hash | ConvertTo-Json -Compress
+if ($fixtureHashesBefore -cne $fixtureHashesAfter) { throw 'Fixture generation is not deterministic' }
+node scripts/check_be01.mjs
+git diff --check
+```
+
+Không tìm thấy Foundry `cast` trong môi trường kiểm tra nên **chưa đối chiếu
+hash bằng cast**. Vẫn kiểm tra vector Keccak/SC01 và tính hash từ JSON bằng
+helper Node hiện có; các helper hash dùng chung với generator, không giả nhận
+đây là đối chiếu bằng implementation độc lập. Không chạy lại PostgreSQL vì
+SQL không thay đổi, không kiểm chứng receipt/RPC/deployment thật.

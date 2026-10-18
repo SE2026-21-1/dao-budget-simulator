@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -25,11 +25,11 @@
       "support": 2,
       "weight": "100000000000000000000",
       "reason": "Participating without a position.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0x6329f7b80d08734102a578c251701c477e116cf0bdd3f7661e9672830159de4f",
       "transactionIndex": "3",
-      "logIndex": "0"
+      "blockNumber": "8961",
+      "blockHash": "0x9023e978868a1aad01a0c704fc5cfe9207dd4087a604137fe46e104f7d2620b2",
+      "logIndex": "2"
     },
     {
       "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545",
@@ -37,11 +37,11 @@
       "support": 0,
       "weight": "300000000000000000000",
       "reason": "Prefer a smaller budget.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0x65f30290af440118925fdb1507e088841bc31b2a2d77a6056fff16642264b44c",
       "transactionIndex": "2",
-      "logIndex": "0"
+      "blockNumber": "8961",
+      "blockHash": "0x9023e978868a1aad01a0c704fc5cfe9207dd4087a604137fe46e104f7d2620b2",
+      "logIndex": "1"
     },
     {
       "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545",
@@ -49,10 +49,10 @@
       "support": 1,
       "weight": "400000000000000000000",
       "reason": "Fund this DAO activity.",
-      "blockNumber": "8926",
-      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
       "transactionHash": "0xe9ac4fb656ff78a45987fcf4f7ce68eab8a2a72aa1d07aa3159685b14c639289",
       "transactionIndex": "1",
+      "blockNumber": "8961",
+      "blockHash": "0x9023e978868a1aad01a0c704fc5cfe9207dd4087a604137fe46e104f7d2620b2",
       "logIndex": "0"
     }
   ],

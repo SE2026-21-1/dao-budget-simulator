@@ -2,7 +2,7 @@
   "context": {
     "chainId": "31337",
     "deploymentId": "synthetic-local-v1",
-    "snapshotRevision": "fixture-v1",
+    "snapshotRevision": "fixture-v2",
     "asOfBlock": "9000",
     "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
     "asOfTimestamp": "1792300000",
@@ -56,10 +56,10 @@
       "salt": "0xaef86103de0a7776f708fa8cb507c31deffbe79162ff48246236619ce9d86dc9"
     },
     "created": {
-      "blockNumber": "8911",
-      "blockHash": "0xbe9de8b3848d563155f16ff9019feae93d4450f9887df27c89422e791a83089e",
       "transactionHash": "0xfe72d1eb3bf2e0da577bff425b050dfa27f97d3f29de18a1bb93df89ca88b661",
       "transactionIndex": "70",
+      "blockNumber": "8936",
+      "blockHash": "0x74c0192d7e216d85d781bbc41bbc60b24f4c2c728e783825a08755155f82bd81",
       "logIndex": "0"
     },
     "transactions": {

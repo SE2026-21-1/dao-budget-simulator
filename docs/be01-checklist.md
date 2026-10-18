@@ -5,7 +5,8 @@ Ngày kiểm tra: **18/10/2026** (Asia/Bangkok). Nhánh làm việc:
 Thư mục ban đầu trống, đã clone đúng repository, không có thay đổi người dùng
 để ghi đè. Không tìm thấy AGENTS.md hoặc phân công TV2 riêng; đã đối chiếu
 README, requirements nhóm, phân công TV1, contracts.md, interface/ABI Treasury
-và fixture SC01. Không commit, push, mở Issue/PR hoặc merge.
+và fixture SC01. Bản BE01 đã được commit/push theo yêu cầu riêng ở `09c6735`;
+lần sửa fixture hiện tại không commit, push, mở Issue/PR hoặc merge.
 
 **Phạm vi hoàn thành BE01:** thiết kế PostgreSQL, đặc tả API đọc và fixture
 tổng hợp để frontend làm song song. Toàn bộ thiết kế mới vẫn **chờ nhóm review**.
@@ -21,6 +22,7 @@ Chưa tuyên bố FR13–FR16 đã nghiệm thu đầy đủ khi chưa có index
 | `docs/api.md` | Hợp đồng GET giữa TV2 và TV3: request/response, số nguyên, cursor, snapshot, sync và lỗi |
 | `fixtures/api/README.md` | Hướng dẫn TV3 dùng mock và giải thích dữ liệu tổng hợp |
 | `fixtures/api/manifest.json` | Ánh xạ method/path/query/HTTP status/scenario sang file JSON; không phải HTTP server |
+| `fixtures/api/simulation.json` | Metadata offline về block/timestamp và log nguồn; kiểm tra timeline, không có endpoint mới |
 | `fixtures/api/*.json` | Summary, 3 trang proposal 20/20/5, lọc/tìm kiếm, transfers, health, empty/error |
 | `fixtures/api/proposals/*.json` | Detail riêng cho từng proposal, cùng dữ liệu với list |
 | `fixtures/api/votes/*.json` | Phiếu tương ứng từng proposal, cộng khớp với detail |
@@ -80,10 +82,15 @@ không kết luận migration đạt chỉ từ checker JSON.
 | Kiểm tra | Kết quả |
 |---|---|
 | Công cụ | Node.js v24.15.0; PostgreSQL/psql 18.4; không thêm package/framework |
-| Migration trên cluster tạm | **PASS**: tạo domain, bảng, FK và index, COMMIT thành công |
-| SQL constraints | **PASS**: uint256 max round-trip; reject âm/phần lẻ/overflow/NaN/Infinity; nguyên bytes description; Transfer zero/self; dedup cùng chain; khác chain/deployment; source role/FK/header; link payout/checkpoint và đổi snapshot revision |
+| Migration trên cluster tạm | **PASS ở lần BE01 trước**: tạo domain, bảng, FK và index, COMMIT thành công; lần sửa fixture này không chạy lại vì SQL không đổi |
+| SQL constraints | **PASS ở lần BE01 trước**: uint256 max, miền số, description bytes, Transfer zero/self, dedup, scopes/FKs, payout/checkpoint/revision; không chạy lại trong lần sửa này |
 | Kết thúc PostgreSQL test | Cluster đã dừng; dữ liệu test ROLLBACK; log và cluster tạm được giữ ngoài repo |
-| Fixture JSON/hash/trang/nhất quán | **PASS**: 122 JSON, 45 ID hash hợp lệ, 20/20/5, đủ 7 state; 10.750 assertions gồm SC01, phiếu, operation, ledger, cursor và source log |
+| Fixture JSON/hash/trang/nhất quán | **PASS**: 123 JSON, 45 ID hash hợp lệ, 20/20/5, đủ 7 state; summary/detail/votes/transfers/filter/cursor/manifest khớp |
+| Timeline trực tiếp từ JSON | **PASS**: 105 block tăng timestamp, 190 log nguồn; vị trí toàn block duy nhất, tx hash↔block/index và thứ tự log nhất quán; create/vote/queue/execute/cancel hợp lệ tại H |
+| Regression dùng bản sao trong bộ nhớ | **PASS**: phát hiện trùng block/logIndex, snapshot lệch +1 giây, đảo thứ tự giữa transaction và trong cùng transaction; fixture đang theo dõi không bị sửa bởi test |
+| Bảo toàn dữ liệu gốc | **PASS** so với `09c6735`: 45 proposalId và đầu vào hash, 13 operationId/salt/predecessor không đổi; SC01 giữ nguyên |
+| Sinh lại xác định | **PASS**: lần sinh thứ hai có SHA-256 giống hệt cho cả 123 JSON |
+| Đối chiếu Foundry cast | **CHƯA CHẠY**: không tìm thấy cast; vector Keccak/SC01 vẫn được kiểm tra bằng helper Node dùng chung với generator, chưa là đối chiếu crypto độc lập |
 | Whitespace | **PASS**: `git diff --check` không báo lỗi; kiểm tra cả file mới khi bàn giao |
 
 Lần chạy PostgreSQL cuối giữ log tại
@@ -93,6 +100,13 @@ Không chạy contract/Foundry tests, HTTP requests, indexer, reorg/resume/rebui
 hoặc benchmark API vì không thay contract và BE01 chưa có các thành phần đó.
 Không lấy fixture tổng hợp làm bằng chứng on-chain hoặc bằng chứng nghiệm thu
 các task sau BE01.
+
+Hai lỗi cũ do gán logIndex theo từng transaction và làm tròn block tạo từ
+snapshot. Nay các sự kiện dùng lịch timestamp chung, snapshot lấy đúng thời
+điểm tạo + 60, còn logIndex được cấp sau khi sắp toàn bộ transaction/emission
+trong block. `validateTimeline` kiểm tra JSON đã lưu, không gọi generator làm
+đáp án. Metadata sourceId chỉ đếm một lần mỗi log; bản sao hiển thị được đối
+chiếu về cùng nguồn. Revision `fixture-v2` làm cursor cũ hết hiệu lực.
 
 ## 5. Quyết định còn chờ nhóm
 

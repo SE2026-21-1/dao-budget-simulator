@@ -67,13 +67,48 @@ export const ADDRESSES = { treasury: ADDRESS('1'), governor: ADDRESS('3'), timel
 export const H = 9000n;
 export const T = 1792300000n;
 export const context = {
-  chainId: '31337', deploymentId: 'synthetic-local-v1', snapshotRevision: 'fixture-v1',
+  chainId: '31337', deploymentId: 'synthetic-local-v1', snapshotRevision: 'fixture-v2',
   asOfBlock: String(H), asOfBlockHash: hashText('be01:synthetic:block:9000'), asOfTimestamp: String(T), dataKind: 'synthetic',
   sync: { status: 'synced', headBlock: '9002', confirmedBlock: '9000', indexedBlock: '9000', lagBlocks: '0', lagSeconds: '0', confirmations: '2', lastIndexedAt: '2026-10-18T03:46:40.000Z' },
 };
 const blockHash = block => hashText(`be01:synthetic:block:${block}`);
 const txHash = label => hashText(`be01:synthetic:transaction:${label}`);
-const event = (label, block, txIndex = 0n, logIndex = 0n) => ({ blockNumber: String(block), blockHash: blockHash(block), transactionHash: txHash(label), transactionIndex: String(txIndex), logIndex: String(logIndex) });
+// Every requested event time becomes one exact block timestamp, without rounding.
+// Sparse transaction indexes model a subset of transactions. logIndex is allocated
+// once per block after every modeled transaction/emission is known.
+function timeline() {
+  const planned = [];
+  const event = (sourceId, timestamp, txIndex, emissionOrder, details, transactionHash = txHash(sourceId)) => {
+    if (timestamp > T) throw new Error(`Future source event: ${sourceId}`);
+    const location = { transactionHash, transactionIndex: String(txIndex) };
+    planned.push({ sourceId, timestamp, txIndex, emissionOrder, details, location });
+    return location;
+  };
+  const finalize = () => {
+    const times = [...new Set([...planned.map(e => e.timestamp), T])].sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+    const blocks = times.map((timestamp, i) => {
+      const number = H - BigInt(times.length - 1 - i);
+      return { blockNumber: String(number), blockHash: blockHash(number), timestamp: String(timestamp) };
+    });
+    const byTime = new Map(blocks.map(b => [BigInt(b.timestamp), b]));
+    planned.sort((a, b) => {
+      for (const key of ['timestamp', 'txIndex', 'emissionOrder']) {
+        if (a[key] !== b[key]) return a[key] < b[key] ? -1 : 1;
+      }
+      return 0;
+    });
+    const nextLog = new Map();
+    const sourceLogs = planned.map(e => {
+      const block = byTime.get(e.timestamp);
+      const logIndex = nextLog.get(block.blockNumber) ?? 0n;
+      nextLog.set(block.blockNumber, logIndex + 1n);
+      Object.assign(e.location, { blockNumber: block.blockNumber, blockHash: block.blockHash, logIndex: String(logIndex) });
+      return { sourceId: e.sourceId, ...e.details, emissionOrder: String(e.emissionOrder), ...e.location };
+    });
+    return { blocks, sourceLogs };
+  };
+  return { event, finalize };
+}
 export const tuple = item => [item.blockNumber, item.transactionIndex, item.logIndex];
 export const proposalTuple = p => [...tuple(p.created), p.proposalId];
 export function descending(a, b) {
@@ -87,6 +122,7 @@ export function buildFixtures() {
   const files = new Map();
   const routes = [];
   const scope = { chainId: context.chainId, deploymentId: context.deploymentId };
+  const { event, finalize } = timeline();
   const add = (file, body) => { if (files.has(file)) throw new Error(`Duplicate file ${file}`); files.set(file, body); };
   const route = (file, endpoint, query = {}, status = 200, scenario = 'default') => routes.push({ method: 'GET', path: endpoint, query: { ...scope, ...query }, status, file, scenario });
   const paged = (items, endpoint, filters, name, key) => {
@@ -108,6 +144,7 @@ export function buildFixtures() {
   const sc01 = JSON.parse(readFileSync(path.join(ROOT, 'fixtures/sc01/disbursement-v1.json'), 'utf8'));
   const proposals = [];
   const votesById = new Map();
+  const executionPositions = new Map();
   const cycle = ['Executed', 'Pending', 'Active', 'Succeeded', 'Defeated', 'Queued', 'Canceled'];
   for (let i = 0; i < 45; i++) {
     const n = BigInt(i);
@@ -119,34 +156,75 @@ export function buildFixtures() {
     const content = { version: 1, title: `Budget proposal ${String(i + 1).padStart(2, '0')}`, body: `Synthetic request ${i + 1} funds a DAO activity for frontend development.` };
     const description = i === 0 ? sc01.description : i === 2 ? `{ "body": ${JSON.stringify(content.body)}, "version": 1, "title": ${JSON.stringify(content.title)} }` : JSON.stringify(content);
     const parsed = JSON.parse(description);
-    let snapshot = T - 1000n - n;
-    if (state === 'Pending') snapshot = i === 1 ? T : T + n;
-    if (state === 'Canceled') snapshot = T + 60n;
-    if (state === 'Active') snapshot = i === 2 ? T - 1n : i === 9 ? T - 300n : T - 100n - n;
-    if (state === 'Succeeded' && i === 3 || state === 'Defeated' && i === 4) snapshot = T - 301n;
+    let createdAt = T - 1060n - n;
+    if (state === 'Pending') createdAt = i === 1 ? T - 60n : T + n - 60n;
+    if (state === 'Canceled') createdAt = T;
+    if (state === 'Active') createdAt = i === 2 ? T - 61n : i === 9 ? T - 360n : T - 160n - n;
+    if ((state === 'Succeeded' && i === 3) || (state === 'Defeated' && i === 4)) createdAt = T - 361n;
+    const snapshot = createdAt + 60n;
     const p = {
       proposalId: '', requestId, proposer: ADDRESSES.voters[i % 4], recipient, amount, description,
       descriptionHash: hashText(description), title: parsed.title, body: parsed.body,
       targets: [ADDRESSES.treasury], values: ['0'], calldatas: [calldata(requestId, recipient, amount)],
       snapshot: String(snapshot), deadline: String(snapshot + 300n), state, stateSource: 'synthetic',
       votes: { against: '0', for: '0', abstain: '0', quorum: snapshot < T ? String(200n * UNIT) : null }, operation: null,
-      created: event(`proposal:${i}:created`, H - (T - (snapshot - 60n) + 11n) / 12n, n * 10n, 0n),
+      created: null,
       transactions: { created: txHash(`proposal:${i}:created`), queued: null, executed: null, canceled: null },
     };
     p.proposalId = String(BigInt(proposalHash(p)));
+    p.created = event(`proposal:${i}:created`, createdAt, n * 10n, 0n,
+      { eventName: 'ProposalCreated', proposalId: p.proposalId, actor: p.proposer });
     const specs = state === 'Pending' || state === 'Canceled' ? [] : state === 'Defeated' ? [[1, 100n], [0, 300n]] : [[1, 400n], [0, 300n], [2, 100n]];
-    const votes = specs.map(([support, tokens], v) => ({ proposalId: p.proposalId, voter: ADDRESSES.voters[tokens === 400n ? 0 : tokens === 300n ? 1 : 3], support, weight: String(tokens * UNIT), reason: ['Fund this DAO activity.', 'Prefer a smaller budget.', 'Participating without a position.'][v], ...event(`proposal:${i}:vote:${v}`, state === 'Active' ? H : H - (T - (snapshot + 120n) + 11n) / 12n, n * 10n + BigInt(v) + 1n, 0n) }));
+    const votes = specs.map(([support, tokens], v) => {
+      const voter = ADDRESSES.voters[tokens === 400n ? 0 : tokens === 300n ? 1 : 3];
+      const location = event(`proposal:${i}:vote:${v}`, state === 'Active' ? T : snapshot + 120n,
+        n * 10n + BigInt(v) + 1n, 0n, { eventName: 'VoteCast', proposalId: p.proposalId, actor: voter });
+      return { proposalId: p.proposalId, voter, support, weight: String(tokens * UNIT),
+        reason: ['Fund this DAO activity.', 'Prefer a smaller budget.', 'Participating without a position.'][v], location };
+    });
     for (const v of votes) { const key = ['against', 'for', 'abstain'][v.support]; p.votes[key] = String(BigInt(p.votes[key]) + BigInt(v.weight)); }
-    votesById.set(p.proposalId, votes.sort((a, b) => descending(tuple(a), tuple(b))));
+    votesById.set(p.proposalId, votes);
     if (state === 'Queued' || state === 'Executed') {
       const eta = state === 'Executed' ? T - 300n - n : i === 5 ? T + 1n : i === 12 ? T : i % 2 === 0 ? T - n : T + n;
       const salt = hashText(`be01:synthetic:chosen-operation-salt:${p.proposalId}`);
       p.operation = { operationId: operationHash(p, ZERO, salt), queuedAt: String(eta - 120n), eta: String(eta), status: state === 'Executed' ? 'Done' : eta <= T ? 'Ready' : 'Waiting', predecessor: ZERO, salt };
       p.transactions.queued = txHash(`proposal:${i}:queued`);
-      if (state === 'Executed') p.transactions.executed = txHash(`proposal:${i}:executed`);
+      event(`proposal:${i}:queued`, eta - 120n, n * 10n + 4n, 0n,
+        { eventName: 'ProposalQueued', proposalId: p.proposalId, actor: p.proposer });
+      if (state === 'Executed') {
+        p.transactions.executed = txHash(`proposal:${i}:executed`);
+        event(`proposal:${i}:executed`, eta + 24n, n * 10n + 5n, 0n,
+          { eventName: 'ProposalExecuted', proposalId: p.proposalId, actor: p.proposer });
+        executionPositions.set(p.proposalId, { timestamp: eta + 24n, transactionIndex: n * 10n + 5n });
+      }
     }
-    if (state === 'Canceled') p.transactions.canceled = txHash(`proposal:${i}:canceled`);
+    if (state === 'Canceled') {
+      p.transactions.canceled = txHash(`proposal:${i}:canceled`);
+      event(`proposal:${i}:canceled`, T, n * 10n + 6n, 0n,
+        { eventName: 'ProposalCanceled', proposalId: p.proposalId, actor: p.proposer });
+    }
     proposals.push(p);
+  }
+  const transfers = [];
+  const transfer = (data, label, timestamp, txIndex, order = 0n, transactionHash = txHash(label)) => {
+    const location = event(label, timestamp, txIndex, order,
+      { eventName: 'Transfer', proposalId: data.proposalId, actor: null }, transactionHash);
+    transfers.push({ ...data, location });
+  };
+  for (let i = 0; i < 20; i++) transfer({ token: ADDRESSES.bud, from: ADDRESSES.funder, to: ADDRESSES.treasury,
+    amount: String(i === 0 ? 10000n * UNIT : 100n * UNIT + 125000000000000000n), direction: 'in', proposalId: null, requestId: null },
+  `funding:${i}`, T - 10000n + BigInt(i), 1000n + BigInt(i));
+  for (const p of proposals.filter(p => p.state === 'Executed')) {
+    const position = executionPositions.get(p.proposalId);
+    transfer({ token: ADDRESSES.bud, from: ADDRESSES.treasury, to: p.recipient, amount: p.amount, direction: 'out',
+      proposalId: p.proposalId, requestId: p.requestId }, `payout:${p.proposalId}`, position.timestamp, position.transactionIndex, 1n, p.transactions.executed);
+  }
+  transfer({ token: ADDRESSES.bud, from: ADDRESSES.funder, to: ADDRESSES.treasury, amount: '0', direction: 'in', proposalId: null, requestId: null }, 'zero-transfer', T - 10n, 3000n);
+  transfer({ token: ADDRESSES.bud, from: ADDRESSES.treasury, to: ADDRESSES.treasury, amount: String(UNIT / 2n), direction: 'self', proposalId: null, requestId: null }, 'self-transfer', T - 9n, 3001n);
+  const simulation = finalize();
+  // Flatten references only after all coordinates have been allocated globally.
+  for (const list of [...votesById.values(), transfers]) for (const row of list) {
+    Object.assign(row, row.location); delete row.location;
   }
   proposals.sort((a, b) => descending(proposalTuple(a), proposalTuple(b)));
   paged(proposals, '/api/proposals', { state: null, proposalId: null }, 'proposals-page', proposalTuple);
@@ -157,13 +235,9 @@ export function buildFixtures() {
   for (const p of proposals) {
     const file = `proposals/${p.proposalId}.json`;
     add(file, response(p)); route(file, `/api/proposals/${p.proposalId}`);
-    paged(votesById.get(p.proposalId), `/api/proposals/${p.proposalId}/votes`, {}, `votes/${p.proposalId}`, tuple);
+    const votes = votesById.get(p.proposalId).sort((a, b) => descending(tuple(a), tuple(b)));
+    paged(votes, `/api/proposals/${p.proposalId}/votes`, {}, `votes/${p.proposalId}`, tuple);
   }
-  const transfers = [];
-  for (let i = 0; i < 20; i++) transfers.push({ token: ADDRESSES.bud, from: ADDRESSES.funder, to: ADDRESSES.treasury, amount: String(i === 0 ? 10000n * UNIT : 100n * UNIT + 125000000000000000n), direction: 'in', proposalId: null, requestId: null, ...event(`funding:${i}`, 6000n + BigInt(i), 1000n + BigInt(i), 0n) });
-  for (const p of proposals.filter(p => p.state === 'Executed')) transfers.push({ token: ADDRESSES.bud, from: ADDRESSES.treasury, to: p.recipient, amount: p.amount, direction: 'out', proposalId: p.proposalId, requestId: p.requestId, ...event(`payout:${p.proposalId}`, H - (T - (BigInt(p.operation.eta) + 24n) + 11n) / 12n, 2000n + BigInt(transfers.length), 1n), transactionHash: p.transactions.executed });
-  transfers.push({ token: ADDRESSES.bud, from: ADDRESSES.funder, to: ADDRESSES.treasury, amount: '0', direction: 'in', proposalId: null, requestId: null, ...event('zero-transfer', 8990n, 3000n) });
-  transfers.push({ token: ADDRESSES.bud, from: ADDRESSES.treasury, to: ADDRESSES.treasury, amount: String(UNIT / 2n), direction: 'self', proposalId: null, requestId: null, ...event('self-transfer', 8991n, 3001n) });
   transfers.sort((a, b) => descending(tuple(a), tuple(b)));
   paged(transfers, '/api/treasury/transfers', { direction: null, proposalId: null }, 'transfers-page', tuple);
   for (const direction of ['in', 'out', 'self']) paged(transfers.filter(t => t.direction === direction), '/api/treasury/transfers', { direction, proposalId: null }, `transfers-direction-${direction}`, tuple);
@@ -199,11 +273,13 @@ export function buildFixtures() {
   const cursor = files.get('proposals-page-1.json').pagination.nextCursor;
   error('error-cursor-context-mismatch.json', 400, 'CURSOR_CONTEXT_MISMATCH', 'Cursor belongs to different filters or snapshot context.', { field: 'state', expected: null, received: 'Active' }, '/api/proposals', { state: 'Active', cursor }, 'cursor-filter-changed');
   error('error-snapshot-invalidated.json', 409, 'SNAPSHOT_INVALIDATED', 'The cursor snapshot was invalidated by reorg or rebuild; restart pagination.', { restart: true }, '/api/proposals', { cursor }, 'snapshot-reorg-or-rebuild');
+  add('simulation.json', { schemaVersion: 1, kind: 'synthetic-be01-timeline-not-chain-evidence',
+    context: structuredClone(context), ...simulation });
   add('manifest.json', {
     schemaVersion: 1, kind: 'synthetic-be01-not-chain-evidence', generator: 'node scripts/generate_be01_fixtures.mjs',
     context: structuredClone(context), sc01ProposalId: sc01.proposalId,
     notes: ['All addresses, block/transaction hashes, timestamps, votes and operations are synthetic; no deployment, receipt or RPC was used.', 'Fixture cursors are unsigned base64url JSON for deterministic frontend mocks; a real server must authenticate cursors and validate snapshot availability.', 'States, description v1, requestId strategy and API contracts remain proposed for team review.'],
-    routes,
+    metadataFiles: ['simulation.json'], routes,
   });
   return files;
 }

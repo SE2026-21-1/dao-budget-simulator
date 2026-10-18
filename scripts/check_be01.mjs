@@ -5,12 +5,11 @@ import path from 'node:path';
 import {
   ROOT, FIXTURE_DIR, UINT256_MAX, UNIT, STATES, ADDRESSES, H, T, context,
   keccak256, hashText, proposalHash, operationHash, calldata, tuple,
-  proposalTuple, descending, buildFixtures, serialize,
+  proposalTuple, descending,
 } from './generate_be01_fixtures.mjs';
 
-let assertions = 0;
-const check = (condition, message) => { assertions++; assert.ok(condition, message); };
-const eq = (actual, expected, message) => { assertions++; assert.deepEqual(actual, expected, message); };
+const check = (condition, message) => assert.ok(condition, message);
+const eq = (actual, expected, message) => assert.deepEqual(actual, expected, message);
 const uint = (value, label) => {
   check(typeof value === 'string' && /^(0|[1-9][0-9]*)$/.test(value), `${label}: canonical decimal string`);
   const n = BigInt(value); check(n <= UINT256_MAX, `${label}: uint256 domain`); return n;
@@ -21,9 +20,166 @@ const keys = (object, expected, label) => eq(Object.keys(object).sort(), [...exp
 const enumerate = (dir, prefix = '') => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? enumerate(path.join(dir, entry.name), `${prefix}${entry.name}/`) : entry.name.endsWith('.json') ? [`${prefix}${entry.name}`] : []);
 const jsonFiles = enumerate(FIXTURE_DIR).sort();
 const files = new Map(jsonFiles.map(file => [file, JSON.parse(readFileSync(path.join(FIXTURE_DIR, file), 'utf8'))]));
-const expected = buildFixtures();
-eq(jsonFiles, [...expected.keys()].sort(), 'No missing, stale or untracked JSON fixtures');
-for (const [file, body] of expected) eq(readFileSync(path.join(FIXTURE_DIR, file), 'utf8'), serialize(body), `${file}: deterministic generation is current`);
+// Validate persisted JSON rather than treating regenerated output as the oracle.
+export function validateTimeline(saved) {
+  const fail = (condition, code) => assert.ok(condition, code);
+  const same = (actual, expected, code) => assert.deepEqual(actual, expected, code);
+  const integer = value => {
+    fail(typeof value === 'string' && /^(0|[1-9][0-9]*)$/.test(value), 'TIMELINE_INTEGER');
+    return BigInt(value);
+  };
+  const simulation = saved.get('simulation.json');
+  same(simulation.kind, 'synthetic-be01-timeline-not-chain-evidence', 'SIMULATION_KIND');
+  const c = saved.get('manifest.json').context;
+  same(simulation.context, c, 'SIMULATION_CONTEXT');
+  const h = integer(c.asOfBlock);
+  const blocks = new Map(); const hashes = new Set();
+  let previousBlock = -1n; let previousTime = -1n;
+  for (const b of simulation.blocks) {
+    const number = integer(b.blockNumber); const time = integer(b.timestamp);
+    fail(number > previousBlock && time > previousTime, 'BLOCK_TIMESTAMP_ORDER');
+    fail(number <= h && !blocks.has(b.blockNumber) && !hashes.has(b.blockHash), 'BLOCK_IDENTITY');
+    fail(/^0x[0-9a-f]{64}$/.test(b.blockHash), 'BLOCK_HASH');
+    blocks.set(b.blockNumber, b); hashes.add(b.blockHash);
+    previousBlock = number; previousTime = time;
+  }
+  same(blocks.get(c.asOfBlock)?.blockHash, c.asOfBlockHash, 'H_HASH');
+  same(blocks.get(c.asOfBlock)?.timestamp, c.asOfTimestamp, 'H_TIMESTAMP');
+  const at = e => {
+    const b = blocks.get(e.blockNumber);
+    fail(b && b.blockHash === e.blockHash, 'EVENT_BLOCK_IDENTITY');
+    return integer(b.timestamp);
+  };
+  const physical = e => `${c.chainId}:${e.blockHash}:${e.logIndex}`;
+  const sources = new Map(); const sourceIds = new Set(); const rawKeys = new Set();
+  const transactionAt = new Map(); const positionOf = new Map(); const emissions = new Set();
+  const semantic = new Map();
+  for (const e of simulation.sourceLogs) {
+    at(e); integer(e.logIndex); integer(e.transactionIndex); integer(e.emissionOrder);
+    fail(typeof e.sourceId === 'string' && !sourceIds.has(e.sourceId), 'SOURCE_ID_DUPLICATE');
+    sourceIds.add(e.sourceId);
+    fail(!sources.has(physical(e)), 'LOG_POSITION_COLLISION');
+    sources.set(physical(e), e);
+    const rawKey = `${c.chainId}:${e.transactionHash}:${e.logIndex}`;
+    fail(!rawKeys.has(rawKey), 'RAW_LOG_DUPLICATE'); rawKeys.add(rawKey);
+    fail(/^0x[0-9a-f]{64}$/.test(e.transactionHash), 'TRANSACTION_HASH');
+    const position = `${e.blockHash}:${e.transactionIndex}`;
+    if (transactionAt.has(position)) same(transactionAt.get(position), e.transactionHash, 'TRANSACTION_AT_POSITION');
+    if (positionOf.has(e.transactionHash)) same(positionOf.get(e.transactionHash), position, 'TRANSACTION_POSITION');
+    transactionAt.set(position, e.transactionHash); positionOf.set(e.transactionHash, position);
+    const emission = `${e.transactionHash}:${e.emissionOrder}`;
+    fail(!emissions.has(emission), 'EMISSION_ORDER_DUPLICATE'); emissions.add(emission);
+    const key = `${e.eventName}:${e.proposalId}`;
+    if (!semantic.has(key)) semantic.set(key, []);
+    semantic.get(key).push(e);
+  }
+  const compare = (a, b, fields) => {
+    for (const key of fields) {
+      const x = integer(a[key]); const y = integer(b[key]);
+      if (x !== y) return x < y ? -1 : 1;
+    }
+    return 0;
+  };
+  const ordered = [...simulation.sourceLogs].sort((a, b) => compare(a, b, ['blockNumber', 'transactionIndex', 'emissionOrder']));
+  for (let i = 1; i < ordered.length; i++) {
+    const a = ordered[i - 1]; const b = ordered[i];
+    if (a.blockHash === b.blockHash) fail(integer(a.logIndex) < integer(b.logIndex), 'LOG_TRANSACTION_ORDER');
+  }
+  const used = new Set();
+  const source = (projection, eventName, proposalId, actor = undefined) => {
+    const e = sources.get(physical(projection));
+    fail(e && e.eventName === eventName && e.proposalId === proposalId, 'PROJECTION_SOURCE');
+    for (const key of ['blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'logIndex']) {
+      same(projection[key], e[key], 'PROJECTION_COORDINATE');
+    }
+    if (actor !== undefined) same(e.actor, actor, 'SOURCE_ACTOR');
+    fail(!used.has(e.sourceId), 'SOURCE_REFERENCED_TWICE'); used.add(e.sourceId);
+    return e;
+  };
+  const before = (a, b) => compare(a, b, ['blockNumber', 'transactionIndex', 'logIndex']) < 0;
+  const proposals = [...saved].filter(([file]) => /^proposals\/[0-9]+\.json$/.test(file)).map(([, body]) => body.data);
+  for (const p of proposals) {
+    const created = source(p.created, 'ProposalCreated', p.proposalId, p.proposer);
+    const snapshot = integer(p.snapshot); const deadline = integer(p.deadline);
+    same(snapshot, at(created) + 60n, 'SNAPSHOT_TIMESTAMP_MISMATCH');
+    same(deadline, snapshot + 300n, 'DEADLINE_TIMESTAMP_MISMATCH');
+    const votes = saved.get(`votes/${p.proposalId}.json`).data;
+    const sums = { against: 0n, for: 0n, abstain: 0n };
+    for (const v of votes) {
+      const log = source(v, 'VoteCast', p.proposalId, v.voter);
+      fail(snapshot < at(log) && at(log) <= deadline, 'VOTE_OUTSIDE_WINDOW');
+      fail(before(created, log), 'VOTE_BEFORE_CREATE');
+      fail([0, 1, 2].includes(v.support), 'VOTE_SUPPORT');
+      sums[['against', 'for', 'abstain'][v.support]] += integer(v.weight);
+    }
+    const lifecycle = {};
+    for (const [field, eventName] of [['queued', 'ProposalQueued'], ['executed', 'ProposalExecuted'], ['canceled', 'ProposalCanceled']]) {
+      const found = semantic.get(`${eventName}:${p.proposalId}`) ?? [];
+      same(found.length, p.transactions[field] === null ? 0 : 1, 'LIFECYCLE_EVENT_COUNT');
+      if (found.length) {
+        const log = found[0]; used.add(log.sourceId); lifecycle[field] = log;
+        same(log.transactionHash, p.transactions[field], 'LIFECYCLE_TRANSACTION');
+        fail(before(created, log), 'LIFECYCLE_BEFORE_CREATE');
+      }
+    }
+    if (lifecycle.queued) {
+      fail(p.operation !== null && !lifecycle.canceled, 'QUEUE_OPERATION');
+      same(integer(p.operation.queuedAt), at(lifecycle.queued), 'QUEUE_BLOCK_TIMESTAMP');
+      fail(at(lifecycle.queued) > deadline, 'QUEUE_BEFORE_DEADLINE');
+      const g = saved.get('summary.json').data.governance;
+      const quorum = integer(g.totalSupply) * integer(g.quorumNumerator) / integer(g.quorumDenominator);
+      fail(sums.for + sums.abstain >= quorum && sums.for > sums.against, 'QUEUE_UNSUCCESSFUL_PROPOSAL');
+      same(integer(p.operation.eta), at(lifecycle.queued) + 120n, 'ETA_TIMESTAMP');
+    } else same(p.operation, null, 'OPERATION_WITHOUT_QUEUE');
+    if (lifecycle.executed) {
+      fail(Boolean(lifecycle.queued) && !lifecycle.canceled, 'EXECUTE_WITHOUT_QUEUE');
+      fail(at(lifecycle.executed) >= integer(p.operation.eta), 'EXECUTE_BEFORE_ETA');
+      fail(before(lifecycle.queued, lifecycle.executed), 'EXECUTE_BEFORE_QUEUE');
+    }
+    if (lifecycle.canceled) {
+      same(lifecycle.canceled.actor, p.proposer, 'CANCEL_NOT_CREATOR');
+      fail(at(lifecycle.canceled) <= snapshot, 'CANCEL_NOT_PENDING');
+      fail(!lifecycle.queued && !lifecycle.executed && votes.length === 0, 'CANCEL_LIFECYCLE');
+    }
+  }
+  const transfers = [1, 2].flatMap(page => saved.get(`transfers-page-${page}.json`).data);
+  for (const t of transfers) {
+    const e = source(t, 'Transfer', t.proposalId);
+    if (t.direction === 'out') {
+      const executed = semantic.get(`ProposalExecuted:${t.proposalId}`) ?? [];
+      same(executed.length, 1, 'PAYOUT_WITHOUT_EXECUTE');
+      same(e.transactionHash, executed[0].transactionHash, 'PAYOUT_EXECUTE_TRANSACTION');
+      same(e.blockHash, executed[0].blockHash, 'PAYOUT_EXECUTE_BLOCK');
+    }
+  }
+  same(used.size, simulation.sourceLogs.length, 'UNREFERENCED_SOURCE_LOG');
+  return { blocks: blocks.size, sourceLogs: sources.size };
+}
+
+const timelineResult = validateTimeline(files);
+// Deliberate faults exercise the JSON validator itself on in-memory copies.
+const collision = structuredClone(files);
+const logs = collision.get('simulation.json').sourceLogs;
+const first = logs.find(a => logs.some(b => a !== b && a.blockHash === b.blockHash && a.transactionHash !== b.transactionHash));
+const second = logs.find(b => b.blockHash === first.blockHash && b.transactionHash !== first.transactionHash);
+second.logIndex = first.logIndex;
+assert.throws(() => validateTimeline(collision), /LOG_POSITION_COLLISION/, 'Regression: two source logs at one block/log position');
+const shifted = structuredClone(files);
+const shiftedProposal = [...shifted].find(([file]) => /^proposals\/[0-9]+\.json$/.test(file))[1].data;
+shiftedProposal.snapshot = String(BigInt(shiftedProposal.snapshot) + 1n);
+assert.throws(() => validateTimeline(shifted), /SNAPSHOT_TIMESTAMP_MISMATCH/, 'Regression: snapshot differs from creation block time +60');
+const reversed = structuredClone(files);
+const orderLogs = reversed.get('simulation.json').sourceLogs;
+const earlier = orderLogs.find(a => orderLogs.some(b => a.blockHash === b.blockHash && BigInt(a.transactionIndex) < BigInt(b.transactionIndex)));
+const later = orderLogs.find(b => earlier.blockHash === b.blockHash && BigInt(earlier.transactionIndex) < BigInt(b.transactionIndex));
+[earlier.logIndex, later.logIndex] = [later.logIndex, earlier.logIndex];
+assert.throws(() => validateTimeline(reversed), /LOG_TRANSACTION_ORDER/, 'Regression: unique log positions in the wrong transaction order');
+const reversedEmission = structuredClone(files);
+const txLogs = reversedEmission.get('simulation.json').sourceLogs;
+const emittedFirst = txLogs.find(a => txLogs.some(b => a !== b && a.transactionHash === b.transactionHash));
+const emittedNext = txLogs.find(b => b !== emittedFirst && b.transactionHash === emittedFirst.transactionHash);
+[emittedFirst.logIndex, emittedNext.logIndex] = [emittedNext.logIndex, emittedFirst.logIndex];
+assert.throws(() => validateTimeline(reversedEmission), /LOG_TRANSACTION_ORDER/, 'Regression: log emission order inside one transaction');
 
 // Published Ethereum Keccak vectors + immutable SC01 serve as independent anchors.
 eq(keccak256(Buffer.alloc(0)), '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470', 'Keccak empty vector');
@@ -48,7 +204,7 @@ function numericTypes(value, label = '') {
 function validateContext(c, file) {
   keys(c, ['chainId', 'deploymentId', 'snapshotRevision', 'asOfBlock', 'asOfBlockHash', 'asOfTimestamp', 'dataKind', 'sync'], `${file} context`);
   eq(c.chainId, '31337', `${file} chain scope`); eq(c.deploymentId, 'synthetic-local-v1', `${file} deployment scope`);
-  eq(c.snapshotRevision, 'fixture-v1', `${file} revision`); eq(c.dataKind, 'synthetic', `${file} synthetic label`);
+  eq(c.snapshotRevision, 'fixture-v2', `${file} revision`); eq(c.dataKind, 'synthetic', `${file} synthetic label`);
   keys(c.sync, ['status', 'headBlock', 'confirmedBlock', 'indexedBlock', 'lagBlocks', 'lagSeconds', 'confirmations', 'lastIndexedAt'], `${file} sync`);
   uint(c.sync.confirmations, 'confirmations');
   for (const field of ['headBlock', 'confirmedBlock', 'indexedBlock', 'lagBlocks', 'lagSeconds']) if (c.sync[field] !== null) uint(c.sync[field], field);
@@ -73,7 +229,7 @@ function eventFields(e) {
 for (const [file, body] of files) {
   numericTypes(body, file);
   validateContext(body.context, file);
-  if (file === 'manifest.json') continue;
+  if (file === 'manifest.json' || file === 'simulation.json') continue;
   if (body.error) {
     keys(body, ['context', 'error'], `${file} error envelope`);
     keys(body.error, ['code', 'message', 'details', 'retryable'], `${file} error`);
@@ -170,20 +326,10 @@ check(proposals.some(p => p.operation?.status === 'Waiting' && BigInt(p.operatio
 check(proposals.some(p => p.operation?.status === 'Ready' && BigInt(p.operation.eta) === T), 'ETA Ready');
 
 const transfers = [1, 2].flatMap(n => files.get(`transfers-page-${n}.json`).data);
-const seenLogs = new Set(); const transactionAtPosition = new Map(); const positionOfTransaction = new Map();
-function uniqueLog(e) {
-  const key = `${context.chainId}:${e.transactionHash}:${e.logIndex}`;
-  check(!seenLogs.has(key), 'Unique chainId+txHash+logIndex across source logs'); seenLogs.add(key);
-  const position = `${e.blockNumber}:${e.transactionIndex}`;
-  if (transactionAtPosition.has(position)) eq(transactionAtPosition.get(position), e.transactionHash, 'One transaction hash per block/index');
-  if (positionOfTransaction.has(e.transactionHash)) eq(positionOfTransaction.get(e.transactionHash), position, 'Transaction has one canonical block/index');
-  transactionAtPosition.set(position, e.transactionHash); positionOfTransaction.set(e.transactionHash, position);
-}
-for (const p of proposals) { uniqueLog(p.created); for (const v of files.get(`votes/${p.proposalId}.json`).data) uniqueLog(v); }
 const paidRequests = new Set(); let totalIn = 0n; let totalOut = 0n;
 for (const t of transfers) {
   keys(t, ['token', 'from', 'to', 'amount', 'direction', 'proposalId', 'requestId', 'blockNumber', 'blockHash', 'transactionHash', 'transactionIndex', 'logIndex'], 'Transfer');
-  eq(t.token, ADDRESSES.bud); address(t.from, 'from'); address(t.to, 'to'); eventFields(t); uniqueLog(t);
+  eq(t.token, ADDRESSES.bud); address(t.from, 'from'); address(t.to, 'to'); eventFields(t);
   const amount = uint(t.amount, 'Transfer amount');
   const direction = t.from === ADDRESSES.treasury && t.to === ADDRESSES.treasury ? 'self' : t.from === ADDRESSES.treasury ? 'out' : t.to === ADDRESSES.treasury ? 'in' : null;
   eq(t.direction, direction, 'Treasury direction'); check(direction !== null, 'Transfer concerns Treasury');
@@ -221,7 +367,8 @@ for (const route of manifest.routes) {
   if (!groupedPages.has(group)) groupedPages.set(group, []);
   groupedPages.get(group).push({ route, body, filters: normalized });
 }
-eq([...represented].sort(), jsonFiles.filter(file => file !== 'manifest.json'), 'Every JSON response mapped to exact request/status/scenario');
+eq(manifest.metadataFiles, ['simulation.json'], 'Only explicit offline metadata files are excluded from routes');
+eq([...represented].sort(), jsonFiles.filter(file => file !== 'manifest.json' && !manifest.metadataFiles.includes(file)), 'Every JSON response mapped to exact request/status/scenario');
 for (const group of groupedPages.values()) {
   const { route: first, filters } = group[0];
   let all;
@@ -249,5 +396,7 @@ for (const file of ['error-invalid-proposal-id.json', 'error-not-found.json', 'e
 eq(files.get('health-synced.json').data, { status: 'ok', database: 'up', indexer: 'synced' });
 eq(files.get('health-lagging.json').data.status, 'degraded'); check(BigInt(files.get('health-lagging.json').context.sync.lagSeconds) > 30n, 'Lagging UI sample exceeds NFR03');
 eq(files.get('health-not-ready.json').data.status, 'unavailable');
-console.log(`BE01 OK: ${jsonFiles.length} JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent (${assertions} assertions).`);
+console.log(`BE01 OK: ${jsonFiles.length} JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.`);
+console.log(`Timeline OK: ${timelineResult.blocks} timestamp-ordered blocks, ${timelineResult.sourceLogs} distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.`);
+console.log('Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.');
 console.log('Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.');

@@ -29,7 +29,7 @@ cast --version
 anvil --version
 forge build
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 forge fmt --check
 ```
 
@@ -52,3 +52,23 @@ Cấu hình `osaka` chỉ được xác minh bằng thực thi EVM local; cần 
 của testnet trước khi deploy. Không commit private key hoặc RPC secret:
 `.env`, `.env.*`, `out/`, `cache/` và `broadcast/` được bỏ qua; `.env.example`
 được phép đưa vào Git.
+
+## Kiểm tra tự động — TV4
+
+Sau khi cài dependency, chạy cùng một bộ lệnh với GitHub Actions:
+
+```bash
+bash scripts/ci.sh
+```
+
+CI dùng Foundry 1.8.5, Python 3.12 và profile `ci` (256 fuzz runs;
+100 invariant runs × 50 thao tác khi có invariant suite). Workflow chạy khi
+push vào `main`, `Dev`, `feature/**` hoặc khi mở/cập nhật PR. Xem tab Actions,
+workflow **TV4 CI**; log và commit SHA được lưu trong artifact 14 ngày.
+Lần đầu cần mạng để tải công cụ, submodule và compiler; không cần RPC/private key.
+
+CI xanh hiện chỉ xác nhận build, format, test ABI và fixture hiện có.
+Chưa có contract triển khai nên chưa nghiệm thu bảo mật, deploy hoặc E2E.
+Xem [checklist và kế hoạch TV4](docs/tv4-checklist.md) để tiếp tục.
+Sau khi tích hợp frontend/indexer, cần bổ sung job typecheck và indexer tests
+trước khi đánh dấu NFR07 hoàn tất.

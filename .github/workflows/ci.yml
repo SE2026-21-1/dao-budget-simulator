@@ -1,0 +1,57 @@
+name: TV4 CI
+
+on:
+  push:
+    branches: [main, Dev, 'feature/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tv4-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Foundry and SC01 compatibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - name: Checkout with pinned submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - name: Build, format, tests and ABI fixture
+        shell: bash
+        run: |
+          mkdir -p reports
+          bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Record scope of checks
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          git submodule status > reports/submodules.txt
+          echo 'CI checks available suites only; see docs/tv4-checklist.md for outstanding acceptance requirements.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload check evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv4-checks-${{ github.sha }}
+          path: reports/
+          retention-days: 14

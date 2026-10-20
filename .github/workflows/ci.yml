@@ -55,3 +55,41 @@ jobs:
           name: tv4-checks-${{ github.sha }}
           path: reports/
           retention-days: 14
+
+  be01:
+    name: BE01 fixtures and PostgreSQL constraints
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout BE01 schema and fixtures
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.15.0'
+      - name: Check offline API fixtures
+        shell: bash
+        run: |
+          mkdir -p reports
+          node scripts/check_be01.mjs 2>&1 | tee reports/be01-fixtures.log
+      - name: Check migration and constraints in isolated PostgreSQL
+        shell: bash
+        run: |
+          bash scripts/check_be01_database.sh 2>&1 | tee reports/be01-database.log
+      - name: Record BE01 scope and versions
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          node --version > reports/node-version.txt
+          echo 'BE01 checks synthetic fixtures and SQL constraints only, not RPC/indexer/API/reorg/rebuild behavior.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload BE01 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tv4-be01-${{ github.sha }}
+          path: reports/
+          retention-days: 14

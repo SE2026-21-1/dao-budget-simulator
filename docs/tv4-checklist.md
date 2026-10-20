@@ -11,12 +11,39 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 - [x] Có test tương thích calldata/event ABI và fixture SC01 tổng hợp.
 - [x] Có lệnh `bash scripts/ci.sh` dùng chung giữa local và CI.
 - [x] Có workflow build, format, test và kiểm tra fixture; lưu log/commit.
-- [ ] Có GitHub Actions run thành công cho commit thiết lập này (đính kèm URL run).
+- [x] Foundry CI baseline thành công tại commit `0344fdb`: [run 39454309744](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39454309744). Đây chưa phải bằng chứng job BE01 mới.
 - [ ] Chạy lại từ clone sạch trên máy thành viên khác.
 
 Các mục đã đánh dấu là thành phần đã được thiết lập, không phải bằng chứng
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
 Hiện chưa có Treasury/Governor/Timelock triển khai trong nhánh TV4.
+
+## Tiến độ tích hợp ngày 20/10/2026
+
+- QA01: xử lý conflict với `Dev`, giữ tài liệu SC01/BE01; bỏ checker/selector test
+  cũ bị phục hồi trùng. CI thêm Node 24.15.0 và PostgreSQL 18.4 cô lập.
+  [Issue #6](https://github.com/SE2026-21-1/dao-budget-simulator/issues/6)
+  giữ các mục review/clone sạch chưa hoàn tất.
+- QA04: [test matrix](test-plan.md) ánh xạ FR/BR/NFR/TC/INV, owner, setup/reset,
+  kỳ vọng và blocker; [issue #7](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7).
+  Ma trận không phải kết quả nghiệm thu các test còn thiếu.
+- QA03 (phần token): [review SC02](sc02-review.md), 24 token tests và smoke deploy
+  Anvil đã đạt; [evidence token-only](evidence/sc02-local-smoke.json).
+  [TV1 bàn giao PR ở #8](https://github.com/SE2026-21-1/dao-budget-simulator/issues/8).
+  Chưa có full role checker hoặc kiểm thử chi tiền qua Governor/Treasury.
+- TV3 nhận [issue #9](https://github.com/SE2026-21-1/dao-budget-simulator/issues/9)
+  dùng fixture BE01 chung; chưa coi giao diện mock là E2E.
+
+Kiểm tra local sau tích hợp: `FOUNDRY_PROFILE=ci bash scripts/ci.sh` đạt 2 tests
+(256 fuzz runs) và ABI/fixture SC01; `node scripts/check_be01.mjs` đạt 123 JSON,
+45 proposal, trang 20/20/5, timeline và regression. SC02 chạy ở detached
+commit `9a890a2`, chưa merge token vào TV4.
+Máy local không có quyền Docker và sudo yêu cầu mật khẩu, nên không có bằng chứng
+SQL local từ runner Bash mới. Kết quả job PostgreSQL thực tế phải xem run/check
+của [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5), artifact
+`tv4-be01-<SHA>` và thông báo evidence trên PR; không suy ra pass từ YAML hoặc
+fixture JSON. PostgreSQL Windows do TV2 báo cáo trước đó được giữ riêng tại
+`be01-checklist.md`.
 
 ## Thứ tự thực hiện
 

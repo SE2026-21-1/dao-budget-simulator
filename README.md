@@ -1,4 +1,8 @@
-# dao-budget-simulator
+# DAO Budget Simulator
+
+Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
+Chỉ dùng local/testnet, không dùng tiền thật. Nhánh tích hợp hiện có nền tảng SC01
+và thiết kế/fixture BE01; chưa chạy được demo end-to-end.
 
 ## Môi trường Foundry — TV4 Operation
 
@@ -55,20 +59,80 @@ của testnet trước khi deploy. Không commit private key hoặc RPC secret:
 
 ## Kiểm tra tự động — TV4
 
-Sau khi cài dependency, chạy cùng một bộ lệnh với GitHub Actions:
+Sau khi cài dependency, chạy các kiểm tra Foundry như job contracts:
 
 ```bash
-bash scripts/ci.sh
+FOUNDRY_PROFILE=ci bash scripts/ci.sh
 ```
 
-CI dùng Foundry 1.8.5, Python 3.12 và profile `ci` (256 fuzz runs;
-100 invariant runs × 50 thao tác khi có invariant suite). Workflow chạy khi
-push vào `main`, `Dev`, `feature/**` hoặc khi mở/cập nhật PR. Xem tab Actions,
-workflow **TV4 CI**; log và commit SHA được lưu trong artifact 14 ngày.
-Lần đầu cần mạng để tải công cụ, submodule và compiler; không cần RPC/private key.
+Job contracts dùng Foundry 1.8.5, Python 3.12 và profile `ci` (256 fuzz runs;
+100 invariant runs × 50 thao tác khi có invariant suite). Job BE01 dùng
+Node.js 24.15.0 kiểm tra fixture và container PostgreSQL 18.4 kiểm tra SQL.
+Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
+Xem Actions → **TV4 CI**; mỗi job lưu log và commit SHA trong artifact 14 ngày.
+Lần đầu cần mạng để tải công cụ, submodule, compiler và image PostgreSQL;
+không cần RPC/private key. Chạy fixture/SQL local theo các lệnh BE01 bên dưới.
 
-CI xanh hiện chỉ xác nhận build, format, test ABI và fixture hiện có.
-Chưa có contract triển khai nên chưa nghiệm thu bảo mật, deploy hoặc E2E.
+CI kiểm tra build, format, ABI/fixture tổng hợp và ràng buộc SQL hiện có,
+không chứng minh indexer/API thật, resume/reorg/rebuild hoặc bảo mật giải ngân.
+Nhánh tích hợp chưa có Treasury/Governor/Timelock đầy đủ để nghiệm thu E2E.
 Xem [checklist và kế hoạch TV4](docs/tv4-checklist.md) để tiếp tục.
 Sau khi tích hợp frontend/indexer, cần bổ sung job typecheck và indexer tests
 trước khi đánh dấu NFR07 hoàn tất.
+
+## Tài liệu và chuẩn tích hợp
+
+- [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
+- [Phân công TV1](docs/requirements/TV1_Cong_viec_Smart_Contracts.md)
+- [Giao tiếp contract và quyết định chờ review](docs/contracts.md)
+- [ABI interface Treasury](shared/abi/ITreasury.json)
+- [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)
+- [Phân công TV4](docs/TV4_Cong_viec_Testing_Deployment.md)
+- [Test matrix và trạng thái nghiệm thu](docs/test-plan.md)
+- [Review token SC02 và smoke local](docs/sc02-review.md)
+
+Fixture SC01 không phải receipt hoặc bằng chứng deployment. Receipt/log thật thuộc SC06.
+TV1 phụ trách contract/unit test; TV2 indexer/API; TV3 dashboard/ví;
+TV4 deploy/seed/check-roles, CI và attack/invariant/E2E. Mỗi PR cần người khác review.
+Không đưa private key hoặc RPC secret vào fixture, tài liệu hay Git.
+
+## BE01 — database, API dự kiến và dữ liệu mẫu
+
+TV3 có thể dùng [fixture API tổng hợp](fixtures/api/README.md) để dựng giao diện
+trước khi có API server. Đọc [đặc tả API](docs/api.md),
+[thiết kế PostgreSQL](docs/database.md) và [checklist bàn giao](docs/be01-checklist.md).
+BE01 chưa triển khai indexer, HTTP server hoặc xử lý reorg thực tế.
+
+Kiểm tra fixture với Node.js (CI pin 24.15.0; chỉ dùng thư viện chuẩn):
+
+```powershell
+node scripts/check_be01.mjs
+```
+
+Checker đọc trực tiếp JSON và tự chạy regression cho logIndex toàn block,
+snapshot theo timestamp block tạo và thứ tự phát log. Metadata offline nằm ở
+`fixtures/api/simulation.json`; vẫn có 45 proposal, trang 20/20/5. Dữ liệu mới
+dùng revision `fixture-v2`; bỏ cursor v1. Hướng dẫn kiểm tra sinh lại xác định
+và các giới hạn đối chiếu hash nằm trong README fixture.
+
+Trên Linux/macOS có Docker, chạy cùng runner SQL với CI:
+
+```bash
+bash scripts/check_be01_database.sh
+```
+
+Runner tạo container PostgreSQL 18.4 mới, không có mạng hoặc port công khai,
+mount SQL read-only, chạy migration rồi constraints với `ON_ERROR_STOP`,
+và xóa đúng container/anonymous volume do nó tạo kể cả khi kiểm tra lỗi.
+Log in ra terminal (CI lưu artifact). Cần quyền truy cập Docker daemon;
+không đổi permission socket hoặc dùng database đang chạy để vượt lỗi môi trường.
+
+Kiểm tra migration và ràng buộc bằng cụm PostgreSQL tạm độc lập trên Windows:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be01_database.ps1 -PostgresBin "C:\Program Files\PostgreSQL\18\bin"
+```
+
+Script tạo cụm mới trong thư mục tạm, tự dừng sau kiểm tra và giữ log để xem lại;
+không kết nối hoặc xóa database đang có. Cách chạy SQL trên hệ điều hành khác
+nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.

@@ -1,0 +1,260 @@
+# TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
+
+Ngày đối chiếu: 20/10/2026. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md) (đã đọc toàn bộ), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md), [SC01](contracts.md), [BE01 database](database.md), [BE01 API](api.md). Đây là **kế hoạch nghiệm thu**, không phải báo cáo toàn hệ thống đã đạt.
+
+TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
+
+## 1. Ranh giới bằng chứng hiện tại
+
+| Mã bằng chứng | Nguồn thực sự / điều đã quan sát | Không được suy ra |
+|---|---|---|
+| E-SC01-H | [sc01-validation.md](sc01-validation.md): báo cáo 14/10, build, selector test và ABI/fixture đạt bằng dependency/compiler có sẵn; không phải clone sạch. Tên test/checker cũ trong báo cáo là lịch sử; đường hiện hành là `tests/unit/OperationAbiCompatibility.t.sol`, `scripts/check.py`. | Không chứng minh Treasury, Governor, Timelock, role hoặc giải ngân. |
+| E-SC01-C | TV4 đã chạy đợt tích hợp: `FOUNDRY_PROFILE=ci bash scripts/ci.sh` đạt 2 ABI compatibility tests (fuzz 256) và checker SC01. Chỉ phạm vi ABI/calldata/event topic/fixture. SHA và run của bản bàn giao được ghi trên [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5). | Không đánh dấu TC01 hoặc NFR07 toàn hệ thống đạt. |
+| E-BE01-H | [be01-checklist.md](be01-checklist.md), [fixture README](../fixtures/api/README.md): nguồn TV2 báo cáo PostgreSQL 18.4 migration/constraint đạt ở lần BE01 trước; fixture 123 JSON, 45 proposal, 20/20/5, timeline/regression. Log PostgreSQL nguồn ở đường TEMP ngoài repo trong checklist, không phải artifact CI hiện tại. | SQL constraints không phải resume/reorg/rebuild worker. Hash giao dịch trong fixture đều tổng hợp. |
+| E-BE01-C | TV4 đã chạy `node scripts/check_be01.mjs`: 123 JSON, 45 proposal, 20/20/5, timeline và regression đạt. Checker **offline**, không RPC, không HTTP server, không indexer. Node local 22.23.3 chỉ là smoke bổ sung; chuẩn BE01/CI pin 24.15.0. | Không chứng minh FR13–FR16 runtime, p95, freshness hay migration trên máy hiện tại. |
+| E-SC02-H | Nguồn `docs/sc02-tokens.md` tại commit SC02 `9a890a2084f10876e580d24589fa6cb0829c11f3` (worktree review riêng): tác giả báo 24 token tests (GOV15/BUD9), ba fuzz ×256; toàn suite nguồn 25 kể cả selector SC01. Đây là **source-reported**, không tự coi là TV4 đã chạy. | Không lấy số 25 làm kết quả suite tích hợp TV4. SC02 chưa nằm trong checkout TV4. |
+| E-SC02-C | TV4 kiểm chứng độc lập: [sc02-review.md](sc02-review.md), [sc02-local-smoke.json](evidence/sc02-local-smoke.json). Detached SHA trên: 24 token tests đạt, seed `0x20261020`, ba fuzz ×256; Anvil token-only deploy/receipt, supply/allocation/clock, delegation, historical lookup, transferFrom, undelegation và BUD transfer đạt. | BUD được chuyển tới **EOA nhận thử**, không phải Treasury. Chưa kiểm TC05 qua Governor, quorum hay INV04 toàn hệ thống. |
+
+Chưa có triển khai Treasury/Governor/Timelock thực, deploy toàn hệ thống, indexer/API chạy thật hoặc E2E ví→chain→API. UI TV3 hiện dùng mock riêng, wallet disabled, form tạo còn placeholder; không coi là đã dùng fixture BE01 hoặc thao tác on-chain. CI PostgreSQL 18.4 dự kiến chạy cô lập bằng Docker: local hiện bị chặn quyền socket Docker và sudo cần mật khẩu; **chưa có kết quả CI PostgreSQL hiện tại**, phải quan sát run thật sau push. Không có receipt testnet governance, attack trace, invariant run hoặc benchmark runtime để nghiệm thu.
+
+Quy ước trạng thái: **CHƯA CHẠY/BỊ CHẶN** = chưa có runtime/evidence đủ cho acceptance; **BẰNG CHỨNG CỤC BỘ** chỉ mô tả phạm vi đã đo, không nâng TC/FR/NFR thành PASS. Tất cả đường `tests/attacks/`, `tests/invariant/`, `tests/e2e/` và evidence TC/INV bên dưới đều **dự kiến, chưa tồn tại**; không phải test stub hay implementation. Lệnh chạy dự kiến chỉ sử dụng sau khi test và dependency thật được tích hợp.
+
+## 2. Fixture độc lập, clock, reset và cấu hình
+
+### F0 — khởi đầu chuẩn cho mỗi ca/biến thể
+
+- Local chain riêng `chainId=31337`; `U=10^18`; mọi lượng bên dưới tính token, encode bằng số nguyên ×U. Không dùng Number/float cho tiền hoặc uint256.
+- Account định danh local xác định: A=`0x00000000000000000000000000000000000000a1`, B=`0x00000000000000000000000000000000000000b1`, C=`0x00000000000000000000000000000000000000c1`, D=`0x00000000000000000000000000000000000000d1`; X (attacker/người bất kỳ)=`0x00000000000000000000000000000000000000e1`; Z (deployer)=`0x00000000000000000000000000000000000000e0`; F (funding)=`0x00000000000000000000000000000000000000f0`; R/R2 (recipient)=`0x00000000000000000000000000000000000000f1`/`0x00000000000000000000000000000000000000f2`. Đây là account fixture **dự kiến**, không địa chỉ deployment/receipt đã có. Unit dùng prank ví EOA; E2E dùng account local được kiểm soát và ghi mapping vai trò→địa chỉ thật trong manifest, không ký bằng địa chỉ tùy ý. Mỗi account có 100 native token local để trả gas; không tính gas vào ledger BUD.
+- Deploy contract thật, lưu địa chỉ thực từ receipt (không gán Treasury vào EOA). GOV fixed supply 1.000U; A/B/C/D=400/300/200/100U; các ví khác GOV=0. BUD mint một lần 20.000U cho F rồi F transfer 10.000U vào Treasury: Treasury=10.000U, F=10.000U, R/R2/X/Z/A/B/C/D=0 BUD. Quét bao gồm Transfer cấp quỹ đầu tiên. Treasury không native balance dùng cho khoản chi.
+- Sau deploy/seed, tại `t0−2`, A/B/C/D self-delegate, trừ override ghi rõ từng ca. Mine tại `t0−1`, rồi tạo proposal tại `t0=1800000000`; checkpoint đã **thành quá khứ** trước propose. GOV/Governor cùng ERC-6372 `mode=timestamp`. Không coi receipt delegate cùng timestamp là checkpoint quá khứ; gọi getPastVotes ở current/future phải bị từ chối. Governor threshold dùng checkpoint quá khứ theo implementation đã build (OZ chuẩn dùng `clock()−1`).
+- Ngưỡng 50U; quorum 20% past totalSupply=200U; voting delay=60s, period=300s; minDelay timelock=120s. Mọi proposal mặc định A tạo, target duy nhất Treasury, value=0, calldata duy nhất `disburse(requestId,R,1000U)`. Với nhãn ca/biến thể `L`, requestId=`keccak256(UTF8("tv4:"+L))`; không dùng lại giữa ca ngoài TC10. Description mặc định nguyên văn `{"version":1,"title":"Chi ngan sach DAO","body":"Khoan chi mo phong cho nghiem thu TV4."}`. Mọi biến thể phải ghi toàn bộ bytes gửi thật; title/body/Unicode và request generator sản phẩm vẫn chờ chốt (§8).
+- Proposal mới Pending, vote totals=0, `hasVoted=false`, request chưa paid, operation chưa schedule; không giữ chỗ ngân sách. `S=proposalSnapshot=t0+60=1800000060`, `D=proposalDeadline=S+300=1800000360`. Phải đọc lại S/D từ contract và assert giá trị, không chỉ tính ở test.
+- Chuỗi thành công chuẩn G(L,amount,recipient): propose tại t0; A/B For tại S+1/S+2 =>700U For; tại D+1 state Succeeded; X queue qua Governor tại `q=D+1` (local test cho phép cùng timestamp sau eth_call), đọc operationId/salt/predecessor thật và `E=proposalEta=q+120=1800000481`; X execute qua Governor tại E. E2E có block timestamp thực khác thì dùng q/E thực, assert E≥q+minDelay. Không impersonate Governor/Timelock để tạo giải ngân hợp lệ.
+
+### Biên thời gian bắt buộc
+
+| Clock được mine chính xác | State/hành vi kỳ vọng cho OZ 5.4.0 timestamp; phải đối chiếu Governor thật |
+|---|---|
+| S−1, S | Pending; vote revert; tại S vẫn chưa truy vấn checkpoint S như quá khứ được. Creator còn được cancel Pending. |
+| S+1 | Active, đọc past votes ở S được; vote được với trọng số snapshot. |
+| D | Active, vote lần đầu còn được. Queue chưa được. |
+| D+1 | Succeeded hoặc Defeated theo tally; vote revert. |
+| E−1 | Queued/Waiting, execute revert. |
+| E | Queued với operation Ready; execute được nếu đủ các điều kiện khác. Thành công mới chuyển Executed. |
+
+Test dùng **timestamp của block chứa giao dịch**, không timestamp trước khi gửi rồi để automine tăng ngoài ý muốn. Mỗi biên khôi phục fixture riêng để phiếu trước đó không làm nhiễu. Ready không là proposal state; revert không sinh Failed/Expired. Nếu Governor tích hợp khác các biên trên, coi là điểm cần review TV1 và cập nhật mọi consumer đồng bộ, không sửa oracle theo kết quả để cho qua.
+
+### Reset và manifest là điều kiện chạy
+
+- **R0 (contract):** redeploy/seed F0 cho từng TC và từng biến thể; hoặc snapshot sau F0 rồi revert, tạo snapshot mới sau mỗi lần revert. Reset timestamp, token/delegate checkpoints, paidRequests, operations, proposal/vote totals và native funding. Không dùng state TC trước làm setup TC sau; helper G chỉ tái tạo dữ liệu trong chính fixture đó.
+- **R1 (backend):** chain F0 mới + PostgreSQL database cô lập mới từ migration; ghi deployment scope riêng, reset worker/checkpoint/revision và cache. SQL checks transaction/ROLLBACK không thay cho reset chain. Không xóa DB đang phục vụ/người dùng.
+- **R2 (UI):** R1 nếu E2E thật, ví local map account đúng; xóa cache/cursor/session theo scope, trả mạng/ví và form về đầu. Kịch bản mock phải gắn nhãn mock, không thay E2E thật.
+- Manifest thật bắt buộc có chainId; GOV/BUD/Treasury/Governor/Timelock addresses và deployment block **từng contract** cùng mốc quét sớm nhất; ABI version/hash từ compiler; commit SHA; compiler/EVM/optimizer/dependency lock revision; 18 decimals/supply/phân bổ; threshold/quorum/delay/period/minDelay/clock; K=2; mapping ví/roles; txHash deploy/seed/renounce. Không lưu private key hoặc RPC secret. Local tăng thời gian được; testnet phải chờ thật và dùng đúng commit đã kiểm.
+- Check-roles phải exit nonzero khi sai địa chỉ/holder/minDelay/token links, kiểm tra zero address và tất cả ví demo/deployer. Bằng chứng danh sách role phải đối chiếu grant/revoke history từ deploy và `hasRole`, không chỉ kiểm một holder mong đợi rồi kết luận không có holder khác.
+
+| Contract/role | Holder duy nhất sau init |
+|---|---|
+| Treasury SPENDER_ROLE, DEFAULT_ADMIN_ROLE | TimelockController |
+| Timelock PROPOSER_ROLE, EXECUTOR_ROLE, CANCELLER_ROLE | BudgetGovernor; EXECUTOR không mở cho zero address |
+| Timelock DEFAULT_ADMIN_ROLE | chính TimelockController |
+
+Z đã renounce admin ở cả Treasury/Timelock; X/A/B/C/D/F/R không có role chi/quản trị. Bất kỳ ví có gas vẫn được queue/execute **qua Governor**; không mâu thuẫn việc chỉ Governor có role trực tiếp ở Timelock.
+
+## 3. Ma trận TC01–TC14
+
+Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho từng mục. Khi bị revert, phải assert không có log chi được commit, recipient/quỹ không đổi và state/request/operation không bị tiêu thụ trái phép; lưu decoded custom error từ ABI thật hoặc revert trace. Tên lỗi riêng trong SC01 chỉ là đề xuất, không được giả làm ABI đã triển khai.
+
+### TC01 — Luồng thành công và dữ liệu đọc
+
+- **Map:** FR02–FR09, FR11–FR13, FR16; BR01–BR05, BR07; NFR01. **Owner:** TV1 contract; TV2 projection/API; TV3 UI; TV4 acceptance.
+- **Setup/reset:** R0+R1+R2/F0, G(TC01,1000,R), A/B/C/D past votes=400/300/200/100U; R=0, quỹ=10.000U; bắt đầu Pending t0, không dùng fixture API giả.
+- **Hành động:** người xem chưa nối ví xem dữ liệu; A tạo qua form rồi script đối chiếu description bytes/hash/proposalId với ProposalCreated. A/B vote For khi Active; X thử queue trước kết quả (revert), queue D+1 và execute E qua Governor; theo dõi indexer/API/UI tại H đã đủ K.
+- **Kỳ vọng quan sát:** VoteCast A400/B300, tally For700/Against0/Abstain0U, quorum200U; Succeeded không tự chuyển tiền. ProposalQueued + CallScheduled có operationId/ETA đúng, trước execute quỹ vẫn10.000U. Receipt execute status1, ProposalExecuted + CallExecuted + `BudgetDisbursed(requestId,R,1000U)` và đúng BUD Transfer Treasury→R1000U; paid=true, operationDone=true, state Executed; Treasury9000U/R1000U/F10000U. Tại cùng H API/UI totalIn10000U,totalOut1000U,balance9000U, một khoản chi không đếm Transfer+BudgetDisbursed hai lần; description/S/D/ETA/txHash và activity khớp chain.
+- **Test/evidence:** dự kiến `tests/e2e/GovernanceFlow.t.sol` và thao tác browser thật (runner do TV3/TV4 chốt); evidence dự kiến `docs/evidence/TC01/` gồm command, receipts, H/hash, API dump và ảnh/video. **Hiện: CHƯA CHẠY/BỊ CHẶN** SC03–SC05, indexer/API/wallet thật; E-SC01/E-BE01 chỉ ABI/fixture, E-SC02-C chỉ token.
+
+### TC02 — Thiếu quorum và vai trò Abstain
+
+- **Map:** FR05–FR07; BR01–BR02, BR07; NFR01. **Owner:** TV1; TV3 hiển thị tally; TV4 acceptance.
+- **Setup/reset:** R0/F0 riêng mỗi biến thể, A propose1000U/R tại t0, tất cả totals0/quỹ10000U/request unpaid.
+- **Hành động/kỳ vọng:** (a) D For100U tại S+1; đến D+1 Defeated vì100<200, queue và execute revert, quỹ10000U/R0/request unpaid. (b) F0 mới: D For100U, C chuyển100 GOV cho X **trước S**, X self-delegate trước S; X Abstain100U sau S, C không vote. For100+Abstain100=200 đạt quorum, Against0 => Succeeded D+1; X queue được. Đối chiếu snapshot C100/X100, không mượn quyền ngoài1000U. (c) F0 mới: C Against200U và D For100U, tổng tham gia300 nhưng For+Abstain100<200 => Defeated; Against không góp quorum. Mỗi VoteCast/tally đúng support0/1/2 và weight.
+- **Test/evidence:** TV1 unit quorum; dự kiến `tests/e2e/QuorumAcceptance.t.sol`, `docs/evidence/TC02/` tally/state/error từng biến thể. **CHƯA CHẠY/BỊ CHẶN** Governor; không lấy quorum trong JSON làm bằng chứng runtime.
+
+### TC03 — Đạt quorum nhưng hòa/thua
+
+- **Map:** FR05–FR08; BR02, BR07; NFR01. **Owner:** TV1; TV4 acceptance.
+- **Setup/reset:** R0/F0 từng nhánh; tại t0−2 A chuyển200 GOV cho X và X self-delegate (A còn200U); mine checkpoint trước t0. B300/C200/D100, supply1000/quỹ10000U. A đủ threshold và propose1000U/R.
+- **Hành động:** nhánh hòa A For200U, C Against200U; nhánh thua reset rồi A For200U, B Against300U; vote tại S+1 trở đi, đọc state D và D+1, X queue/execute.
+- **Kỳ vọng:** quorum đạt200U cả hai; tại D còn Active, D+1 Defeated vì For≤Against; queue/execute revert, không operation được schedule/chi, paid=false, quỹ10000U/R0; UI tách rõ quorum đạt và kết quả thất bại.
+- **Test/evidence:** TV1 unit result; dự kiến `tests/e2e/QuorumAcceptance.t.sol`, `docs/evidence/TC03/`. **CHƯA CHẠY/BỊ CHẶN** Governor; E-BE01 chỉ mô phỏng.
+
+### TC04 — Một phiếu và các biên snapshot/deadline
+
+- **Map:** FR02, FR05–FR07; BR01–BR02; NFR01. **Owner:** TV1, TV3 guard UI; TV4 acceptance.
+- **Setup/reset:** R0/F0 và A propose tại t0 cho từng biên, Treasury10000U/R0/request unpaid; X0 GOV. Không giữ phiếu từ biến thể khác.
+- **Hành động/kỳ vọng:** A vote tại S−1/S revert, totals0/hasVoted(A)=false. A vote lần đầu S+1 hoặc D thành công weight400U, hasVoted=true; lần hai đổi support hoặc lặp cùng support revert, totals không đổi. Vote lần đầu D+1 revert; tại D queue revert. X vote khi Active với weight0 không làm tăng tally (nếu implementation cho nhận phiếu thì VoteCast0, nếu chặn thì ghi error và xác nhận không tăng); không đặt quyền từ số dư hiện tại. Tại S chỉ Pending, S+1 Active; tại D còn Active, D+1 Succeeded nếu A For400U hoặc Defeated nếu không phiếu. Từng giao dịch có timestamp/receipt/trace; không chỉ kiểm UI nút disable.
+- **Test/evidence:** dự kiến `tests/e2e/VotingBoundaries.t.sol`, `docs/evidence/TC04/`; TV1 unit historical lookup và duplicate vote. **CHƯA CHẠY/BỊ CHẶN** Governor; token historical lookup riêng có E-SC02-C, chưa chứng minh cửa sổ vote.
+
+### TC05 — Attack chuyển token/đổi delegate sau snapshot
+
+- **Map:** FR02, FR05–FR06; BR01–BR02; NFR01; INV04. **Owner:** TV1 unit token/voting; TV4 attack/acceptance.
+- **Setup/reset:** R0/F0; nhánh a A/B/C/D self-delegate; nhánh b D **không delegate trước S** nên D past votes0 dù balance100U. A propose1000U/R, bắt đầu Pending t0, X past votes0, quỹ10000U.
+- **Hành động:** a tại S+1 A vote400U For rồi transfer400U A→X, X self-delegate; B đổi delegate sang X sau S, X thử vote cùng proposal. b reset rồi D self-delegate sau S, D vote. Thêm biến thể transferFrom đã approve để bao phủ cùng đường cập nhật votes.
+- **Kỳ vọng:** a current votes X700U/A0/B0 nhưng `getPastVotes(A,S)=400U`, B300U, X0; phiếu X không tăng tally (0 hoặc revert theo ABI), B vẫn có quyền snapshot300U nếu vote; cuối For≤1000U, không đếm lại400 của A. b D snapshot0, delegation muộn không thêm100U. Paid=false/quỹ10000U/R0 nếu không execute; DelegateChanged/DelegateVotesChanged/Transfer và VoteCast liên kết đúng timestamps. Không khẳng định chống mua phiếu trước snapshot hoặc Sybil ngoài phạm vi.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC05.t.sol`; lệnh tương lai `forge test --match-path tests/attacks/TC05.t.sol -vvvv`; `docs/evidence/TC05/` phải có mục tiêu double-count, checkpoint trước/sau, calldata, attacker accounts, seed, trace từng vote/transfer/delegate và giải thích snapshot chặn. **CHƯA CHẠY/BỊ CHẶN** Governor; E-SC02-H là kết quả nguồn, E-SC02-C kiểm chứng token riêng, không đánh TC05 đạt.
+
+### TC06 — Attack gọi thẳng Treasury/Timelock
+
+- **Map:** FR07–FR09; BR03–BR04, BR07; NFR01, NFR08; INV02. **Owner:** TV1 unit access control; TV4 attack/acceptance.
+- **Setup/reset:** R0/F0 roles đã renounce đúng bảng; X không role, Treasury10000U/R0/request unpaid, t0 không có proposal/operation. Nhánh trực tiếp execute dùng thêm G tới Queued/Ready hợp lệ sau reset để thử operation thật.
+- **Hành động:** X gọi `Treasury.disburse`, Timelock `schedule`/`scheduleBatch` với delay0 và120, `execute`/`executeBatch` trên operation hợp lệ; X thử cấp SPENDER/PROPOSER/EXECUTOR/CANCELLER/admin cho mình và mở executor zero. Sau đó X queue/execute đúng đường Governor như positive control.
+- **Kỳ vọng:** tất cả đường trực tiếp/role trái quyền revert với AccessControl error account/role đúng; không CallScheduled/CallExecuted/BudgetDisbursed được commit, không đổi role/paid/quỹ. Với positive control Governor, X hợp lệ dù không role trực tiếp: chi1000U, quỹ9000U/R1000U. Không giả mạo Timelock để tạo positive control.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC06.t.sol`; lệnh `forge test --match-path tests/attacks/TC06.t.sol -vvvv`; `docs/evidence/TC06/` gồm mục tiêu bypass, bảng role trước/sau, selector/account/decoded error, call trace X→contract bị chặn và trace Governor→Timelock→Treasury thành công. **CHƯA CHẠY/BỊ CHẶN** Treasury/Timelock/Governor và manifest thật.
+
+### TC07 — Attack execute sớm/lặp
+
+- **Map:** FR07–FR09, FR12; BR03, BR05, BR07; NFR01; INV01–INV02. **Owner:** TV1, TV3 phản hồi receipt; TV4 attack/acceptance.
+- **Setup/reset:** R0/F0, G(TC07,1000,R) dừng sau queue q=D+1, operation pending E=q+120, quỹ10000U/R0/request unpaid. Các lần thử nằm cùng ca có chủ ý; biến thể sai description reset riêng.
+- **Hành động/kỳ vọng:** X execute E−1 qua Governor revert, state vẫn Queued, operation Waiting, paid=false và không tiền ra. Tại E operation Ready (không state Ready), execute thành công chính xác1000U, state Executed/done/paid=true, quỹ9000U/R1000U. Execute lần nữa E+1 revert, không log chi thứ hai hoặc thay balance/request. Queue/execute với descriptionHash đổi do parse/stringify/khoảng trắng khác phải không điều khiển operation gốc; gốc vẫn retry được bằng nguyên bytes đúng.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC07.t.sol`; lệnh `forge test --match-path tests/attacks/TC07.t.sol -vvvv`; `docs/evidence/TC07/` gồm mục tiêu skip delay/replay, q/E/block timestamps, nguyên description/hash, operationId từ tích hợp thật (không giả salt=descriptionHash), lỗi sớm/lặp, receipt thành công và delta balances. **CHƯA CHẠY/BỊ CHẶN** full governance; không receipt thật hiện có.
+
+### TC08 — Attack payload ngoài phạm vi và ngưỡng tạo
+
+- **Map:** FR03, FR07–FR08; BR03–BR04, BR06; NFR01; INV02. **Owner:** TV1 validator on-chain; TV3 form validation; TV4 attack/acceptance.
+- **Setup/reset:** R0/F0 từng input; A đủ400U past votes, X0; Treasury10000U/R0/request unpaid, t0 chưa proposal. Nhánh threshold chuyển49U GOV từ A→X và X self-delegate ở t0−2, mine quá khứ trước propose; A còn351U. Thêm nhánh X50U để chứng minh biên threshold hợp lệ; nhánh delegate cùng timestamp chưa có checkpoint quá khứ phải từ chối khi quyền quá khứ<50U.
+- **Hành động:** bỏ qua UI, gọi propose chuẩn với 0 hoặc2 actions, mảng độ dài lệch; target BUD/EOA/Timelock thay Treasury; selector transfer/grantRole/updateDelay thay disburse; native value1 wei; calldata quá ngắn/ABI hỏng; recipient zero hoặc Treasury; amount0; payload đổi role/tham số. Gửi từng input độc lập, cùng request bytes32 không dùng làm lý do chặn thay kiểm tra payload.
+- **Kỳ vọng:** mỗi input sai revert ở Governor on-chain, không ProposalCreated/operation, không role/config/balance/paid đổi. Threshold49U và checkpoint chưa quá khứ bị từ chối,50U và payload hợp lệ tạo Pending/ProposalCreated đúng; số dư không bị trừ. Mô tả/title UI biên nằm §5 Q-UI, không giả contract có validate độ dài text khi chưa chốt ABI. Không tự cấm requestId zero vì requirements không cấm.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC08.t.sol`; lệnh `forge test --match-path tests/attacks/TC08.t.sol -vvvv`; `docs/evidence/TC08/` phải liệt kê **mỗi vector** mục tiêu, input/calldata/value, error selector+args từ ABI thật, trace chặn trước schedule, role/balance trước/sau và valid control. **CHƯA CHẠY/BỊ CHẶN** Governor/Treasury validators; không lấy UI-only validation làm đạt BR04.
+
+### TC09 — Tranh số dư, revert nguyên tử, nạp rồi retry
+
+- **Map:** FR07–FR09, FR11–FR13; BR03–BR05, BR07; NFR01; INV03. **Owner:** TV1 contract; TV2 ledger; TV3 UI; TV4 acceptance.
+- **Setup/reset:** R0+R1/F0; P1 chi7000U→R, P2 chi6000U→R2, request khác nhau, A tạo tại t0 (cùng timestamp local có thể nhiều tx); mỗi P có A+B For700U, S/D đọc riêng; cả hai queue sau D, E1/E2 đủ120s. Tổng đề xuất13000U>quỹ10000U vẫn tạo/queue được; F10000U/R/R2=0.
+- **Hành động/kỳ vọng:** X execute P1 khi Ready => Treasury3000U,R7000U, P1 Executed/paid1=true. Execute P2 khi Ready thiếu3000U => toàn tx revert, Treasury3000U/R2=0, paid2=false, P2 Queued/Ready, operation2 chưa done; không event chi được commit, **không Failed**. F transfer3000U vào Treasury => F7000U/quỹ6000U; retry **cùng P2/operation2/request2** thành công => Treasury0, R2 nhận chính xác6000U, R giữ7000U, F7000U. Ledger tại H totalIn13000U,totalOut13000U,balance0; revert không tăng tổng chi hay paid. Không recreate proposal để né retry.
+- **Test/evidence:** dự kiến `tests/e2e/BudgetRetry.t.sol`, `docs/evidence/TC09/` (hai operation, failed trace, funding/execute receipts, state/paid trước/sau, ledger/API cùng H). **CHƯA CHẠY/BỊ CHẶN** Treasury/Governor/indexer; chưa có retry receipt.
+
+### TC10 — Attack hai proposal cùng requestId
+
+- **Map:** FR03, FR08–FR09, FR13; BR03–BR05; NFR01; INV01. **Owner:** TV1 paid-request unit; TV2 linkage/dedup; TV4 attack/acceptance.
+- **Setup/reset:** R0+R1/F0; request chung=`keccak256(UTF8("tv4:TC10"))`; P1 chi1000U→R, P2 chi2000U→R2, descriptions khác nguyên bytes nên proposalId khác; cả hai A+B For700U và queue đúng delay, quỹ10000U. Nhánh khác reset rồi dùng bytes32(0), không mặc định cấm zero.
+- **Hành động/kỳ vọng:** execute P1 trước => quỹ9000U/R1000U, paid=true, P1 Executed. Execute P2 sau ETA revert vì request đã trả dù đủ9000U, P2 vẫn Queued/operation chưa done, R2=0, chỉ một Transfer/BudgetDisbursed thành công cho request. Reset rồi đảo thứ tự: P2 thành công2000U, P1 bị chặn => quỹ8000U/R2=2000U/R0. Phân biệt uniqueness proposalId với thanh toán requestId; không vô tình kiểm hai lần cùng operation thay cho TC10.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC10.t.sol`; lệnh `forge test --match-path tests/attacks/TC10.t.sol -vvvv`; `docs/evidence/TC10/` gồm mục tiêu double-pay, hai bộ proposalId/operationId/descriptionHash cùng request, receipt lần1, error/trace lần2, paid/balance/event count và lý do Treasury chặn. **CHƯA CHẠY/BỊ CHẶN** paidRequests/Treasury/Governor thật; JSON trùng request ở BE01 không là attack proof.
+
+### TC11 — Crash/restart, RPC lỗi và reorg
+
+- **Map:** FR09, FR11, FR13–FR14, FR16; BR05; NFR03–NFR04. **Owner:** TV2 indexer/API/SQL tests; TV4 integration/acceptance.
+- **Setup/reset:** R1/F0+G(TC11,1000,R) trên chain local riêng; K=2, database sạch, headers mọi block kể cả rỗng; fix batch range/checkpoint trước batch và cửa sổ hash W đã chốt trong run config. Quỹ chain sau G9000U/R1000U. Thêm nhánh snapshot chain trước G để tạo reorg canonical thay thế không có chi.
+- **Hành động:** ngắt worker (i) sau raw logs trước projections, (ii) sau projections trước checkpoint/COMMIT, (iii) sau COMMIT trước acknowledge; restart cùng DB, scan lại batch. Tiêm lỗi RPC trước/giữa batch và decode lỗi. Reorg trong W bằng local fork/revert rồi mine nhánh thay; restart kiểm checkpoint hash, rollback đến common ancestor A rồi quét lại. Ca riêng vượt W phải không tìm được ancestor và yêu cầu rebuild.
+- **Kỳ vọng:** trước COMMIT batch rollback cả checkpoint/projection; sau COMMIT replay không trùng/mất. Key chainId+txHash+logIndex duy nhất, lưu blockHash/raw topics/data và kiểm conflict khác payload/hash, không DO NOTHING che reorg. Checkpoint không vượt dữ liệu đã commit hoặc head−2, kể cả block không event. RPC retry có backoff theo config ghi trong evidence, không hot-loop/advance giả. Nhánh bị thay không còn log/vote/payout/count; revision/cursor cũ bị invalid; số dư rebuilt trên nhánh thay=10000U/R0 nếu chi bị orphan. Vượt W: health not_ready/rebuild_required, ngừng phục vụ dữ liệu mới như canonical, không đoán checkpoint hay tiếp tục advance.
+- **Test/evidence:** dự kiến bài TV2 crash/reorg runner và `tests/e2e/` integration (tên runner chốt khi implementation có thật), `docs/evidence/TC11/` chứa batch log/kill-point/retry timestamps/DB dumps/header forks/common ancestor/checkpoint, API health/cursor errors. **CHƯA CHẠY/BỊ CHẶN** chưa worker/API; E-BE01-C offline và SQL nguồn không chứng minh TC11.
+
+### TC12 — DB trống và rebuild cùng H
+
+- **Map:** FR04, FR06–FR09, FR11, FR13–FR16; BR01–BR05, BR07; NFR01, NFR04. **Owner:** TV2 rebuild/historical query tests; TV1 đối chiếu contract; TV4 acceptance.
+- **Setup/reset:** R1/F0 mới; chốt H là block có timestamp `t0+1000`, rồi mine thêm2 block để H đủK. Tạo8 proposal A sở hữu, mỗi khoản1000U→R, nhãn/request/description riêng: Executed tạo t0 và chạy G (chi duy nhất1000U); Queued Waiting tạo t0+100, queue t0+950 (ETA=t0+1070); Queued Ready tạo t0+200, queue t0+700 (ETA=t0+820); Succeeded tạo t0+500, chưa queue; Defeated tạo t0+510; Active tạo t0+800; Canceled tạo t0+900 và A cancel t0+901; Pending tạo t0+950. Với Executed/Queued/Succeeded, A/B For tại snapshot+1/+2 (700U); Defeated chỉ D For100U; Active chỉ A For400U trước H; Pending/Canceled không phiếu. S/D từng P lấy create+60/+360 và assert contract; thực hiện các giao dịch theo thứ tự timestamp tăng, không warp ngược. Tại H: quỹ9000U/R1000U/F10000U, chỉ request Executed paid; các proposal khác không giữ chỗ. Ghi H number/hash/timestamp canonical từ DB cũ, freeze cả hai DB tại H (không dùng latest); block rỗng làm chuyển state theo clock.
+- **Hành động:** export canonical projection ở H từ DB đang có, tạo **DB mới trống riêng** và chạy rebuild từ manifest/ABI/address/deployment blocks đến H, không đọc DB cũ hoặc seed metadata riêng. So sorted values của proposal (IDs/description bytes/calldata/proposer/recipient/amount/S/D), votes/support/weight, operation/salt/predecessor/ETA/status, requests đã paid, raw canonical logs, Transfer ledger và tổng số. So Governor.state/quorum(snapshot)/proposal fields, Timelock readiness, GOV past votes/supply và BUD.balanceOf bằng eth_call block H/hash.
+- **Kỳ vọng:** hai tập có cùng nội dung, không chỉ count/hash tự khai; balance9000U và totalIn10000U,totalOut1000U khi chỉ có chi nêu trên; state tính bằng clock(H), **không** chỉ event cuối, không dùng Date.now/latest. Tại H trước/tại snapshot quorum chưa tra quá khứ phải xử lý rõ; kiểm thêm H ở S/S+1/D/D+1/E−1/E bằng các ca con reset độc lập. Revision mới có thể khác nhưng không làm khác business data; cursor cũ invalid theo hợp đồng. RPC thiếu historical state phải báo DATA_NOT_READY, không fallback latest. DB cũ giữ nguyên cho đến so sánh đạt.
+- **Test/evidence:** dự kiến runner rebuild/compare do TV2 bàn giao, `docs/evidence/TC12/` gồm lệnh thực, manifest, H/hash, export trước/sau, diff giá trị và historical calls. **CHƯA CHẠY/BỊ CHẶN** chưa rebuild/indexer/chain governance/historical RPC proof; H=9000 fixture BE01 là giả, không dùng như checkpoint chain.
+
+### TC13 — Ví, form, receipt, HTML và mạng
+
+- **Map:** FR01–FR05, FR07–FR08, FR10–FR12, FR16; BR03–BR04, BR06–BR07; NFR01, NFR03, NFR06. **Owner:** TV3 wallet/component tests; TV2 API error/data tests; TV4 browser E2E/acceptance.
+- **Setup/reset:** R2/F0 từng nhánh, chưa nối ví, chain config lấy manifest thật, API snapshot H/hash đủ K; ví A400 past votes và Treasury10000U/R0. Form chưa submit, giữ requestId đã sinh. HTML mô tả dùng text `<img src=x onerror="window.__tv4_xss=1">`; không nạp secret vào browser logs.
+- **Hành động/kỳ vọng:** xem public bốn màn hình không ví; nối đúng mạng hiển thị address/chain, balance/delegate/current/snapshot voting power; sai mạng chặn gửi tx tới địa chỉ mạng khác và yêu cầu switch (ghi wallet request log không có sendTransaction sai mạng). Từ chối ký giữ nguyên title/body/amount/recipient/description/requestId và hiển thị user rejected; pending wallet→submitted txHash→confirming→success chỉ sau receipt status1. Receipt status0 là revert + lý do dễ hiểu, không success; cập nhật sync state sau receipt, dùng contract state trước action nếu API trễ. HTML không tạo DOM handler/script hoặc thay sentinel, vẫn hiển thị text an toàn. Propose/vote/queue/execute/cancel trên UI phải đi chain thật theo điều kiện TC khác, lịch sử có transaction và testnet simulation banner. Title 4/5/120/121 và body19/20/2000/2001 kiểm biên theo quy tắc ký tự đã chốt, recipient/amount sai không được gửi như hợp lệ.
+- **Test/evidence:** TV3 test module hiện hữu, browser acceptance dự kiến dưới `tests/e2e/` sau khi chọn runner theo frontend thật; `docs/evidence/TC13/` chứa ảnh/video, console/network/wallet request log đã che secret, receipt status0/1 và dữ liệu form trước/sau. **CHƯA CHẠY/BỊ CHẶN** wallet disabled/create placeholder, chưa tích hợp BE01/API/chain; mock render không là E2E đạt.
+
+### TC14 — Attack deployer và quyền hủy Pending
+
+- **Map:** FR03, FR07–FR10, FR13; BR03–BR04, BR06–BR07; NFR01, NFR08; INV02. **Owner:** TV1 access/cancel tests; TV2 canceled history; TV3 UI; TV4 attack/acceptance.
+- **Setup/reset:** R0+R1/F0 đúng roles/renounce, Z0 role, A tạo Pending t0, quỹ10000U/R0/request unpaid. Mỗi người/mốc/state hủy là fixture riêng; không dùng proposal đã hủy để chứng minh hủy sai thời điểm.
+- **Hành động/kỳ vọng:** Z thử grantRole lại admin/spender/proposer/executor/canceller, gọi trực tiếp disburse/schedule/execute và thay minDelay/param trái quyền => revert, roles/config/quỹ không đổi. X/Z hủy Pending do A tạo => revert; A hủy tại S (vẫn Pending) được, ProposalCanceled đúng ID/creator, history giữ description/tx, state Canceled, vote/queue/execute sau hủy đều revert, paid=false/quỹ10000U. A hủy tại S+1 (Active), Succeeded, Queued Waiting, Queued Ready, Executed, Defeated đều revert; không có quyền emergency cancel. Riêng Executed fixture có chi1000U nên baseline9000U/R1000U giữ nguyên sau cancel bị chặn. Kiểm cả overload/entry point cancel công khai của ABI thật, không chỉ nút UI.
+- **Test/evidence:** **dự kiến** `tests/attacks/TC14.t.sol`; lệnh `forge test --match-path tests/attacks/TC14.t.sol -vvvv`; `docs/evidence/TC14/` gồm mục tiêu regain privilege/emergency cancel, role grant/revoke/renounce receipts, bảng hasRole mọi ví/zero trước/sau, mỗi actor/state/timestamp/error, receipt cancel hợp lệ và chain/history balances. **CHƯA CHẠY/BỊ CHẶN** roles/deploy/cancel thật; check-roles/manifest toàn hệ thống chưa có evidence.
+
+## 4. Stateful invariant: không chấp nhận chứng minh rỗng
+
+**Owner module:** TV1 giữ unit/fuzz contract và hỗ trợ fixture thật. **TV4 owner:** handler, ghost ledger/oracle, attack/invariant và acceptance INV01–INV04. Dự kiến file `tests/invariant/BudgetInvariant.t.sol` (chưa có); chưa có log/seed/stats đạt invariant hiện tại. E-SC02 token fuzz không thay invariant governance.
+
+| INV | Oracle độc lập và chuỗi thao tác phải phủ | Map / evidence bắt buộc |
+|---|---|---|
+| INV01 | Ghost map đếm **giải ngân thành công đã commit** theo requestId; mọi count≤1; receipt/event/recipient balance xác nhận mỗi lần trả. Tạo hai proposalId khác nhau dùng cùng request, xen execute retry/thiếu tiền/nạp quỹ và lặp operation. Không lấy paidRequests của SUT làm oracle duy nhất. | FR08–FR09; BR03, BR05; NFR01/NFR07; TC07/TC09/TC10. Lưu request→proposal/operation→successful receipt, count và trace fail tối thiểu. |
+| INV02 | Mọi out BUD hợp lệ phải nối request/proposal/operation, calldata whitelist, For+Abstain≥quorum snapshot, For>Against sau deadline, queue qua Governor và execution timestamp≥ETA. Caller Treasury là Timelock, đường thực tế user→Governor→Timelock→Treasury; role holders không đổi. Handler **không prank Timelock/Governor để chi**. | FR03/FR05–FR08/FR10; BR01–BR04/BR06–BR07; NFR01/NFR08; TC06–TC08/TC14. Lưu ít nhất một trace thành công đầy đủ và âm trái quyền/sớm. |
+| INV03 | Từ deployment Transfer BUD canonical: balanceOf(Treasury)=in−out tại cùng block, kể cả seed/nạp thêm/thiếu tiền rồi retry; loại self-transfer khỏi hai tổng, giữ zero transfer không tăng tổng. BudgetDisbursed chỉ nối request, không cộng chi hai lần; GOV/token khác/native không tính vào BUD. | FR08–FR09/FR11/FR13; BR03/BR05; NFR01; TC01/TC09/TC11/TC12. Lưu ledger ghost, Transfer receipts, balance calls cùng H và tổng. |
+| INV04 | Với từng proposal, pin supply/past weights tại S; transfer/transferFrom/delegate/undelegate sau S không đổi trọng số đó, mỗi voter≤1 vote; sum(For+Against+Abstain)≤pastTotalSupply(S). Đối chiếu từng voter với snapshot oracle, không chỉ tổng≤1000 để bỏ lọt sai trọng số. | FR02/FR05–FR06; BR01–BR02; NFR01/NFR07; TC04–TC05. Lưu snapshot supply/weight, operations sau S, VoteCast và tally từng proposal. |
+
+**Cấu hình nghiệm thu bắt buộc:** CI ít nhất **100 chuỗi ×50 thao tác stateful** (Foundry invariant runs≥100, depth≥50), không nhầm với 256 lần fuzz của một unit test. Khi suite có thật, lệnh dự kiến `FOUNDRY_INVARIANT_RUNS=100 FOUNDRY_INVARIANT_DEPTH=50 forge test --match-path tests/invariant/BudgetInvariant.t.sol -vvvv`; phải lưu resolved config thực, Foundry version, seed tái hiện từng run/campaign và thống kê. Chưa dùng lệnh này để tuyên bố đã chạy.
+
+Handler có nhiều actor và delegate/transfer/transferFrom/undelegate, propose hợp lệ/độc hại/trùng request, vote For/Against/Abstain/lặp, warp qua S/D/E, queue/execute/cancel và BUD transfer nạp quỹ. Theo dõi per-action attempts/success/revert, per-state visit, số proposal/vote/queue và **successful execute**, requests trả, tổng amount và coverage từng INV. Chạy một đường G hợp lệ qua chính handler/oracle để bảo đảm reachable; campaign phải thực sự có execute thành công bằng đường chuẩn và ghi thống kê/receipt/trace, không chỉ positive test ngoài handler. Nếu execute success=0 hoặc tất cả calls revert, **không nghiệm thu**, dù forge báo invariant không fail. Lưu counterexample đã shrink + seed/trace nếu lỗi. Reset R0 mỗi chuỗi; không chỉnh balance/paidRequests/ghost state bằng cheatcode để giả giải ngân. Bằng chứng dự kiến `docs/evidence/invariants/`; hiện **CHƯA CHẠY/BỊ CHẶN** SC03–SC05/handler.
+
+## 5. Bài nghiệm thu dữ liệu và chất lượng bổ sung
+
+Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không tự tạo framework mới. TV4 acceptance owner cho tất cả; module tests vẫn ở TV tương ứng.
+
+| Bài / map / module owner | Setup độc lập, hành động và tiêu chí quan sát cụ thể | Reset / evidence / trạng thái |
+|---|---|---|
+| Q-READ — FR04/FR09/FR11/FR16; NFR01; TV2+TV3 | R1/F0 tạo **45 proposal thật** gồm state theo clock(H); cố định chain/deployment/H/hash/revision. GET list limit20 qua3 trang phải20/20/5, cùng filter không mất/lặp ID, chi tiết/phiếu/treasury/summary cùng H; tìm ID hợp lệ không có báo404 có cấu trúc, ID sai dạng/âm/hex/exponent/>uint256 báo400 theo API spec. Kiểm filter từng state, empty, cursor đổi filter/limit/scope từ chối, cursor invalid/tamper từ chối, H sau checkpoint503, snapshot bị invalid409. Tiền/uint256 chuỗi nguyên, số nhỏ1 wei và fractional BUD không mất chính xác; API không có signing key/endpoint ký. Dashboard totals/dòng tiền, simulation banner và bốn màn hình đúng chain; native/GOV/token lạ không tăng BUD budget. | R1/R2; `docs/evidence/read-api/` **dự kiến** với HTTP dumps/DB/eth_call/ảnh. **CHƯA CHẠY/BỊ CHẶN** API/indexer/UI thật; E-BE01-C chỉ chứng minh fixture45/20/20/5 offline. |
+| Q-PERF — NFR02; FR16; TV2 | R1/F0 riêng; trước t0 phân lại1000 GOV thành10 ví mỗi100U: A/B/C/D/X/Z/F/R/R2 và Y=`0x00000000000000000000000000000000000000f3` (Y có100 native local). Self-delegate ở t0−2, mine checkpoint quá khứ; các role và BUD không đổi. A tạo100 proposal ở t0, mỗi chi1U BUD→R nhưng request/description khác; mỗi proposal10 ví vote For100U tại S+1, tổng **100 proposal/1000 vote thật đã index**; H>D+1 đủK, quỹ vẫn10000U vì chưa execute. Load API đọc với **10 clients đồng thời liên tục60s**, mỗi client lặp list/list/summary/detail/votes (40/20/20/20%), ID cố định tồn tại, ghi counts/errors/raw latency; warmup nếu có tách khỏi60s. Ghi CPU/RAM/OS/PostgreSQL/Node/RPC/tool version/manifest/H/dataset. Tính p95 nearest-rank ở vị trí ceil(0.95×N) của mẫu latency đã sắp; báo aggregate và từng endpoint; tiêu chí **p95<1000ms**, không ≤ hoặc thời gian đọc mock. Responses phải hợp lệ, errors báo riêng để lỗi nhanh không làm đẹp p95. | R1, dataset/perf DB riêng không ảnh hưởng demo; tool/lệnh benchmark chốt với TV2 khi server có thật, không khẳng định đã có k6/autocannon. Evidence `docs/evidence/performance/` **dự kiến**; **CHƯA CHẠY/BỊ CHẶN** server/dataset/load runner. |
+| Q-FRESH — NFR03; FR13–FR14/FR16; TV2+TV3 | R1/F0, K=2 theo manifest; ghi thời điểm quan sát head≥eventBlock+2 (đã đủ xác nhận) và thời điểm event/projection commit hiển thị API. RPC bình thường: mọi mẫu event đủK được xử lý **trong30s**; không bắt đầu tính từ lúc gửi tx hoặc timestamp H cũ. API sync block không vượt head−2. Cố tình pause worker>30s: UI sync warning khi lagSeconds>30; đúng30s không tự coi vượt ngưỡng; null/health degraded/RPC lỗi hiển thị rõ, không giả synced. Resume rồi bắt kịp warning hết đúng data. | R1/R2 từng delay; evidence timestamps/raw headers/API/UI `docs/evidence/freshness/` **dự kiến**. **CHƯA CHẠY/BỊ CHẶN** worker/API/wallet; health fixture chỉ là ví dụ. |
+| Q-RECOVER — NFR04; FR14–FR15; TV2 | TC11 tiêm RPC timeout/429/transport failure ở từng phase, log retry/backoff theo config thật, checkpoint đứng ở batch đã commit; khôi phục RPC bắt kịp không trùng/mất. TC12 rebuild DB mới và so cùng H/hash; vượt cửa sổ reorg dừng dữ liệu mới/rebuild_required. Không xem retry ở JSON checker là RPC recovery. | R1, fault injection riêng, TC11/TC12 evidence **dự kiến**; **CHƯA CHẠY/BỊ CHẶN** worker/rebuild. |
+| Q-UI — NFR06; FR01–FR04/FR11–FR12; TV3 | R2/F0 và dữ liệu empty/loading/error/synced có nhãn rõ; browser viewport chiều rộng **390px và1366px**, ghi height/device scale/browser. Bốn màn hình tiếng Việt, không che action/số tiền, label liên kết input; chỉ dùng Tab/Shift+Tab/Enter/Space và bàn phím nhập đủ form, chọn vote/xác nhận/cancel có focus nhìn được; không mắc keyboard trap. Kiểm validation title/body biên TC13 và Unicode sau khi chốt quy tắc ký tự. | Reset viewport/session/form mỗi biến thể; ảnh390/1366 và video keyboard/actions `docs/evidence/ui/` **dự kiến**. **CHƯA CHẠY/BỊ CHẶN** UI runtime tích hợp; module mock tests không thay browser proof. |
+| Q-CLONE — NFR05; TV1/TV2/TV3 cung cấp lệnh, TV4 vận hành | Clone mới vào thư mục riêng không dùng cache/out/DB/env của người viết; init submodule đúng lock revision, compiler/Foundry1.8.5/OZ5.4.0/forge-std1.17.0 và Node24.15.0/PostgreSQL18.4 theo repo; cài frontend/indexer đúng lockfile khi có. Theo README duy nhất chạy build/typecheck/tests, chain/DB, deploy/seed/check-roles, demo1000U và TC12. Ghi tool versions, commit, log từng lệnh, role/số dư/receipt thực. Không cần hỏi biến thiếu/thứ tự bí mật. | DB/chain mới riêng; không xóa checkout hoặc dữ liệu người dùng. `docs/evidence/clean-clone/` **dự kiến**; **CHƯA CHẠY/BỊ CHẶN** governance/indexer/UI setup và máy clean; E-SC01-H nói rõ không clone sạch. |
+| Q-CI — NFR07; NFR01; TV1/TV2/TV3 tests module, TV4 CI | Commit cuối có CI build/format/typecheck theo module hiện hữu, contract negative/unit/fuzz, invariant≥100×50 và indexer tests; frontend tests hiện có. Kiểm report thực, không skip suite chưa có rồi báo toàn hệ thống xanh. Mỗi safety BR có negative ở TC04–TC10/TC14; invariant successful-execute proof phải đi cùng run. Review không còn issue mở cho chi sai tiền/bypass voting/timelock/roles/double-pay. | Fresh CI workspace; URL run/artifacts gắn SHA. Hiện E-SC01-C/E-BE01-C cục bộ; PostgreSQL18.4 CI chưa quan sát, không có invariant/indexer/frontend thật: **CHƯA NGHIỆM THU NFR07**. |
+| Q-CONFIG — NFR08; BR04/BR06/BR07; TV1 ABI/constructor, TV4 deployment | Kiểm `.env.example` khớp cấu hình thật, không secret/khóa ví/RPC secret trong tracked files/history/evidence/log. Quét bằng công cụ/lệnh ghi rõ, review env và URL đã che, không đưa giá trị secret vào report. Xác minh manifest §2, check-roles holder+zero+deployer và minDelay/token links; cố ý manifest/config sai trong fixture riêng phải exit nonzero. Testnet xác nhận EVM/compiler tương thích, địa chỉ/code/chainId/deploymentBlock thật; demo ít nhất một Executed và một Defeated, chờ timestamp thật, có txHash/explorer/receipt và số dư. | R0 cho malformed config, local/testnet manifest tách nhau; `docs/evidence/deployment/` **dự kiến**; **CHƯA NGHIỆM THU** manifest/roles/deploy governance/testnet/secrets scan chứng minh đầy đủ. SC02 smoke chỉ token local. |
+
+## 6. Traceability đầy đủ FR/BR/NFR → TC/INV → evidence
+
+Các mã E chỉ là nguồn cục bộ ở §1. Mọi acceptance dưới đây **chưa đạt toàn bộ**; lý do/evidence còn thiếu nằm tại TC/Q tương ứng, không được chuyển PASS vì có tên bài test.
+
+| Requirement | Coverage có tiêu chí thực thi | Evidence hiện tại / còn thiếu |
+|---|---|---|
+| FR01 | TC13, Q-UI: public read, address/network, chặn gửi sai mạng | Thiếu wallet/browser E2E thật. |
+| FR02 | TC01/TC04/TC05/TC13, INV04: balance/delegate/current/past votes, past checkpoint | E-SC02-H khác E-SC02-C; thiếu Governor/UI snapshot integration. |
+| FR03 | TC01/TC08/TC10/TC13: threshold past50, một action, text/requestId/description/hash nguyên bản, ProposalCreated | E-SC01 chỉ encode/fixture; thiếu propose thật và validator âm. |
+| FR04 | TC01/TC12, Q-READ/Q-UI:45→20/20/5, filter/ID/detail đủ trường cùng H | E-BE01-C offline; thiếu HTTP/chain/UI. |
+| FR05 | TC01–TC05/TC13, INV04: ba support, một phiếu, snapshot/time windows | Token có proof riêng; thiếu Governor VoteCast/receipt. |
+| FR06 | TC02/TC03/TC04/TC12, INV02/INV04:100 For fail,100+100 Abstain pass,200 hòa200 fail, sau deadline | E-BE01 mô phỏng; thiếu contract outcomes. |
+| FR07 | TC01–TC04/TC06/TC07/TC14, INV02: queue public qua Governor, state/quorum, operationId/ETA | Thiếu queue receipts/timelock. |
+| FR08 | TC01/TC06–TC10, INV01–INV03: ETA, transfer đúng, replay/request duplicate | Thiếu Treasury/Governor execute thật. |
+| FR09 | TC01/TC09/TC11/TC12, INV03, Q-READ: ledger BUD-only cùng H, insufficient funds retry | Fixture ledger có E-BE01-C; thiếu balances/receipts/indexer thật. |
+| FR10 | TC14/TC13: creator Pending only, Canceled history và mọi operation bị chặn | Thiếu cancel contract/UI/API proof. |
+| FR11 | TC01/TC09/TC11/TC12, Q-READ/Q-UI: totals cùng H, không revert/double count,4 màn hình/banner | Thiếu chain→API→UI proof. |
+| FR12 | TC07/TC09/TC13: wallet stages, receipt0/1, refusal giữ form, HTML-safe, sync/error | Thiếu wallet/receipt/browser proof. |
+| FR13 | TC01/TC09–TC12, INV03: quét deploy blocks, raw log/blockHash, dedup, payout linkage | E-BE01 SQL/fixture cục bộ; thiếu scanner/receipt integration. |
+| FR14 | TC11, Q-FRESH/Q-RECOVER: K=2, batch atomic, restart hash/reorg/window | Chưa worker/runtime proof. |
+| FR15 | TC12, Q-RECOVER/Q-CLONE: DB mới từ chain, same-H data/state/balance | Chưa rebuild command/exports/historical calls. |
+| FR16 | TC01/TC11–TC13, Q-READ/Q-PERF: read endpoints/health/structured validation/pagination/asOfBlock, không ký | E-BE01 spec/fixture offline; thiếu HTTP server/tests. |
+| BR01 | TC01/TC04/TC05/TC12, INV04: delegated snapshot, transfer/delegate sau S bất biến | E-SC02-C token-only; thiếu proposal thật. |
+| BR02 | TC02–TC05, INV02/INV04: For+Abstain quorum, For>Against, một vote, ba support | Chưa Governor runtime. |
+| BR03 | TC01/TC07–TC10/TC14, INV01–INV03: một chi BUD đúng recipient/amount, request không double-pay | ABI/fixture chưa là validation/payment. |
+| BR04 | TC06/TC08/TC14, INV02, Q-CONFIG: only Treasury.disburse/native0/on-chain payload restrictions | Chưa validator/role runtime. |
+| BR05 | TC01/TC09/TC10, INV03: không reserve, balance tại execute, atomic retry cùng operation | Chưa insufficient-funds trace/receipt retry. |
+| BR06 | TC08/TC14, Q-CONFIG: creator Pending-only, không change role/params qua proposal, redeploy khi đổi config | Chưa cancel/role attack trace. |
+| BR07 | TC01/TC02/TC06/TC07, INV02: success không tự chi, queue+execute public Governor, ETA | Chưa Governor/Timelock integration. |
+| NFR01 | TC01–TC10/TC14, INV01–INV04, Q-CONFIG: on-chain safeguards, DB không quyền ký/override | Chưa full negative/invariant proof. |
+| NFR02 | Q-PERF:100proposal/1000vote,10clients/60s,p95<1s,cấu hình máy/cách đo | Chưa API/load results. |
+| NFR03 | TC11/TC13,Q-FRESH: K=2, đủ xác nhận→commit≤30s, UI cảnh báo>30s | Fixture health không phải latency runtime. |
+| NFR04 | TC11/TC12,Q-RECOVER: retry/backoff/atomic checkpoint/reorg/rebuild | Chưa worker/recovery/rebuild. |
+| NFR05 | Q-CLONE: clone sạch/versions/lockfile/README/demo/tests | E-SC01-H không phải clone sạch; thiếu clean-clone run. |
+| NFR06 | TC13,Q-UI: tiếng Việt,390/1366,labels/loading/empty/error/keyboard | Chưa browser visual/keyboard proof tích hợp. |
+| NFR07 | TC04–TC10/TC14, INV01–INV04,Q-CI: mọi safety có âm, CI đủ module,≥100×50 không vacuous | Chỉ ABI/fixture observed; thiếu run đủ suite/defect closure. |
+| NFR08 | TC06/TC14,Q-CONFIG/Q-CLONE: no secrets/env.example/manifest/roles exit code | Chưa whole-system deployment/scan; token smoke không đủ. |
+
+## 7. Gói evidence và điều kiện đóng acceptance
+
+Mỗi TC (đặc biệt **TC05/06/07/08/10/14 từng ca riêng**) phải lưu: mục tiêu attack; setup actors/funds/roles/clock độc lập và reset; source+integration commit SHA/manifest hash; môi trường/tool versions; **lệnh thật đã chạy**; expected và actual; calldata/description bytes/3 IDs khi liên quan; raw trace hoặc receipt (revert eth_call không có txHash phải ghi là call trace, không bịa receipt); decoded error/args; balance/state/paid/operation/roles trước/sau tại block/hash; cơ chế chặn; người chạy và reviewer. File test dự kiến và lệnh kế hoạch không là evidence. Attack negative phải có valid control để không kết luận bảo vệ đúng từ fixture hỏng.
+
+On-chain local/testnet evidence luôn có chainId, addresses, deployment blocks, txHash, blockNumber/hash/timestamp, receipt status và event topics/data; testnet có explorer link. Replay bổ sung H/hash/revision và sorted exports/diff/historical eth_call; performance bổ sung raw samples/cấu hình/công thức p95; UI bổ sung ảnh/video/network/wallet log đã che bí mật; invariant bổ sung seed/runs/depth/action counters/successful execute/counterexample nếu có. Không commit khóa/RPC credentials hoặc dùng transaction hash tổng hợp làm giao dịch thật.
+
+TV4 chỉ đổi trạng thái một TC/INV/Q thành **ĐẠT** khi có actual evidence tái lập gắn đúng commit, đủ positive/negative và oracle độc lập. Nghiệm thu cuối cần mọi FR/BR/NFR có evidence đủ, không lỗi mở cho chi sai hoặc bypass; clone sạch chạy demo/test, testnet ít nhất một giải ngân và một thất bại, DB rebuild cùng H. Không khóa acceptance bằng CI xanh chỉ kiểm ABI/fixtures.
+
+## 8. Quyết định còn mở và phụ thuộc cần bàn giao
+
+| Owner quyết định | Nội dung cần chốt / bằng chứng mở khóa |
+|---|---|
+| TV1 + TV4 | Tích hợp SC02 qua review; constructor Treasury/Timelock/Governor và thứ tự deploy không vòng; ABI/event/errors thật, entrypoints cancel, timestamp clock/threshold/quorum; validate biên S/D/E bằng Governor thật. Hiện chỉ ITreasury ABI và token ở branch riêng. |
+| TV1 + TV2 + TV3 | Description JSON v1, đếm Unicode code point hay quy tắc khác cho5–120/20–2000; CSPRNG requestId trước propose và giữ khi retry; xử lý NUL/UTF-8 hỏng mà không đổi bytes/hash; zero requestId không tự cấm. Giữ description nguyên bytes cho queue/execute/rebuild. |
+| TV1 + TV2 | Operation salt/predecessor từ Governor tích hợp và receipt thật, không dùng salt tự chọn của BE01 hay mặc định descriptionHash; quy tắc nối BudgetDisbursed↔Transfer để không double count. |
+| TV2 + TV4 | Manifest/ABI version/scope, hash window W, batch size/backoff/retry policy/cursor retention+authentication; lệnh run/rebuild/compare/runtime test thực, historical RPC hỗ trợ same-H state. Không có worker/API thì TC11/TC12 và latency/performance tiếp tục bị chặn. |
+| TV2 + TV3 | API/schema BE01 còn chờ review; tích hợp fixture chung trước rồi HTTP thật, asOfBlock/hash/revision và sync warnings; UI hiện mock riêng chưa là BE01 integration. |
+| TV3 + TV4 | Frontend thực/lockfile/runner/module commands; bật wallet, form create thật và browser E2E; thống nhất boundary text và width/keyboard evidence. Không tạo framework chỉ để có đường test. |
+| TV4 + TV1 | Manifest/check-roles thật và testnet tương thích EVM Osaka/RPC/faucet; CI PostgreSQL Docker18.4 chưa có run quan sát sau push, local Docker permission là blocker hiện tại. Chốt clean-clone và commit evidence cuối trước acceptance. |
+
+Các tham số nghiệp vụ, TC01–TC14, INV01–INV04 và chỉ tiêu NFR trong requirements **không phải quyết định mở** để tùy ý giảm phạm vi. Khi đổi cấu hình demo được nhóm duyệt, cập nhật nhất quán requirements/config/deploy/test/evidence, không thêm shim hoặc báo đạt bằng dữ liệu giả.

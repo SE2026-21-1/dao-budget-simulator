@@ -41,3 +41,32 @@ Fixture SC01 không phải receipt hoặc bằng chứng deployment. Receipt/log
 TV1 phụ trách contract/unit test; TV2 indexer/API; TV3 dashboard/ví;
 TV4 deploy/seed/check-roles, CI và attack/invariant/E2E. Mỗi PR cần người khác review.
 Không đưa private key hoặc RPC secret vào fixture, tài liệu hay Git.
+
+## BE01 — database, API dự kiến và dữ liệu mẫu
+
+TV3 có thể dùng [fixture API tổng hợp](fixtures/api/README.md) để dựng giao diện
+trước khi có API server. Đọc [đặc tả API](docs/api.md),
+[thiết kế PostgreSQL](docs/database.md) và [checklist bàn giao](docs/be01-checklist.md).
+BE01 chưa triển khai indexer, HTTP server hoặc xử lý reorg thực tế.
+
+Kiểm tra fixture với Node.js (chỉ dùng thư viện chuẩn):
+
+```powershell
+node scripts/check_be01.mjs
+```
+
+Checker đọc trực tiếp JSON và tự chạy regression cho logIndex toàn block,
+snapshot theo timestamp block tạo và thứ tự phát log. Metadata offline nằm ở
+`fixtures/api/simulation.json`; vẫn có 45 proposal, trang 20/20/5. Dữ liệu mới
+dùng revision `fixture-v2`; bỏ cursor v1. Hướng dẫn kiểm tra sinh lại xác định
+và các giới hạn đối chiếu hash nằm trong README fixture.
+
+Kiểm tra migration và ràng buộc bằng cụm PostgreSQL tạm độc lập trên Windows:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be01_database.ps1 -PostgresBin "C:\Program Files\PostgreSQL\18\bin"
+```
+
+Script tạo cụm mới trong thư mục tạm, tự dừng sau kiểm tra và giữ log để xem lại;
+không kết nối hoặc xóa database đang có. Cách chạy SQL trên hệ điều hành khác
+nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.

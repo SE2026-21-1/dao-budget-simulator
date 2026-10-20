@@ -90,6 +90,7 @@ trước khi đánh dấu NFR07 hoàn tất.
 - [Phân công TV4](docs/TV4_Cong_viec_Testing_Deployment.md)
 - [Test matrix và trạng thái nghiệm thu](docs/test-plan.md)
 - [Review token SC02 và smoke local](docs/sc02-review.md)
+- [Tổng kết công việc TV4 và tác dụng](docs/tv4-work-summary.md)
 
 Fixture SC01 không phải receipt hoặc bằng chứng deployment. Receipt/log thật thuộc SC06.
 TV1 phụ trách contract/unit test; TV2 indexer/API; TV3 dashboard/ví;

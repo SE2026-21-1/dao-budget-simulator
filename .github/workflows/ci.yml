@@ -22,12 +22,12 @@ jobs:
       FOUNDRY_PROFILE: ci
     steps:
       - name: Checkout with pinned submodules
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
           persist-credentials: false
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: '3.12'
       - name: Install pinned Foundry
@@ -50,7 +50,7 @@ jobs:
           echo 'CI checks available suites only; see docs/tv4-checklist.md for outstanding acceptance requirements.' >> "$GITHUB_STEP_SUMMARY"
       - name: Upload check evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: tv4-checks-${{ github.sha }}
           path: reports/
@@ -62,11 +62,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout BE01 schema and fixtures
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: '24.15.0'
       - name: Check offline API fixtures
@@ -88,7 +88,7 @@ jobs:
           echo 'BE01 checks synthetic fixtures and SQL constraints only, not RPC/indexer/API/reorg/rebuild behavior.' >> "$GITHUB_STEP_SUMMARY"
       - name: Upload BE01 evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: tv4-be01-${{ github.sha }}
           path: reports/

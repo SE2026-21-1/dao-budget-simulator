@@ -39,11 +39,16 @@ Kiểm tra local sau tích hợp: `FOUNDRY_PROFILE=ci bash scripts/ci.sh` đạt
 45 proposal, trang 20/20/5, timeline và regression. SC02 chạy ở detached
 commit `9a890a2`, chưa merge token vào TV4.
 Máy local không có quyền Docker và sudo yêu cầu mật khẩu, nên không có bằng chứng
-SQL local từ runner Bash mới. Kết quả job PostgreSQL thực tế phải xem run/check
-của [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5), artifact
-`tv4-be01-<SHA>` và thông báo evidence trên PR; không suy ra pass từ YAML hoặc
-fixture JSON. PostgreSQL Windows do TV2 báo cáo trước đó được giữ riêng tại
-`be01-checklist.md`.
+SQL local từ runner Bash mới. **CI đã chạy thật thành công** ở commit `b2c32a0`:
+[run 39457911277](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39457911277),
+cả Foundry và BE01 đều success; Node `v24.15.0`, PostgreSQL 18.4, migration
+COMMIT, SQL constraints báo `BE01 checks passed` rồi ROLLBACK.
+[Stdout SQL nguyên bản](evidence/be01-ci-b2c32a0.txt) được lưu từ artifact
+`tv4-be01-b2c32a06be39cfacb749cb9d305e462d8929bce0`.
+Workflow tiếp theo pin các Actions dùng Node24 để xử lý cảnh báo runtime Node20
+từ run này; không đặt biến môi trường để che cảnh báo.
+Fixture/SQL success không phải worker/API/E2E hoặc NFR07 hoàn tất. Bằng chứng
+PostgreSQL Windows trước đó của TV2 được giữ riêng tại `be01-checklist.md`.
 
 ## Thứ tự thực hiện
 

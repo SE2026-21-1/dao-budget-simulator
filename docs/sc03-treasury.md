@@ -140,3 +140,15 @@ không thay thế stateful invariant campaign do TV4 phụ trách.
 - ABI compiler Treasury vẫn khớp shared/abi/Treasury.json và giữ đủ interface SC01.
 - Treasury.sol, ITreasury.sol, BudgetToken và GovernanceToken không thay đổi trong đợt bổ sung.
 - Không thêm ReentrancyGuard; không commit, push hoặc tạo PR.
+
+## TV4 sau SC04 — cập nhật21/10/2026
+
+Các kết quả55tests/source TV1 ở trên là lịch sử. Governor đã tích hợp tại
+`70c2b33`; [TV4 SC04 review/evidence](sc04-governor.md#tv4-kiểm-chứng-độc-lập-sau-tích-hợp-sc04--21102026)
+có deployment thật với TimelockController OZ5.4.0 delay120 và exclusive roles,
+bootstrap renounce **trước funding**, manifest/full role audit và positive
+Governor→Timelock→Treasury. Có demo1000 BUD, competing7000/6000/topup3000/retry,
+shared request, bounded governance invariant và approved transferFrom snapshot
+regression. Source/ABI Treasury không đổi; còn peer review/SC05 và testnet, không
+lấy smoke Treasury-only hoặc unit callback token làm deployment production.
+

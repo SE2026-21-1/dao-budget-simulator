@@ -1,0 +1,68 @@
+{
+  "scope": "Observed GitHub Actions only; no approval or whole-system acceptance claim",
+  "implementationSource": "fcd01e5a29300aa4d30e3703ea6e91b6b8b0fb0f",
+  "implementationRuns": [
+    {
+      "id": 39543232800,
+      "event": "push",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543232800",
+      "head_sha": "fcd01e5a29300aa4d30e3703ea6e91b6b8b0fb0f",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119035511887,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543232800/job/119035511887"
+        },
+        {
+          "id": 119035512114,
+          "name": "Foundry, Treasury/Governor invariants and live smoke",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543232800/job/119035512114"
+        },
+        {
+          "id": 119035512177,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543232800/job/119035512177"
+        }
+      ]
+    },
+    {
+      "id": 39543238043,
+      "event": "pull_request",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543238043",
+      "head_sha": "fcd01e5a29300aa4d30e3703ea6e91b6b8b0fb0f",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119035529010,
+          "name": "Foundry, Treasury/Governor invariants and live smoke",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543238043/job/119035529010"
+        },
+        {
+          "id": 119035529271,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543238043/job/119035529271"
+        },
+        {
+          "id": 119035529356,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543238043/job/119035529356"
+        }
+      ]
+    }
+  ]
+}

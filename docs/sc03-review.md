@@ -73,8 +73,8 @@ Runner sở hữu Anvil riêng, chỉ bind loopback và tự dừng sau chạy; 
 
 ## 4. Điều kiện chưa đủ để nghiệm thu
 
-- QA02/QA03 toàn hệ thống: SC04/SC05, constructor và role graph thực; manifest và check-roles phải xác nhận chỉ Timelock giữ Treasury admin/spender, Governor giữ đúng quyền Timelock, không còn bootstrap quyền.
-- QA05/QA06 governance: propose/vote/queue/execute thật, boundary snapshot/deadline/ETA, whitelist, cancel và INV02/INV04.
+- QA02/QA03 **local đã có** [deploy/manifest/check-roles SC04](sc04-governor.md#tv4-kiểm-chứng-độc-lập-sau-tích-hợp-sc04--21102026): Timelock giữ Treasury admin/spender, Governor giữ role Timelock, bootstrap bỏ trước funding. Còn peer review và testnet, không dùng role EOA của báo cáo lịch sử này.
+- QA05/QA06 governance đã chạy smoke/attack/bounded invariant; cần rà đủ variants và peer review theo [matrix](test-plan.md), không suy ra full INV từ Treasury-only source7a0ab33.
 - QA07: BE checkpoint/K-confirmations/reorg/resume/projections/API/rebuild, UI wallet/form thật và so cùng block H.
 - QA08: testnet có RPC/faucet, xác minh hỗ trợ Osaka; chờ thời gian thật, không dùng time-warp.
 

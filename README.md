@@ -15,7 +15,7 @@ HTTP API và ví giao dịch frontend chưa hoàn tất; chưa có demo UI→cha
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`; [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) chờ peer review |
 | SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
-| SC06 — ABI và dữ liệu tích hợp | Có ABI Governor/Treasury/token; manifest/receipt local TV4 không thay bàn giao testnet hay consumer acceptance |
+| SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
 | SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |

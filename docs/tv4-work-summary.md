@@ -1,6 +1,6 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục 4–5. Vai trò: kiểm thử bảo mật và vận hành. Mục 1–3 giữ bằng chứng lịch sử đúng source commit, không phải trạng thái mới nhất.
+Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục 5–6. Vai trò: kiểm thử bảo mật và vận hành. Mục1–3/5 giữ bằng chứng lịch sử đúng source commit; SC04 mới nhất ở mục6.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
 
@@ -142,14 +142,14 @@ tests của nhánh SC02 thành test suite đã tích hợp vào TV4.
 ## 4. Những việc chưa được coi là hoàn thành
 
 - Peer review/approval và merge PR #5; clone sạch chạy đủ demo trên máy thành viên khác.
-- Governor/Timelock SC04/SC05 và role graph cuối; GOV/BUD/Treasury đã tích hợp ngày 21/10.
-- Deploy/seed/check-roles toàn hệ thống, manifest thật và env.example khớp deployment thực tế.
-- Attack/invariant governance; TC01–TC14 và INV01–INV04 chưa đủ evidence nghiệm thu dù có Treasury-only campaign.
+- Peer review SC04/SC05/deployment/role graph; local đã có Governor và TimelockController thật, không còn chờ contract giả.
+- Deploy/seed/check-roles/manifest **testnet**; local QA02/QA03 đã có script và evidence thực, không thay testnet.
+- Đủ biến thể/reset/peer review cho TC01–TC14 và INV toàn hệ thống; đã có governance attack/bounded oracle, không còn chỉ Treasury-only.
 - BE checkpoint/confirmations/resume/reorg/projections/API/rebuild, benchmark và freshness; BE02 raw reader/storage đã tích hợp.
 - Frontend dùng fixture chung, ví/form/giao dịch thật, UI/E2E và kiểm tra bàn phím.
 - Deploy testnet và demo một proposal giải ngân thành công, một proposal thất bại.
 
-**Bước tiếp theo:** nhận review PR #5/#12; TV1 bàn giao Governor–Timelock; TV2 checkpoint/projections/API/rebuild và TV3 wallet/form/shared fixtures. TV4 mở rộng kiểm chứng theo test matrix khi đầu vào có thật, không giả full governance từ Treasury-only.
+**Bước tiếp theo:** nhận review PR #5/#12/#13 và deploy/check-roles; TV2 checkpoint/projections/API/rebuild, TV3 wallet/form/shared fixtures; chốt testnet/RPC/faucet/Osaka. Không dùng địa chỉ smoke đã dừng hoặc receipt nhánh reset để cấu hình chain đang chạy.
 
 ## 5. Bổ sung bàn giao ngày 21/10/2026
 
@@ -173,3 +173,47 @@ tests của nhánh SC02 thành test suite đã tích hợp vào TV4.
 [Tổng hợp local](evidence/tv4-local-verification-20261021.json) phân biệt native SQL, Docker CI, Treasury-only và các prerequisite còn thiếu. Ba invariant checks được Foundry nhóm vào một campaign, không nhân 5.000 calls thành15.000.
 
 Các kết quả mới không phải TC01–TC14/INV01–INV04 đã nghiệm thu toàn bộ. EOA spender trong smoke chỉ là tài khoản thử nghiệm trên Anvil tạm, không là deployment role cuối. Chưa fault-inject failure/interruption của Docker runner; log hiện chứng minh cleanup sau đường chạy thành công.
+
+## 6. Sau TV1 push SC04: QA02/QA03/QA05/QA06 local
+
+| Source / task | Đã thực hiện | Tác dụng |
+|---|---|---|
+| `70c2b33` / [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) | Merge SC04 `f57fcfd` và mở PR nguồn vào Dev | TV4 có Governor thật; giữ82 unit/security tests/ABI của TV1, không sửa source sản phẩm hay tự approval. |
+| `fcd01e5` / [QA02 #14](https://github.com/SE2026-21-1/dao-budget-simulator/issues/14) | `deploy_local.mjs`, `governance_local.mjs`: real graph, final roles trước funding, seed/delegate/checkpoint, manifest/receipts/source/compiler/ABI | Người khác khởi động Anvil rỗng và deploy lại không cần khóa bí mật; QA02 demo1000 BUD không phụ thuộc UI hoặc fake Timelock. |
+| `fcd01e5` / [QA03 #15](https://github.com/SE2026-21-1/dao-budget-simulator/issues/15) | `check_roles.mjs`: pinH, source/constructor/runtime/token links/config/full role history | Phát hiện cả extra holder ngoài demo mapping; CLI trả1 khi sai, chặn funding, không chỉ xác nhận một holder đúng. |
+| `fcd01e5` / [QA05 #16](https://github.com/SE2026-21-1/dao-budget-simulator/issues/16) | Smoke actual Anvil: timing/snapshot/quorum/cancel/whitelist/direct bypass/replay/oversubscription/retry | Có exact receipt/custom error/operation salt và Transfer ledger thật; không gán EOA thành Timelock. |
+| `fb7d5c5` / [QA06 #17](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17) |4 governance properties,14 handler actions, independent balances/delegates/allowances/checkpoints/payout oracle; regression multi-snapshot + transferFrom | Kiểm cả trọng số từng voter và chuỗi thất bại→nạp→retry; successful execute trong fuzz sequence, không vacuous seed-only test. |
+
+### Kết quả thực tế
+
+- [Foundry](evidence/tv4-sc04-foundry-20261021.txt): **142passed/0failed/0skipped**,
+  82 Governor unit; governance100×50=5000calls,4 checks nhóm1campaign, seed0x20261021.
+  Treasury vẫn có campaign riêng. Counter cuối5 successful executes không là tổng100runs;
+  positive transferFrom/snapshot mutation được kiểm trong regression, không suy từ cuối
+  campaign có0 transferFrom successes.
+- [Live governance](evidence/sc04-local-smoke.json): nhánh QA02 riêng5 receipts
+  chi1000 BUD, quỹ9000/recipient1000; reset rồi campaign **105receipts49success/56revert**.
+  Tranh7.000/6.000, topup3.000/retry cùng operation; ledger13.000in/out, quỹ0/R7000/R2=6000/F7000.
+- [Role CLI](evidence/sc04-role-audit.json): **8probes đúng kỳ vọng**; bootstrap
+  deliberately cấp thêm spender0x...0999 rồi renounce, checker nhận ra dù không nằm
+  trong demo mapping; Treasury0/F20000 chưa funding. Đây là misconfiguration fixture,
+  không là khả năng của attacker sau init.
+- BE02 **HttpRpc/readBatch thật**:108headers block2–109,61raw/45decoded/16unknown/0decodeErrors,
+ 0discarded. Unknown access-control/init topics giữraw; GOV raw-only do registry chưa hỗ trợ.
+- [Backend regression](evidence/tv4-sc04-backend-20261021.txt): Node24.15.0,
+  typecheck/build,63unit tests và fixture BE01 đạt. SQL/Docker chạy ở CI, không
+  giả SQL local cho chain governance.
+- [CI implementation push39543232800](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543232800)
+  và [PR39543238043](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39543238043),
+  sourcefcd01e5: cả3job success, gồm governance smoke thật và PostgreSQL cô lập.
+  Trạng thái source mới nhất xem PR #5/[metadata CI](evidence/tv4-sc04-ci.json).
+
+### Ranh giới
+
+Không tự đánh full TC01–TC14/INV/NFR/E2E hoặc SC05/testnet đạt. Oracle bounded
+5voter/4recipient/16request/24proposal; chưa ERC1271/signature/aggregate100runs hoặc
+arbitrary-strategy liveness. Source unit signatures đã chạy không thay oracle coverage.
+Checker holder audit toàn lịch sử độc lập với universe hữu hạn trong invariant.
+API/projections/K-confirmations/reorg/rebuild và frontend wallet/form còn phụ thuộc
+TV2/TV3. Mạng testnet/RPC/faucet/Osaka chưa chốt; scripts cố ý **local-only**, không
+phát giao dịch testnet hay giả receipt. Chờ peer review/merge, không đóng issue chỉ vì CI xanh.

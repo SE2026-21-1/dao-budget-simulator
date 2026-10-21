@@ -1,0 +1,87 @@
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+> dao-budget-simulator@0.0.0 test:be02
+> tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts
+
+✔ CLI help and invalid arguments have appropriate exit codes (2971.100663ms)
+✔ CLI reports unsupported ABI as an actionable config error (1143.71908ms)
+✔ CLI rejects wrong chain before attempting PostgreSQL and never prints secrets (1258.955807ms)
+✔ config preserves bigint, validates scope and permits a pinned latest request (11.824047ms)
+✔ reject invalid config: numericChainId (1.147188ms)
+✔ reject invalid config: zeroChain (0.836017ms)
+✔ reject invalid config: overflow (0.671995ms)
+✔ reject invalid config: fractionalBlock (1.131649ms)
+✔ reject invalid config: negativeBlock (0.672149ms)
+✔ reject invalid config: reversedRange (1.596272ms)
+✔ reject invalid config: zeroBatch (1.022578ms)
+✔ reject invalid config: unboundedBatch (1.613585ms)
+✔ reject invalid config: invalidRpc (1.888875ms)
+✔ reject invalid config: deploymentOverflow (0.858739ms)
+✔ reject invalid config: emptyContracts (0.415456ms)
+✔ reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI (17.122554ms)
+✔ synthetic vectors cover all eleven required event types and source indexed layouts (7.696173ms)
+✔ decodes governor.ProposalCreated with exact named ABI values (59.595593ms)
+✔ decodes governor.VoteCast with exact named ABI values (4.608555ms)
+✔ decodes governor.ProposalQueued with exact named ABI values (5.596003ms)
+✔ decodes governor.ProposalExecuted with exact named ABI values (3.322352ms)
+✔ decodes governor.ProposalCanceled with exact named ABI values (11.097273ms)
+✔ decodes timelock.CallScheduled with exact named ABI values (14.273231ms)
+✔ decodes timelock.CallExecuted with exact named ABI values (6.133054ms)
+✔ decodes timelock.Cancelled with exact named ABI values (5.68293ms)
+✔ decodes timelock.CallSalt with exact named ABI values (8.679893ms)
+✔ decodes treasury.BudgetDisbursed with exact named ABI values (9.018281ms)
+✔ decodes budget_token.Transfer with exact named ABI values (3.323446ms)
+✔ independent hand-assembled canonical Transfer vector decodes without fixture encoder (3.018812ms)
+✔ preserves uint256 above 2^53 including indexed integers and maximum proposal ID (18.316287ms)
+✔ dynamic description and reason preserve exact Unicode and whitespace (28.91007ms)
+✔ registry Treasury fragment matches handed-over shared JSON ABI exactly (7.94518ms)
+✔ ABI version is explicitly bound to contract role and cannot use object prototype keys (9.555292ms)
+✔ unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC (6.167862ms)
+✔ known events reject missing, additional and malformed indexed topics (14.497045ms)
+✔ known events reject truncated, odd, nonhex and trailing data (8.724367ms)
+✔ known events reject noncanonical uint8 and invalid dynamic offsets (9.781513ms)
+✔ NUL in valid Solidity description or reason is raw-only for JSONB storage (14.709456ms)
+✔ invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error (2.500615ms)
+✔ decoded, unknown and malformed logs retain every original RPC field (4.260434ms)
+✔ range boundaries work above Number.MAX_SAFE_INTEGER without gaps (6.375609ms)
+✔ scan includes every boundary/empty block and sorts tx/log indices; preserves raw input (74.596739ms)
+✔ different deployment blocks retain early contract logs and clamp each RPC filter (9.115972ms)
+✔ RPC cannot return a known contract log before its deployment block (3.76474ms)
+✔ RPC cannot substitute another configured contract in a filter response (2.072141ms)
+✔ duplicate transaction hashes in a header are contradictory (1.712616ms)
+✔ wrong chain stops before any storage write or block request (1.817592ms)
+✔ latest is pinned once for the finite scan (5.319291ms)
+✔ outside-deployment log is dropped before ABI or canonical-log validation (5.769081ms)
+✔ unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics (36.79885ms)
+✔ reject contradictory/invalid log: removed (7.838673ms)
+✔ reject contradictory/invalid log: pending (36.28148ms)
+✔ reject contradictory/invalid log: blockHash (1.183664ms)
+✔ reject contradictory/invalid log: block number (0.845315ms)
+✔ reject contradictory/invalid log: txHash (1.500143ms)
+✔ reject contradictory/invalid log: txIndex (1.013705ms)
+✔ reject contradictory/invalid log: invalid hex (0.922503ms)
+✔ reject contradictory/invalid log: unsafe index (12.499949ms)
+✔ detect colliding log positions and transaction order disagreement (1.832314ms)
+✔ reports previous committed batch separately when a later header chain disagrees (8.603132ms)
+✔ changing final header prevents write (1.914172ms)
+✔ HTTP JSON-RPC transport reads synthetic logs through scanner (447.627772ms)
+✔ RPC HTTP failures redact URL paths and body; prior batches remain explicit (53.68853ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 63
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6744.976323
+BE01 OK: 123 JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.
+Timeline OK: 105 timestamp-ordered blocks, 190 distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.
+Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.
+Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.

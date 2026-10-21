@@ -272,12 +272,16 @@ SHA khi review. Kết quả TV4 source `7a0ab33`: cả ba job success tại
 cleanup container/volume. [Metadata](evidence/tv4-ci-7a0ab33.json) giữ SHA/artifact.
 
 Kết quả thực tế và môi trường ghi tại [checklist BE02](be02-checklist.md).
-Ngay cả khi toàn bộ test synthetic và PostgreSQL đạt, BE02 vẫn **chưa nghiệm thu
-bằng receipt thật SC06**. TV1/TV4 cần bàn giao ABI build, manifest địa chỉ/chain/
-deployment block, receipt/log thật cho create/vote/queue/execute/cancel cùng
-header tương ứng. Khi đó đối chiếu schema/indexed fields và các ID
-proposal/request/operation, salt/predecessor trước khi chốt tích hợp.
+Ngay cả khi test synthetic/PostgreSQL và local receipt đạt, BE02 vẫn chưa có
+nghiệm thu SC06 end-to-end hoặc projection/API/checkpoint/reorg. TV4 đã bàn giao
+ABI Governor/Treasury build, manifest local thật và receipt create/vote/queue/
+execute/cancel tại [SC04 evidence](sc04-governor.md#tv4-kiểm-chứng-độc-lập-sau-tích-hợp-sc04--21102026).
+TV2 cần peer review schema/indexed fields/IDs/salt và tích hợp PostgreSQL; không
+dùng địa chỉ của smoke đã dừng làm deployment đang chạy.
 
-TV4 [smoke Treasury](sc03-review.md) đã decode receipt Transfer/BudgetDisbursed
-local thật bằng BE02. Đây là proof boundary token/Treasury→decoder, không
-thay scanner→PostgreSQL/projection/API hoặc receipt Governor/Timelock SC06.
+TV4 `scripts/smoke_governance.mjs` đã chạy **HttpRpc/readBatch thật** trên owned
+Anvil:108header block2–109,61raw/45decoded/16unknown initialization/role topics,
+0decode errors/0discarded. Bốn role Governor/Timelock/Treasury/BUD; GOV chưa hỗ trợ
+registry, raw-only. Operation salt đúng OZ5.4 right-padding Governor XOR
+descriptionHash, không bằng descriptionHash. Proof này chưa ghi chain đó vào
+PostgreSQL, không thay projections/API/confirmations/reorg/rebuild acceptance.

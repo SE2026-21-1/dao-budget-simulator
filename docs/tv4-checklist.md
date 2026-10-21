@@ -16,7 +16,20 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 Các mục đã đánh dấu là thành phần đã được thiết lập, không phải bằng chứng
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
-Đã tích hợp GOV/BUD/Treasury và BE02 vào nhánh TV4 ngày 21/10. Governor/Timelock, projection/API, reorg/rebuild và UI wallet thật vẫn thiếu.
+Đã tích hợp GOV/BUD/Treasury/BudgetGovernor và BE02 vào TV4. TimelockController OZ5.4.0 thật đã dùng cho deploy/seed/check-roles/smoke local; projection/API, reorg/rebuild và UI wallet thật vẫn thiếu, SC05/testnet chưa peer nghiệm thu.
+
+## SC04 mở khóa QA02–QA03/QA05–QA06 — 21/10/2026
+
+- [x] Tích hợp TV1 `f57fcfd` bằng `70c2b33`; mở [PR #13 SC04](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13), request TV1/TV2 review; không tự approval/merge.
+- [x] [QA02 #14](https://github.com/SE2026-21-1/dao-budget-simulator/issues/14): deploy local thực, grant final roles/renounce bootstrap trước funding, seed và historical delegation, manifest/compiler/ABI/source/receipt.
+- [x] [QA03 #15](https://github.com/SE2026-21-1/dao-budget-simulator/issues/15): checker cùngH từ creation/runtime/token links/config/full grant-revoke history; [8 probes CLI](evidence/sc04-role-audit.json) đúng exit0/sai exit1. Extra spender thật ngoài demo mapping bị chặn trước funding.
+- [x] Smoke final-role EOA→Governor→Timelock→Treasury: [QA02 demo5 receipt chi1000 và campaign105receipt](evidence/sc04-local-smoke.json), snapshot/delay/cancel/whitelist/replay/budget race/retry. Nhánh demo được reset, không trộn ledger.
+- [x] [QA05 #16](https://github.com/SE2026-21-1/dao-budget-simulator/issues/16): regression concurrent khác snapshot/shared request/budget retry; smoke có exact time/error/receipt. Coverage cục bộ theo [matrix](test-plan.md), không phải mọi TC đã PASS.
+- [x] [QA06 #17](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17):4 governance invariant checks, campaign100×50 seed0x20261021; ghost oracle độc lập và execute trong sequence. [Review/scope](sc04-governor.md#qa05qa06-oracle-và-giới-hạn), [stdout](evidence/tv4-sc04-foundry-20261021.txt).
+- [x] BE02 HttpRpc/readBatch đọc chain thật:108 header,61 raw/45decoded/16unknown/0decode errors tạiH109;0 discarded. Không DB/projection/API/reorg, GOV raw-only.
+- [ ] Peer review/approval và merge; đầy đủ TC variants/whole-system INV/E2E, testnet.
+
+`scripts/deploy_local.mjs` để chain do người dùng mở tiếp tục chạy; `scripts/smoke_governance.mjs` tự sở hữu và dừng chain tạm. Cả hai không dùng private key hay RPC testnet. Hướng dẫn chạy ở README; manifest cũ ràng buộc source commit/build ghi kèm.
 
 ## Tiến độ tích hợp ngày 21/10/2026
 
@@ -65,32 +78,31 @@ PostgreSQL Windows trước đó của TV2 được giữ riêng tại `be01-che
 
 ## Thứ tự thực hiện
 
-1. TV1 bàn giao SC04/SC05, constructor/role graph và ABI/receipt; token/Treasury đã tích hợp.
-2. TV4 hoàn thiện deploy/seed/check-roles governance khi có đầu vào; không dùng spender EOA của smoke làm mẫu deployment cuối.
-3. Mở rộng Treasury-only invariant sang governance/attack khi có contract thật; cần successful Governor execute.
-4. TV2 hoàn thiện checkpoint/reorg/projections/API/rebuild; TV3 wallet/form/shared fixtures, rồi TV4 chạy E2E/same-H.
-5. TV1 review deployment, xác minh testnet Osaka/RPC/faucet, deploy/testnet/evidence.
+1. TV1/TV2 peer review PR #13/#5 và deploy/check-roles, đối chiếu bàn giao SC05; local không còn chờ Governor/Timelock giả.
+2. TV2/TV3 dùng manifest của **Anvil local còn chạy**, không dùng địa chỉ smoke đã dừng hoặc receipt nhánh reset làm canonical.
+3. Rà đủ actor/state/transferFrom/zero-request/reset variants và bounded oracle; không nâng scope vượt evidence.
+4. TV2 checkpoint/K-confirmations/reorg/projections/API/rebuild; TV3 wallet/form/shared fixtures, rồi TV4 E2E/same-H.
+5. Chốt mạng testnet/RPC/faucet, xác minh Osaka/compiler, TV1 review deployment trước phát giao dịch thật.
 
 ## Deploy, cấu hình và demo (NFR05, NFR08)
 
-- [ ] Script deploy local và testnet, lưu chainId, địa chỉ, deploymentBlock,
-  ABI version, cấu hình governance và commit SHA.
-- [ ] Seed GOV 1.000: A/B/C/D = 400/300/200/100; self-delegate và checkpoint quá khứ.
-- [ ] Seed BUD 20.000: treasury 10.000, ví nạp quỹ 10.000; 18 decimals.
-- [ ] Cấu hình threshold 50, quorum 20%, voting delay 60 giây,
-  voting period 300 giây, timelock 120 giây; clock GOV/Governor thống nhất.
-- [ ] `check-roles` đọc và kiểm tra đúng bảng quyền, trả exit code khác 0 nếu sai.
-- [ ] Treasury SPENDER chỉ Timelock; admin Treasury là Timelock.
-- [ ] Timelock PROPOSER/EXECUTOR/CANCELLER chỉ Governor; EXECUTOR không mở zero address.
-- [ ] Admin Timelock là chính Timelock; deployer đã từ bỏ quyền ở cả hai nơi.
-- [ ] Có `.env.example` phù hợp script thực tế; không commit private key/RPC secret.
+- [x] Script deploy/seed **local** và manifest chainId/từng address/block/tx, ABI/compiler/source/config/commit; [README](../README.md#deploy-audit-role-và-demo-governance-local--tv4).
+- [ ] Script/deployment/manifest **testnet**; không coi local thành testnet.
+- [x] GOV1000: A/B/C/D400/300/200/100, self-delegate và checkpoint đã quá khứ.
+- [x] BUD20000: Treasury10000/funding10000 sau init,18 decimals.
+- [x] Threshold50,quorum20%,delay60/period300/minDelay120,timestamp clock.
+- [x] Checker đúng exit0/sai exit1, read-only cùngH và full role history.
+- [x] Treasury admin/spender chỉ Timelock.
+- [x] Timelock proposer/executor/canceller chỉ Governor, zero executor không mở.
+- [x] Admin Timelock self, deployer bỏ bootstrap cả Treasury/Timelock **trước funding**.
+- [x] `.env.example` BE02 hiện có; deploy/checker dùng `--rpc` explicit, không nạp `.env` tự động hoặc nhận key.
 - [ ] Xác nhận testnet hỗ trợ EVM/compiler đã chọn trước deployment.
-- [ ] Local demo tự tăng thời gian; testnet chờ thời gian thực.
+- [x] Local tự tăng thời gian và QA02 demo1000 BUD qua Governor thật; chưa dùng time-warp trên testnet.
 - [ ] Testnet có ít nhất một proposal giải ngân và một proposal thất bại.
 
 ## Acceptance và attack scenarios
 
-Các TC dưới đây chưa nghiệm thu đầy đủ. TC06/TC09/TC10/TC14 có **bằng chứng Treasury cục bộ** trong E-SC03-C/E-TV4-21 của [test matrix](test-plan.md), không thay phần Governor/Timelock/UI/API còn thiếu.
+Các TC dưới đây chưa nghiệm thu đầy đủ. E-SC04-L/E-SC04-ROLE/E-GOV-INV trong [matrix](test-plan.md) đã mở khóa bằng chứng contract/roles/reader thật, không thay đầy đủ variants hoặc Governor/UI/API end-to-end. E-SC03-C/E-TV4-21 giữ scope Treasury-only lịch sử.
 
 | Mã | Điều cần kiểm tra | Phối hợp |
 | --- | --- | --- |
@@ -120,9 +132,8 @@ Các TC dưới đây chưa nghiệm thu đầy đủ. TC06/TC09/TC10/TC14 có *
 - [ ] INV03: số dư BUD treasury bằng tổng vào trừ tổng ra.
 - [ ] INV04: thay đổi token sau snapshot không làm tổng trọng số phiếu vượt tổng cung tại snapshot.
 - [x] Có campaign Treasury-only100×50 và oracle độc lập; không đánh dấu các INV toàn hệ thống phía trên đạt.
-- [ ] Có handler stateful, tối thiểu 100 chuỗi × 50 thao tác trong CI.
-- [ ] Handler đi được đến execute thành công; ghi số lần thành công/revert,
-  seed và thống kê để tránh bộ test chỉ toàn revert.
+- [x] Handler governance CI tối thiểu100chuỗi×50,4properties nhóm1campaign; Treasury campaign riêng.
+- [x] Handler đạt execute thành công trong sequence, có attempts/success/revert/state counters và seed; counters stdout là chuỗi cuối, không tự nhận aggregate100runs.
 
 ## CI và evidence cuối kỳ
 

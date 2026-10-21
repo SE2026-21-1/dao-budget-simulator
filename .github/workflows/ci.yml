@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   contracts:
-    name: Foundry, Treasury invariants and live smoke
+    name: Foundry, Treasury/Governor invariants and live smoke
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
@@ -51,6 +51,10 @@ jobs:
         shell: bash
         run: |
           node --import tsx scripts/smoke_treasury.mjs --output reports/sc03-local-smoke.json 2>&1 | tee reports/sc03-smoke.log
+      - name: Exercise final roles and real Governor to Timelock to Treasury transactions
+        shell: bash
+        run: |
+          node --import tsx scripts/smoke_governance.mjs --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
       - name: Record scope of checks
         if: always()
         shell: bash

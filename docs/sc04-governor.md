@@ -136,13 +136,12 @@ forge fmt
 forge build
 forge test --match-path 'tests/unit/BudgetGovernor.t.sol' -vv
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 forge fmt --check
-git diff --check
 ```
 
-Nhánh thực tế còn scripts/check_sc01.py; scripts/check.py của TV4 chưa vào Dev khi tạo SC04.
-Không sửa checker hoặc công việc backend/frontend/CI của thành viên khác.
+Nhánh TV4 dùng checker chuẩn `scripts/check.py`. Các kết quả nguồn bên dưới giữ
+tên `scripts/check_sc01.py` để phân biệt bằng chứng lịch sử tại nhánh TV1.
 
 ## Ánh xạ nghiệm thu SC04
 

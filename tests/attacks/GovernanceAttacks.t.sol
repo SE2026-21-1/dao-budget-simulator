@@ -45,7 +45,14 @@ contract GovernanceAttacksTest is GovernanceOracleChecks {
         // Its historical 700 votes must nevertheless remain valid in BOTH.
         handler.delegateGov(4, handler.ACTOR_COUNT());
         handler.delegateGov(1, 1);
-        handler.transferGov(4, 2, 400 ether);
+        handler.approveGov(4, 3, 400 ether);
+        handler.transferFromGov(4, 3, 2, 400 ether);
+        assertEq(handler.allowances(4, 3), 0);
+        // A different funded owner gave this spender no approval: the denied
+        // transfer cannot rewrite either proposal's already pinned snapshot.
+        uint256 delegatedFailures = handler.reverts(uint256(GovernanceOracleHandler.CallKind.TransferFrom));
+        handler.transferFromGov(2, 3, 4, 1 ether);
+        assertEq(handler.reverts(uint256(GovernanceOracleHandler.CallKind.TransferFrom)), delegatedFailures + 1);
         handler.vote(1, 0, 1);
         handler.vote(1, 1, 1);
         handler.vote(2, 4, 1);

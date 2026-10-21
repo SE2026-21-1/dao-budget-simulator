@@ -34,7 +34,9 @@ contract GovernanceOracleHandler is Test {
         Transfer,
         Delegate,
         Unauthorized,
-        Tamper
+        Tamper,
+        Approve,
+        TransferFrom
     }
 
     struct Proposal {
@@ -73,11 +75,13 @@ contract GovernanceOracleHandler is Test {
     Checkpoint[] internal checkpoints;
     uint256[5] public balances;
     uint256[5] public delegates; // ACTOR_COUNT denotes undelegated/address(0).
+    uint256[5][5] public allowances;
+    uint256[8] public stateVisits;
     uint256[16] public paymentsByRequest;
     uint256[4] public received;
-    uint256[10] public attempts;
-    uint256[10] public successes;
-    uint256[10] public reverts;
+    uint256[12] public attempts;
+    uint256[12] public successes;
+    uint256[12] public reverts;
     uint256 public totalFunded;
     uint256 public totalPaid;
     uint256 public successfulExecutions;
@@ -172,6 +176,11 @@ contract GovernanceOracleHandler is Test {
     function _begin() internal {
         sequenceCalls++;
         if (sequenceCalls == 1) _reachable(0);
+        // Sample model states before each action; invariants independently
+        // compare these states with Governor. Counters are per sequence.
+        for (uint256 i; i < proposals.length; ++i) {
+            stateVisits[uint256(expectedState(i))]++;
+        }
     }
 
     function lifecycle(uint256 seed) external {
@@ -247,6 +256,40 @@ contract GovernanceOracleHandler is Test {
             _checkReturn(result, 1);
             balances[from] -= amount;
             balances[to] += amount;
+            _checkpoint();
+        }
+    }
+
+    function approveGov(uint256 ownerSeed, uint256 spenderSeed, uint256 amountSeed) external {
+        _begin();
+        uint256 owner = ownerSeed % ACTOR_COUNT;
+        uint256 spender = spenderSeed % ACTOR_COUNT;
+        uint256 amount = amountSeed == type(uint256).max ? amountSeed : bound(amountSeed, 0, 2_000 ether);
+        (bool ok, bytes memory result) = _call(
+            CallKind.Approve, actor(owner), address(gov), abi.encodeCall(gov.approve, (actor(spender), amount)), true
+        );
+        if (ok) {
+            _checkReturn(result, 1);
+            allowances[owner][spender] = amount;
+        }
+    }
+
+    function transferFromGov(uint256 owner, uint256 spender, uint256 to, uint256 amountSeed) external {
+        _begin();
+        owner %= ACTOR_COUNT;
+        spender %= ACTOR_COUNT;
+        to %= ACTOR_COUNT;
+        uint256 amount = bound(amountSeed, 0, 2_000 ether);
+        bool expected = amount <= balances[owner] && amount <= allowances[owner][spender];
+        bytes memory payload = abi.encodeCall(gov.transferFrom, (actor(owner), actor(to), amount));
+        (bool ok, bytes memory result) = _call(CallKind.TransferFrom, actor(spender), address(gov), payload, expected);
+        // Preserve the sticky mismatch on unexpected success without letting an
+        // underflow in ghost accounting revert/discard the offending action.
+        if (ok && expected) {
+            _checkReturn(result, 1);
+            balances[owner] -= amount;
+            balances[to] += amount;
+            if (allowances[owner][spender] != type(uint256).max) allowances[owner][spender] -= amount;
             _checkpoint();
         }
     }
@@ -698,6 +741,13 @@ abstract contract GovernanceOracleChecks is Test {
             assertEq(
                 h.gov().delegates(h.actor(i)), h.delegates(i) == h.ACTOR_COUNT() ? address(0) : h.actor(h.delegates(i))
             );
+            for (uint256 spender; spender < h.ACTOR_COUNT(); ++spender) {
+                assertEq(
+                    h.gov().allowance(h.actor(i), h.actor(spender)),
+                    h.allowances(i, spender),
+                    "INV04: allowance differs from independent approval/transferFrom history"
+                );
+            }
             balances += h.balances(i);
         }
         assertEq(balances, h.SUPPLY());
@@ -738,7 +788,7 @@ contract GovernanceInvariantTest is GovernanceOracleChecks {
     function setUp() public {
         vm.warp(10_000);
         handler = new GovernanceOracleHandler();
-        bytes4[] memory selectors = new bytes4[](12);
+        bytes4[] memory selectors = new bytes4[](14);
         selectors[0] = GovernanceOracleHandler.lifecycle.selector;
         selectors[1] = GovernanceOracleHandler.propose.selector;
         selectors[2] = GovernanceOracleHandler.vote.selector;
@@ -751,6 +801,8 @@ contract GovernanceInvariantTest is GovernanceOracleChecks {
         selectors[9] = GovernanceOracleHandler.delegateGov.selector;
         selectors[10] = GovernanceOracleHandler.unauthorized.selector;
         selectors[11] = GovernanceOracleHandler.tamper.selector;
+        selectors[12] = GovernanceOracleHandler.approveGov.selector;
+        selectors[13] = GovernanceOracleHandler.transferFromGov.selector;
         targetContract(address(handler));
         targetSelector(FuzzSelector({addr: address(handler), selectors: selectors}));
     }
@@ -786,6 +838,16 @@ contract GovernanceInvariantTest is GovernanceOracleChecks {
         emit log_named_uint(
             "unauthorized reverts", handler.reverts(uint256(GovernanceOracleHandler.CallKind.Unauthorized))
         );
+        emit log_named_uint("approval successes", handler.successes(uint256(GovernanceOracleHandler.CallKind.Approve)));
+        emit log_named_uint(
+            "transferFrom successes", handler.successes(uint256(GovernanceOracleHandler.CallKind.TransferFrom))
+        );
+        emit log_named_uint(
+            "transferFrom reverts", handler.reverts(uint256(GovernanceOracleHandler.CallKind.TransferFrom))
+        );
+        for (uint256 i; i < 8; ++i) {
+            emit log_named_uint(string.concat("model state visits ", vm.toString(i)), handler.stateVisits(i));
+        }
         emit log_named_uint("total BUD funded", handler.totalFunded());
         emit log_named_uint("total BUD paid", handler.totalPaid());
     }

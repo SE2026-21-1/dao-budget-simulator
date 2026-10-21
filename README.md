@@ -1,16 +1,33 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Nhánh tích hợp hiện có nền tảng SC01
-và thiết kế/fixture BE01; chưa chạy được demo end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Repository đã có nền tảng SC01 và
+hai token của SC02: GovernanceToken (GOV) và BudgetToken (BUD), kèm unit test.
+SC03 đã có Treasury và unit test chống chi lặp. Chưa triển khai Governor/Timelock,
+chưa chạy được demo end-to-end.
+
+## Trạng thái các task TV1
+
+| Task | Trạng thái |
+|---|---|
+| SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
+| SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
+| SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
+| SC04 — Governor và giới hạn proposal | Chưa triển khai |
+| SC05 — Timelock và quyền sau deploy | Chưa triển khai |
+| SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
+| SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất governance; đã có unit test SC01/SC02/SC03 |
+| SC08 — Tích hợp local | Chưa thực hiện |
+| SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
+| SC10 — Testnet và bàn giao | Chưa thực hiện |
 
 ## Môi trường Foundry — TV4 Operation
 
 Cấu hình, thư viện và dữ liệu tích hợp SC01 được đồng bộ từ nhánh `feature/tv1-sc01`,
 commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Interface `ITreasury`, ABI chia sẻ,
 fixture tổng hợp và script kiểm tra fixture được giữ làm chuẩn tích hợp.
-Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4;
-chưa có triển khai Treasury, voting hoặc timelock.
+Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4.
+GOV/BUD và Treasury đã tích hợp từ `Dev` tại `1f40748`; Governor/Timelock chưa có.
 
 | Thành phần | Phiên bản |
 | --- | --- |
@@ -80,11 +97,49 @@ Xem [checklist và kế hoạch TV4](docs/tv4-checklist.md) để tiếp tục.
 Sau khi tích hợp frontend/indexer, cần bổ sung job typecheck và indexer tests
 trước khi đánh dấu NFR07 hoàn tất.
 
+## Unit test SC02
+
+Sau khi cài dependency và toolchain ở trên, chạy riêng từng token:
+
+```bash
+forge test --match-path 'tests/unit/GovernanceToken.t.sol' -vv
+forge test --match-path 'tests/unit/BudgetToken.t.sol' -vv
+```
+
+Hoặc chạy cả hai token, rồi toàn bộ test để kiểm tra cùng SC01:
+
+```bash
+forge test --match-path 'tests/unit/*Token.t.sol' -vv
+forge test
+```
+
+Test GOV kiểm tra nguồn cung/phân bổ, decimals, delegation, timestamp clock và
+checkpoint lịch sử. Test BUD kiểm tra nguồn cung, phân bổ demo, chuyển không phí,
+approve/transferFrom và allowance. Có test âm và fuzz test cho hai token.
+Constructor và trình tự phân bổ cho TV4 được mô tả trong
+[tài liệu SC02](docs/sc02-tokens.md).
+
+## Unit test SC03
+
+```bash
+forge build
+forge test --match-path 'tests/unit/Treasury.t.sol' -vv
+forge test -vv
+python3 scripts/check.py
+```
+
+Treasury dùng AccessControl và SafeERC20; nạp bằng transfer BUD, kiểm tra số dư khi chi,
+chặn requestId đã thanh toán và cho retry sau lần thất bại. Test dùng địa chỉ Timelock giả lập,
+chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng dẫn SC03](docs/sc03-treasury.md).
+
 ## Tài liệu và chuẩn tích hợp
 
 - [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
 - [Phân công TV1](docs/requirements/TV1_Cong_viec_Smart_Contracts.md)
 - [Giao tiếp contract và quyết định chờ review](docs/contracts.md)
+- [SC02 — Token, constructor và phân bổ cho TV4](docs/sc02-tokens.md)
+- [SC03 — Treasury, quyền và bàn giao TV4](docs/sc03-treasury.md)
+- [ABI Treasury triển khai](shared/abi/Treasury.json)
 - [ABI interface Treasury](shared/abi/ITreasury.json)
 - [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)
 - [Phân công TV4](docs/TV4_Cong_viec_Testing_Deployment.md)

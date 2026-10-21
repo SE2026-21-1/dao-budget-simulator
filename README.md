@@ -3,7 +3,7 @@
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
 Chỉ dùng local/testnet, không dùng tiền thật. Repository đã có nền tảng SC01 và
 hai token của SC02: GovernanceToken (GOV) và BudgetToken (BUD), kèm unit test.
-SC03 đã có Treasury và unit test chống chi lặp. Chưa triển khai Governor/Timelock,
+SC03 đã có Treasury và unit test chống chi lặp. SC04 đã có BudgetGovernor và fixture Timelock trong unit test; chưa hoàn tất SC05,
 chưa chạy được demo end-to-end.
 
 ## Trạng thái các task TV1
@@ -13,7 +13,7 @@ chưa chạy được demo end-to-end.
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
 | SC02 — Token và voting power | Đã triển khai hai token và unit test; chờ review/tích hợp |
 | SC03 — Treasury và chống chi lặp | Đã triển khai Treasury, unit test và ABI; chờ review/tích hợp |
-| SC04 — Governor và giới hạn proposal | Chưa triển khai |
+| SC04 — Governor và giới hạn proposal | Đã triển khai BudgetGovernor, unit test và ABI; chờ review |
 | SC05 — Timelock và quyền sau deploy | Chưa triển khai |
 | SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
 | SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất; đã có unit test SC01/SC02 |
@@ -81,6 +81,19 @@ Treasury dùng AccessControl và SafeERC20; nạp bằng transfer BUD, kiểm tr
 chặn requestId đã thanh toán và cho retry sau lần thất bại. Test dùng địa chỉ Timelock giả lập,
 chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng dẫn SC03](docs/sc03-treasury.md).
 
+## Unit test SC04
+
+```bash
+forge build
+forge test --match-path 'tests/unit/BudgetGovernor.t.sol' -vv
+forge test -vv
+python3 scripts/check_sc01.py
+```
+
+BudgetGovernor chỉ nhận một lời gọi Treasury.disburse chuẩn ABI, dùng GOV timestamp checkpoint,
+threshold 50 GOV và quorum 20%. Xem [SC04 — Governor](docs/sc04-governor.md).
+Test có Timelock thật làm fixture; production roles/deploy/check-roles thuộc SC05 và TV4.
+
 ## Tài liệu và chuẩn tích hợp
 
 - [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
@@ -88,6 +101,8 @@ chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng d�
 - [Giao tiếp contract và quyết định chờ review](docs/contracts.md)
 - [SC02 — Token, constructor và phân bổ cho TV4](docs/sc02-tokens.md)
 - [SC03 — Treasury, quyền và bàn giao TV4](docs/sc03-treasury.md)
+- [SC04 — Governor, proposal và voting](docs/sc04-governor.md)
+- [ABI BudgetGovernor](shared/abi/BudgetGovernor.json)
 - [ABI Treasury triển khai](shared/abi/Treasury.json)
 - [ABI interface Treasury](shared/abi/ITreasury.json)
 - [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)

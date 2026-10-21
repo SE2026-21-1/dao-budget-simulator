@@ -120,7 +120,10 @@ async function loadProject(root) {
     assert.equal(metadata.settings.optimizer.runs, 200, `${key}: wrong optimizer runs`);
     assert.equal(metadata.settings.evmVersion, 'osaka', `${key}: wrong EVM target`);
     assert.deepEqual(metadata.settings.compilationTarget, { [spec.source]: spec.name }, `${key}: wrong compilation target`);
-    assert.deepEqual(artifact.abi, metadata.output.abi, `${key}: ABI disagrees with compiler metadata`);
+    // Foundry reorders fragments and inserts empty outputs/normalizes receive
+    // inputs. Compare the complete ABI semantics, not those JSON representations.
+    const canonicalAbi = (abi) => new Interface(abi).fragments.map((fragment) => fragment.format('json')).sort();
+    assert.deepEqual(canonicalAbi(artifact.abi), canonicalAbi(metadata.output.abi), `${key}: ABI disagrees with compiler metadata`);
     assert.match(artifact.bytecode.object, /^0x[0-9a-fA-F]+$/, `${key}: missing/unlinked creation bytecode`);
     assert.match(artifact.deployedBytecode.object, /^0x[0-9a-fA-F]+$/, `${key}: missing/unlinked runtime bytecode`);
     for (const [source, info] of Object.entries(metadata.sources)) {

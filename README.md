@@ -1,10 +1,10 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp SC01, token
-GOV/BUD, Treasury và BE02 đọc log RPC/lưu PostgreSQL. Có unit tests, kiểm thử
-stateful Treasury và smoke giao dịch local. Chưa có Governor/Timelock đầy đủ,
-HTTP API hoặc ví giao dịch frontend; chưa chạy được demo DAO end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
+Treasury, BudgetGovernor và BE02 đọc log RPC/lưu PostgreSQL. Có script local
+deploy/seed/manifest/check-roles, invariant Treasury/governance và smoke Anvil.
+HTTP API và ví giao dịch frontend chưa hoàn tất; chưa có demo UI→chain→API end-to-end.
 
 ## Trạng thái các task TV1
 
@@ -13,11 +13,11 @@ HTTP API hoặc ví giao dịch frontend; chưa chạy được demo DAO end-to-
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
-| SC04 — Governor và giới hạn proposal | Đã tích hợp từ `f57fcfd`; TV4 kiểm chứng độc lập và chờ peer review |
-| SC05 — Timelock và quyền sau deploy | Chưa triển khai |
-| SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
-| SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất governance; đã có unit test SC01/SC02/SC03 |
-| SC08 — Tích hợp local | Chưa thực hiện |
+| SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`; [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) chờ peer review |
+| SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
+| SC06 — ABI và dữ liệu tích hợp | Có ABI Governor/Treasury/token; manifest/receipt local TV4 không thay bàn giao testnet hay consumer acceptance |
+| SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
+| SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
 | SC10 — Testnet và bàn giao | Chưa thực hiện |
 
@@ -161,6 +161,51 @@ python3 scripts/check.py
 BudgetGovernor chỉ nhận một lời gọi Treasury.disburse chuẩn ABI, dùng GOV timestamp checkpoint,
 threshold 50 GOV và quorum 20%. Xem [SC04 — Governor](docs/sc04-governor.md).
 Test có Timelock thật làm fixture; production roles/deploy/check-roles thuộc SC05 và TV4.
+
+## Deploy, audit role và demo governance local — TV4
+
+Cần Foundry 1.8.5, Node 24.15.0 và `npm ci`; build bằng cấu hình đã khóa.
+Để giữ chain chạy cho TV2/TV3, mở terminal riêng:
+
+```bash
+anvil --host 127.0.0.1 --chain-id 31337 --hardfork osaka --silent
+```
+
+Trên **Anvil mới, rỗng, không fork**, chạy:
+
+```bash
+forge build
+node scripts/deploy_local.mjs --rpc http://127.0.0.1:8545 --output /tmp/dao-local-manifest.json
+node scripts/check_roles.mjs --rpc http://127.0.0.1:8545 --manifest /tmp/dao-local-manifest.json
+```
+
+Script chỉ nhận RPC deploy numeric loopback, không nhận key, từ chối chain có
+giao dịch và không ghi đè manifest. Deploy GOV/BUD/Treasury/Timelock/Governor
+thật; bỏ admin bootstrap, audit role **trước** funding10.000 BUD, rồi delegate
+400/300/200/100 GOV và mine checkpoint quá khứ. Funding wallet còn10.000 BUD.
+Manifest chứa receipt, từng deployment block, hash source/compiler/ABI, commit,
+scanFromBlock và chính sách K=2. K chỉ là cấu hình bàn giao, BE02 chưa tự thực thi
+confirmations/checkpoint. Checker read-only cùng H, đối chiếu creation/runtime,
+constructor/token links/config và toàn bộ lịch sử role với `hasRole`; exit khác0
+khi sai. Manifest ràng buộc đúng source commit/build; audit lại bản cũ phải dùng
+đúng checkout ghi trong manifest. Địa chỉ local không dùng làm cấu hình testnet.
+
+Smoke tự sở hữu Anvil loopback tạm, không tác động chain đang chạy:
+
+```bash
+node --import tsx scripts/smoke_governance.mjs --output /tmp/sc04-local-smoke.json
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/invariant/GovernanceInvariant.t.sol -vv
+forge test --match-path tests/attacks/GovernanceAttacks.t.sol -vvvv
+```
+
+Smoke có nhánh F0 chi đúng1.000 BUD, lưu receipt riêng rồi revert nhánh đó trước
+campaign attack; không trộn receipt đã revert vào ledger canonical cuối. Campaign
+chính kiểm snapshot/deadline/ETA, final roles, quorum/cancel/payload, chi7.000,
+thiếu tiền cho6.000, nạp3.000/retry cùng operation và hai proposal trùng request.
+BE02 `HttpRpc/readBatch` đọc thật Governor/Timelock/Treasury/BUD; GOV giữ raw receipt,
+registry BE02 chưa hỗ trợ GOV. Không có DB projection/API/UI hoặc reorg trong smoke.
+Xem [bằng chứng và review SC04](docs/sc04-governor.md) và [matrix nghiệm thu](docs/test-plan.md).
+
 
 ## Tài liệu và chuẩn tích hợp
 

@@ -39,7 +39,7 @@ try {
   await new Promise((done, reject) => { reserve.once('error', reject); reserve.listen(0, '127.0.0.1', done); });
   const port = reserve.address().port;
   await new Promise((done, reject) => reserve.close(error => error ? reject(error) : done()));
-  anvil = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--timestamp', '1800000000', '--allow-blocks-with-same-timestamp', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
+  anvil = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--timestamp', '1800000000', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
   anvil.on('error', error => { anvilOutput += error.message; });
   for (const stream of [anvil.stdout, anvil.stderr]) stream.on('data', data => { anvilOutput += data; });
   const rpc = async (method, params = []) => {

@@ -395,35 +395,38 @@ contract GovernanceOracleHandler is Test {
     {
         if (proposals.length >= MAX_PROPOSALS) return (false, 0);
         index = proposals.length;
-        string memory description = string.concat("tv4-stateful-proposal-", vm.toString(index));
-        address[] memory targets = new address[](1);
-        targets[0] = address(treasury);
-        uint256[] memory values = new uint256[](1);
-        bytes[] memory data = new bytes[](1);
-        data[0] = abi.encodeCall(ITreasury.disburse, (requestId(request), recipient(recipientIndex), amount));
-        bytes memory result;
-        (created, result) = _call(
-            CallKind.Propose,
-            actor(proposerIndex),
-            address(governor),
-            abi.encodeCall(governor.propose, (targets, values, data, description)),
-            _weightsAt(block.timestamp - 1)[proposerIndex] >= 50 ether
-        );
-        if (!created) return (false, index);
         proposals.push();
         Proposal storage p = proposals[index];
-        p.descriptionHash = keccak256(bytes(description));
-        p.id = uint256(keccak256(abi.encode(targets, values, data, p.descriptionHash)));
-        _checkReturn(result, p.id);
         p.request = request;
         p.recipientIndex = recipientIndex;
         p.amount = amount;
         p.proposerIndex = proposerIndex;
         p.snapshot = block.timestamp + 60;
         p.deadline = block.timestamp + 360;
-        p.operation = keccak256(
-            abi.encode(targets, values, data, bytes32(0), bytes32(bytes20(address(governor))) ^ p.descriptionHash)
+        bytes memory payload;
+        {
+            string memory description = string.concat("tv4-stateful-proposal-", vm.toString(index));
+            p.descriptionHash = keccak256(bytes(description));
+            (address[] memory targets, uint256[] memory values, bytes[] memory data) = _action(p);
+            p.id = uint256(keccak256(abi.encode(targets, values, data, p.descriptionHash)));
+            p.operation = keccak256(
+                abi.encode(targets, values, data, bytes32(0), bytes32(bytes20(address(governor))) ^ p.descriptionHash)
+            );
+            payload = abi.encodeCall(governor.propose, (targets, values, data, description));
+        }
+        bytes memory result;
+        (created, result) = _call(
+            CallKind.Propose,
+            actor(p.proposerIndex),
+            address(governor),
+            payload,
+            _weightsAt(block.timestamp - 1)[p.proposerIndex] >= 50 ether
         );
+        if (!created) {
+            proposals.pop();
+            return (false, index);
+        }
+        _checkReturn(result, p.id);
     }
 
     function _vote(uint256 index, uint256 voter, uint8 support) internal {
@@ -465,19 +468,20 @@ contract GovernanceOracleHandler is Test {
             && p.tallies[1] > p.tallies[0];
         bool expected = validPath && paymentsByRequest[p.request] == 0 && totalPaid <= totalFunded
             && p.amount <= totalFunded - totalPaid;
-        (address[] memory targets, uint256[] memory values, bytes[] memory data) = _action(p);
+        bytes memory executionPayload;
+        bytes memory disbursement;
+        {
+            (address[] memory targets, uint256[] memory values, bytes[] memory data) = _action(p);
+            disbursement = data[0];
+            executionPayload = abi.encodeCall(governor.execute, (targets, values, data, p.descriptionHash));
+        }
         vm.recordLogs();
-        (bool ok, bytes memory result) = _call(
-            CallKind.Execute,
-            actor(4),
-            address(governor),
-            abi.encodeCall(governor.execute, (targets, values, data, p.descriptionHash)),
-            expected
-        );
+        (bool ok, bytes memory result) =
+            _call(CallKind.Execute, actor(4), address(governor), executionPayload, expected);
         Vm.Log[] memory entries = vm.getRecordedLogs();
         if (!ok) return;
         _checkReturn(result, p.id);
-        _checkPaymentEvents(p, entries, data[0]);
+        _checkPaymentEvents(p, entries, disbursement);
         p.executed = true;
         p.executedAt = block.timestamp;
         p.validExecution = validPath;

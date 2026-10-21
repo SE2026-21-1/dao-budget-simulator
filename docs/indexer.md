@@ -190,7 +190,8 @@ node scripts/check_be01.mjs
 git diff --check
 ```
 
-Kết quả thực tế ngày **20/10/2026**, Windows/Node.js 24: `npm ci`, build và
+Kết quả lịch sử của TV2 ngày **20/10/2026**, Windows/Node.js 24 (không phải kết quả
+Linux/CI của tích hợp TV4): `npm ci`, build và
 typecheck **PASS**; `test:be02` **63/63 PASS**; `test:be02:db` **21/21 PASS** trên
 PostgreSQL **18.4** thật, không skip. Suite SQL chạy cả migration/checks BE01 và
 CLI thật qua HTTP RPC synthetic. Cluster tạm đã dừng. Checker BE01 đạt 123 JSON,
@@ -221,12 +222,54 @@ npm run test:be02:db -- -PostgresBin 'D:\duong-dan\PostgreSQL\bin'
 Runner tạo cluster mới dưới `%TEMP%/dao-be02-pg-<uuid>`, bind localhost/cổng
 riêng, không sử dụng `DATABASE_URL`, dừng cluster khi xong và giữ data/log cho
 review. Test mock không thay bằng chứng SQL này. Nếu PostgreSQL không có sẵn,
-ghi rõ test chưa chạy; không suy PASS từ unit test. Trên hệ điều hành khác,
-tạo cluster test riêng với user `be02_test`, database `be02_test` **mới, trống**
-trên `127.0.0.1`, rồi đặt `BE02_TEST_DATABASE_URL` và `BE02_TEST_ISOLATED=1` để
-chạy trực tiếp `npx tsx --test tests/indexer/storage.test.ts`. Suite tự chạy
-migration/SQL checks BE01, từ chối database có bảng sẵn; chỉ đặt cờ isolated khi
-chắc chắn đây là database mới dành riêng cho test.
+ghi rõ test chưa chạy; không suy PASS từ unit test.
+
+### Linux/macOS: Docker PostgreSQL 18.4, Node chạy trên host
+
+Cần Docker daemon local đang hoạt động và Node.js **24.15.0** trên host. Không
+chạy Node/tsx bên trong container: test mở HTTP RPC synthetic trên loopback và
+gọi CLI child process trên cùng host.
+
+```bash
+npm ci
+npm run typecheck
+npm run build
+npm run test:be02
+npm run test:be02:db:linux
+# Hoặc gọi trực tiếp cùng runner:
+bash scripts/check_be02_database.sh
+```
+
+Tên npm `:linux` là lệnh Bash tường minh, cũng dùng được với Bash/Docker Desktop
+trên macOS; không thay thế lệnh PowerShell `test:be02:db` của Windows. Runner
+tạo container **mới** từ `postgres:18.4`, user/database `be02_test`, password
+ngẫu nhiên và anonymous volume riêng. Không mount dữ liệu host, không dùng
+`DATABASE_URL` của người gọi hoặc database đang có. Docker tự cấp cổng host qua
+`127.0.0.1::5432`; không probe/chọn cổng cố định, không publish `0.0.0.0`/IPv6.
+Runner kiểm tra binding loopback rồi đặt riêng `BE02_TEST_DATABASE_URL` và
+`BE02_TEST_ISOLATED=1` cho test host. Suite tự chạy migration/SQL checks BE01,
+từ chối database có bảng sẵn; không có chế độ chạy thiếu URL rồi skip storage.
+
+Readiness giới hạn 90 lượt kiểm tra cách nhau 1 giây, dừng sớm khi unhealthy
+hoặc container ngừng. Trap EXIT/INT/TERM xóa đúng container theo CID file cùng
+anonymous volume, cả khi readiness/test lỗi; lỗi cleanup làm lệnh thất bại.
+Không giữ database sau test; stdout/stderr chứa image ID, phiên bản PostgreSQL,
+binding và kết quả suite, kèm server log khi có lỗi. SIGKILL hoặc mất Docker
+daemon không thể được trap xử lý; nếu cleanup báo lỗi phải xử lý CID được in,
+không coi test là PASS.
+
+### CI BE02 và giới hạn bằng chứng Linux
+
+Job `be02` trong `.github/workflows/ci.yml` dùng Ubuntu 24.04 và Node.js
+24.15.0, chạy đúng chuỗi `npm ci`, typecheck, build, `test:be02` và Docker runner
+ở trên. Artifact `tv4-be02-<github.sha>` giữ **14 ngày**: log từng bước, SHA
+checkout thật (`commit.txt`), SHA sự kiện (`event-sha.txt`), phiên bản
+Node/npm/TypeScript/tsx/Docker; log database ghi phiên bản PostgreSQL và image ID.
+SHA checkout có thể là merge commit của pull request, nên cần đối chiếu cả hai
+SHA khi review. Kết quả TV4 source `7a0ab33`: cả ba job success tại
+[run39539691342](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342);
+[Docker stdout](evidence/be02-ci-7a0ab33.txt) có21 storage tests không skip và
+cleanup container/volume. [Metadata](evidence/tv4-ci-7a0ab33.json) giữ SHA/artifact.
 
 Kết quả thực tế và môi trường ghi tại [checklist BE02](be02-checklist.md).
 Ngay cả khi toàn bộ test synthetic và PostgreSQL đạt, BE02 vẫn **chưa nghiệm thu
@@ -234,3 +277,7 @@ bằng receipt thật SC06**. TV1/TV4 cần bàn giao ABI build, manifest địa
 deployment block, receipt/log thật cho create/vote/queue/execute/cancel cùng
 header tương ứng. Khi đó đối chiếu schema/indexed fields và các ID
 proposal/request/operation, salt/predecessor trước khi chốt tích hợp.
+
+TV4 [smoke Treasury](sc03-review.md) đã decode receipt Transfer/BudgetDisbursed
+local thật bằng BE02. Đây là proof boundary token/Treasury→decoder, không
+thay scanner→PostgreSQL/projection/API hoặc receipt Governor/Timelock SC06.

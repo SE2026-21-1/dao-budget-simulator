@@ -1,9 +1,10 @@
 # API đọc BE01 — đặc tả để TV3 làm song song
 
-**Trạng thái: đề xuất chờ TV1/TV3 review.** Đây là hợp đồng dữ liệu dự kiến,
-chưa có HTTP server hoặc indexer. [Fixture](../fixtures/api/README.md) là dữ liệu
-tổng hợp; mọi địa chỉ, block, hash giao dịch và operation trong đó không chứng minh
-deployment hoặc giao dịch thật. Không gửi giao dịch đến địa chỉ fixture.
+**Trạng thái: đề xuất chờ TV1/TV3 review.** Chưa có HTTP server/projection phục vụ
+API này. BE02 đã có finite RPC reader/raw storage, không phải API đã triển khai.
+[Fixture](../fixtures/api/README.md) vẫn là dữ liệu tổng hợp; địa chỉ, block,
+hash và operation trong fixture không chứng minh deployment/giao dịch thật.
+Không gửi giao dịch đến địa chỉ fixture.
 
 API chỉ đọc, không giữ private key, ký giao dịch, giữ chỗ ngân sách hay quyết định
 quyền chi tiền. Ví gửi propose/vote/queue/execute/cancel trực tiếp qua Governor.

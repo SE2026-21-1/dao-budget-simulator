@@ -1,10 +1,10 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Repository đã có nền tảng SC01 và
-hai token của SC02: GovernanceToken (GOV) và BudgetToken (BUD), kèm unit test.
-SC03 đã có Treasury và unit test chống chi lặp. Chưa triển khai Governor/Timelock,
-chưa chạy được demo end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp SC01, token
+GOV/BUD, Treasury và BE02 đọc log RPC/lưu PostgreSQL. Có unit tests, kiểm thử
+stateful Treasury và smoke giao dịch local. Chưa có Governor/Timelock đầy đủ,
+HTTP API hoặc ví giao dịch frontend; chưa chạy được demo DAO end-to-end.
 
 ## Trạng thái các task TV1
 
@@ -79,23 +79,24 @@ của testnet trước khi deploy. Không commit private key hoặc RPC secret:
 Sau khi cài dependency, chạy các kiểm tra Foundry như job contracts:
 
 ```bash
-FOUNDRY_PROFILE=ci bash scripts/ci.sh
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh
 ```
 
-Job contracts dùng Foundry 1.8.5, Python 3.12 và profile `ci` (256 fuzz runs;
-100 invariant runs × 50 thao tác khi có invariant suite). Job BE01 dùng
-Node.js 24.15.0 kiểm tra fixture và container PostgreSQL 18.4 kiểm tra SQL.
-Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
-Xem Actions → **TV4 CI**; mỗi job lưu log và commit SHA trong artifact 14 ngày.
-Lần đầu cần mạng để tải công cụ, submodule, compiler và image PostgreSQL;
-không cần RPC/private key. Chạy fixture/SQL local theo các lệnh BE01 bên dưới.
+Job contracts dùng Foundry 1.8.5, Python 3.12, Node 24.15.0 và profile `ci`
+(256 fuzz runs, 100 invariant runs × 50 thao tác, seed `0x20261021`). Job này
+còn deploy BUD/Treasury trên Anvil tạm để kiểm giao dịch thật và decoder BE02.
+Job BE01 kiểm fixture/SQL; job BE02 cài dependency theo lockfile, typecheck,
+build, 63 bài kiểm tra RPC/decoder và 21 bài storage/CLI trên PostgreSQL 18.4
+cô lập. Mỗi job giữ log, SHA và phiên bản trong artifact 14 ngày.
 
-CI kiểm tra build, format, ABI/fixture tổng hợp và ràng buộc SQL hiện có,
-không chứng minh indexer/API thật, resume/reorg/rebuild hoặc bảo mật giải ngân.
-Nhánh tích hợp chưa có Treasury/Governor/Timelock đầy đủ để nghiệm thu E2E.
-Xem [checklist và kế hoạch TV4](docs/tv4-checklist.md) để tiếp tục.
-Sau khi tích hợp frontend/indexer, cần bổ sung job typecheck và indexer tests
-trước khi đánh dấu NFR07 hoàn tất.
+Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
+Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
+Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
+
+[CI bản triển khai `7a0ab33`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342)
+đã chạy thành công cả ba job; [metadata và log SQL](docs/evidence/tv4-ci-7a0ab33.json).
+Đây không chứng minh Governor/Timelock, checkpoint/reorg/rebuild, HTTP API,
+UI wallet/E2E hay NFR07 toàn hệ thống. Xem [checklist TV4](docs/tv4-checklist.md).
 
 ## Unit test SC02
 
@@ -132,6 +133,22 @@ Treasury dùng AccessControl và SafeERC20; nạp bằng transfer BUD, kiểm tr
 chặn requestId đã thanh toán và cho retry sau lần thất bại. Test dùng địa chỉ Timelock giả lập,
 chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng dẫn SC03](docs/sc03-treasury.md).
 
+### Smoke độc lập TV4 và invariant Treasury-only
+
+Cần Node 24.15.0; chạy sau build ở trên:
+
+```bash
+npm ci
+node --import tsx scripts/smoke_treasury.mjs --output /tmp/sc03-local-smoke.json
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/invariant/TreasuryAccounting.t.sol -vv
+```
+
+Smoke sở hữu Anvil loopback tạm, tự dừng; không nhận RPC URL/private key.
+Kiểm phân quyền, chi trùng, thiếu tiền/retry và 7 Transfer/3 BudgetDisbursed
+thật qua BE02. Spender EOA là thiết lập thử nghiệm, không phải Timelock.
+Invariant dùng oracle lịch sử độc lập; không thay INV01–INV04 governance.
+Xem [review SC03](docs/sc03-review.md) và [kết quả local](docs/evidence/tv4-local-verification-20261021.json).
+
 ## Tài liệu và chuẩn tích hợp
 
 - [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
@@ -145,6 +162,7 @@ chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng d�
 - [Phân công TV4](docs/TV4_Cong_viec_Testing_Deployment.md)
 - [Test matrix và trạng thái nghiệm thu](docs/test-plan.md)
 - [Review token SC02 và smoke local](docs/sc02-review.md)
+- [Review SC03 độc lập, invariant và receipt smoke](docs/sc03-review.md)
 - [Tổng kết công việc TV4 và tác dụng](docs/tv4-work-summary.md)
 
 Fixture SC01 không phải receipt hoặc bằng chứng deployment. Receipt/log thật thuộc SC06.
@@ -195,11 +213,12 @@ nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
 
 ## BE02 — RPC log reader và decoder
 
-BE02 quét một dải block hữu hạn, decode 11 event theo ABI đã xác định nguồn và
-ghi header/raw log vào PostgreSQL bằng transaction. Chưa có projection, API server,
-checkpoint, K confirmations, resume/reorg rollback hoặc rebuild. Trên `Dev` hiện
-chưa có receipt SC06; kiểm thử dùng dữ liệu synthetic riêng, không chứng minh
-nghiệm thu bằng giao dịch thật.
+BE02 được tích hợp từ `4c568d6`; [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12)
+được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 11 event
+và ghi header/raw log trong transaction PostgreSQL. Chưa có projection,
+HTTP API, checkpoint, K confirmations, resume/reorg rollback hoặc rebuild.
+Suite BE02 dùng synthetic RPC; smoke SC03 bổ sung decode receipt Treasury/BUD
+local thật, không phải nghiệm thu SC06/full DAO hoặc chain→DB→API.
 
 Cần Node.js 24 và PostgreSQL (đã kiểm thử với 18.4):
 
@@ -218,6 +237,17 @@ khác vị trí mặc định, chạy:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1 -PostgresBin "C:\Program Files\PostgreSQL\18\bin"
 ```
+
+Trên Linux/macOS có Docker:
+
+```bash
+npm run test:be02:db:linux
+```
+
+Runner tạo container PostgreSQL 18.4 mới, cổng host ngẫu nhiên chỉ bind
+`127.0.0.1`, không dùng `DATABASE_URL` của người gọi; host chạy test CLI/RPC
+và tự xóa container/anonymous volume. Đã chạy thật trên CI; không dùng
+database đang có hoặc đổi quyền socket để vượt lỗi môi trường.
 
 Để quét RPC, chuẩn bị database đã migrate cùng metadata deployment khớp cấu hình
 theo [hướng dẫn indexer](docs/indexer.md), rồi chạy:

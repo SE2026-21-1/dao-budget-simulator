@@ -1,6 +1,6 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết: **20/10/2026**. Vai trò: kiểm thử bảo mật và vận hành.
+Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục 4–5. Vai trò: kiểm thử bảo mật và vận hành. Mục 1–3 giữ bằng chứng lịch sử đúng source commit, không phải trạng thái mới nhất.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
 
@@ -142,13 +142,34 @@ tests của nhánh SC02 thành test suite đã tích hợp vào TV4.
 ## 4. Những việc chưa được coi là hoàn thành
 
 - Peer review/approval và merge PR #5; clone sạch chạy đủ demo trên máy thành viên khác.
-- Tích hợp token SC02 vào Dev; Treasury/Governor/Timelock thật và bảng role đã chốt.
-- Deploy/seed/check-roles toàn hệ thống, manifest thật và env.example khớp script thực tế.
-- Attack/invariant governance; TC01–TC14 và INV01–INV04 có evidence nghiệm thu đầy đủ.
-- Indexer/API thật, resume/reorg/rebuild cùng H, benchmark và phép đo freshness.
+- Governor/Timelock SC04/SC05 và role graph cuối; GOV/BUD/Treasury đã tích hợp ngày 21/10.
+- Deploy/seed/check-roles toàn hệ thống, manifest thật và env.example khớp deployment thực tế.
+- Attack/invariant governance; TC01–TC14 và INV01–INV04 chưa đủ evidence nghiệm thu dù có Treasury-only campaign.
+- BE checkpoint/confirmations/resume/reorg/projections/API/rebuild, benchmark và freshness; BE02 raw reader/storage đã tích hợp.
 - Frontend dùng fixture chung, ví/form/giao dịch thật, UI/E2E và kiểm tra bàn phím.
 - Deploy testnet và demo một proposal giải ngân thành công, một proposal thất bại.
 
-**Bước tiếp theo:** lấy review cho PR #5; TV1 bàn giao PR SC02 và contract tiếp theo;
-TV3/TV2 chốt fixture/API. TV4 dùng test matrix để triển khai và nghiệm thu các
-bài thực tế khi đủ đầu vào, không đánh dấu hoàn thành bằng mock hoặc fixture.
+**Bước tiếp theo:** nhận review PR #5/#12; TV1 bàn giao Governor–Timelock; TV2 checkpoint/projections/API/rebuild và TV3 wallet/form/shared fixtures. TV4 mở rộng kiểm chứng theo test matrix khi đầu vào có thật, không giả full governance từ Treasury-only.
+
+## 5. Bổ sung bàn giao ngày 21/10/2026
+
+### Mã đã tích hợp và giá trị
+
+| Commit / PR | Thay đổi | Tác dụng |
+|---|---|---|
+| `496a2f3` | Merge Dev `1f40748`, gồm token và Treasury | TV4 dùng production contract thật, cập nhật đường checker `scripts/check.py`, không phục hồi test ABI trùng. |
+| `5cb8b7e` | Merge BE02 `4c568d6` | Có reader RPC hữu hạn, ABI decoder và raw PostgreSQL storage để kiểm tra tích hợp. |
+| `7a0ab33` | Treasury stateful QA, runtime smoke, Linux BE02 runner và CI | Oracle độc lập nhiều role epochs; proof giao dịch thật và decoder; CI không dừng ở JSON/SQL constraints. |
+| [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12) | TV4 mở bàn giao từ branch TV2, request TV2/TV1 review | Không sửa lịch sử nhánh TV2, không tự nhận approval hoặc merge Dev. |
+
+### Kết quả đã quan sát
+
+- Foundry **58 passed, 0 failed, 0 skipped**. Ba invariant checks Treasury-only trong campaign100×50, seed `0x20261021`, 5.000 handler calls; [stdout](evidence/tv4-foundry-20261021.txt).
+- Node **24.15.0**, typecheck/build và BE02 **63/63** unit/RPC/decoder tests; BE01 vẫn123 JSON,45 proposal,20/20/5. [Stdout backend](evidence/tv4-be02-20261021.txt).
+- PostgreSQL **18.4** native cluster mới trên loopback: **21/21** storage/CLI tests, không skip; đã dừng/xóa sau chạy. Không dùng database đang có, không đổi permission Docker.
+- [Smoke Treasury thật](evidence/sc03-local-smoke.json):19 receipt (13 thành công/6 revert), phân quyền, chi trùng, thiếu tiền/nạp/retry, revoke/re-grant/renounce; ledger12.000 vào/12.000 ra. BE02 decode7 Transfer/3 BudgetDisbursed local thật. [Review và lệnh tái hiện](sc03-review.md).
+- [Push CI39539691342](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342) và [PR CI39539695150](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539695150) tại source `7a0ab33`: **cả ba job success**. [Docker stdout](evidence/be02-ci-7a0ab33.txt) xác nhận PostgreSQL18.4, binding127.0.0.1,21 tests không skip và cleanup container/volume; [metadata](evidence/tv4-ci-7a0ab33.json).
+
+[Tổng hợp local](evidence/tv4-local-verification-20261021.json) phân biệt native SQL, Docker CI, Treasury-only và các prerequisite còn thiếu. Ba invariant checks được Foundry nhóm vào một campaign, không nhân 5.000 calls thành15.000.
+
+Các kết quả mới không phải TC01–TC14/INV01–INV04 đã nghiệm thu toàn bộ. EOA spender trong smoke chỉ là tài khoản thử nghiệm trên Anvil tạm, không là deployment role cuối. Chưa fault-inject failure/interruption của Docker runner; log hiện chứng minh cleanup sau đường chạy thành công.

@@ -16,7 +16,20 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 Các mục đã đánh dấu là thành phần đã được thiết lập, không phải bằng chứng
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
-Hiện chưa có Treasury/Governor/Timelock triển khai trong nhánh TV4.
+Đã tích hợp GOV/BUD/Treasury và BE02 vào nhánh TV4 ngày 21/10. Governor/Timelock, projection/API, reorg/rebuild và UI wallet thật vẫn thiếu.
+
+## Tiến độ tích hợp ngày 21/10/2026
+
+- [x] Tích hợp `Dev` (`1f40748`) và BE02 (`4c568d6`) bằng `496a2f3`/`5cb8b7e`; giữ checker ABI chuẩn TV4.
+- [x] QA03 Treasury: [review SC03](sc03-review.md), [19 receipt thật](evidence/sc03-local-smoke.json); quyền/chi trùng/thiếu tiền/retry/role transitions và ledger đạt cục bộ.
+- [x] Treasury-only stateful oracle: 3 invariant checks, campaign100×50, seed `0x20261021`; regression nhiều role epochs. Không thay whole-governance INV01–INV04.
+- [x] Local tại `7a0ab33`: Foundry58/58, BE02 unit63/63, PostgreSQL18.4 storage21/21, không skip; typecheck/build và BE01 fixture đạt. [Evidence local](evidence/tv4-local-verification-20261021.json).
+- [x] CI contracts+live smoke, BE01, BE02 đều thành công: [push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342), [PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539695150). [Docker log](evidence/be02-ci-7a0ab33.txt) xác nhận loopback và cleanup thành công; chưa fault-inject failure/interruption của runner.
+- [x] Mở [PR #12 BE02](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12), request TV2/TV1 review; không tự approval/merge vào Dev.
+- [ ] Peer approval/merge PR #5 và #12. Yêu cầu review không phải approval.
+
+Local SQL dùng cluster native tạm mới (Node24.15.0/PostgreSQL18.4), đã dừng/xóa; không vượt quyền Docker. Docker runner được kiểm chứng riêng trên CI. Phần ngày 20/10 dưới đây là lịch sử, không phải trạng thái tích hợp hiện tại.
+
 
 ## Tiến độ tích hợp ngày 20/10/2026
 
@@ -52,12 +65,11 @@ PostgreSQL Windows trước đó của TV2 được giữ riêng tại `be01-che
 
 ## Thứ tự thực hiện
 
-1. TV1 cung cấp token, Treasury, Governor, Timelock; chốt constructor,
-   ABI/event, clock timestamp và bảng role.
-2. TV4 thêm deploy/seed/check-roles local; TV1 review trước khi dùng testnet.
-3. Thêm attack và invariant suites; kiểm tra handler đi đến execute thành công.
-4. Phối hợp TV2/TV3 chạy E2E và rebuild; bổ sung CI ứng dụng/indexer.
-5. Deploy testnet, thu receipt, hoàn thiện demo và evidence.
+1. TV1 bàn giao SC04/SC05, constructor/role graph và ABI/receipt; token/Treasury đã tích hợp.
+2. TV4 hoàn thiện deploy/seed/check-roles governance khi có đầu vào; không dùng spender EOA của smoke làm mẫu deployment cuối.
+3. Mở rộng Treasury-only invariant sang governance/attack khi có contract thật; cần successful Governor execute.
+4. TV2 hoàn thiện checkpoint/reorg/projections/API/rebuild; TV3 wallet/form/shared fixtures, rồi TV4 chạy E2E/same-H.
+5. TV1 review deployment, xác minh testnet Osaka/RPC/faucet, deploy/testnet/evidence.
 
 ## Deploy, cấu hình và demo (NFR05, NFR08)
 
@@ -78,8 +90,7 @@ PostgreSQL Windows trước đó của TV2 được giữ riêng tại `be01-che
 
 ## Acceptance và attack scenarios
 
-Mọi dòng dưới đây đang chờ triển khai/kiểm chứng. Lưu mã test, lệnh chạy,
-kết quả và evidence tương ứng; không đánh dấu đạt chỉ vì có tên test.
+Các TC dưới đây chưa nghiệm thu đầy đủ. TC06/TC09/TC10/TC14 có **bằng chứng Treasury cục bộ** trong E-SC03-C/E-TV4-21 của [test matrix](test-plan.md), không thay phần Governor/Timelock/UI/API còn thiếu.
 
 | Mã | Điều cần kiểm tra | Phối hợp |
 | --- | --- | --- |
@@ -108,13 +119,15 @@ kết quả và evidence tương ứng; không đánh dấu đạt chỉ vì có
 - [ ] INV02: chi thành công chỉ qua proposal hợp lệ và Timelock hết delay.
 - [ ] INV03: số dư BUD treasury bằng tổng vào trừ tổng ra.
 - [ ] INV04: thay đổi token sau snapshot không làm tổng trọng số phiếu vượt tổng cung tại snapshot.
+- [x] Có campaign Treasury-only100×50 và oracle độc lập; không đánh dấu các INV toàn hệ thống phía trên đạt.
 - [ ] Có handler stateful, tối thiểu 100 chuỗi × 50 thao tác trong CI.
 - [ ] Handler đi được đến execute thành công; ghi số lần thành công/revert,
   seed và thống kê để tránh bộ test chỉ toàn revert.
 
 ## CI và evidence cuối kỳ
 
-- [ ] Khi có frontend/indexer: CI thêm build/typecheck/indexer tests theo lockfile thực tế.
+- [x] BE02 CI: lockfile/typecheck/build/RPC-decoder/storage-CLI PostgreSQL thật, có artifact SHA/logs.
+- [ ] Frontend CI và governance invariant/E2E đầy đủ sau bàn giao; chưa nghiệm thu NFR07.
 - [ ] Mọi yêu cầu an toàn có test âm; không còn lỗi mở cho phép chi sai/bỏ qua quyền.
 - [ ] Xác minh NFR02 hiệu năng và NFR03 độ mới với TV2; ghi máy, dữ liệu và lệnh đo.
 - [ ] Kiểm tra retry/backoff, checkpoint và phục hồi NFR04 với TV2.

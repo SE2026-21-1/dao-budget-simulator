@@ -13,7 +13,7 @@ HTTP API hoặc ví giao dịch frontend; chưa chạy được demo DAO end-to-
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
-| SC04 — Governor và giới hạn proposal | Chưa triển khai |
+| SC04 — Governor và giới hạn proposal | Đã tích hợp từ `f57fcfd`; TV4 kiểm chứng độc lập và chờ peer review |
 | SC05 — Timelock và quyền sau deploy | Chưa triển khai |
 | SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
 | SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất governance; đã có unit test SC01/SC02/SC03 |
@@ -27,7 +27,7 @@ Cấu hình, thư viện và dữ liệu tích hợp SC01 được đồng bộ 
 commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Interface `ITreasury`, ABI chia sẻ,
 fixture tổng hợp và script kiểm tra fixture được giữ làm chuẩn tích hợp.
 Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4.
-GOV/BUD và Treasury đã tích hợp từ `Dev` tại `1f40748`; Governor/Timelock chưa có.
+GOV/BUD/Treasury đã tích hợp từ `Dev` tại `1f40748`; BudgetGovernor từ `f57fcfd`. TimelockController dùng dependency OpenZeppelin đã khóa; SC05 chưa được bàn giao riêng.
 
 | Thành phần | Phiên bản |
 | --- | --- |
@@ -149,6 +149,19 @@ thật qua BE02. Spender EOA là thiết lập thử nghiệm, không phải Tim
 Invariant dùng oracle lịch sử độc lập; không thay INV01–INV04 governance.
 Xem [review SC03](docs/sc03-review.md) và [kết quả local](docs/evidence/tv4-local-verification-20261021.json).
 
+## Unit test SC04
+
+```bash
+forge build
+forge test --match-path 'tests/unit/BudgetGovernor.t.sol' -vv
+forge test -vv
+python3 scripts/check.py
+```
+
+BudgetGovernor chỉ nhận một lời gọi Treasury.disburse chuẩn ABI, dùng GOV timestamp checkpoint,
+threshold 50 GOV và quorum 20%. Xem [SC04 — Governor](docs/sc04-governor.md).
+Test có Timelock thật làm fixture; production roles/deploy/check-roles thuộc SC05 và TV4.
+
 ## Tài liệu và chuẩn tích hợp
 
 - [Yêu cầu nhóm](docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md)
@@ -156,6 +169,8 @@ Xem [review SC03](docs/sc03-review.md) và [kết quả local](docs/evidence/tv4
 - [Giao tiếp contract và quyết định chờ review](docs/contracts.md)
 - [SC02 — Token, constructor và phân bổ cho TV4](docs/sc02-tokens.md)
 - [SC03 — Treasury, quyền và bàn giao TV4](docs/sc03-treasury.md)
+- [SC04 — Governor, proposal và voting](docs/sc04-governor.md)
+- [ABI BudgetGovernor](shared/abi/BudgetGovernor.json)
 - [ABI Treasury triển khai](shared/abi/Treasury.json)
 - [ABI interface Treasury](shared/abi/ITreasury.json)
 - [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)

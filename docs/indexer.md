@@ -1,0 +1,236 @@
+# BE02 — đọc RPC log, decode ABI và lưu PostgreSQL
+
+BE02 là CLI quét **hữu hạn** một dải block cho một deployment. Đầu vào là
+Ethereum JSON-RPC; đầu ra là header trong `indexed_blocks` và log trong
+`raw_events` của migration BE01. Không có projection proposal/vote/operation,
+API server, checkpoint, K confirmations, rollback reorg hoặc rebuild ở bước này.
+Không dùng kết quả CLI để khẳng định dữ liệu đã sẵn sàng phục vụ API BE01.
+
+Trên `Dev` nền `1b247000396c3209bedf823c94e1ec1255239293`, BE01 đã có schema và
+123 fixture API. Khi bắt đầu BE02 ngày 20/10/2026, chưa có bàn giao SC06 trong
+`shared/abi/` hoặc `fixtures/chain/`. Nhánh remote TV1 SC02 cũng chưa có receipt
+SC06. Không merge nhánh TV1 vào BE02. Dữ liệu kiểm thử BE02 là synthetic riêng;
+hash giao dịch/block tổng hợp không phải bằng chứng giao dịch blockchain thật.
+
+## Kiến trúc
+
+```text
+config + ABI registry
+        |
+eth_chainId -> xác minh mạng
+        |
+cố định toBlock -> chia khoảng [from, to] liên tiếp
+        |
+eth_getLogs theo contract và deploymentBlock riêng
+        |
+header/timestamp + tọa độ transaction/log -> normalize -> sort
+        |
+decode: decoded | unknown_topic | decode_error
+        |
+xác minh metadata -> transaction PostgreSQL: indexed_blocks + raw_events
+        |
+báo cáo batch đã commit, duplicate và lỗi; kết thúc CLI
+```
+
+Các module tách cấu hình, RPC, registry/decoder, scanner, storage và CLI.
+`ethers` v6 cung cấp ABI coder/decoder và Ethereum Keccak tiêu chuẩn; `pg` là
+PostgreSQL driver dùng truy vấn có tham số. TypeScript kiểm tra kiểu; `tsx`
+chạy CLI/test TypeScript. Phiên bản thực tế được khóa trong `package-lock.json`;
+cài bằng `npm ci` với Node.js 24.
+
+Block number/timestamp, chainId và uint256 dùng `bigint` nội bộ. Khi ghi JSON
+hoặc `NUMERIC`, chuyển thành chuỗi nguyên thập phân. Address/hash phục vụ khóa
+database được chuẩn hóa hex thường; `rpc_log` giữ nguyên object JSON-RPC nguồn,
+bao gồm trường bổ sung. Decode không thay thế topics/data/log nguồn.
+
+## Nguồn ABI và event hỗ trợ
+
+| Contract role trong BE01 | ABI version cấu hình | Event hỗ trợ | Nguồn và trạng thái |
+|---|---|---|---|
+| `governor` | `oz-5.4.0-governor` | ProposalCreated, VoteCast, ProposalQueued, ProposalExecuted, ProposalCanceled | Interface/module Governor của OpenZeppelin Contracts 5.4.0 theo revision dependency đã khóa; chưa xác nhận với Governor tích hợp SC06 |
+| `timelock` | `oz-5.4.0-timelock` | CallScheduled, CallExecuted, Cancelled, CallSalt | TimelockController OpenZeppelin Contracts 5.4.0; CallSalt thuộc ABI phiên bản này; chưa xác nhận với deployment SC06 |
+| `treasury` | `sc01-itreasury-v1` | BudgetDisbursed | `shared/abi/ITreasury.json` của SC01; interface hiện có, chưa có receipt Treasury SC06 |
+| `budget_token` | `oz-5.4.0-erc20` | Transfer | IERC20 OpenZeppelin Contracts 5.4.0; chưa xác nhận BUD bằng artifact/receipt SC06 |
+
+Registry chọn ABI theo cặp role/ABI version của contract đã cấu hình; không thử
+đoán event bằng một ABI chung cho mọi địa chỉ. GOV và event delegate chưa thuộc
+phạm vi BE02. BUD Transfer hiện được lưu như raw event, chưa lọc thành projection
+dòng tiền Treasury hoặc liên kết với BudgetDisbursed.
+
+Các fragment OZ được đối chiếu với source upstream chính thức tại revision
+`c64a1edb67b6e3f4a15cca8909c9482ad33a02b0` trong `foundry.lock`, không suy ra ABI
+từ tên event hoặc thay đổi vendor để có fixture mới. Tham chiếu source cụ thể
+nằm trong `indexer/abi-registry.ts` và `fixtures/be02/README.md`.
+
+## Cấu hình
+
+Sao chép `indexer/config/example.json` thành `indexer/config/local.json`, rồi
+sửa theo deployment đã xác minh. Không commit file chứa credential. `RPC_URL`
+và `DATABASE_URL` cung cấp kết nối bằng biến môi trường; file mẫu không chứa secret.
+
+```powershell
+Copy-Item indexer/config/example.json indexer/config/local.json
+```
+
+| Trường | Ý nghĩa |
+|---|---|
+| `rpcUrl` | URL JSON-RPC HTTP/HTTPS; `RPC_URL` trong môi trường được ưu tiên nếu có |
+| `chainId` | Chain ID mong đợi, chuỗi nguyên dương; đối chiếu `eth_chainId` trước ghi DB |
+| `deploymentId` | Chuỗi khóa nội bộ số nguyên dương `deployments.deployment_id`; không phải tên API `synthetic-local-v1` của fixture BE01 |
+| `fromBlock` | Block đầu dải yêu cầu, chuỗi nguyên không âm |
+| `toBlock` | Block cuối bao gồm, chuỗi nguyên không âm hoặc `"latest"`; latest được chụp một lần cho cả lượt quét |
+| `batchSize` | Số block mỗi batch, chuỗi nguyên trong `[1, 10000]` |
+| `contracts[].role` | `governor`, `timelock`, `treasury` hoặc `budget_token` |
+| `contracts[].address` | Địa chỉ EVM hợp lệ, khác zero, duy nhất trong deployment |
+| `contracts[].deploymentBlock` | Block deploy riêng của contract, chuỗi nguyên không âm |
+| `contracts[].abiVersion` | Một trong các ABI version phù hợp role ở bảng trên |
+
+Không đọc log trước `max(fromBlock, contract.deploymentBlock)`. Batch toàn lượt
+quét được tính từ contract deploy sớm nhất còn trong dải; không dùng deployment
+block lớn nhất của toàn bộ contract. Các khoảng đóng `[a,b]`, `[b+1,c]` liên
+tiếp giữ đúng biên và vẫn lưu header block không có log.
+
+Log từ địa chỉ ngoài cấu hình bị loại trước decode. Log có `removed: true`,
+tọa độ/blockHash không khớp header hoặc dữ liệu RPC mâu thuẫn phải làm batch
+thất bại. Những kiểm tra này phát hiện dữ liệu không nhất quán tại lúc quét;
+chúng chưa thay thế cơ chế theo dõi và rollback reorg của BE03/BE07.
+
+## Database và chạy CLI
+
+Chỉ dùng PostgreSQL test/local **mới, độc lập**. Không dùng database đang chứa
+dữ liệu người dùng để chạy bộ kiểm thử. Trên database mới, migration BE01 chạy
+một lần; không sửa migration hoặc xóa bảng cũ để né lỗi:
+
+```powershell
+npm ci
+psql -X -v ON_ERROR_STOP=1 -d <database-test-moi> -f database/migrations/001_initial.sql
+psql -X -v ON_ERROR_STOP=1 -d <database-test-moi> -f database/tests/001_initial_checks.sql
+```
+
+Trước quét, đăng ký deployment và contract metadata đã xác minh vào
+`deployments`/`deployment_contracts`, rồi dùng đúng `deployment_id` được trả về
+trong cấu hình. Chain ID, địa chỉ, role, deployment block và ABI version phải
+khớp metadata đã lưu. Scanner không tự tạo deployment hoặc thay ABI trong DB.
+`governance_config` và `confirmation_depth` của BE01 không được CLI diễn giải
+thành bằng chứng đã xử lý projection hoặc K confirmations.
+
+Để đăng ký **metadata tổng hợp** khớp `example.json` trên database test mới:
+
+```powershell
+psql -X -v ON_ERROR_STOP=1 -d <database-test-moi> -f indexer/config/example.metadata.sql
+```
+
+Script in `deploymentId` được tạo; sửa `deploymentId` trong config theo kết quả
+này, không mặc định luôn bằng `1`. SQL checks BE01 tuy ROLLBACK vẫn có thể tăng
+identity sequence. File metadata không phải migration hoặc bằng chứng deploy;
+với mạng thật dùng metadata đã xác minh từ SC06 thay các giá trị tổng hợp.
+
+Sau khi đặt biến môi trường local và cấu hình deployment hợp lệ:
+
+```powershell
+$env:RPC_URL = 'http://127.0.0.1:8545'
+$env:DATABASE_URL = 'postgresql://<user>:<password>@127.0.0.1:<port>/<database-test-moi>'
+npm run indexer -- --config indexer/config/local.json
+```
+
+Địa chỉ/block trong file mẫu là tổng hợp; thay bằng deployment thật trước khi
+quét mạng thật. `.env.example` là mẫu tham khảo; CLI không tự load `.env`, cần
+export biến môi trường trước chạy. Lệnh không deploy contract, gửi giao dịch
+hoặc ký bằng khóa.
+
+## Ghi dữ liệu, chạy lại và lỗi
+
+Storage ghi cả header/timestamp và raw event của một batch trong cùng
+transaction. Khóa FK BE01 ràng buộc chain/deployment/role/address và
+blockNumber/blockHash. `raw_events.event_name` chỉ có giá trị khi decode thành
+công; `decoded_payload` chứa trực tiếp object tham số theo tên ABI (ví dụ
+Transfer có `from`, `to`, `value`). ABI version lấy từ metadata
+`deployment_contracts.abi_version` đã được đối chiếu khi ghi. Không thêm cột
+hoặc migration mới. Với unknown topic/decode error, cả `event_name` và
+`decoded_payload` là SQL NULL; `rpc_log`, topics/data và tọa độ vẫn được lưu.
+Phân loại lỗi cùng ABI version và tọa độ nằm trong `issues` của báo cáo CLI.
+Giữ báo cáo này để đối soát; không biến log chưa decode được thành event hợp lệ.
+
+Điều trên áp dụng cho log có cấu trúc RPC và tọa độ hợp lệ nhưng ABI không hỗ
+trợ/không decode được. RPC envelope, hex hoặc tọa độ không hợp lệ làm batch
+thất bại trước ghi; không bỏ qua ràng buộc BE01 để chèn chúng như log canonical.
+
+Solidity string có thể chứa NUL (`U+0000`), nhưng PostgreSQL JSONB không lưu
+được ký tự này. Decoder trả `decode_error` cho trường hợp đó, giữ nguyên ABI
+bytes trong topics/data/`rpc_log` và không thay NUL bằng ký tự khác. Đây là
+giới hạn biểu diễn decoded JSONB; raw nguồn vẫn phục vụ đối soát/replay.
+
+Chạy lại cùng log không thêm bản ghi trùng. Storage so sánh nội dung khi gặp
+khóa `(chain_id, transaction_hash, log_index)` đã tồn tại, bao gồm deployment,
+blockHash, topics/data và dữ liệu decode; khác nội dung là xung đột và rollback
+batch. Header cùng số nhưng khác hash/timestamp cũng không được ghi đè âm thầm.
+Nếu đã có header kề trước/sau trong DB, batch phải nối đúng parent hash; sai
+nhánh phải dừng. Storage kiểm tra tọa độ với raw log đã lưu trên cùng chain và
+khóa transaction theo chain để các lần chạy BE02 không ghi vượt qua nhau.
+Các batch trước đã commit vẫn giữ nguyên khi batch sau thất bại; báo cáo phân
+biệt phần đã commit và batch lỗi. Không dùng checkpoint để tuyên bố hoàn thành
+đồng bộ.
+
+CLI xuất JSON từng dòng: `batch_committed` cho batch đã commit, rồi
+`scan_result` tổng lượt quét. Mã thoát `0` = `completed`; `1` = `failed` do lỗi
+cấu hình/mạng/RPC/tính nhất quán/database; `2` = `completed_with_decode_issues`
+(raw đã lưu nhưng có `UNKNOWN_TOPIC` hoặc `DECODE_ERROR`). Khi thất bại,
+`committedBatches` giữ phần đã commit và `failedBatch` chỉ ra dải lỗi nếu đã bắt
+đầu batch. Thông báo vận hành không in RPC URL, database connection string hoặc
+response lỗi có thể chứa credential.
+
+## Kiểm thử và giới hạn bằng chứng
+
+```powershell
+npm run build
+npm run typecheck
+npm run test:be02
+npm run test:be02:db
+node scripts/check_be01.mjs
+git diff --check
+```
+
+Kết quả thực tế ngày **20/10/2026**, Windows/Node.js 24: `npm ci`, build và
+typecheck **PASS**; `test:be02` **63/63 PASS**; `test:be02:db` **21/21 PASS** trên
+PostgreSQL **18.4** thật, không skip. Suite SQL chạy cả migration/checks BE01 và
+CLI thật qua HTTP RPC synthetic. Cluster tạm đã dừng. Checker BE01 đạt 123 JSON,
+45 proposal, 105 block, 190 log nguồn; 123 JSON API giữ nguyên SHA-256 so với
+commit nền; `git diff --check` đạt. Bằng chứng và log PostgreSQL trong
+[checklist BE02](be02-checklist.md).
+
+`test:be02` kiểm tra decoder và scanner bằng synthetic RPC riêng, gồm tất cả
+event, indexed/non-indexed/dynamic arguments, uint256 lớn, dải/batch, thứ tự,
+header/removed log, lỗi và bảo toàn raw. Vector
+`fixtures/be02/independent-transfer.json` được ghép tay từ topic Transfer chuẩn,
+hai address word và data word `0de0b6b3a7640000` = `1000000000000000000`; generator
+không tạo vector này. Decoder vì thế không chỉ được kiểm tra bằng round trip
+encoder/decoder cùng thư viện. Fixture API BE01 không được dùng thay receipt
+Ethereum; nguồn và cách sinh lại BE02 nằm trong `fixtures/be02/README.md`.
+
+`test:be02:db` chạy storage trên PostgreSQL thật với database tạm độc lập,
+migration BE01, dedup, xung đột, transaction rollback và phần batch trước đã
+commit. Suite còn gọi CLI thật qua child process, đọc synthetic JSON-RPC HTTP
+local và ghi PostgreSQL: exit 0/rerun, exit 2 giữ raw khi decode lỗi và exit 1
+khi batch sau xung đột. Lệnh npm dùng PowerShell runner trên Windows, mặc định PostgreSQL bin
+`C:\Program Files\PostgreSQL\18\bin`; thay vị trí nếu cần:
+
+```powershell
+npm run test:be02:db -- -PostgresBin 'D:\duong-dan\PostgreSQL\bin'
+```
+
+Runner tạo cluster mới dưới `%TEMP%/dao-be02-pg-<uuid>`, bind localhost/cổng
+riêng, không sử dụng `DATABASE_URL`, dừng cluster khi xong và giữ data/log cho
+review. Test mock không thay bằng chứng SQL này. Nếu PostgreSQL không có sẵn,
+ghi rõ test chưa chạy; không suy PASS từ unit test. Trên hệ điều hành khác,
+tạo cluster test riêng với user `be02_test`, database `be02_test` **mới, trống**
+trên `127.0.0.1`, rồi đặt `BE02_TEST_DATABASE_URL` và `BE02_TEST_ISOLATED=1` để
+chạy trực tiếp `npx tsx --test tests/indexer/storage.test.ts`. Suite tự chạy
+migration/SQL checks BE01, từ chối database có bảng sẵn; chỉ đặt cờ isolated khi
+chắc chắn đây là database mới dành riêng cho test.
+
+Kết quả thực tế và môi trường ghi tại [checklist BE02](be02-checklist.md).
+Ngay cả khi toàn bộ test synthetic và PostgreSQL đạt, BE02 vẫn **chưa nghiệm thu
+bằng receipt thật SC06**. TV1/TV4 cần bàn giao ABI build, manifest địa chỉ/chain/
+deployment block, receipt/log thật cho create/vote/queue/execute/cancel cùng
+header tương ứng. Khi đó đối chiếu schema/indexed fields và các ID
+proposal/request/operation, salt/predecessor trước khi chốt tích hợp.

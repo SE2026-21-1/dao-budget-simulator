@@ -1,179 +1,83 @@
 import { useState } from "react";
 import { Link } from "react-router";
-
-import {
-  mockProposals,
-  proposalStatuses,
-} from "../data/mockProposals";
+import FixtureLoadState from "../components/FixtureLoadState";
+import { formatBUD } from "../data/formatBUD";
+import { proposalStatuses } from "../data/proposals";
+import { useProposalFixtures } from "../data/useProposalFixtures";
 
 const PAGE_SIZE = 20;
 
 function ProposalListPage() {
-  // Trạng thái tìm kiếm
   const [search, setSearch] = useState("");
-
-  // Trạng thái bộ lọc
   const [status, setStatus] = useState("ALL");
-
-  // Trang hiện tại
   const [page, setPage] = useState(1);
+  const { state, retry, simulateError } = useProposalFixtures();
 
-  // Lọc dữ liệu
-  const filteredProposals = mockProposals.filter(
-    (proposal) => {
-      const matchSearch = proposal.proposalId.includes(
-        search.trim()
-      );
-
-      const matchStatus =
-        status === "ALL" || proposal.status === status;
-
-      return matchSearch && matchStatus;
-    }
-  );
-
-  // Tính tổng số trang
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProposals.length / PAGE_SIZE)
-  );
-
-  // Xác định vị trí bắt đầu của trang
-  const startIndex = (page - 1) * PAGE_SIZE;
-
-  // Lấy 20 proposal cho trang hiện tại
-  const currentProposals = filteredProposals.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
-  );
+  const filteredProposals = state.status === "success" ? state.collection.proposals.filter((proposal) =>
+    (search.trim() === "" || proposal.proposalId === search.trim()) &&
+    (status === "ALL" || proposal.state === status)
+  ) : [];
+  const totalPages = Math.max(1, Math.ceil(filteredProposals.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const currentProposals = filteredProposals.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   return (
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
-        Danh sách đề xuất
-      </h2>
-
-      <p className="mt-2 text-gray-500">
-        Danh sách các đề xuất chi ngân sách DAO.
-      </p>
-
-      {/* Khu vực tìm kiếm và lọc */}
-      <div className="mt-6 flex flex-wrap gap-4">
-
-        {/* Tìm kiếm */}
-        <input
-          type="text"
-          placeholder="Tìm theo Proposal ID..."
-          aria-label="Tìm theo Proposal ID"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-3"
-        />
-
-        {/* Lọc trạng thái */}
-        <select
-          aria-label="Lọc trạng thái"
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-            setPage(1);
-          }}
-          className="rounded-lg border border-gray-300 bg-white px-4 py-3"
-        >
-          <option value="ALL">
-            Tất cả trạng thái
-          </option>
-
-          {proposalStatuses.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-
+      <div className="page-heading">
+        <div>
+          <p className="page-heading__eyebrow">Đề xuất · Màn hình 02</p>
+          <h1>Danh sách đề xuất</h1>
+          <p className="page-heading__description">Tra cứu các yêu cầu chi BUD theo mã và trạng thái.</p>
+        </div>
+        <Link to="/proposals/new" className="button-primary">Tạo đề xuất</Link>
       </div>
 
-      {/* Hiển thị số lượng kết quả */}
-      <p className="mt-5 text-sm text-gray-500">
-        Tìm thấy {filteredProposals.length} đề xuất
-      </p>
+      <section className="panel" aria-label="Bộ lọc đề xuất">
+        <div className="filters">
+          <div>
+            <label className="field-label" htmlFor="proposal-search">Proposal ID</label>
+            <input id="proposal-search" className="field-control" type="search" inputMode="numeric" placeholder="Nhập đúng Proposal ID (số thập phân)"
+              value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} />
+          </div>
+          <div>
+            <label className="field-label" htmlFor="proposal-status">Trạng thái</label>
+            <select id="proposal-status" className="field-control" value={status}
+              onChange={(event) => { setStatus(event.target.value); setPage(1); }}>
+              <option value="ALL">Tất cả trạng thái</option>
+              {proposalStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </div>
+        </div>
+      </section>
 
-      {/* Danh sách Proposal */}
-      <div className="mt-4 space-y-4">
-
+      {state.status === "success" && <p className="result-count" aria-live="polite">
+        {filteredProposals.length} đề xuất · Fixture TV2 BE01 · Block {state.collection.context.asOfBlock}
+      </p>}
+      {state.status !== "success" ? <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} /> : <>
+      <div className="proposal-list">
         {currentProposals.map((proposal) => (
-          <div
-            key={proposal.proposalId}
-            className="rounded-xl bg-white p-6 shadow-sm"
-          >
-
-            <h3 className="text-xl font-bold">
-              Proposal #{proposal.proposalId}
-            </h3>
-
-            <p className="mt-2 text-gray-600">
-              {proposal.title}
-            </p>
-
-            <p className="mt-2">
-              Trạng thái: {proposal.status}
-            </p>
-
-            <p className="mt-2">
-              Số tiền:{" "}
-              {(
-                BigInt(proposal.amount) /
-                10n ** 18n
-              ).toLocaleString("vi-VN")}{" "}
-              BUD
-            </p>
-
-            <Link
-              to={`/proposals/${proposal.proposalId}`}
-              className="mt-4 inline-block rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-            >
-              Xem chi tiết
-            </Link>
-
-          </div>
+          <article className="proposal-row" key={proposal.proposalId}>
+            <div className="proposal-row__main">
+              <span className="eyebrow">Proposal #{proposal.proposalId}</span>
+              <h2 className="proposal-row__title">{proposal.title}</h2>
+              <p className="proposal-row__meta">Người nhận: {proposal.recipient}</p>
+            </div>
+            <div className="proposal-row__side">
+              <span className="status-pill">{proposal.state}</span>
+              <span className="proposal-row__amount">{formatBUD(proposal.amount)}</span>
+              <Link to={`/proposals/${proposal.proposalId}`} className="button-secondary" aria-label={`Xem đề xuất ${proposal.proposalId}`}>Xem chi tiết</Link>
+            </div>
+          </article>
         ))}
-
-        {/* Danh sách rỗng */}
-        {currentProposals.length === 0 && (
-          <div className="rounded-xl bg-white p-6 text-gray-500">
-            Không tìm thấy đề xuất nào.
-          </div>
-        )}
-
+        {currentProposals.length === 0 && <div className="empty-state">Không tìm thấy đề xuất phù hợp. Proposal ID phải khớp chính xác.</div>}
       </div>
 
-      {/* Phân trang */}
-      <div className="mt-8 flex items-center justify-between gap-4">
-
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="rounded-lg bg-gray-300 px-5 py-3 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Trang trước
-        </button>
-
-        <span className="font-medium">
-          Trang {page} / {totalPages}
-        </span>
-
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="rounded-lg bg-blue-600 px-5 py-3 text-white disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Trang sau
-        </button>
-
-      </div>
+      <nav className="pagination" aria-label="Phân trang đề xuất">
+        <button type="button" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Trang trước</button>
+        <span>Trang {currentPage} / {totalPages}</span>
+        <button type="button" disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Trang sau</button>
+      </nav>
+      </>}
     </div>
   );
 }

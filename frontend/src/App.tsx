@@ -1,109 +1,60 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-} from "react-router";
-
+import { BrowserRouter, NavLink, Route, Routes } from "react-router";
 import DashboardPage from "./pages/DashboardPage";
 import ProposalListPage from "./pages/ProposalListPage";
 import ProposalDetailPage from "./pages/ProposalDetailPage";
 import CreateProposalPage from "./pages/CreateProposalPage";
 
+const navigation = [
+  { to: "/", label: "Tổng quan", end: true },
+  { to: "/proposals", label: "Đề xuất", end: true },
+  { to: "/proposals/new", label: "Tạo đề xuất", end: true },
+];
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-slate-100">
-
-        {/* Header */}
-        <header className="bg-slate-900 px-6 py-5 text-white">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-
-            <h1 className="text-2xl font-bold">
-              DAO Budget Simulator
-            </h1>
-
-            <button
-              disabled
-              className="cursor-not-allowed rounded-lg bg-blue-600 px-5 py-2 font-medium opacity-70"
-            >
-              Kết nối ví
-            </button>
-
+      <div className="app-shell">
+        <header className="site-header">
+          <div className="site-header__inner">
+            <div className="brand">
+              <span className="brand__mark" aria-hidden="true">D</span>
+              <div>
+                <p className="brand__name">DAO Budget Simulator</p>
+                <p className="brand__caption">Bảng điều khiển ngân sách</p>
+              </div>
+            </div>
+            <div className="header-status" aria-label="Trạng thái kết nối">
+              <span className="header-status__dot" aria-hidden="true" />
+              <span>Chưa kết nối ví</span>
+            </div>
           </div>
         </header>
 
-        <main className="mx-auto max-w-6xl p-6">
-
-          {/* Menu điều hướng */}
-          <nav className="mb-6 flex flex-wrap gap-3">
-
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) =>
-                `rounded-lg px-5 py-3 font-medium ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-slate-700"
-                }`
-              }
-            >
-              Dashboard
-            </NavLink>
-
-            <NavLink
-              to="/proposals"
-              className={({ isActive }) =>
-                `rounded-lg px-5 py-3 font-medium ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-slate-700"
-                }`
-              }
-            >
-              Danh sách đề xuất
-            </NavLink>
-
-            <NavLink
-              to="/proposals/new"
-              className={({ isActive }) =>
-                `rounded-lg px-5 py-3 font-medium ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-slate-700"
-                }`
-              }
-            >
-              Tạo đề xuất
-            </NavLink>
-
+        <div className="navigation-wrap">
+          <nav className="navigation" aria-label="Điều hướng chính">
+            {navigation.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.end}
+                className={({ isActive }) => `navigation__link${isActive ? " navigation__link--active" : ""}`}>
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
+        </div>
 
-          {/* Các màn hình */}
+        <main className="page-container" id="main-content">
+          <div className="demo-banner" role="note">
+            <strong>Môi trường mô phỏng</strong>
+            <span>Dữ liệu hiện là fixture. Chưa kết nối API, ví hay blockchain.</span>
+          </div>
           <Routes>
-            <Route
-              path="/"
-              element={<DashboardPage />}
-            />
-
-            <Route
-              path="/proposals"
-              element={<ProposalListPage />}
-            />
-
-            <Route
-              path="/proposals/new"
-              element={<CreateProposalPage />}
-            />
-
-            <Route
-              path="/proposals/:id"
-              element={<ProposalDetailPage />}
-            />
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/proposals" element={<ProposalListPage />} />
+            <Route path="/proposals/new" element={<CreateProposalPage />} />
+            <Route path="/proposals/:id" element={<ProposalDetailPage />} />
+            <Route path="*" element={<div className="panel"><h1>Không tìm thấy trang</h1><p>Đường dẫn này không tồn tại.</p></div>} />
           </Routes>
-
         </main>
+        <footer className="site-footer">DAO Budget Simulator · Bản giao diện đang phát triển</footer>
       </div>
     </BrowserRouter>
   );

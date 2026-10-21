@@ -1,177 +1,59 @@
 import { Link, useParams } from "react-router";
-
-import { mockProposals } from "../data/mockProposals";
-
-// Hàm chuyển số tiền BUD từ đơn vị nhỏ nhất
-// sang dạng dễ đọc cho người dùng.
-function formatBUD(rawAmount: string) {
-  const decimals = 10n ** 18n;
-  const amount = BigInt(rawAmount);
-
-  const whole = amount / decimals;
-  const remainder = amount % decimals;
-
-  const fraction = remainder
-    .toString()
-    .padStart(18, "0")
-    .replace(/0+$/, "");
-
-  const wholeText = whole.toLocaleString("vi-VN");
-
-  return (
-    wholeText +
-    (fraction ? "," + fraction : "") +
-    " BUD"
-  );
-}
-
-// Hàm rút gọn địa chỉ ví để hiển thị.
-function shortAddress(address: string) {
-  return (
-    address.slice(0, 8) +
-    "..." +
-    address.slice(-6)
-  );
-}
+import FixtureLoadState from "../components/FixtureLoadState";
+import { formatBUD } from "../data/formatBUD";
+import { useProposalFixtures } from "../data/useProposalFixtures";
 
 function ProposalDetailPage() {
-
-  // Lấy Proposal ID từ đường dẫn URL.
   const { id } = useParams();
+  const { state, retry, simulateError } = useProposalFixtures();
+  const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
 
-  // Tìm proposal tương ứng trong danh sách.
-  const proposal = mockProposals.find(
-    (item) => item.proposalId === id
-  );
+  if (state.status !== "success") {
+    return <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />;
+  }
 
-  // Nếu không tìm thấy proposal.
   if (!proposal) {
     return (
-      <div className="rounded-xl bg-white p-6 shadow-sm">
-
-        <h2 className="text-2xl font-bold text-red-600">
-          Không tìm thấy đề xuất
-        </h2>
-
-        <p className="mt-3 text-gray-500">
-          Proposal ID không tồn tại trong hệ thống.
-        </p>
-
-        <Link
-          to="/proposals"
-          className="mt-5 inline-block rounded-lg bg-blue-600 px-5 py-3 text-white"
-        >
-          Quay lại danh sách
-        </Link>
-
+      <div className="panel">
+        <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
+        <h1>Không tìm thấy đề xuất</h1>
+        <p className="muted">Proposal ID này không tồn tại trong bộ dữ liệu fixture BE01.</p>
+        <Link to="/proposals" className="button-primary">Quay lại danh sách</Link>
       </div>
     );
   }
 
-  // Nếu tìm thấy, hiển thị thông tin proposal.
   return (
     <div>
-
-      {/* Nút quay lại */}
-      <Link
-        to="/proposals"
-        className="mb-5 inline-block text-blue-600 hover:underline"
-      >
-        ← Quay lại danh sách
-      </Link>
-
-      {/* Tiêu đề */}
-      <div className="mb-6">
-        <h2 className="text-3xl font-bold text-slate-800">
-          Chi tiết đề xuất #{proposal.proposalId}
-        </h2>
-
-        <p className="mt-2 text-gray-500">
-          Thông tin chi tiết của Proposal
-        </p>
+      <Link to="/proposals" className="back-link">← Danh sách đề xuất</Link>
+      <div className="page-heading">
+        <div>
+          <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
+          <h1 className="proposal-id">Proposal #{proposal.proposalId}</h1>
+          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · Fixture BE01 tại block {state.collection.context.asOfBlock}.</p>
+        </div>
       </div>
 
-      {/* Thông tin Proposal */}
-      <div className="rounded-xl bg-white p-6 shadow-sm">
+      <div className="detail-grid">
+        <section className="panel">
+          <div className="detail-title">
+            <h2>{proposal.title}</h2>
+            <span className="status-pill">{proposal.state}</span>
+          </div>
+          <p className="eyebrow">Số tiền đề xuất</p>
+          <p className="detail-amount">{formatBUD(proposal.amount)}</p>
+          <dl className="detail-fields">
+            <div><dt>Người tạo</dt><dd>{proposal.proposer}</dd></div>
+            <div><dt>Địa chỉ nhận</dt><dd>{proposal.recipient}</dd></div>
+            <div><dt>Mô tả</dt><dd className="description-text">{proposal.body}</dd></div>
+          </dl>
+        </section>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-
-          <h3 className="text-2xl font-bold">
-            {proposal.title}
-          </h3>
-
-          <span className="rounded-lg bg-blue-100 px-4 py-2 font-medium text-blue-700">
-            {proposal.status}
-          </span>
-
-        </div>
-
-        <hr className="my-6 border-gray-200" />
-
-        {/* Số tiền */}
-        <div className="mb-6">
-          <p className="text-gray-500">
-            Số tiền đề xuất
-          </p>
-
-          <p className="mt-2 text-3xl font-bold text-blue-600">
-            {formatBUD(proposal.amount)}
-          </p>
-        </div>
-
-        {/* Người tạo */}
-        <div className="mb-6">
-          <p className="font-medium text-gray-500">
-            Người tạo đề xuất
-          </p>
-
-          <p
-            className="mt-2 break-all font-medium"
-            title={proposal.proposer}
-          >
-            {shortAddress(proposal.proposer)}
-          </p>
-        </div>
-
-        {/* Người nhận */}
-        <div className="mb-6">
-          <p className="font-medium text-gray-500">
-            Địa chỉ nhận BUD
-          </p>
-
-          <p
-            className="mt-2 break-all font-medium"
-            title={proposal.recipient}
-          >
-            {shortAddress(proposal.recipient)}
-          </p>
-        </div>
-
-        {/* Mô tả */}
-        <div className="mb-6">
-          <p className="font-medium text-gray-500">
-            Mô tả đề xuất
-          </p>
-
-          <p className="mt-2 whitespace-pre-wrap text-gray-700">
-            {proposal.description}
-          </p>
-        </div>
-
-        <hr className="my-6 border-gray-200" />
-
-        {/* Thông báo dữ liệu giả */}
-        <div className="rounded-lg bg-yellow-50 p-4 text-sm text-yellow-800">
-
-          Đây là dữ liệu mô phỏng.
-
-          <p className="mt-2">
-            Chức năng bỏ phiếu, Queue, Execute và Cancel
-            sẽ được tích hợp với blockchain ở các bước sau.
-          </p>
-
-        </div>
-
+        <aside className="panel">
+          <div className="panel__header"><h2>Tiến trình đề xuất</h2></div>
+          <div className="empty-state">Snapshot, deadline, quorum, ETA và transaction sẽ hiện ở đây khi có API và contract.</div>
+          <p className="notice" style={{ marginTop: 18 }}>Đây là dữ liệu mô phỏng. Vote, cancel, queue và execute sẽ được tích hợp ở các ngày sau.</p>
+        </aside>
       </div>
     </div>
   );

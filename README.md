@@ -1,8 +1,9 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Hiện repository mới có nền tảng SC01;
-chưa có token, Treasury hoặc Governor triển khai, chưa chạy được demo end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Contract trên `Dev` hiện có nền tảng
+SC01; TV2 có schema/fixture BE01 và CLI đọc log BE02. Chưa có token, Treasury
+hoặc Governor triển khai trên nhánh này, chưa chạy được demo end-to-end.
 
 ## Môi trường tái lập
 
@@ -70,3 +71,44 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be01_database.
 Script tạo cụm mới trong thư mục tạm, tự dừng sau kiểm tra và giữ log để xem lại;
 không kết nối hoặc xóa database đang có. Cách chạy SQL trên hệ điều hành khác
 nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
+
+## BE02 — RPC log reader và decoder
+
+BE02 quét một dải block hữu hạn, decode 11 event theo ABI đã xác định nguồn và
+ghi header/raw log vào PostgreSQL bằng transaction. Chưa có projection, API server,
+checkpoint, K confirmations, resume/reorg rollback hoặc rebuild. Trên `Dev` hiện
+chưa có receipt SC06; kiểm thử dùng dữ liệu synthetic riêng, không chứng minh
+nghiệm thu bằng giao dịch thật.
+
+Cần Node.js 24 và PostgreSQL (đã kiểm thử với 18.4):
+
+```powershell
+npm ci
+npm run build
+npm run typecheck
+npm run test:be02
+npm run test:be02:db
+node scripts/check_be01.mjs
+```
+
+Test database tự tạo và dừng một cluster tạm độc lập. Nếu binaries PostgreSQL
+khác vị trí mặc định, chạy:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1 -PostgresBin "C:\Program Files\PostgreSQL\18\bin"
+```
+
+Để quét RPC, chuẩn bị database đã migrate cùng metadata deployment khớp cấu hình
+theo [hướng dẫn indexer](docs/indexer.md), rồi chạy:
+
+```powershell
+$env:RPC_URL = 'http://127.0.0.1:8545'
+$env:DATABASE_URL = 'postgresql://be02_demo@127.0.0.1:5432/be02_demo'
+npm run indexer -- --config indexer/config/local.json
+```
+
+Tạo `local.json` từ [cấu hình mẫu](indexer/config/example.json), thay địa chỉ,
+deployment block, ABI version và `deploymentId` bằng metadata đã xác minh.
+Địa chỉ trong mẫu là synthetic. CLI không tự nạp `.env`, không tạo deployment;
+exit code `2` báo raw log đã lưu nhưng có unknown topic/decode error.
+Xem [checklist BE02](docs/be02-checklist.md) để biết kết quả và phần chờ SC06.

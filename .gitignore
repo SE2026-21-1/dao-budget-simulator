@@ -32,3 +32,9 @@ replay_pid*
 .env
 .env.*
 !.env.example
+
+# Node/TypeScript generated files
+/node_modules/
+/dist/
+/coverage/
+/indexer/config/local*.json

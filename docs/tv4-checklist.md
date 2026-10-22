@@ -16,7 +16,45 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 Các mục đã đánh dấu là thành phần đã được thiết lập, không phải bằng chứng
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
-Đã tích hợp GOV/BUD/Treasury/BudgetGovernor và BE02 vào TV4. TimelockController OZ5.4.0 thật đã dùng cho deploy/seed/check-roles/smoke local; projection/API, reorg/rebuild và UI wallet thật vẫn thiếu, SC05/testnet chưa peer nghiệm thu.
+Đã tích hợp GOV/BUD/Treasury/BudgetGovernor, BE02 và frontend TV3 `47f91d5` vào working tree TV4. TimelockController OZ5.4.0 thật đã dùng cho deploy/seed/check-roles/smoke local; ngày 22/10 có governance→PostgreSQL raw acceptance. Projection/API, reorg/rebuild nghiệp vụ và UI wallet thật vẫn thiếu; SC05/testnet chưa peer nghiệm thu.
+
+## Bổ sung TV4 ngày 22/10/2026
+
+- [x] Nhập frontend từ `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`, không tự nhận phần UI nguồn là của TV4. Dùng fixture BE01 canonical, bỏ JSON copy/template dead assets; sửa loading theo request và mobile amount wrapping, thêm skip-link.
+- [x] Node24.15.0: frontend lint không warning/error; `tsc -b && vite build` đạt. Workflow có job frontend và artifacts, contracts chuyển sang smoke PostgreSQL thật; **chưa push/chạy workflow mới trên GitHub**.
+- [x] [11 scenario browser thật](evidence/tv4-20261022/frontend-browser.json): 20/20/5, exact ID/filter/empty/detail precision, loading/error/retry, production không bật injection, not-found và form disabled; bốn màn hình 390px/1366px không tràn ngang, Tab/Enter/skip-link/native select.
+- [x] [Raw governance PostgreSQL](evidence/tv4-20261022/governance-storage.json): canonical H109,108 headers/61 raw/45 decoded/16 unknown/0 decode error, SQL raw/payload/RPC/header đúng reader; ledger13.000in/out và supply/balances khớp chain cùng H.
+- [x] SQL trigger lỗi ở header thứ hai trong batch mới: rollback toàn batch, prior batches giữ nguyên. CLI finite-range tiếp nối, scanner/CLI process mới chạy lại không trùng; CLI exit2 đúng unknown init topics. Replay vào DB mới cho cùng semantic digest.
+- [x] Clone baseline `5fbf615` bằng `--no-local --recurse-submodules`, overlay candidate source; không copy node_modules/out/cache. Cài lại dependency, frontend lint/build và Foundry142/142 đạt, fuzz256/invariant100×50 seed0x20261021. Đây là **candidate chưa commit trên cùng máy**, không phải clone remote bản mới hay máy thành viên khác.
+- [x] BE02 typecheck/build63/63, PostgreSQL18.4 native cô lập21/21 và migration/SQL checks đạt,0skip. Local native không chứng minh Docker runner mới; không đổi quyền daemon.
+- [x] Deploy CLI trên clone candidate, check-roles từ working tree chính exit0; [bundle thật](evidence/tv4-20261022/local-handoff/handoff.json) có manifest/audit/5ABI/4BE02contract descriptors; exporter từ chối ghi đè bundle có sẵn, nội dung không đổi.
+
+[Tổng hợp môi trường/source hashes/stdout](evidence/tv4-20261022/verification.json).
+HEAD `5fbf615` là base của candidate chưa commit, không đại diện toàn bộ code mới;
+hash từng source trong evidence ràng buộc bản đã chạy. Manifest bàn giao H19 thuộc
+chain riêng, không dùng receipt smoke đã dừng hoặc nhánh demo đã reset làm canonical.
+
+### Bàn giao và điều kiện còn thiếu
+
+| Bên nhận | Đã sẵn sàng | Điều kiện để TV4 nghiệm thu tiếp |
+|---|---|---|
+| TV1 | Manifest, full compiler ABI, role audit và attack/invariant evidence | Peer review deployment/SC05, xác nhận cấu hình; không tự approval |
+| TV2 | `be02-contracts.json`, deployment blocks/ABI, raw SQL/restart/replay evidence | Tạo metadata và dùng deployment_id SQL thật; bàn giao checkpoint/K/reorg/projections/API và full rebuild |
+| TV3 | Frontend fixture chạy được, ABI/chain/accounts, browser evidence | Ví/form/giao dịch thật, receipt/error/network handling |
+| Cả nhóm | Clone candidate local tái lập và script local handoff | Máy thành viên khác chạy lại; peer approval; CI cho revision mới sau commit/push |
+| Testnet | Thông số/roles đã kiểm local | Chốt mạng/RPC/faucet, signer được cấp test token/gas và EVM/compiler tương thích trước khi ký/gửi |
+
+Để tạo lại bundle từ Anvil mới còn chạy: dùng `deploy_local.mjs`, `check_roles.mjs`,
+`export_local_handoff.mjs` theo README. Bundle chỉ numeric loopback; máy khác phải
+deploy/regenerate, không mở tài khoản Anvil unlocked ra Internet. Export không bịa
+deployment ID hoặc tuyên bố backend đã enforce K=2.
+
+Chưa đóng QA07/QA08/QA10 toàn bộ: raw replay không là FR15 proposal/state rebuild;
+finite-range process restart không là checkpoint/resume/reorg TC11; browser fixture
+không là TC13 wallet hoặc UI→chain→API E2E. PR #5 vẫn open và đã request
+`nvdungmim`/`daongocuong` theo API GitHub ngày22/10; chưa có thao tác commit/push,
+approval/merge hoặc transaction testnet trong đợt này.
+
 
 ## SC04 mở khóa QA02–QA03/QA05–QA06 — 21/10/2026
 
@@ -138,11 +176,12 @@ Các TC dưới đây chưa nghiệm thu đầy đủ. E-SC04-L/E-SC04-ROLE/E-GO
 ## CI và evidence cuối kỳ
 
 - [x] BE02 CI: lockfile/typecheck/build/RPC-decoder/storage-CLI PostgreSQL thật, có artifact SHA/logs.
-- [ ] Frontend CI và governance invariant/E2E đầy đủ sau bàn giao; chưa nghiệm thu NFR07.
+- [x] Có job frontend lint/typecheck/build và live governance raw PostgreSQL acceptance trong workflow; kết quả local ngày22/10 ở trên.
+- [ ] Workflow mới chạy thành công trên GitHub và E2E đầy đủ sau bàn giao; chưa nghiệm thu NFR07 toàn hệ thống.
 - [ ] Mọi yêu cầu an toàn có test âm; không còn lỗi mở cho phép chi sai/bỏ qua quyền.
 - [ ] Xác minh NFR02 hiệu năng và NFR03 độ mới với TV2; ghi máy, dữ liệu và lệnh đo.
 - [ ] Kiểm tra retry/backoff, checkpoint và phục hồi NFR04 với TV2.
-- [ ] Kiểm tra UI 390px/1366px và bàn phím NFR06 với TV3.
+- [x] Kiểm tra UI fixture 390px/1366px và bàn phím trên Chromium150; không thay ví/giao dịch TC13 hoặc chứng nhận accessibility đa trình duyệt.
 - [ ] README clone sạch chạy được local demo; CI xanh trước bàn giao.
 
 Mẫu ghi một bằng chứng (không chứa bí mật):

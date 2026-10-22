@@ -30,8 +30,9 @@ ghi riêng ở mục tương ứng; không suy kết quả chạy từ việc c�
 | Handoff | Config mẫu, docs/indexer.md, checklist này và README gốc |
 
 Nguồn và danh sách event đầy đủ nằm trong [hướng dẫn indexer](indexer.md).
-Đây là **khung BE02 chạy bằng synthetic fixture** cho đến khi có bằng chứng SC06;
-không tuyên bố FR13–FR16 hoặc toàn bộ pipeline đã nghiệm thu.
+Ở lần bàn giao gốc, đây là **khung BE02 chạy bằng synthetic fixture**. Bằng chứng
+raw governance local thật ngày 22/10 được bổ sung riêng bên dưới, chưa phải
+nghiệm thu SC06 chính thức, FR13–FR16 hoặc toàn bộ pipeline.
 
 ## File tạo/sửa
 
@@ -141,24 +142,89 @@ và [PR CI39539695150](https://github.com/SE2026-21-1/dao-budget-simulator/actio
 loopback,21/21 storage tests và cleanup container/volume trên đường thành công;
 chưa fault-inject interruption/failure riêng. [Metadata](evidence/tv4-ci-7a0ab33.json).
 
-Smoke SC03 còn decode7 Transfer và3 BudgetDisbursed local thật bằng BE02;
-[receipt evidence](evidence/sc03-local-smoke.json). Chưa chạy toàn pipeline
-scanner/storage trên receipt governance SC06; mục còn chờ bên dưới giữ nguyên.
+Tại mốc21/10, smoke SC03 decode7 Transfer và3 BudgetDisbursed local thật bằng
+BE02; [receipt evidence](evidence/sc03-local-smoke.json). Lúc đó chưa chạy toàn
+pipeline scanner/storage trên governance; bằng chứng bổ sung22/10 nằm bên dưới.
 
 
 ## Còn chờ và phạm vi bước sau
 
-- [ ] TV1 xuất ABI build đầy đủ và custom errors; TV4/TV1 xác minh chainId,
-  manifest địa chỉ, deployment block riêng và ABI version.
-- [ ] TV1 bàn giao receipt/log thật create/vote/queue/execute/cancel, header/block
-  timestamp và cách nối proposalId, requestId, operationId, predecessor/salt.
-- [ ] Chạy decoder/scanner/storage trên receipt thật và đối chiếu tại cùng H.
+- [x] 22/10 local: có năm full compiler ABI/custom errors, manifest, role audit,
+  chainId, địa chỉ, deployment block và bốn ABI version BE02 trong
+  [local-handoff](evidence/tv4-20261022/local-handoff/handoff.json).
+- [x] 22/10 local: receipt/log create/vote/queue/execute/cancel và header/timestamp
+  được đọc qua HTTP RPC thật; đối chiếu proposalId/requestId/operationId và
+  predecessor/salt trong smoke. Không coi đây là bàn giao SC06 chính thức.
+- [x] 22/10 local: decoder/scanner/PostgresStorage và CLI trên governance thật,
+  SQL đối chiếu raw và ledger cùng H=109 cho bốn role hỗ trợ (chi tiết bên dưới).
+- [ ] TV1/TV2 nghiệm thu SC06 chính thức và peer review ABI/indexed fields,
+  manifest, IDs/salt; xác nhận consumers production. Local proof không tự cấp
+  peer approval và không chứng minh testnet.
 - [ ] BE03/BE07: checkpoint/resume, K confirmations, kiểm tra hash khi khởi động,
   common ancestor/rollback và yêu cầu rebuild khi vượt cửa sổ.
 - [ ] BE tiếp theo: proposal/vote/operation/transfer/disbursement projection,
-  state/quorum/balance tại H, API, rebuild và performance tests.
+  state/quorum/balance tại H, API, FR15 projection/state reconstruction và
+  performance tests.
 
 Không cộng BudgetDisbursed như dòng tiền thứ hai: projection sau này phải dùng
 BUD Transfer và liên kết payout chặt. Không tự lấy salt = descriptionHash hoặc
 đổi description nguyên bản. Những quy tắc BE01 còn hiệu lực dù BE02 chưa tạo
 projection hoặc API server.
+
+## Bổ sung TV4 ngày 22/10/2026: raw governance local thật
+
+Bằng chứng [governance-storage.json](evidence/tv4-20261022/governance-storage.json)
+thuộc candidate chưa commit, HEAD `5fbf615`; không ghi đè kết quả Windows
+20/10 hoặc CI source `7a0ab33` ngày 21/10. Cùng ngày, BE02 typecheck/build,
+63 unit tests và 21/21 migration/SQL/storage tests trên PostgreSQL 18.4 native
+isolated đạt; không suy từ đó rằng Docker/GitHub CI candidate đã chạy.
+
+| Phần đã kiểm chứng | Kết quả local 22/10 |
+|---|---|
+| Đường thật | HttpRpc → scanner → PostgresStorage; CLI child process mới, Anvil và PostgreSQL 18.4 isolated |
+| Canonical H=109 | 108 headers (block 2–109), 61 raw, 45 decoded, 16 unknown, 0 decode errors |
+| Bốn role BE02 | Governor/Timelock/Treasury/BUD; unknown initialization/access-control topics giữ raw; GOV ngoài registry |
+| SQL đối chiếu | Header, topics/data, decoded payload, RPC object khớp chain; BUD 13.000 vào/13.000 ra, 2 request đã trả cùng H |
+| Fault/rollback | Sau nửa đầu scanner đã commit, SQL trigger cố ý lỗi header thứ hai của batch; toàn batch lỗi rollback, batch trước giữ nguyên |
+| Restart hữu hạn | CLI quét phần còn lại với dải explicit; scanner full rerun và CLI process mới rerun idempotent |
+| Raw replay | DB thứ hai rỗng nhận lại raw/header cùng semantic digest `dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086` |
+| Exit code | CLI restart/replay exit 2 dự kiến vì unknown init topics, không phải exit 0 hoặc mất raw |
+
+Lệnh Docker dành cho lần tái lập (dependencies/Foundry artifacts đã có;
+Node 24.15.0, Docker daemon, forge/anvil trên host):
+
+```bash
+bash scripts/check_governance_database.sh --output /tmp/tv4-governance-storage.json
+```
+
+Runner sở hữu PostgreSQL `postgres:18.4`, hai DB mới và smoke Anvil, cổng DB
+động numeric loopback; bỏ qua `DATABASE_URL`/`RPC_URL` người gọi và cleanup
+container/anonymous volume riêng. Workflow contracts đã nối runner, nhưng
+**chưa tuyên bố lần chạy GitHub CI mới**. Bằng chứng local nêu trên thực sự
+dùng native PostgreSQL, không phải kết quả Docker runner.
+
+Native URL mode tùy chọn (tự tạo hai DB mới rỗng, khác nhau, tên `tv4_*`,
+do user kết nối sở hữu; không dùng DB người dùng):
+
+```bash
+export TV4_SMOKE_ISOLATED=1
+export TV4_SMOKE_DATABASE_URL='postgresql://<owner>:<password>@127.0.0.1:<port>/tv4_smoke_live'
+export TV4_SMOKE_REBUILD_DATABASE_URL='postgresql://<owner>:<password>@127.0.0.1:<port>/tv4_smoke_rebuild'
+node --import tsx scripts/smoke_governance.mjs --output /tmp/tv4-governance-native.json --database
+```
+
+`scripts/governance_storage.mjs` kiểm tra numeric loopback, ownership và schema
+rỗng, không drop bảng có sẵn. Không có `--database` thì không có SQL proof.
+Chi tiết lệnh/bàn giao ở [indexer](indexer.md#bổ-sung-22102026-governance-thật--postgresql-và-cli).
+Đây **không phải** checkpoint/resume tự động, reorg/confirmations, FR15 rebuild
+projection/state, HTTP API hay full UI/chain/API E2E.
+
+Bundle [local-handoff](evidence/tv4-20261022/local-handoff/handoff.json) chứa
+manifest, role audit, bốn descriptor BE02 và năm full compiler ABI. Nó thuộc
+Anvil caller-owned `http://127.0.0.1:8559` H=19, khác smoke chain đã dừng.
+`scripts/export_local_handoff.mjs --rpc <loopback-url> --manifest <manifest.json>
+--output <NEW-directory>` audit/export read-only, không chứa keys và từ chối
+thư mục có sẵn. TV2 phải xác minh instance còn chạy hoặc redeploy/export lại;
+INSERT metadata vào `deployments`/`deployment_contracts` rồi lấy
+`deployment_id` thật từ `RETURNING` cho config, **không tự gán deploymentId**
+từ tên bundle. Peer/SC06 chính thức và production consumers vẫn chưa nghiệm thu.

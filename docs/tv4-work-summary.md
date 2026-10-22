@@ -1,6 +1,6 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục 5–6. Vai trò: kiểm thử bảo mật và vận hành. Mục1–3/5 giữ bằng chứng lịch sử đúng source commit; SC04 mới nhất ở mục6.
+Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
 
@@ -217,3 +217,59 @@ Checker holder audit toàn lịch sử độc lập với universe hữu hạn t
 API/projections/K-confirmations/reorg/rebuild và frontend wallet/form còn phụ thuộc
 TV2/TV3. Mạng testnet/RPC/faucet/Osaka chưa chốt; scripts cố ý **local-only**, không
 phát giao dịch testnet hay giả receipt. Chờ peer review/merge, không đóng issue chỉ vì CI xanh.
+
+## 7. Bổ sung TV4 ngày 22/10: frontend và governance raw SQL
+
+### Phần đã triển khai
+
+| Hạng mục TV4 | Thay đổi và giá trị |
+|---|---|
+| Tích hợp TV3 | Nhập frontend nguồn `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`; giữ attribution TV3. Dùng canonical `fixtures/api`, bỏ bản copy JSON/template thừa; sửa loading theo request, wrap amount mobile, thêm skip-link và live page indicator. |
+| CI | Thêm job frontend lint/typecheck/production build, log/SHA/artifact14ngày. Contracts gọi runner governance→PostgreSQL thật; không lấy build làm browser E2E. |
+| Raw integration | `scripts/governance_storage.mjs` nối actual reader/scanner/PostgresStorage/CLI trên canonical chain trước khi smoke dừng; so SQL raw/header/payload và ledger cùngH, giữ unknown topics. |
+| Phục hồi cục bộ | Fault SQL giữa batch, xác nhận rollback và prior commits; explicit finite-range CLI continuation, full rerun qua process mới; replay DB trống thứ hai với semantic digest giống nhau. Không triển khai thay checkpoint/reorg/projection của TV2. |
+| Bàn giao | `scripts/export_local_handoff.mjs` audit read-only rồi xuất manifest/role report/five compiler ABIs/four BE02 descriptors. Từ chối ghi đè; TV2 phải lấy deployment_id thật sau INSERT metadata. |
+
+### Bằng chứng đã chạy
+
+- [Tổng hợp](evidence/tv4-20261022/verification.json): phiên bản, lệnh/stdout,
+  source hashes, điều kiện clone candidate và các blocker.
+- [Browser Chromium150](evidence/tv4-20261022/frontend-browser.json):11scenario
+  fixture thật; pagination20/20/5, exact ID/filter/precision, loading/error/retry,
+  not-found và form disabled;4màn hình390/1366, keyboard skip/Tab/Enter;3PNG.
+- [Governance→PostgreSQL18.4](evidence/tv4-20261022/governance-storage.json):
+  H109,108headers/61raw/45decoded/16unknown/0decodeErrors; ledger13.000in/out,
+  2paidrequests; fault/rollback và rerun/replay đạt, digest canonical=rebuild.
+- Clean baseline clone rồi overlay candidate source, không copy node_modules/out/cache:
+  clean install, frontend lint0warning/error và build đạt; Foundry142/142,
+  fuzz256/invariant100×50 seed0x20261021. BE02 typecheck/build63/63 và
+  native PostgreSQL18.4 migration/SQL/storage21/21,0skip; BE01 fixture đạt.
+- [Bundle local thật](evidence/tv4-20261022/local-handoff/handoff.json):
+  chain khác với smoke, H19 tại numeric loopback8559, seed chuẩn; deploy/export
+  và rootcheckroles exit0. Export vào thư mục có sẵn exit1, bundle không đổi.
+- Guard database từ chối thiếu isolated flag, remote host, URL options, DB ngoài
+  prefix; DB đã có dữ liệu bị từ chối và header/event counts không đổi.
+  Default governance smoke không DB và Treasury smoke vẫn chạy được.
+
+### Giới hạn và người cần phối hợp
+
+Candidate đang ở working tree trên baseHEAD `5fbf615`, **chưa commit/push/merge**;
+HEAD trong manifest không đại diện các script/frontend mới, phải đối chiếu
+source hashes trong evidence. Clone tái lập trên cùng máy, compiler global đã
+có; chưa phải máy thành viên khác. Native SQL đã chạy và dừng/xóa cluster;
+Docker runner mới cùng workflow bốn job **chưa có run GitHub mới**.
+Foundry lints hiện hữu được giữ nguyên trong stdout, không che warning.
+
+PR #5 kiểm tra ngày22/10 vẫn open, đã request `nvdungmim` và `daongocuong`,
+reviews API trả `[]`; không tự approval hoặc gọi requested review là đã duyệt.
+Không có GitHub token/gh cho thao tác ghi trong phiên này.
+
+TV1 review deployment/SC05/ABI; TV2 bàn giao checkpoint/K/reorg/projections/API
+và FR15 rebuild nghiệp vụ; TV3 bàn giao ví/form/giao dịch. Sau đó TV4 mới đóng
+QA07/UI→chain→API cùngH, TC11–TC13 đầy đủ. Testnet còn thiếu mạng/RPC/faucet,
+funded signer và xác nhận EVM/compiler; không dùng Anvil time-warp hoặc địa chỉ
+fixture để giả testnet. QA08/QA10 toàn bộ vẫn mở theo checklist.
+
+Bundle chỉ dùng khi đúng chain/checkout/build còn tồn tại; chain reset hoặc
+commit/build thay đổi thì deploy/export lại. Không dùng receipt smoke đã dừng
+cho consumer hoặc mở cổng tài khoản Anvil unlocked ra Internet.

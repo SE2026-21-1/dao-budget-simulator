@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   contracts:
-    name: Foundry, Treasury/Governor invariants and live smoke
+    name: Foundry, governance invariants and live PostgreSQL acceptance
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
@@ -51,10 +51,10 @@ jobs:
         shell: bash
         run: |
           node --import tsx scripts/smoke_treasury.mjs --output reports/sc03-local-smoke.json 2>&1 | tee reports/sc03-smoke.log
-      - name: Exercise final roles and real Governor to Timelock to Treasury transactions
+      - name: Exercise final roles, live governance ingestion, restart and raw replay
         shell: bash
         run: |
-          node --import tsx scripts/smoke_governance.mjs --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
+          bash scripts/check_governance_database.sh --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
       - name: Record scope of checks
         if: always()
         shell: bash
@@ -166,4 +166,51 @@ jobs:
         with:
           name: tv4-be02-${{ github.sha }}
           path: reports/
+          retention-days: 14
+
+  frontend:
+    name: Frontend lint and production build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout integrated frontend and canonical BE01 fixtures
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Install locked frontend dependencies
+        shell: bash
+        run: |
+          mkdir -p reports
+          npm ci --prefix frontend 2>&1 | tee reports/frontend-install.log
+      - name: Lint frontend
+        shell: bash
+        run: |
+          npm run lint --prefix frontend 2>&1 | tee reports/frontend-lint.log
+      - name: Typecheck and build production frontend
+        shell: bash
+        run: |
+          npm run build --prefix frontend 2>&1 | tee reports/frontend-build.log
+      - name: Record frontend scope and versions
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          printf '%s\n' '${{ github.sha }}' > reports/event-sha.txt
+          node --version > reports/node-version.txt
+          npm --version > reports/npm-version.txt
+          npm ls --prefix frontend --depth=0 > reports/frontend-packages.txt 2>&1
+          echo 'Frontend lint/typecheck/build only. Browser evidence is recorded separately; no wallet/API/chain E2E is claimed.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload frontend build and evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tv4-frontend-${{ github.sha }}
+          path: |
+            reports/
+            frontend/dist/
           retention-days: 14

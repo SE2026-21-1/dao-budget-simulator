@@ -1,0 +1,1 @@
+PASS: real local Governor -> Timelock -> Treasury, final roles, attacks/retry, live BE02 decoding. Evidence: /tmp/dao-tv4-acceptance-Cpq1w4I3/default-governance-smoke.json

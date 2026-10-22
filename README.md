@@ -2,9 +2,10 @@
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
 Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
-Treasury, BudgetGovernor và BE02 đọc log RPC/lưu PostgreSQL. Có script local
-deploy/seed/manifest/check-roles, invariant Treasury/governance và smoke Anvil.
-HTTP API và ví giao dịch frontend chưa hoàn tất; chưa có demo UI→chain→API end-to-end.
+Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
+Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
+→ PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
+HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API end-to-end.
 
 ## Trạng thái các task TV1
 
@@ -83,11 +84,11 @@ FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh
 ```
 
 Job contracts dùng Foundry 1.8.5, Python 3.12, Node 24.15.0 và profile `ci`
-(256 fuzz runs, 100 invariant runs × 50 thao tác, seed `0x20261021`). Job này
-còn deploy BUD/Treasury trên Anvil tạm để kiểm giao dịch thật và decoder BE02.
-Job BE01 kiểm fixture/SQL; job BE02 cài dependency theo lockfile, typecheck,
-build, 63 bài kiểm tra RPC/decoder và 21 bài storage/CLI trên PostgreSQL 18.4
-cô lập. Mỗi job giữ log, SHA và phiên bản trong artifact 14 ngày.
+(256 fuzz runs, 100 invariant runs × 50 thao tác, seed `0x20261021`), smoke Treasury
+và governance thật qua PostgreSQL 18.4 cô lập, rollback/restart/raw replay cùng H.
+Job BE01 kiểm fixture/SQL; job BE02 typecheck/build, 63 bài RPC/decoder và
+21 bài storage/CLI. Job frontend cài theo lockfile, lint và production build
+(`tsc -b && vite build`); không giả là browser/wallet E2E. Artifact giữ 14 ngày.
 
 Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
@@ -97,6 +98,11 @@ Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon h�
 đã chạy thành công cả ba job; [metadata và log SQL](docs/evidence/tv4-ci-7a0ab33.json).
 Đây không chứng minh Governor/Timelock, checkpoint/reorg/rebuild, HTTP API,
 UI wallet/E2E hay NFR07 toàn hệ thống. Xem [checklist TV4](docs/tv4-checklist.md).
+
+Bổ sung ngày **22/10** đã được chạy local trên Node 24.15.0; xem
+[evidence TV4](docs/evidence/tv4-20261022/verification.json).
+Workflow bốn job mới chưa được push/chạy GitHub trong đợt này; kết quả CI ba job
+ở trên là lịch sử, không phải bằng chứng cho frontend hoặc raw replay mới.
 
 ## Unit test SC02
 
@@ -190,6 +196,21 @@ constructor/token links/config và toàn bộ lịch sử role với `hasRole`; 
 khi sai. Manifest ràng buộc đúng source commit/build; audit lại bản cũ phải dùng
 đúng checkout ghi trong manifest. Địa chỉ local không dùng làm cấu hình testnet.
 
+Xuất bundle bàn giao từ chain **còn chạy**; thư mục đích phải chưa tồn tại:
+
+```bash
+node scripts/export_local_handoff.mjs --rpc http://127.0.0.1:8545 \
+  --manifest /tmp/dao-local-manifest.json --output /tmp/dao-local-handoff
+```
+
+Bundle có manifest, role audit cùng H, ABI compiler đầy đủ cho năm contract,
+`handoff.json` và `be02-contracts.json` cho bốn role BE02 hiện hỗ trợ.
+Exporter read-only, kiểm source/build/roles trước xuất, không ghi đè thư mục cũ.
+TV2 tạo deployment metadata trong DB đã migration rồi dùng `deployment_id`
+thực được SQL trả về; bundle không bịa ID. GOV ABI được bàn giao nhưng BE02 chưa
+decode GOV. Numeric loopback chỉ dùng cùng máy; thành viên máy khác tự deploy
+và tạo bundle mới. Không mở RPC chứa tài khoản Anvil unlocked ra Internet.
+
 Smoke tự sở hữu Anvil loopback tạm, không tác động chain đang chạy:
 
 ```bash
@@ -205,6 +226,52 @@ thiếu tiền cho6.000, nạp3.000/retry cùng operation và hai proposal trùn
 BE02 `HttpRpc/readBatch` đọc thật Governor/Timelock/Treasury/BUD; GOV giữ raw receipt,
 registry BE02 chưa hỗ trợ GOV. Không có DB projection/API/UI hoặc reorg trong smoke.
 Xem [bằng chứng và review SC04](docs/sc04-governor.md) và [matrix nghiệm thu](docs/test-plan.md).
+
+### Governance → PostgreSQL, restart và raw replay
+
+Sau `npm ci` và `forge build`, với Docker daemon có quyền hợp lệ:
+
+```bash
+bash scripts/check_governance_database.sh --output /tmp/sc04-storage-smoke.json
+```
+
+Runner sở hữu Anvil tạm, container PostgreSQL 18.4 và hai database mới; không dùng
+`DATABASE_URL`/`RPC_URL` đang có, dọn container/volume khi kết thúc. Kiểm actual
+HttpRpc/scanner/CLI/storage, header và raw/payload đầy đủ, ledger SQL khớp chain
+cùng H; cố ý lỗi SQL giữa batch phải rollback; chạy lại qua process mới không trùng;
+replay sang DB thứ hai cho cùng semantic digest. Unknown init/role topics giữ raw
+và CLI trả 2 đúng hợp đồng, không che thành exit 0.
+
+[Kết quả ngày 22/10](docs/evidence/tv4-20261022/governance-storage.json):
+108 header, 61 raw log, 45 decoded, 16 unknown, 0 decode error.
+Local dùng native PostgreSQL 18.4 cô lập; chưa chứng minh Docker runner mới chạy
+trên máy này hoặc GitHub. Raw replay không thay projection/state rebuild FR15,
+checkpoint/resume, K-confirmations, reorg hoặc UI/API E2E.
+
+## Frontend tích hợp — TV3 và nghiệm thu TV4
+
+Cần Node **24.15.0**. Dữ liệu lấy trực tiếp từ `fixtures/api/` của BE01, không
+giữ bản sao JSON trong frontend và không gọi API giả:
+
+```bash
+npm ci --prefix frontend
+npm run lint --prefix frontend
+npm run build --prefix frontend
+npm run dev --prefix frontend -- --host 127.0.0.1
+# Hoặc xem bản production sau build:
+npm run preview --prefix frontend -- --host 127.0.0.1
+```
+
+Bốn màn hình `/`, `/proposals`, `/proposals/:id`, `/proposals/new`.
+Danh sách 45 proposal, tìm exact ID, lọc/phân trang 20/20/5; số tiền dùng BigInt.
+Trang tạo chỉ preview, nút bị khóa; chưa connect ví hoặc vote/cancel/queue/execute.
+Trong dev, `/proposals?fixture=error` dùng kiểm error/retry; production bỏ qua
+query này. Root `npm run build` chỉ build indexer, không build frontend.
+
+[Browser evidence](docs/evidence/tv4-20261022/frontend-browser.json) ghi 11
+scenario Chromium thật, bốn màn hình ở 390px/1366px, bàn phím, precision,
+loading/error/retry và not-found; không thay nghiệm thu TC13 ví/giao dịch.
+Xem [hướng dẫn frontend](frontend/README.md) và [checklist TV4](docs/tv4-checklist.md).
 
 
 ## Tài liệu và chuẩn tích hợp

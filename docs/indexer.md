@@ -285,3 +285,77 @@ Anvil:108header block2–109,61raw/45decoded/16unknown initialization/role topic
 registry, raw-only. Operation salt đúng OZ5.4 right-padding Governor XOR
 descriptionHash, không bằng descriptionHash. Proof này chưa ghi chain đó vào
 PostgreSQL, không thay projections/API/confirmations/reorg/rebuild acceptance.
+
+### Bổ sung 22/10/2026: governance thật → PostgreSQL và CLI
+
+Đoạn HttpRpc/readBatch phía trên là mốc **21/10**, chưa ghi PostgreSQL ở lần
+đó. Ngày **22/10**, candidate local (HEAD vẫn `5fbf615`, thay đổi chưa commit)
+đã chạy đường `HttpRpc → scanner → PostgresStorage` và CLI child process thật
+trên Anvil riêng cùng PostgreSQL **18.4 native** isolated. Báo cáo:
+[governance-storage.json](evidence/tv4-20261022/governance-storage.json).
+Tại canonical **H=109**, SQL khớp chính xác **108 headers, 61 raw events,
+45 decoded, 16 unknown topics, 0 decode errors** cho bốn role Governor,
+Timelock, Treasury, BUD; initialization/access-control topics chưa hỗ trợ được
+giữ raw, không coi là lỗi mất dữ liệu. GOV chưa thuộc registry BE02.
+
+SQL đối chiếu header, topics/data, decoded payload và object RPC nguồn với
+chain cùng H; ledger BUD có **13.000 vào/13.000 ra**, khớp chain và **2 request
+đã trả** (không cộng BudgetDisbursed lần nữa). Scanner ghi nửa đầu, fault SQL
+trigger cố ý ở header thứ hai của batch chứng minh rollback batch lỗi và giữ
+batch đã commit; CLI quét nốt dải hữu hạn. Full scanner rerun và CLI rerun từ
+process mới đều idempotent. Restart/replay CLI trả **exit 2** dự kiến do các
+unknown initialization topics. Replay raw vào database thứ hai ban đầu rỗng
+có cùng semantic digest
+`dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086`.
+Đây là **restart bằng fromBlock/toBlock tường minh và raw replay**, không phải
+checkpoint/resume tự động, reorg/confirmations hoặc FR15 tái dựng projection/state.
+Không có HTTP API hay nghiệm thu UI/chain/API trong bằng chứng này.
+
+Lệnh tái lập Docker (Node 24.15.0, npm dependencies, Foundry/Anvil và compiler
+artifacts đã có; Docker daemon local hoạt động):
+
+```bash
+bash scripts/check_governance_database.sh --output /tmp/tv4-governance-storage.json
+```
+
+Runner sở hữu container `postgres:18.4`, hai database mới và smoke Anvil riêng,
+publish PostgreSQL trên numeric loopback/cổng động; bỏ qua `DATABASE_URL` và
+`RPC_URL` của người gọi. Cleanup xóa container/anonymous volume do runner tạo.
+Workflow contracts đã gọi runner này; **không có kết quả GitHub CI mới ngày
+22/10 được tuyên bố**. Lần bằng chứng 22/10 dùng native cluster, không phải
+đã thực thi Docker runner trên máy local.
+
+Chế độ native tùy chọn: tự tạo **hai database rỗng khác nhau**, do user kết nối
+sở hữu, tên bắt đầu `tv4_`, PostgreSQL bind numeric loopback. Không trỏ vào DB
+người dùng; helper từ chối schema có sẵn và không drop bảng để chạy tiếp:
+
+```bash
+export TV4_SMOKE_ISOLATED=1
+export TV4_SMOKE_DATABASE_URL='postgresql://<owner>:<password>@127.0.0.1:<port>/tv4_smoke_live'
+export TV4_SMOKE_REBUILD_DATABASE_URL='postgresql://<owner>:<password>@127.0.0.1:<port>/tv4_smoke_rebuild'
+node --import tsx scripts/smoke_governance.mjs --output /tmp/tv4-governance-native.json --database
+```
+
+Không truyền `--database` thì smoke chỉ kiểm chứng chain/readBatch, không chứng
+minh SQL. `scripts/governance_storage.mjs` là helper của đường opt-in này.
+
+### Bàn giao local cho TV2
+
+Bundle thật [local-handoff/handoff.json](evidence/tv4-20261022/local-handoff/handoff.json)
+đi cùng `manifest.json`, `role-audit.json`, `be02-contracts.json` và năm full
+compiler ABI trong `abi/`. Nó thuộc Anvil caller-owned **127.0.0.1:8559, H=19**,
+khác chain smoke H=109 đã dừng; không phải deployment testnet. Lệnh read-only
+audit/export (output phải là thư mục **chưa tồn tại**):
+
+```bash
+node scripts/export_local_handoff.mjs --rpc http://127.0.0.1:8559 \
+  --manifest docs/evidence/tv4-20261022/local-handoff/manifest.json \
+  --output /tmp/tv4-local-handoff-new
+```
+
+Exporter không deploy, không ghi DB, không chứa private key và từ chối ghi đè
+thư mục có sẵn. TV2 phải xác minh chain còn đúng instance hoặc redeploy rồi
+export lại, chèn metadata `deployments`/`deployment_contracts` với bốn descriptor
+BE02, lấy **deployment_id thực từ INSERT ... RETURNING** để cấu hình scanner.
+Bundle không phát minh `deploymentId`. ABI/role audit local không thay nghiệm
+thu SC06 chính thức, peer review indexed fields/IDs/salt hay production consumer.

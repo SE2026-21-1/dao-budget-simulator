@@ -350,3 +350,38 @@ UI/API/reorg/rebuild, dữ liệu lưu PostgreSQL từ chain này hoặc testnet
 Không đổi full TC01–TC14/INV toàn hệ thống thành PASS; vẫn cần peer review/variant
 coverage theo [matrix](test-plan.md). [Backend regression](evidence/tv4-sc04-backend-20261021.txt)
 typecheck/build,63 unit tests và BE01 fixture đều đạt; SQL chạy lại được ghi riêng ở CI.
+
+## Bổ sung runtime TV4 — 22/10/2026
+
+Phần21/10 phía trên giữ nguyên source/receipt và giới hạn tại thời điểm đó.
+Base HEAD vẫn `5fbf615`; candidate chưa commit, không merge/commit/push.
+Frontend nhập worktree snapshot nguồn `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`,
+không coi SHA đó là commit candidate. Source hashes tại [work summary](tv4-work-summary.md).
+
+- **E-RAWSQL-22:** [report](evidence/tv4-20261022/governance-storage.json)
+  bổ sung raw PostgreSQL thật: canonicalH109,108 headers/61 raw/45 decoded/
+  16 unknown/0 decode errors; exact headers/raw/payload/RPC và SQL BUD ledger
+  13000in/13000out khớp chain cùngH,2 paid requests. Init/access topics giữ raw;
+  GOV registry chưa hỗ trợ, dùng ABI cung cấp. Trigger lỗi header thứ hai rollback
+  batch, prior committed batches còn nguyên; scanner/CLI fresh-process rerun
+  idempotent. DB trống thứ hai raw replay cùng semantic digest
+  `dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086`.
+  CLI restart/rebuild exit2 kỳ vọng vì unknown topics, không projection rebuild.
+  Native PostgreSQL18.4 cô lập đã chạy; Docker18.4 runner cấu hình workflow,
+  **chưa có GitHub CI execution mới được tuyên bố**.
+- **E-UI-22:** [browser report](evidence/tv4-20261022/frontend-browser.json)
+  và3PNG:11 scenarios Chromium150 trên canonical root fixture,20/20/5,
+  exact ID/whitespace, filter7Executed/7Active, detail61/1wei BUD, empty/notfound,
+  disabled form, loading/error/recovery, production bỏ qua dev injection;
+  keyboard skip/Tab/Enter,4screens390/1366 không horizontal overflow.
+  Không nối fixture browser với SQL/receipt thành UI→chain→API proof.
+- **E-CANDIDATE-22:** Node24.15.0 frontend lint0warnings/build đạt; clean
+  candidate clone baseline rồi overlay source, không copy node_modules/out/cache;
+  clean installs, frontend lint/build, `scripts/ci.sh`142/142 đạt,
+  fuzz256/invariant100×50 seed `0x20261021`. Cùng máy, compiler global sẵn,
+  không independent other-machine acceptance; Foundry lints hiện hữu không suppress.
+
+Xem [matrix TC01/TC11/TC12/TC13](test-plan.md): raw storage không
+checkpoint/resume/reorg/K-confirmations/projection/state reconstruction/FR15;
+browser fixture không wallet/form submit/HTTP API/same-H consumer E2E.
+Testnet và peer approval còn thiếu; không nâng TC/INV/NFR toàn hệ thống thành PASS.

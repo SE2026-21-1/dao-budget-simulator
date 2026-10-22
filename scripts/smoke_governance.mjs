@@ -15,18 +15,21 @@ import { readBatch } from '../indexer/reader.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
-if (args.length !== 2 || args[0] !== '--output') {
-  console.error('Usage: node --import tsx scripts/smoke_governance.mjs --output <evidence.json>\nBuild with forge first. Own loopback Anvil only; no RPC URL or keys.');
+if (!((args.length === 2 || (args.length === 3 && args[2] === '--database')) && args[0] === '--output')) {
+  console.error('Usage: node --import tsx scripts/smoke_governance.mjs --output <evidence.json> [--database]\nBuild with forge first. Own loopback Anvil only; no RPC URL or keys.\nDatabase opt-in requires TV4_SMOKE_ISOLATED=1 and two new owned loopback databases via TV4_SMOKE_DATABASE_URL / TV4_SMOKE_REBUILD_DATABASE_URL; caller DATABASE_URL is ignored.');
   process.exit(1);
 }
 const output = resolve(args[1]);
+const databaseMode = args.length === 3;
+const storageHelper = databaseMode ? await import('./governance_storage.mjs') : undefined;
+const storageUrls = storageHelper?.storageSmokeEnvironment();
 const pause = ms => new Promise(done => setTimeout(done, ms));
 const U = 10n ** 18n;
 let anvil;
 let anvilOutput = '';
 let rpcId = 0;
 const report = {
-  scope: 'Local deployed contracts, final roles, real governance transactions and BE02 receipt decoding. Not testnet, frontend/API, confirmations, reorg or whole-system TC acceptance.',
+  scope: `Local deployed contracts, final roles, real governance transactions and BE02 receipt decoding.${databaseMode ? ' Includes actual raw PostgreSQL ingestion/restart/second-database replay at fixed H; not FR15 production projection rebuild or TC11 checkpoints/reorg.' : ''} Not testnet, frontend/API, confirmations, reorg or whole-system TC acceptance.`,
   sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   sourceHashes: {}, receipts: [], proposals: [], assertions: [],
 };
@@ -340,8 +343,15 @@ try {
   }
   report.assertions.push('final roles audited from complete grant/revoke history at fixed H and unchanged after calls', 'deployer and outsider cannot regain roles, directly spend/schedule/execute or change delay', 'canonical single Treasury action whitelist enforced on-chain', 'Pending/Active/deadline/ETA boundaries verified with exact mined transaction timestamps', 'snapshot weights survive token transfer/delegate changes and cannot be double counted', 'low quorum, tie and abstain-only defeated; For+Abstain contributes quorum', 'creator-only Pending cancellation, late cancellation denied', 'operationId uses actual OZ5.4 right-padded Governor address XOR descriptionHash salt', 'permissionless EOA queue/execute through Governor with exact real event ordering', 'early execution, operation replay and distinct proposals sharing request are denied', 'oversubscribed execution leaves Queued/Ready/unpaid and original ETA; same-operation retry succeeds', 'same-H Transfer ledger equals actual balances and successful BudgetDisbursed totals without double counting', 'BE02 decodes actual mined governance/token/timelock/treasury receipts');
   report.ledger = { totalIn: String(totalIn), totalOut: String(totalOut), payoutTotal: String(payoutTotal), paidRequestIds: [...paidIds], finalBalances };
-  report.be02 = { decodedCounts, scope: 'real RPC reader and receipt decoding for Governor/Timelock/Treasury/BUD; GOV receipts remain raw only. No database/projection/API/checkpoint/reorg acceptance' };
+  report.be02 = { decodedCounts, scope: `real RPC reader and receipt decoding for Governor/Timelock/Treasury/BUD; GOV receipts remain raw only.${databaseMode ? ' Actual PostgreSQL raw persistence/replay evidence is in storage; no production projection/API/checkpoint/reorg acceptance.' : ' No database/projection/API/checkpoint/reorg acceptance'}` };
   report.finalBlock = { number: BigInt(H.number).toString(), hash: H.hash, timestamp: BigInt(H.timestamp).toString() };
+  if (databaseMode) {
+    report.storage = await storageHelper.governanceStorageSmoke({
+      root, urls: storageUrls, manifest, abis, config, batch, head: H, chainLedger: report.ledger,
+      readBalance: account => one('BUD', 'balanceOf', [account], Htag),
+      readSupply: () => one('BUD', 'totalSupply', [], Htag),
+    });
+  }
   report.result = 'passed';
 } finally {
   if (anvil && anvil.exitCode === null) {

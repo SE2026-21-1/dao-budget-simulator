@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import FixtureLoadState from "../components/FixtureLoadState";
-import { formatBUD } from "../data/formatBUD";
+import { formatCompactBUD, formatBUD } from "../data/formatBUD";
 import { proposalStatuses } from "../data/proposals";
 import { useProposalFixtures } from "../data/useProposalFixtures";
 
@@ -58,13 +58,13 @@ function ProposalListPage() {
         {currentProposals.map((proposal) => (
           <article className="proposal-row" key={proposal.proposalId}>
             <div className="proposal-row__main">
-              <span className="eyebrow">Proposal #{proposal.proposalId}</span>
+              <span className="eyebrow" title={proposal.proposalId}>Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</span>
               <h2 className="proposal-row__title">{proposal.title}</h2>
               <p className="proposal-row__meta">Người nhận: {proposal.recipient}</p>
             </div>
             <div className="proposal-row__side">
-              <span className="status-pill">{proposal.state}</span>
-              <span className="proposal-row__amount">{formatBUD(proposal.amount)}</span>
+              <span className={`status-pill status-pill--${proposal.state.toLowerCase()}`}>{proposal.state}</span>
+              <span className="proposal-row__amount" title={formatBUD(proposal.amount)}>{formatCompactBUD(proposal.amount)}</span>
               <Link to={`/proposals/${proposal.proposalId}`} className="button-secondary" aria-label={`Xem đề xuất ${proposal.proposalId}`}>Xem chi tiết</Link>
             </div>
           </article>

@@ -321,9 +321,15 @@ bash scripts/check_governance_database.sh --output /tmp/tv4-governance-storage.j
 Runner sở hữu container `postgres:18.4`, hai database mới và smoke Anvil riêng,
 publish PostgreSQL trên numeric loopback/cổng động; bỏ qua `DATABASE_URL` và
 `RPC_URL` của người gọi. Cleanup xóa container/anonymous volume do runner tạo.
-Workflow contracts đã gọi runner này; **không có kết quả GitHub CI mới ngày
-22/10 được tuyên bố**. Lần bằng chứng 22/10 dùng native cluster, không phải
-đã thực thi Docker runner trên máy local.
+Guard helper kiểm tra **TCP peer phía client** là loopback. Không buộc
+`inet_server_addr()` của PostgreSQL là loopback: Docker publish cổng trên
+`127.0.0.1` nhưng server trong container nhận kết nối tại IP bridge.
+Guard URL numeric loopback, database prefix/ownership và schema rỗng vẫn giữ.
+Report `storage.databaseConnections` ghi riêng client/server address để đối chiếu.
+Workflow contracts gọi runner này. Sau push `33c5297`, Docker CI đã phát hiện
+guard server-address sai ở trên; [chẩn đoán và smoke bản sửa](evidence/tv4-20261022/docker-loopback-fix.json).
+Bằng chứng local dùng native cluster/TCP forwarding, không gọi thành Docker run
+thành công; trạng thái CI bản sửa phải đối chiếu revision/run mới sau push.
 
 Chế độ native tùy chọn: tự tạo **hai database rỗng khác nhau**, do user kết nối
 sở hữu, tên bắt đầu `tv4_`, PostgreSQL bind numeric loopback. Không trỏ vào DB

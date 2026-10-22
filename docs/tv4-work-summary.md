@@ -253,7 +253,7 @@ phát giao dịch testnet hay giả receipt. Chờ peer review/merge, không đ�
 
 ### Giới hạn và người cần phối hợp
 
-Candidate đang ở working tree trên baseHEAD `5fbf615`, **chưa commit/push/merge**;
+Tại mốc ghi evidence mục7, candidate ở working tree trên baseHEAD `5fbf615`, **chưa commit/push/merge**;
 HEAD trong manifest không đại diện các script/frontend mới, phải đối chiếu
 source hashes trong evidence. Clone tái lập trên cùng máy, compiler global đã
 có; chưa phải máy thành viên khác. Native SQL đã chạy và dừng/xóa cluster;
@@ -273,3 +273,26 @@ fixture để giả testnet. QA08/QA10 toàn bộ vẫn mở theo checklist.
 Bundle chỉ dùng khi đúng chain/checkout/build còn tồn tại; chain reset hoặc
 commit/build thay đổi thì deploy/export lại. Không dùng receipt smoke đã dừng
 cho consumer hoặc mở cổng tài khoản Anvil unlocked ra Internet.
+
+## 8. Sửa Foundry job sau push `33c5297`
+
+[Push run39725731638](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39725731638/job/119649060315)
+đã qua build/format/Foundry tests và Treasury smoke; lỗi ở bước governance
+PostgreSQL: `Actual PostgreSQL server must be loopback`. Frontend, BE01 và
+BE02 của run này đều success. Không rerun bản lỗi chỉ để xác nhận báo cáo.
+
+Nguyên nhân: guard nhầm lớp mạng, kiểm `inet_server_addr()` phía PostgreSQL.
+Docker đã publish `127.0.0.1:<port>` đúng nhưng địa chỉ server trong container
+là bridge IP. Sửa `scripts/governance_storage.mjs` để kiểm TCP peer của client;
+URL numeric loopback, isolated flag, ownership, prefix và schema rỗng vẫn bắt buộc.
+Report ghi client/server address riêng; không sửa contract hoặc bỏ bước smoke.
+
+[Bằng chứng sửa](evidence/tv4-20261022/docker-loopback-fix.json):
+PostgreSQL18.4 thật tại `127.0.0.2`, TCP forward từ `127.0.0.1`, Anvil thật;
+client peer `127.0.0.1` khác server address `127.0.0.2`, toàn bộ smoke SQL,
+rollback, CLI restart/raw replay đạt. Đây là local forwarding proof, không
+gọi native test thành Docker run. Negative guards remote/options/missing flag,
+nonempty DB không đổi dữ liệu và database không đúng owner vẫn bị chặn.
+
+Log CI lỗi và smoke/guards đi kèm giữ riêng evidence lịch sử mục7; CI bản sửa
+cần được quan sát sau commit/push, không suy CI xanh từ smoke local.

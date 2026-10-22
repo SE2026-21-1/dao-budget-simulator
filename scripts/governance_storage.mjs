@@ -48,13 +48,21 @@ export function storageSmokeEnvironment(env = process.env) {
 }
 
 async function requireEmptyOwned(pool) {
+  const client = await pool.connect();
+  let clientAddress;
+  try {
+    // Docker's loopback-published port forwards to a bridge address on the server.
+    // Check our TCP peer, not PostgreSQL's server-side inet_server_addr().
+    clientAddress = client.connection.stream.remoteAddress;
+    assert.ok(['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(clientAddress),
+      'PostgreSQL client connection must be loopback');
+  } finally { client.release(); }
   const { rows: [identity] } = await pool.query(`SELECT current_database() AS database,
     host(inet_server_addr()) AS address, inet_server_port() AS port,
     current_setting('server_version') AS version,
     (SELECT pg_get_userbyid(datdba) = current_user FROM pg_database WHERE datname = current_database()) AS owned`);
   assert.equal(identity.owned, true, 'Disposable database must be owned by the connecting role');
   assert.match(identity.database, /^tv4_[a-z0-9_]+$/, 'Unexpected database destination');
-  assert.ok(['127.0.0.1', '::1'].includes(identity.address), 'Actual PostgreSQL server must be loopback');
   const { rows: [lock] } = await pool.query('SELECT pg_try_advisory_lock(747004, 1) AS acquired');
   assert.equal(lock.acquired, true, 'Another smoke owns this database');
   const { rows: [objects] } = await pool.query(`SELECT
@@ -66,7 +74,7 @@ async function requireEmptyOwned(pool) {
     (SELECT count(*) FROM pg_largeobject_metadata)::int AS large_objects`);
   assert.deepEqual(objects, { schemas: 0, relations: 0, types: 0, functions: 0, extensions: 0, large_objects: 0 },
     'Refusing nonempty database; no tables/schemas are dropped');
-  return identity;
+  return { ...identity, clientAddress };
 }
 
 async function migrateAndSeed(pool, migration, manifest, contracts, fromBlock) {
@@ -182,6 +190,9 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
       scope: 'Actual HttpRpc -> BE02 scanner -> PostgresStorage -> SQL, CLI process restart and second fresh database raw replay at canonical H. No FR15 full projection/state reconstruction, TC11 checkpoints/resume/reorg, production API or frontend E2E acceptance.',
       isolation: 'Explicit --database and TV4_SMOKE_ISOLATED=1; two owned empty numeric-loopback databases; no existing schema/data dropped; caller DATABASE_URL/RPC_URL ignored.',
       versions: { node: process.version, postgres: identities.map(item => item.version), pg: lock.packages['node_modules/pg'].version, tsx: lock.packages['node_modules/tsx'].version },
+      databaseConnections: identities.map(({ clientAddress, address, port }) => ({
+        clientAddress, serverAddress: address, serverPort: port,
+      })),
       sourceHashes, fromBlock: String(config.fromBlock), toBlock: String(config.toBlock), blockHash: head.hash,
       semanticDigest: { algorithm: 'sha256', canonicalization: 'Sorted SQL numeric chain order, recursively sorted JSON object keys. Excludes generated IDs, deployment IDs and wall-clock timestamps.',
         queryHashes: { headers: sha(HEADERS_SQL), events: sha(EVENTS_SQL), totals: sha(TOTALS_SQL), balances: sha(BALANCES_SQL) } }, phases: [],
@@ -290,7 +301,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
       : typeof error?.code === 'string' && /^[A-Z0-9_]+$/.test(error.code) ? error.code : 'ERROR';
     const safeGuardMessages = new Set([
       'Disposable database must be owned by the connecting role', 'Unexpected database destination',
-      'Actual PostgreSQL server must be loopback', 'Another smoke owns this database',
+      'PostgreSQL client connection must be loopback', 'Another smoke owns this database',
       'Refusing nonempty database; no tables/schemas are dropped',
       'Source and rebuild must be different fresh databases',
       'Source and rebuild database names must differ on the same local port',

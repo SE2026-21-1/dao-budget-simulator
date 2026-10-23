@@ -1,0 +1,25 @@
+{
+  "scope": "Real PostgreSQL mode interruption during owned indexer CLI; not checkpoint/reorg acceptance",
+  "cases": [
+    {
+      "signal": "SIGINT",
+      "exitCode": 130,
+      "realStorageDirectoryObserved": true,
+      "realIndexerCliObserved": true,
+      "ownedChildrenReaped": true,
+      "rpcClosed": true,
+      "priorEvidenceUnchanged": true,
+      "temporaryFilesRemoved": true
+    },
+    {
+      "signal": "SIGTERM",
+      "exitCode": 143,
+      "realStorageDirectoryObserved": true,
+      "realIndexerCliObserved": true,
+      "ownedChildrenReaped": true,
+      "rpcClosed": true,
+      "priorEvidenceUnchanged": true,
+      "temporaryFilesRemoved": true
+    }
+  ]
+}

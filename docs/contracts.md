@@ -128,7 +128,7 @@ requestId cố định chỉ dùng fixture, không minh họa randomness cho pro
 Có amount 1.000 BUD ở đơn vị nhỏ nhất, targets/values/calldatas, description nguyên bản,
 descriptionHash và proposalId đã tính. Mọi uint256 dùng chuỗi số nguyên, không dùng JS Number.
 Không có transactionHash/receipt/operationId giả; log chain thật thuộc `fixtures/chain/` tại SC06.
-Chạy `forge build` rồi `python3 scripts/check_sc01.py` để đối chiếu ABI và các giá trị encode/hash.
+Chạy `forge build` rồi `python3 scripts/check.py` để đối chiếu ABI và các giá trị encode/hash.
 Script chỉ kiểm tra dữ liệu, không deploy hoặc ký giao dịch, không thay công việc script của TV4.
 
 TV2 review event, format description, cách nối ID và fixture; TV3 review encode/decode,

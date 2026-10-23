@@ -3,6 +3,9 @@
 Căn cứ: FR03, FR05, FR06, FR10; BR01–BR04/BR06; TC02–TC05/TC08.
 Nhánh feature/tv1-sc04 tạo từ origin/Dev tại 1f40748 sau khi SC02/SC03 đã merge.
 Không thay token, Treasury, ITreasury, dependency hoặc triển khai script TV4.
+Các kết quả trong phần TV1 bên dưới là lịch sử nguồn `f57fcfd`; cập nhật TV4
+độc lập sau tích hợp nằm ở mục cuối, không lấy137 tests nguồn làm số hiện tại.
+
 
 ## Constructor và kế thừa OpenZeppelin 5.4.0
 
@@ -127,7 +130,7 @@ mô hình tin cậy: SC05/TV4 phải loại bỏ mọi proposer/executor/cancell
 
 Bộ test dùng TimelockController thật làm fixture để kiểm tra module composition và cancel Queued/Executed,
 không phải deployment production. Fixture cố ý còn admin bootstrap để dựng môi trường test.
-Chưa có script deploy/check-roles production, audit danh sách role, manifest/testnet hoặc invariant campaign.
+Tại bàn giao TV1 chưa có deploy/check-roles/audit role/manifest hay invariant campaign.
 SC05 phải xác minh delay 120 giây, production roles, bỏ quyền deployer, execute sớm/lặp/thiếu tiền retry
 và các đường gọi trực tiếp Timelock. Không sửa Treasury trong SC04.
 
@@ -136,13 +139,12 @@ forge fmt
 forge build
 forge test --match-path 'tests/unit/BudgetGovernor.t.sol' -vv
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 forge fmt --check
-git diff --check
 ```
 
-Nhánh thực tế còn scripts/check_sc01.py; scripts/check.py của TV4 chưa vào Dev khi tạo SC04.
-Không sửa checker hoặc công việc backend/frontend/CI của thành viên khác.
+Nhánh TV4 dùng checker chuẩn `scripts/check.py`. Các kết quả nguồn bên dưới giữ
+tên `scripts/check_sc01.py` để phân biệt bằng chứng lịch sử tại nhánh TV1.
 
 ## Ánh xạ nghiệm thu SC04
 
@@ -217,7 +219,7 @@ không thay đổi yêu cầu tích hợp SC01/TV2/TV3. Không cho phép tự ch
 Các test xuyên contract ở đây dùng fixture, chưa phải acceptance cấu hình deployment thật.
 TV4 phải xác minh đúng địa chỉ GOV/BUD/Treasury/Timelock, quyền duy nhất sau bootstrap,
 thu hồi admin/spender tạm, minDelay 120, chặn gọi thẳng Timelock và cung cấp manifest/evidence.
-Chưa có deploy/check-roles script, testnet, full stateful invariant hoặc audit wallet ERC-1271.
+Tại nguồn TV1 chưa có deploy/check-roles, testnet, full stateful invariant hoặc audit ERC-1271; bằng chứng local TV4 được bổ sung bên dưới.
 
 ### Kết quả sau bổ sung security tests
 
@@ -231,3 +233,155 @@ Chưa có deploy/check-roles script, testnet, full stateful invariant hoặc aud
 - Không phát hiện lỗi Governor cần sửa khi chạy các tình huống bổ sung.
 - SC04 sẵn sàng commit và PR để peer review, chưa nghiệm thu production SC05.
 - Không thực hiện commit/push/PR.
+
+## TV4 kiểm chứng độc lập sau tích hợp SC04 — 21/10/2026
+
+Source TV1 `f57fcfd` tích hợp bằng `70c2b33`; deployment/smoke kiểm tại
+`fcd01e5a29300aa4d30e3703ea6e91b6b8b0fb0f`, oracle/attack bản cuối tại
+`fb7d5c54740855b880988b7be469a91fe67ce67a`.
+[PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) bàn giao
+SC04 vào Dev; [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5)
+chứa TV4. Chưa có peer approval hoặc nghiệm thu testnet.
+
+### Review và quyết định
+
+- Không phát hiện lỗi cần sửa `BudgetGovernor.sol` trong phạm vi đã kiểm. Không
+  thay source/ABI sản phẩm TV1. ABI Governor/Treasury chia sẻ bằng đúng artifact
+  build; token dùng ABI compiler, chưa có JSON token chia sẻ trong `shared/abi`.
+- `_propose` là cửa whitelist cho `propose` chuẩn; không thêm đường chi đặc biệt.
+  Một action, target Treasury immutable, value0, selector/disburse canonical100
+  bytes, recipient khác zero/Treasury, amount>0. Request0 không bị cấm.
+- Threshold dùng checkpoint quá khứ; snapshot tạiS vẫn Pending, tạiD vẫn Active.
+  For+Abstain tính quorum, For phải thắng Against. Description giữ nguyên bytes.
+- Cancel công khai chỉ creator/Pending. Các setter/relay/updateTimelock cần
+  governance nhưng whitelist không cho proposal tới các target đó.
+- Constructor code/clock không đủ chứng minh danh tính; checker đối chiếu exact
+  creation transaction/constructor, runtime đã normalize vùng immutable theo
+  compiler, toàn bộ metadata source hashes và token/Treasury/Timelock links.
+- Dùng **TimelockController thật** từ OZ5.4.0 đã khóa, delay120; không cần chờ
+  một wrapper SC05 để chạy local. Đây không tự đóng SC05/testnet/peer review.
+
+### QA02–QA03: deployment và audit thực
+
+[`deploy_local.mjs`](../scripts/deploy_local.mjs),
+[`check_roles.mjs`](../scripts/check_roles.mjs) và
+[`governance_local.mjs`](../scripts/governance_local.mjs) triển khai graph thật,
+grant final roles, renounce bootstrap ở cả Treasury/Timelock, audit **trước funding**,
+self-delegate và mine checkpoint quá khứ, cấp10.000 BUD; funding còn10.000.
+Manifest ghi từng contract/block/tx, full ABI hash/compiler/optimizer/EVM/lock/source,
+scanFromBlock và K=2 như chính sách bàn giao, không claim BE02 đã thực thi K.
+Checker read-only tất cả observation cùngH; toàn bộ grant/revoke history đối chiếu
+`hasRole`, không chỉ kiểm vài tài khoản rồi suy ra holder duy nhất.
+
+[Evidence CLI](evidence/sc04-role-audit.json): **8 probes đạt kỳ vọng**, exit0 cho
+deploy/audit đúng; exit1 cho sai Treasury, config minDelay bị đổi, chain không rỗng,
+ghi đè manifest, RPC không loopback và extra holder thật. Fixture âm deliberately
+cho **bootstrap admin còn quyền** cấp SPENDER cho `0x...0999` trước renounce;
+không impersonate contract, không mô tả đây là capability của attacker sau init.
+Gate và CLI cùng phát hiện holder ngoài demo mapping; Treasury vẫn0, funding20.000
+BUD, chưa có funding. Mọi chain thử được dừng, không thay quyền Docker hoặc chain người dùng.
+
+### Giao dịch thật, attack và reader BE02
+
+Lệnh chạy lại đầy đủ ở [README](../README.md#deploy-audit-role-và-demo-governance-local--tv4):
+`node --import tsx scripts/smoke_governance.mjs --output /tmp/sc04-local-smoke.json`.
+[Evidence](evidence/sc04-local-smoke.json) tại source trên:
+
+- Nhánh F0 QA02 riêng:5 receipt thật, A400+B300 For, chi đúng1.000 BUD,
+  Treasury9.000/recipient1.000/funding10.000; role graph cuối không còn bootstrap.
+  Nhánh này đã revert sau kiểm; receipt nằm riêng `demo1000`, **không** tính vào
+  ledger canonical của campaign sau reset.
+- Campaign chính: **105 receipt =49 status1 +56 status0**,8 proposal; revert có
+  exact custom error/trace, không log commit. Không lấy tổng receipt làm số TC đạt.
+- Snapshot transfer400 GOV, redelegate300 GOV → current caller700 nhưng snapshot
+  caller0, A400/B300 vẫn đúng; receiver không đếm lại phiếu. Kiểm S/D/E bằng timestamp
+  block chứa giao dịch thật; vote tạiS/queue tạiD/execute E−1 bị chặn, execute tạiE được.
+- Thiếu quorum/tie/abstain-only Defeated; For100+Abstain200 Succeeded. Creator
+  cancel tạiS được, outsider/Pending và creator/Active/Succeeded bị chặn.
+- Outsider/former deployer không trực tiếp chi/schedule/scheduleBatch/execute/
+  executeBatch, cấp lại role/mở executor zero/updateDelay. Positive control qua
+  Governor của EOA thường được; không impersonate Governor/Timelock.
+- Salt được tính độc lập `bytes32(bytes20(governor)) XOR descriptionHash`, padding
+  phải; operationId khớp Timelock/CallScheduled, ETA=q+120. Receipt chi theo thứ tự
+  Transfer → BudgetDisbursed → CallExecuted → ProposalExecuted.
+- Hai proposal distinct cùng request không trả hai lần. Hai khoản7.000/6.000
+  tranh quỹ10.000: trả7.000, khoản6.000 thiếu3.000 revert vẫn Queued/Ready/unpaid,
+  ETA/operation giữ nguyên; nạp3.000 rồi retry chính operation đó được.
+- CùngH109/hash lưu trong evidence: Transfer ledger in13.000/out13.000,
+  Treasury0, R7.000/R2=6.000/F7.000; BudgetDisbursed chỉ nối request, không cộng chi hai lần.
+- **BE02 HttpRpc/readBatch thật** đọc108 header (block2–109),61 raw logs:
+ 45 decoded,16 unknown initialization/access-control topics giữ raw,0 decode errors,
+ 0 discarded. Có8 ProposalCreated,13 VoteCast,4 queue/schedule/salt và2 execution/
+ payout; GOV chưa có role registry BE02, chỉ giữ raw receipt/đối chiếu ABI trực tiếp.
+  Đây không phải DB/projection/API/checkpoint/reorg acceptance.
+
+### QA05–QA06: oracle và giới hạn
+
+[`GovernanceAttacks.t.sol`](../tests/attacks/GovernanceAttacks.t.sol) regression
+concurrent **khác snapshot**, direct transfer/delegate/undelegate và approved
+`transferFrom` sau snapshot; thiếu allowance bị chặn. Sau đó budget race/thiếu
+tiền/retry cùng operation, shared request và former-deployer bypass; giữ lịch sử
+trong một ca thay vì chép lại từng unit input.
+
+[`GovernanceInvariant.t.sol`](../tests/invariant/GovernanceInvariant.t.sol) có4
+invariant INV01–INV04 trong **một campaign100×50=5.000 handler calls**, seed
+`0x20261021`; không phải4×5.000.14 actions, ghost balances/delegates/allowances/
+checkpoints pin từng voter độc lập với GOV; vote/state/quorum/ETA/operation/payment
+dự đoán trước, successful history không lấy `paidRequests` làm oracle. Sticky flag giữ mismatch
+để handler revert không che lỗi. Mỗi chuỗi có lifecycle thành công trong action,
+không chỉ seed payout trong setUp; `afterInvariant` assert non-vacuity.
+
+[Stdout Foundry](evidence/tv4-sc04-foundry-20261021.txt):
+**142 passed,0 failed/skipped**,8 suites, gồm82 unit Governor.4 invariant checks
+được Foundry nhóm thành1 test; Treasury có campaign riêng100×50. Counter được in
+ở cuối là trạng thái chuỗi cuối, **không phải tổng100 runs**:51 action,5 execute
+success,2 execute revert,25 vote success,5 queue success,1 cancel success,
+1 unauthorized revert,3 approve success và5 transferFrom revert. Chuỗi cuối
+transferFrom success0; positive transferFrom nằm trong regression khác snapshot.
+Có model state visits theo code0–7, nhưng đây chỉ là samples trước mỗi action,
+không phải aggregate phase coverage của100runs. Unassisted execute0 không chứng
+minh random-only liveness. Regression riêng có3 successful execution,2 không qua helper.
+
+Model giới hạn5 voter,4 passive recipient,16 request,24 proposal; direct GOV transfer/
+approve/transferFrom/delegate/undelegate, chưa model signature/ERC-1271, malformed
+payload toàn bộ hoặc mọi chiến lược liveness. Role universe invariant hữu hạn;
+checker runtime riêng audit toàn bộ holder history. Chưa có aggregate coverage100runs,
+UI/API/reorg/rebuild, dữ liệu lưu PostgreSQL từ chain này hoặc testnet.
+Không đổi full TC01–TC14/INV toàn hệ thống thành PASS; vẫn cần peer review/variant
+coverage theo [matrix](test-plan.md). [Backend regression](evidence/tv4-sc04-backend-20261021.txt)
+typecheck/build,63 unit tests và BE01 fixture đều đạt; SQL chạy lại được ghi riêng ở CI.
+
+## Bổ sung runtime TV4 — 22/10/2026
+
+Phần21/10 phía trên giữ nguyên source/receipt và giới hạn tại thời điểm đó.
+Base HEAD vẫn `5fbf615`; candidate chưa commit, không merge/commit/push.
+Frontend nhập worktree snapshot nguồn `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`,
+không coi SHA đó là commit candidate. Source hashes tại [work summary](tv4-work-summary.md).
+
+- **E-RAWSQL-22:** [report](evidence/tv4-20261022/governance-storage.json)
+  bổ sung raw PostgreSQL thật: canonicalH109,108 headers/61 raw/45 decoded/
+  16 unknown/0 decode errors; exact headers/raw/payload/RPC và SQL BUD ledger
+  13000in/13000out khớp chain cùngH,2 paid requests. Init/access topics giữ raw;
+  GOV registry chưa hỗ trợ, dùng ABI cung cấp. Trigger lỗi header thứ hai rollback
+  batch, prior committed batches còn nguyên; scanner/CLI fresh-process rerun
+  idempotent. DB trống thứ hai raw replay cùng semantic digest
+  `dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086`.
+  CLI restart/rebuild exit2 kỳ vọng vì unknown topics, không projection rebuild.
+  Native PostgreSQL18.4 cô lập đã chạy; Docker18.4 runner cấu hình workflow,
+  **chưa có GitHub CI execution mới được tuyên bố**.
+- **E-UI-22:** [browser report](evidence/tv4-20261022/frontend-browser.json)
+  và3PNG:11 scenarios Chromium150 trên canonical root fixture,20/20/5,
+  exact ID/whitespace, filter7Executed/7Active, detail61/1wei BUD, empty/notfound,
+  disabled form, loading/error/recovery, production bỏ qua dev injection;
+  keyboard skip/Tab/Enter,4screens390/1366 không horizontal overflow.
+  Không nối fixture browser với SQL/receipt thành UI→chain→API proof.
+- **E-CANDIDATE-22:** Node24.15.0 frontend lint0warnings/build đạt; clean
+  candidate clone baseline rồi overlay source, không copy node_modules/out/cache;
+  clean installs, frontend lint/build, `scripts/ci.sh`142/142 đạt,
+  fuzz256/invariant100×50 seed `0x20261021`. Cùng máy, compiler global sẵn,
+  không independent other-machine acceptance; Foundry lints hiện hữu không suppress.
+
+Xem [matrix TC01/TC11/TC12/TC13](test-plan.md): raw storage không
+checkpoint/resume/reorg/K-confirmations/projection/state reconstruction/FR15;
+browser fixture không wallet/form submit/HTTP API/same-H consumer E2E.
+Testnet và peer approval còn thiếu; không nâng TC/INV/NFR toàn hệ thống thành PASS.

@@ -69,7 +69,7 @@ thiếu quỹ/retry, hai request tranh số dư, transfer trả false/revert, c�
 bàn giao admin rồi deployer thử lấy lại quyền/chi tiền, native value và fuzz bảo toàn BUD.
 Token transfer lỗi được mô phỏng trên địa chỉ BUD bằng vm.mockCall/vm.mockCallRevert,
 không sửa BudgetToken. Unit test chứng minh rollback paidRequests sau external call lỗi.
-INV01/INV03 có kiểm tra unit/fuzz; chưa phải stateful invariant campaign của TV4.
+Unit/fuzz TV1 kiểm tra INV01/INV03 cục bộ; TV4 đã bổ sung [stateful Treasury-only campaign và runtime smoke](sc03-review.md). Chưa nghiệm thu invariant governance đầy đủ.
 BR04 giới hạn target/selector tại Governor và FR08 timelock delay chưa xác minh trong SC03.
 SC04/SC05 kiểm thử trạng thái proposal và retry execute toàn luồng; TV4 deploy/check-roles thật.
 
@@ -78,12 +78,14 @@ forge fmt
 forge build
 forge test --match-path 'tests/unit/Treasury.t.sol' -vv
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 forge fmt --check
 git diff --check
 ```
 
 ## Kết quả trước bổ sung security review
+
+Các mục kết quả dưới đây giữ nguyên báo cáo lịch sử SC03; tên checker cũ là lệnh đã chạy lúc đó, không phải đường hiện hành TV4. SC03 đã merge Dev qua PR #11. Kết quả độc lập mới: [review TV4 ngày21/10](sc03-review.md), không coi mock Timelock là deployment cuối.
 
 - Nhánh feature/tv1-sc03 tạo từ feature/tv1-sc02; không commit/push/PR.
 - forge fmt (hai file SC03), forge build: đạt. Build có cảnh báo keyword tương lai trong OpenZeppelin, giữ nguyên thư viện.
@@ -138,3 +140,15 @@ không thay thế stateful invariant campaign do TV4 phụ trách.
 - ABI compiler Treasury vẫn khớp shared/abi/Treasury.json và giữ đủ interface SC01.
 - Treasury.sol, ITreasury.sol, BudgetToken và GovernanceToken không thay đổi trong đợt bổ sung.
 - Không thêm ReentrancyGuard; không commit, push hoặc tạo PR.
+
+## TV4 sau SC04 — cập nhật21/10/2026
+
+Các kết quả55tests/source TV1 ở trên là lịch sử. Governor đã tích hợp tại
+`70c2b33`; [TV4 SC04 review/evidence](sc04-governor.md#tv4-kiểm-chứng-độc-lập-sau-tích-hợp-sc04--21102026)
+có deployment thật với TimelockController OZ5.4.0 delay120 và exclusive roles,
+bootstrap renounce **trước funding**, manifest/full role audit và positive
+Governor→Timelock→Treasury. Có demo1000 BUD, competing7000/6000/topup3000/retry,
+shared request, bounded governance invariant và approved transferFrom snapshot
+regression. Source/ABI Treasury không đổi; còn peer review/SC05 và testnet, không
+lấy smoke Treasury-only hoặc unit callback token làm deployment production.
+

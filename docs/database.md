@@ -11,6 +11,22 @@ psql -X -v ON_ERROR_STOP=1 -d <database-tam> -f database/migrations/001_initial.
 psql -X -v ON_ERROR_STOP=1 -d <database-tam> -f database/tests/001_initial_checks.sql
 ```
 
+Linux/macOS hoặc GitHub Actions có Docker daemon truy cập được:
+
+```bash
+bash scripts/check_be01_database.sh
+```
+
+Runner Bash pin image `postgres:18.4`, tạo container mới không có mạng hay
+port host, chỉ mount `database/` read-only. Sau khi server healthy, chạy hai file
+SQL với `psql -X --no-password --set=ON_ERROR_STOP=1`; in server version và
+image ID để lưu evidence. Trap dọn đúng container và anonymous volume vừa tạo
+ở cả đường thành công/lỗi; không dùng hoặc xóa database/container có sẵn.
+Trust auth chỉ nằm trong container test không nối mạng. SQL logs ra stdout/stderr,
+job BE01 lưu cùng SHA trong artifact 14 ngày. Nếu không có quyền Docker, sửa
+môi trường với người quản trị hoặc dùng CI; không mở quyền socket để chạy test.
+
+
 Trên Windows có PostgreSQL binaries, runner tự tạo cluster/database tạm độc lập, chọn cổng localhost còn trống, chạy cả migration/test và dừng cluster sau khi xong:
 
 ```powershell

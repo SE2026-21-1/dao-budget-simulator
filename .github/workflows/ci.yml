@@ -1,0 +1,216 @@
+name: TV4 CI
+
+on:
+  push:
+    branches: [main, Dev, 'feature/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tv4-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contracts:
+    name: Foundry, governance invariants and live PostgreSQL acceptance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+      FOUNDRY_FUZZ_SEED: '0x20261021'
+    steps:
+      - name: Checkout with pinned submodules
+        uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install pinned Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - name: Set up Node.js for live receipt verification
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Install locked smoke dependencies
+        run: npm ci
+      - name: Build, format, tests and ABI fixture
+        shell: bash
+        run: |
+          mkdir -p reports
+          bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Exercise Treasury transactions and BE02 live receipt decoding
+        shell: bash
+        run: |
+          node --import tsx scripts/smoke_treasury.mjs --output reports/sc03-local-smoke.json 2>&1 | tee reports/sc03-smoke.log
+      - name: Exercise final roles, live governance ingestion, restart and raw replay
+        shell: bash
+        run: |
+          bash scripts/check_governance_database.sh --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
+      - name: Record scope of checks
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          git submodule status > reports/submodules.txt
+          echo 'CI checks available suites only; see docs/tv4-checklist.md for outstanding acceptance requirements.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload check evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tv4-checks-${{ github.sha }}
+          path: reports/
+          retention-days: 14
+
+  be01:
+    name: BE01 fixtures and PostgreSQL constraints
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout BE01 schema and fixtures
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Check offline API fixtures
+        shell: bash
+        run: |
+          mkdir -p reports
+          node scripts/check_be01.mjs 2>&1 | tee reports/be01-fixtures.log
+      - name: Check migration and constraints in isolated PostgreSQL
+        shell: bash
+        run: |
+          bash scripts/check_be01_database.sh 2>&1 | tee reports/be01-database.log
+      - name: Record BE01 scope and versions
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          node --version > reports/node-version.txt
+          echo 'BE01 checks synthetic fixtures and SQL constraints only, not RPC/indexer/API/reorg/rebuild behavior.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload BE01 evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tv4-be01-${{ github.sha }}
+          path: reports/
+          retention-days: 14
+
+  be02:
+    name: BE02 TypeScript and isolated PostgreSQL storage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout BE02 implementation
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Install locked dependencies
+        shell: bash
+        run: |
+          mkdir -p reports
+          npm ci 2>&1 | tee reports/be02-install.log
+      - name: Typecheck BE02 source and tests
+        shell: bash
+        run: |
+          npm run typecheck 2>&1 | tee reports/be02-typecheck.log
+      - name: Build BE02
+        shell: bash
+        run: |
+          npm run build 2>&1 | tee reports/be02-build.log
+      - name: Check BE02 synthetic RPC and decoder behavior
+        shell: bash
+        run: |
+          npm run test:be02 2>&1 | tee reports/be02-tests.log
+      - name: Check BE02 storage and host CLI against isolated PostgreSQL
+        shell: bash
+        run: |
+          npm run test:be02:db:linux 2>&1 | tee reports/be02-database.log
+      - name: Record BE02 scope, exact revision and tool versions
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          printf '%s\n' '${{ github.sha }}' > reports/event-sha.txt
+          node --version > reports/node-version.txt
+          npm --version > reports/npm-version.txt
+          docker version > reports/docker-version.txt 2>&1
+          if [[ -x node_modules/.bin/tsc ]]; then
+            node_modules/.bin/tsc --version > reports/typescript-version.txt
+          fi
+          if [[ -x node_modules/.bin/tsx ]]; then
+            node_modules/.bin/tsx --version > reports/tsx-version.txt
+          fi
+          echo 'BE02 checks synthetic RPC/ABI decoding, BE01 migration/constraints and raw PostgreSQL storage/CLI only. No SC06 receipt acceptance, checkpoint/reorg, projections or API completion is claimed.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload BE02 evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tv4-be02-${{ github.sha }}
+          path: reports/
+          retention-days: 14
+
+  frontend:
+    name: Frontend lint and production build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout integrated frontend and canonical BE01 fixtures
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Install locked frontend dependencies
+        shell: bash
+        run: |
+          mkdir -p reports
+          npm ci --prefix frontend 2>&1 | tee reports/frontend-install.log
+      - name: Lint frontend
+        shell: bash
+        run: |
+          npm run lint --prefix frontend 2>&1 | tee reports/frontend-lint.log
+      - name: Typecheck and build production frontend
+        shell: bash
+        run: |
+          npm run build --prefix frontend 2>&1 | tee reports/frontend-build.log
+      - name: Record frontend scope and versions
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p reports
+          git rev-parse HEAD > reports/commit.txt
+          printf '%s\n' '${{ github.sha }}' > reports/event-sha.txt
+          node --version > reports/node-version.txt
+          npm --version > reports/npm-version.txt
+          npm ls --prefix frontend --depth=0 > reports/frontend-packages.txt 2>&1
+          echo 'Frontend lint/typecheck/build only. Browser evidence is recorded separately; no wallet/API/chain E2E is claimed.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload frontend build and evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tv4-frontend-${{ github.sha }}
+          path: |
+            reports/
+            frontend/dist/
+          retention-days: 14

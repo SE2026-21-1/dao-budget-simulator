@@ -1,0 +1,25 @@
+{
+  "name": "dao-budget-simulator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "indexer": "tsx indexer/cli.ts",
+    "test:be02": "tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts",
+    "test:be02:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1",
+    "test:be02:db:linux": "bash scripts/check_be02_database.sh"
+  },
+  "dependencies": {
+    "ethers": "6.17.0",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.0.0",
+    "tsx": "4.23.15",
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "synthetic": true,
+  "chainId": "31337",
+  "disclaimer": "Artificial addresses, hashes and logs. Not mined receipts or SC06 acceptance evidence.",
+  "events": [
+    {
+      "role": "governor",
+      "abiVersion": "oz-5.4.0-governor",
+      "eventName": "ProposalCreated",
+      "expectedPayload": {
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "proposer": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "targets": [
+          "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+          "0x1234567890abcdef1234567890abcdef12345678"
+        ],
+        "values": [
+          "0",
+          "57896044618658097711785492504343953926634992332820282019728792003956688276757"
+        ],
+        "signatures": [
+          "",
+          "disburse(bytes32,address,uint256)"
+        ],
+        "calldatas": [
+          "0x1234abcd",
+          "0x"
+        ],
+        "voteStart": "123",
+        "voteEnd": "456",
+        "description": "{ \"version\": 1, \"title\": \"Synthetic BE02\", \"body\": \"Ngân sách thử nghiệm 🚀\" }"
+      },
+      "rawLog": {
+        "address": "0x1111111111111111111111111111111111111111",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000001",
+        "transactionIndex": "0x0",
+        "logIndex": "0x0",
+        "removed": false,
+        "topics": [
+          "0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0"
+        ],
+        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd0000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001e000000000000000000000000000000000000000000000000000000000000002c0000000000000000000000000000000000000000000000000000000000000007b00000000000000000000000000000000000000000000000000000000000001c800000000000000000000000000000000000000000000000000000000000003800000000000000000000000000000000000000000000000000000000000000002000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd0000000000000000000000001234567890abcdef1234567890abcdef123456780000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000075bcd1500000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000021646973627572736528627974657333322c616464726573732c75696e74323536290000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000041234abcd00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000567b202276657273696f6e223a20312c20227469746c65223a202253796e7468657469632042453032222c2022626f6479223a20224e67c3a26e2073c3a16368207468e1bbad206e676869e1bb876d20f09f9a8022207d00000000000000000000"
+      }
+    },
+    {
+      "role": "governor",
+      "abiVersion": "oz-5.4.0-governor",
+      "eventName": "VoteCast",
+      "expectedPayload": {
+        "voter": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "support": "2",
+        "weight": "57896044618658097711785492504343953926634992332820282019728792003956688276757",
+        "reason": "Synthetic vote: ủng hộ 🚀"
+      },
+      "rawLog": {
+        "address": "0x1111111111111111111111111111111111111111",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000002",
+        "transactionIndex": "0x0",
+        "logIndex": "0x1",
+        "removed": false,
+        "topics": [
+          "0xb8e138887d0aa13bab447e82de9d5c1777041ecd21ca36ba824ff1e6c07ddda4",
+          "0x000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd"
+        ],
+        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000280000000000000000000000000000000000000000000000000000000075bcd150000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000001f53796e74686574696320766f74653a20e1bba76e672068e1bb9920f09f9a8000"
+      }
+    },
+    {
+      "role": "governor",
+      "abiVersion": "oz-5.4.0-governor",
+      "eventName": "ProposalQueued",
+      "expectedPayload": {
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "etaSeconds": "1900000000"
+      },
+      "rawLog": {
+        "address": "0x1111111111111111111111111111111111111111",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000003",
+        "transactionIndex": "0x0",
+        "logIndex": "0x2",
+        "removed": false,
+        "topics": [
+          "0x9a2e42fd6722813d69113e7d0079d3d940171428df7373df9c7f7617cfda2892"
+        ],
+        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000000000000000000000000000000000000000000000000000713fb300"
+      }
+    },
+    {
+      "role": "governor",
+      "abiVersion": "oz-5.4.0-governor",
+      "eventName": "ProposalExecuted",
+      "expectedPayload": {
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+      },
+      "rawLog": {
+        "address": "0x1111111111111111111111111111111111111111",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000004",
+        "transactionIndex": "0x0",
+        "logIndex": "0x3",
+        "removed": false,
+        "topics": [
+          "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f"
+        ],
+        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "role": "governor",
+      "abiVersion": "oz-5.4.0-governor",
+      "eventName": "ProposalCanceled",
+      "expectedPayload": {
+        "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+      },
+      "rawLog": {
+        "address": "0x1111111111111111111111111111111111111111",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000005",
+        "transactionIndex": "0x0",
+        "logIndex": "0x4",
+        "removed": false,
+        "topics": [
+          "0x789cf55be980739dad1d0699b93b58e806b51c9d96619bfa8fe0a28abaa7b30c"
+        ],
+        "data": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "role": "timelock",
+      "abiVersion": "oz-5.4.0-timelock",
+      "eventName": "CallScheduled",
+      "expectedPayload": {
+        "id": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "index": "57896044618658097711785492504343953926634992332820282019728792003956688276757",
+        "target": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "value": "57896044618658097711785492504343953926634992332820282019728792003956688276757",
+        "data": "0xabcdef0123456789",
+        "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "delay": "120"
+      },
+      "rawLog": {
+        "address": "0x2222222222222222222222222222222222222222",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000006",
+        "transactionIndex": "0x0",
+        "logIndex": "0x5",
+        "removed": false,
+        "topics": [
+          "0x4cf4410cc57040e44862ef0f45f3dd5a5e02db8eb8add648d4b0e236f1d07dca",
+          "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "0x80000000000000000000000000000000000000000000000000000000075bcd15"
+        ],
+        "data": "0x000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd80000000000000000000000000000000000000000000000000000000075bcd1500000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000780000000000000000000000000000000000000000000000000000000000000008abcdef0123456789000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "role": "timelock",
+      "abiVersion": "oz-5.4.0-timelock",
+      "eventName": "CallExecuted",
+      "expectedPayload": {
+        "id": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "index": "57896044618658097711785492504343953926634992332820282019728792003956688276757",
+        "target": "0x1234567890abcdef1234567890abcdef12345678",
+        "value": "57896044618658097711785492504343953926634992332820282019728792003956688276757",
+        "data": "0x1234abcd"
+      },
+      "rawLog": {
+        "address": "0x2222222222222222222222222222222222222222",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000007",
+        "transactionIndex": "0x0",
+        "logIndex": "0x6",
+        "removed": false,
+        "topics": [
+          "0xc2617efa69bab66782fa219543714338489c4e9e178271560a91b82c3f612b58",
+          "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+          "0x80000000000000000000000000000000000000000000000000000000075bcd15"
+        ],
+        "data": "0x0000000000000000000000001234567890abcdef1234567890abcdef1234567880000000000000000000000000000000000000000000000000000000075bcd15000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000041234abcd00000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "role": "timelock",
+      "abiVersion": "oz-5.4.0-timelock",
+      "eventName": "Cancelled",
+      "expectedPayload": {
+        "id": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+      },
+      "rawLog": {
+        "address": "0x2222222222222222222222222222222222222222",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000008",
+        "transactionIndex": "0x0",
+        "logIndex": "0x7",
+        "removed": false,
+        "topics": [
+          "0xbaa1eb22f2a492ba1a5fea61b8df4d27c6c8b5f3971e63bb58fa14ff72eedb70",
+          "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+        ],
+        "data": "0x"
+      }
+    },
+    {
+      "role": "timelock",
+      "abiVersion": "oz-5.4.0-timelock",
+      "eventName": "CallSalt",
+      "expectedPayload": {
+        "id": "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "salt": "0xabababababababababababababababababababababababababababababababab"
+      },
+      "rawLog": {
+        "address": "0x2222222222222222222222222222222222222222",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x0000000000000000000000000000000000000000000000000000000000000009",
+        "transactionIndex": "0x0",
+        "logIndex": "0x8",
+        "removed": false,
+        "topics": [
+          "0x20fda5fd27a1ea7bf5b9567f143ac5470bb059374a27e8f67cb44f946f6d0387",
+          "0xcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+        ],
+        "data": "0xabababababababababababababababababababababababababababababababab"
+      }
+    },
+    {
+      "role": "treasury",
+      "abiVersion": "sc01-itreasury-v1",
+      "eventName": "BudgetDisbursed",
+      "expectedPayload": {
+        "requestId": "0xefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+        "recipient": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "amount": "57896044618658097711785492504343953926634992332820282019728792003956688276757"
+      },
+      "rawLog": {
+        "address": "0x3333333333333333333333333333333333333333",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x000000000000000000000000000000000000000000000000000000000000000a",
+        "transactionIndex": "0x0",
+        "logIndex": "0x9",
+        "removed": false,
+        "topics": [
+          "0xed831073041168fde3787985861235c1f42621a21918a64a309a17903e0e10db",
+          "0xefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+          "0x000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd"
+        ],
+        "data": "0x80000000000000000000000000000000000000000000000000000000075bcd15"
+      }
+    },
+    {
+      "role": "budget_token",
+      "abiVersion": "oz-5.4.0-erc20",
+      "eventName": "Transfer",
+      "expectedPayload": {
+        "from": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        "to": "0x1234567890abcdef1234567890abcdef12345678",
+        "value": "57896044618658097711785492504343953926634992332820282019728792003956688276757"
+      },
+      "rawLog": {
+        "address": "0x4444444444444444444444444444444444444444",
+        "blockNumber": "0x64",
+        "blockHash": "0x5555555555555555555555555555555555555555555555555555555555555555",
+        "transactionHash": "0x000000000000000000000000000000000000000000000000000000000000000b",
+        "transactionIndex": "0x0",
+        "logIndex": "0xa",
+        "removed": false,
+        "topics": [
+          "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+          "0x000000000000000000000000abcdefabcdefabcdefabcdefabcdefabcdefabcd",
+          "0x0000000000000000000000001234567890abcdef1234567890abcdef12345678"
+        ],
+        "data": "0x80000000000000000000000000000000000000000000000000000000075bcd15"
+      }
+    }
+  ]
+}

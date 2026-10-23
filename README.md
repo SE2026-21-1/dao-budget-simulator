@@ -1,50 +1,108 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Repository đã có nền tảng SC01 và
-hai token của SC02: GovernanceToken (GOV) và BudgetToken (BUD), kèm unit test.
-SC03 đã có Treasury và unit test chống chi lặp. SC04 đã có BudgetGovernor và fixture Timelock trong unit test; chưa hoàn tất SC05,
-chưa chạy được demo end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
+Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
+Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
+→ PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
+HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API end-to-end.
 
 ## Trạng thái các task TV1
 
 | Task | Trạng thái |
 |---|---|
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
-| SC02 — Token và voting power | Đã triển khai hai token và unit test; chờ review/tích hợp |
-| SC03 — Treasury và chống chi lặp | Đã triển khai Treasury, unit test và ABI; chờ review/tích hợp |
-| SC04 — Governor và giới hạn proposal | Đã triển khai BudgetGovernor, unit test và ABI; chờ review |
-| SC05 — Timelock và quyền sau deploy | Chưa triển khai |
-| SC06 — ABI và dữ liệu tích hợp | Chưa hoàn tất; hiện có ABI nháp và fixture tổng hợp SC01 |
-| SC07 — Hoàn thiện unit test và test biên | Chưa hoàn tất; đã có unit test SC01/SC02 |
-| SC08 — Tích hợp local | Chưa thực hiện |
+| SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
+| SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
+| SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`; [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) chờ peer review |
+| SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
+| SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
+| SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
+| SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
 | SC10 — Testnet và bàn giao | Chưa thực hiện |
 
-## Môi trường tái lập
+## Môi trường Foundry — TV4 Operation
 
-- Foundry (forge/cast/anvil): 1.8.5.
-- Solidity: 0.8.37; optimizer 200 runs; EVM local: osaka.
-- OpenZeppelin Contracts: 5.4.0; forge-std: 1.17.0.
-- Python 3 để kiểm tra ABI/fixture, không cần package bên ngoài.
-- Dependency được khóa bằng git submodule và `foundry.lock`.
+Cấu hình, thư viện và dữ liệu tích hợp SC01 được đồng bộ từ nhánh `feature/tv1-sc01`,
+commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Interface `ITreasury`, ABI chia sẻ,
+fixture tổng hợp và script kiểm tra fixture được giữ làm chuẩn tích hợp.
+Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4.
+GOV/BUD/Treasury đã tích hợp từ `Dev` tại `1f40748`; BudgetGovernor từ `f57fcfd`. TimelockController dùng dependency OpenZeppelin đã khóa; SC05 chưa được bàn giao riêng.
 
-Cài Foundry đúng phiên bản theo hướng dẫn của nhóm/TV4. Sau khi clone:
+| Thành phần | Phiên bản |
+| --- | --- |
+| Foundry (`forge`, `cast`, `anvil`) | 1.8.5 |
+| Solidity | 0.8.37 |
+| OpenZeppelin Contracts | 5.4.0 |
+| forge-std | 1.17.0 |
+| EVM local | osaka |
+| Optimizer | bật, 200 runs |
+
+Dependency được khóa bằng Git submodule và `foundry.lock`. Cài Foundry 1.8.5
+theo [hướng dẫn Foundry](https://getfoundry.sh/introduction/installation), rồi chạy:
 
 ```bash
+git clone --branch feature/tv4-operation https://github.com/SE2026-21-1/dao-budget-simulator.git
+cd dao-budget-simulator
 git submodule update --init --recursive
 forge --version
 cast --version
+anvil --version
 forge build
-forge test --match-path 'tests/unit/ITreasury.t.sol' -vv
-python3 scripts/check_sc01.py
+forge test -vv
+python3 scripts/check.py
 forge fmt --check
 ```
 
-Lần build đầu cần mạng để tải compiler nếu máy chưa có Solidity 0.8.37.
-Để kiểm tra toàn bộ test hiện có, dùng `forge test`.
-Cấu hình tìm test trong `tests/` để nhận cả unit/invariant/attacks sau này.
-Không suy ra test thành công từ artifact `out/` có sẵn.
+Lần build đầu có mã Solidity cần mạng để tải compiler 0.8.37 nếu chưa có.
+Foundry tìm contract trong `contracts/`, test trong `tests/` và thư viện trong
+`lib/`. Remapping `forge-std/` và `@openzeppelin/contracts/` đã có trong
+`foundry.toml`. Script kiểm tra ABI/fixture cần Python 3, không cần package bổ sung.
+Bộ test `tests/unit/OperationAbiCompatibility.t.sol` gồm:
+
+- `testFuzzDisbursementPayloadMatchesClientAbi`: đối chiếu calldata do interface
+  tạo với ABI công khai cho requestId, địa chỉ nhận và số lượng được fuzz.
+- `testBudgetDisbursedTopicMatchesIndexerAbi`: cố định topic0 của sự kiện
+  `BudgetDisbursed` để phát hiện thay đổi làm mất tương thích với indexer.
+
+Script Python đối chiếu ABI compiler, calldata, descriptionHash và proposalId.
+Fixture là dữ liệu tổng hợp, không phải receipt on-chain. Các kiểm tra này chưa
+chứng minh phân quyền Treasury, chống giải ngân lặp hay luồng DAO end-to-end.
+
+Cấu hình `osaka` chỉ được xác minh bằng thực thi EVM local; cần kiểm tra hỗ trợ
+của testnet trước khi deploy. Không commit private key hoặc RPC secret:
+`.env`, `.env.*`, `out/`, `cache/` và `broadcast/` được bỏ qua; `.env.example`
+được phép đưa vào Git.
+
+## Kiểm tra tự động — TV4
+
+Sau khi cài dependency, chạy các kiểm tra Foundry như job contracts:
+
+```bash
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh
+```
+
+Job contracts dùng Foundry 1.8.5, Python 3.12, Node 24.15.0 và profile `ci`
+(256 fuzz runs, 100 invariant runs × 50 thao tác, seed `0x20261021`), smoke Treasury
+và governance thật qua PostgreSQL 18.4 cô lập, rollback/restart/raw replay cùng H.
+Job BE01 kiểm fixture/SQL; job BE02 typecheck/build, 63 bài RPC/decoder và
+21 bài storage/CLI. Job frontend cài theo lockfile, lint và production build
+(`tsc -b && vite build`); không giả là browser/wallet E2E. Artifact giữ 14 ngày.
+
+Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
+Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
+Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
+
+[CI bản triển khai `7a0ab33`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342)
+đã chạy thành công cả ba job; [metadata và log SQL](docs/evidence/tv4-ci-7a0ab33.json).
+Đây không chứng minh Governor/Timelock, checkpoint/reorg/rebuild, HTTP API,
+UI wallet/E2E hay NFR07 toàn hệ thống. Xem [checklist TV4](docs/tv4-checklist.md).
+
+Bổ sung ngày **22/10** đã được chạy local trên Node 24.15.0; xem
+[evidence TV4](docs/evidence/tv4-20261022/verification.json).
+Workflow bốn job mới chưa được push/chạy GitHub trong đợt này; kết quả CI ba job
+ở trên là lịch sử, không phải bằng chứng cho frontend hoặc raw replay mới.
 
 ## Unit test SC02
 
@@ -74,12 +132,28 @@ Constructor và trình tự phân bổ cho TV4 được mô tả trong
 forge build
 forge test --match-path 'tests/unit/Treasury.t.sol' -vv
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 ```
 
 Treasury dùng AccessControl và SafeERC20; nạp bằng transfer BUD, kiểm tra số dư khi chi,
 chặn requestId đã thanh toán và cho retry sau lần thất bại. Test dùng địa chỉ Timelock giả lập,
 chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng dẫn SC03](docs/sc03-treasury.md).
+
+### Smoke độc lập TV4 và invariant Treasury-only
+
+Cần Node 24.15.0; chạy sau build ở trên:
+
+```bash
+npm ci
+node --import tsx scripts/smoke_treasury.mjs --output /tmp/sc03-local-smoke.json
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/invariant/TreasuryAccounting.t.sol -vv
+```
+
+Smoke sở hữu Anvil loopback tạm, tự dừng; không nhận RPC URL/private key.
+Kiểm phân quyền, chi trùng, thiếu tiền/retry và 7 Transfer/3 BudgetDisbursed
+thật qua BE02. Spender EOA là thiết lập thử nghiệm, không phải Timelock.
+Invariant dùng oracle lịch sử độc lập; không thay INV01–INV04 governance.
+Xem [review SC03](docs/sc03-review.md) và [kết quả local](docs/evidence/tv4-local-verification-20261021.json).
 
 ## Unit test SC04
 
@@ -87,12 +161,118 @@ chưa chứng minh luồng Governor → Timelock → Treasury. Xem [hướng d�
 forge build
 forge test --match-path 'tests/unit/BudgetGovernor.t.sol' -vv
 forge test -vv
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 ```
 
 BudgetGovernor chỉ nhận một lời gọi Treasury.disburse chuẩn ABI, dùng GOV timestamp checkpoint,
 threshold 50 GOV và quorum 20%. Xem [SC04 — Governor](docs/sc04-governor.md).
 Test có Timelock thật làm fixture; production roles/deploy/check-roles thuộc SC05 và TV4.
+
+## Deploy, audit role và demo governance local — TV4
+
+Cần Foundry 1.8.5, Node 24.15.0 và `npm ci`; build bằng cấu hình đã khóa.
+Để giữ chain chạy cho TV2/TV3, mở terminal riêng:
+
+```bash
+anvil --host 127.0.0.1 --chain-id 31337 --hardfork osaka --silent
+```
+
+Trên **Anvil mới, rỗng, không fork**, chạy:
+
+```bash
+forge build
+node scripts/deploy_local.mjs --rpc http://127.0.0.1:8545 --output /tmp/dao-local-manifest.json
+node scripts/check_roles.mjs --rpc http://127.0.0.1:8545 --manifest /tmp/dao-local-manifest.json
+```
+
+Script chỉ nhận RPC deploy numeric loopback, không nhận key, từ chối chain có
+giao dịch và không ghi đè manifest. Deploy GOV/BUD/Treasury/Timelock/Governor
+thật; bỏ admin bootstrap, audit role **trước** funding10.000 BUD, rồi delegate
+400/300/200/100 GOV và mine checkpoint quá khứ. Funding wallet còn10.000 BUD.
+Manifest chứa receipt, từng deployment block, hash source/compiler/ABI, commit,
+scanFromBlock và chính sách K=2. K chỉ là cấu hình bàn giao, BE02 chưa tự thực thi
+confirmations/checkpoint. Checker read-only cùng H, đối chiếu creation/runtime,
+constructor/token links/config và toàn bộ lịch sử role với `hasRole`; exit khác0
+khi sai. Manifest ràng buộc đúng source commit/build; audit lại bản cũ phải dùng
+đúng checkout ghi trong manifest. Địa chỉ local không dùng làm cấu hình testnet.
+
+Xuất bundle bàn giao từ chain **còn chạy**; thư mục đích phải chưa tồn tại:
+
+```bash
+node scripts/export_local_handoff.mjs --rpc http://127.0.0.1:8545 \
+  --manifest /tmp/dao-local-manifest.json --output /tmp/dao-local-handoff
+```
+
+Bundle có manifest, role audit cùng H, ABI compiler đầy đủ cho năm contract,
+`handoff.json` và `be02-contracts.json` cho bốn role BE02 hiện hỗ trợ.
+Exporter read-only, kiểm source/build/roles trước xuất, không ghi đè thư mục cũ.
+TV2 tạo deployment metadata trong DB đã migration rồi dùng `deployment_id`
+thực được SQL trả về; bundle không bịa ID. GOV ABI được bàn giao nhưng BE02 chưa
+decode GOV. Numeric loopback chỉ dùng cùng máy; thành viên máy khác tự deploy
+và tạo bundle mới. Không mở RPC chứa tài khoản Anvil unlocked ra Internet.
+
+Smoke tự sở hữu Anvil loopback tạm, không tác động chain đang chạy:
+
+```bash
+node --import tsx scripts/smoke_governance.mjs --output /tmp/sc04-local-smoke.json
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/invariant/GovernanceInvariant.t.sol -vv
+forge test --match-path tests/attacks/GovernanceAttacks.t.sol -vvvv
+```
+
+Smoke có nhánh F0 chi đúng1.000 BUD, lưu receipt riêng rồi revert nhánh đó trước
+campaign attack; không trộn receipt đã revert vào ledger canonical cuối. Campaign
+chính kiểm snapshot/deadline/ETA, final roles, quorum/cancel/payload, chi7.000,
+thiếu tiền cho6.000, nạp3.000/retry cùng operation và hai proposal trùng request.
+BE02 `HttpRpc/readBatch` đọc thật Governor/Timelock/Treasury/BUD; GOV giữ raw receipt,
+registry BE02 chưa hỗ trợ GOV. Không có DB projection/API/UI hoặc reorg trong smoke.
+Xem [bằng chứng và review SC04](docs/sc04-governor.md) và [matrix nghiệm thu](docs/test-plan.md).
+
+### Governance → PostgreSQL, restart và raw replay
+
+Sau `npm ci` và `forge build`, với Docker daemon có quyền hợp lệ:
+
+```bash
+bash scripts/check_governance_database.sh --output /tmp/sc04-storage-smoke.json
+```
+
+Runner sở hữu Anvil tạm, container PostgreSQL 18.4 và hai database mới; không dùng
+`DATABASE_URL`/`RPC_URL` đang có, dọn container/volume khi kết thúc. Kiểm actual
+HttpRpc/scanner/CLI/storage, header và raw/payload đầy đủ, ledger SQL khớp chain
+cùng H; cố ý lỗi SQL giữa batch phải rollback; chạy lại qua process mới không trùng;
+replay sang DB thứ hai cho cùng semantic digest. Unknown init/role topics giữ raw
+và CLI trả 2 đúng hợp đồng, không che thành exit 0.
+
+[Kết quả ngày 22/10](docs/evidence/tv4-20261022/governance-storage.json):
+108 header, 61 raw log, 45 decoded, 16 unknown, 0 decode error.
+Local dùng native PostgreSQL 18.4 cô lập; chưa chứng minh Docker runner mới chạy
+trên máy này hoặc GitHub. Raw replay không thay projection/state rebuild FR15,
+checkpoint/resume, K-confirmations, reorg hoặc UI/API E2E.
+
+## Frontend tích hợp — TV3 và nghiệm thu TV4
+
+Cần Node **24.15.0**. Dữ liệu lấy trực tiếp từ `fixtures/api/` của BE01, không
+giữ bản sao JSON trong frontend và không gọi API giả:
+
+```bash
+npm ci --prefix frontend
+npm run lint --prefix frontend
+npm run build --prefix frontend
+npm run dev --prefix frontend -- --host 127.0.0.1
+# Hoặc xem bản production sau build:
+npm run preview --prefix frontend -- --host 127.0.0.1
+```
+
+Bốn màn hình `/`, `/proposals`, `/proposals/:id`, `/proposals/new`.
+Danh sách 45 proposal, tìm exact ID, lọc/phân trang 20/20/5; số tiền dùng BigInt.
+Trang tạo chỉ preview, nút bị khóa; chưa connect ví hoặc vote/cancel/queue/execute.
+Trong dev, `/proposals?fixture=error` dùng kiểm error/retry; production bỏ qua
+query này. Root `npm run build` chỉ build indexer, không build frontend.
+
+[Browser evidence](docs/evidence/tv4-20261022/frontend-browser.json) ghi 11
+scenario Chromium thật, bốn màn hình ở 390px/1366px, bàn phím, precision,
+loading/error/retry và not-found; không thay nghiệm thu TC13 ví/giao dịch.
+Xem [hướng dẫn frontend](frontend/README.md) và [checklist TV4](docs/tv4-checklist.md).
+
 
 ## Tài liệu và chuẩn tích hợp
 
@@ -106,6 +286,11 @@ Test có Timelock thật làm fixture; production roles/deploy/check-roles thu�
 - [ABI Treasury triển khai](shared/abi/Treasury.json)
 - [ABI interface Treasury](shared/abi/ITreasury.json)
 - [Fixture tổng hợp SC01](fixtures/sc01/disbursement-v1.json)
+- [Phân công TV4](docs/TV4_Cong_viec_Testing_Deployment.md)
+- [Test matrix và trạng thái nghiệm thu](docs/test-plan.md)
+- [Review token SC02 và smoke local](docs/sc02-review.md)
+- [Review SC03 độc lập, invariant và receipt smoke](docs/sc03-review.md)
+- [Tổng kết công việc TV4 và tác dụng](docs/tv4-work-summary.md)
 
 Fixture SC01 không phải receipt hoặc bằng chứng deployment. Receipt/log thật thuộc SC06.
 TV1 phụ trách contract/unit test; TV2 indexer/API; TV3 dashboard/ví;
@@ -119,7 +304,7 @@ trước khi có API server. Đọc [đặc tả API](docs/api.md),
 [thiết kế PostgreSQL](docs/database.md) và [checklist bàn giao](docs/be01-checklist.md).
 BE01 chưa triển khai indexer, HTTP server hoặc xử lý reorg thực tế.
 
-Kiểm tra fixture với Node.js (chỉ dùng thư viện chuẩn):
+Kiểm tra fixture với Node.js (CI pin 24.15.0; chỉ dùng thư viện chuẩn):
 
 ```powershell
 node scripts/check_be01.mjs
@@ -131,6 +316,18 @@ snapshot theo timestamp block tạo và thứ tự phát log. Metadata offline n
 dùng revision `fixture-v2`; bỏ cursor v1. Hướng dẫn kiểm tra sinh lại xác định
 và các giới hạn đối chiếu hash nằm trong README fixture.
 
+Trên Linux/macOS có Docker, chạy cùng runner SQL với CI:
+
+```bash
+bash scripts/check_be01_database.sh
+```
+
+Runner tạo container PostgreSQL 18.4 mới, không có mạng hoặc port công khai,
+mount SQL read-only, chạy migration rồi constraints với `ON_ERROR_STOP`,
+và xóa đúng container/anonymous volume do nó tạo kể cả khi kiểm tra lỗi.
+Log in ra terminal (CI lưu artifact). Cần quyền truy cập Docker daemon;
+không đổi permission socket hoặc dùng database đang chạy để vượt lỗi môi trường.
+
 Kiểm tra migration và ràng buộc bằng cụm PostgreSQL tạm độc lập trên Windows:
 
 ```powershell
@@ -140,3 +337,56 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be01_database.
 Script tạo cụm mới trong thư mục tạm, tự dừng sau kiểm tra và giữ log để xem lại;
 không kết nối hoặc xóa database đang có. Cách chạy SQL trên hệ điều hành khác
 nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
+
+## BE02 — RPC log reader và decoder
+
+BE02 được tích hợp từ `4c568d6`; [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12)
+được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 11 event
+và ghi header/raw log trong transaction PostgreSQL. Chưa có projection,
+HTTP API, checkpoint, K confirmations, resume/reorg rollback hoặc rebuild.
+Suite BE02 dùng synthetic RPC; smoke SC03 bổ sung decode receipt Treasury/BUD
+local thật, không phải nghiệm thu SC06/full DAO hoặc chain→DB→API.
+
+Cần Node.js 24 và PostgreSQL (đã kiểm thử với 18.4):
+
+```powershell
+npm ci
+npm run build
+npm run typecheck
+npm run test:be02
+npm run test:be02:db
+node scripts/check_be01.mjs
+```
+
+Test database tự tạo và dừng một cluster tạm độc lập. Nếu binaries PostgreSQL
+khác vị trí mặc định, chạy:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1 -PostgresBin "C:\Program Files\PostgreSQL\18\bin"
+```
+
+Trên Linux/macOS có Docker:
+
+```bash
+npm run test:be02:db:linux
+```
+
+Runner tạo container PostgreSQL 18.4 mới, cổng host ngẫu nhiên chỉ bind
+`127.0.0.1`, không dùng `DATABASE_URL` của người gọi; host chạy test CLI/RPC
+và tự xóa container/anonymous volume. Đã chạy thật trên CI; không dùng
+database đang có hoặc đổi quyền socket để vượt lỗi môi trường.
+
+Để quét RPC, chuẩn bị database đã migrate cùng metadata deployment khớp cấu hình
+theo [hướng dẫn indexer](docs/indexer.md), rồi chạy:
+
+```powershell
+$env:RPC_URL = 'http://127.0.0.1:8545'
+$env:DATABASE_URL = 'postgresql://be02_demo@127.0.0.1:5432/be02_demo'
+npm run indexer -- --config indexer/config/local.json
+```
+
+Tạo `local.json` từ [cấu hình mẫu](indexer/config/example.json), thay địa chỉ,
+deployment block, ABI version và `deploymentId` bằng metadata đã xác minh.
+Địa chỉ trong mẫu là synthetic. CLI không tự nạp `.env`, không tạo deployment;
+exit code `2` báo raw log đã lưu nhưng có unknown topic/decode error.
+Xem [checklist BE02](docs/be02-checklist.md) để biết kết quả và phần chờ SC06.

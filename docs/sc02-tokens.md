@@ -60,7 +60,7 @@ forge build
 forge test --match-path 'tests/unit/GovernanceToken.t.sol' -vv
 forge test --match-path 'tests/unit/BudgetToken.t.sol' -vv
 forge test
-python3 scripts/check_sc01.py
+python3 scripts/check.py
 git diff --check
 ```
 
@@ -69,12 +69,13 @@ lookup current/future bị từ chối, public mint bị từ chối, zero recip
 transfer không phí, allowance, lỗi thiếu tiền/allowance và fuzz bảo toàn nguồn cung.
 Test public mint thử selector mint(address,uint256); việc không có đường mint khác còn được
 đối chiếu source/ABI, không coi một lời gọi revert là chứng minh mọi selector.
-SC03 sẽ kiểm tra Treasury thật; SC04 kiểm tra snapshot voting/quorum bằng Governor thật.
-Chưa triển khai Treasury/Governor/Timelock, deployment script, frontend hay indexer.
-ABI phát hành dùng chung được xử lý trong SC06; ABI hiện tại có trong artifact build.
+SC02 và Treasury SC03 đã tích hợp vào TV4 từ `Dev` ngày21/10; xem [review SC03](sc03-review.md). Governor/Timelock, deployment toàn hệ thống và frontend thật vẫn chưa có; BE02 reader/raw storage đã tích hợp nhưng không phải projection/API.
+ABI phát hành toàn hệ thống vẫn chờ SC06; ABI hiện tại có trong artifact build và ABI Treasury trong `shared/abi/`.
 TV4 review constructor/phân bổ; TV3 review delegate/read; điều kiện review nhóm vẫn áp dụng.
 
 ## Kết quả kiểm tra ngày 18/10/2026
+
+Đây là kết quả lịch sử trên nhánh SC02; lệnh checker cũ trong báo cáo nguồn đã được thay bằng `scripts/check.py` trong nhánh TV4. Kết quả tích hợp mới ghi tại [evidence TV4 ngày21/10](evidence/tv4-local-verification-20261021.json).
 
 - Nhánh: feature/tv1-sc02, tạo từ feature/tv1-sc01; không commit/push.
 - forge build: thành công; compiler cảnh báo tên keyword tương lai trong OpenZeppelin, không sửa thư viện.

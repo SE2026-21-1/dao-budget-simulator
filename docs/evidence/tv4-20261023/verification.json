@@ -199,5 +199,72 @@
   "preservedUnrelatedLocalChanges": [
     "README.md architecture-review link",
     "docs/AD-064-architecture-review.md"
-  ]
+  ],
+  "verifiedImplementationCommit": "228077a6f18944fb7fc6852c65f217db8a368024",
+  "cleanClone": {
+    "provenance": "clean-clone.json",
+    "checks": [
+      {
+        "label": "clean-install",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "npm ci && npm ci --prefix frontend"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 9.288,
+        "log": "clean-install.txt"
+      },
+      {
+        "label": "clean-contracts",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "bash scripts/ci.sh && node --test tests/smoke/interruption.test.mjs && node --import tsx scripts/smoke_governance.mjs --output /tmp/tv4-clean-governance-228077a.json"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 173.609,
+        "log": "clean-contracts.txt"
+      },
+      {
+        "label": "clean-node",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "npm run typecheck && npm run build && npm run test:be02 && node scripts/check_be01.mjs && npm run lint --prefix frontend && npm run build --prefix frontend"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 38.415,
+        "log": "clean-node.txt"
+      }
+    ],
+    "governance": "clean-governance-summary.json",
+    "sameMachine": true,
+    "independentOtherMachine": false
+  },
+  "githubSourceCi": {
+    "metadata": "ci-source.json",
+    "run": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940",
+    "commit": "228077a6f18944fb7fc6852c65f217db8a368024",
+    "conclusion": "success",
+    "jobs": 4
+  }
 }

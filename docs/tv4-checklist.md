@@ -27,6 +27,9 @@ nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
 - [x] Browser production fixture: phân trang20/20/5, lọc7Executed, không tràn ngang390/1366, production bỏ qua error injection; form vẫn disabled, không coi là wallet E2E.
 - [x] Fetch nhánh nhóm: TV2 vẫn `4c568d6` finite raw storage; TV3 `26ecca7` tinh chỉnh thiết kế, chưa có wallet/form giao dịch thật. Không nhập thay đổi thiết kế không liên quan để giả mở khóa E2E.
 - [x] GitHub xác nhận PR #5/#12/#13 đã merge vào Dev ngày23/10; [CI baseline877141c](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39726637732) success. Các ghi chú PR open/chưa có CI ở mục ngày22/10 là lịch sử.
+- [x] Source bổ sung `228077a`: [CI push39899337940](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940) cả4job success, gồm process interruption và governance→Docker PostgreSQL acceptance; [metadata](evidence/tv4-20261023/ci-source.json). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đã request `nvdungmim`/`daongocuong`, chưa approval/merge.
+- [x] Full147Foundry tests đạt; hai ca ngắt trong PostgreSQL mode có real indexer CLI đạt130/143, children reaped, RPC đóng, temp files được dọn và prior evidence không đổi.
+- [x] Clone sạch đúng commit `228077a` bằng `--no-local --recurse-submodules`, không overlay source/copy node_modules/out/cache; cài mới dependency,147Foundry/8process/63backend tests,frontend lint/build và governance smoke thực đạt. [Provenance](evidence/tv4-20261023/clean-clone.json). Cùng máy và compiler global đã có; chưa thay kiểm chứng máy thành viên khác.
 - [ ] Peer review bản bổ sung23/10; merge trước đây không thay review thay đổi mới.
 
 Regression contract mới trong `tests/attacks/GovernanceAttacks.t.sol` bổ sung
@@ -208,12 +211,13 @@ Các TC dưới đây chưa nghiệm thu đầy đủ. E-SC04-L/E-SC04-ROLE/E-GO
 
 - [x] BE02 CI: lockfile/typecheck/build/RPC-decoder/storage-CLI PostgreSQL thật, có artifact SHA/logs.
 - [x] Có job frontend lint/typecheck/build và live governance raw PostgreSQL acceptance trong workflow; kết quả local ngày22/10 ở trên.
-- [ ] Workflow mới chạy thành công trên GitHub và E2E đầy đủ sau bàn giao; chưa nghiệm thu NFR07 toàn hệ thống.
+- [x] Workflow bổ sung chạy thành công trên GitHub tại source `228077a`; không suy ra E2E hoặc NFR07 toàn hệ thống.
+- [ ] E2E đầy đủ sau bàn giao TV2/TV3; nghiệm thu NFR07 toàn hệ thống.
 - [ ] Mọi yêu cầu an toàn có test âm; không còn lỗi mở cho phép chi sai/bỏ qua quyền.
 - [ ] Xác minh NFR02 hiệu năng và NFR03 độ mới với TV2; ghi máy, dữ liệu và lệnh đo.
 - [ ] Kiểm tra retry/backoff, checkpoint và phục hồi NFR04 với TV2.
 - [x] Kiểm tra UI fixture 390px/1366px và bàn phím trên Chromium150; không thay ví/giao dịch TC13 hoặc chứng nhận accessibility đa trình duyệt.
-- [ ] README clone sạch chạy được local demo; CI xanh trước bàn giao.
+- [x] Clone sạch cùng máy chạy được local demo và bộ test tại source `228077a`; CI source xanh. Máy thành viên khác vẫn theo #20.
 
 Mẫu ghi một bằng chứng (không chứa bí mật):
 

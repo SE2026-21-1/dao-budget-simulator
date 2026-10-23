@@ -345,3 +345,20 @@ Không tìm thấy cấu hình testnet được chốt hoặc funded signer; kh�
 giao dịch, không tạo manifest/testnet txHash giả. Không tự approval hoặc merge
 revision mới. QA07/QA08/QA10 toàn bộ vẫn bị chặn bởi các bàn giao trên.
 
+### Kết quả publish và tái lập source mục9
+
+Implementation đã commit/push `228077a6f18944fb7fc6852c65f217db8a368024`.
+[CI push39899337940](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940)
+đạt cả4job, gồm interruption gate và governance→Docker PostgreSQL acceptance;
+[metadata/job steps/artifacts](evidence/tv4-20261023/ci-source.json).
+[PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) vào Dev,
+đã request `nvdungmim`/`daongocuong`; không tự approval hoặc merge.
+
+Clone sạch **đúng commit trên**, `--no-local --recurse-submodules`, không overlay
+source hoặc copy dependencies/build outputs: cài lại root/frontend dependency,
+147Foundry tests,8process tests,63backend tests,fixture checker,frontend lint/build
+và smoke governance thật đều đạt. Nhánh demo chi1000BUD còn9000Treasury.
+[Provenance](evidence/tv4-20261023/clean-clone.json) và stdout ghi riêng; vẫn cùng
+máy, compiler global sẵn, không tự nhận đã đạt nghiệm thu máy thành viên khác.
+Commit evidence/docs kế tiếp không thay source runtime đã được kiểm chứng.
+

@@ -362,3 +362,28 @@ và smoke governance thật đều đạt. Nhánh demo chi1000BUD còn9000Treasu
 máy, compiler global sẵn, không tự nhận đã đạt nghiệm thu máy thành viên khác.
 Commit evidence/docs kế tiếp không thay source runtime đã được kiểm chứng.
 
+## 10. Đồng bộ commit TV1/TV2/TV3 theo yêu cầu
+
+Đã fetch toàn bộ remote và đọc các PR/issue/review liên quan. TV1 SC01–SC04,
+TV2 BE01/BE02 đã có trong lịch sử TV4; các head hiện tại lần lượt
+`f57fcfd` và `4c568d6`, không có commit contract/backend mới để tích hợp thêm.
+Merge `origin/Dev` (`ff26697`) thành `ee2b739` chỉ cập nhật lịch sử, không đổi nội dung.
+
+TV3 có thiết kế mới `26ecca741259946dac7f04338219126437122947`, được
+cherry-pick `-x` thành `9322547`, giữ nguyên author TV3. Giải conflict App/CSS
+theo giao diện mới nhưng giữ sửa tích hợp TV4: canonical fixtures, loader/retry,
+skip-link, focusable main và mobile wrapping. Sticky header mới che skip-link
+đang focus đã được tái hiện bằng hit-test/screenshot; nâng skip-link lên trên
+header và kiểm lại Tab/Enter chuyển focus tới main-content.
+
+Dashboard hiện45proposal,7Active,7Executed, tổng BUD được đề xuất và phân bổ
+7state; đây không phải số dư Treasury. Amount tính bằng BigInt; dạng gọn có dấu
+`≈` khi ẩn phần lẻ, tooltip/detail giữ nguyên wei. Cập nhật tài liệu frontend và
+dòng attributionREADME mà không commit liên kết AD-064 có sẵn của người dùng.
+
+Lint/build/BE01 checker đạt; browser thực kiểm4route×390/1366 không tràn ngang,
+phân trang20/20/5, search/filter, số tiền đúng, dev retry/recovery và production
+bỏ qua error injection. [Commit map, source hashes, browser và screenshot](evidence/tv4-20261023/team-update/verification.json).
+Không coi cập nhật giao diện thành wallet/API E2E; #18/#19/#20 vẫn còn điều kiện
+bàn giao. Không tự approval hoặc merge PR của nhóm.
+

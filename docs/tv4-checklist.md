@@ -32,6 +32,17 @@ nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
 - [x] Clone sạch đúng commit `228077a` bằng `--no-local --recurse-submodules`, không overlay source/copy node_modules/out/cache; cài mới dependency,147Foundry/8process/63backend tests,frontend lint/build và governance smoke thực đạt. [Provenance](evidence/tv4-20261023/clean-clone.json). Cùng máy và compiler global đã có; chưa thay kiểm chứng máy thành viên khác.
 - [ ] Peer review bản bổ sung23/10; merge trước đây không thay review thay đổi mới.
 
+### Cập nhật bàn giao nhóm sau yêu cầu đồng bộ commit
+
+- [x] Merge `origin/Dev` tại `ee2b739`; không có thay đổi nội dung, ghi nhận lịch sử PR đã merge.
+- [x] Các head TV1 SC01–SC04 và TV2 BE01/BE02 đều là ancestor của TV4; TV1 `f57fcfd`, TV2 `4c568d6` đã được tích hợp, không có contract/backend commit mới để bỏ sót.
+- [x] Cherry-pick có attribution TV3 `26ecca7` thành `9322547`: dashboard/sidebar/charts/compact BUD. Giữ canonical fixtures, loading/retry, skip-link/focus target và mobile wrapping; không đưa JSON copy/dead assets trở lại.
+- [x] Lint/build/BE01 checker đạt; browser4route×390/1366 không overflow, metrics45/7/7, raw amount2871875000000000000015, precision tooltip/detail, pagination20/20/5 và error/recovery đạt. Sửa skip-link bị sticky header che, xác nhận keyboard Enter focus main-content.
+- [ ] Wallet/API/E2E, checkpoint/reorg/state rebuild và testnet vẫn theo #18/#19/#20; cập nhật thiết kế không thay các bàn giao này.
+
+[Source hashes, commit map, browser và screenshot](evidence/tv4-20261023/team-update/verification.json).
+
+
 Regression contract mới trong `tests/attacks/GovernanceAttacks.t.sol` bổ sung
 transfer/delegate/approved transferFrom đúng timestamp snapshotS; negative role
 controls với operation hợp lệ và exact AccessControl error; ETA−1/ETA; hủy Pending

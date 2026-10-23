@@ -2,7 +2,7 @@
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
 Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
-Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
+Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5` + `26ecca7`.
 Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
 → PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
 HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API end-to-end.

@@ -18,6 +18,51 @@ Các mục đã đánh dấu là thành phần đã được thiết lập, khô
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
 Đã tích hợp GOV/BUD/Treasury/BudgetGovernor, BE02 và frontend TV3 `47f91d5` vào working tree TV4. TimelockController OZ5.4.0 thật đã dùng cho deploy/seed/check-roles/smoke local; ngày 22/10 có governance→PostgreSQL raw acceptance. Projection/API, reorg/rebuild nghiệp vụ và UI wallet thật vẫn thiếu; SC05/testnet chưa peer nghiệm thu.
 
+## Bổ sung TV4 ngày 23/10/2026
+
+- [x] Sửa cleanup hai smoke CLI: SIGINT/SIGTERM trả 130/143, dừng/reap Anvil và indexer con; signal lặp không bỏ cleanup, có SIGKILL escalation giới hạn thời gian.
+- [x] Evidence được stage và thay thế atomically sau cleanup thành công; interruption không ghi PASS hoặc thay evidence cũ. Temp directory storage tham gia cùng lifecycle.
+- [x] Tám process regression dùng Anvil thật đạt; workflow contracts chạy `node --test tests/smoke/interruption.test.mjs` sau build.
+- [x] BE02 typecheck/build, 63 RPC/config/decoder/CLI tests và 21 PostgreSQL18.4 storage tests đạt, không skip; frontend lint/build đạt.
+- [x] Browser production fixture: phân trang20/20/5, lọc7Executed, không tràn ngang390/1366, production bỏ qua error injection; form vẫn disabled, không coi là wallet E2E.
+- [x] Fetch nhánh nhóm: TV2 vẫn `4c568d6` finite raw storage; TV3 `26ecca7` tinh chỉnh thiết kế, chưa có wallet/form giao dịch thật. Không nhập thay đổi thiết kế không liên quan để giả mở khóa E2E.
+- [x] GitHub xác nhận PR #5/#12/#13 đã merge vào Dev ngày23/10; [CI baseline877141c](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39726637732) success. Các ghi chú PR open/chưa có CI ở mục ngày22/10 là lịch sử.
+- [x] Source bổ sung `228077a`: [CI push39899337940](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940) cả4job success, gồm process interruption và governance→Docker PostgreSQL acceptance; [metadata](evidence/tv4-20261023/ci-source.json). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đã request `nvdungmim`/`daongocuong`, chưa approval/merge.
+- [x] Full147Foundry tests đạt; hai ca ngắt trong PostgreSQL mode có real indexer CLI đạt130/143, children reaped, RPC đóng, temp files được dọn và prior evidence không đổi.
+- [x] Clone sạch đúng commit `228077a` bằng `--no-local --recurse-submodules`, không overlay source/copy node_modules/out/cache; cài mới dependency,147Foundry/8process/63backend tests,frontend lint/build và governance smoke thực đạt. [Provenance](evidence/tv4-20261023/clean-clone.json). Cùng máy và compiler global đã có; chưa thay kiểm chứng máy thành viên khác.
+- [ ] Peer review bản bổ sung23/10; merge trước đây không thay review thay đổi mới.
+
+### Cập nhật bàn giao nhóm sau yêu cầu đồng bộ commit
+
+- [x] Merge `origin/Dev` tại `ee2b739`; không có thay đổi nội dung, ghi nhận lịch sử PR đã merge.
+- [x] Các head TV1 SC01–SC04 và TV2 BE01/BE02 đều là ancestor của TV4; TV1 `f57fcfd`, TV2 `4c568d6` đã được tích hợp, không có contract/backend commit mới để bỏ sót.
+- [x] Cherry-pick có attribution TV3 `26ecca7` thành `9322547`: dashboard/sidebar/charts/compact BUD. Giữ canonical fixtures, loading/retry, skip-link/focus target và mobile wrapping; không đưa JSON copy/dead assets trở lại.
+- [x] Lint/build/BE01 checker đạt; browser4route×390/1366 không overflow, metrics45/7/7, raw amount2871875000000000000015, precision tooltip/detail, pagination20/20/5 và error/recovery đạt. Sửa skip-link bị sticky header che, xác nhận keyboard Enter focus main-content.
+- [ ] Wallet/API/E2E, checkpoint/reorg/state rebuild và testnet vẫn theo #18/#19/#20; cập nhật thiết kế không thay các bàn giao này.
+
+[Source hashes, commit map, browser và screenshot](evidence/tv4-20261023/team-update/verification.json).
+
+
+Regression contract mới trong `tests/attacks/GovernanceAttacks.t.sol` bổ sung
+transfer/delegate/approved transferFrom đúng timestamp snapshotS; negative role
+controls với operation hợp lệ và exact AccessControl error; ETA−1/ETA; hủy Pending
+không tiêu thụ request; cấm hủy Queued sau thiếu tiền rồi retry cùng operation.
+Kết quả, source hashes và phạm vi xem [evidence23/10](evidence/tv4-20261023/verification.json).
+
+Lệnh kiểm cleanup sau `npm ci`/`forge build`, trên Node24.15.0:
+
+```bash
+node --test tests/smoke/interruption.test.mjs
+```
+
+Điều kiện còn thiếu được giao cụ thể:
+[TV2 checkpoint/reorg/API/rebuild #18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18),
+[TV3 wallet/form/E2E #19](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19),
+[TV1/TV4 testnet, peer review và máy khác #20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20).
+Chưa có mạng/RPC testnet được chốt hoặc funded signer; không đưa secret lên
+GitHub, không tự phát giao dịch hoặc tự approval. QA07/QA08/QA10 toàn bộ vẫn mở.
+
+
 ## Bổ sung TV4 ngày 22/10/2026
 
 - [x] Nhập frontend từ `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`, không tự nhận phần UI nguồn là của TV4. Dùng fixture BE01 canonical, bỏ JSON copy/template dead assets; sửa loading theo request và mobile amount wrapping, thêm skip-link.
@@ -177,12 +222,13 @@ Các TC dưới đây chưa nghiệm thu đầy đủ. E-SC04-L/E-SC04-ROLE/E-GO
 
 - [x] BE02 CI: lockfile/typecheck/build/RPC-decoder/storage-CLI PostgreSQL thật, có artifact SHA/logs.
 - [x] Có job frontend lint/typecheck/build và live governance raw PostgreSQL acceptance trong workflow; kết quả local ngày22/10 ở trên.
-- [ ] Workflow mới chạy thành công trên GitHub và E2E đầy đủ sau bàn giao; chưa nghiệm thu NFR07 toàn hệ thống.
+- [x] Workflow bổ sung chạy thành công trên GitHub tại source `228077a`; không suy ra E2E hoặc NFR07 toàn hệ thống.
+- [ ] E2E đầy đủ sau bàn giao TV2/TV3; nghiệm thu NFR07 toàn hệ thống.
 - [ ] Mọi yêu cầu an toàn có test âm; không còn lỗi mở cho phép chi sai/bỏ qua quyền.
 - [ ] Xác minh NFR02 hiệu năng và NFR03 độ mới với TV2; ghi máy, dữ liệu và lệnh đo.
 - [ ] Kiểm tra retry/backoff, checkpoint và phục hồi NFR04 với TV2.
 - [x] Kiểm tra UI fixture 390px/1366px và bàn phím trên Chromium150; không thay ví/giao dịch TC13 hoặc chứng nhận accessibility đa trình duyệt.
-- [ ] README clone sạch chạy được local demo; CI xanh trước bàn giao.
+- [x] Clone sạch cùng máy chạy được local demo và bộ test tại source `228077a`; CI source xanh. Máy thành viên khác vẫn theo #20.
 
 Mẫu ghi một bằng chứng (không chứa bí mật):
 

@@ -29,7 +29,8 @@ function ProposalDetailPage() {
       <div className="page-heading">
         <div>
           <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
-          <h1 className="proposal-id">Proposal #{proposal.proposalId}</h1>
+          <h1 className="proposal-id">Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</h1>
+          <p className="proposal-full-id">ID đầy đủ: {proposal.proposalId}</p>
           <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · Fixture BE01 tại block {state.collection.context.asOfBlock}.</p>
         </div>
       </div>
@@ -38,7 +39,7 @@ function ProposalDetailPage() {
         <section className="panel">
           <div className="detail-title">
             <h2>{proposal.title}</h2>
-            <span className="status-pill">{proposal.state}</span>
+            <span className={`status-pill status-pill--${proposal.state.toLowerCase()}`}>{proposal.state}</span>
           </div>
           <p className="eyebrow">Số tiền đề xuất</p>
           <p className="detail-amount">{formatBUD(proposal.amount)}</p>
@@ -52,7 +53,7 @@ function ProposalDetailPage() {
         <aside className="panel">
           <div className="panel__header"><h2>Tiến trình đề xuất</h2></div>
           <div className="empty-state">Snapshot, deadline, quorum, ETA và transaction sẽ hiện ở đây khi có API và contract.</div>
-          <p className="notice" style={{ marginTop: 18 }}>Đây là dữ liệu mô phỏng. Vote, cancel, queue và execute sẽ được tích hợp ở các ngày sau.</p>
+          <p className="notice" style={{ marginTop: 18 }}>Đây là dữ liệu mô phỏng. Vote, cancel, queue và execute chưa được tích hợp.</p>
         </aside>
       </div>
     </div>

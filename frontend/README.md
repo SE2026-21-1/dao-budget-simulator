@@ -1,7 +1,8 @@
 # DAO Budget Simulator — frontend fixture
 
 Giao diện React/TypeScript/Vite được tích hợp từ TV3 commit
-`47f91d50b7a9104c027dbf05e7a862ddb69d31d0`, kèm các sửa tích hợp/nghiệm thu TV4.
+`47f91d50b7a9104c027dbf05e7a862ddb69d31d0` và cập nhật thiết kế
+`26ecca741259946dac7f04338219126437122947`, kèm sửa tích hợp/nghiệm thu TV4.
 Đây là **giao diện dùng dữ liệu tổng hợp**, không phải bằng chứng chạy E2E on-chain.
 
 ## Chạy từ clone sạch
@@ -30,7 +31,7 @@ run lint` là script oxlint hiện có. Không cần PostgreSQL/RPC/ví để ch
 
 | Route | Hành vi hiện có |
 | --- | --- |
-| `/` | Tổng quan, ba đề xuất đầu của fixture; các số liệu treasury vẫn là `—` chờ API. |
+| `/` | Dashboard fixture:45proposal,7Active,7Executed, tổng BUD được đề xuất, phân bổ7state và6proposal đại diện. Không coi tổng đề xuất là số dư Treasury. |
 | `/proposals` | 45 đề xuất; phân trang client 20/20/5; tìm **đúng toàn bộ Proposal ID thập phân**, có trim khoảng trắng; lọc AND theo một trong bảy state. Đổi tìm kiếm/state trở về trang 1. |
 | `/proposals/:id` | Chi tiết trong cùng bộ fixture; ID không có hoặc không đúng định dạng hiện màn hình không tìm thấy đề xuất. |
 | `/proposals/new` | Chỉ bản phác thảo, nút tạo bị disable; không có form nhập/gửi giao dịch. |
@@ -41,7 +42,9 @@ Nguồn duy nhất: `fixtures/api/proposals-page-{1,2,3}.json` ở gốc repo,
 không trùng/thiếu ID và tổng số bản ghi. Dữ liệu có `dataKind: synthetic`,
 revision `fixture-v2`, block giả `9000`; xem
 [contract fixture BE01](../fixtures/api/README.md). ID và amount luôn là chuỗi;
-hiển thị BUD dùng BigInt, không chuyển sang Number hay làm tròn mất wei.
+hiển thị BUD dùng BigInt, không chuyển sang Number. Dashboard/list dùng dạng gọn
+có dấu `≈` nếu ẩn phần thập phân khác0; tooltip giữ nguyên lượng chính xác.
+Trang detail hiển thị đủ chữ số, không làm mất wei.
 Không dùng cursor/API pagination trong UI này: cả ba trang được tải trước rồi
 lọc/phân trang cục bộ. Không gọi backend, đọc ví, ký giao dịch hoặc gọi chain.
 
@@ -58,12 +61,18 @@ local, không phải cấu hình triển khai production.
 ## Smoke nghiệm thu thủ công
 
 Các mục dưới đây là kịch bản tái lập; kết quả thực tế ngày22/10 được ghi riêng tại [browser evidence](../docs/evidence/tv4-20261022/frontend-browser.json). Chỉ claim các thao tác/viewport có trong report, không coi toàn bộ hướng dẫn là đã chạy.
+Bản thiết kế TV3 `26ecca7` được TV4 tích hợp và kiểm browser ngày23/10 tại
+[team-update evidence](../docs/evidence/tv4-20261023/team-update/browser.json):
+4route×2viewport không tràn ngang,45/7/7metrics, tổng rawBigInt chính xác,
+phân trang20/20/5, compact/tooltip/detailprecision, dev retry/recovery và
+production bỏ qua error injection. Skip-link được giữ và nâng lên trên sticky header.
 Chạy cả viewport rộng **1366px** và mobile **390px**, kiểm tra không tràn ngang,
 Proposal ID/địa chỉ dài xuống dòng, số tiền đủ chữ số; hàng proposal mobile được
 wrap để state, amount và link chi tiết không đẩy rộng trang.
 
-- `/`: có heading `Ngân sách DAO`, banner fixture, ba link `.proposal-row` và
-  bốn chỉ số chờ API. Các navigation link có `aria-current="page"` khi active.
+- `/`: có heading `Ngân sách DAO`, banner fixture,6hàng `.dashboard-table tbody tr`,
+  bốn chỉ số fixture và hai biểu đồ phân bổ trạng thái. Các navigation link có
+  `aria-current="page"` khi active; tổng BUD được đề xuất không là số dư Treasury.
 - `/proposals`: `.proposal-list > article` có 20 hàng đầu; nav
   `[aria-label="Phân trang đề xuất"]` có `Trang 1 / 3`, nút `Trang trước`
   disabled. `Trang sau` lần lượt cho 20 rồi 5 hàng; ở trang 3 nút sau disabled.
@@ -99,7 +108,9 @@ wrap để state, amount và link chi tiết không đẩy rộng trang.
 
 Gate frontend cài lockfile bằng `npm --prefix frontend ci`, chạy
 `npm --prefix frontend run lint` và `npm --prefix frontend run build`;
-workflow ở gốc repo là nơi định nghĩa gate. Workflow mới chưa có run GitHub.
+workflow ở gốc repo là nơi định nghĩa gate. Bản TV4 trước cập nhật thiết kế đã có
+[CI4job xanh](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899877984);
+CI revision tích hợp thiết kế được kiểm riêng, không suy ra từ run cũ.
 Build chỉ kiểm tra TypeScript và đóng gói Vite/canonical JSON, **không chứng minh**
 keyboard/responsive/browser, kết nối API/ví, form hay governance E2E. Smoke browser
 phải báo riêng URL, viewport, thao tác và quan sát thực; không coi fixtures là

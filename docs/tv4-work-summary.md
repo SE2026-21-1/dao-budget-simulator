@@ -1,6 +1,6 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
+Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6, **22/10/2026** ở mục7–8 và **23/10/2026** ở mục9. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
 
@@ -296,3 +296,94 @@ nonempty DB không đổi dữ liệu và database không đúng owner vẫn b�
 
 Log CI lỗi và smoke/guards đi kèm giữ riêng evidence lịch sử mục7; CI bản sửa
 cần được quan sát sau commit/push, không suy CI xanh từ smoke local.
+
+## 9. Bổ sung TV4 ngày 23/10: shutdown an toàn và regression biên
+
+**Lỗi thực sự:** gửi SIGTERM riêng tới Node smoke làm parent thoát nhưng Anvil
+vẫn trả RPC. `finally` đơn thuần không chạy khi Node xử lý signal mặc định.
+Sửa bằng lifecycle chung cho hai smoke: handler SIGINT/SIGTERM, cleanup idempotent,
+stop/reap child, bounded SIGKILL escalation, đăng ký storage temp dirs/indexer CLI.
+Evidence được stage rồi rename atomic chỉ sau cleanup thành công; interruption
+không ghi PASS hoặc thay nội dung evidence cũ. Provenance gồm hash helper mới.
+
+**Regression bảo mật:** năm ca thêm vào `GovernanceAttacks.t.sol` dùng contract
+thật và final roles, không giả Timelock/Governor để chi:
+
+- Nhiều transfer/delegate/approved transferFrom đúng snapshotS; voteS+1 dùng
+  checkpoint cuốiS, thay đổiS+1 không viết lại trọng số.
+- Direct schedule/cancel/execute/disburse với các điều kiện khác hợp lệ phải
+  bị chặn đúng `AccessControlUnauthorizedAccount`, gồm former deployer.
+- Cùng operation thiếu đúng1giây ởETA−1 không chi; tạiETA chi được.
+- Hủy Pending không tiêu thụ request; proposal khác cùng action/request chi được.
+- Thiếu tiền rollback toàn bộ; creator không hủy Queued, nạp lại retry chính
+  operation cũ mà không vote/queue lại.
+
+[Evidence23/10](evidence/tv4-20261023/verification.json) và stdout đi kèm ghi
+147Foundry tests đạt, seed0x20261021, hai campaign100×50;8process interruption
+tests dùng Anvil thật;63RPC/config/decoder/CLI và21PostgreSQL storage tests không
+skip; frontend lint/build và browser production fixture390/1366 đạt.
+Governance SQL smoke xác nhận receipt, rollback batch, CLI restart và raw replay
+DB mới tại cùngH. PostgreSQL18.4 native cô lập, không đổi quyền Docker daemon.
+Raw replay vẫn không phải projection/state rebuild hoặc reorg/checkpoint.
+
+GitHub xác nhận PR #5/#12/#13 đã merge ngày23/10; CI baseline `877141c`
+[run39726637732](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39726637732)
+success. Không lấy run baseline làm bằng chứng cho source mới của mục9; run của
+revision bổ sung được kiểm riêng khi push. Workflow thêm process interruption gate.
+
+Fetch mới nhất cho thấy TV2 `4c568d6` vẫn finite raw storage; TV3 `26ecca7` chỉ
+chỉnh thiết kế, form vẫn disabled. Không nhập thay đổi thiết kế ngoài phạm vi để
+gọi đó là E2E. Yêu cầu bàn giao đã tạo và assign owner cùng TV4:
+
+| Issue | Đầu ra cần nhận |
+|---|---|
+| [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18) | TV2 checkpoint/K/reorg/projection/API và same-H rebuild/benchmark. |
+| [#19](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19) | TV3 wallet/form/governance transactions và lỗi network/signature/receipt. |
+| [#20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20) | TV1 review deploy/roles, chốt testnet/EVM/RPC/funded signer; thành viên khác clone chạy lại. |
+
+Không tìm thấy cấu hình testnet được chốt hoặc funded signer; không ký/gửi
+giao dịch, không tạo manifest/testnet txHash giả. Không tự approval hoặc merge
+revision mới. QA07/QA08/QA10 toàn bộ vẫn bị chặn bởi các bàn giao trên.
+
+### Kết quả publish và tái lập source mục9
+
+Implementation đã commit/push `228077a6f18944fb7fc6852c65f217db8a368024`.
+[CI push39899337940](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940)
+đạt cả4job, gồm interruption gate và governance→Docker PostgreSQL acceptance;
+[metadata/job steps/artifacts](evidence/tv4-20261023/ci-source.json).
+[PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) vào Dev,
+đã request `nvdungmim`/`daongocuong`; không tự approval hoặc merge.
+
+Clone sạch **đúng commit trên**, `--no-local --recurse-submodules`, không overlay
+source hoặc copy dependencies/build outputs: cài lại root/frontend dependency,
+147Foundry tests,8process tests,63backend tests,fixture checker,frontend lint/build
+và smoke governance thật đều đạt. Nhánh demo chi1000BUD còn9000Treasury.
+[Provenance](evidence/tv4-20261023/clean-clone.json) và stdout ghi riêng; vẫn cùng
+máy, compiler global sẵn, không tự nhận đã đạt nghiệm thu máy thành viên khác.
+Commit evidence/docs kế tiếp không thay source runtime đã được kiểm chứng.
+
+## 10. Đồng bộ commit TV1/TV2/TV3 theo yêu cầu
+
+Đã fetch toàn bộ remote và đọc các PR/issue/review liên quan. TV1 SC01–SC04,
+TV2 BE01/BE02 đã có trong lịch sử TV4; các head hiện tại lần lượt
+`f57fcfd` và `4c568d6`, không có commit contract/backend mới để tích hợp thêm.
+Merge `origin/Dev` (`ff26697`) thành `ee2b739` chỉ cập nhật lịch sử, không đổi nội dung.
+
+TV3 có thiết kế mới `26ecca741259946dac7f04338219126437122947`, được
+cherry-pick `-x` thành `9322547`, giữ nguyên author TV3. Giải conflict App/CSS
+theo giao diện mới nhưng giữ sửa tích hợp TV4: canonical fixtures, loader/retry,
+skip-link, focusable main và mobile wrapping. Sticky header mới che skip-link
+đang focus đã được tái hiện bằng hit-test/screenshot; nâng skip-link lên trên
+header và kiểm lại Tab/Enter chuyển focus tới main-content.
+
+Dashboard hiện45proposal,7Active,7Executed, tổng BUD được đề xuất và phân bổ
+7state; đây không phải số dư Treasury. Amount tính bằng BigInt; dạng gọn có dấu
+`≈` khi ẩn phần lẻ, tooltip/detail giữ nguyên wei. Cập nhật tài liệu frontend và
+dòng attributionREADME mà không commit liên kết AD-064 có sẵn của người dùng.
+
+Lint/build/BE01 checker đạt; browser thực kiểm4route×390/1366 không tràn ngang,
+phân trang20/20/5, search/filter, số tiền đúng, dev retry/recovery và production
+bỏ qua error injection. [Commit map, source hashes, browser và screenshot](evidence/tv4-20261023/team-update/verification.json).
+Không coi cập nhật giao diện thành wallet/API E2E; #18/#19/#20 vẫn còn điều kiện
+bàn giao. Không tự approval hoặc merge PR của nhóm.
+

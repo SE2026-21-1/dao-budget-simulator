@@ -47,6 +47,10 @@ jobs:
         run: |
           mkdir -p reports
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Verify smoke interruption cleans owned processes and temporary files
+        shell: bash
+        run: |
+          node --test tests/smoke/interruption.test.mjs 2>&1 | tee reports/smoke-interruption.log
       - name: Exercise Treasury transactions and BE02 live receipt decoding
         shell: bash
         run: |

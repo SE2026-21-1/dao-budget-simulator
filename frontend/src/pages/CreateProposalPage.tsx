@@ -20,7 +20,7 @@ function CreateProposalPage() {
       </div>
       <section className="panel form-preview" aria-label="Bản phác thảo biểu mẫu">
         <div className="panel__header"><h2>Thông tin khoản chi</h2></div>
-        <p className="notice">Đây là bản phác thảo giao diện. Form nhập và kiểm tra dữ liệu sẽ được làm ở Ngày 10; hiện chưa thể gửi giao dịch.</p>
+        <p className="notice">Biểu mẫu này đang ở giai đoạn thiết kế. Chưa thể nhập dữ liệu hoặc gửi giao dịch.</p>
         {fields.map((field) => (
           <div className="preview-field" key={field.label}>
             <strong>{field.label}</strong>

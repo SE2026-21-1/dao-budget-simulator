@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 // Owns its Anvil. All positive executions use EOA -> Governor -> Timelock -> Treasury.
 import assert from 'node:assert/strict';
-import { spawn, execFileSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { AbiCoder, Interface, ZeroAddress, ZeroHash, id, keccak256, toBeHex, toQuantity } from 'ethers';
 import { deployGovernance, checkGovernanceRoles } from './governance_local.mjs';
+import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 import { decodeLog } from '../indexer/decoder.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { readBatch } from '../indexer/reader.ts';
@@ -23,6 +24,7 @@ const output = resolve(args[1]);
 const databaseMode = args.length === 3;
 const storageHelper = databaseMode ? await import('./governance_storage.mjs') : undefined;
 const storageUrls = storageHelper?.storageSmokeEnvironment();
+const lifecycle = createSmokeLifecycle();
 const pause = ms => new Promise(done => setTimeout(done, ms));
 const U = 10n ** 18n;
 let anvil;
@@ -34,7 +36,7 @@ const report = {
   sourceHashes: {}, receipts: [], proposals: [], assertions: [],
 };
 try {
-  for (const path of ['scripts/smoke_governance.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
+  for (const path of ['scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
   }
   report.runtime = { node: process.version, anvil: execFileSync('anvil', ['--version'], { encoding: 'utf8' }).trim(), forge: execFileSync('forge', ['--version'], { encoding: 'utf8' }).trim(), evm: 'osaka', chainId: '31337', isolation: 'owned ephemeral loopback Anvil; unlocked local accounts, no keys; exact transaction timestamps' };
@@ -42,12 +44,13 @@ try {
   await new Promise((done, reject) => { reserve.once('error', reject); reserve.listen(0, '127.0.0.1', done); });
   const port = reserve.address().port;
   await new Promise((done, reject) => reserve.close(error => error ? reject(error) : done()));
-  anvil = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--timestamp', '1800000000', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
+  anvil = lifecycle.spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--timestamp', '1800000000', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
   anvil.on('error', error => { anvilOutput += error.message; });
   for (const stream of [anvil.stdout, anvil.stderr]) stream.on('data', data => { anvilOutput += data; });
   const rpc = async (method, params = []) => {
+    lifecycle.throwIfInterrupted();
     assert.equal(anvil.exitCode, null, `Owned Anvil exited: ${anvilOutput}`);
-    const response = await fetch(`http://127.0.0.1:${port}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: ++rpcId, method, params }), signal: AbortSignal.timeout(10_000) });
+    const response = await fetch(`http://127.0.0.1:${port}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: ++rpcId, method, params }), signal: AbortSignal.any([lifecycle.signal, AbortSignal.timeout(10_000)]) });
     assert.equal(response.status, 200);
     const result = await response.json();
     if (result.error) throw new Error(`${method}: ${JSON.stringify(result.error)}`);
@@ -347,19 +350,13 @@ try {
   report.finalBlock = { number: BigInt(H.number).toString(), hash: H.hash, timestamp: BigInt(H.timestamp).toString() };
   if (databaseMode) {
     report.storage = await storageHelper.governanceStorageSmoke({
-      root, urls: storageUrls, manifest, abis, config, batch, head: H, chainLedger: report.ledger,
+      root, urls: storageUrls, manifest, abis, config, batch, head: H, chainLedger: report.ledger, lifecycle,
       readBalance: account => one('BUD', 'balanceOf', [account], Htag),
       readSupply: () => one('BUD', 'totalSupply', [], Htag),
     });
   }
   report.result = 'passed';
+  await lifecycle.complete(output, report, `PASS: real local Governor -> Timelock -> Treasury, final roles, attacks/retry, live BE02 decoding. Evidence: ${output}`);
 } finally {
-  if (anvil && anvil.exitCode === null) {
-    const exited = new Promise(done => anvil.once('exit', done));
-    anvil.kill('SIGTERM');
-    const timer = setTimeout(() => anvil.kill('SIGKILL'), 5_000);
-    await exited; clearTimeout(timer);
-  }
+  try { await lifecycle.cleanup(); } finally { lifecycle.dispose(); }
 }
-await writeFile(output, JSON.stringify(report, null, 2) + '\n');
-console.log(`PASS: real local Governor -> Timelock -> Treasury, final roles, attacks/retry, live BE02 decoding. Evidence: ${output}`);

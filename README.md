@@ -5,7 +5,8 @@ Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích h�
 Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
 Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
 → PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
-HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API end-to-end.
+BE05 HTTP API đọc PostgreSQL đã có, nhưng frontend/wallet chưa tích hợp API và
+chưa có demo UI→chain→API end-to-end.
 
 ## Trạng thái các task TV1
 
@@ -18,7 +19,7 @@ HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API 
 | SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
+| SC08 — Tích hợp local | Có script contract local; E2E frontend/wallet/API còn chờ tích hợp consumer |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
 | SC10 — Testnet và bàn giao | Chưa thực hiện |
 
@@ -439,4 +440,28 @@ dòng tiền; BudgetDisbursed nối đúng khoản chi và proposal thực thi. 
 Xem [hướng dẫn BE04](docs/be04.md), [checklist](docs/be04-checklist.md),
 [SQL truy vấn](database/queries/be04_read_model.sql) và
 [evidence local](docs/evidence/be04-20261024/report.md).
-HTTP API thuộc BE05, rebuild/compare thuộc BE06 và rollback/retry thuộc BE07.
+HTTP API được triển khai ở BE05; rebuild/compare thuộc BE06 và rollback/retry thuộc BE07.
+
+## BE05 — HTTP API đọc
+
+API có sáu GET endpoint theo [đặc tả API](docs/api.md). Chạy migration
+`database/migrations/004_be05_api.sql` sau 001–003, cấu hình `DATABASE_URL` tới
+database BE03/BE04 và đặt secret HMAC ổn định:
+
+```bash
+npm ci
+export API_CURSOR_SECRET="$(openssl rand -hex 32)"
+npm run api
+npm run typecheck
+npm run build
+npm run test:api:db
+```
+
+Mặc định server chỉ bind `127.0.0.1:3000`; có thể cấu hình `API_HOST`,
+`API_PORT`, `API_SNAPSHOT_TTL_SECONDS` và `API_CORS_ORIGINS`. Snapshot immutable
+được lưu riêng để cursor tiếp tục đọc đúng H sau khi BE04 tiến lên; GET đầu tạo
+cache chỉ đọc trong các bảng `api_read_*`, không sửa raw/projection/business tables. H lịch sử
+chỉ còn phục vụ trong TTL nếu đã được API lưu. API không gọi RPC/indexer/projector
+và không gửi transaction. Test database dùng container PostgreSQL 18.4 mới,
+port chỉ bind loopback; wrapper từ chối dùng `DATABASE_URL` hiện có. Xem
+[hướng dẫn chạy, cursor và ví dụ curl](docs/api.md#7-chạy-api-be05).

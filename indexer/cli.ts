@@ -30,7 +30,8 @@ export async function main(args = process.argv.slice(2)): Promise<number> {
       if (args[2] === '--redecode') {
         const processed = await storage.redecode(config);
         const issues = await storage.decodeIssues(config);
-        process.stdout.write(JSON.stringify({ type: 'redecode_result', processed, ...issues }) + '\n');
+        process.stdout.write(JSON.stringify({ type: 'redecode_result', processed,
+          processedMeaning: 'raw events re-decoded in this deployment (through H when a raw checkpoint exists), including unchanged rows', ...issues }) + '\n');
         return issues.decodeErrors + issues.unknownTopics ? 2 : 0;
       }
       const report = await sync(config, new HttpRpc(config.rpcUrl), storage,

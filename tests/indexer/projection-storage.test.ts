@@ -11,7 +11,7 @@ import { project } from '../../indexer/projection/projector.js';
 import { blockTag, type RpcTransport } from '../../indexer/rpc.js';
 import { PostgresStorage } from '../../indexer/storage.js';
 import { sync } from '../../indexer/syncer.js';
-import { Scenario, addresses, projectionConfig } from './projection-fixture.js';
+import { Scenario, actor, addresses, projectionConfig } from './projection-fixture.js';
 import { hash, serveRpc } from './helpers.js';
 
 const abi = new Interface([
@@ -310,6 +310,163 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
       raw,
     );
   });
+  test('BE04 recovery: --redecode repairs a payload tampered after a successful decode', async () => {
+    const s = new Scenario();
+    s.fund();
+    s.propose();
+    s.add('budget_token', 'Transfer', [actor, addresses.treasury, 3n], 3n, 1001n);
+    const { config, rpc, storage } = await fixture(s);
+    await sync(config, rpc, storage);
+    const futureLog = s.logs.at(-1)!;
+    await pool.query(`INSERT INTO indexed_blocks (deployment_id,block_number,block_hash,parent_hash,block_timestamp)
+      VALUES ($1,3,$2,$3,1001)`, [config.deploymentId, futureLog.blockHash, hash(2)]);
+    const futurePayload = { from: actor, to: addresses.treasury, value: '999' };
+    const futureRowId = (await pool.query(`INSERT INTO raw_events (deployment_id,chain_id,contract_role,
+      contract_address,block_number,block_hash,transaction_hash,transaction_index,log_index,topics,data,removed,
+      event_name,decoded_payload,rpc_log,decode_status,decode_error_code)
+      VALUES ($1,$2,$3,$4,3,$5,$6,0,0,$7::evm_hash32[],$8,FALSE,'Transfer',$9::jsonb,$10::jsonb,'decoded',NULL)
+      RETURNING raw_event_id::text`, [config.deploymentId, config.chainId.toString(), futureLog.contract.role,
+      futureLog.contract.address, futureLog.blockHash, futureLog.transactionHash, futureLog.topics, futureLog.data,
+      JSON.stringify(futurePayload), JSON.stringify(futureLog.rawLog)])).rows[0].raw_event_id;
+    const originalRow = (
+      await pool.query(
+        `SELECT raw_event_id,decoded_payload,event_name,decode_status,decode_error_code
+         FROM raw_events WHERE deployment_id=$1 AND event_name='Transfer' ORDER BY block_number LIMIT 1`,
+        [config.deploymentId],
+      )
+    ).rows[0];
+    const original = originalRow.decoded_payload;
+    const beforeRaw = (
+      await pool.query(`SELECT raw_event_id,chain_id,contract_role,contract_address,block_number::text AS block_number,
+        block_hash,transaction_hash,transaction_index::text AS transaction_index,log_index::text AS log_index,
+        topics::text[] AS topics,data,rpc_log FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`,
+      [config.deploymentId])
+    ).rows;
+    const beforeCheckpoint = (
+      await pool.query(`SELECT block_number::text,block_hash,observed_head_block::text,confirmation_depth,
+        sync_status,source_scope,last_error_code FROM checkpoints WHERE deployment_id=$1`, [config.deploymentId])
+    ).rows;
+    await pool.query(
+      `UPDATE raw_events SET event_name='Approval',decoded_payload=decoded_payload||'{"value":"999"}'::jsonb
+       WHERE raw_event_id=$1`,
+      [originalRow.raw_event_id],
+    );
+
+    const processed = await storage.redecode(config);
+    const restored = (await pool.query(`SELECT raw_event_id,decoded_payload,event_name,decode_status,decode_error_code
+      FROM raw_events WHERE raw_event_id=$1`, [originalRow.raw_event_id])).rows[0];
+    assert.equal(processed, 2, 'processed counts every raw event re-decoded through H');
+    assert.equal(restored.event_name, 'Transfer');
+    assert.deepEqual(restored.decoded_payload, original);
+    assert.equal(restored.decode_status, 'decoded');
+    assert.equal(restored.decode_error_code, null);
+    const future = (await pool.query(`SELECT event_name,decoded_payload,decode_status FROM raw_events WHERE raw_event_id=$1`,
+      [futureRowId])).rows[0];
+    assert.deepEqual(future, { event_name: 'Transfer', decoded_payload: futurePayload, decode_status: 'decoded' },
+      'redecode must leave rows beyond the raw checkpoint untouched');
+    assert.deepEqual(
+      (await pool.query(`SELECT raw_event_id,chain_id,contract_role,contract_address,block_number::text AS block_number,
+        block_hash,transaction_hash,transaction_index::text AS transaction_index,log_index::text AS log_index,
+        topics::text[] AS topics,data,rpc_log FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`,
+      [config.deploymentId])).rows,
+      beforeRaw,
+      'redecode must preserve raw identity, coordinates, bytes and RPC log',
+    );
+    assert.deepEqual((await pool.query(`SELECT block_number::text,block_hash,observed_head_block::text,confirmation_depth,
+      sync_status,source_scope,last_error_code FROM checkpoints WHERE deployment_id=$1`, [config.deploymentId])).rows,
+    beforeCheckpoint, 'redecode must not move or relabel the raw checkpoint');
+    const stableDecoded = (await pool.query(`SELECT raw_event_id,event_name,decoded_payload,decode_status,decode_error_code
+      FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows;
+    assert.equal(await storage.redecode(config), 2);
+    assert.deepEqual((await pool.query(`SELECT raw_event_id,event_name,decoded_payload,decode_status,decode_error_code
+      FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows, stableDecoded);
+    assert.deepEqual((await storage.decodeIssues(config)).issues, []);
+  });
+  test('BE03 recovery: redecode restores unknown and malformed classifications from raw bytes', async () => {
+    const s = new Scenario();
+    s.fund();
+    s.propose();
+    s.add('budget_token', 'Transfer', [actor, addresses.treasury, 1n], 3n, 1001n);
+    const unknown = s.logs.at(-1)!;
+    unknown.topics = [hash(999)];
+    unknown.rawLog.topics = unknown.topics;
+    s.add('budget_token', 'Transfer', [actor, addresses.treasury, 2n], 4n, 1002n);
+    const malformed = s.logs.at(-1)!;
+    malformed.data = '0x';
+    malformed.rawLog.data = malformed.data;
+    const { config, rpc, storage } = await fixture(s);
+    rpc.head = 6n;
+    await sync(config, rpc, storage);
+    const initial = (await pool.query(`SELECT raw_event_id,decode_status,decode_error_code FROM raw_events
+      WHERE deployment_id=$1 ORDER BY block_number`, [config.deploymentId])).rows;
+    assert.deepEqual(initial.map((row) => row.decode_status), ['decoded', 'decoded', 'unknown_topic', 'decode_error']);
+    const beforeRaw = (await pool.query(`SELECT raw_event_id,chain_id,contract_role,contract_address,
+      block_number::text AS block_number,block_hash,transaction_hash,transaction_index::text AS transaction_index,
+      log_index::text AS log_index,topics::text[] AS topics,data,rpc_log FROM raw_events
+      WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows;
+    const beforeCheckpoint = (await pool.query(`SELECT block_number::text,block_hash,observed_head_block::text,
+      confirmation_depth,sync_status,source_scope,last_error_code FROM checkpoints WHERE deployment_id=$1`,
+    [config.deploymentId])).rows;
+    await pool.query(`UPDATE raw_events SET event_name='Transfer',decoded_payload='{"value":"999"}'::jsonb,
+      decode_status='decoded',decode_error_code=NULL WHERE deployment_id=$1 AND decode_status <> 'decoded'`,
+    [config.deploymentId]);
+
+    await pool.query(`CREATE FUNCTION be04_test_fail_redecode() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.block_number=4 THEN RAISE EXCEPTION 'redecode test only'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER be04_test_fail_redecode BEFORE UPDATE ON raw_events
+      FOR EACH ROW EXECUTE FUNCTION be04_test_fail_redecode()`);
+    try {
+      await assert.rejects(storage.redecode(config), /redecode test only/);
+      const rolledBack = (await pool.query(`SELECT block_number::text,decode_status,event_name,decoded_payload
+        FROM raw_events WHERE deployment_id=$1 AND block_number IN (3,4) ORDER BY block_number`,
+      [config.deploymentId])).rows;
+      assert.equal(rolledBack.every((row) => row.decode_status === 'decoded' && row.event_name === 'Transfer'
+        && row.decoded_payload.value === '999'), true,
+      'an error after the first repair must roll every decode update back');
+      assert.deepEqual((await pool.query(`SELECT block_number::text,block_hash,observed_head_block::text,
+        confirmation_depth,sync_status,source_scope,last_error_code FROM checkpoints WHERE deployment_id=$1`,
+      [config.deploymentId])).rows, beforeCheckpoint);
+    } finally {
+      await pool.query('DROP TRIGGER be04_test_fail_redecode ON raw_events; DROP FUNCTION be04_test_fail_redecode()');
+    }
+
+    assert.equal(await storage.redecode(config), 4);
+    const decoded = (await pool.query(`SELECT block_number::text,decode_status,decode_error_code,event_name,decoded_payload
+      FROM raw_events WHERE deployment_id=$1 ORDER BY block_number`, [config.deploymentId])).rows;
+    assert.equal(decoded[0].event_name, 'Transfer');
+    assert.deepEqual(decoded[0].decoded_payload, { from: actor, to: addresses.treasury, value: '10000' });
+    assert.equal(decoded[1].event_name, 'ProposalCreated');
+    assert.equal(decoded[2].decode_status, 'unknown_topic');
+    assert.equal(decoded[2].decode_error_code, 'UNKNOWN_TOPIC');
+    assert.equal(decoded[2].event_name, null);
+    assert.equal(decoded[2].decoded_payload, null);
+    assert.equal(decoded[3].decode_status, 'decode_error');
+    assert.equal(decoded[3].decode_error_code, 'DECODE_ERROR');
+    assert.equal(decoded[3].event_name, null);
+    assert.equal(decoded[3].decoded_payload, null);
+    assert.deepEqual(await storage.decodeIssues(config), {
+      unknownTopics: 1,
+      decodeErrors: 1,
+      issues: [
+        { blockNumber: '3', transactionHash: unknown.transactionHash, logIndex: '0', code: 'UNKNOWN_TOPIC', abiVersion: 'oz-5.4.0-erc20' },
+        { blockNumber: '4', transactionHash: malformed.transactionHash, logIndex: '0', code: 'DECODE_ERROR', abiVersion: 'oz-5.4.0-erc20' },
+      ],
+    });
+    assert.equal((await pool.query('SELECT last_error_code FROM checkpoints WHERE deployment_id=$1', [config.deploymentId])).rows[0].last_error_code,
+      'DECODE_INCOMPLETE');
+    assert.deepEqual((await pool.query(`SELECT raw_event_id,chain_id,contract_role,contract_address,
+      block_number::text AS block_number,block_hash,transaction_hash,transaction_index::text AS transaction_index,
+      log_index::text AS log_index,topics::text[] AS topics,data,rpc_log FROM raw_events
+      WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows, beforeRaw);
+    assert.deepEqual((await pool.query(`SELECT block_number::text,block_hash,observed_head_block::text,
+      confirmation_depth,sync_status,source_scope,last_error_code FROM checkpoints WHERE deployment_id=$1`,
+    [config.deploymentId])).rows, beforeCheckpoint);
+    const stableDecoded = (await pool.query(`SELECT raw_event_id,event_name,decoded_payload,decode_status,decode_error_code
+      FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows;
+    assert.equal(await storage.redecode(config), 4);
+    assert.deepEqual((await pool.query(`SELECT raw_event_id,event_name,decoded_payload,decode_status,decode_error_code
+      FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId])).rows, stableDecoded);
+  });
   test('RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication', async () => {
     const s = new Scenario();
     s.fund();
@@ -399,5 +556,13 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
       'DECODE_INCOMPLETE',
     );
     assert.deepEqual(second[0].treasury, { totalIn: '10000', totalOut: '0', balance: '10000' });
+    const redecode = await run('--redecode', 2);
+    assert.equal(redecode[0].type, 'redecode_result');
+    assert.equal(redecode[0].processedMeaning,
+      'raw events re-decoded in this deployment (through H when a raw checkpoint exists), including unchanged rows');
+    assert.equal(redecode[0].processed, Number((await pool.query(
+      'SELECT count(*)::int AS count FROM raw_events WHERE deployment_id=$1', [config.deploymentId],
+    )).rows[0].count));
+    assert.equal(redecode[0].unknownTopics, 1);
   });
 });

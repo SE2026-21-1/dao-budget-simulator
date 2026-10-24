@@ -21,18 +21,14 @@ Transfer được tính dòng tiền, BudgetDisbursed nối khoản chi cùng tr
 
 ## Validation
 
-- Build/typecheck PASS; BE04 23 unit + 8 real PostgreSQL PASS, không skip.
-- Hồi quy BE02/BE03: 86 unit/CLI, 21 + 16 PostgreSQL PASS.
-- Anvil mới, deployment/roles từ script repo: 8 mốc H=24…55,
-  5 proposal, 7 vote, 2 operation, 1 payment 1.000 BUD; treasury còn 9.000 BUD.
-  Cùng requestId execute lần hai revert, giữ Queued/Ready; repeat projection và
-  raw idle restart giữ dữ liệu ổn định.
-- Môi trường local: Node 24.19.0, Forge/Anvil 1.7.1, Solc 0.8.37/Osaka,
-  PostgreSQL 16.15 với điều chỉnh startup guard trong namespace chỉ có UID 0.
-  Chưa xác nhận CI với toolchain chuẩn Forge 1.8.5/PostgreSQL 18.4.
-
-Evidence: `docs/evidence/be04-20261024/`, hướng dẫn `docs/be04.md`.
-Liên quan #18; không đóng issue đó bằng BE04.
+- `npm ci`, typecheck, build và diff checks PASS; lockfile không đổi.
+- Unit: BE02 **64/64**, BE03 **22/22**, BE04 **27/27**; không skip.
+- PostgreSQL mới, cô lập: BE01 migration/checks PASS; BE02 **21/21**, BE03 **16/16**, BE04 **10/10**.
+- Regression `--redecode` chạy cùng test trên SHA trước sửa: **7 pass, 3 fail** như dự kiến; sau sửa BE04 PostgreSQL suite **10/10 pass**. Raw bytes/identity/checkpoint giữ nguyên, payload/event được khôi phục và unknown/malformed vẫn bị đánh dấu.
+- Foundry 1.8.5 CI suite: **142/142 pass**, không skip; Solc 0.8.37, Osaka, optimizer 200.
+- Official live runner với Anvil 1.8.5 unforked/PostgreSQL 18.4 cô lập: **10/10 phase**, 24 receipt. H=67, raw/projection cùng hash `0x7b66ac580f1eac86167d0bdc26a7534fe8c15b852fa38d671bf23b488014c836`; Treasury total in 13.000 BUD, out 12.000 BUD, balance 1.000 BUD. Bao gồm duplicate requestId zero và execute thiếu tiền → nạp quỹ → retry thành công.
+- Bằng chứng cho bản sửa: [`docs/evidence/be04-p2-fix-20261024/`](evidence/be04-p2-fix-20261024/report.md). Cluster/runtime và dependency tải tạm không nằm trong PR; dump SQL là dữ liệu fixture Anvil cục bộ.
+- Docker/PowerShell wrappers không chạy được trên WSL cục bộ do thiếu công cụ; các suite PostgreSQL trực tiếp và live runner đã chạy PASS. GitHub CI cho commit mới sẽ được chạy sau khi cập nhật PR.
 
 ## Review and limits
 

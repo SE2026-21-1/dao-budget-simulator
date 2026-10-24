@@ -8,9 +8,10 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
-import { Interface, id, toQuantity } from 'ethers';
+import { Interface, ZeroHash, id, toQuantity } from 'ethers';
 import pg from 'pg';
 import { deployGovernance } from './governance_local.mjs';
+import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 import { parseConfig } from '../indexer/config.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { PostgresStorage } from '../indexer/storage.ts';
@@ -109,12 +110,11 @@ try {
   const address = Object.fromEntries(Object.entries(manifest.contracts).map(([k, v]) => [k, v.address]));
   const tx = async (label, from, name, method, values = [], at, success = true) => {
     if (at !== undefined) await rpc('evm_setNextBlockTimestamp', [toQuantity(at)]);
-    const hash = await rpc('eth_sendTransaction', [
+    const transactionHash = await rpc('eth_sendTransaction', [
       { from, to: address[name], data: abi[name].encodeFunctionData(method, values), gas: toQuantity(8_000_000) },
     ]);
-    const receipt = await rpc('eth_getTransactionReceipt', [hash]);
-    assert.ok(receipt, label);
-    assert.equal(receipt.status, success ? '0x1' : '0x0', label);
+    const receipt = await waitForReceipt(rpc, transactionHash, { step: label });
+    assertReceiptStatus(receipt, transactionHash, label, success);
     if (!success) assert.deepEqual(receipt.logs, []);
     report.receipts.push({ ...receipt, label });
     return receipt;
@@ -125,7 +125,7 @@ try {
       await rpc('eth_call', [{ to: address[name], data: abi[name].encodeFunctionData(method, values) }, 'latest']),
     );
   const U = 10n ** 18n;
-  const shared = id('be04:shared-request');
+  const shared = ZeroHash;
   const definitions = [
     ['payment', shared],
     ['duplicate', shared],
@@ -294,10 +294,103 @@ try {
     eta,
     false,
   );
-  const final = await phase('executed plus duplicate revert', { ...queued, payment: 'Executed' });
-  assert.equal(final.projection.treasury.balance, String(9000n * U));
-  assert.equal(final.projection.treasury.totalOut, String(1000n * U));
-  assert.deepEqual(final.projection.counts, { proposals: 5, votes: 7, operations: 2, transfers: 2, disbursements: 1 });
+  const firstPayment = await phase('executed plus zero requestId duplicate revert', { ...queued, payment: 'Executed' });
+  assert.equal(firstPayment.projection.treasury.balance, String(9000n * U));
+  assert.equal(firstPayment.projection.treasury.totalOut, String(1000n * U));
+  assert.deepEqual(firstPayment.projection.counts, { proposals: 5, votes: 7, operations: 2, transfers: 2, disbursements: 1 });
+
+  const underfundRequest = id('be04:underfunded-retry');
+  const underfundDescription = '  {"version":1,"title":"BE04 insufficient funds","body":"Nạp quỹ rồi thử lại."}  ';
+  const underfundTargets = [address.Treasury];
+  const underfundValues = ['0'];
+  const underfundCalldatas = [
+    abi.Treasury.encodeFunctionData('disburse', [underfundRequest, accounts.recipient, 11000n * U]),
+  ];
+  const underfundProposalId = String(
+    (await call('Governor', 'hashProposal', [underfundTargets, underfundValues, underfundCalldatas, id(underfundDescription)]))[0],
+  );
+  const underfundNow = BigInt((await rpc('eth_getBlockByNumber', ['latest', false])).timestamp) + 1n;
+  await tx(
+    'propose underfunded payment',
+    accounts.A,
+    'Governor',
+    'propose',
+    [underfundTargets, underfundValues, underfundCalldatas, underfundDescription],
+    underfundNow,
+  );
+  const underfundSnapshot = BigInt((await call('Governor', 'proposalSnapshot', [underfundProposalId]))[0]);
+  const underfundDeadline = BigInt((await call('Governor', 'proposalDeadline', [underfundProposalId]))[0]);
+  await tx('vote underfunded proposal A', accounts.A, 'Governor', 'castVote', [underfundProposalId, 1], underfundSnapshot + 1n);
+  await tx('vote underfunded proposal B', accounts.B, 'Governor', 'castVote', [underfundProposalId, 1], underfundSnapshot + 1n);
+  const underfundArgs = [underfundTargets, underfundValues, underfundCalldatas, id(underfundDescription)];
+  const underfundBalanceBefore = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
+  assert.equal(underfundBalanceBefore, 9000n * U);
+  await tx('queue underfunded proposal', accounts.caller, 'Governor', 'queue', underfundArgs, underfundDeadline + 1n);
+  const underfundEta = BigInt((await call('Governor', 'proposalEta', [underfundProposalId]))[0]);
+  await rpc('evm_setNextBlockTimestamp', [toQuantity(underfundEta)]);
+  await rpc('evm_mine');
+  await tx(
+    'underfunded execute reverts',
+    accounts.outsider,
+    'Governor',
+    'execute',
+    underfundArgs,
+    underfundEta,
+    false,
+  );
+  const paidAfterRevert = (await call('Treasury', 'paidRequests', [underfundRequest]))[0];
+  const balanceAfterRevert = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
+  assert.equal(paidAfterRevert, false);
+  assert.equal(balanceAfterRevert, underfundBalanceBefore);
+  const afterRevert = await phase('underfunded execute reverted', { ...queued, payment: 'Executed' });
+  assert.equal(afterRevert.projection.treasury.balance, String(9000n * U));
+  assert.deepEqual(afterRevert.projection.counts,
+    { proposals: 6, votes: 9, operations: 3, transfers: 2, disbursements: 1 });
+  const underfundState = async () =>
+    (
+      await pool.query(
+        `SELECT s.state,s.operation_status FROM proposal_states s WHERE s.deployment_id=$1 AND s.proposal_id=$2`,
+        [d, underfundProposalId],
+      )
+    ).rows[0];
+  const stateAfterRevert = await underfundState();
+  assert.deepEqual(stateAfterRevert, { state: 'Queued', operation_status: 'Ready' });
+  await tx(
+    'top up Treasury after execute revert',
+    accounts.funding,
+    'BUD',
+    'transfer',
+    [address.Treasury, 3000n * U],
+  );
+  const balanceAfterTopUp = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
+  assert.equal(balanceAfterTopUp, 12000n * U);
+  await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs, underfundEta + 2n);
+  const paidAfterRetry = (await call('Treasury', 'paidRequests', [underfundRequest]))[0];
+  assert.equal(paidAfterRetry, true);
+  const final = await phase('funded retry succeeds', { ...queued, payment: 'Executed' });
+  assert.equal(final.projection.treasury.balance, String(1000n * U));
+  assert.equal(final.projection.treasury.totalIn, String(13000n * U));
+  assert.equal(final.projection.treasury.totalOut, String(12000n * U));
+  assert.deepEqual(final.projection.counts, { proposals: 6, votes: 9, operations: 3, transfers: 4, disbursements: 2 });
+  const stateAfterRetry = await underfundState();
+  assert.deepEqual(stateAfterRetry, { state: 'Executed', operation_status: 'Done' });
+  report.underfundingCheck = {
+    requestId: underfundRequest,
+    amount: String(11000n * U),
+    balanceBefore: underfundBalanceBefore.toString(),
+    failedExecutionReceipt: report.receipts.find((r) => r.label === 'underfunded execute reverts'),
+    paidAfterRevert,
+    balanceAfterRevert: balanceAfterRevert.toString(),
+    topUpAmount: String(3000n * U),
+    balanceAfterTopUp: balanceAfterTopUp.toString(),
+    successfulRetryReceipt: report.receipts.find((r) => r.label === 'retry underfunded execute after funding'),
+    paidAfterRetry,
+    balanceAfterRetry: final.projection.treasury.balance,
+    stateAfterRevert,
+    stateAfterRetry,
+    revertProjectionContext: afterRevert.projection.context,
+    retryProjectionContext: final.projection.context,
+  };
   const rows = (
     await pool.query(
       `SELECT p.proposal_id::text,p.request_id,p.description,p.description_hash,v.params,s.state,
@@ -310,13 +403,22 @@ try {
       [d],
     )
   ).rows;
-  for (const p of proposals)
+  for (const p of [...proposals, {
+    proposalId: underfundProposalId,
+    description: underfundDescription,
+    descriptionHash: id(underfundDescription),
+  }])
     assert.ok(
       rows
         .filter((r) => r.proposal_id === p.proposalId)
         .every((r) => r.description === p.description && r.description_hash === p.descriptionHash),
     );
   assert.ok(rows.filter((r) => r.proposal_id === proposals[1].proposalId).every((r) => r.paid_request === null));
+  const firstZeroRequestPayment = rows.find((r) => r.proposal_id === proposals[0].proposalId);
+  assert.equal(firstZeroRequestPayment?.request_id, ZeroHash);
+  assert.equal(firstZeroRequestPayment?.paid_request, ZeroHash);
+  assert.equal(firstZeroRequestPayment?.paid_proposal, proposals[0].proposalId);
+  assert.equal(rows.find((r) => r.proposal_id === underfundProposalId)?.transfer_amount, String(11000n * U));
   const stable = async () => {
     const snapshot = {};
     for (const t of ['proposals', 'votes', 'operations', 'transfers', 'disbursements', 'proposal_states'])
@@ -349,7 +451,16 @@ try {
     await readFile(new URL('../database/queries/be04_read_model.sql', import.meta.url), 'utf8')
   ).replaceAll(":'deployment_id'", d);
   await pool.query(readQueries);
-  report.proposals = proposals;
+  report.proposals = [...proposals, {
+    label: 'underfunded-retry',
+    proposalId: underfundProposalId,
+    requestId: underfundRequest,
+    description: underfundDescription,
+    targets: underfundTargets,
+    values: underfundValues,
+    calldatas: underfundCalldatas,
+    descriptionHash: id(underfundDescription),
+  }];
   report.finalRows = rows;
   report.finalSnapshot = before;
   report.checks.push(
@@ -357,7 +468,9 @@ try {
     'snapshot/deadline/ETA boundaries and empty-block state transitions reconciled at each H',
     'WithParams/reason/description preserved; salt and operationId reconstructed from pinned OZ algorithm',
     'one BUD outflow, one disbursement, 9000 BUD balance after 1000 BUD payment',
-    'duplicate request execute reverted with zero logs and remained Queued Ready',
+    'zero requestId with same recipient/amount paid once; duplicate execution made no payment',
+    'insufficient-funds execute reverted with zero logs, no paid request or ledger row; top-up and retry succeeded',
+    'Treasury balance reconciled 9000 -> 12000 -> 1000 BUD across revert, top-up and retry',
     'repeat projection is row-stable; idle BE03 restart preserves raw identity/unknown classifications',
   );
   report.status = 'PASS';
@@ -372,7 +485,16 @@ try {
     'indexer/projection/chain.ts',
     'indexer/projection/projector.ts',
     'database/migrations/003_be04.sql',
+    'indexer/storage.ts',
+    'indexer/cli.ts',
     'scripts/check_be04_live.mjs',
+    'scripts/governance_local.mjs',
+    'scripts/receipt.mjs',
+    'tests/indexer/projection-storage.test.ts',
+    'tests/indexer/be04-live-receipt.test.mjs',
+    'package.json',
+    'docs/be03.md',
+    'docs/be04.md',
   ])
     report.sourceHashes[path] = createHash('sha256')
       .update(await readFile(new URL(`../${path}`, import.meta.url)))

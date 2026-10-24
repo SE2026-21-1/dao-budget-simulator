@@ -438,5 +438,8 @@ dòng tiền; BudgetDisbursed nối đúng khoản chi và proposal thực thi. 
 
 Xem [hướng dẫn BE04](docs/be04.md), [checklist](docs/be04-checklist.md),
 [SQL truy vấn](database/queries/be04_read_model.sql) và
-[evidence local](docs/evidence/be04-20261024/report.md).
-HTTP API thuộc BE05, rebuild/compare thuộc BE06 và rollback/retry thuộc BE07.
+[evidence baseline](docs/evidence/be04-20261024/report.md). Hai lỗi P2 có
+regression trước/sau và live runner chính thức 10/10 phase tại
+[báo cáo sửa P2](docs/evidence/be04-p2-fix-20261024/report.md).
+HTTP API thuộc BE05, rebuild/compare thuộc BE06, reorg rollback/retry thuộc
+BE07 và benchmark thuộc BE08.

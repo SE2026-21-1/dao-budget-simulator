@@ -1,4 +1,5 @@
 import type { Pool, PoolClient } from 'pg';
+import { isDeepStrictEqual } from 'node:util';
 import { decodeLog } from './decoder.js';
 import { confirmationDepth, firstBlock, scopeHash, sourceKey } from './scope.js';
 import type { BatchStorage, Checkpoint, DecodeIssue, IndexerConfig, LogBatch, NormalizedLog, SyncStorage, WriteResult } from './types.js';
@@ -90,7 +91,7 @@ function validateBatch(config: IndexerConfig, batch: LogBatch): void {
   }
 }
 
-async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict = false): Promise<void> {
+export async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict = false): Promise<void> {
   const deployments = await client.query<{ chain_id: string; deployment_block: string }>(`
     SELECT trunc(chain_id)::text AS chain_id, trunc(deployment_block)::text AS deployment_block FROM deployments
     WHERE deployment_id = $1 FOR SHARE`, [config.deploymentId]);
@@ -128,7 +129,7 @@ async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict 
   }
 }
 
-async function checkpoint(client: PoolClient, config: IndexerConfig): Promise<Checkpoint | null> {
+export async function checkpoint(client: PoolClient, config: IndexerConfig): Promise<Checkpoint | null> {
   const result = await client.query(`SELECT trunc(block_number)::text AS number, block_hash, source_scope, confirmation_depth
     FROM checkpoints WHERE deployment_id = $1 FOR UPDATE`, [config.deploymentId]);
   const row = result.rows[0];
@@ -328,29 +329,42 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
       WHERE c.deployment_id = $1`, [config.deploymentId]);
   }
 
-  /** Explicit recovery from immutable raw bytes; does not move the raw checkpoint. */
+  /** Re-decodes every raw event through the checkpoint from immutable raw bytes; does not move the raw checkpoint. */
   async redecode(config: IndexerConfig): Promise<number> {
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
       await verifyMetadata(client, config, true);
-      await checkpoint(client, config);
+      const rawCheckpoint = await checkpoint(client, config);
       const rows = await client.query(`SELECT *, topics::text[] AS topics FROM raw_events WHERE deployment_id = $1
-        AND block_number <= COALESCE((SELECT block_number FROM checkpoints WHERE deployment_id=$1), block_number)
-        AND decode_status IS DISTINCT FROM 'decoded' ORDER BY block_number, transaction_index, log_index FOR UPDATE`, [config.deploymentId]);
+        AND ($2::numeric IS NULL OR block_number <= $2)
+        ORDER BY block_number, transaction_index, log_index FOR UPDATE`, [config.deploymentId, rawCheckpoint?.number.toString() ?? null]);
       for (const row of rows.rows) {
-        const log: NormalizedLog = { contract: config.contracts.find((c) => c.role === row.contract_role)!,
+        const contract = config.contracts.find((c) => c.role === row.contract_role && c.address === row.contract_address);
+        if (!contract) {
+          throw new StorageError('STORAGE_METADATA_MISMATCH', 'Raw event source is absent from the configured ABI scope.', {
+            deploymentId: config.deploymentId,
+            contractRole: row.contract_role,
+          });
+        }
+        const log: NormalizedLog = { contract,
           blockNumber: BigInt(row.block_number), blockHash: row.block_hash, transactionHash: row.transaction_hash,
           transactionIndex: BigInt(row.transaction_index), logIndex: BigInt(row.log_index),
           topics: row.topics, data: row.data, rawLog: row.rpc_log };
         const decoded = decodeLog(log);
+        const eventName = decoded.status === 'decoded' ? decoded.eventName : null;
+        const payload = decoded.status === 'decoded' ? decoded.payload : null;
+        const errorCode = decoded.status === 'decoded' ? null : decoded.code;
+        if (row.event_name === eventName && isDeepStrictEqual(row.decoded_payload, payload)
+            && row.decode_status === decoded.status && row.decode_error_code === errorCode) continue;
         await client.query(`UPDATE raw_events SET event_name=$2, decoded_payload=$3::jsonb, decode_status=$4, decode_error_code=$5
-          WHERE raw_event_id=$1`, [row.raw_event_id, decoded.status === 'decoded' ? decoded.eventName : null,
-          decoded.status === 'decoded' ? JSON.stringify(decoded.payload) : null, decoded.status, decoded.status === 'decoded' ? null : decoded.code]);
+          WHERE raw_event_id=$1`, [row.raw_event_id, eventName,
+          payload === null ? null : JSON.stringify(payload), decoded.status, errorCode]);
       }
       await this.markDecodeState(client, config);
       await client.query('COMMIT');
+      // `processed` counts every raw event re-decoded, including rows already correct.
       return rows.rowCount!;
     } catch (error) {
       await client.query('ROLLBACK');

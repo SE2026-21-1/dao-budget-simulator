@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { ContractFactory, Interface, ZeroAddress, ZeroHash, getAddress, id, keccak256, toQuantity } from 'ethers';
+import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 
 // This is the agreed local project configuration, not an input supplied by a manifest.
 const UNIT = 10n ** 18n;
@@ -26,7 +27,6 @@ const EXECUTOR = id('EXECUTOR_ROLE');
 const CANCELLER = id('CANCELLER_ROLE');
 const sha = (value) => createHash('sha256').update(value).digest('hex');
 const lower = (address) => getAddress(address).toLowerCase();
-const pause = (ms) => new Promise((done) => setTimeout(done, ms));
 const decimal = (value, label) => {
   assert.match(value, /^(0|[1-9][0-9]*)$/, `${label}: expected decimal string`);
   return BigInt(value);
@@ -178,16 +178,10 @@ function normalizedRuntime(code, references) {
 
 async function send(rpc, receipts, label, from, to, data) {
   const transactionHash = await rpc('eth_sendTransaction', [{ from, ...(to ? { to } : {}), data, gas: toQuantity(15000000) }]);
-  for (let attempt = 0; attempt < 200; attempt++) {
-    const receipt = await rpc('eth_getTransactionReceipt', [transactionHash]);
-    if (receipt) {
-      assert.equal(receipt.status, '0x1', `${label}: transaction reverted (${transactionHash})`);
-      receipts.push({ ...receipt, label });
-      return receipt;
-    }
-    await pause(50);
-  }
-  throw new Error(`${label}: receipt not mined (${transactionHash})`);
+  const receipt = await waitForReceipt(rpc, transactionHash, { step: label });
+  assertReceiptStatus(receipt, transactionHash, label);
+  receipts.push({ ...receipt, label });
+  return receipt;
 }
 
 /** Deploys real contracts to a caller-owned NEW empty unlocked Anvil chain. */

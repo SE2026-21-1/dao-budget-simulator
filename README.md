@@ -412,3 +412,34 @@ hạn; không dùng nó ghi vào deployment đã có checkpoint BE03. Đọc
 Lịch sử BLOCKED giữ trong checklist. Tích hợp raw/checkpoint PASS tại H=32,
 head=34; 16 topic quản trị bootstrap ngoài ABI subset vẫn unknown, nên CLI
 trả exit 2 / DECODE_INCOMPLETE, không phải decodeComplete=true.
+
+## BE04 — proposal và sổ dòng tiền
+
+BE04 bổ sung projection proposal/vote/operation/transfer/disbursement, đối chiếu
+contract tại cùng H và công bố một snapshot nhất quán. Chạy migration
+`database/migrations/003_be04.sql` sau 001/002 rồi dùng:
+
+```bash
+npm run indexer -- --config indexer/config/local.json --sync-project
+# Hoặc tạo lại projection từ raw checkpoint hiện có, không quét lại log:
+npm run indexer -- --config indexer/config/local.json --project
+npm run test:be04
+npm run test:be04:db
+# Cần forge build, Anvil và Docker; tự tạo chain/DB local mới:
+mkdir -p reports
+npm run test:be04:live
+```
+
+H/hash/revision của bảng truy vấn lấy từ `projection_checkpoints`, có thể thấp
+hơn raw checkpoint khi đối soát chưa thành công. Chỉ BUD Transfer được tính
+dòng tiền; BudgetDisbursed nối đúng khoản chi và proposal thực thi. Trạng thái
+được cập nhật cả ở block trống, không cần event mới. RPC phải hỗ trợ historical
+`eth_call` với EIP-1898 canonical block hash.
+
+Xem [hướng dẫn BE04](docs/be04.md), [checklist](docs/be04-checklist.md),
+[SQL truy vấn](database/queries/be04_read_model.sql) và
+[evidence baseline](docs/evidence/be04-20261024/report.md). Hai lỗi P2 có
+regression trước/sau và live runner chính thức 10/10 phase tại
+[báo cáo sửa P2](docs/evidence/be04-p2-fix-20261024/report.md).
+HTTP API thuộc BE05, rebuild/compare thuộc BE06, reorg rollback/retry thuộc
+BE07 và benchmark thuộc BE08.

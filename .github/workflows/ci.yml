@@ -55,6 +55,10 @@ jobs:
         shell: bash
         run: |
           bash scripts/check_governance_database.sh --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
+      - name: Reconcile BE04 projections with live governance at confirmed H
+        shell: bash
+        run: |
+          bash scripts/check_be04_database.sh --live --output reports/be04-live.json 2>&1 | tee reports/be04-live.log
       - name: Record scope of checks
         if: always()
         shell: bash
@@ -167,6 +171,22 @@ jobs:
           name: tv4-be02-${{ github.sha }}
           path: reports/
           retention-days: 14
+
+  be04:
+    name: BE04 projection semantics and atomic PostgreSQL publication
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - run: npm run test:be04
+      - run: npm run test:be04:db
 
   frontend:
     name: Frontend lint and production build

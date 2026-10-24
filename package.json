@@ -12,7 +12,10 @@
     "test:be02:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1",
     "test:be02:db:linux": "bash scripts/check_be02_database.sh",
     "test:be03": "tsx --test tests/indexer/syncer.test.ts",
-    "test:be03:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1"
+    "test:be03:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1",
+    "test:be04": "node --import tsx --test tests/indexer/projection.test.ts",
+    "test:be04:db": "bash scripts/check_be04_database.sh",
+    "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json"
   },
   "dependencies": {
     "ethers": "6.17.0",

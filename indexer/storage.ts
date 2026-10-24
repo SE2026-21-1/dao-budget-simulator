@@ -90,7 +90,7 @@ function validateBatch(config: IndexerConfig, batch: LogBatch): void {
   }
 }
 
-async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict = false): Promise<void> {
+export async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict = false): Promise<void> {
   const deployments = await client.query<{ chain_id: string; deployment_block: string }>(`
     SELECT trunc(chain_id)::text AS chain_id, trunc(deployment_block)::text AS deployment_block FROM deployments
     WHERE deployment_id = $1 FOR SHARE`, [config.deploymentId]);
@@ -128,7 +128,7 @@ async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict 
   }
 }
 
-async function checkpoint(client: PoolClient, config: IndexerConfig): Promise<Checkpoint | null> {
+export async function checkpoint(client: PoolClient, config: IndexerConfig): Promise<Checkpoint | null> {
   const result = await client.query(`SELECT trunc(block_number)::text AS number, block_hash, source_scope, confirmation_depth
     FROM checkpoints WHERE deployment_id = $1 FOR UPDATE`, [config.deploymentId]);
   const row = result.rows[0];

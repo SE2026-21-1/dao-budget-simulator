@@ -1,0 +1,104 @@
+{
+  "status": "PASS_LOCAL",
+  "baseCommit": "4b9f060e8e2bdef7849b09d55ddeaf6a90545d4d",
+  "branch": "feature/tv2-be04",
+  "task": "BE04",
+  "date": "2026-10-24",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "checks": {
+    "typecheck": "PASS",
+    "build": "PASS",
+    "be04Unit": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "be04PostgreSQL": {
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "live": {
+      "status": "PASS",
+      "phaseCount": 8,
+      "finalContext": {
+        "chainId": "31337",
+        "deploymentId": "1",
+        "asOfBlock": "55",
+        "asOfBlockHash": "0x5be818bf8866935804e3d165e61e577b343fcdc0148e11f0e84d5fc47a6b98bb",
+        "asOfTimestamp": "1800000485",
+        "snapshotRevision": "37b73ec2-295d-4a9a-b000-00bd94acf08f",
+        "dataKind": "chain"
+      },
+      "counts": {
+        "proposals": 5,
+        "votes": 7,
+        "operations": 2,
+        "transfers": 2,
+        "disbursements": 1
+      },
+      "treasury": {
+        "totalIn": "10000000000000000000000",
+        "totalOut": "1000000000000000000000",
+        "balance": "9000000000000000000000"
+      }
+    },
+    "regression": {
+      "be02Be03UnitCliPassed": 86,
+      "be02PostgreSQLPassed": 21,
+      "be03PostgreSQLPassed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "Executed and inspected in this session; full regression output is in tool results, not separate transcript files."
+    }
+  },
+  "runtime": {
+    "node": "v24.19.0",
+    "postgres": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+    "anvil": "anvil Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:50:55.527285345Z (1778226655)\nBuild Profile: dist",
+    "forge": "forge Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:50:55.527285345Z (1778226655)\nBuild Profile: dist",
+    "compiler": "0.8.37+commit.f401782d",
+    "evm": "osaka"
+  },
+  "environmentNotes": [
+    "Execution namespace maps only UID 0 and disallows Unix sockets. Temporary PostgreSQL 16.15 tools had only startup root-refusal branches disabled (initdb offset 0x683f, postgres offset 0x16120b; six bytes each). Database/SQL transaction code was not modified. PostgreSQL listened on loopback TCP only.",
+    "Use node --import tsx to avoid the tsx CLI Unix IPC socket in this namespace.",
+    "Docker is unavailable in this execution environment. Docker runner syntax was checked; live acceptance used a new local PostgreSQL cluster and a new owned Anvil.",
+    "Standard CI is configured for PostgreSQL 18.4 and Forge 1.8.5; it has not been run remotely for this candidate. Local Forge/Anvil are 1.7.1, compiler/settings remain 0.8.37/Osaka/optimizer 200."
+  ],
+  "limits": [
+    "Latest published H only; full replay per projection invocation.",
+    "No HTTP API (BE05), production rebuild/compare (BE06), automatic reorg rollback/retry (BE07), benchmark (BE08) or peer review.",
+    "16 raw bootstrap unknown remain preserved; projection counts them as recognized ancillary without changing BE03 decode status.",
+    "Evidence was captured before branch publication. Peer review and remote CI are separate from PASS_LOCAL."
+  ],
+  "filesSha256": {
+    ".github/workflows/ci.yml": "cc1960deb1c7ac135896aace3ef31940f1cde0f7d06b6a62fe08247d311004cc",
+    "README.md": "a7f0ca89c5299c0a257eeb48f5b3e98764df67766c28092a20263d9946534912",
+    "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+    "database/queries/be04_read_model.sql": "b43d142b867ba2552940ffa97f54bc58e94896c4530762c4bc3a3290a9f210e1",
+    "docs/api.md": "00c8c880e75a5f036ddfcfe53834446716458bdd35e93a972d8459f4f4b0b8b0",
+    "docs/be04-checklist.md": "88a847855ca4c7252581f94b07b82a917f568dd4e168fac4163a1cdef51a62d4",
+    "docs/be04-pr.md": "6a790253343b0fba9e23466c035158e71d97a05b6129d52b4bf2c5231d9fcda8",
+    "docs/be04.md": "4d1fb268078df0dee19990abd07f8f3ba9df207e91556434e9aeacd63111e2ec",
+    "docs/evidence/be04-20261024/build.txt": "c7839930bda1499a0b70f3c4afda13a788fc8afcfb0b6c16a899c1cf70b52c4f",
+    "docs/evidence/be04-20261024/live.json": "58bd66ae50729a22b670642478bdfbca47a33cdb1cb22923872c4a03179de2e7",
+    "docs/evidence/be04-20261024/live.txt": "a4362bcb5b84b19e9fdaa42b5ca51eacacaf3fc7273fe43cc28135c22af51ad6",
+    "docs/evidence/be04-20261024/postgres.txt": "3501014f629e33aafa617b27bf026564e10816370e29cdc503964f21c39a3704",
+    "docs/evidence/be04-20261024/typecheck.txt": "04e09ffed7e96313cc24328d9569d0ca3d5144ff4f70887a26e51269181f167e",
+    "docs/evidence/be04-20261024/unit.txt": "205467f079e43078ad3bec53430de679c82104d6ce5686628169d37cd304a1ec",
+    "docs/indexer.md": "391af51294beb83fd1fc6f4b9d1a1d7d54d91906a76d3bcca73180f2f22d0a69",
+    "indexer/cli.ts": "87cf38cbf8a6d3dffda07a6585854b22a669aaa94e28bf3377f0ea68fabc6a53",
+    "indexer/projection/chain.ts": "b8d8a8e4881a6f100daa911b039969857a76dfd2b9217f68cc9eb4bb4cc463da",
+    "indexer/projection/model.ts": "2239615b0f3d6a193aec31adecedb3b16b2e205027d32acf10638e3f4011093b",
+    "indexer/projection/projector.ts": "cbaf4d6249b45b03f25909aba7258c6e2bbda81767bab5a79d5411225383fe81",
+    "indexer/storage.ts": "7dbd077820270e2deb76d2924f2aeae949ac83cf2d93f74e709a8949da28b8e9",
+    "package.json": "9db827eb2ee76482a5afe36a3e7dfa85d1de89e33c5d75d39cb943bcf9cd31db",
+    "scripts/check_be04_database.sh": "6e2c7f32f1e1ed37ff07709b76a281a2371a73fdc6ef75ae58ba58838869f59f",
+    "scripts/check_be04_live.mjs": "07240ac091a58d7abfa60cc7ea023640a45020b1324c0adcff8dc9ccdc94ebb9",
+    "tests/indexer/projection-fixture.ts": "e35406ef0c61257b68e4b5f35ec5a146fba31b2b909b0adcd0440a9a8a54a395",
+    "tests/indexer/projection-storage.test.ts": "ac6390b6d954460a6bdcedc95097daaeaaf1fdb9d9aa5ef9fb6d7a030f1e58a0",
+    "tests/indexer/projection.test.ts": "7c5eb4c313fd2c7bd9c970ebec6b2267d91d6fe015afeaac97eda3df732230aa",
+    ".gitattributes": "615445a6685d026aac58dcb4fc330db1e1c8146c713e35abfe732e12f1b8baba"
+  }
+}

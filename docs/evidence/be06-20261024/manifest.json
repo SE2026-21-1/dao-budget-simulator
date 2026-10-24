@@ -1,6 +1,6 @@
 {
   "format": "dao-budget-local-governance-v1",
-  "sourceCommit": "1ffbc3b8a283a7bdd346ecc3205909fa358c0590",
+  "sourceCommit": "e4c3ce4300dfb3e90a4e933508b2a403887aaaee",
   "chainId": "31337",
   "deploymentName": "be06-live-anvil",
   "scanFromBlock": "1",

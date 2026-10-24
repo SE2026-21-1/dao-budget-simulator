@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "implementationCommit": "1ffbc3b8a283a7bdd346ecc3205909fa358c0590",
+  "implementationCommit": "e4c3ce4300dfb3e90a4e933508b2a403887aaaee",
   "branch": "feature/tv2-be06",
   "recordedAt": "2026-10-24",
   "runtime": {
@@ -94,14 +94,14 @@
   "live": {
     "chainId": "31337",
     "H": "67",
-    "hash": "0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee",
+    "hash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7",
     "K": 2,
     "compareBeforeAdvance": "equal",
     "compareAfterAdvance": "equal",
     "mismatchProbeExitCode": 2,
     "postHTransferBlock": 70,
     "headAfterAdvance": 73,
-    "normalizedSha256": "bd5f430c33834380a6dc73498311ae7f975b82ca27aeb17a367b5573cdbd3c18"
+    "normalizedSha256": "4edc995cd4ea206c893b0b55ffb22d8878504ce4e4478e64f1118c4944a97f81"
   },
   "acceptance": {
     "tv4IndependentFr15RebuildCompare": "PENDING",
@@ -109,8 +109,13 @@
     "peerReview": "NOT CLAIMED"
   },
   "sourceTree": {
-    "sha": "7ba189849004f24ba17b4d5dd3b1a7873a02e4b4",
-    "localValidationCommit": "77b2d819aef2540d6e22ffd0df37da4f1c577312",
-    "localValidationTreeMatchesImplementationTree": true
+    "sha": "02c0b57f04743359fe2b7f86bc4fd6df254918f1",
+    "localRegressionCommit": "77b2d819aef2540d6e22ffd0df37da4f1c577312",
+    "localRegressionTree": "7ba189849004f24ba17b4d5dd3b1a7873a02e4b4",
+    "differencesSinceLocalRegression": [
+      ".github/workflows/ci.yml"
+    ],
+    "runtimeImplementationCodeUnchanged": true,
+    "liveRunMatchesImplementationCommit": true
   }
 }

@@ -2,8 +2,8 @@
   "result": "rebuilt",
   "manifest": {
     "format": "dao-budget-local-governance-v1",
-    "sha256": "bec3431039710891f0e52fb3b036f6cf2dd1671fcaad4fd742c1143db6914528",
-    "sourceCommit": "1ffbc3b8a283a7bdd346ecc3205909fa358c0590"
+    "sha256": "fd6275aacd0c8b922639601da3ef22f6587b6e61d20b919895a3434589378ff4",
+    "sourceCommit": "e4c3ce4300dfb3e90a4e933508b2a403887aaaee"
   },
   "scope": {
     "chainId": "31337",
@@ -40,23 +40,23 @@
   },
   "confirmations": 2,
   "requestedBlock": "67",
-  "blockHash": "0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee",
+  "blockHash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7",
   "chainHeadBefore": "73",
   "safeBlockBefore": "71",
   "chainHeadAfter": "73",
   "safeBlockAfter": "71",
   "rawCheckpoint": {
     "block": "67",
-    "hash": "0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee"
+    "hash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7"
   },
   "projection": {
     "context": {
       "chainId": "31337",
       "deploymentId": "1",
       "asOfBlock": "67",
-      "asOfBlockHash": "0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee",
-      "asOfTimestamp": "1800000970",
-      "snapshotRevision": "427e4fd3-e8f4-4c5e-9198-7071d46993e8",
+      "asOfBlockHash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7",
+      "asOfTimestamp": "1800000971",
+      "snapshotRevision": "1fb8b669-d254-4c66-9f27-f2590bdd2251",
       "dataKind": "chain"
     },
     "counts": {
@@ -76,8 +76,8 @@
   },
   "chainMetadata": {
     "atBlock": "67",
-    "blockHash": "0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee",
-    "blockTimestamp": "1800000970",
+    "blockHash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7",
+    "blockTimestamp": "1800000971",
     "contractCodeHashes": {
       "governor": {
         "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",

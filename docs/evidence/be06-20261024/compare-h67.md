@@ -2,8 +2,8 @@
 
 Kết quả: **PASS — dữ liệu chuẩn hóa bằng nhau.**
 
-- Hash tham chiếu: 0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee
-- Hash rebuild: 0xe97832b322764ee72481d093d9ce3598d423779e47eddc5c017ff00af12daeee
+- Hash tham chiếu: 0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7
+- Hash rebuild: 0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7
 - Scope khớp: yes
 - Chain cross-check: PASS (state, proposalVotes/quorum, timelock, clock/linkage, balanceOf)
 - Proposals: 6 / 6

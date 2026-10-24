@@ -9,3 +9,7 @@ docs/evidence/be03-20261024/*.txt -whitespace
 docs/evidence/be03-review-20261024/*.txt -whitespace
 docs/evidence/be03-integration-20261024/*.txt -whitespace
 docs/evidence/be03-packaging-20261024/*.txt -whitespace
+
+# Preserve BE04 evidence bytes and terminal trailing blank lines on every OS.
+docs/evidence/be04-20261024/** -text
+docs/evidence/be04-20261024/*.txt -whitespace

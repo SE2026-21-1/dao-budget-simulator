@@ -1,0 +1,5 @@
+
+> dao-budget-simulator@0.0.0 test:be03:db
+> powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1
+
+sh: 1: powershell: not found

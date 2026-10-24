@@ -1,0 +1,5 @@
+
+> dao-budget-simulator@0.0.0 test:be02:db:linux
+> bash scripts/check_be02_database.sh
+
+Docker is required for the isolated BE02 database check.

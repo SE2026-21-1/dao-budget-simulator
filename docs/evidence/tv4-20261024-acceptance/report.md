@@ -2,7 +2,7 @@
 
 ## Kết luận
 
-Backend, governance, rebuild cùng H, benchmark NFR02 local và E2E bằng EIP-1193/Anvil đã chạy thật. **Không chốt release:** TC11/reorg chưa đạt; API còn phục vụ snapshot của nhánh đã bị thay sau khi ingestion phát hiện hash lệch. Testnet, ví extension, máy thành viên khác, peer approval và CI của revision TV4 mới chưa được nghiệm thu.
+Backend, governance, rebuild cùng H, benchmark NFR02 local và E2E bằng EIP-1193/Anvil đã chạy thật. Code/evidence24f576e đã push qua SSH và CI đúngrevision đạt8/8job; [metadata publish/CI/PR21](publication.json). **Không chốt release:** TC11/reorg chưa đạt; API còn phục vụ snapshot của nhánh đã bị thay sau khi ingestion phát hiện hash lệch. Testnet, ví extension, máy thành viên khác và peer approval chưa được nghiệm thu.
 
 ## Nguồn và môi trường
 
@@ -102,7 +102,7 @@ TV2 cần bàn giao rollback/common ancestor/window policy, replay, revision/cur
 
 Không có mạng/RPC testnet được nhóm chốt hoặc signer/gas bàn giao trong repo; chỉ có `.env.example`. Không chọn mạng/signer thay người dùng, không xin private key qua chat, không dùng time-warp trên testnet. Cần TV1 review roles/build/EVM, signer an toàn đã có gas và cấu hình network trước demo Executed/Defeated thời gian thật.
 
-Máy không có gh/token/stored credential; `GIT_TERMINAL_PROMPT=0 git push --dry-run origin HEAD:feature/tv4-operation` thất bại do không đọc được Username. Không push, đổi issue/PR, tự approval hoặc tuyên bố CI revision mới xanh. [Nội dung bàn giao sẵn](../../tv4-handoff-20261024.md) cho PR#21 và issue#18/#19/#20.
+HTTPS push/dry-run thất bại do thiếu credential, nhưng SSH agent hiện có đã push thành công code/evidence `24f576e1be10bc0a2d0814a73a551067ca31b777` lên `feature/tv4-operation`; kiểm host key nghiêm ngặt, không đổi origin hoặc force-push. [CI đúng revision](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662) hoàn tất8/8job thành công; PR#21 đang open/base Dev và tự nhận head24f576e qua push. [Metadata public API](publication.json) ghi đúng source SHA, thời điểm quan sát, từng job và giới hạn: không tự coi CI của commit tài liệu sinh sau đó đã hoàn tất. SSH không cấp GitHub API credential; chưa đăng body/comment/request-review mới hoặc tự approval. [Nội dung bàn giao đã có trong nhánh remote](../../tv4-handoff-20261024.md) cho PR#21 và issue#18/#19/#20.
 
 README AD-064 link và file AD-064 chưa tracked của người dùng được giữ riêng, không nhận là thay đổi TV4 mới. Clone cùng máy và người khác chạy lại phải ghi riêng; không lấy CI hoặc clone cùng máy làm independent-machine approval.
 

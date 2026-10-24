@@ -24,7 +24,8 @@ là căn cứ mới; local PASS không tự thành release/peer approval.
 - [x] SIGTERM native runner trả143, stop cluster/đóng port/xóa temp, không báo PASS khi ngắt.
 - [x] Reorg thật đã được kiểm tra và ghi **KHÔNG ĐẠT**: ingestion exit1 hash mismatch/DB nguyên vẹn, nhưng API vẫn200 với hash orphan. Không đánh dấu TC11 PASS.
 - [ ] TV2 BE07: rollback/replay, hash window, revision/cursor invalidation và RPC retry/backoff; production freshness/pause-warning-recover.
-- [ ] TV1/TV2/TV3 peer review; CI chính revision TV4 mới sau push. GitHub credential chưa có; [nội dung PR/issue sẵn](tv4-handoff-20261024.md), chưa được gửi.
+- [x] Push code/evidence24f576e lên `feature/tv4-operation` bằng SSH agent, không đổi origin; [CI revision mới](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662) đạt8/8job. [Metadata publish/CI/PR21 head](evidence/tv4-20261024-acceptance/publication.json).
+- [ ] TV1/TV2/TV3 peer review; [nội dung PR/issue sẵn](tv4-handoff-20261024.md) chưa đăng thành body/comment/request-review mới do chưa có GitHub API credential. SSH push không cấp quyền ghi REST API.
 - [ ] Mạng/RPC testnet được chốt, signer an toàn đã có gas, EVM/compiler được TV1 xác nhận; demo Executed/Defeated thời gian thật.
 - [ ] Ví extension và thành viên khác chạy lại trên máy khác; không lấy EIP-1193 injected hoặc clone cùng máy thay nghiệm thu này.
 

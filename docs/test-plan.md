@@ -43,8 +43,8 @@ INV01–INV04 có governance oracle và successful execute trong sequence, khôn
 prank Timelock để chi; đây vẫn là bounded local evidence. NFR02 đạt trên máy
 đã ghi. NFR03 chỉ có sample acceptance-driver; NFR04 còn BE07/backoff/reorg.
 NFR05 có clone sạch candidate cùng máy E-TV4-24-CLONE, còn máy thành viên khác; NFR06 có ảnh/keyboard local,
-không chứng nhận mọi trình duyệt. NFR07 chưa chốt vì peer review/CI revision
-mới và lỗi reorg còn mở. NFR08 local role audit và history secret-scan/triage có proof, testnet chưa có.
+không chứng nhận mọi trình duyệt. NFR07 chưa chốt vì peer review và lỗi reorg
+còn mở; [CI revision24f576e](evidence/tv4-20261024-acceptance/publication.json) đạt8/8job sau SSH push, không lấy baseline thay thế. NFR08 local role audit và history secret-scan/triage có proof, testnet chưa có.
 
 ## 1. Ranh giới bằng chứng theo phiên bản
 

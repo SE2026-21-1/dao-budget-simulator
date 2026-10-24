@@ -400,7 +400,7 @@ bàn giao. Không tự approval hoặc merge PR của nhóm.
 - TC12 đúng tám proposal tạiH49=t0+1000 và sáu mốcS/S+1/D/D+1/E−1/E:14DB mới, normalized/chain compare equal; API tám proposal, Pending quorum=null, Queued Waiting/Ready đúngETA, ledger10000in/1000out/9000balance. Giữ FAIL harness ban đầu và bản sửa firstBlock; không sửa readinessAPI để né lỗi.
 - Gitleaks8.30.1 quét49commit,283finding redacted; từng finding là158public address/124file hash/1placeholder,0credential xác nhận; giữ rawexit1, không suppress. Còn giới hạn pattern scan.
 - Reorg thật **KHÔNG ĐẠT**: syncdừngCHECKPOINT_HASH_MISMATCH/SQLgiữ nguyên nhưngAPI200vớihashorphan. TV2BE07/backoff/invalidation vàfreshnessproduction còn thiếu; không chốt release.
-- GitHub chưa có credential nên chưa push/updatePR#21/issues#18/#19/#20 hoặc xinapproval thật; đã chuẩn bị [nội dung bàn giao](tv4-handoff-20261024.md). Testnet thiếu network/RPC/signer/gas/TV1review; không ký/gửi suy đoán.
+- Đã pushcode/evidence24f576e qua SSH agent lên `feature/tv4-operation`, không đổi origin; [CI đúngrevision](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662) đạt8/8job, PR#21 tự nhận head24f576e qua push. [Metadata](evidence/tv4-20261024-acceptance/publication.json). HTTPS vẫn thiếu credential; chưa đăng body/comment/request-review mới choPR#21/issues#18/#19/#20 hoặc tựapproval. [Nội dung bàn giao](tv4-handoff-20261024.md) đã nằm trong nhánh remote. Testnet thiếu network/RPC/signer/gas/TV1review; không ký/gửi suy đoán.
 
 [Báo cáo phạm vi và bằng chứng](evidence/tv4-20261024-acceptance/report.md),
 [native](evidence/tv4-20261024-acceptance/native/report.json),

@@ -108,9 +108,9 @@ UI wallet/E2E hay NFR07 toàn hệ thống. Xem [checklist TV4](docs/tv4-checkli
 
 Các CI tại source cũ chỉ là lịch sử. Dev `1451779` có
 [CI năm job thành công](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40088009664).
-Nhánh tích hợp TV4 hiện có BE05/BE06/wallet và job BE03 mới; chưa push/chạy CI
-revision này do máy chưa có GitHub credential. Kết quả local và blocker có
-trong [evidence 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
+Nhánh tích hợp TV4 có BE05/BE06/wallet và job BE03 mới đã push qua SSH tới
+`24f576e`; [CI đúng revision](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662) đạt **8/8 job**.
+Kết quả local, metadata publish/CI và blocker có trong [evidence 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
 
 Clone sạch candidate `d2617d0` cùng máy đã chạy lại install/build/typecheck,
 330 tests, smoke và native `--benchmark` thành công, không overlay/cache dự án.

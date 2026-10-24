@@ -179,6 +179,19 @@
       "evidence": "reorg.json"
     }
   },
+  "publication": {
+    "status": "PUSHED",
+    "branch": "feature/tv4-operation",
+    "publishedCommit": "24f576e1be10bc0a2d0814a73a551067ca31b777",
+    "transport": "existing SSH agent with strict host-key verification",
+    "originConfigurationUnchanged": true,
+    "ciRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662",
+    "ciConclusionForPublishedCommit": "success",
+    "successfulJobs": 8,
+    "pr21HeadSynchronized": true,
+    "evidence": "publication.json",
+    "prIssueBodiesAndNewReviewRequestsPosted": false
+  },
   "blockers": [
     {
       "owner": "TV2",
@@ -193,8 +206,8 @@
       "scope": "Peer approval, wallet extension and another-machine reproducibility"
     },
     {
-      "owner": "user GitHub authentication",
-      "scope": "Push/update PR21/issues18/19/20 and observe current-revision CI"
+      "owner": "GitHub API authentication",
+      "scope": "Update PR21/issues18/19/20 bodies/comments and new review requests; code/evidence push via SSH is complete"
     }
   ],
   "preservedUserChanges": {

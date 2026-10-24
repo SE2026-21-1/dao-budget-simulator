@@ -3,13 +3,14 @@ import FixtureLoadState from "../components/FixtureLoadState";
 import { formatCompactBUD, formatBUD } from "../data/formatBUD";
 import { proposalStatuses, type Proposal } from "../data/proposals";
 import { useProposalFixtures } from "../data/useProposalFixtures";
+import TreasurySection from "../components/TreasurySection";
 
 const palette = ["#b8852f", "#0e7759", "#58b99e", "#7892ab", "#d9ae55", "#244369", "#bd6660"];
 const shortId = (id: string) => `${id.slice(0, 7)}…${id.slice(-5)}`;
 
-function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asOfBlock: string }) {
+function DashboardContent({ proposals, asOfBlock, source }: { proposals: Proposal[]; asOfBlock: string; source: string }) {
   if (proposals.length === 0) {
-    return <div className="empty-state">Chưa có đề xuất trong dữ liệu fixture.</div>;
+    return <div className="empty-state">Chưa có đề xuất trong snapshot này.</div>;
   }
   const counts = proposalStatuses.map((status, index) => ({
     status, count: proposals.filter((item) => item.state === status).length, color: palette[index],
@@ -26,15 +27,15 @@ function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asO
   }, { offset: 0, values: [] }).values;
 
   return <>
-    <div className="stats-grid" aria-label="Chỉ số từ dữ liệu fixture">
-      <div className="stat-card stat-card--amber"><span className="stat-card__icon" aria-hidden="true">◇</span><p className="stat-card__label">Tổng đề xuất</p><p className="stat-card__value">{total}</p><p className="stat-card__hint">Trong snapshot BE01</p></div>
+    <div className="stats-grid" aria-label="Chỉ số từ snapshot đang xem">
+      <div className="stat-card stat-card--amber"><span className="stat-card__icon" aria-hidden="true">◇</span><p className="stat-card__label">Tổng đề xuất</p><p className="stat-card__value">{total}</p><p className="stat-card__hint">Trong snapshot {source}</p></div>
       <div className="stat-card stat-card--green"><span className="stat-card__icon" aria-hidden="true">↗</span><p className="stat-card__label">Đang bỏ phiếu</p><p className="stat-card__value">{active}</p><p className="stat-card__hint">Trạng thái Active</p></div>
       <div className="stat-card stat-card--blue"><span className="stat-card__icon" aria-hidden="true">✓</span><p className="stat-card__label">Đã thực thi</p><p className="stat-card__value">{executed}</p><p className="stat-card__hint">Trạng thái Executed</p></div>
       <div className="stat-card stat-card--sand"><span className="stat-card__icon" aria-hidden="true">◎</span><p className="stat-card__label">Tổng BUD được đề xuất</p><p className="stat-card__value stat-card__value--amount" title={formatBUD(amount.toString())}>{formatCompactBUD(amount.toString())}</p><p className="stat-card__hint">Không phải số dư Treasury</p></div>
     </div>
     <div className="overview-grid">
       <section className="panel status-panel">
-        <div className="panel__header"><div><p className="section-kicker">DỮ LIỆU TỔNG HỢP</p><h2>Trạng thái đề xuất</h2><p>Số lượng theo từng trạng thái tại block {asOfBlock}.</p></div></div>
+        <div className="panel__header"><div><p className="section-kicker">DỮ LIỆU SNAPSHOT</p><h2>Trạng thái đề xuất</h2><p>Số lượng theo từng trạng thái tại block {asOfBlock}.</p></div></div>
         <div className="status-bars">
           {counts.map(({ status, count, color }) => <div className="status-bar" key={status}>
             <div className="status-bar__label"><span>{status}</span><strong>{count}</strong></div>
@@ -43,7 +44,7 @@ function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asO
         </div>
       </section>
       <section className="panel distribution-panel">
-        <div className="panel__header"><div><p className="section-kicker">SNAPSHOT BE01</p><h2>Phân bổ trạng thái</h2><p>Đếm theo từng giai đoạn quản trị.</p></div></div>
+        <div className="panel__header"><div><p className="section-kicker">SNAPSHOT {source}</p><h2>Phân bổ trạng thái</h2><p>Đếm theo từng giai đoạn quản trị.</p></div></div>
         <div className="distribution-panel__body">
           <div className="donut" style={{ background: `conic-gradient(${segments.join(", ")})` }} role="img" aria-label={counts.map((item) => `${item.status}: ${item.count}`).join(", ")}><span><strong>{total}</strong><small>đề xuất</small></span></div>
           <ul className="donut-legend">{counts.map(({ status, count, color }) => <li key={status}><span className="donut-legend__name"><i style={{ backgroundColor: color }} />{status}</span><strong>{Math.round(count / total * 100)}%</strong></li>)}</ul>
@@ -58,17 +59,19 @@ function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asO
       <section className="panel process-panel">
         <div className="panel__header"><div><p className="section-kicker">QUY TRÌNH</p><h2>Từ đề xuất tới chi quỹ</h2></div></div>
         <ol className="process-list"><li><span>01</span><div><strong>Tạo đề xuất</strong><p>Nêu khoản chi BUD và địa chỉ nhận.</p></div></li><li><span>02</span><div><strong>Bỏ phiếu</strong><p>Thành viên quyết định trong kỳ voting.</p></div></li><li><span>03</span><div><strong>Queue và execute</strong><p>Giao dịch chỉ chạy sau timelock khi gọi execute.</p></div></li></ol>
-        <p className="process-panel__note">Các thao tác on-chain sẽ được tích hợp sau.</p>
+        <p className="process-panel__note">Ví ký qua Governor; dữ liệu chỉ cập nhật sau khi indexer xuất bản snapshot mới.</p>
       </section>
     </div>
   </>;
 }
 
 function DashboardPage() {
-  const { state, retry, simulateError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing } = useProposalFixtures();
   return <div>
     <div className="page-heading page-heading--dashboard"><div><p className="page-heading__eyebrow">TỔNG QUAN / DAO BUDGET</p><h1>Ngân sách DAO</h1><p className="page-heading__description">Theo dõi đề xuất và tiến trình quản trị trong một không gian rõ ràng, minh bạch.</p></div><Link to="/proposals" className="button-primary">Khám phá đề xuất <span aria-hidden="true">↗</span></Link></div>
-    {state.status === "success" ? <DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} /> : <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />}
+    <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+    {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
+    {state.status === "success" ? <><DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} source={state.collection.context.dataKind === "chain" ? "API BE05" : "BE01"} /><TreasurySection context={state.collection.context} onConfirmed={retry} /></> : <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />}
   </div>;
 }
 

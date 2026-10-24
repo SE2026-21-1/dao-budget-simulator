@@ -49,9 +49,10 @@ function ProposalListPage() {
           </div>
         </div>
       </section>
+      <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
 
       {state.status === "success" && <p className="result-count" aria-live="polite">
-        {filteredProposals.length} đề xuất · Fixture TV2 BE01 · Block {state.collection.context.asOfBlock}
+        {filteredProposals.length} đề xuất · {state.collection.context.dataKind === "chain" ? "API BE05" : "Fixture TV2 BE01"} · Block {state.collection.context.asOfBlock}
       </p>}
       {state.status !== "success" ? <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} /> : <>
       <div className="proposal-list">
@@ -59,7 +60,7 @@ function ProposalListPage() {
           <article className="proposal-row" key={proposal.proposalId}>
             <div className="proposal-row__main">
               <span className="eyebrow" title={proposal.proposalId}>Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</span>
-              <h2 className="proposal-row__title">{proposal.title}</h2>
+              <h2 className="proposal-row__title">{proposal.title ?? `Proposal ${proposal.proposalId}`}</h2>
               <p className="proposal-row__meta">Người nhận: {proposal.recipient}</p>
             </div>
             <div className="proposal-row__side">

@@ -19,7 +19,7 @@ Phạm vi FR04, FR09, FR11, FR13; liên quan #18.
 - [x] Hồi quy BE02/BE03: 86 unit/CLI và 21 + 16 PostgreSQL PASS.
 - [x] GitHub Actions [run 40077920715](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40077920715) PASS trên commit code f1cbbbbe; BE04 projection/atomic PostgreSQL và live reconciliation đều PASS. CI theo dõi head PR mới nhất.
 - [ ] TV1/TV4 peer review và chạy runner chuẩn.
-- [x] Publish nhánh BE04 và [draft PR #23](https://github.com/SE2026-21-1/dao-budget-simulator/pull/23) kế thừa BE03; chưa merge.
+- [x] Publish nhánh BE04 và [PR #23](https://github.com/SE2026-21-1/dao-budget-simulator/pull/23) kế thừa BE03; ready for review, TV1/TV4 được request, chưa merge.
 
 Nội dung và phạm vi review dự kiến nằm tại [be04-pr.md](be04-pr.md).
 Trạng thái peer review/CI cần kiểm tra trên PR; evidence local không thay thế

@@ -1,0 +1,36 @@
+{
+  "format": "dao-budget-local-governance-v1",
+  "sourceCommit": "1ffbc3b8a283a7bdd346ecc3205909fa358c0590",
+  "chainId": "31337",
+  "deploymentName": "be06-live-anvil",
+  "scanFromBlock": "1",
+  "confirmations": "2",
+  "batchSize": "7",
+  "contracts": {
+    "governor": {
+      "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+      "deploymentBlock": "5",
+      "abiVersion": "oz-5.4.0-governor"
+    },
+    "timelock": {
+      "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "deploymentBlock": "4",
+      "abiVersion": "oz-5.4.0-timelock"
+    },
+    "treasury": {
+      "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "deploymentBlock": "3",
+      "abiVersion": "sc01-itreasury-v1"
+    },
+    "budget_token": {
+      "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "deploymentBlock": "2",
+      "abiVersion": "oz-5.4.0-erc20"
+    },
+    "GOV": {
+      "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "deploymentBlock": "1",
+      "abiVersion": "sc02-governance-token-v1"
+    }
+  }
+}

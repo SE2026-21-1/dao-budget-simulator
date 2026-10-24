@@ -1,0 +1,65 @@
+Command: npm run test:be03:db
+Exit code: 0
+
+
+> dao-budget-simulator@0.0.0 test:be03:db
+> powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1
+
+The files belonging to this database system will be owned by user "Cuongdz".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+creating directory C:/Users/Cuongdz/AppData/Local/Temp/dao-be03-pg-b31ca3bbabe748b6b966a973c18e6e8a/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... windows
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... Asia/Bangkok
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    ^"C^:^\Program^ Files^\PostgreSQL^\18^\bin^\pg^_ctl^" -D ^"C^:^\Users^\Cuongdz^\AppData^\Local^\Temp^\dao^-be03^-pg^-b31ca3bbabe748b6b966a973c18e6e8a^\data^" -l logfile start
+
+waiting for server to start.... done
+server started
+CREATE DATABASE
+▶ BE03 isolated real PostgreSQL / child process crash and restart
+  ✔ fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash (62.1503ms)
+  ✔ K=0 indexes head; no safe block leaves checkpoint absent (51.9376ms)
+  ✔ PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint (44.0573ms)
+  ✔ missing required source or altered manifest/K refuses checkpoint adoption, including idle start (37.171ms)
+  ✔ legacy unscoped checkpoint is refused (27.5792ms)
+  ✔ source failure and missing scan evidence never advance checkpoint (13.8925ms)
+  ✔ SQL failure after inserting a header and first event rolls back entire batch/checkpoint (55.9716ms)
+  ✔ COMMIT itself fails: no successful batch notification and no SQL data/checkpoint (19.1429ms)
+  ✔ same event key changed contents is a conflict; prior committed range survives (23.1719ms)
+  ✔ repeated range, retries and restart preserve event IDs and exact uint256 payload (49.3636ms)
+  ✔ hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint (28.4935ms)
+  ✔ competing writers cannot rewind or commit beyond complete coverage; stale writer must restart (82.1199ms)
+  ✔ decode error and unknown topic are durable and remain visible after idle restart (29.6014ms)
+  ✔ legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params (34.9778ms)
+{"crashEvidence":"beforeCommit","beforeRestart":{"blocks":0,"events":0,"checkpoint":null},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at beforeCommit: SQL visibility and restart exactly once (1428.7725ms)
+{"crashEvidence":"afterCommit","beforeRestart":{"blocks":2,"events":1,"checkpoint":"101"},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at afterCommit: SQL visibility and restart exactly once (1707.0542ms)
+✔ BE03 isolated real PostgreSQL / child process crash and restart (3931.6381ms)
+ℹ tests 16
+ℹ suites 1
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4796.4902
+PASS: BE01 migration/constraints and BE03 storage on isolated real PostgreSQL.
+waiting for server to shut down.... done
+server stopped
+Temporary cluster and logs retained at: C:\Users\Cuongdz\AppData\Local\Temp\dao-be03-pg-b31ca3bbabe748b6b966a973c18e6e8a

@@ -1,0 +1,12 @@
+{
+  "label": "backend-build",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "node_modules/typescript/bin/tsc",
+    "-p",
+    "tsconfig.build.json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "backend-build.txt"
+}

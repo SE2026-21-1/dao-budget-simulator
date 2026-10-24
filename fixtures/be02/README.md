@@ -1,5 +1,13 @@
 # BE02 synthetic log fixtures
 
+BE03 regression adds a twelfth supported event, `VoteCastWithParams`, in
+`tests/indexer/decoder.test.ts`. Its synthetic log is encoded from the handed-over
+`shared/abi/BudgetGovernor.json`, separately from the registry, and checks all six
+fields, large uint256, Unicode reason and arbitrary params bytes. It is NOT a
+mined receipt. The original eleven file vectors below remain unchanged. The
+historical statement about absent SC06 describes the BE02 baseline; current Dev
+also has TV4 saved local receipts/ABIs, which are not a fresh running deployment.
+
 Every log in this directory is **synthetic**. Addresses, transaction hashes, block hashes and coordinates are artificial. These files are neither mined receipts nor evidence that BE02 has passed SC06 acceptance. No SC06 implementation ABI or chain receipt was present on the current Dev baseline.
 
 `events.json` contains one RPC-shaped log for each of the eleven supported events. It exercises indexed fields, non-indexed fields, dynamic arrays/bytes/strings, Unicode, and uint256 values exceeding JavaScript's safe integer range. Decimal ABI integers are expected as strings. Regenerate deterministically with `npx tsx fixtures/be02/generate.ts`; the generator does not touch BE01 fixtures.

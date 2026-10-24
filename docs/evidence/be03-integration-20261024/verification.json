@@ -1,0 +1,875 @@
+{
+  "recordedAt": "2026-10-24T03:44:57.803Z",
+  "status": "PASS",
+  "scope": "BE03 raw ingestion/checkpoint/resume plus currently supported business event subset on a fresh chain; not all-topic decode completeness",
+  "historicalBlocked": [
+    {
+      "path": "../be03-20261024/verification.json",
+      "status": "BLOCKED",
+      "preserved": true
+    },
+    {
+      "path": "../be03-review-20261024/verification.json",
+      "status": "BLOCKED",
+      "preserved": true
+    }
+  ],
+  "source": {
+    "branch": "feature/tv2-be03",
+    "head": "1a4c262f387fa7480020da17dde5d608a5193eaf",
+    "workingTree": "Uncommitted BE03 and pre-existing CRLF checkout changes; initial-status.txt and final-status.txt",
+    "hashEvidence": "final-source-verification.json"
+  },
+  "toolchain": {
+    "wsl": "wsl-provenance.json",
+    "compiler": "solc-provenance.json",
+    "effectiveConfig": "forge-config.json",
+    "runtime": {
+      "node": "v24.15.0",
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "platform": "win32",
+      "anvil": {
+        "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+        "sha256": "5c2217d266135a6fbe5faaccccb1e9eb2ddc1d06f8aabeef5fdb16d9846e4880",
+        "output": "anvil Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+      },
+      "cast": {
+        "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+        "sha256": "b2541a63789931fc4c170e2502c16c3be259f2da4daba1a8d05ea5cfa7729baa",
+        "output": "cast Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+      },
+      "postgres": {
+        "executable": "C:\\Program Files\\PostgreSQL\\18\\bin\\postgres.exe",
+        "sha256": "ed1fa062cea44b0d200d2e10099ebc85faff7ef27df75a2e813ffd56d8a60868",
+        "output": "postgres (PostgreSQL) 18.4"
+      },
+      "sourceCommit": "1a4c262f387fa7480020da17dde5d608a5193eaf"
+    }
+  },
+  "artifact": {
+    "status": "PASS",
+    "cacheSourceCount": 83,
+    "artifactCount": 98,
+    "buildInfoCount": 1,
+    "jsonByteIdenticalCount": 99,
+    "forceRebuildExitCode": 0,
+    "submodules": "submodules-recursive.json",
+    "provenance": "artifact-verification.json",
+    "comparison": "rebuild-comparison.json",
+    "warnings": "forge-rebuild.txt; unchanged source/config; no warning suppression"
+  },
+  "counts": [
+    {
+      "label": "be03-unit-decoder",
+      "tests": 47,
+      "pass": 47,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "label": "be03-postgres-regression",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0
+    }
+  ],
+  "provenanceGuardCases": {
+    "pass": 4,
+    "fail": 0,
+    "evidence": "provenance-guards.json",
+    "classification": "Synthetic RPC preflight, real deploy helper source checking, no real send"
+  },
+  "integration": {
+    "status": "PASS",
+    "manifest": "manifest.json",
+    "config": "config.json",
+    "report": "integration.json",
+    "anvil": {
+      "command": [
+        "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "59319",
+        "--chain-id",
+        "31337",
+        "--hardfork",
+        "osaka",
+        "--timestamp",
+        "1800000000",
+        "--silent"
+      ],
+      "pid": 23992,
+      "rpcUrl": "http://127.0.0.1:59319",
+      "metadata": {
+        "clientVersion": "anvil/v1.7.1",
+        "clientSemver": "1.7.1+4072e48705.1778226879.dist",
+        "clientCommitSha": "4072e48705af9d93e3c0f6e29e93b5e9a40caed8",
+        "chainId": 31337,
+        "instanceId": "0xc5a7d26f82b7af8074e60f68964a0638a9bed4d1f0ea7114bfbdf8c910d23a48",
+        "latestBlockNumber": 0,
+        "latestBlockHash": "0xbf48bc3c82308c9f095294b82fb69a9d32425e21de16ef725a531fd6ff2d8c9c",
+        "forkedNetwork": null,
+        "snapshots": {}
+      }
+    },
+    "postgres": {
+      "root": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n",
+      "cluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data",
+      "address": "127.0.0.1",
+      "port": 59295,
+      "user": "be03_test",
+      "database": "be03_live",
+      "separateRegressionDatabase": "be03_test",
+      "auth": "trust; owned temporary loopback test cluster only",
+      "identity": [
+        {
+          "current_database": "be03_live",
+          "current_user": "be03_test",
+          "address": "127.0.0.1",
+          "port": 59295,
+          "version": "PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35227, 64-bit"
+        }
+      ]
+    },
+    "governance": {
+      "proposalId": "23280058885649761329027891407225596706091644280968121876110651573659979035665",
+      "requestId": "0xd16572bca40b955778618f519e1c0986825e682202d7067b70f98ffa8cd37973",
+      "snapshot": "1800000063",
+      "deadline": "1800000363",
+      "eta": "1800000484",
+      "executeTransactionHash": "0x779d58588bc9b541ce4e3301291772dfcc3b89f5d574ebc66ebc7674dc8c4a72",
+      "state": "7",
+      "paidRequests": true,
+      "recipientBUD": "1000000000000000000000",
+      "treasuryBUD": "9000000000000000000000"
+    },
+    "withParamsTransaction": "0x8b10edb9e325f80ae20340ef2826a8490cc1b477924a62f063f74ca2a191678c",
+    "withParamsEvidence": "withparams-receipt-decoder.json",
+    "k2": [
+      {
+        "followingBlocks": 0,
+        "head": "21",
+        "safeBlock": "19",
+        "checkpoint": {
+          "deployment_id": "1",
+          "block_number": "19",
+          "block_hash": "0xe8a6a3a53c657ddc452229049f08f49c6351bba743ff50b6d1a7567e0a6426b8",
+          "header_hash": "0xe8a6a3a53c657ddc452229049f08f49c6351bba743ff50b6d1a7567e0a6426b8",
+          "observed_head_block": "21",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "withParamsRows": 0
+      },
+      {
+        "followingBlocks": 1,
+        "head": "22",
+        "safeBlock": "20",
+        "checkpoint": {
+          "deployment_id": "1",
+          "block_number": "20",
+          "block_hash": "0xdd5609b4618b55a0dcc1f4baf159192cc923893115776e772d4d7535e548a276",
+          "header_hash": "0xdd5609b4618b55a0dcc1f4baf159192cc923893115776e772d4d7535e548a276",
+          "observed_head_block": "22",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "withParamsRows": 0
+      },
+      {
+        "followingBlocks": 2,
+        "head": "23",
+        "safeBlock": "21",
+        "checkpoint": {
+          "deployment_id": "1",
+          "block_number": "21",
+          "block_hash": "0xff4ca7e43796eaf9ca474bca54499551ff572190d8764205fd8df4ed2dd5d0b0",
+          "header_hash": "0xff4ca7e43796eaf9ca474bca54499551ff572190d8764205fd8df4ed2dd5d0b0",
+          "observed_head_block": "23",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "withParamsRows": 1
+      }
+    ],
+    "crashResume": [
+      {
+        "point": "beforeCommit",
+        "beforeDigest": "fcd2a2bf2190343f215930a4ce72e1d4ca3215c4f22764434b69aea06cd44ba1",
+        "afterKillDigest": "fcd2a2bf2190343f215930a4ce72e1d4ca3215c4f22764434b69aea06cd44ba1",
+        "afterResumeDigest": "808fae7e32036cd755253b30be0751b0af1daf3909bacf27589eaf5cfeaa0fd0",
+        "checkpointBefore": {
+          "deployment_id": "1",
+          "block_number": "26",
+          "block_hash": "0x4bbf71cb001f16e2090da5cd57db1db9d9cda2d40a696f3a3bd7d99b3bda5d7d",
+          "header_hash": "0x4bbf71cb001f16e2090da5cd57db1db9d9cda2d40a696f3a3bd7d99b3bda5d7d",
+          "observed_head_block": "28",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "checkpointAfterKill": {
+          "deployment_id": "1",
+          "block_number": "26",
+          "block_hash": "0x4bbf71cb001f16e2090da5cd57db1db9d9cda2d40a696f3a3bd7d99b3bda5d7d",
+          "header_hash": "0x4bbf71cb001f16e2090da5cd57db1db9d9cda2d40a696f3a3bd7d99b3bda5d7d",
+          "observed_head_block": "28",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "checkpointAfterResume": {
+          "deployment_id": "1",
+          "block_number": "29",
+          "block_hash": "0x712532f3c7a494db2e44a86cde926ce68375fbee16c2fe7dd7088c8bfd3a7185",
+          "header_hash": "0x712532f3c7a494db2e44a86cde926ce68375fbee16c2fe7dd7088c8bfd3a7185",
+          "observed_head_block": "31",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "restartCommittedBatches": 1,
+        "successOutputBeforeKill": "",
+        "stderrBeforeKill": ""
+      },
+      {
+        "point": "afterCommit",
+        "beforeDigest": "808fae7e32036cd755253b30be0751b0af1daf3909bacf27589eaf5cfeaa0fd0",
+        "afterKillDigest": "6e7f8a51cf3c573de66b3b7a2792dd1a8df92f5e145bab6debef000c361d4edf",
+        "afterResumeDigest": "6e7f8a51cf3c573de66b3b7a2792dd1a8df92f5e145bab6debef000c361d4edf",
+        "checkpointBefore": {
+          "deployment_id": "1",
+          "block_number": "29",
+          "block_hash": "0x712532f3c7a494db2e44a86cde926ce68375fbee16c2fe7dd7088c8bfd3a7185",
+          "header_hash": "0x712532f3c7a494db2e44a86cde926ce68375fbee16c2fe7dd7088c8bfd3a7185",
+          "observed_head_block": "31",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "checkpointAfterKill": {
+          "deployment_id": "1",
+          "block_number": "32",
+          "block_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+          "header_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+          "observed_head_block": "34",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "checkpointAfterResume": {
+          "deployment_id": "1",
+          "block_number": "32",
+          "block_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+          "header_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+          "observed_head_block": "34",
+          "confirmation_depth": 2,
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "sync_status": "syncing",
+          "last_error_code": "DECODE_INCOMPLETE"
+        },
+        "restartCommittedBatches": 0,
+        "successOutputBeforeKill": "",
+        "stderrBeforeKill": ""
+      }
+    ],
+    "sameHeight": {
+      "H": "32",
+      "blockHash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+      "head": "34",
+      "checkpoint": {
+        "deployment_id": "1",
+        "block_number": "32",
+        "block_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+        "header_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+        "observed_head_block": "34",
+        "confirmation_depth": 2,
+        "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+        "sync_status": "syncing",
+        "last_error_code": "DECODE_INCOMPLETE"
+      },
+      "headerCount": 31,
+      "receiptLogCount": 30,
+      "rawEventCount": 30,
+      "distinctEventCount": 30,
+      "decodedCount": 14,
+      "unknownBootstrapCount": 16,
+      "decodeErrorCount": 0,
+      "missingEvents": 0,
+      "duplicateEvents": 0,
+      "rawMismatches": 0,
+      "supportedDecodeMismatches": 0,
+      "finalDigest": "6e7f8a51cf3c573de66b3b7a2792dd1a8df92f5e145bab6debef000c361d4edf",
+      "receiptEvidence": "canonical-rpc-at-H.json",
+      "sqlEvidence": "sql-final.json",
+      "sqlQueries": {
+        "headers": "SELECT block_number::text,block_hash,parent_hash,block_timestamp::text FROM indexed_blocks ORDER BY indexed_blocks.block_number",
+        "events": "SELECT raw_event_id::text,chain_id::text,contract_role,contract_address,block_number::text,block_hash,transaction_hash,transaction_index::text,log_index::text,topics::text[],data,removed,event_name,decoded_payload,rpc_log,decode_status,decode_error_code FROM raw_events ORDER BY raw_events.block_number,raw_events.transaction_index,raw_events.log_index",
+        "checkpoint": "SELECT c.deployment_id::text,c.block_number::text,c.block_hash,b.block_hash AS header_hash,c.observed_head_block::text,c.confirmation_depth,c.source_scope,c.sync_status,c.last_error_code FROM checkpoints c JOIN indexed_blocks b USING(deployment_id,block_number,block_hash)"
+      }
+    },
+    "idleRerunCount": 2,
+    "rawAndDecodedSnapshotStableAfterIdleAndRedecode": true
+  },
+  "decodeCompleteness": {
+    "decodeComplete": false,
+    "cliExitCode": 2,
+    "checkpointLastErrorCode": "DECODE_INCOMPLETE",
+    "supportedBusinessEventsDecoded": 14,
+    "unsupportedBootstrapEvents": 16,
+    "decodeErrors": 0,
+    "classification": [
+      {
+        "event": "treasury:RoleGranted:0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+        "count": 3
+      },
+      {
+        "event": "timelock:RoleGranted:0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+        "count": 5
+      },
+      {
+        "event": "timelock:MinDelayChange:0x11c24f4ead16507c69ac467fbd5e4eed5fb5c699626d2cc6d66421df253886d5",
+        "count": 1
+      },
+      {
+        "event": "governor:VotingDelaySet:0xc565b045403dc03c2eea82b81a0465edad9e2e7fc4d97e11421c209da93d7a93",
+        "count": 1
+      },
+      {
+        "event": "governor:VotingPeriodSet:0x7e3f7f0708a84de9203036abaa450dccc85ad5ff52f78c170f3edb55cf5e8828",
+        "count": 1
+      },
+      {
+        "event": "governor:ProposalThresholdSet:0xccb45da8d5717e6c4544694297c4ba5cf151d455c9bb0ed4fc7a38411bc05461",
+        "count": 1
+      },
+      {
+        "event": "governor:QuorumNumeratorUpdated:0x0553476bf02ef2726e8ce5ced78d63e26e602e4a2257b1f559418e24b4633997",
+        "count": 1
+      },
+      {
+        "event": "governor:TimelockChange:0x08f74ea46ef7894f65eabfb5e6e695de773a000b47c529ab559178069b226401",
+        "count": 1
+      },
+      {
+        "event": "treasury:RoleRevoked:0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b",
+        "count": 1
+      },
+      {
+        "event": "timelock:RoleRevoked:0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b",
+        "count": 1
+      }
+    ],
+    "interpretation": "Expected unsupported bootstrap administrative topics remain immutable raw. Raw/checkpoint acceptance passes; this does not claim decodeComplete=true."
+  },
+  "codeChanges": [
+    {
+      "path": "scripts/governance_local.mjs:129",
+      "reason": "Original raw keccak check rejected Foundry CRLF-normalized compiler sources. Preserve original SHA-256 and record exact compilerSourceNormalizations.",
+      "failureEvidence": "initial-source-hash-failure-integration.json",
+      "guardEvidence": "provenance-guards.json"
+    },
+    {
+      "path": "tests/indexer/checkpoint-storage.test.ts:187",
+      "reason": "100 rapid SQL observations could finish before the competing backend became visible; use a 5-second deadline, retain real SQL lock proof and record pg_blocking_pids.",
+      "failureEvidence": "concurrency-attempt-be03-postgres-regression.txt",
+      "passEvidence": "be03-postgres-regression.txt"
+    }
+  ],
+  "harnessAttempts": [
+    {
+      "evidence": "preprocessor-check-attempt-integration.json",
+      "resolution": "Distinguish Foundry-generated input from original tests; pinned force rebuild reproduces artifacts byte-for-byte."
+    },
+    {
+      "evidence": "pg-pipe-attempt-integration.json",
+      "resolution": "pg-pipe-attempt-resolution.json; Windows pg_ctl event exit plus close owned readers. Owned cluster stopped explicitly."
+    }
+  ],
+  "cleanup": {
+    "anvil": {
+      "stopped": [
+        null,
+        "SIGTERM"
+      ],
+      "rpcUnavailable": true
+    },
+    "postgres": {
+      "stopped": true,
+      "retainedCluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+    }
+  },
+  "finalChecks": {
+    "gitDiffCheckExit": 0,
+    "gitDiffCheckOutput": "",
+    "newSourceDocTrailingWhitespace": [],
+    "nodeSyntaxChecks": "exit 0 for scripts/governance_local.mjs, run-integration.mjs, check-provenance-guards.mjs"
+  },
+  "remaining": [
+    "16 unsupported bootstrap administrative raw topics remain unknown; CLI exit 2, no business event unknown/decode_error.",
+    "TV1/TV4 peer review not performed in this session.",
+    "No Linux PostgreSQL runner execution."
+  ],
+  "excluded": [
+    "BE04/projection/API/rebuild/benchmark",
+    "automatic reorg rollback",
+    "testnet or production deployment"
+  ],
+  "gitActions": {
+    "staged": false,
+    "committed": false,
+    "pushed": false,
+    "prOpened": false,
+    "workflowDispatched": false
+  },
+  "commands": [
+    {
+      "label": "backend-build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.build.json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "backend-build.txt"
+    },
+    {
+      "label": "backend-typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "backend-typecheck.txt"
+    },
+    {
+      "label": "be03-unit-decoder",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/indexer/syncer.test.ts",
+        "tests/indexer/decoder.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "be03-unit-decoder.txt"
+    },
+    {
+      "label": "pg-initdb",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\initdb.exe",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data",
+        "-U",
+        "be03_test",
+        "--auth=trust",
+        "--encoding=UTF8",
+        "--locale=C"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-initdb.txt"
+    },
+    {
+      "label": "pg-start",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "start",
+        "-w",
+        "-t",
+        "30",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data",
+        "-l",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\postgres.log",
+        "-o",
+        "-h 127.0.0.1 -p 59295"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-start.txt"
+    },
+    {
+      "label": "be03-postgres-regression",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/indexer/checkpoint-storage.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "be03-postgres-regression.txt"
+    },
+    {
+      "label": "cast-chain-id",
+      "command": [
+        "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+        "chain-id",
+        "--rpc-url",
+        "http://127.0.0.1:59319"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "cast-chain-id.txt"
+    },
+    {
+      "label": "repository-deploy",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/deploy_local.mjs",
+        "--rpc",
+        "http://127.0.0.1:59319",
+        "--output",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\manifest.json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "repository-deploy.txt"
+    },
+    {
+      "label": "k2-0-following",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "k2-0-following.txt"
+    },
+    {
+      "label": "k2-1-following",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "k2-1-following.txt"
+    },
+    {
+      "label": "k2-2-following",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "k2-2-following.txt"
+    },
+    {
+      "label": "execute-unconfirmed",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "execute-unconfirmed.txt"
+    },
+    {
+      "label": "execute-confirmed",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "execute-confirmed.txt"
+    },
+    {
+      "label": "beforeCommit-restart",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "beforeCommit-restart.txt"
+    },
+    {
+      "label": "afterCommit-restart",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "afterCommit-restart.txt"
+    },
+    {
+      "label": "idle-rerun-1",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "idle-rerun-1.txt"
+    },
+    {
+      "label": "idle-rerun-2",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--sync"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "idle-rerun-2.txt"
+    },
+    {
+      "label": "offline-redecode",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "indexer/cli.ts",
+        "--config",
+        "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+        "--redecode"
+      ],
+      "exitCode": 2,
+      "signal": null,
+      "log": "offline-redecode.txt"
+    },
+    {
+      "label": "pg-stop",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "stop",
+        "-w",
+        "-t",
+        "30",
+        "-m",
+        "fast",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-stop.txt"
+    },
+    {
+      "label": "pg-status-after-stop",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "status",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+      ],
+      "exitCode": 3,
+      "signal": null,
+      "log": "pg-status-after-stop.txt"
+    }
+  ],
+  "rerun": {
+    "wslBuild": "export PATH=/home/cuongdz/.foundry/bin:$PATH; forge build --force",
+    "windowsRuntime": "node --import tsx docs/evidence/be03-integration-20261024/run-integration.mjs",
+    "guards": "node docs/evidence/be03-integration-20261024/check-provenance-guards.mjs",
+    "requirements": "Windows Node/PostgreSQL paths and compatible Anvil/Cast binaries recorded in scripts; fresh cluster and Anvil are owned by runner; out/ built and verified with WSL first."
+  },
+  "historicalEvidenceHashes": {
+    "docs/evidence/be03-20261024/be01-fixtures.txt": "6a50f641b4e4a791a5670439524fdc7a0666a0e91628bb16b2686015763338e5",
+    "docs/evidence/be03-20261024/be02-db.txt": "7cd24274de21ec8af1e766c2d9e477aef2f3d94f4fee3fb305cce40c62aa9761",
+    "docs/evidence/be03-20261024/be02.txt": "7515d4b01bc31abece99f18be2ae3a9e616b0a8fb9c166a1cb1e2d6ad22879c6",
+    "docs/evidence/be03-20261024/be03-db.txt": "83974fad8a9ac8f488316b39436169342b07f6a65952c3e90841e86131a57d4a",
+    "docs/evidence/be03-20261024/be03.txt": "81af0b7e8d2129f0cf4af6815a6bc235d22d012fe27397f9efea6677b9683e43",
+    "docs/evidence/be03-20261024/build.txt": "3e6b2e7b703370fd8dc03813d4e8295e468bb8e0f78a31fe6f25f20f6a580cbf",
+    "docs/evidence/be03-20261024/integration-blocked.txt": "a8a3f5bdb009675e652821ba068cb31f3c11a13eca835be5f73ab5df65cb1b5f",
+    "docs/evidence/be03-20261024/typecheck.txt": "ea5c864fdad9acdcf18f3ced55e38f183a9599bdf485d771ebd86c9b43b06338",
+    "docs/evidence/be03-20261024/verification.json": "994cb091af15006ebe36f9e481828e5639a6c4a0b525dd9d74a08895b631abed",
+    "docs/evidence/be03-20261024/whitespace.txt": "f6b9c0ac4bdb4dc943f7fb067ac8ac82b64f38f54859e3f9396a54bac96267c0",
+    "docs/evidence/be03-20261024/withparams-regression.json": "4d5bf39dc7e4c026d6a6a67ec6a746606c82ee5e5c2360cb61457de571e83da3",
+    "docs/evidence/be03-review-20261024/anvil-preflight-command.json": "6ad153bde90a2ee434fcb1dcefaf64a1f8c70088397c8ed2c767668f496310c9",
+    "docs/evidence/be03-review-20261024/anvil-preflight-sandbox.json": "65d3395f2851a308a9c56d496d90271af8bd7c8c06d73abe27f60d31c2e9bb1f",
+    "docs/evidence/be03-review-20261024/anvil-preflight.json": "f011aaf1452ac39b0b9b545516b1a0c37ba99c34b91d3a1df0f554046d6e478f",
+    "docs/evidence/be03-review-20261024/be03-db-escalated.json": "8587a2fa6f43f7b78048b972bf202e8f9b4e29c88625618fc5c8dca6c48796c5",
+    "docs/evidence/be03-review-20261024/be03-db-escalated.txt": "86d7c78156673dcc3efe69e522820cbaa3f2d7d3e63adab6850f94a52cdb3599",
+    "docs/evidence/be03-review-20261024/be03-db.json": "b47dc83eb43c164d195b6f922e8e2acd8fbd320a1919f37f4de887a8613c0a13",
+    "docs/evidence/be03-review-20261024/be03-db.txt": "8ec468a40450bbd34f6f753144891de151bb078200a02e8b5aac47ebbce2b837",
+    "docs/evidence/be03-review-20261024/be03-unit.json": "9f9fbbb6edeca880925321eedca7d05da72617bf92f379cbbcf8bf638a7601b9",
+    "docs/evidence/be03-review-20261024/be03-unit.txt": "e83af8e037c77b326f72421606ff6f400c6ae9fd8e1a7525d69ae7a463e9928f",
+    "docs/evidence/be03-review-20261024/build.json": "b472f39ffcf78e2a560eb393ece98810461a638fed918043a509ac46f721b270",
+    "docs/evidence/be03-review-20261024/build.txt": "ca4eb94aeb52b4c4fc61466f0957ebcf98502397c97d85f4993571d91c9a9186",
+    "docs/evidence/be03-review-20261024/cast-package.json": "5d811f6d29d30c21f0b8d3d67e3ccfc548e9e230c6f278d1b80d1446f592aa09",
+    "docs/evidence/be03-review-20261024/cast-package.txt": "c6767aade768a7f1489dea7731023c92d5e861d6344800f71a063b3197c04f7c",
+    "docs/evidence/be03-review-20261024/cast-probe.json": "76bd6512e70af5454f9a37590f6e699d54733272bdf2dc6679128877e1dae614",
+    "docs/evidence/be03-review-20261024/cleanup.json": "d26acb3132d0af70b0c29b520962f74498849d952945335f961074fe924e314b",
+    "docs/evidence/be03-review-20261024/commit-candidates.txt": "c05f5f4b74c5502ee25bde0df2c1eadf15aea94ce06022b0f22381414606f499",
+    "docs/evidence/be03-review-20261024/decoder.json": "699d3f5050b01d9f777dda54ef5b15038f214f0d630a106e0539075b8a6ac86f",
+    "docs/evidence/be03-review-20261024/decoder.txt": "dad571ec8eeef02c53c76facb212ac074c7086ad17854972676614d44b088527",
+    "docs/evidence/be03-review-20261024/environment-probes.json": "cfdbcecc19ac32c32e255d1f254705f690c6b339a0dfa8a0a895f7b0e60cbf61",
+    "docs/evidence/be03-review-20261024/forge-escalated.json": "cc6c39e681d830c37889466f8315347ee0e92972a4219e443fe4f7d2ddd21f30",
+    "docs/evidence/be03-review-20261024/foundry-probes.json": "46f5df8ea05d8aaf310da45bf679f95ce089bdccdada0beee5c436031a610f94",
+    "docs/evidence/be03-review-20261024/postgres-server.txt": "e2d4082c398dafcd9189816973787266c7c7b38412b29134124e7cb6bdacd2ef",
+    "docs/evidence/be03-review-20261024/probe-anvil.mjs": "6a873f20113f36893ef07f9e6c73de1d3f313ab91a937800c01f6282daf9b5ac",
+    "docs/evidence/be03-review-20261024/review.md": "aca30f52b429fb6006f910fe8a5a2c84d5a85bbd6115618908334e5a18bf3bfb",
+    "docs/evidence/be03-review-20261024/typecheck.json": "fc911ee296cd72c44d43cd2b253fc7684b553069808a7bb8ebd19d37655d7883",
+    "docs/evidence/be03-review-20261024/typecheck.txt": "07a0b1a4a94386e58e070fe9817cf7c332c96d17ba8561038a3b7a62de57bb30",
+    "docs/evidence/be03-review-20261024/verification.json": "e38ce213f1faaa60f196c303613615816ff6c19de9a12a3969bc13288c36cca2",
+    "docs/evidence/be03-review-20261024/whitespace.json": "dd96468db2dbce4905fe3c2b19baa5dd27b05c89f6e4c710a668a6c608ee878c"
+  },
+  "evidenceHashes": {
+    "afterCommit-restart.json": "4a8061505c7d5d8f19547d432448f49b938312da3ccb49720a58cdc9d8fa285d",
+    "afterCommit-restart.txt": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+    "anvil-output.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifact-verification.json": "476de2e5da9cc44df533a1349688a89a00ea2aacde3fab3cfa49409fbfa25777",
+    "backend-build.json": "7e2bcbbf09457cbbbb76e09bfa7cb383aaca0f223123d3aa9f6c44246067cece",
+    "backend-build.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-typecheck.json": "829672b9514aabf9220c415ea31784f53944661d3a5307f2524ccdeb2634ffc6",
+    "backend-typecheck.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "be03-postgres-regression.json": "e0c6bba2e1339d9544c8ed5cec20b439702b8086f0c4a9a8a4800cedeca25ca8",
+    "be03-postgres-regression.txt": "695edd39f8f6390a902328b2cbd3050e37b06dbcdd63a7610b9dd0d7a2d6567b",
+    "be03-unit-decoder.json": "3ad89c31bdf5d7a32a1270dc08b6cf66f9bc12065a9876bebc01ccae923f1312",
+    "be03-unit-decoder.txt": "0c7a8995e61a81858db883c28636ba9eb22b2db1f8665dbb485ed10e193b70b3",
+    "beforeCommit-restart.json": "1bd454d675564faa339050622901d3713b577ba501cdb30ffc91d77b76e20b43",
+    "beforeCommit-restart.txt": "ec7301c0b42a57e41133961652a129c00560399f770eaf05f596316255ece3cd",
+    "canonical-rpc-at-H.json": "ca334d05e88a1e6ef7babc049229cee32a2b7266a90be3c76f4da740495fea00",
+    "cast-chain-id.json": "a2aa37395600c8403f81753efeaa5f82b99a1ce100a03672280363fb260c5523",
+    "cast-chain-id.txt": "86a0c4f8d13f9617d4b7dbd87976fa11a69de64cf0ce47b13bd21ab7cf9f1aca",
+    "check-provenance-guards.mjs": "819ea6f52811f57040d887db32480fe9ee3349ae1a39fea4c0b88d8ec30641f1",
+    "concurrency-attempt-be03-postgres-regression.json": "22bd52986a310caf0966fe0c40bf1db40058a909e1ca29449447a88aba15c9dd",
+    "concurrency-attempt-be03-postgres-regression.txt": "42a0cfb72d883c09ed431fca3f4e14286d01a2b80169e6fee2f8f7bb9f00d82c",
+    "concurrency-attempt-integration.json": "efb4dfb365efb89b9c88a7397d90330c0b8aa80d5bc2640b26a5880a2b80fdbf",
+    "concurrency-attempt-postgres-server.txt": "83144e83e40462df2a69a114eab5c82fd4ed8ef75b26d4aa3af8a80edb9779e7",
+    "concurrency-attempt-run-output.txt": "560f6e660e8e7319545a274f925b0871a1f61939c09168a45ac01e42c9947f01",
+    "config.json": "1b543e26dee4f2d134e95150e984f2dcea4e5356b8c5da0d8e9bbcd4bfb33436",
+    "execute-confirmed.json": "c034eae96dfc0a5cacc43285abff1304777dbb2c65a79ed7c42b34280981cfc8",
+    "execute-confirmed.txt": "40b73b8267b141a345798b90117678b7f028a041b084e31291366d21e871299f",
+    "execute-unconfirmed.json": "ca02d5485432246b7a483d9a35d661c5c612336bdfb75560f99088202b3c639e",
+    "execute-unconfirmed.txt": "8d76a8a287feb177288ef53bb4e74489a3e7e0adc39d29af4a2a2c173622f48f",
+    "final-checks.json": "c84248b21b4f3ce42d4d1a7a2435507320ab6d4b63a8fb080b2cbe18b7a00d82",
+    "final-source-verification.json": "6deb8da2e91a43356f7fe67ff51009bf6d89504b129f3c7bd42b26d789d53665",
+    "final-status.txt": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+    "forge-build.txt": "0d85aca504ecb6b8d576c477c6adfce4e6d88536962cfffea8edfe3080cedc2d",
+    "forge-config.json": "1573bf6060a155055eba7afafaf1539af39387737dbb214d2dcfcc13fec0b468",
+    "forge-rebuild.txt": "d15f8f37757a5531a2ab773de566c8023cd717ae433ecd6d485733d5dbf1e3ed",
+    "idle-rerun-1.json": "e65e397f8b3a90528b871f123ce231086dbd9ce514a096b94979ecb05dcd7aca",
+    "idle-rerun-1.txt": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+    "idle-rerun-2.json": "4bd0a28e2024c28646242cdd80e32c2cefece27c0c71a6ae1ef97a1c4fe3c5de",
+    "idle-rerun-2.txt": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+    "initial-contract-semantic-diff.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "initial-source-hash-failure-integration.json": "863ee1e0c60e3c7774a82dd59dd30c8830d8ff30711ee4e015af11d4c4ab7350",
+    "initial-source-hash-failure-run-output.txt": "8c3f09dab8acdf85da6d3a047bbaab968150b8b45a7942ebf7b1777383aff103",
+    "initial-status.txt": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+    "integration.json": "38d048406cbb4127186076d309a851183358944bd2fb6d7c2554830983e079b6",
+    "k2-0-following.json": "6941f1bf6d4f01e2c5e02779d7dfdc9590bdc55bab8c609904eebb7283b01e5d",
+    "k2-0-following.txt": "2e817482226e82f9564d7077bc714acbb85553defeec1eed83f69b16d8d2e458",
+    "k2-1-following.json": "3438f92b5c5c18c50632ac91a8cd81c2745c32d68b5809cd4d88b21cb8e8b68a",
+    "k2-1-following.txt": "0826c362e29c786a1e4bdac4b88324eeddaeefbe060b45a21118c74d51c447aa",
+    "k2-2-following.json": "3b5889f635b99fae6155970f9672838d10f1f66a9e2eebbfb3255f85931d18e4",
+    "k2-2-following.txt": "272f54ebd4e30a9c457fe5b89a66da16c90966cba06e8e2b99c9b13e90f53a0e",
+    "manifest.json": "176d8f0c692455aaa7e74a2c9fb2fd17dc08f4d6f8d84314ca5872e0c257bf53",
+    "offline-redecode.json": "e3b9db3a1a9f2bac756709d40d9cc963af760ed954cc96958f4a0655d2e3ee46",
+    "offline-redecode.txt": "2031f09541e35eb3b44dbd6e5f5cd4cd8a37cf10f95dcc2326f8d27b94db9f0c",
+    "pg-initdb.json": "177b166b998f6185d42b63ab88a45c365a34909ca70ba9a05f788b01e4bf0f89",
+    "pg-initdb.txt": "76f58e86733fe3e577c4b24b1982792d63f2100905800731dfa5203c9398a9ff",
+    "pg-pipe-attempt-integration.json": "126eac4cf78ee0fa0c5ba7d9bf5578ed84112afcf405e0affc5f04a98c14281a",
+    "pg-pipe-attempt-pg-start.json": "ce3a8febdcc5cbda363b1623e740bbbc46d90d15359abad2800a3993aab33bb8",
+    "pg-pipe-attempt-pg-start.txt": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+    "pg-pipe-attempt-pg-stop.json": "079d2acb381080f41b479793e745769340b87d72435c8f8690a0d9a802bf982b",
+    "pg-pipe-attempt-pg-stop.txt": "37560b86d897a93dc51c8a25bafb1e1161b5ca155aab9274436708ba45c31900",
+    "pg-pipe-attempt-resolution.json": "46262fa3f277c08c0d959864d7e883308d907e0a97d4b3bf4aaac3af664f9bee",
+    "pg-pipe-attempt-run-output.txt": "a313083d5f06ff1efa902c627afa0b9936b454be102dd6cb16a576e211110981",
+    "pg-start.json": "28eb0b786a31fe03af5e5976e8788f1d0a71afd813238fdc3e961ef1872b77a9",
+    "pg-start.txt": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+    "pg-status-after-stop.json": "094c0351daaaf97a69814147ae490586b1383e1d5053185c1f5004c56b1f6eed",
+    "pg-status-after-stop.txt": "00e9e2231199060045479aeef60a466d575acde1f92e0f1567df14db2d3dc4b1",
+    "pg-stop.json": "134bb5f098ec9ebd2431295ace41594e7cb1ed4e48e705d6315ee40c4c8973e9",
+    "pg-stop.txt": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+    "postgres-server.txt": "2609514b4d8c2fed4d1c669b30cf65b5411b5c592ce377d6c23a4c7c9e18e164",
+    "preprocessor-check-attempt-integration.json": "d159c1b117faae9bb710d214381e53406b93b161d7a619527413b7929f639ecf",
+    "preprocessor-check-attempt-run-output.txt": "25c9ec2fc8713e7c120ba34342ea43eeb77a5fb2582914bc5970d9bcf6f0dc36",
+    "provenance-guards.json": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+    "provenance-guards.txt": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+    "rebuild-comparison.json": "b45056d9c53995d8ecd6fffe9e438f3be437c504a22008dfdb102894965ed434",
+    "receipts.json": "3dce0f152bdb60cdb87da51e90e9421e879a7abc53d2b83ce5d5ebdab9b06ad5",
+    "report.md": "4a640083503cbea543a911ced093474b9e3f8f8a0170af2582f1676e32844c00",
+    "repository-deploy.json": "e7eedc44c61c225cb56cf43b82caf691c6f938e0df88d0593271a850cd024d8f",
+    "repository-deploy.txt": "4d7d25393ccaf95e388eca368427bbb79eec03e3d5301d6a010bfb1dbd236cdb",
+    "run-integration.mjs": "9073a58ad4c7a5fe8b2735ff97daba7b07ef57fb7133e02d1edebff1f7f8b40d",
+    "run-output.txt": "43167e0c5a14d3ae4ce3266e6c9c97b21a35065fe29b73bda8c2d572df036f19",
+    "solc-provenance.json": "c02310fcbd7782a453b3130b757e132880694f5cc7c90c21795463109e75522c",
+    "sql-after-idle-reruns.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-after-redecode.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-afterCommit-after-kill.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-afterCommit-before-worker.json": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+    "sql-afterCommit-resumed.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-before-idle-reruns.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-beforeCommit-after-kill.json": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+    "sql-beforeCommit-before-worker.json": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+    "sql-beforeCommit-resumed.json": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+    "sql-final.json": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+    "sql-k2-0.json": "f506bdf854c712caf35d19b9b8745c0a1d88781518c43ec94274c151cd8399aa",
+    "sql-k2-1.json": "81c345e6a0dad1368fbae6b589f95e1b903e66ce1290ba65fff540fb93d289c8",
+    "sql-k2-2.json": "ef590ee9e1da2478a05ed89d0db74d476f1d5a75a6b49aff383c6ed4e8772d41",
+    "submodules-recursive.json": "baae835d75014e256292c11b72d92c90bd30b7638d8b0bf84e2c308d7f3564d1",
+    "withparams-receipt-decoder.json": "2e7d38541e950f72b2f25b017a6e2325e7a9c201912fb8b1b7551b1757e5ab3a",
+    "wsl-provenance.json": "d6fd0f839d3bf7198f721d7c4f4d53b69345d4411125ab552884ec2565b73e63"
+  }
+}

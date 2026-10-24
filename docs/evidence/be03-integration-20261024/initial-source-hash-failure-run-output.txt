@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "error": {
+    "message": "out/BudgetGovernor.sol/BudgetGovernor.json: source mismatch contracts/BudgetGovernor.sol\n+ actual - expected\n\n+ '0xdbc5d554f28d30684463691d0d7b7925c18d9548300918b3f03063408ef4ab87'\n- '0xe9474c2fb805e4c047ae99fc48bbbaf00cdff5817e01490b8df9a24e7314c4ab'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: out/BudgetGovernor.sol/BudgetGovernor.json: source mismatch contracts/BudgetGovernor.sol\n+ actual - expected\n\n+ '0xdbc5d554f28d30684463691d0d7b7925c18d9548300918b3f03063408ef4ab87'\n- '0xe9474c2fb805e4c047ae99fc48bbbaf00cdff5817e01490b8df9a24e7314c4ab'\n\n    at file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:95:20"
+  },
+  "cleanup": {}
+}
+

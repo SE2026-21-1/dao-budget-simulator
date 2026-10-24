@@ -1,0 +1,14 @@
+{
+  "label": "repository-deploy",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "scripts/deploy_local.mjs",
+    "--rpc",
+    "http://127.0.0.1:59319",
+    "--output",
+    "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\manifest.json"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "repository-deploy.txt"
+}

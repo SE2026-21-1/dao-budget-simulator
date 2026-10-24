@@ -1,0 +1,11 @@
+# Keep checksum-based BE03 evidence byte-exact across Windows and WSL checkouts.
+docs/evidence/be03-20261024/** -text whitespace=cr-at-eol
+docs/evidence/be03-review-20261024/** -text whitespace=cr-at-eol
+docs/evidence/be03-integration-20261024/** -text whitespace=cr-at-eol
+docs/evidence/be03-packaging-20261024/** -text whitespace=cr-at-eol
+
+# Raw terminal/server logs retain their original spaces as checksum evidence.
+docs/evidence/be03-20261024/*.txt -whitespace
+docs/evidence/be03-review-20261024/*.txt -whitespace
+docs/evidence/be03-integration-20261024/*.txt -whitespace
+docs/evidence/be03-packaging-20261024/*.txt -whitespace

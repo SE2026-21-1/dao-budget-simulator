@@ -341,7 +341,7 @@ nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
 ## BE02 — RPC log reader và decoder
 
 BE02 được tích hợp từ `4c568d6`; [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12)
-được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 11 event
+được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 12 event
 và ghi header/raw log trong transaction PostgreSQL. Chưa có projection,
 HTTP API, checkpoint, K confirmations, resume/reorg rollback hoặc rebuild.
 Suite BE02 dùng synthetic RPC; smoke SC03 bổ sung decode receipt Treasury/BUD
@@ -390,3 +390,25 @@ deployment block, ABI version và `deploymentId` bằng metadata đã xác minh.
 Địa chỉ trong mẫu là synthetic. CLI không tự nạp `.env`, không tạo deployment;
 exit code `2` báo raw log đã lưu nhưng có unknown topic/decode error.
 Xem [checklist BE02](docs/be02-checklist.md) để biết kết quả và phần chờ SC06.
+
+## BE03 — checkpoint, confirmations và resume
+
+Luồng BE03 dùng `--sync`, lưu checkpoint raw theo chain/deployment và bộ nguồn
+manifest; restart tự kiểm tra hash rồi tiếp tục H+1. `confirmations` là số nguyên
+JSON, mặc định `2`: chỉ nhận H ≤ head−K. Cần chạy thêm migration
+`database/migrations/002_be03.sql`; giữ nguyên migration BE01.
+
+```powershell
+npm run indexer -- --config indexer/config/local.json --sync
+npm run test:be03
+npm run test:be03:db
+```
+
+Chạy lại lệnh `--sync` để resume. Dải BE02 không có cờ vẫn là công cụ quét hữu
+hạn; không dùng nó ghi vào deployment đã có checkpoint BE03. Đọc
+[quy trình migrate/start/restart và phục hồi decode](docs/be03.md),
+[checklist BE03](docs/be03-checklist.md) và
+[bằng chứng tích hợp mới](docs/evidence/be03-integration-20261024/report.md).
+Lịch sử BLOCKED giữ trong checklist. Tích hợp raw/checkpoint PASS tại H=32,
+head=34; 16 topic quản trị bootstrap ngoài ABI subset vẫn unknown, nên CLI
+trả exit 2 / DECODE_INCOMPLETE, không phải decodeComplete=true.

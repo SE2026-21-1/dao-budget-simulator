@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { loadProposalFixtures, type ProposalCollection } from "./proposals";
+import { type ProposalCollection } from "./proposals";
+import { loadProposals } from "./api";
+import { apiBaseUrl } from "../chain/config";
 
 type LoadState =
   | { status: "loading" }
@@ -15,7 +17,7 @@ export function useProposalFixtures() {
 
   useEffect(() => {
     let active = true;
-    loadProposalFixtures(simulateError).then(
+    (simulateError && !apiBaseUrl ? Promise.reject(new Error("Lỗi tải dữ liệu mô phỏng để kiểm tra giao diện.")) : loadProposals()).then(
       (collection) => { if (active) setState({ status: "success", collection }); },
       (error: unknown) => { if (active) setState({ status: "error", message: error instanceof Error ? error.message : "Không tải được dữ liệu." }); },
     );

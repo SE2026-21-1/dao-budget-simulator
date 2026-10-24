@@ -17,6 +17,13 @@ export interface Proposal {
   recipient: string;
   snapshot: string;
   deadline: string;
+  descriptionHash?: string;
+  targets?: string[];
+  values?: string[];
+  calldatas?: string[];
+  votes?: { against: string; for: string; abstain: string; quorum: string | null };
+  operation?: { eta: string; status: string } | null;
+  transactions?: { created: string | null; queued: string | null; executed: string | null; canceled: string | null };
 }
 
 export interface FixtureContext {
@@ -26,6 +33,8 @@ export interface FixtureContext {
   asOfBlock: string;
   asOfBlockHash: string;
   dataKind: string;
+  asOfTimestamp?: string;
+  sync?: { status: string; lagSeconds: string | null };
 }
 
 export interface ProposalCollection {

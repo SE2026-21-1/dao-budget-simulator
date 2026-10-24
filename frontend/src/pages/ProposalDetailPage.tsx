@@ -2,6 +2,11 @@ import { Link, useParams } from "react-router";
 import FixtureLoadState from "../components/FixtureLoadState";
 import { formatBUD } from "../data/formatBUD";
 import { useProposalFixtures } from "../data/useProposalFixtures";
+import ProposalActions from "../components/ProposalActions";
+import { formatGOV } from "../chain/wallet";
+import { transactionUrl } from "../chain/config";
+
+const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).toLocaleString("vi-VN") : "—";
 
 function ProposalDetailPage() {
   const { id } = useParams();
@@ -52,8 +57,18 @@ function ProposalDetailPage() {
 
         <aside className="panel">
           <div className="panel__header"><h2>Tiến trình đề xuất</h2></div>
-          <div className="empty-state">Snapshot, deadline, quorum, ETA và transaction sẽ hiện ở đây khi có API và contract.</div>
-          <p className="notice" style={{ marginTop: 18 }}>Đây là dữ liệu mô phỏng. Vote, cancel, queue và execute chưa được tích hợp.</p>
+          <dl className="detail-fields">
+            <div><dt>Snapshot</dt><dd>{timestamp(proposal.snapshot)}</dd></div>
+            <div><dt>Deadline</dt><dd>{timestamp(proposal.deadline)}</dd></div>
+            <div><dt>ETA</dt><dd>{timestamp(proposal.operation?.eta)}</dd></div>
+            <div><dt>For / Against / Abstain</dt><dd>{proposal.votes ? `${formatGOV(BigInt(proposal.votes.for))} / ${formatGOV(BigInt(proposal.votes.against))} / ${formatGOV(BigInt(proposal.votes.abstain))}` : "—"}</dd></div>
+            <div><dt>Quorum tại snapshot</dt><dd>{proposal.votes?.quorum ? formatGOV(BigInt(proposal.votes.quorum)) : "Chưa xác định"}</dd></div>
+          </dl>
+          {proposal.transactions && <div className="transaction-list"><h3>Giao dịch</h3>{Object.entries(proposal.transactions).filter(([, hash]) => hash).map(([kind, hash]) => {
+            const url = transactionUrl(hash!);
+            return <p key={kind}>{kind}: {url ? <a href={url} target="_blank" rel="noreferrer">{hash}</a> : <code>{hash}</code>}</p>;
+          })}</div>}
+          <ProposalActions proposal={proposal} context={state.collection.context} />
         </aside>
       </div>
     </div>

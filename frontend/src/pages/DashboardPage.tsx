@@ -3,6 +3,7 @@ import FixtureLoadState from "../components/FixtureLoadState";
 import { formatCompactBUD, formatBUD } from "../data/formatBUD";
 import { proposalStatuses, type Proposal } from "../data/proposals";
 import { useProposalFixtures } from "../data/useProposalFixtures";
+import TreasurySection from "../components/TreasurySection";
 
 const palette = ["#b8852f", "#0e7759", "#58b99e", "#7892ab", "#d9ae55", "#244369", "#bd6660"];
 const shortId = (id: string) => `${id.slice(0, 7)}…${id.slice(-5)}`;
@@ -68,7 +69,7 @@ function DashboardPage() {
   const { state, retry, simulateError } = useProposalFixtures();
   return <div>
     <div className="page-heading page-heading--dashboard"><div><p className="page-heading__eyebrow">TỔNG QUAN / DAO BUDGET</p><h1>Ngân sách DAO</h1><p className="page-heading__description">Theo dõi đề xuất và tiến trình quản trị trong một không gian rõ ràng, minh bạch.</p></div><Link to="/proposals" className="button-primary">Khám phá đề xuất <span aria-hidden="true">↗</span></Link></div>
-    {state.status === "success" ? <DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} /> : <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />}
+    {state.status === "success" ? <><DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} /><TreasurySection context={state.collection.context} /></> : <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />}
   </div>;
 }
 

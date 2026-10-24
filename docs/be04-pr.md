@@ -27,12 +27,13 @@ Transfer được tính dòng tiền, BudgetDisbursed nối khoản chi cùng tr
 - Regression `--redecode` chạy cùng test trên SHA trước sửa: **7 pass, 3 fail** như dự kiến; sau sửa BE04 PostgreSQL suite **10/10 pass**. Raw bytes/identity/checkpoint giữ nguyên, payload/event được khôi phục và unknown/malformed vẫn bị đánh dấu.
 - Foundry 1.8.5 CI suite: **142/142 pass**, không skip; Solc 0.8.37, Osaka, optimizer 200.
 - Official live runner với Anvil 1.8.5 unforked/PostgreSQL 18.4 cô lập: **10/10 phase**, 24 receipt. H=67, raw/projection cùng hash `0x7b66ac580f1eac86167d0bdc26a7534fe8c15b852fa38d671bf23b488014c836`; Treasury total in 13.000 BUD, out 12.000 BUD, balance 1.000 BUD. Bao gồm duplicate requestId zero và execute thiếu tiền → nạp quỹ → retry thành công.
-- Bằng chứng cho bản sửa: [`docs/evidence/be04-p2-fix-20261024/`](evidence/be04-p2-fix-20261024/report.md). Cluster/runtime và dependency tải tạm không nằm trong PR; dump SQL là dữ liệu fixture Anvil cục bộ.
-- Docker/PowerShell wrappers không chạy được trên WSL cục bộ do thiếu công cụ; các suite PostgreSQL trực tiếp và live runner đã chạy PASS. GitHub Actions run [40077920715](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40077920715) PASS trên commit code `f1cbbbbe20e426c50b1db347ce3da27c73d9edda`; trạng thái job cho head mới nhất được theo dõi trên PR #23.
+- Evidence: [report sửa P2](evidence/be04-p2-fix-20261024/report.md), [live receipts/projection](evidence/be04-p2-fix-20261024/be04-live-final-run.json), [SQL summary](evidence/be04-p2-fix-20261024/be04-live-final-run-sql.log), [source/toolchain provenance](evidence/be04-p2-fix-20261024/source-provenance.json). Cluster/runtime và dependency tải tạm không nằm trong PR; dump SQL đầy đủ được giữ riêng, không sửa checksum.
+- Docker/PowerShell wrappers local bị BLOCKED trên WSL do thiếu công cụ; các suite PostgreSQL trực tiếp và live runner đã PASS. GitHub Actions trên code head `53638b816d2b327d6a41fd8657566ee3f503b956`: [run 40078301376](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40078301376) PASS đủ 5 jobs, gồm BE04 projection/atomic PostgreSQL và “Reconcile BE04 projections with live governance at confirmed H”.
 
 ## Review and limits
 
 TV1: semantics clock/quorum/salt/calldata. TV4: canonical H, atomic publication,
-raw unknown policy và chạy CI chuẩn. Chưa có peer review.
+raw unknown policy và CI. Review submissions/threads chưa có; CI PASS không phải
+peer approval.
 Full replay và publication mới nhất là phạm vi BE04; HTTP API thuộc BE05,
 production rebuild/compare BE06, rollback/retry BE07, benchmark BE08.

@@ -89,6 +89,8 @@ Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không d
 - `requestId` sinh một lần bằng CSPRNG và giữ qua retry; amount được parse từ chuỗi thành BigInt 18 decimals, từ chối > uint256, exponent hoặc >18 decimals. Title/body giữ nguyên khoảng trắng/Unicode; description được serialize một lần lúc propose. Queue/execute/cancel dùng nguyên actions/hash đã lưu, đối chiếu calldata disburse và proposal ID; không parse/stringify lại description.
 - Nạp quỹ là BUD `transfer(Treasury, amount)`, không có endpoint POST hoặc hàm deposit giả. Pending/Active/Queued không giữ chỗ ngân sách; insufficient Treasury khi execute vẫn có thể revert.
 - UI đợi receipt thành công, giữ dữ liệu form khi ký bị từ chối/lỗi, chặn gửi lặp khi giao dịch đang chờ. Sau receipt, thao tác quản trị/nạp quỹ tải lại snapshot mới nhất đã **xuất bản**. Nếu indexer chưa bắt kịp, bấm **Tải dữ liệu mới nhất** sau khi ingest/project; không tự ghi đè state/số dư dự đoán. Nút này cũng phục hồi snapshot/cursor đã hết TTL hoặc invalidated bằng lượt đọc mới, không dùng cursor cũ.
+- Receipt replacement chỉ thành công khi repricing cùng action; cancellation/thay action báo lỗi. Hash/Proposal ID lấy từ receipt thực đã mine, không tìm lại hash cũ. Khi account đổi giữa delegation và receipt, callback cũ không được ghi đè balance/delegate/votes của account mới.
+- Content có transaction owner được giữ mounted trong snapshot refresh thành công, có nhãn H cũ/đang tải; không xóa receipt chỉ vì publication chưa bắt kịp. API transport lỗi có thông báo tiếng Việt, giữ error thay vì fallback fixture.
 
 ## Browser kiểm chứng bằng Anvil thật
 
@@ -136,3 +138,14 @@ npm --prefix frontend run lint
 ```
 
 Behavior tests kiểm tra calldata/hash SC01, nguyên văn Unicode/description, uint256/precision, payload gốc và định dạng tiền; không kiểm tra wiring bằng mock-echo hoặc repin bản sao fixture. Build có TypeScript typecheck. Các lệnh này và browser real-chain phải được chạy sau khi tích hợp hoàn tất; tài liệu này không tự khẳng định chúng đã pass. Fixture/unit/build không thay thế bằng chứng ví–API–chain, negative case hoặc deployment testnet thật.
+
+## Kết quả nghiệm thu TV4 ngày 24/10/2026
+
+[Browser evidence](../docs/evidence/tv4-20261024-acceptance/browser.json) ghi12checks,
+bốn route ở390/1366 và8ảnh: A+B700For chi1000BUD, queue/execute/cancel/deposit,
+wrong network/refusal/HTML-safe, cancellation/repricing và stale-account regression
+trên Anvil/API thật. Sáu behavior tests và production build đã PASS sau sửa
+TS1294; log theo từng source ở [report](../docs/evidence/tv4-20261024-acceptance/report.md).
+Đây không phải wallet extension hoặc testnet. Reorg thật chưa được backend
+rollback/invalidate API; không coi kết quả frontend là release approval.
+

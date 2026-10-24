@@ -46,8 +46,17 @@ function snapshotQuery(context?: FixtureContext) {
   return query;
 }
 
+async function request(path: string, query: URLSearchParams, signal?: AbortSignal): Promise<Response> {
+  try {
+    return await fetch(`${apiBaseUrl}/api/${path}?${query}`, { signal });
+  } catch (cause) {
+    if (signal?.aborted) throw cause;
+    throw new Error("Không kết nối được API. Kiểm tra dịch vụ và cấu hình mạng rồi thử lại.", { cause });
+  }
+}
+
 async function get(path: string, query: URLSearchParams, signal?: AbortSignal): Promise<unknown> {
-  const response = await fetch(`${apiBaseUrl}/api/${path}?${query}`, { signal });
+  const response = await request(path, query, signal);
   const body = await response.json() as { error?: { code?: string; message?: string } };
   if (!response.ok) throw new ApiError(response.status, body.error?.code ?? `HTTP_${response.status}`, body.error?.message ?? "Không tải được dữ liệu.");
   return body;
@@ -68,7 +77,7 @@ function assertContext(context: FixtureContext, pinned?: FixtureContext) {
 }
 
 export async function loadHealth(signal?: AbortSignal): Promise<Health> {
-  const response = await fetch(`${apiBaseUrl}/api/health?${snapshotQuery()}`, { signal });
+  const response = await request("health", snapshotQuery(), signal);
   const body = await response.json() as Health & { error?: { code: string; message: string } };
   if (body.error) throw new ApiError(response.status, body.error.code, body.error.message);
   // BE05 intentionally returns the health data envelope with 503 when unavailable.

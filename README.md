@@ -2,11 +2,14 @@
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
 Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
-Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5` + `26ecca7`.
-Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
-→ PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
-BE05 HTTP API đọc PostgreSQL đã có, nhưng frontend/wallet chưa tích hợp API và
-chưa có demo UI→chain→API end-to-end.
+Treasury, BudgetGovernor, BE03 checkpoint/K-confirmations, BE04 projection,
+BE05 HTTP API, BE06 rebuild/compare và frontend TV3 `9f4d57a` có ví/giao dịch.
+Có deploy/seed/check-roles, invariant và nghiệm thu Anvil → PostgreSQL → API
+→ UI thật bằng EIP-1193 transport local. Fixture BE01 vẫn dùng được khi không
+bật API; API lỗi không bị thay bằng fixture.
+**Chưa đủ điều kiện release:** reorg thật dừng ingestion nhưng API còn phục vụ
+snapshot nhánh cũ; BE07 rollback/backoff/invalidation, testnet và peer approval
+còn thiếu. Xem [báo cáo TV4 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
 
 ## Trạng thái các task TV1
 
@@ -15,11 +18,11 @@ chưa có demo UI→chain→API end-to-end.
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
-| SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`; [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) chờ peer review |
+| SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`, PR #13 đã merge; peer nghiệm thu SC05/deployment vẫn là đầu việc riêng |
 | SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | Có script contract local; E2E frontend/wallet/API còn chờ tích hợp consumer |
+| SC08 — Tích hợp local | UI → EIP-1193 local → Governor/Timelock/Treasury → indexer/API → UI đã chạy; chưa thay test ví extension/testnet |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
 | SC10 — Testnet và bàn giao | Chưa thực hiện |
 
@@ -87,9 +90,12 @@ FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh
 Job contracts dùng Foundry 1.8.5, Python 3.12, Node 24.15.0 và profile `ci`
 (256 fuzz runs, 100 invariant runs × 50 thao tác, seed `0x20261021`), smoke Treasury
 và governance thật qua PostgreSQL 18.4 cô lập, rollback/restart/raw replay cùng H.
-Job BE01 kiểm fixture/SQL; job BE02 typecheck/build, 63 bài RPC/decoder và
-21 bài storage/CLI. Job frontend cài theo lockfile, lint và production build
-(`tsc -b && vite build`); không giả là browser/wallet E2E. Artifact giữ 14 ngày.
+Job BE01 kiểm fixture/SQL; BE02 có 64 RPC/decoder và 21 PostgreSQL tests.
+BE03 thêm 22 bài confirmation/resume và 16 bài PostgreSQL/crash; BE04 kiểm
+projection, BE05 API và BE06 rebuild/compare cùng H. Frontend chạy lint,
+6 behavior tests và production build (`tsc -b && vite build`).
+Workflow cấu hình tám job; artifact giữ 14 ngày. Browser/EIP-1193 acceptance
+được lưu riêng, không giả là CI đã chạy ví extension.
 
 Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
@@ -100,10 +106,39 @@ Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon h�
 Đây không chứng minh Governor/Timelock, checkpoint/reorg/rebuild, HTTP API,
 UI wallet/E2E hay NFR07 toàn hệ thống. Xem [checklist TV4](docs/tv4-checklist.md).
 
-Bổ sung ngày **22/10** đã được chạy local trên Node 24.15.0; xem
-[evidence TV4](docs/evidence/tv4-20261022/verification.json).
-Workflow bốn job mới chưa được push/chạy GitHub trong đợt này; kết quả CI ba job
-ở trên là lịch sử, không phải bằng chứng cho frontend hoặc raw replay mới.
+Các CI tại source cũ chỉ là lịch sử. Dev `1451779` có
+[CI năm job thành công](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40088009664).
+Nhánh tích hợp TV4 hiện có BE05/BE06/wallet và job BE03 mới; chưa push/chạy CI
+revision này do máy chưa có GitHub credential. Kết quả local và blocker có
+trong [evidence 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
+
+### Nghiệm thu native PostgreSQL khi không dùng được Docker
+
+Node được pin bằng `.nvmrc` (24.15.0). Dùng PostgreSQL **18.4** có sẵn, hoặc
+cài binary vào thư mục tạm, không cần sudo/quyền Docker:
+
+```bash
+nvm install
+nvm use
+npm ci
+npm ci --prefix frontend
+forge build
+npm install --prefix /tmp/dao-tv4-pg18 --ignore-scripts --no-audit --no-fund \
+  @embedded-postgres/linux-x64@18.4.0-beta.17
+(cd /tmp/dao-tv4-pg18/node_modules/@embedded-postgres/linux-x64 && node scripts/hydrate-symlinks.js)
+PG_BIN=/tmp/dao-tv4-pg18/node_modules/@embedded-postgres/linux-x64/native/bin
+npm run test:tv4:native -- --postgres-bin "$PG_BIN" --output /tmp/tv4-native-new
+# Bao gồm cả benchmark 100 proposal/1000 vote thật, 10 client/60 giây:
+npm run test:tv4:native -- --postgres-bin "$PG_BIN" --output /tmp/tv4-native-perf-new --benchmark
+```
+
+Mỗi output phải mới/rỗng. Runner sở hữu cluster loopback, tài khoản/database
+tách theo suite, Anvil và cleanup; không dùng `DATABASE_URL`/`RPC_URL` của người
+gọi. Không có `psql` vẫn chạy được qua `pg`. `report.json` ghi exit code, test
+counts, version/source/binary hashes và cleanup; lỗi/ngắt không được báo PASS.
+Binary NPM có version đóng gói beta; PostgreSQL thực chạy phải báo **18.4**.
+Benchmark tạo database riêng trước khi runner dừng cluster, không tái dùng
+database live. Kết quả máy này không thay benchmark máy khác/testnet.
 
 ## Unit test SC02
 
@@ -251,12 +286,15 @@ checkpoint/resume, K-confirmations, reorg hoặc UI/API E2E.
 
 ## Frontend tích hợp — TV3 và nghiệm thu TV4
 
-Cần Node **24.15.0**. Dữ liệu lấy trực tiếp từ `fixtures/api/` của BE01, không
-giữ bản sao JSON trong frontend và không gọi API giả:
+Cần Node **24.15.0**. Không đặt `VITE_API_BASE_URL` thì frontend đọc trực tiếp
+fixture canonical `fixtures/api/`, khóa mọi giao dịch; không giữ bản sao JSON.
+Đặt API/deployment từ manifest thật để dùng BE05 và ví theo
+[runbook frontend](frontend/README.md#kết-nối-be05-và-deployment-thật).
 
 ```bash
 npm ci --prefix frontend
 npm run lint --prefix frontend
+npm run test --prefix frontend
 npm run build --prefix frontend
 npm run dev --prefix frontend -- --host 127.0.0.1
 # Hoặc xem bản production sau build:
@@ -264,14 +302,19 @@ npm run preview --prefix frontend -- --host 127.0.0.1
 ```
 
 Bốn màn hình `/`, `/proposals`, `/proposals/:id`, `/proposals/new`.
-Danh sách 45 proposal, tìm exact ID, lọc/phân trang 20/20/5; số tiền dùng BigInt.
-Trang tạo chỉ preview, nút bị khóa; chưa connect ví hoặc vote/cancel/queue/execute.
-Trong dev, `/proposals?fixture=error` dùng kiểm error/retry; production bỏ qua
-query này. Root `npm run build` chỉ build indexer, không build frontend.
+Fixture có 45 proposal, exact-ID/filter/phân trang 20/20/5; tiền dùng BigInt.
+API mode hỗ trợ connect/switch account/network, propose/vote/cancel/queue/
+execute, self-delegate và nạp BUD. Queue/execute giữ payload/description gốc;
+receipt bị hủy/thay thao tác không báo thành công, repricing dùng hash đã mine.
+Sau receipt, chỉ đọc snapshot đã xuất bản; bấm **Tải dữ liệu mới nhất** khi
+indexer đã bắt kịp K xác nhận. Trong dev fixture, `?fixture=error` kiểm retry;
+production bỏ qua query này. Root build chỉ build backend.
 
-[Browser evidence](docs/evidence/tv4-20261022/frontend-browser.json) ghi 11
-scenario Chromium thật, bốn màn hình ở 390px/1366px, bàn phím, precision,
-loading/error/retry và not-found; không thay nghiệm thu TC13 ví/giao dịch.
+[Browser evidence 24/10](docs/evidence/tv4-20261024-acceptance/browser.json):
+12 kiểm tra, bốn route ×390/1366, luồng A+B700 For chi1000 BUD, cancel/deposit,
+wrong network/refusal/HTML-safe, replacement và account-switch regressions.
+Provider kiểm chứng forward RPC thật tới Anvil unlocked riêng, **không** phải
+MetaMask extension hoặc testnet. Reorg chưa đạt, xem báo cáo trước khi demo.
 Xem [hướng dẫn frontend](frontend/README.md) và [checklist TV4](docs/tv4-checklist.md).
 
 

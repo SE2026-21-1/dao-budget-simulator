@@ -1,0 +1,210 @@
+{
+  "format": "dao-budget-tv4-native-v1",
+  "status": "FAIL",
+  "startedAt": "2026-10-24T12:08:52.229Z",
+  "scope": "Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, and live Anvil/API/two-target rebuild. No testnet or browser acceptance.",
+  "isolation": {
+    "currentUid": 1000,
+    "currentGid": 1000,
+    "callerDatabaseAndRpcIgnored": true,
+    "privilegesChanged": false,
+    "freshCluster": true,
+    "numericLoopback": "127.0.0.1",
+    "portAllocation": "Kernel-reserved ephemeral TCP port, held through initdb; released immediately before pg_ctl. Bind collision fails closed.",
+    "migrations": "Dedicated BE01 DB uses SQL files; every other suite owns its own migrations on separate empty databases.",
+    "postgresPort": 46331
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+    "platform": "linux",
+    "arch": "x64",
+    "postgresBin": "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin",
+    "postgres": "postgres (PostgreSQL) 18.4",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "pg": "8.23.1"
+  },
+  "provenance": {
+    "sourceHashes": {
+      "scripts/check_tv4_native.mjs": "cd12acb699646041a74f884bafc7e117c6c94e18270812e845a0b9509cf29349",
+      "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+      "scripts/check_be04_live.mjs": "efc018feff8a9d566e87aa1d7194bcfefbebbb01333b987106df28fb6f8c3995",
+      "scripts/smoke_governance.mjs": "47e0e502bc4a3925fdc4f96bf6a9aab04faa7c1392c0d27a7a79aa85c22f5f74",
+      "scripts/governance_storage.mjs": "f2b6338e174d229c5840b9c5cdff1920c5c18b81f94480308f9b2675da3934d6",
+      "scripts/governance_local.mjs": "ea4aa4140f4432cd49ac48c030ef749837750b741a224c330972cf14df13a65f",
+      "tests/indexer/storage.test.ts": "b690a2726d84e5da7966c5637b747ee45003090356fdc66f7f62cf5fd63df77b",
+      "tests/indexer/checkpoint-storage.test.ts": "66af31aef208d487e95cdd34720a1b186472ad03b2a01e29d69580b12bba125f",
+      "tests/indexer/projection-storage.test.ts": "0e048c953cb2d1fc74fb5e3260024f24f457455063b2ff7b02c89e7117443ad1",
+      "tests/api/server.test.mjs": "f07f214ceb3985cfed4fb67a3e996439b714a783542eb7d5a6658b1bdf361c7e",
+      "tests/indexer/be06-db.test.mjs": "b9252ddbd18b13b9699ae364f0d88f96b689a653686c1c54a384328de74fa22a",
+      "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+      "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+      "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+      "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+      "database/tests/001_initial_checks.sql": "45dc35c92822b48067f9c98b54e30717f28e50001d80ded86e419bd5128c8f6e",
+      "package.json": "226c7ae52a741199b4a50cbd58ed0e5160b828615fda8b50059bc3db8741a127",
+      "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+      "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9"
+    },
+    "binaryHashes": {
+      "initdb": "515186eed81a1f2741bdcbfeb080af093a59a27fb2896237b04dd6c48bae349d",
+      "pg_ctl": "6beab6014ea28dcc78b8c6a43ec9e3e20536e13a175d75151107410ac866c481",
+      "postgres": "de0a4a7646c51f032e0088ae6fe9d0833fa280b78d4455681574a32937b32838"
+    }
+  },
+  "commands": [
+    {
+      "name": "postgres-version",
+      "argv": [
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin/postgres",
+        "--version"
+      ],
+      "startedAt": "2026-10-24T12:08:52.355Z",
+      "timeoutMs": 180000,
+      "log": "logs/01-postgres-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 36
+    },
+    {
+      "name": "anvil-version",
+      "argv": [
+        "anvil",
+        "--version"
+      ],
+      "startedAt": "2026-10-24T12:08:52.392Z",
+      "timeoutMs": 180000,
+      "log": "logs/02-anvil-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 16
+    },
+    {
+      "name": "forge-version",
+      "argv": [
+        "forge",
+        "--version"
+      ],
+      "startedAt": "2026-10-24T12:08:52.408Z",
+      "timeoutMs": 180000,
+      "log": "logs/03-forge-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 44
+    },
+    {
+      "name": "initdb",
+      "argv": [
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin/initdb",
+        "-D",
+        "/tmp/dao-tv4-native-mbsUjn/data",
+        "-U",
+        "tv4_native_admin",
+        "--auth-local=trust",
+        "--auth-host=scram-sha-256",
+        "--pwfile",
+        "/tmp/dao-tv4-native-mbsUjn/password",
+        "--encoding=UTF8",
+        "--locale=C"
+      ],
+      "startedAt": "2026-10-24T12:08:52.502Z",
+      "timeoutMs": 60000,
+      "log": "logs/04-initdb.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 3684
+    },
+    {
+      "name": "postgres-start",
+      "argv": [
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin/pg_ctl",
+        "start",
+        "-w",
+        "-t",
+        "30",
+        "-D",
+        "/tmp/dao-tv4-native-mbsUjn/data",
+        "-l",
+        "/tmp/dao-tv4-native-mbsUjn/postgres.log"
+      ],
+      "startedAt": "2026-10-24T12:08:56.194Z",
+      "timeoutMs": 40000,
+      "log": "logs/05-postgres-start.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "FAIL",
+      "error": "Interrupted by SIGTERM",
+      "durationMs": 244
+    },
+    {
+      "name": "postgres-stop-fast",
+      "argv": [
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin/pg_ctl",
+        "stop",
+        "-w",
+        "-t",
+        "15",
+        "-m",
+        "fast",
+        "-D",
+        "/tmp/dao-tv4-native-mbsUjn/data"
+      ],
+      "startedAt": "2026-10-24T12:08:56.439Z",
+      "timeoutMs": 20000,
+      "log": "logs/06-postgres-stop-fast.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 217
+    }
+  ],
+  "suites": {
+    "be01-sql": {
+      "status": "NOT_RUN"
+    },
+    "be02-storage": {
+      "status": "NOT_RUN"
+    },
+    "be03-checkpoint-crash": {
+      "status": "NOT_RUN"
+    },
+    "be04-projection": {
+      "status": "NOT_RUN"
+    },
+    "be05-api": {
+      "status": "NOT_RUN"
+    },
+    "be06-two-db": {
+      "status": "NOT_RUN"
+    },
+    "governance-storage": {
+      "status": "NOT_RUN"
+    },
+    "live-api-be06": {
+      "status": "NOT_RUN"
+    }
+  },
+  "cleanup": {
+    "status": "PASS",
+    "clusterStopped": true,
+    "temporaryFilesRemoved": true,
+    "errors": []
+  },
+  "error": "Interrupted by SIGTERM",
+  "interruptedBy": "SIGTERM",
+  "finishedAt": "2026-10-24T12:08:56.794Z"
+}

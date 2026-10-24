@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "ownedBrowserPortsClosed": {
+    "postgres": true,
+    "rpc": true,
+    "api": true,
+    "frontend": true
+  },
+  "fixturePreviewPort4178Closed": true,
+  "nativeClusterCleanup": "native/report.json",
+  "nativeSignalCleanup": "native-interruption/signal-driver.json",
+  "benchmarkCleanup": "benchmark.json",
+  "callerServicesTouched": false
+}

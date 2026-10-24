@@ -5,6 +5,26 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Trạng thái hiện tại — 24/10/2026
+
+Mục ngày 21–23/10 bên dưới là lịch sử theo source commit, không phải mô tả
+nhánh tích hợp hiện tại. [Báo cáo và giới hạn](evidence/tv4-20261024-acceptance/report.md)
+là căn cứ mới; local PASS không tự thành release/peer approval.
+
+- [x] Merge Dev1451779, candidate BE05/BE06c41a9ab và wallet TV3 9f4d57a; giữ phần TV4, không tự merge PR upstream.
+- [x] `.nvmrc`24.15.0; native PostgreSQL18.4 runner có isolation, logs/source hashes và cleanup, không cần Docker/sudo.
+- [x] Foundry147/147, fuzz256 và invariant100×50 seed0x20261021; backend64+22+27+5,51 real-DB tests,8process tests và6frontend behavior tests PASS.
+- [x] BE03 K/checkpoint/crash trước/sau COMMIT/redecode, BE04 atomic publication, BE05 API và hai BE06 rebuild cùng H67/hash PASS.
+- [x] Benchmark NFR02 local:100 proposal/1000 vote chain thật,10client/60s,8133success/0error,p95133,652ms. Không thay AD-064753 user hoặc benchmark testnet.
+- [x] Browser EIP-1193 local:12checks PASS,4route×390/1366; A+B700For chi1000BUD, creator cancel, deposit, HTML-safe/network/refusal và receipt/account-switch regression.
+- [x] Sửa TS1294, replacement receipts, stale wallet refresh, status mất khi reload, label nguồn API, mobile table containment và lỗi mạng tiếng Việt; không suppress warning.
+- [x] SIGTERM native runner trả143, stop cluster/đóng port/xóa temp, không báo PASS khi ngắt.
+- [x] Reorg thật đã được kiểm tra và ghi **KHÔNG ĐẠT**: ingestion exit1 hash mismatch/DB nguyên vẹn, nhưng API vẫn200 với hash orphan. Không đánh dấu TC11 PASS.
+- [ ] TV2 BE07: rollback/replay, hash window, revision/cursor invalidation và RPC retry/backoff; production freshness/pause-warning-recover.
+- [ ] TV1/TV2/TV3 peer review; CI chính revision TV4 mới sau push. GitHub credential chưa có; [nội dung PR/issue sẵn](tv4-handoff-20261024.md), chưa được gửi.
+- [ ] Mạng/RPC testnet được chốt, signer an toàn đã có gas, EVM/compiler được TV1 xác nhận; demo Executed/Defeated thời gian thật.
+- [ ] Ví extension và thành viên khác chạy lại trên máy khác; không lấy EIP-1193 injected hoặc clone cùng máy thay nghiệm thu này.
+
 ## Nền tảng hiện có
 
 - [x] Pin Foundry 1.8.5, compiler và dependency qua submodule/lockfile.
@@ -16,7 +36,7 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 Các mục đã đánh dấu là thành phần đã được thiết lập, không phải bằng chứng
 nghiệm thu toàn hệ thống. Fixture SC01 không phải receipt on-chain.
-Đã tích hợp GOV/BUD/Treasury/BudgetGovernor, BE02 và frontend TV3 `47f91d5` vào working tree TV4. TimelockController OZ5.4.0 thật đã dùng cho deploy/seed/check-roles/smoke local; ngày 22/10 có governance→PostgreSQL raw acceptance. Projection/API, reorg/rebuild nghiệp vụ và UI wallet thật vẫn thiếu; SC05/testnet chưa peer nghiệm thu.
+Các thành phần local hiện có gồm governance, BE03–BE06 và wallet/API; xem mục24/10. TimelockController OZ5.4.0 thật đã được kiểm qua deploy/seed/check-roles/smoke. SC05/testnet và full recovery/reorg chưa peer nghiệm thu.
 
 ## Bổ sung TV4 ngày 23/10/2026
 

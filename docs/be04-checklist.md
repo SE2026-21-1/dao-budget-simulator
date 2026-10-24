@@ -1,7 +1,8 @@
 # BE04 Checklist bàn giao
 
-Nhánh `feature/tv2-be04`, nền `4b9f060` của BE03 / PR #22. PR #22 chưa merge,
-nên PR #23 giữ base `feature/tv2-be03`.
+Nhánh `feature/tv2-be04`, nền `4b9f060` của BE03. Ngày 24/10, BE03 đã merge
+qua PR #22 (`a36247a`), BE04 qua PR #26 (`1451779`). PR #23 là bàn giao
+lịch sử trên base BE03, không dùng trạng thái của nó để suy BE04 chưa có trên Dev.
 Phạm vi FR04, FR09, FR11, FR13; liên quan #18.
 
 - [x] Proposal từ description nguyên bản + calldata, kiểm proposalId/hash.
@@ -21,12 +22,14 @@ Phạm vi FR04, FR09, FR11, FR13; liên quan #18.
 - [x] Hồi quy BE02/BE03: 86 unit/CLI và 21 + 16 PostgreSQL PASS.
 - [x] GitHub Actions trên code head `53638b816d2b327d6a41fd8657566ee3f503b956`: [run 40078301376](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40078301376) PASS; cả 5 job, gồm BE04 projection/atomic PostgreSQL và live reconciliation, đều success.
 - [ ] TV1/TV4 peer review. CI PASS và evidence local không thay thế approval.
-- [x] Publish nhánh BE04 và [PR #23](https://github.com/SE2026-21-1/dao-budget-simulator/pull/23) kế thừa BE03; open, ready for review, TV1/TV4 được request, chưa merge.
+- [x] BE04 đã được tích hợp vào Dev qua [PR #26](https://github.com/SE2026-21-1/dao-budget-simulator/pull/26).
 
 Nội dung và phạm vi review dự kiến nằm tại [be04-pr.md](be04-pr.md).
-Review submissions và inline threads hiện chưa có. Docker/PowerShell wrappers
-local BLOCKED do runtime không có trên WSL; các GitHub Actions jobs nêu trên
-đã thực sự chạy thành công trên GitHub.
+Trạng thái review lịch sử cần đối chiếu GitHub; nghiệm thu local không là approval.
+TV4 đã chạy độc lập native PostgreSQL 18.4: 10/10 projection DB tests,
+live Anvil → BE03 → BE04 → HTTP API và hai BE06 rebuild tại H=67 đều PASS.
+[Evidence mới](evidence/tv4-20261024-acceptance/native/report.json) ghi riêng
+runtime, source hashes và cleanup; Docker trên máy TV4 vẫn bị từ chối quyền.
 
 Evidence ban đầu: [report](evidence/be04-20261024/report.md), [live](evidence/be04-20261024/live.json).
 Evidence sửa P2: [report](evidence/be04-p2-fix-20261024/report.md),

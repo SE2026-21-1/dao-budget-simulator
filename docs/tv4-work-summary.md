@@ -1,8 +1,8 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6, **22/10/2026** ở mục7–8 và **23/10/2026** ở mục9. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả mới được ghi riêng.
+Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10** ở mục5–6, **22/10** ở mục7–8, **23/10** ở mục9–10 và **24/10/2026** ở mục11. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
-Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
+Nhánh bàn giao: `feature/tv4-operation` → `Dev`, hiện qua [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21); PR #5 thuộc lịch sử tích hợp trước.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
@@ -386,4 +386,22 @@ phân trang20/20/5, search/filter, số tiền đúng, dev retry/recovery và pr
 bỏ qua error injection. [Commit map, source hashes, browser và screenshot](evidence/tv4-20261023/team-update/verification.json).
 Không coi cập nhật giao diện thành wallet/API E2E; #18/#19/#20 vẫn còn điều kiện
 bàn giao. Không tự approval hoặc merge PR của nhóm.
+
+
+## 11. TV4 nghiệm thu tích hợp ngày 24/10/2026
+
+- Merge Dev1451779 qua613b62d; candidate BE05/BE06c41a9ab qua0480c84; TV3wallet9f4d57a qua c348896. Giữ fixture/accessibility/smoke/oracle TV4, không nhận phần nguồn TV1/TV2/TV3 là tự viết.
+- Thêm `.nvmrc`24.15.0 và native PostgreSQL18.4 acceptance runner:cluster/roles/database tách theo suite, logs/source/binary hashes, bounded cleanup và SIGTERM143. Không cần Docker/sudo/psql; không dùng DB/RPC caller.
+- Thêm real-chain NFR02 benchmark100proposal/1000vote,10ví×100GOV,10client/60s; lần đầu8133success/0error,p95133,652ms. Optional `--benchmark` cho runner provision DB riêng trước cleanup.
+- Full Foundry147PASS với fuzz256/invariant100×50 seed0x20261021; backend64+22+27+5,51real-DB tests,8process và6frontend behavior tests PASS. Có liveAPI vàhai BE06 rebuild đúngH67/hash,post-H exclusion/mismatch probe.
+- E2E bằng injected EIP-1193 forward Anvil thật: A+B700For chi1000BUD; UI/API quỹ9000; cancel/deposit/network/refusal/HTML-safe.12checks,4route×390/1366 và keyboard skip-link PASS.
+- Tái hiện/sửa buildTS1294, cancellation false-success, repricing wrong-hash, stale-account delegation refresh, mất receipt do unmount, wallet context hot-update, source label, mobile overflow và lỗi mạng tiếng Việt. Không suppress cảnh báo; không dùng mock receipt.
+- Reorg thật **KHÔNG ĐẠT**: syncdừngCHECKPOINT_HASH_MISMATCH/SQLgiữ nguyên nhưngAPI200vớihashorphan. TV2BE07/backoff/invalidation vàfreshnessproduction còn thiếu; không chốt release.
+- GitHub chưa có credential nên chưa push/updatePR#21/issues#18/#19/#20 hoặc xinapproval thật; đã chuẩn bị [nội dung bàn giao](tv4-handoff-20261024.md). Testnet thiếu network/RPC/signer/gas/TV1review; không ký/gửi suy đoán.
+
+[Báo cáo phạm vi và bằng chứng](evidence/tv4-20261024-acceptance/report.md),
+[native](evidence/tv4-20261024-acceptance/native/report.json),
+[browser](evidence/tv4-20261024-acceptance/browser.json),
+[benchmark](evidence/tv4-20261024-acceptance/benchmark.json),
+[reorg](evidence/tv4-20261024-acceptance/reorg.json).
 

@@ -1,0 +1,76 @@
+{
+  "startedAt": "2026-10-24T03:41:12.142Z",
+  "status": "FAIL",
+  "classification": "Fresh real Anvil receipts -> BE03 real RPC -> isolated real PostgreSQL; no BE04",
+  "commands": [],
+  "stages": [],
+  "receipts": [],
+  "assertions": [],
+  "cleanup": {},
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "platform": "win32",
+    "anvil": {
+      "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+      "sha256": "5c2217d266135a6fbe5faaccccb1e9eb2ddc1d06f8aabeef5fdb16d9846e4880",
+      "output": "anvil Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+    },
+    "cast": {
+      "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+      "sha256": "b2541a63789931fc4c170e2502c16c3be259f2da4daba1a8d05ea5cfa7729baa",
+      "output": "cast Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+    },
+    "postgres": {
+      "executable": "C:\\Program Files\\PostgreSQL\\18\\bin\\postgres.exe",
+      "sha256": "ed1fa062cea44b0d200d2e10099ebc85faff7ef27df75a2e813ffd56d8a60868",
+      "output": "postgres (PostgreSQL) 18.4"
+    },
+    "sourceCommit": "1a4c262f387fa7480020da17dde5d608a5193eaf"
+  },
+  "sourceHashes": {
+    "contracts/BudgetGovernor.sol": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+    "contracts/BudgetToken.sol": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+    "contracts/GovernanceToken.sol": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+    "contracts/Treasury.sol": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+    "contracts/interfaces/ITreasury.sol": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+    "indexer/abi-registry.ts": "77f9a9ebe8f28e89eda4b40c3eebf57ed5d948cdbced19984fca22ab92fee08e",
+    "indexer/cli.ts": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+    "indexer/config.ts": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/errors.ts": "61fae126552748bc8c5890904b2cfea0ba8dc9522d333a0e85c2471730650f75",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+    "indexer/syncer.ts": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+    "indexer/types.ts": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+    "indexer/config/example.json": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+    "indexer/config/example.metadata.sql": "2c46e30630a3758e6a8bbbf891a5f2961d114a12c496745bf23c915e2a3f5b1b",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "scripts/check.py": "f3e9e689557820042b5f493051c30da463cb98926401ae8caa337c294f7de472",
+    "scripts/check_be01.mjs": "4f27a50582d56885b43d1d59a41837b86c5cd962fd71d9d0f466a863fa2a8edc",
+    "scripts/check_be01_database.ps1": "f9eacefa22880ac65ff9ab923c1a355a5de5cd8adbb11a2004ce852ca933da29",
+    "scripts/check_be01_database.sh": "21246c61e97d0764281eaedbfebf1c4b5fe7db33f65d52665cc4563d03d3514d",
+    "scripts/check_be02_database.ps1": "3e7cdc81f173ec24fe276f6c92811a072aa1a3f758746c3a2ecb65a4daab7063",
+    "scripts/check_be02_database.sh": "01d54741eb8077ff0388a01520bb71666181219763c44910b05d5c8edd1357f5",
+    "scripts/check_be03_database.ps1": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+    "scripts/check_governance_database.sh": "6e51002653259c60f4b36efe5f428536fb3a53ad0f4b0e7964d47134a68e65e7",
+    "scripts/check_roles.mjs": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+    "scripts/ci.sh": "b341dc868ee52a1072a694c4a36a59fa110ba50b00b5b0b0a114ec0eb3453982",
+    "scripts/deploy_local.mjs": "ce40fb5f4b14ce22e100a694e72c0ddb2217f36920b62d7edec94abb9898c0db",
+    "scripts/export_local_handoff.mjs": "1186ac1c951a37982ddf92379ff69d7a6d953b45f1af97b55231624d22646495",
+    "scripts/generate_be01_fixtures.mjs": "ca0f7167f1782afe311439a2ef72eac7e6645cdc56e475acde8a9d769a81fce7",
+    "scripts/governance_local.mjs": "27524cac530930dc94b5fd6a5f06d733f25bd14c8021748668ab22941dc2031d",
+    "scripts/governance_storage.mjs": "3814c36c386f43790b4a6c8523e53047db14e38d5a5f32944a9a8ba465da7bab",
+    "scripts/smoke_governance.mjs": "803e567459a58e62410b4d763e8bdd4bf3ee33fffe253212af584d7800b72417",
+    "scripts/smoke_treasury.mjs": "6c841910f75ba491a4e098309225877c89fffe037159eddf58888a167e5f3e9f"
+  },
+  "error": {
+    "message": "out/GovernanceAttacks.t.sol/GovernanceAttacksTest.json: source mismatch tests/invariant/GovernanceInvariant.t.sol\n+ actual - expected\n\n+ '0x00ad4e272699612aec48d5a4ef724502f2198fc75f97b80079e5686f819951af'\n- '0x08bbba3abd9672d50c171ea8c5122e5c7d94d5599681f8bd6f6d4a53c717cf11'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: out/GovernanceAttacks.t.sol/GovernanceAttacksTest.json: source mismatch tests/invariant/GovernanceInvariant.t.sol\n+ actual - expected\n\n+ '0x00ad4e272699612aec48d5a4ef724502f2198fc75f97b80079e5686f819951af'\n- '0x08bbba3abd9672d50c171ea8c5122e5c7d94d5599681f8bd6f6d4a53c717cf11'\n\n    at file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:100:20"
+  },
+  "finishedAt": "2026-10-24T03:41:13.363Z"
+}

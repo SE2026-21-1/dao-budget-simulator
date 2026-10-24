@@ -126,15 +126,24 @@ async function loadProject(root) {
     assert.deepEqual(canonicalAbi(artifact.abi), canonicalAbi(metadata.output.abi), `${key}: ABI disagrees with compiler metadata`);
     assert.match(artifact.bytecode.object, /^0x[0-9a-fA-F]+$/, `${key}: missing/unlinked creation bytecode`);
     assert.match(artifact.deployedBytecode.object, /^0x[0-9a-fA-F]+$/, `${key}: missing/unlinked runtime bytecode`);
+    const compilerSourceNormalizations = {};
     for (const [source, info] of Object.entries(metadata.sources)) {
       const contents = await hashFile(source);
-      assert.equal(keccak256(contents), info.keccak256, `${key}: stale artifact or changed source ${source}`);
+      let compilerHash = keccak256(contents);
+      // Foundry normalizes CRLF before passing Solidity sources to solc. Keep
+      // sourceHashes bound to the original bytes; accept only this exact input
+      // normalization when validating the compiler metadata, never other edits.
+      if (compilerHash !== info.keccak256) {
+        compilerHash = keccak256(Buffer.from(contents.toString('utf8').replaceAll('\r\n', '\n')));
+        compilerSourceNormalizations[source] = 'crlf-to-lf';
+      }
+      assert.equal(compilerHash, info.keccak256, `${key}: stale artifact or changed source ${source}`);
     }
     artifacts[key] = artifact;
     artifactProvenance[key] = {
       path, sha256: sha(bytes), abiSha256: sha(JSON.stringify(artifact.abi)),
       creationBytecodeSha256: sha(artifact.bytecode.object), runtimeBytecodeSha256: sha(artifact.deployedBytecode.object),
-      compiler: metadata.compiler, settings: metadata.settings,
+      compiler: metadata.compiler, settings: metadata.settings, compilerSourceNormalizations,
       immutableReferences: artifact.deployedBytecode.immutableReferences ?? {},
     };
   }

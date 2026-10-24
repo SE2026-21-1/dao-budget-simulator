@@ -1,0 +1,31 @@
+{
+  "classification": "Synthetic RPC preflight, real repository deployment source verification; zero real transactions",
+  "cases": [
+    {
+      "label": "original CRLF checkout accepted",
+      "status": "PASS",
+      "interceptedSendAttempts": 1,
+      "error": "VERIFIED_PROJECT_NO_REAL_SEND"
+    },
+    {
+      "label": "same source LF accepted",
+      "status": "PASS",
+      "interceptedSendAttempts": 1,
+      "error": "VERIFIED_PROJECT_NO_REAL_SEND"
+    },
+    {
+      "label": "changed Solidity identifier rejected",
+      "status": "PASS",
+      "interceptedSendAttempts": 0,
+      "error": "GOV: stale artifact or changed source contracts/GovernanceToken.sol\n+ actual - expected\n\n+ '0xf69f8b3c10eed103b9fbfade10da60a9f28b57bfe32c5f108468e88281079d3a'\n- '0x5ddb5388348eff11df127e129489311153a3937479e78a5195ee7300ee7bab5a'\n"
+    },
+    {
+      "label": "extra source comment rejected",
+      "status": "PASS",
+      "interceptedSendAttempts": 0,
+      "error": "GOV: stale artifact or changed source contracts/GovernanceToken.sol\n+ actual - expected\n\n+ '0xddb11dae8c40f12e7626ca571864a3c018591ce4febe79ca887950dd22be8066'\n- '0x5ddb5388348eff11df127e129489311153a3937479e78a5195ee7300ee7bab5a'\n"
+    }
+  ],
+  "status": "PASS",
+  "temporaryCopyRemoved": true
+}

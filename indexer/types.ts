@@ -17,6 +17,8 @@ export interface IndexerConfig {
   toBlock: bigint | 'latest';
   batchSize: bigint;
   contracts: ContractConfig[];
+  /** Number of following blocks required; BE03 defaults to 2. */
+  confirmations?: number;
 }
 
 export interface BlockHeader {
@@ -54,6 +56,26 @@ export interface LogBatch {
   toBlock: bigint;
   blocks: BlockHeader[];
   logs: DecodedLog[];
+  scannedSources?: string[];
+}
+
+export interface Checkpoint {
+  number: bigint;
+  hash: string;
+}
+
+export interface DecodeIssue {
+  blockNumber: string;
+  transactionHash: string;
+  logIndex: string;
+  code: string;
+  abiVersion: string;
+}
+
+export interface SyncStorage {
+  loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null>;
+  writeCheckpointBatch(config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null, head: bigint): Promise<WriteResult>;
+  decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues?: DecodeIssue[] }>;
 }
 
 export interface WriteResult {

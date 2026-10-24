@@ -1,0 +1,68 @@
+Command: npm run test:be02:db
+Exit code: 0
+
+
+> dao-budget-simulator@0.0.0 test:be02:db
+> powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1
+
+The files belonging to this database system will be owned by user "Cuongdz".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+creating directory C:/Users/Cuongdz/AppData/Local/Temp/dao-be02-pg-90e846fe722e489d9779fe7e53d11a7c/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... windows
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... Asia/Bangkok
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    ^"C^:^\Program^ Files^\PostgreSQL^\18^\bin^\pg^_ctl^" -D ^"C^:^\Users^\Cuongdz^\AppData^\Local^\Temp^\dao^-be02^-pg^-90e846fe722e489d9779fe7e53d11a7c^\data^" -l logfile start
+
+waiting for server to start.... done
+server started
+CREATE DATABASE
+▶ PostgreSQL storage (real isolated PostgreSQL)
+  ✔ writes complete headers including empty block, exact uint256, original JSON and scoped raw columns (20.513ms)
+  ✔ identical and concurrent retries do not duplicate events or blocks (61.5688ms)
+  ✔ detects changed block hash, parent hash and timestamp with the same block key (41.4356ms)
+  ✔ detects raw/decode content conflicts rather than suppressing the chain dedup key (77.5928ms)
+  ✔ same chain dedup key cannot be silently copied to another deployment (15.0286ms)
+  ✔ unknown topics and decoder errors retain raw data and NULL decode columns (15.4114ms)
+  ✔ missing deployment or chain mismatch fails before inserting any data (8.1671ms)
+  ✔ numeric metadata with an explicit zero scale still matches its exact integer configuration (8.3449ms)
+  ✔ detects disconnected stored neighbors on either boundary across separate runs (21.0434ms)
+  ✔ detects conflicting canonical coordinates even when the transaction dedup key differs (24.7128ms)
+  ✔ detects inverse transaction/log ordering against logs saved by a previous run (20.9222ms)
+  ✔ rejects a stored transaction appearing in a different connected block with a new log index (12.5521ms)
+  ✔ every requested contract role/address/deploymentBlock/ABI must match existing metadata (26.8675ms)
+  ✔ later event conflict rolls back newly inserted headers and earlier events, preserving prior batch (11.7329ms)
+  ✔ database errors roll back inserted headers and raw events (10.8387ms)
+  ✔ rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches (18.8728ms)
+  ✔ BE01 foreign keys reject a log linked to another deployment contract or block hash (60.8851ms)
+  ✔ does not advance checkpoints or create projections or overwrite deployment metadata (22.7749ms)
+  ✔ actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates (1581.3184ms)
+  ✔ actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields (979.6309ms)
+  ✔ actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back (1166.0466ms)
+✔ PostgreSQL storage (real isolated PostgreSQL) (4411.8331ms)
+ℹ tests 21
+ℹ suites 1
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5121.1976
+PASS: BE01 migration/constraints and BE02 storage on isolated real PostgreSQL.
+waiting for server to shut down.... done
+server stopped
+Temporary cluster and logs retained at: C:\Users\Cuongdz\AppData\Local\Temp\dao-be02-pg-90e846fe722e489d9779fe7e53d11a7c

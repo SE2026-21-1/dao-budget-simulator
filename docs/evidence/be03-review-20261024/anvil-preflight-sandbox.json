@@ -1,0 +1,83 @@
+{
+  "recordedAt": "2026-10-24T02:43:54.260Z",
+  "classification": "environment preflight, no ingestion",
+  "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+  "command": [
+    "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "55344",
+    "--chain-id",
+    "31337",
+    "--hardfork",
+    "osaka",
+    "--silent"
+  ],
+  "rpcUrl": "http://127.0.0.1:55344",
+  "pid": 25152,
+  "clientVersion": "anvil/v1.7.1",
+  "chainId": "31337",
+  "metadata": {
+    "clientVersion": "anvil/v1.7.1",
+    "clientSemver": "1.7.1+4072e48705.1778226879.dist",
+    "clientCommitSha": "4072e48705af9d93e3c0f6e29e93b5e9a40caed8",
+    "chainId": 31337,
+    "instanceId": "0x924d635ad775edc073f2a1713051b863e3d90293c203872942f35f92d6768281",
+    "latestBlockNumber": 0,
+    "latestBlockHash": "0x903b10daa805e77254d8f661b306e9426d22befb11491a115199d6ea5c795005",
+    "forkedNetwork": null,
+    "snapshots": {}
+  },
+  "genesis": {
+    "hash": "0x903b10daa805e77254d8f661b306e9426d22befb11491a115199d6ea5c795005",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "miner": "0x0000000000000000000000000000000000000000",
+    "stateRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "difficulty": "0x0",
+    "number": "0x0",
+    "gasLimit": "0x1c9c380",
+    "gasUsed": "0x0",
+    "timestamp": "0x6adc1b6a",
+    "extraData": "0x",
+    "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "nonce": "0x0000000000000000",
+    "baseFeePerGas": "0x3b9aca00",
+    "withdrawalsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "blobGasUsed": "0x0",
+    "excessBlobGas": "0x0",
+    "parentBeaconBlockRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "totalDifficulty": "0x0",
+    "size": "0x267",
+    "uncles": [],
+    "transactions": [],
+    "withdrawals": []
+  },
+  "castRpc": {
+    "command": [
+      "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+      "chain-id",
+      "--rpc-url",
+      "http://127.0.0.1:55344"
+    ],
+    "exitCode": 1,
+    "signal": null,
+    "stdout": "",
+    "stderr": "Error: error sending request for url (http://127.0.0.1:55344/)\n\nContext:\n- Error #0: client error (Connect)\n- Error #1: tcp connect error\n- Error #2: No connection could be made because the target machine actively refused it. (os error 10061)"
+  },
+  "error": "Expected values to be strictly equal:\n\n1 !== 0\n",
+  "status": "PREFLIGHT_FAILED",
+  "shutdown": {
+    "code": null,
+    "signal": "SIGTERM"
+  },
+  "processStopped": true,
+  "anvilStdout": "",
+  "anvilStderr": "",
+  "rpcUnavailableAfterStop": true
+}

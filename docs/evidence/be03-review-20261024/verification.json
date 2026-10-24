@@ -1,0 +1,406 @@
+{
+  "recordedAt": "2026-10-24T02:50:09.640Z",
+  "branch": "feature/tv2-be03",
+  "baseSha": "1a4c262f387fa7480020da17dde5d608a5193eaf",
+  "candidate": "Uncommitted BE03 working tree over baseSha; sourceHashes identify tested source. No runtime/test changes in this review.",
+  "candidateSourceDigest": "f49ef491bce29a9a2afda91ddd82934af6444a63c5dc3b62c4c4e5c5550b6f9a",
+  "review": {
+    "result": "READY_FOR_SOURCE_REVIEW",
+    "findingsRequiringCodeFix": [],
+    "runtimeChanged": false,
+    "regressionsAdded": false,
+    "details": "review.md",
+    "agentsInstructions": "No AGENTS.md found in repository source or D:/ parent.",
+    "canonicalVerification": "--sync always checks RPC chainId and checkpoint hash, including idle. --redecode is offline and validates DB chain/deployment/scope/K/prefix; it does not verify RPC."
+  },
+  "environment": {
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "powershell": "5.1.26100.9711",
+    "timezone": "Asia/Bangkok",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "postgres": "18.4",
+    "foundryRuntimeProbed": "Anvil/Cast 1.7.1, 4072e48705af9d93e3c0f6e29e93b5e9a40caed8",
+    "compilerRequiredByDeployHelper": "0.8.37+commit.f401782d",
+    "optimizerRuns": 200,
+    "evmVersion": "osaka",
+    "ciFoundryPin": "v1.8.5; not executed here",
+    "probes": "environment-probes.json"
+  },
+  "freshChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.txt"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "typecheck.txt"
+    },
+    {
+      "command": "npm run test:be03",
+      "exitCode": 0,
+      "log": "be03-unit.txt"
+    },
+    {
+      "command": "npm run test:be03:db",
+      "executionContext": "require_escalated",
+      "exitCode": 0,
+      "log": "be03-db-escalated.txt"
+    },
+    {
+      "command": "node --import tsx --test tests/indexer/decoder.test.ts",
+      "exitCode": 0,
+      "log": "decoder.txt"
+    },
+    {
+      "command": "git diff --check; untracked source/document whitespace checks",
+      "exitCode": 0,
+      "log": "whitespace.json"
+    },
+    {
+      "command": "node --check docs/evidence/be03-review-20261024/probe-anvil.mjs",
+      "exitCode": 0,
+      "log": "Probe executed successfully as recorded in anvil-preflight-command.json"
+    }
+  ],
+  "counts": {
+    "be03": {
+      "pass": 22,
+      "fail": 0,
+      "skip": 0
+    },
+    "be03Postgres": {
+      "pass": 16,
+      "fail": 0,
+      "skip": 0
+    },
+    "decoder": {
+      "pass": 25,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "failedEnvironmentAttempts": [
+    {
+      "command": "npm run test:be03:db",
+      "exitCode": 1,
+      "log": "be03-db.txt"
+    },
+    {
+      "command": "node docs/evidence/be03-review-20261024/probe-anvil.mjs",
+      "executionContext": "sandbox",
+      "exitCode": 1,
+      "log": "anvil-preflight-sandbox.json",
+      "error": "Error: error sending request for url (http://127.0.0.1:55344/)\n\nContext:\n- Error #0: client error (Connect)\n- Error #1: tcp connect error\n- Error #2: No connection could be made because the target machine actively refused it. (os error 10061)",
+      "successfulRetry": "anvil-preflight-command.json"
+    },
+    {
+      "command": "npm pack @foundry-rs/cast-win32-amd64@1.7.1 --pack-destination dist/be03-tools --ignore-scripts",
+      "exitCode": 1,
+      "context": "sandbox",
+      "error": "EACCES fetching https://registry.npmjs.org/@foundry-rs%2fcast-win32-amd64; no cache log writable",
+      "successfulRetry": "cast-package.json"
+    }
+  ],
+  "successfulEnvironmentRetries": [
+    {
+      "command": "node docs/evidence/be03-review-20261024/probe-anvil.mjs",
+      "executionContext": "require_escalated",
+      "exitCode": 0,
+      "log": "anvil-preflight.json",
+      "precedingSandboxFailure": "Cast chain-id: loopback connection refused (os error 10061); Node RPC succeeded, Anvil stopped in finally"
+    },
+    {
+      "command": "npm pack @foundry-rs/cast-win32-amd64@1.7.1 --pack-destination dist/be03-tools --ignore-scripts --fetch-retries=0 --fetch-timeout=20000",
+      "exitCode": 0,
+      "executionContext": "require_escalated",
+      "precedingSandboxFailure": "EACCES requesting https://registry.npmjs.org/@foundry-rs%2fcast-win32-amd64"
+    }
+  ],
+  "historicalChecksNotRerun": {
+    "verification": "../be03-20261024/verification.json",
+    "recordedAt": "2026-10-24 02:32:13 UTC",
+    "be02": "64/64; historical only",
+    "be02Postgres": "21/21; historical only",
+    "be01Fixtures": "historical only"
+  },
+  "sourceComparisonWithPriorRun": {
+    "comparedPaths": [
+      "indexer/abi-registry.ts",
+      "indexer/cli.ts",
+      "indexer/config.ts",
+      "indexer/reader.ts",
+      "indexer/rpc.ts",
+      "indexer/scanner.ts",
+      "indexer/scope.ts",
+      "indexer/storage.ts",
+      "indexer/syncer.ts",
+      "indexer/types.ts",
+      "database/migrations/001_initial.sql",
+      "database/migrations/002_be03.sql",
+      "package.json",
+      "package-lock.json",
+      "tests/indexer/decoder.test.ts",
+      "tests/indexer/syncer.test.ts",
+      "tests/indexer/checkpoint-storage.test.ts",
+      "tests/indexer/crash-worker.ts",
+      "scripts/check_be03_database.ps1"
+    ],
+    "differingPaths": [],
+    "interpretation": "Runtime/test bytes match original recorded hashes; fresh BE03/decoder results are still recorded independently."
+  },
+  "integration": {
+    "status": "BLOCKED",
+    "reason": "Forge cannot start under Windows Application Control; no compiler artifacts. Anvil and Cast do run independently.",
+    "forgeCommands": "forge-escalated.json",
+    "forgeExecutableExitCode": null,
+    "artifactProvenanceVerified": false,
+    "freshAnvilRpc": {
+      "chainId": "31337",
+      "instanceId": "0x3d88bc1f6ad40b586f6acb33d2df32aabe334d412957412ffc0161945c1e4240",
+      "genesisHash": "0x73c6e43d0ebbba7a09a6bd919eebb6601741a2d09266311e62cc5ba2ddb71c87",
+      "endpointAtProbeTime": "http://127.0.0.1:54456",
+      "headAfterAttempt": "0",
+      "activeNow": false,
+      "log": "anvil-preflight.json"
+    },
+    "castVersion": "cast-probe.json",
+    "deployCommand": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "scripts/deploy_local.mjs",
+      "--rpc",
+      "http://127.0.0.1:54456",
+      "--output",
+      "D:\\dao-budget-simulator\\docs\\evidence\\be03-review-20261024\\new-instance-manifest.json"
+    ],
+    "deployExitCode": 1,
+    "deployError": "Local deployment failed: ENOENT: no such file or directory, open 'D:\\dao-budget-simulator\\out\\GovernanceToken.sol\\GovernanceToken.json'",
+    "deploymentManifest": null,
+    "deploymentAddresses": null,
+    "transactionHashes": [],
+    "newTransactionsSent": false,
+    "freshVoteCastWithParamsReceipt": null,
+    "rpcToPostgresExercised": false,
+    "k2BoundaryOnFreshChain": "UNVERIFIED",
+    "freshChainResumeAndDedup": "UNVERIFIED",
+    "sameHeightReceiptSqlComparison": "UNVERIFIED",
+    "alternativeEnvironment": "WSL not installed (exit 1), Docker not on PATH; project CI read locally, not dispatched or modified."
+  },
+  "evidenceKinds": {
+    "synthetic": "All BE03/decoder test logs, including WithParams recovery, use synthetic events/RPC; PostgreSQL and child processes are real.",
+    "historicalReceipts": "Existing TV4 bundle on Dev; no new live deployment assertion or transactions against those addresses.",
+    "freshRpc": "Owned empty Anvil RPC preflight only; no deployment or fresh receipt, no ingestion into PostgreSQL."
+  },
+  "postgres": {
+    "cluster": "%TEMP%/dao-be03-pg-cab3857d277a48b1941783ca08bcd460",
+    "user": "be03_test",
+    "database": "be03_test",
+    "bind": "127.0.0.1:55198",
+    "serverLog": "postgres-server.txt",
+    "cleanup": "server stopped in runner finally; pg_ctl status separately returned 3 (no server running)",
+    "crashEvidence": [
+      {
+        "crashEvidence": "beforeCommit",
+        "beforeRestart": {
+          "blocks": 0,
+          "events": 0,
+          "checkpoint": null
+        },
+        "afterRestart": {
+          "blocks": 2,
+          "events": 1,
+          "checkpoint": "101"
+        },
+        "sql": {
+          "block_number": "101",
+          "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+          "header_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+          "events": 1
+        }
+      },
+      {
+        "crashEvidence": "afterCommit",
+        "beforeRestart": {
+          "blocks": 2,
+          "events": 1,
+          "checkpoint": "101"
+        },
+        "afterRestart": {
+          "blocks": 2,
+          "events": 1,
+          "checkpoint": "101"
+        },
+        "sql": {
+          "block_number": "101",
+          "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+          "header_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+          "events": 1
+        }
+      }
+    ],
+    "sql": "SELECT c.block_number::text,c.block_hash,b.block_hash AS header_hash,\n  (SELECT count(*)::int FROM raw_events WHERE deployment_id=c.deployment_id) AS events\nFROM checkpoints c JOIN indexed_blocks b USING (deployment_id,block_number,block_hash) WHERE c.deployment_id=$1",
+    "sqlClassification": "Synthetic headers/events stored and read from real isolated PostgreSQL, not Anvil receipt SQL."
+  },
+  "cleanup": {
+    "anvil": [
+      {
+        "pid": 25152,
+        "endpointAtProbeTime": "http://127.0.0.1:55344",
+        "stopped": true,
+        "rpcUnavailableAfterStop": true,
+        "exit": {
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      },
+      {
+        "pid": 28104,
+        "endpointAtProbeTime": "http://127.0.0.1:54456",
+        "stopped": true,
+        "rpcUnavailableAfterStop": true,
+        "exit": {
+          "code": null,
+          "signal": "SIGTERM"
+        }
+      }
+    ],
+    "crashChildrenAndSyntheticRpc": "Test teardown; crash child and real CLI restarts awaited",
+    "existingDatabaseUsed": false,
+    "oldDeploymentUsed": false,
+    "testnetTransactions": false,
+    "securityPolicyChanged": false
+  },
+  "dependencies": {
+    "TV1": "Peer review ABI/indexed fields, WithParams semantics and full source review.",
+    "TV4": "Allowed Foundry/solc build environment or compiler artifacts with verified metadata/source hashes, then fresh deploy/manifest/receipts and BE03 same-H acceptance."
+  },
+  "preserved": {
+    "unchangedFromBase": [
+      "database/migrations/001_initial.sql",
+      "package-lock.json",
+      "fixtures/api",
+      "fixtures/sc01",
+      "contracts",
+      "lib"
+    ],
+    "check": "git diff --exit-code -- <listed paths>: exit 0"
+  },
+  "submodules": [
+    {
+      "path": "lib/forge-std",
+      "sha": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219",
+      "workingTree": "clean"
+    },
+    {
+      "path": "lib/openzeppelin-contracts",
+      "sha": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+      "workingTree": "clean"
+    }
+  ],
+  "sourceHashes": {
+    "contracts/BudgetGovernor.sol": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+    "contracts/BudgetToken.sol": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+    "contracts/GovernanceToken.sol": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+    "contracts/Treasury.sol": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+    "contracts/interfaces/ITreasury.sol": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "database/tests/001_initial_checks.sql": "45dc35c92822b48067f9c98b54e30717f28e50001d80ded86e419bd5128c8f6e",
+    "foundry.lock": "515030960082805b0e943111b2d62127f5f85548dfcd1ba71cc2746bd4da8113",
+    "foundry.toml": "211fdac51a1fcdfe6bf67860d57ea89975569e6f4fa14d79d5259082a330868e",
+    "indexer/abi-registry.ts": "77f9a9ebe8f28e89eda4b40c3eebf57ed5d948cdbced19984fca22ab92fee08e",
+    "indexer/cli.ts": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+    "indexer/config.ts": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+    "indexer/config/example.json": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+    "indexer/config/example.metadata.sql": "2c46e30630a3758e6a8bbbf891a5f2961d114a12c496745bf23c915e2a3f5b1b",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/errors.ts": "61fae126552748bc8c5890904b2cfea0ba8dc9522d333a0e85c2471730650f75",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+    "indexer/syncer.ts": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+    "indexer/types.ts": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "package.json": "8708d771335df917c6d5ffc235aa016f9260d866ef5155917c60f647b25c0106",
+    "scripts/check.py": "f3e9e689557820042b5f493051c30da463cb98926401ae8caa337c294f7de472",
+    "scripts/check_be01.mjs": "4f27a50582d56885b43d1d59a41837b86c5cd962fd71d9d0f466a863fa2a8edc",
+    "scripts/check_be01_database.ps1": "f9eacefa22880ac65ff9ab923c1a355a5de5cd8adbb11a2004ce852ca933da29",
+    "scripts/check_be01_database.sh": "21246c61e97d0764281eaedbfebf1c4b5fe7db33f65d52665cc4563d03d3514d",
+    "scripts/check_be02_database.ps1": "3e7cdc81f173ec24fe276f6c92811a072aa1a3f758746c3a2ecb65a4daab7063",
+    "scripts/check_be02_database.sh": "01d54741eb8077ff0388a01520bb71666181219763c44910b05d5c8edd1357f5",
+    "scripts/check_be03_database.ps1": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+    "scripts/check_governance_database.sh": "6e51002653259c60f4b36efe5f428536fb3a53ad0f4b0e7964d47134a68e65e7",
+    "scripts/check_roles.mjs": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+    "scripts/ci.sh": "b341dc868ee52a1072a694c4a36a59fa110ba50b00b5b0b0a114ec0eb3453982",
+    "scripts/deploy_local.mjs": "ce40fb5f4b14ce22e100a694e72c0ddb2217f36920b62d7edec94abb9898c0db",
+    "scripts/export_local_handoff.mjs": "1186ac1c951a37982ddf92379ff69d7a6d953b45f1af97b55231624d22646495",
+    "scripts/generate_be01_fixtures.mjs": "ca0f7167f1782afe311439a2ef72eac7e6645cdc56e475acde8a9d769a81fce7",
+    "scripts/governance_local.mjs": "6406d8cc19dc434d4a2cac4999fc1d52a05ae0ded16a40cc961d58a67796eae7",
+    "scripts/governance_storage.mjs": "3814c36c386f43790b4a6c8523e53047db14e38d5a5f32944a9a8ba465da7bab",
+    "scripts/smoke_governance.mjs": "803e567459a58e62410b4d763e8bdd4bf3ee33fffe253212af584d7800b72417",
+    "scripts/smoke_treasury.mjs": "6c841910f75ba491a4e098309225877c89fffe037159eddf58888a167e5f3e9f",
+    "shared/abi/BudgetGovernor.json": "534f464886e3870b0883f576b61cba845ae54541b8157ebe1b22b989877b9451",
+    "tests/indexer/checkpoint-storage.test.ts": "6e962f642d0943e6206b0a6520a89b88b2d5cb8a11a906f0fe4a76c8540fcfdb",
+    "tests/indexer/cli.test.ts": "130ed1dea746957f187081d2aa7ad831966f44d9ed680ef2dae09625788cb58d",
+    "tests/indexer/config.test.ts": "b514860f2460a046b24b37ee2e76803cce1a9833ae34dff133d0bf20260e8444",
+    "tests/indexer/crash-worker.ts": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+    "tests/indexer/decoder.test.ts": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+    "tests/indexer/helpers.ts": "c6d123aad457354b65e84faf28651d4a1cdd9e1d92e28ee275c75092d3cc9fba",
+    "tests/indexer/reader.test.ts": "d91cf1b651d22af9c48b74636da6baeb6ed9be2e0fa0e57f91970b006c2830a9",
+    "tests/indexer/storage.test.ts": "b690a2726d84e5da7966c5637b747ee45003090356fdc66f7f62cf5fd63df77b",
+    "tests/indexer/syncer.test.ts": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+    "tsconfig.build.json": "fb30b3b0c40147dc441087d57595d54bdae5d2d56c43e22d2db57c0bca024636",
+    "tsconfig.json": "e2aba9596967b5b891b18dba78a67d5716e196de97708910e0890f69f7944ec4"
+  },
+  "evidenceHashes": {
+    "anvil-preflight-command.json": "6ad153bde90a2ee434fcb1dcefaf64a1f8c70088397c8ed2c767668f496310c9",
+    "anvil-preflight-sandbox.json": "65d3395f2851a308a9c56d496d90271af8bd7c8c06d73abe27f60d31c2e9bb1f",
+    "anvil-preflight.json": "f011aaf1452ac39b0b9b545516b1a0c37ba99c34b91d3a1df0f554046d6e478f",
+    "be03-db-escalated.json": "8587a2fa6f43f7b78048b972bf202e8f9b4e29c88625618fc5c8dca6c48796c5",
+    "be03-db-escalated.txt": "86d7c78156673dcc3efe69e522820cbaa3f2d7d3e63adab6850f94a52cdb3599",
+    "be03-db.json": "b47dc83eb43c164d195b6f922e8e2acd8fbd320a1919f37f4de887a8613c0a13",
+    "be03-db.txt": "8ec468a40450bbd34f6f753144891de151bb078200a02e8b5aac47ebbce2b837",
+    "be03-unit.json": "9f9fbbb6edeca880925321eedca7d05da72617bf92f379cbbcf8bf638a7601b9",
+    "be03-unit.txt": "e83af8e037c77b326f72421606ff6f400c6ae9fd8e1a7525d69ae7a463e9928f",
+    "build.json": "b472f39ffcf78e2a560eb393ece98810461a638fed918043a509ac46f721b270",
+    "build.txt": "ca4eb94aeb52b4c4fc61466f0957ebcf98502397c97d85f4993571d91c9a9186",
+    "cast-package.json": "5d811f6d29d30c21f0b8d3d67e3ccfc548e9e230c6f278d1b80d1446f592aa09",
+    "cast-package.txt": "c6767aade768a7f1489dea7731023c92d5e861d6344800f71a063b3197c04f7c",
+    "cast-probe.json": "76bd6512e70af5454f9a37590f6e699d54733272bdf2dc6679128877e1dae614",
+    "cleanup.json": "d26acb3132d0af70b0c29b520962f74498849d952945335f961074fe924e314b",
+    "decoder.json": "699d3f5050b01d9f777dda54ef5b15038f214f0d630a106e0539075b8a6ac86f",
+    "decoder.txt": "dad571ec8eeef02c53c76facb212ac074c7086ad17854972676614d44b088527",
+    "environment-probes.json": "cfdbcecc19ac32c32e255d1f254705f690c6b339a0dfa8a0a895f7b0e60cbf61",
+    "forge-escalated.json": "cc6c39e681d830c37889466f8315347ee0e92972a4219e443fe4f7d2ddd21f30",
+    "foundry-probes.json": "46f5df8ea05d8aaf310da45bf679f95ce089bdccdada0beee5c436031a610f94",
+    "postgres-server.txt": "e2d4082c398dafcd9189816973787266c7c7b38412b29134124e7cb6bdacd2ef",
+    "probe-anvil.mjs": "6a873f20113f36893ef07f9e6c73de1d3f313ab91a937800c01f6282daf9b5ac",
+    "typecheck.json": "fc911ee296cd72c44d43cd2b253fc7684b553069808a7bb8ebd19d37655d7883",
+    "typecheck.txt": "07a0b1a4a94386e58e070fe9817cf7c332c96d17ba8561038a3b7a62de57bb30",
+    "whitespace.json": "dd96468db2dbce4905fe3c2b19baa5dd27b05c89f6e4c710a668a6c608ee878c"
+  },
+  "commitScope": {
+    "list": "commit-candidates.txt",
+    "includes": "Existing uncommitted BE03/WithParams source, tests, migration, docs and both evidence bundles.",
+    "generatedOrTemporaryExcluded": [
+      "dist/ (TypeScript build, downloaded Foundry binaries/tarballs and report-generation helper)",
+      "node_modules/",
+      "out/",
+      "cache/",
+      "%TEMP%/dao-be03-pg-* (owned stopped test clusters)",
+      "%TEMP%/be03-crash-* (test configs)",
+      "indexer/config/local*.json"
+    ],
+    "actualGitWrites": "No commit, staging, push, PR, merge, GitHub comment or workflow dispatch."
+  },
+  "limitations": [
+    "No fresh chain-to-RPC-to-PostgreSQL acceptance or WithParams receipt.",
+    "No separate child CLI exit-2/each-redecode-guard measurement in this review; those branches were reviewed in source.",
+    "No Linux BE03 runner execution.",
+    "BE04, projection, HTTP API, rebuild, benchmark and reorg rollback outside scope."
+  ]
+}

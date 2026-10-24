@@ -1,0 +1,13 @@
+{
+  "status": "FAIL",
+  "error": {
+    "message": "connect ECONNREFUSED 127.0.0.1:57945",
+    "stack": "Error: connect ECONNREFUSED 127.0.0.1:57945\n    at D:\\dao-budget-simulator\\node_modules\\pg-pool\\index.js:45:11\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:126:3"
+  },
+  "cleanup": {
+    "postgres": {
+      "error": "pg-stop: exit 1; pg_ctl: PID file \"C:/Users/Cuongdz/AppData/Local/Temp/dao-be03-live-UJmEnN/data/postmaster.pid\" does not exist\r\nIs server running?\r\n"
+    }
+  }
+}
+

@@ -1,0 +1,30 @@
+Observed on 2026-10-24, Windows, from feature/tv2-be03 over Dev 1a4c262.
+
+Initial environment: forge/cast/anvil absent from PATH; Governor artifact absent.
+Pinned submodules initialized successfully, without changing their locked commits.
+
+Command: npm view @foundry-rs/anvil-win32-amd64@1.8.5 dist.tarball
+Result: FAIL, npm E404 No match found for version 1.8.5.
+
+Downloaded transient npm binary packages (no package dependency/lockfile changes):
+@foundry-rs/anvil-win32-amd64@1.7.1
+@foundry-rs/forge-win32-amd64@1.7.1
+
+Command: ./dist/be03-tools/package/bin/anvil.exe --version
+Result: PASS
+anvil Version: 1.7.1
+Commit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8
+Build Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)
+Build Profile: dist
+
+Commands, attempted inside sandbox and again with require_escalated:
+./dist/be03-tools/package/bin/forge.exe --version
+./dist/be03-tools/package/bin/forge.exe build
+Result: FAIL, process could not be launched.
+Program 'forge.exe' failed to run: An Application Control policy has blocked this file.
+PowerShell classification: ResourceUnavailable / NativeCommandFailed.
+
+Fresh deployment/governance -> Anvil RPC -> PostgreSQL integration: SKIP (blocked).
+No compiler pin change, no fabricated new receipt, no existing DB, no testnet tx.
+Anvil was only queried for its version; no node was started, no process left running.
+Saved TV4 receipts/manifests on Dev were inspected as historical evidence only.

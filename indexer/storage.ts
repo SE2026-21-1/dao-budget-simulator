@@ -1,7 +1,9 @@
 import type { Pool, PoolClient } from 'pg';
-import type { BatchStorage, IndexerConfig, LogBatch, WriteResult } from './types.js';
+import { decodeLog } from './decoder.js';
+import { confirmationDepth, firstBlock, scopeHash, sourceKey } from './scope.js';
+import type { BatchStorage, Checkpoint, DecodeIssue, IndexerConfig, LogBatch, NormalizedLog, SyncStorage, WriteResult } from './types.js';
 
-type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR';
+type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR' | 'CHECKPOINT_CONFLICT';
 
 export class StorageError extends Error {
   constructor(
@@ -88,7 +90,7 @@ function validateBatch(config: IndexerConfig, batch: LogBatch): void {
   }
 }
 
-async function verifyMetadata(client: PoolClient, config: IndexerConfig): Promise<void> {
+async function verifyMetadata(client: PoolClient, config: IndexerConfig, strict = false): Promise<void> {
   const deployments = await client.query<{ chain_id: string; deployment_block: string }>(`
     SELECT trunc(chain_id)::text AS chain_id, trunc(deployment_block)::text AS deployment_block FROM deployments
     WHERE deployment_id = $1 FOR SHARE`, [config.deploymentId]);
@@ -116,6 +118,38 @@ async function verifyMetadata(client: PoolClient, config: IndexerConfig): Promis
       });
     }
   }
+  if (strict) {
+    const supported = contracts.rows.filter((c) => c.contract_role !== 'governance_token');
+    const depth = await client.query('SELECT confirmation_depth FROM deployments WHERE deployment_id = $1', [config.deploymentId]);
+    if (supported.length !== config.contracts.length || depth.rows[0].confirmation_depth !== confirmationDepth(config)
+        || config.fromBlock > firstBlock(config)) {
+      throw new StorageError('STORAGE_METADATA_MISMATCH', 'BE03 requires every supported manifest source, matching K, and fromBlock <= earliest deployment block.');
+    }
+  }
+}
+
+async function checkpoint(client: PoolClient, config: IndexerConfig): Promise<Checkpoint | null> {
+  const result = await client.query(`SELECT trunc(block_number)::text AS number, block_hash, source_scope, confirmation_depth
+    FROM checkpoints WHERE deployment_id = $1 FOR UPDATE`, [config.deploymentId]);
+  const row = result.rows[0];
+  if (!row) return null;
+  if (row.source_scope !== scopeHash(config) || row.confirmation_depth !== confirmationDepth(config)) {
+    throw new StorageError('CHECKPOINT_CONFLICT', 'Checkpoint source scope or K differs; legacy checkpoints cannot be adopted implicitly.');
+  }
+  const number = BigInt(row.number);
+  const headers = await client.query(`SELECT count(*)::text AS count FROM indexed_blocks
+    WHERE deployment_id = $1 AND block_number BETWEEN $2 AND $3`, [config.deploymentId, firstBlock(config).toString(), number.toString()]);
+  if (number < firstBlock(config) || BigInt(headers.rows[0].count) !== number - firstBlock(config) + 1n) {
+    throw new StorageError('CHECKPOINT_CONFLICT', 'Checkpoint has missing stored prefix headers.');
+  }
+  return { number, hash: row.block_hash };
+}
+
+interface Progress { expected: Checkpoint | null; head: bigint }
+export interface TransactionHooks {
+  /** Test dependency injection only; production CLI never configures hooks. */
+  beforeCommit?: () => Promise<void>;
+  afterCommit?: () => Promise<void>;
 }
 
 async function verifyStoredBoundaries(client: PoolClient, config: IndexerConfig, batch: LogBatch): Promise<void> {
@@ -134,10 +168,47 @@ async function verifyStoredBoundaries(client: PoolClient, config: IndexerConfig,
   }
 }
 
-export class PostgresStorage implements BatchStorage {
-  constructor(private readonly pool: Pool) {}
+export class PostgresStorage implements BatchStorage, SyncStorage {
+  constructor(private readonly pool: Pool, private readonly hooks: TransactionHooks = {}) {}
 
-  async writeBatch(config: IndexerConfig, batch: LogBatch): Promise<WriteResult> {
+  async loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+      await verifyMetadata(client, config, true);
+      const result = await checkpoint(client, config);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally { client.release(); }
+  }
+
+  async decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues: DecodeIssue[] }> {
+    const result = await this.pool.query(`WITH unresolved AS (
+      SELECT r.*, d.abi_version FROM raw_events r
+      JOIN deployment_contracts d USING (deployment_id, chain_id, contract_role, contract_address)
+      LEFT JOIN checkpoints c USING (deployment_id)
+      WHERE r.deployment_id = $1 AND r.block_number <= COALESCE($2::numeric, c.block_number, r.block_number)
+        AND r.decode_status IS DISTINCT FROM 'decoded'
+    ) SELECT count(*) FILTER (WHERE decode_status = 'unknown_topic')::int AS unknown,
+      count(*) FILTER (WHERE decode_status = 'decode_error' OR decode_status IS NULL)::int AS errors,
+      COALESCE((SELECT jsonb_agg(jsonb_build_object('blockNumber', trunc(block_number)::text,
+        'transactionHash', transaction_hash, 'logIndex', log_index::text,
+        'code', COALESCE(decode_error_code,'UNCLASSIFIED_LEGACY'), 'abiVersion', abi_version)
+        ORDER BY block_number,transaction_index,log_index)
+        FROM (SELECT * FROM unresolved ORDER BY block_number,transaction_index,log_index LIMIT 100) sample), '[]'::jsonb) AS issues
+      FROM unresolved`, [config.deploymentId, at?.toString() ?? null]);
+    return { unknownTopics: result.rows[0].unknown, decodeErrors: result.rows[0].errors, issues: result.rows[0].issues };
+  }
+
+  async writeCheckpointBatch(config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null, head: bigint): Promise<WriteResult> {
+    return this.writeBatch(config, batch, { expected, head });
+  }
+
+  async writeBatch(config: IndexerConfig, batch: LogBatch, progress?: Progress): Promise<WriteResult> {
     validateBatch(config, batch);
     let client: PoolClient | undefined;
     try {
@@ -147,7 +218,22 @@ export class PostgresStorage implements BatchStorage {
       // have no BE01 unique constraint. Hash collisions only add serialization.
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
       // Lock metadata until COMMIT; never seed or overwrite user deployment data.
-      await verifyMetadata(client, config);
+      await verifyMetadata(client, config, !!progress);
+      if (progress) {
+        const current = await checkpoint(client, config);
+        if (current?.number !== progress.expected?.number || current?.hash !== progress.expected?.hash
+            || batch.fromBlock !== (current ? current.number + 1n : firstBlock(config))) {
+          throw new StorageError('CHECKPOINT_CONFLICT', 'Stale writer or noncontiguous checkpoint batch; restart and verify RPC hash.');
+        }
+        if (progress.head < batch.toBlock + BigInt(confirmationDepth(config))) invalid('Batch exceeds confirmed head.');
+        const expectedSources = config.contracts.filter((c) => c.deploymentBlock <= batch.toBlock).map(sourceKey).sort();
+        if (JSON.stringify(batch.scannedSources?.slice().sort()) !== JSON.stringify(expectedSources)) {
+          invalid('Not every active manifest source was scanned successfully.');
+        }
+      } else {
+        const existing = await client.query('SELECT 1 FROM checkpoints WHERE deployment_id = $1', [config.deploymentId]);
+        if (existing.rowCount) throw new StorageError('CHECKPOINT_CONFLICT', 'Use BE03 sync for a deployment with a checkpoint.');
+      }
       await verifyStoredBoundaries(client, config, batch);
       const result: WriteResult = { insertedBlocks: 0, insertedEvents: 0, duplicateEvents: 0 };
       for (const block of batch.blocks) {
@@ -197,8 +283,28 @@ export class PostgresStorage implements BatchStorage {
         }
         if (written.rows[0]!.inserted) result.insertedEvents += 1;
         else result.duplicateEvents += 1;
+        if (progress) {
+          await client.query(`UPDATE raw_events SET decode_status = $4, decode_error_code = $5
+            WHERE chain_id = $1 AND transaction_hash = $2 AND log_index = $3`,
+          [config.chainId.toString(), log.transactionHash, log.logIndex.toString(), decode.status,
+            decode.status === 'decoded' ? null : decode.code]);
+        }
       }
+      if (progress) {
+        const last = batch.blocks.at(-1)!;
+        await client.query(`INSERT INTO checkpoints
+          (deployment_id, block_number, block_hash, observed_head_block, confirmation_depth, sync_status, source_scope)
+          VALUES ($1,$2,$3,$4,$5,'syncing',$6)
+          ON CONFLICT (deployment_id) DO UPDATE SET block_number = EXCLUDED.block_number,
+            block_hash = EXCLUDED.block_hash, observed_head_block = EXCLUDED.observed_head_block,
+            confirmation_depth = EXCLUDED.confirmation_depth, source_scope = EXCLUDED.source_scope,
+            sync_status = 'syncing', updated_at = CURRENT_TIMESTAMP`,
+        [config.deploymentId, last.number.toString(), last.hash, progress.head.toString(), confirmationDepth(config), scopeHash(config)]);
+        await this.markDecodeState(client, config);
+      }
+      await this.hooks.beforeCommit?.();
       await client.query('COMMIT');
+      await this.hooks.afterCommit?.();
       return result;
     } catch (error) {
       if (client) {
@@ -213,5 +319,42 @@ export class PostgresStorage implements BatchStorage {
     } finally {
       client?.release();
     }
+  }
+
+  private async markDecodeState(client: PoolClient, config: IndexerConfig): Promise<void> {
+    await client.query(`UPDATE checkpoints c SET last_error_code = CASE WHEN EXISTS (
+      SELECT 1 FROM raw_events r WHERE r.deployment_id = c.deployment_id AND r.block_number <= c.block_number
+      AND r.decode_status IS DISTINCT FROM 'decoded') THEN 'DECODE_INCOMPLETE' ELSE NULL END
+      WHERE c.deployment_id = $1`, [config.deploymentId]);
+  }
+
+  /** Explicit recovery from immutable raw bytes; does not move the raw checkpoint. */
+  async redecode(config: IndexerConfig): Promise<number> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+      await verifyMetadata(client, config, true);
+      await checkpoint(client, config);
+      const rows = await client.query(`SELECT *, topics::text[] AS topics FROM raw_events WHERE deployment_id = $1
+        AND block_number <= COALESCE((SELECT block_number FROM checkpoints WHERE deployment_id=$1), block_number)
+        AND decode_status IS DISTINCT FROM 'decoded' ORDER BY block_number, transaction_index, log_index FOR UPDATE`, [config.deploymentId]);
+      for (const row of rows.rows) {
+        const log: NormalizedLog = { contract: config.contracts.find((c) => c.role === row.contract_role)!,
+          blockNumber: BigInt(row.block_number), blockHash: row.block_hash, transactionHash: row.transaction_hash,
+          transactionIndex: BigInt(row.transaction_index), logIndex: BigInt(row.log_index),
+          topics: row.topics, data: row.data, rawLog: row.rpc_log };
+        const decoded = decodeLog(log);
+        await client.query(`UPDATE raw_events SET event_name=$2, decoded_payload=$3::jsonb, decode_status=$4, decode_error_code=$5
+          WHERE raw_event_id=$1`, [row.raw_event_id, decoded.status === 'decoded' ? decoded.eventName : null,
+          decoded.status === 'decoded' ? JSON.stringify(decoded.payload) : null, decoded.status, decoded.status === 'decoded' ? null : decoded.code]);
+      }
+      await this.markDecodeState(client, config);
+      await client.query('COMMIT');
+      return rows.rowCount!;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally { client.release(); }
   }
 }

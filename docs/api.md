@@ -1,7 +1,8 @@
 # API đọc BE01 — đặc tả để TV3 làm song song
 
-**Trạng thái: đề xuất chờ TV1/TV3 review.** Chưa có HTTP server/projection phục vụ
-API này. BE02 đã có finite RPC reader/raw storage, không phải API đã triển khai.
+**Trạng thái: đề xuất chờ TV1/TV3 review; HTTP server thuộc BE05.** BE04 đã có
+[projection và snapshot tại H](be04.md), chưa triển khai HTTP endpoint này.
+BE02/BE03 cung cấp raw storage/checkpoint; chúng không phải HTTP API.
 [Fixture](../fixtures/api/README.md) vẫn là dữ liệu tổng hợp; địa chỉ, block,
 hash và operation trong fixture không chứng minh deployment/giao dịch thật.
 Không gửi giao dịch đến địa chỉ fixture.

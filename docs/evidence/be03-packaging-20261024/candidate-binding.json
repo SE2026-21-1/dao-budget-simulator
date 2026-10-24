@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "classification": "Candidate binding to the previously executed real integration, not a new chain run",
+  "acceptedRegistrySha256": "77f9a9ebe8f28e89eda4b40c3eebf57ed5d948cdbced19984fca22ab92fee08e",
+  "candidateRegistrySha256": "49ac2246021e5bbad532ab67a52ff96ea48f9ce32674a5e5fd4c642d80e88fa4",
+  "registryChange": "Comment only: distinguish local acceptance from pending handoff approval",
+  "registryExecutableAstSha256": "c20a2da2c767e32415babcfd1994f2abd367179c06cdc013c71a0361107b5355",
+  "executableAstIdentical": true,
+  "testedSourceHashes": {
+    "tests/indexer/decoder.test.ts": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+    "tests/indexer/syncer.test.ts": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+    "tests/indexer/crash-worker.ts": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+    "tests/indexer/checkpoint-storage.test.ts": "66af31aef208d487e95cdd34720a1b186472ad03b2a01e29d69580b12bba125f",
+    "package.json": "8708d771335df917c6d5ffc235aa016f9260d866ef5155917c60f647b25c0106",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "scripts/check_be03_database.ps1": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+    "indexer/config/example.json": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df"
+  },
+  "otherAcceptedRuntimeSourceMismatches": [],
+  "reusedIntegration": "docs/evidence/be03-integration-20261024/verification.json",
+  "integrationNotRerunReason": "Only documentation and a registry comment changed; runtime statements, ABI fragments, CLI exits, storage, deployment helper and tests are unchanged."
+}

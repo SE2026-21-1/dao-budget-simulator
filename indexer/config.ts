@@ -71,7 +71,11 @@ export function parseConfig(value: unknown, env: NodeJS.ProcessEnv = process.env
     configuredRoles.add(role);
     return result;
   });
-  return { rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts };
+  const confirmations = input.confirmations === undefined ? 2 : input.confirmations;
+  if (typeof confirmations !== 'number' || !Number.isInteger(confirmations) || confirmations < 0 || confirmations > 2_147_483_647) {
+    throw new IndexerError('INVALID_CONFIG', 'confirmations must be an integer number in [0, 2147483647].');
+  }
+  return { rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts, confirmations };
 }
 
 export async function loadConfig(path: string, env: NodeJS.ProcessEnv = process.env): Promise<IndexerConfig> {

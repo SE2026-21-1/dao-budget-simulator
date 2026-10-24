@@ -1,5 +1,15 @@
 # BE02 — đọc RPC log, decode ABI và lưu PostgreSQL
 
+BE03 bổ sung luồng `--sync` cho checkpoint/K/resume và `--redecode` để phục hồi
+decode từ raw đã lưu. Xem [quy ước và hướng dẫn BE03](be03.md). Các phần dưới
+mô tả luồng BE02 hữu hạn không có cờ; các kết quả cũ giữ đúng ngày/SHA của chúng.
+Registry hiện có thêm `VoteCastWithParams` theo compiler ABI BudgetGovernor;
+payload giữ cả `params`, uint256 vẫn là chuỗi thập phân.
+
+BE04 bổ sung `--project` / `--sync-project` và các bảng dẫn xuất; xem
+[hướng dẫn projection](be04.md). Những giới hạn BE02 bên dưới mô tả riêng luồng
+scan hữu hạn, không có cờ, tại thời điểm bàn giao BE02.
+
 BE02 là CLI quét **hữu hạn** một dải block cho một deployment. Đầu vào là
 Ethereum JSON-RPC; đầu ra là header trong `indexed_blocks` và log trong
 `raw_events` của migration BE01. Không có projection proposal/vote/operation,

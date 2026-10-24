@@ -1,0 +1,24 @@
+[
+  {
+    "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\forge.exe",
+    "sha256": "6df26c16a6e53519abdd09fcdacf9af1ecdb50e216ee1816fa8012b5a553ef48",
+    "arguments": [
+      "--version"
+    ],
+    "started": false,
+    "exitCode": null,
+    "output": null,
+    "error": "Program 'forge.exe' failed to run: An Application Control policy has blocked this fileAt line:9 char:29\r\n+             $item.output = (& $executable @arguments 2>&1 | Out-Strin ...\r\n+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~."
+  },
+  {
+    "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+    "sha256": "5c2217d266135a6fbe5faaccccb1e9eb2ddc1d06f8aabeef5fdb16d9846e4880",
+    "arguments": [
+      "--version"
+    ],
+    "started": true,
+    "exitCode": 0,
+    "output": "anvil Version: 1.7.1\r\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\r\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\r\nBuild Profile: dist",
+    "error": null
+  }
+]

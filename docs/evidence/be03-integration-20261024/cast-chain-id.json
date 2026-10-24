@@ -1,0 +1,12 @@
+{
+  "label": "cast-chain-id",
+  "command": [
+    "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+    "chain-id",
+    "--rpc-url",
+    "http://127.0.0.1:59319"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "cast-chain-id.txt"
+}

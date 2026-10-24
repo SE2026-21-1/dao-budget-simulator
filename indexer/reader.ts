@@ -4,6 +4,7 @@ import { PG_BIGINT_MAX } from './config.js';
 import { IndexerError } from './errors.js';
 import { blockTag, hex, quantity, rpcObject, type RpcTransport } from './rpc.js';
 import type { BlockHeader, IndexerConfig, JsonObject, LogBatch, NormalizedLog } from './types.js';
+import { sourceKey } from './scope.js';
 
 export function* blockRanges(from: bigint, to: bigint, size: bigint): Generator<[bigint, bigint]> {
   if (size < 1n || from < 0n || to < from) throw new IndexerError('INVALID_RANGE', 'Invalid finite block range/batch size.');
@@ -44,11 +45,13 @@ export async function readBatch(
   const scope = new Map(config.contracts.map((contract) => [contract.address, contract]));
   const logs: NormalizedLog[] = [];
   let discardedOutsideDeployment = 0;
+  const scannedSources: string[] = [];
   for (const contract of config.contracts) {
     const start = from > contract.deploymentBlock ? from : contract.deploymentBlock;
     if (start > to) continue;
     const result = await rpc.call('eth_getLogs', [{ address: contract.address, fromBlock: blockTag(start), toBlock: blockTag(to) }]);
     if (!Array.isArray(result)) throw new IndexerError('RPC_INVALID_DATA', 'eth_getLogs must return an array.');
+    scannedSources.push(sourceKey(contract));
     for (const value of result) {
       const raw = rpcObject(value, 'log');
       const address = hex(raw.address, 'log.address', 20);
@@ -99,5 +102,5 @@ export async function readBatch(
   if (last && !isDeepStrictEqual(await readHeader(rpc, last.number), last)) {
     throw new IndexerError('BLOCK_CHANGED', 'Batch end header changed during the scan; batch was not written.');
   }
-  return { batch: { fromBlock: from, toBlock: to, blocks, logs: logs.map((log) => ({ log, decode: decodeLog(log) })) }, discardedOutsideDeployment };
+  return { batch: { fromBlock: from, toBlock: to, blocks, scannedSources, logs: logs.map((log) => ({ log, decode: decodeLog(log) })) }, discardedOutsideDeployment };
 }

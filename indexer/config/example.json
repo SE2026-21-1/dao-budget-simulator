@@ -5,6 +5,7 @@
   "fromBlock": "100",
   "toBlock": "110",
   "batchSize": "5",
+  "confirmations": 2,
   "contracts": [
     { "role": "budget_token", "address": "0x4444444444444444444444444444444444444444", "deploymentBlock": "100", "abiVersion": "oz-5.4.0-erc20" },
     { "role": "treasury", "address": "0x1111111111111111111111111111111111111111", "deploymentBlock": "101", "abiVersion": "sc01-itreasury-v1" },

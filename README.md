@@ -468,3 +468,11 @@ chỉ còn phục vụ trong TTL nếu đã được API lưu. API không gọi 
 và không gửi transaction. Test database dùng container PostgreSQL 18.4 mới,
 port chỉ bind loopback; wrapper từ chối dùng `DATABASE_URL` hiện có. Xem
 [hướng dẫn chạy, cursor và ví dụ curl](docs/api.md#7-chạy-api-be05).
+
+## BE06 — rebuild và compare tại H
+
+BE06 dựng database riêng từ verified manifest + RPC ở H cụ thể, rồi compare với
+publication BE04 đúng cùng H/hash; target không được là database API đang chạy.
+Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06.md) và
+[bằng chứng nghiệm thu](docs/evidence/be06-20261024/summary.md). Reorg/retry tự
+động thuộc BE07, benchmark thuộc BE08.

@@ -192,6 +192,113 @@ jobs:
       - run: npm run test:be04
       - run: npm run test:be04:db
 
+  be05-api:
+    name: BE05 HTTP API and immutable PostgreSQL snapshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - run: npm run test:api:db
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - run: forge build
+      - run: forge test --match-path tests/unit/OperationAbiCompatibility.t.sol
+      - name: Run fresh Anvil, PostgreSQL and HTTP API integration
+        run: npm run test:be05:live
+      - name: Upload BE05 live evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: be05-live-${{ github.sha }}
+          path: reports/be05-live.json
+          retention-days: 14
+
+  be06-rebuild-compare:
+    name: BE06 pinned-H rebuild and normalized compare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be04_test
+          POSTGRES_PASSWORD: be04_test
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U be04_test -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      FOUNDRY_PROFILE: ci
+      PG_ADMIN_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/postgres
+      BE06_TEST_ISOLATED: '1'
+      BE06_TEST_REFERENCE_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_test_reference
+      BE06_TEST_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_test_target
+      BE04_LIVE_ISOLATED: '1'
+      BE04_LIVE_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be04_live
+      BE06_LIVE_ISOLATED: '1'
+      BE06_LIVE_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_live_target
+      BE06_LIVE_ADVANCED_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_live_advanced_target
+    steps:
+      - name: Checkout with pinned submodules
+        uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - name: Build and test BE06
+        run: |
+          mkdir -p reports
+          npm run typecheck
+          npm run build
+          forge build
+          npm run test:be06
+      - name: Create disposable BE06 databases
+        run: |
+          node --input-type=module <<'NODE'
+          import pg from 'pg';
+          const client = new pg.Client({ connectionString: process.env.PG_ADMIN_URL });
+          await client.connect();
+          for (const name of ['be06_test_reference', 'be06_test_target', 'be04_live', 'be06_live_target', 'be06_live_advanced_target'])
+            await client.query(`CREATE DATABASE ${name}`);
+          await client.end();
+          NODE
+      - name: Test BE06 against isolated PostgreSQL
+        run: npm run test:be06:db
+      - name: Run fresh Anvil and PostgreSQL rebuild/compare acceptance
+        run: npm run test:be06:live -- --output reports/be06-live.json --be06
+      - name: Upload BE06 live evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: be06-live-${{ github.sha }}
+          path: reports/be06-live*
+          retention-days: 14
+
   frontend:
     name: Frontend lint and production build
     runs-on: ubuntu-24.04

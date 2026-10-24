@@ -8,6 +8,11 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "indexer": "tsx indexer/cli.ts",
+    "api": "tsx indexer/api/main.ts",
+    "be06": "tsx indexer/be06/cli.ts",
+    "test:api": "node --import tsx --test tests/api/server.test.mjs",
+    "test:api:db": "bash scripts/check_be05_database.sh",
+    "test:be05:live": "bash scripts/check_be05_live_database.sh --output reports/be05-live.json",
     "test:be02": "tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts",
     "test:be02:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1",
     "test:be02:db:linux": "bash scripts/check_be02_database.sh",
@@ -15,7 +20,10 @@
     "test:be03:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1",
     "test:be04": "node --import tsx --test tests/indexer/projection.test.ts tests/indexer/be04-live-receipt.test.mjs",
     "test:be04:db": "bash scripts/check_be04_database.sh",
-    "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json"
+    "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json",
+    "test:be06": "tsx --test tests/indexer/be06.test.ts",
+    "test:be06:db": "node --import tsx --test tests/indexer/be06-db.test.mjs",
+    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs"
   },
   "dependencies": {
     "ethers": "6.17.0",

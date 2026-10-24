@@ -78,10 +78,9 @@ export async function reconcile(
       String((await call(treasury, treasuryAbi, 'budgetToken'))[0]).toLowerCase() === token,
     'Contract linkage differs from configured manifest at H.',
   );
-  requireProjection(
-    (await call(token, tokenAbi, 'balanceOf', [treasury]))[0] === model.balance,
-    'BUD balanceOf(H) differs from Transfer ledger.',
-  );
+  const treasuryBalance = (await call(token, tokenAbi, 'balanceOf', [treasury]))[0] as bigint;
+  requireProjection(treasuryBalance === model.balance,
+    `BUD balanceOf(H) ${treasuryBalance} differs from Transfer ledger ${model.balance}.`);
   const evaluated = new Map<string, Evaluated>();
   for (const p of model.proposals) {
     const quorum =
@@ -92,14 +91,16 @@ export async function reconcile(
     const votes = await call(governor, governorAbi, 'proposalVotes', [p.id]);
     requireProjection(
       p.votes.every((v, i) => votes[i] === v),
-      'Governor proposalVotes(H) differs from indexed votes.',
+      `${p.id}: Governor proposalVotes(H) [${votes.join(',')}] differs from indexed votes [${p.votes.join(',')}].`,
     );
     const state = (await call(governor, governorAbi, 'state', [p.id]))[0] as bigint;
-    requireProjection(states[Number(state)] === value.state, 'Governor state(H) differs from derived state.');
+    requireProjection(states[Number(state)] === value.state,
+      `${p.id}: Governor state(H) ${states[Number(state)] ?? `unknown(${state})`} differs from derived state ${value.state}.`);
     if (p.operation) {
       const actual = (await call(timelock, timelockAbi, 'getTimestamp', [p.operation.id]))[0] as bigint;
       const expected = p.operation.executed ? 1n : p.operation.canceled ? 0n : BigInt(p.operation.eta);
-      requireProjection(actual === expected, 'Timelock getTimestamp(H) differs from projected operation.');
+      requireProjection(actual === expected,
+        `${p.id}: Timelock getTimestamp(H) ${actual} differs from projected operation timestamp ${expected}.`);
     }
     evaluated.set(p.id, value);
   }

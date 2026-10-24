@@ -1,0 +1,1 @@
+{"test:api:db":{"status":"BLOCKED","exitCode":1,"reason":"Docker is unavailable in this WSL2 environment"},"test:be05:live":{"status":"BLOCKED","exitCode":1,"reason":"Docker is unavailable in this WSL2 environment"},"PowerShellWrappers":{"status":"BLOCKED","reason":"Neither powershell nor pwsh is installed; direct isolated PostgreSQL suites were run instead"}}

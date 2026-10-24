@@ -4,10 +4,10 @@ import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { once } from 'node:events';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { Interface, ZeroHash, id, toQuantity } from 'ethers';
 import pg from 'pg';
 import { deployGovernance } from './governance_local.mjs';
@@ -18,23 +18,42 @@ import { PostgresStorage } from '../indexer/storage.ts';
 import { sync } from '../indexer/syncer.ts';
 import { project } from '../indexer/projection/projector.ts';
 import { createApiServer } from '../indexer/api/server.ts';
+import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
 
 const args = process.argv.slice(2);
-const withApi = args.length === 3 && args[2] === '--api';
-assert.ok((args.length === 2 || withApi) && args[0] === '--output',
-  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api]');
+const flags = args.slice(2);
+const withApi = flags.includes('--api');
+const withBe06 = flags.includes('--be06');
+assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06'].includes(flag))
+  && new Set(flags).size === flags.length,
+  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api] [--be06]');
 assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
 const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
 assert.equal(url.hostname, '127.0.0.1');
 assert.equal(url.username, 'be04_test');
 assert.equal(url.pathname, '/be04_live');
+if (withBe06) assert.equal(process.env.BE06_LIVE_ISOLATED, '1', 'Use two new caller-owned isolated BE06 target databases.');
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(args[1]);
 const pool = new pg.Pool({ connectionString: url.href, max: 3 });
+const liveBe06Pools = [];
+function be06TargetPool(name) {
+  const value = process.env[name];
+  assert.ok(value, `Set ${name} to a new isolated PostgreSQL database.`);
+  const targetUrl = new URL(value);
+  assert.ok(['postgres:', 'postgresql:'].includes(targetUrl.protocol));
+  assert.equal(targetUrl.hostname, '127.0.0.1', `${name} must use numeric loopback PostgreSQL.`);
+  assert.ok(!targetUrl.search && !targetUrl.hash, `${name} must not contain query or fragment parameters.`);
+  const target = new pg.Pool({ connectionString: targetUrl.href, max: 4 });
+  liveBe06Pools.push(target);
+  return target;
+}
+const be06Target = withBe06 ? be06TargetPool('BE06_LIVE_TARGET_DATABASE_URL') : null;
+const be06AdvancedTarget = withBe06 ? be06TargetPool('BE06_LIVE_ADVANCED_TARGET_DATABASE_URL') : null;
 const report = {
-  scope:
-    withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet, reorg rollback or FR15 rebuild acceptance.' :
-      'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. Not HTTP API, reorg rollback, testnet or FR15 rebuild acceptance.',
+  scope: withBe06 ? 'Live local Anvil and isolated PostgreSQL: governance history, BE03/BE04 publication, independent BE06 rebuilds at the same H/hash, normalized compare, chain reconciliation, and post-H event exclusion.' :
+    withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet or reorg rollback.' :
+      'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. No HTTP API, reorg rollback or testnet.',
   baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   runtime: { node: process.version },
   receipts: [],
@@ -52,7 +71,13 @@ try {
     0,
     'Refuse a nonempty database.',
   );
+  if (withBe06) {
+    await assertEmptyDatabase(be06Target);
+    await assertEmptyDatabase(be06AdvancedTarget);
+  }
   report.runtime.postgres = (await pool.query('SELECT version() AS version')).rows[0].version;
+  report.runtime.tsx = JSON.parse(await readFile(new URL('../node_modules/tsx/package.json', import.meta.url), 'utf8')).version;
+  report.runtime.typescript = JSON.parse(await readFile(new URL('../node_modules/typescript/package.json', import.meta.url), 'utf8')).version;
   for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : [])])
     await pool.query(await readFile(new URL(`../database/migrations/${name}.sql`, import.meta.url), 'utf8'));
   const reserve = createServer();
@@ -605,6 +630,181 @@ try {
           'proposal detail description/hash and votes read from the live projection'] };
     } finally { await new Promise((done) => api.close(done)); }
   }
+  if (withBe06) {
+    const atBlock = finalProjection.context.asOfBlock;
+    const manifestInput = {
+      format: manifest.format,
+      sourceCommit: manifest.sourceCommit,
+      chainId: manifest.chainId,
+      deploymentName: 'be06-live-anvil',
+      scanFromBlock: manifest.scanFromBlock,
+      confirmations: manifest.confirmations,
+      batchSize: '7',
+      contracts: {
+        ...Object.fromEntries([
+          ['governor', 'Governor'], ['timelock', 'Timelock'], ['treasury', 'Treasury'], ['budget_token', 'BUD'],
+        ].map(([role, key]) => [role, {
+          address: manifest.contracts[key].address,
+          deploymentBlock: manifest.contracts[key].deploymentBlock,
+          abiVersion: manifest.contracts[key].abiVersion,
+        }])),
+        GOV: {
+          address: manifest.contracts.GOV.address,
+          deploymentBlock: manifest.contracts.GOV.deploymentBlock,
+          abiVersion: manifest.contracts.GOV.abiVersion,
+        },
+      },
+    };
+    const manifestBytes = `${JSON.stringify(manifestInput, null, 2)}\n`;
+    const manifestPath = `${output}.be06-manifest.json`;
+    await mkdir(dirname(manifestPath), { recursive: true });
+    await writeFile(manifestPath, manifestBytes, { flag: 'wx', mode: 0o600 });
+    const manifestSha256 = createHash('sha256').update(manifestBytes).digest('hex');
+    const blockHash = finalProjection.context.asOfBlockHash;
+    const cliCommands = [];
+    const invokeBe06Cli = (targetDatabaseUrl, commandArgs, expectedExit = 0) => {
+      const args = ['--import', 'tsx', 'indexer/be06/cli.ts', ...commandArgs];
+      const env = { ...process.env, RPC_URL: rpcUrl, BE06_REFERENCE_DATABASE_URL: url.href,
+        BE06_TARGET_DATABASE_URL: targetDatabaseUrl };
+      let stdout = '';
+      let exitCode = 0;
+      try { stdout = execFileSync(process.execPath, args, { cwd: root, env, encoding: 'utf8' }); }
+      catch (error) {
+        exitCode = error.status ?? 1;
+        stdout = error.stdout?.toString() ?? '';
+        if (exitCode !== expectedExit) throw error;
+      }
+      assert.equal(exitCode, expectedExit, 'BE06 command exited with an unexpected status.');
+      cliCommands.push({ argv: ['node', ...args], exitCode });
+      return stdout;
+    };
+    const jsonFile = async (path) => JSON.parse(await readFile(path, 'utf8'));
+
+    const firstRebuildPath = `${output}.be06-first-rebuild.json`;
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['rebuild', '--manifest', manifestPath, '--at', atBlock, '--output', firstRebuildPath]);
+    const firstRebuild = await jsonFile(firstRebuildPath);
+    assert.equal(firstRebuild.rawCheckpoint.block, atBlock);
+    assert.equal(firstRebuild.rawCheckpoint.hash, blockHash);
+    const firstReferenceExportPath = `${output}.be06-first-reference.json`;
+    const firstTargetExportPath = `${output}.be06-first-target.json`;
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['export', '--manifest', manifestPath, '--at', atBlock, '--database', 'reference', '--output', firstReferenceExportPath]);
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['export', '--manifest', manifestPath, '--at', atBlock, '--database', 'target', '--output', firstTargetExportPath]);
+    const firstComparePath = `${output}.be06-first-compare.json`;
+    const firstSummaryPath = `${output}.be06-first-compare.md`;
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['compare', '--manifest', manifestPath, '--at', atBlock, '--json-output', firstComparePath,
+        '--summary-output', firstSummaryPath]);
+    const firstCompare = await jsonFile(firstComparePath);
+    assert.equal(firstCompare.result, 'equal', JSON.stringify(firstCompare.mismatches));
+    assert.equal(firstCompare.chainCrossCheck?.hash, blockHash);
+    const referenceData = await jsonFile(firstReferenceExportPath);
+    const firstData = await jsonFile(firstTargetExportPath);
+    assert.deepEqual(firstData, referenceData);
+    const normalizedSha256 = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+    const sourceDecode = report.phases.at(-1).raw;
+    assert.equal(sourceDecode.unknownTopics, 16, 'Keep all 16 known bootstrap ancillary unknown logs.');
+    assert.equal(firstRebuild.decodeWarnings.complete, sourceDecode.decodeComplete);
+    assert.equal(firstRebuild.decodeWarnings.complete, false, 'Ancillary unknown logs must not become full decode.');
+    assert.equal(firstRebuild.decodeWarnings.unknownTopics, sourceDecode.unknownTopics);
+
+    const proposalId = String(firstData.proposalStates[0].proposalId);
+    const originalState = String(firstData.proposalStates[0].state);
+    const wrongState = originalState === 'Defeated' ? 'Succeeded' : 'Defeated';
+    await be06Target.query('UPDATE proposal_states SET state=$3 WHERE deployment_id=$1 AND proposal_id=$2',
+      [firstRebuild.target.deploymentId, proposalId, wrongState]);
+    const mismatchPath = `${output}.be06-mismatch-probe.json`;
+    const mismatchSummaryPath = `${output}.be06-mismatch-probe.md`;
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['compare', '--manifest', manifestPath, '--at', atBlock, '--json-output', mismatchPath,
+        '--summary-output', mismatchSummaryPath], 2);
+    const mismatchProbe = await jsonFile(mismatchPath);
+    assert.equal(mismatchProbe.result, 'mismatch');
+    assert.ok(mismatchProbe.mismatches.some((item) => item.path === `proposalStates[proposal:${proposalId}].state`
+      && item.reference === originalState && item.rebuild === wrongState));
+    await be06Target.query('UPDATE proposal_states SET state=$3 WHERE deployment_id=$1 AND proposal_id=$2',
+      [firstRebuild.target.deploymentId, proposalId, originalState]);
+    const restoredComparePath = `${output}.be06-restored-compare.json`;
+    const restoredSummaryPath = `${output}.be06-restored-compare.md`;
+    invokeBe06Cli(process.env.BE06_LIVE_TARGET_DATABASE_URL,
+      ['compare', '--manifest', manifestPath, '--at', atBlock, '--json-output', restoredComparePath,
+        '--summary-output', restoredSummaryPath]);
+    assert.equal((await jsonFile(restoredComparePath)).result, 'equal');
+
+    // Advance Anvil with a real BUD Transfer after H. A second fresh target must
+    // still index and publish exactly H, even though later logs are available.
+    const laterTransfer = await tx('BE06 post-H BUD Transfer', accounts.funding, 'BUD', 'transfer',
+      [accounts.recipient, 1n * U]);
+    const laterBlock = BigInt(laterTransfer.blockNumber);
+    assert.ok(laterBlock > BigInt(atBlock), 'Post-H transfer must be in a later block.');
+    const laterLogs = await rpc('eth_getLogs', [{ address: address.BUD, fromBlock: laterTransfer.blockNumber,
+      toBlock: laterTransfer.blockNumber }]);
+    assert.ok(laterLogs.length > 0, 'The post-H BUD Transfer must be available from RPC.');
+    await rpc('anvil_mine', ['0x3', '0x0']);
+
+    const advancedRebuildPath = `${output}.be06-advanced-rebuild.json`;
+    invokeBe06Cli(process.env.BE06_LIVE_ADVANCED_TARGET_DATABASE_URL,
+      ['rebuild', '--manifest', manifestPath, '--at', atBlock, '--output', advancedRebuildPath]);
+    const advancedRebuild = await jsonFile(advancedRebuildPath);
+    assert.equal(advancedRebuild.rawCheckpoint.block, atBlock);
+    assert.equal(advancedRebuild.rawCheckpoint.hash, blockHash);
+    const advancedReferenceExportPath = `${output}.be06-advanced-reference.json`;
+    const advancedTargetExportPath = `${output}.be06-advanced-target.json`;
+    invokeBe06Cli(process.env.BE06_LIVE_ADVANCED_TARGET_DATABASE_URL,
+      ['export', '--manifest', manifestPath, '--at', atBlock, '--database', 'reference', '--output', advancedReferenceExportPath]);
+    invokeBe06Cli(process.env.BE06_LIVE_ADVANCED_TARGET_DATABASE_URL,
+      ['export', '--manifest', manifestPath, '--at', atBlock, '--database', 'target', '--output', advancedTargetExportPath]);
+    const advancedComparePath = `${output}.be06-advanced-compare.json`;
+    const advancedSummaryPath = `${output}.be06-advanced-compare.md`;
+    invokeBe06Cli(process.env.BE06_LIVE_ADVANCED_TARGET_DATABASE_URL,
+      ['compare', '--manifest', manifestPath, '--at', atBlock, '--json-output', advancedComparePath,
+        '--summary-output', advancedSummaryPath]);
+    const advancedCompare = await jsonFile(advancedComparePath);
+    assert.equal(advancedCompare.result, 'equal', JSON.stringify(advancedCompare.mismatches));
+    assert.equal(advancedCompare.chainCrossCheck?.hash, blockHash);
+    const advancedReferenceData = await jsonFile(advancedReferenceExportPath);
+    const advancedData = await jsonFile(advancedTargetExportPath);
+    assert.deepEqual(advancedReferenceData, referenceData);
+    assert.deepEqual(advancedData, referenceData);
+    assert.equal(advancedRebuild.decodeWarnings.complete, false);
+    assert.equal(advancedRebuild.decodeWarnings.unknownTopics, 16);
+    for (const [targetPool, identity] of [[be06Target, firstRebuild.target], [be06AdvancedTarget, advancedRebuild.target]]) {
+      const [blocksAhead, eventsAhead] = await Promise.all([
+        targetPool.query('SELECT count(*)::text AS count FROM indexed_blocks WHERE deployment_id=$1 AND block_number>$2',
+          [identity.deploymentId, atBlock]),
+        targetPool.query('SELECT count(*)::text AS count FROM raw_events WHERE deployment_id=$1 AND block_number>$2',
+          [identity.deploymentId, atBlock]),
+      ]);
+      assert.equal(blocksAhead.rows[0].count, '0', 'No indexed header may exist after H.');
+      assert.equal(eventsAhead.rows[0].count, '0', 'No raw event may exist after H.');
+    }
+    report.be06 = {
+      status: 'PASS',
+      manifest: { path: manifestPath, sha256: manifestSha256, sourceCommit: manifest.sourceCommit },
+      deploymentScope: referenceData.context.scope,
+      requestedBlock: atBlock,
+      blockHash,
+      confirmations: Number(manifest.confirmations),
+      cliCommands,
+      mismatchProbe: { result: mismatchProbe.result, exitCode: 2, mismatches: mismatchProbe.mismatches },
+      firstRebuild,
+      firstCompare: { result: firstCompare.result, chainCrossCheck: firstCompare.chainCrossCheck, mismatches: firstCompare.mismatches },
+      postH: { transfer: laterTransfer, block: laterBlock.toString(), rpcLogCount: laterLogs.length,
+        chainHeadAfterMining: await rpc('eth_blockNumber'), excludedFromBothTargets: true },
+      advancedRebuild,
+      advancedCompare: { result: advancedCompare.result, chainCrossCheck: advancedCompare.chainCrossCheck,
+        mismatches: advancedCompare.mismatches },
+      normalized: { sha256: { reference: normalizedSha256(referenceData), firstRebuild: normalizedSha256(firstData),
+        advancedRebuild: normalizedSha256(advancedData) },
+        reference: referenceData, firstRebuild: firstData, advancedRebuild: advancedData },
+      checks: ['fresh PostgreSQL targets rebuilt from the verified manifest and RPC using BE03 sync and BE04 projection',
+        'both targets published exactly H/hash and matched the source publication at the same H/hash and deployment scope',
+        'proposal state, proposalVotes/quorum, timelock, contract links and balanceOf reconciled at H/hash',
+        'a BUD Transfer mined after H was returned by RPC but excluded from both target databases'],
+    };
+  }
 } catch (error) {
   report.status = 'FAIL';
   report.error = { name: error.name, message: error.message, stack: error.stack };
@@ -636,16 +836,31 @@ try {
     'docs/api.md',
     'docs/be03.md',
     'docs/be04.md',
+    'README.md',
+    '.env.example',
+    'docs/be06.md',
+    'indexer/config/be06.manifest.example.json',
+    'indexer/be06/manifest.ts',
+    'indexer/be06/rebuild.ts',
+    'indexer/be06/compare.ts',
+    'indexer/be06/cli.ts',
+    'tests/indexer/be06.test.ts',
+    'tests/indexer/be06-db.test.mjs',
   ])
     report.sourceHashes[path] = createHash('sha256')
       .update(await readFile(new URL(`../${path}`, import.meta.url)))
       .digest('hex');
-  await writeFile(output, JSON.stringify(report, null, 2) + '\n');
-  await pool.end();
-  if (phaseApi && phaseApi.listening) await new Promise((done) => phaseApi.close(done));
-  if (anvil && anvil.exitCode === null) {
-    const exited = once(anvil, 'close');
-    anvil.kill();
-    await exited;
+  try {
+    await mkdir(dirname(output), { recursive: true });
+    await writeFile(output, JSON.stringify(report, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
+  } finally {
+    await pool.end();
+    await Promise.all(liveBe06Pools.map((target) => target.end()));
+    if (phaseApi && phaseApi.listening) await new Promise((done) => phaseApi.close(done));
+    if (anvil && anvil.exitCode === null) {
+      const exited = once(anvil, 'close');
+      anvil.kill();
+      await exited;
+    }
   }
 }

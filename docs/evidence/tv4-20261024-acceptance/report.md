@@ -62,6 +62,8 @@ Kết quả chỉ áp dụng máy/môi trường/mix này; không chứng minh t
 
 Gitleaks8.30.1 được tải từ release có SHA-256 xác minh, chạy toàn bộ49 commit reachable (`git --log-opts=--all`), khoảng12,41MB. Raw exit1/283 findings được giữ nguyên và redact100%, không allowlist/suppress. Đọc từng vị trí ở commit gốc:158 địa chỉ token EVM công khai,124 SHA-256 file nguồn/artifact,1 placeholder README; không có credential được xác nhận. Đây là pattern scan có triage, không bảo đảm phát hiện mọi loại secret. Xem [triage](gitleaks-triage.json).
 
+Quét thêm [snapshot index đã stage](gitleaks-staged-triage.json) từ tree `efdb0ae14800895a3246922e9b1a01b57c430ff6`, sau đó commit nguyên snapshot thành `5fe1f96f27f5842d799f3a3928e3d9fa1e45a225`, gồm code và evidence mới, không copy node_modules/out/cache hoặc thay đổi AD-064 của người dùng:17,99MB,raw exit1/536finding; triage384public EVM address và152file SHA-256,0credential xác nhận. Có thể export lại chính commit này để kiểm độc lập; không claim output scan/triage hoặc checksum/docs sinh sau snapshot đã tự quét chính nó.
+
 ## Browser và các lỗi tích hợp đã sửa
 
 Luồng TC01 local: UI tạo proposal1000 BUD, A400+B300 For, queue qua Governor, chặn Execute trước ETA, execute qua Timelock/Treasury, index K=2 rồi API/UI hiện quỹ9000 BUD. Sau đó UI nạp10 BUD, balance9010; proposal khác được creator hủy khi Pending. Người không phải creator bị khóa nút hủy. Description HTML hiển thị text, không chạy sentinel.

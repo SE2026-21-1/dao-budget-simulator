@@ -153,6 +153,20 @@
       "suppressionOrAllowlistAdded": false,
       "evidence": "gitleaks-triage.json"
     },
+    "secretScanStagedSnapshot": {
+      "status": "TRIAGED_FALSE_POSITIVES",
+      "sourceIndexTree": "efdb0ae14800895a3246922e9b1a01b57c430ff6",
+      "snapshotSubsequentlyCommittedAs": "5fe1f96f27f5842d799f3a3928e3d9fa1e45a225",
+      "rawExitCode": 1,
+      "rawFindings": 536,
+      "publicAddresses": 384,
+      "publicFileDigests": 152,
+      "confirmedCredentials": 0,
+      "unreviewedFindings": 0,
+      "userAd064ChangesExcluded": true,
+      "evidence": "gitleaks-staged-triage.json",
+      "limit": "Scan output/triage and later integrity/docs updates were generated after this snapshot."
+    },
     "freshnessSample": {
       "confirmedToApiMs": 374.39,
       "productionSlaAccepted": false,

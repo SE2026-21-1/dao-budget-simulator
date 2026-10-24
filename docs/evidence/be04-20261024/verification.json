@@ -78,7 +78,7 @@
     "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
     "database/queries/be04_read_model.sql": "b43d142b867ba2552940ffa97f54bc58e94896c4530762c4bc3a3290a9f210e1",
     "docs/api.md": "00c8c880e75a5f036ddfcfe53834446716458bdd35e93a972d8459f4f4b0b8b0",
-    "docs/be04-checklist.md": "88a847855ca4c7252581f94b07b82a917f568dd4e168fac4163a1cdef51a62d4",
+    "docs/be04-checklist.md": "6ec6083bc73f8ff8a415a715cb999b486a30c7acc42d8ff3d2979b8bacc0dcff",
     "docs/be04-pr.md": "6a790253343b0fba9e23466c035158e71d97a05b6129d52b4bf2c5231d9fcda8",
     "docs/be04.md": "4d1fb268078df0dee19990abd07f8f3ba9df207e91556434e9aeacd63111e2ec",
     "docs/evidence/be04-20261024/build.txt": "c7839930bda1499a0b70f3c4afda13a788fc8afcfb0b6c16a899c1cf70b52c4f",
@@ -100,5 +100,15 @@
     "tests/indexer/projection-storage.test.ts": "ac6390b6d954460a6bdcedc95097daaeaaf1fdb9d9aa5ef9fb6d7a030f1e58a0",
     "tests/indexer/projection.test.ts": "7c5eb4c313fd2c7bd9c970ebec6b2267d91d6fe015afeaac97eda3df732230aa",
     ".gitattributes": "615445a6685d026aac58dcb4fc330db1e1c8146c713e35abfe732e12f1b8baba"
+  },
+  "publication": {
+    "pullRequest": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/23",
+    "branch": "feature/tv2-be04",
+    "codeCommit": "ba39336e0d1448e6a9e50d77796741316bedcf3b",
+    "validatedTree": "2dd15a918eaef3e22cdb2008a37700f89b1b964e",
+    "baseBranch": "feature/tv2-be03",
+    "dependsOnPullRequest": 22,
+    "draft": true,
+    "merged": false
   }
 }

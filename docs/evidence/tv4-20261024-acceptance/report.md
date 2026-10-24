@@ -31,6 +31,9 @@ Backend, governance, rebuild cùng H, benchmark NFR02 local và E2E bằng EIP-1
 | Frontend | 6 behavior tests PASS; production build PASS sau sửa TS1294 | [frontend.txt](frontend.txt), [frontend-build-fixed.txt](frontend-build-fixed.txt), [frontend-final.txt](frontend-final.txt) |
 | Native runner SIGTERM | Exit143; cluster stopped/port closed/temp removed; report FAIL thay vì PASS | [native-interruption/signal-driver.json](native-interruption/signal-driver.json) |
 | Browser E2E | 12 checks PASS;4 route×390/1366 không tràn ngang | [browser.json](browser.json), [browser-receipts.json](browser-receipts.json) |
+| TC12 tám proposal và historical boundaries | 7 case PASS; mỗi case có reference/target mới, normalized+chain compare bằng nhau; H49 đủ tám trạng thái fixture | [tc12-complete/report.json](tc12-complete/report.json), [driver](run-tc12.mjs) |
+| Clone sạch candidate `d2617d0` | Install/build/typecheck,330 test, smoke và native `--benchmark` PASS; không overlay/cache dự án | [clean/report.json](clean/report.json) |
+| Quét secret toàn bộ history | Gitleaks8.30.1 exit1 với283 finding; triage đều là public digest/address/placeholder,0 credential được xác nhận | [raw redacted](gitleaks-history.json), [triage](gitleaks-triage.json) |
 
 Các campaign invariant là bounded model; số counter cuối stdout thuộc sequence được in, không tự coi là tổng mọi run. Có Governor execute thành công trong sequence; không dùng toàn bộ revert để chứng minh bất biến.
 
@@ -38,7 +41,9 @@ Các campaign invariant là bounded model; số counter cuối stdout thuộc se
 
 Tại H=67/hash được ghim, reference và hai database mới đều có6 proposal,9 vote,3 operation,4 Transfer và2 disbursement. TotalIn=13000 BUD, totalOut=12000 BUD, balance=1000 BUD khớp contract tại hash H. Compare normalized bằng nhau; probe sửa state tạo mismatch/exit2, khôi phục trở lại bằng nhau. Sau khi head lên73 và có Transfer ở block70, rebuild vẫn dừng đúng67 và loại event sau H. Các giá trị đầy đủ nằm trong `native/live.json` và các file `.be06-*` đi kèm.
 
-Đây là PASS về FR15 implementation và dataset đã chạy, không tự thay bộ8 trạng thái đồng thời của mọi variant TC12. Các boundary snapshot/deadline/ETA được kiểm riêng qua model, unit và các phase live.
+Bổ sung TC12 đúng setup tám proposal tại H49, timestamp=t0+1000, K=2: Executed, Queued Waiting, Queued Ready, Succeeded, Defeated, Active, Canceled và Pending. Reference ingestion/projection bình thường và target rebuild từ manifest dùng database mới riêng; so toàn bộ normalized business values, raw canonical logs và contract tại cùng H/hash bằng nhau. Có10 vote/3 operation/2 Transfer/1 disbursement; totalIn10000/totalOut1000/balance9000 BUD, recipient1000/funding10000, ETA Waiting=t0+1070/Ready=t0+820. Pending quorum=null, không gọi past state ở snapshot tương lai.
+
+Sáu case S/S+1/D/D+1/E−1/E cũng dùng cặp database mới riêng, lịch sử chain chung được ghim hash (không warp ngược), quorum/state khớp Governor; HTTP API ở H49 phục vụ cả tám proposal. [Driver và lệnh chạy lại](run-tc12.mjs), [kết quả đầy đủ](tc12-complete/report.json). Lần đầu driver khai deployment_block=scanFromBlock1 thay vì firstBlock2 của bốn contract scan, API từ chối503 đúng; giữ [FAIL ban đầu](tc12/report.json), sửa harness dùng helper firstBlock hiện có rồi chạy lại trên chain/DB reset riêng. Không sửa API hoặc nới readiness để đạt PASS. Historical-RPC failure/cursor sau reorg vẫn theo gate TC11, không tự coi đã nghiệm thu toàn bộ recovery.
 
 ### NFR02 — dữ liệu chain thật
 
@@ -50,6 +55,12 @@ Tại H=67/hash được ghim, reference và hai database mới đều có6 prop
 - Treasury vẫn10000 BUD vì benchmark không execute. Ví thứ10 là account Anvil chuẩn thay tên Y lịch sử; tổng cung, phân bổ100/ví và100/1000 không đổi.
 
 Kết quả chỉ áp dụng máy/môi trường/mix này; không chứng minh tải AD-064753 user, remote-client hoặc testnet.
+
+### Clone sạch và quét secret
+
+[clean/report.json](clean/report.json): clone `--no-local --recurse-submodules` đúng `d2617d09694cefd53aa18d23c34335852406102d`, ban đầu không có node_modules/frontend node_modules/out/cache/.env; npm cache mới, không copy source/build output. Toàn bộ build/typecheck,330 test đã liệt kê, Treasury/governance smoke,51 DB tests và native runner có `--benchmark` PASS. Benchmark lần này8636success/0error,p95127,602ms; không thay số liệu8133 của lần đầu hoặc cộng hai run làm coverage mới. Log vẫn giữ một lint warning và bundle warning. Đây là clone **cùng máy**, toolchain/compiler đã cài; không phải xác nhận từ máy thành viên khác.
+
+Gitleaks8.30.1 được tải từ release có SHA-256 xác minh, chạy toàn bộ49 commit reachable (`git --log-opts=--all`), khoảng12,41MB. Raw exit1/283 findings được giữ nguyên và redact100%, không allowlist/suppress. Đọc từng vị trí ở commit gốc:158 địa chỉ token EVM công khai,124 SHA-256 file nguồn/artifact,1 placeholder README; không có credential được xác nhận. Đây là pattern scan có triage, không bảo đảm phát hiện mọi loại secret. Xem [triage](gitleaks-triage.json).
 
 ## Browser và các lỗi tích hợp đã sửa
 
@@ -96,5 +107,17 @@ README AD-064 link và file AD-064 chưa tracked của người dùng được g
 ## Chạy lại
 
 Xem README mục **Nghiệm thu native PostgreSQL khi không dùng được Docker**. `npm run test:tv4:native -- --postgres-bin <PG18.4-bin> --output <new-dir>` chạy các suite/live trên cluster riêng. Thêm `--benchmark` để runner tạo database benchmark riêng và chạy100/1000/10/60 trước cleanup. `npm run benchmark:api -- --output <new.json>` dùng riêng chỉ khi người gọi đã provision database rỗng `tv4_benchmark`/owner `be04_test` và đặt hai biến TV4_BENCHMARK theo usage.
+
+TC12 driver là evidence chạy bổ sung, chưa nằm trong native runner. Cần Anvil31337 mới, unforked và PostgreSQL cluster18.4 riêng do người gọi sở hữu, superuser local `be04_test`, chưa có database `tv4_tc12_*`; driver chỉ tạo các database của ca thử, không xóa/can thiệp database khác. Sau build và `npm ci`, chạy:
+
+```bash
+TV4_TC12_ISOLATED=1 \
+TV4_TC12_RPC_URL=http://127.0.0.1:<anvil-port> \
+TV4_TC12_POSTGRES_URL=postgresql://be04_test@127.0.0.1:<pg-port>/postgres \
+TV4_TC12_OUTPUT=/tmp/tv4-tc12-new \
+node --import tsx docs/evidence/tv4-20261024-acceptance/run-tc12.mjs
+```
+
+Người gọi stop/xóa riêng cluster và Anvil sau khi nhận report; cả hai dịch vụ thuộc lần nghiệm thu này đã được stop. Hash evidence nằm trong `SHA256SUMS`; không sửa JSON lịch sử để gán source commit mới.
 
 Không dùng địa chỉ trong evidence để chạy lại chain đã dừng/reset. Mỗi lần deploy phải tạo manifest mới và cấu hình BE05 deployment_name thật; không nhầm external deploymentId với PK nội bộ.

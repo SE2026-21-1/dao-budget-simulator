@@ -15,10 +15,12 @@ tiêu chí để khớp dữ liệu đã chạy.
 |---|---|---|
 | E-TV4-24-C | [contracts](evidence/tv4-20261024-acceptance/contracts.txt):147PASS, seed0x20261021, hai campaign100×50; [backend](evidence/tv4-20261024-acceptance/backend.txt):64+22+27+5 unit/model/CLI và8process PASS | Bounded oracle; không cộng nhiều run làm coverage mới |
 | E-TV4-24-DB | [native](evidence/tv4-20261024-acceptance/native/report.json):BE01 SQL,51DBtests,real governance/storage vàliveAPI/BE06 PASS | Native18.4 không là Docker; source hashes ghi theo lần chạy |
-| E-TV4-24-R | [live](evidence/tv4-20261024-acceptance/native/live.json):hai target mới tạiH67, normalized/chain compare bằng nhau;head73/post-H Transfer không lọt target; mismatch probe exit2 | FR15 có thực thi; không tự thay mọi variant8-state/reset của TC12 |
+| E-TV4-24-R | [live](evidence/tv4-20261024-acceptance/native/live.json):hai target H67/post-H/mismatch; [TC12](evidence/tv4-20261024-acceptance/tc12-complete/report.json):đúng tám proposal H49 và sáu boundary, mỗi case hai DB mới, normalized/chain compare equal | Recovery/historical-RPC failure và cursor sau reorg chưa nghiệm thu |
 | E-TV4-24-UI | [browser](evidence/tv4-20261024-acceptance/browser.json):12checks,4route×390/1366,UI→chain→API→UI,receipt/network/refusal/HTML-safe/cancel/deposit | EIP-1193 forward tới Anvil thật; chưa wallet extension/testnet |
 | E-TV4-24-P | [benchmark](evidence/tv4-20261024-acceptance/benchmark.json):100proposal/1000vote thật,10×100GOV,10client/60s,8133success/0error,p95133,652ms | NFR02 local/mix đã ghi; không thay AD-064753user/testnet |
 | E-TV4-24-X | [reorg](evidence/tv4-20261024-acceptance/reorg.json):hash mismatch dừng ingestion nhưng API200/hash orphan; [freshness](evidence/tv4-20261024-acceptance/freshness-sample.json):một sample374,39ms | TC11/NFR03/NFR04 toàn hệ thống chưa đạt; BE07 chưa bàn giao |
+| E-TV4-24-CLONE | [clean](evidence/tv4-20261024-acceptance/clean/report.json):candidate d2617d0, không overlay/cache dự án;330tests/build/smoke/native `--benchmark` PASS,8636success/0error,p95127,602ms | Cùng máy, compiler/toolchain sẵn; không thay independent-machine approval |
+| E-TV4-24-SECRET | [Gitleaks triage](evidence/tv4-20261024-acceptance/gitleaks-triage.json):49commit,283finding redacted, toàn public digest/address/placeholder,0credential xác nhận | Raw exit1 được giữ; pattern scan không bảo đảm mọi secret |
 
 | TC | Trạng thái mới và căn cứ |
 |---|---|
@@ -33,16 +35,16 @@ tiêu chí để khớp dữ liệu đã chạy.
 | TC09 | Live insufficient funds→fund→same-operation retry, SQL/API ledger PASS |
 | TC10 | Shared/zero request, duplicate revert và linkage model/live PASS; không cộng Transfer+BudgetDisbursed |
 | TC11 | **KHÔNG ĐẠT** reorg rollback/invalidation;16DB crash/checkpoint tests PASS chỉ chứng minh phần atomic/resume |
-| TC12 | PASS implementation rebuild/compare tạiH67 vàpost-H exclusion; bộ8 trạng thái đồng thời/đủ mọi reset variant chưa chốt |
+| TC12 | PASS tám proposal H49 cùng H/hash, Pending quorum=null, Queued Waiting/Ready, totals9000/10000/1000; S/S+1/D/D+1/E−1/E dùng từng cặp DB mới và normalized/chain compare equal. Historical-RPC failure/cursor sau reorg chưa chốt |
 | TC13 | PASS12browser checks bằng transport local và6behavior tests; extension/video/đủ mọi variant chưa nghiệm thu |
 | TC14 | Contract role/creator-Pending negatives và UI noncreator-disabled/creator-cancel PASS; approval/testnet còn thiếu |
 
 INV01–INV04 có governance oracle và successful execute trong sequence, không
 prank Timelock để chi; đây vẫn là bounded local evidence. NFR02 đạt trên máy
 đã ghi. NFR03 chỉ có sample acceptance-driver; NFR04 còn BE07/backoff/reorg.
-NFR05 cần clone ghi riêng và máy thành viên khác; NFR06 có ảnh/keyboard local,
+NFR05 có clone sạch candidate cùng máy E-TV4-24-CLONE, còn máy thành viên khác; NFR06 có ảnh/keyboard local,
 không chứng nhận mọi trình duyệt. NFR07 chưa chốt vì peer review/CI revision
-mới và lỗi reorg còn mở. NFR08 local role audit có proof, testnet chưa có.
+mới và lỗi reorg còn mở. NFR08 local role audit và history secret-scan/triage có proof, testnet chưa có.
 
 ## 1. Ranh giới bằng chứng theo phiên bản
 
@@ -205,7 +207,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R1/F0 mới; chốt H là block có timestamp `t0+1000`, rồi mine thêm2 block để H đủK. Tạo8 proposal A sở hữu, mỗi khoản1000U→R, nhãn/request/description riêng: Executed tạo t0 và chạy G (chi duy nhất1000U); Queued Waiting tạo t0+100, queue t0+950 (ETA=t0+1070); Queued Ready tạo t0+200, queue t0+700 (ETA=t0+820); Succeeded tạo t0+500, chưa queue; Defeated tạo t0+510; Active tạo t0+800; Canceled tạo t0+900 và A cancel t0+901; Pending tạo t0+950. Với Executed/Queued/Succeeded, A/B For tại snapshot+1/+2 (700U); Defeated chỉ D For100U; Active chỉ A For400U trước H; Pending/Canceled không phiếu. S/D từng P lấy create+60/+360 và assert contract; thực hiện các giao dịch theo thứ tự timestamp tăng, không warp ngược. Tại H: quỹ9000U/R1000U/F10000U, chỉ request Executed paid; các proposal khác không giữ chỗ. Ghi H number/hash/timestamp canonical từ DB cũ, freeze cả hai DB tại H (không dùng latest); block rỗng làm chuyển state theo clock.
 - **Hành động:** export canonical projection ở H từ DB đang có, tạo **DB mới trống riêng** và chạy rebuild từ manifest/ABI/address/deployment blocks đến H, không đọc DB cũ hoặc seed metadata riêng. So sorted values của proposal (IDs/description bytes/calldata/proposer/recipient/amount/S/D), votes/support/weight, operation/salt/predecessor/ETA/status, requests đã paid, raw canonical logs, Transfer ledger và tổng số. So Governor.state/quorum(snapshot)/proposal fields, Timelock readiness, GOV past votes/supply và BUD.balanceOf bằng eth_call block H/hash.
 - **Kỳ vọng:** hai tập có cùng nội dung, không chỉ count/hash tự khai; balance9000U và totalIn10000U,totalOut1000U khi chỉ có chi nêu trên; state tính bằng clock(H), **không** chỉ event cuối, không dùng Date.now/latest. Tại H trước/tại snapshot quorum chưa tra quá khứ phải xử lý rõ; kiểm thêm H ở S/S+1/D/D+1/E−1/E bằng các ca con reset độc lập. Revision mới có thể khác nhưng không làm khác business data; cursor cũ invalid theo hợp đồng. RPC thiếu historical state phải báo DATA_NOT_READY, không fallback latest. DB cũ giữ nguyên cho đến so sánh đạt.
-- **Test/evidence24/10:** E-TV4-24-R chạy BE06 CLI trên hai database mới tạiH67/hash,6proposal/9vote/3operation/4Transfer/2disbursement; compare normalized/contract bằng nhau, mismatch probe exit2; head73 và event70 không lọt rebuild67. FR15 đã có runtime proof. Bộ8 trạng thái đồng thời và mọi reset/boundary/historical-failure variant của setup TC12 vẫn chưa tự đánh đủ PASS.
+- **Test/evidence24/10:** E-TV4-24-R có hai target H67/hash,post-H exclusion/mismatch probe và [driver TC12](evidence/tv4-20261024-acceptance/run-tc12.mjs) đã chạy đúng tám proposal H49=t0+1000,10vote/3operation/2Transfer/1disbursement; toàn bộ normalized values/chain compare equal, API đủ tám proposal, totals10000/1000/9000 và Pending quorum=null. Sáu case S/S+1/D/D+1/E−1/E cũng dùng reference+target DB mới riêng trên lịch sử chain được ghim hash, không warp ngược. [Kết quả7case](evidence/tv4-20261024-acceptance/tc12-complete/report.json). Lần đầu harness khai sai prefix1 thay vì firstBlock2 bị API503 đúng, FAIL được giữ riêng; sửa harness, không nới readiness. Historical-RPC failure và cursor invalidation sau reorg vẫn chưa nghiệm thu theo TC11.
 
 ### TC13 — Ví, form, receipt, HTML và mạng
 

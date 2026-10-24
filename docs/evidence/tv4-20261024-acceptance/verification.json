@@ -110,6 +110,49 @@
       "p95Ms": 133.6519580000022,
       "evidence": "benchmark.json"
     },
+    "cleanClone": {
+      "status": "PASS",
+      "candidate": "d2617d09694cefd53aa18d23c34335852406102d",
+      "sameMachine": true,
+      "sourceOverlay": false,
+      "reusedProjectNodeModulesOutCache": false,
+      "freshNpmCache": true,
+      "toolchainCompilerAlreadyInstalled": true,
+      "runtimeSourceFilesMatchedCandidate": 23,
+      "observedTests": 330,
+      "benchmarkSuccessfulRequests": 8636,
+      "benchmarkErrorRequests": 0,
+      "benchmarkP95Ms": 127.60182499999064,
+      "evidence": "clean/report.json"
+    },
+    "tc12EightProposalsAndBoundaries": {
+      "status": "PASS",
+      "cases": 7,
+      "freshDatabases": 14,
+      "finalH": "49",
+      "finalTimestamp": "1800001024",
+      "fixture": "Executed, Queued Waiting, Queued Ready, Succeeded, Defeated, Active, Canceled, Pending",
+      "boundaryCases": ["S", "S+1", "D", "D+1", "E-1", "E"],
+      "normalizedAndChainComparisons": "equal for all seven cases",
+      "apiAtFinalH": "PASS including Pending quorum=null",
+      "driver": "run-tc12.mjs",
+      "driverSha256": "1be51d5079536d814189d4b13d18e204d9fa46a1a13039aaab5f806cc8cc15a3",
+      "evidence": "tc12-complete/report.json",
+      "initialHarnessMetadataFailurePreserved": "tc12/report.json",
+      "notAccepted": "historical RPC failure and cursor invalidation after reorg"
+    },
+    "secretScanHistory": {
+      "status": "TRIAGED_FALSE_POSITIVES",
+      "scanner": "gitleaks 8.30.1",
+      "candidate": "d2617d09694cefd53aa18d23c34335852406102d",
+      "commits": 49,
+      "rawExitCode": 1,
+      "rawFindings": 283,
+      "confirmedCredentials": 0,
+      "unreviewedFindings": 0,
+      "suppressionOrAllowlistAdded": false,
+      "evidence": "gitleaks-triage.json"
+    },
     "freshnessSample": {
       "confirmedToApiMs": 374.39,
       "productionSlaAccepted": false,
@@ -145,5 +188,6 @@
     "sha256": "cd7e8841bee12b489f4d08d97a353d15e6ada20750a11c67636678efa34ec2a2",
     "README_AD064_link": "Preserved separately; excluded from assistant commits"
   },
-  "cleanup": "cleanup.json"
+  "cleanup": "cleanup.json",
+  "evidenceIntegrity": "SHA256SUMS (excludes itself)"
 }

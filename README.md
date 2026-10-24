@@ -112,6 +112,14 @@ Nhánh tích hợp TV4 hiện có BE05/BE06/wallet và job BE03 mới; chưa pus
 revision này do máy chưa có GitHub credential. Kết quả local và blocker có
 trong [evidence 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
 
+Clone sạch candidate `d2617d0` cùng máy đã chạy lại install/build/typecheck,
+330 tests, smoke và native `--benchmark` thành công, không overlay/cache dự án.
+TC12 bổ sung đủ tám proposal cùng H và sáu mốc S/S+1/D/D+1/E−1/E; mỗi case
+reference/target mới, normalized/chain compare bằng nhau. Gitleaks toàn history
+có283finding public hash/address/placeholder đã triage; raw exit1 được giữ,
+không suppress. [Report và lệnh chạy lại](docs/evidence/tv4-20261024-acceptance/report.md)
+ghi rõ giới hạn clone cùng máy, pattern scan và gate reorg chưa đạt.
+
 ### Nghiệm thu native PostgreSQL khi không dùng được Docker
 
 Node được pin bằng `.nvmrc` (24.15.0). Dùng PostgreSQL **18.4** có sẵn, hoặc

@@ -396,6 +396,9 @@ bàn giao. Không tự approval hoặc merge PR của nhóm.
 - Full Foundry147PASS với fuzz256/invariant100×50 seed0x20261021; backend64+22+27+5,51real-DB tests,8process và6frontend behavior tests PASS. Có liveAPI vàhai BE06 rebuild đúngH67/hash,post-H exclusion/mismatch probe.
 - E2E bằng injected EIP-1193 forward Anvil thật: A+B700For chi1000BUD; UI/API quỹ9000; cancel/deposit/network/refusal/HTML-safe.12checks,4route×390/1366 và keyboard skip-link PASS.
 - Tái hiện/sửa buildTS1294, cancellation false-success, repricing wrong-hash, stale-account delegation refresh, mất receipt do unmount, wallet context hot-update, source label, mobile overflow và lỗi mạng tiếng Việt. Không suppress cảnh báo; không dùng mock receipt.
+- Clone sạch đúngcandidate d2617d0 cùng máy, npm cache mới/không overlay/node_modules/out/cache:330tests/build/smoke/native runner có `--benchmark` PASS; benchmark lần hai8636success/0error,p95127,602ms. Không cộng nhiều run thành coverage mới.
+- TC12 đúng tám proposal tạiH49=t0+1000 và sáu mốcS/S+1/D/D+1/E−1/E:14DB mới, normalized/chain compare equal; API tám proposal, Pending quorum=null, Queued Waiting/Ready đúngETA, ledger10000in/1000out/9000balance. Giữ FAIL harness ban đầu và bản sửa firstBlock; không sửa readinessAPI để né lỗi.
+- Gitleaks8.30.1 quét49commit,283finding redacted; từng finding là158public address/124file hash/1placeholder,0credential xác nhận; giữ rawexit1, không suppress. Còn giới hạn pattern scan.
 - Reorg thật **KHÔNG ĐẠT**: syncdừngCHECKPOINT_HASH_MISMATCH/SQLgiữ nguyên nhưngAPI200vớihashorphan. TV2BE07/backoff/invalidation vàfreshnessproduction còn thiếu; không chốt release.
 - GitHub chưa có credential nên chưa push/updatePR#21/issues#18/#19/#20 hoặc xinapproval thật; đã chuẩn bị [nội dung bàn giao](tv4-handoff-20261024.md). Testnet thiếu network/RPC/signer/gas/TV1review; không ký/gửi suy đoán.
 
@@ -403,5 +406,8 @@ bàn giao. Không tự approval hoặc merge PR của nhóm.
 [native](evidence/tv4-20261024-acceptance/native/report.json),
 [browser](evidence/tv4-20261024-acceptance/browser.json),
 [benchmark](evidence/tv4-20261024-acceptance/benchmark.json),
+[clone sạch](evidence/tv4-20261024-acceptance/clean/report.json),
+[TC12](evidence/tv4-20261024-acceptance/tc12-complete/report.json),
+[secret scan](evidence/tv4-20261024-acceptance/gitleaks-triage.json),
 [reorg](evidence/tv4-20261024-acceptance/reorg.json).
 

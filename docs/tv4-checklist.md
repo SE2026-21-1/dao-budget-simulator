@@ -15,6 +15,9 @@ là căn cứ mới; local PASS không tự thành release/peer approval.
 - [x] `.nvmrc`24.15.0; native PostgreSQL18.4 runner có isolation, logs/source hashes và cleanup, không cần Docker/sudo.
 - [x] Foundry147/147, fuzz256 và invariant100×50 seed0x20261021; backend64+22+27+5,51 real-DB tests,8process tests và6frontend behavior tests PASS.
 - [x] BE03 K/checkpoint/crash trước/sau COMMIT/redecode, BE04 atomic publication, BE05 API và hai BE06 rebuild cùng H67/hash PASS.
+- [x] TC12 bổ sung đúng tám proposal H49/t0+1000 và S/S+1/D/D+1/E−1/E; từng cặp DB mới, normalized/chain compare equal và HTTP API cùng H, Pending quorum=null, ledger9000/10000/1000. [Evidence](evidence/tv4-20261024-acceptance/tc12-complete/report.json).
+- [x] Clone sạch candidate d2617d0 cùng máy, không overlay/source cache;330tests/build/smoke/native `--benchmark` PASS. [Report](evidence/tv4-20261024-acceptance/clean/report.json); không thay máy thành viên khác.
+- [x] Gitleaks8.30.1 quét49commit; giữ raw exit1/283finding, triage public SHA/address/placeholder,0credential được xác nhận; không allowlist/suppress. [Triage](evidence/tv4-20261024-acceptance/gitleaks-triage.json).
 - [x] Benchmark NFR02 local:100 proposal/1000 vote chain thật,10client/60s,8133success/0error,p95133,652ms. Không thay AD-064753 user hoặc benchmark testnet.
 - [x] Browser EIP-1193 local:12checks PASS,4route×390/1366; A+B700For chi1000BUD, creator cancel, deposit, HTML-safe/network/refusal và receipt/account-switch regression.
 - [x] Sửa TS1294, replacement receipts, stale wallet refresh, status mất khi reload, label nguồn API, mobile table containment và lỗi mạng tiếng Việt; không suppress warning.

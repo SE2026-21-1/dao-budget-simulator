@@ -14,8 +14,8 @@ HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API 
 | SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
-| SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`; [PR #13](https://github.com/SE2026-21-1/dao-budget-simulator/pull/13) chờ peer review |
-| SC05 — Timelock và quyền sau deploy | TV1 chưa bàn giao riêng; TV4 dùng TimelockController OZ5.4.0 thật để kiểm chứng local, không giả EOA |
+| SC04 — Governor và giới hạn proposal | Đã merge `f57fcfd` qua PR #13; có unit/security tests |
+| SC05 — Timelock và quyền sau deploy | TV1 có test tích hợp final roles/ETA/retry và tài liệu bàn giao; chờ peer review, deployment/testnet riêng |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
 | SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
@@ -168,6 +168,22 @@ BudgetGovernor chỉ nhận một lời gọi Treasury.disburse chuẩn ABI, dù
 threshold 50 GOV và quorum 20%. Xem [SC04 — Governor](docs/sc04-governor.md).
 Test có Timelock thật làm fixture; production roles/deploy/check-roles thuộc SC05 và TV4.
 
+## SC05 — Timelock và quyền sau bootstrap
+
+```bash
+forge build
+forge test --match-path 'tests/integration/TimelockGovernance.t.sol' -vv
+FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261023 forge test -vv
+python3 scripts/check.py
+```
+
+[Hướng dẫn SC05](docs/sc05-timelock-roles.md) chốt minDelay 120 giây, role matrix,
+trình tự grant/revoke/renounce và audit lịch sử role. Fixture dùng năm contract thật,
+bỏ mọi quyền bootstrap trước khi nạp BUD; kiểm tra queue/execute qua ví không có GOV,
+biên ETA, retry thiếu quỹ và chi trùng requestId. ABI [TimelockController](shared/abi/TimelockController.json)
+sinh từ compiler. Deploy/check-roles local đã có của TV4 giữ nguyên; kiểm chứng bằng Foundry
+không thay audit deployment/testnet hoặc UI/API E2E.
+
 ## Deploy, audit role và demo governance local — TV4
 
 Cần Foundry 1.8.5, Node 24.15.0 và `npm ci`; build bằng cấu hình đã khóa.
@@ -282,6 +298,8 @@ Xem [hướng dẫn frontend](frontend/README.md) và [checklist TV4](docs/tv4-c
 - [SC02 — Token, constructor và phân bổ cho TV4](docs/sc02-tokens.md)
 - [SC03 — Treasury, quyền và bàn giao TV4](docs/sc03-treasury.md)
 - [SC04 — Governor, proposal và voting](docs/sc04-governor.md)
+- [SC05 — Timelock và role bàn giao TV4](docs/sc05-timelock-roles.md)
+- [ABI TimelockController](shared/abi/TimelockController.json)
 - [ABI BudgetGovernor](shared/abi/BudgetGovernor.json)
 - [ABI Treasury triển khai](shared/abi/Treasury.json)
 - [ABI interface Treasury](shared/abi/ITreasury.json)

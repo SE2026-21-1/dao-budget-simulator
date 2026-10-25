@@ -1,3 +1,4 @@
+import { setTimeout as sleep } from 'node:timers/promises';
 import { IndexerError } from './errors.js';
 import { UINT256_MAX } from './config.js';
 
@@ -5,12 +6,59 @@ export interface RpcTransport {
   call(method: string, params: unknown[]): Promise<unknown>;
 }
 
+export interface HttpRpcRetryPolicy {
+  sleep?: (delayMs: number) => Promise<void>;
+  now?: () => number;
+}
+
+const MAX_ATTEMPTS = 3;
+const BASE_RETRY_DELAY_MS = 250;
+const MAX_RETRY_DELAY_MS = 2_000;
+const TRANSIENT_HTTP_STATUSES = new Set([429, 500, 502, 503, 504]);
+const RETRYABLE_READ_METHODS: Record<string, true> = {
+  eth_chainId: true,
+  eth_blockNumber: true,
+  eth_getBlockByNumber: true,
+  eth_getLogs: true,
+  eth_getCode: true,
+  eth_call: true,
+};
+
+class RetryableRpcError extends IndexerError {
+  constructor(code: string, message: string, readonly retryAfterMs = 0) { super(code, message, true); }
+}
+
+function retryAfterMs(value: string | null, now: number): number {
+  if (value === null) return 0;
+  const seconds = /^\d+$/.test(value.trim()) ? Number(value) : NaN;
+  const delay = Number.isNaN(seconds) ? Date.parse(value) - now : seconds * 1_000;
+  return Number.isNaN(delay) ? 0 : Math.min(MAX_RETRY_DELAY_MS, Math.max(0, delay));
+}
+
 export class HttpRpc implements RpcTransport {
   private id = 0;
-  constructor(private readonly url: string, private readonly timeoutMs = 30_000) {}
+  constructor(
+    private readonly url: string,
+    private readonly timeoutMs = 30_000,
+    private readonly retryPolicy: HttpRpcRetryPolicy = {},
+  ) {}
 
   async call(method: string, params: unknown[]): Promise<unknown> {
     const id = ++this.id;
+    for (let attempt = 1; ; attempt++) {
+      try { return await this.callAttempt(method, params, id); }
+      catch (error) {
+        if (!(error instanceof RetryableRpcError)) throw error;
+        if (!Object.hasOwn(RETRYABLE_READ_METHODS, method)) throw new IndexerError(error.code, error.message);
+        if (attempt >= MAX_ATTEMPTS) throw error;
+        const delay = Math.min(MAX_RETRY_DELAY_MS, Math.max(BASE_RETRY_DELAY_MS * 2 ** (attempt - 1), error.retryAfterMs));
+        if (this.retryPolicy.sleep) await this.retryPolicy.sleep(delay);
+        else await sleep(delay);
+      }
+    }
+  }
+
+  private async callAttempt(method: string, params: unknown[], id: number): Promise<unknown> {
     let response: Response;
     try {
       response = await fetch(this.url, {
@@ -19,11 +67,22 @@ export class HttpRpc implements RpcTransport {
         signal: AbortSignal.timeout(this.timeoutMs),
       });
     } catch {
-      throw new IndexerError('RPC_UNAVAILABLE', `${method}: RPC transport failed or timed out.`);
+      throw new RetryableRpcError('RPC_UNAVAILABLE', `${method}: RPC transport failed or timed out.`);
     }
-    if (!response.ok) throw new IndexerError('RPC_HTTP_ERROR', `${method}: RPC HTTP status ${response.status}.`);
+    if (!response.ok) {
+      const delay = retryAfterMs(response.headers.get('retry-after'), this.retryPolicy.now?.() ?? Date.now());
+      // Do not consume or expose provider error bodies; release the connection before retrying.
+      await response.body?.cancel().catch(() => undefined);
+      const message = `${method}: RPC HTTP status ${response.status}.`;
+      if (TRANSIENT_HTTP_STATUSES.has(response.status)) throw new RetryableRpcError('RPC_HTTP_ERROR', message, delay);
+      throw new IndexerError('RPC_HTTP_ERROR', message);
+    }
+    let text: string;
+    // The fetch signal remains active while reading the body, not just until headers arrive.
+    try { text = await response.text(); }
+    catch { throw new RetryableRpcError('RPC_UNAVAILABLE', `${method}: RPC transport failed or timed out.`); }
     let body: Record<string, unknown>;
-    try { body = rpcObject(await response.json(), 'RPC response'); }
+    try { body = rpcObject(JSON.parse(text), 'RPC response'); }
     catch { throw new IndexerError('RPC_INVALID_RESPONSE', `${method}: RPC response is not a JSON object.`); }
     if (body.id !== id || body.jsonrpc !== '2.0') {
       throw new IndexerError('RPC_INVALID_RESPONSE', `${method}: RPC response ID/version mismatch.`);

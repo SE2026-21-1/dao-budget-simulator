@@ -82,7 +82,7 @@ Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không d
 ## Snapshot, health và giao dịch
 
 - Client tải hết các trang proposal bằng cursor BE05 và giữ cùng H/hash/revision. Summary và Transfer dùng chính context đó; mỗi lượt tải mới bỏ context/cursor cũ. Mã lỗi đọc từ envelope `error.code`/`error.message`, không từ trường `message` ở root.
-- Health gọi `/api/health` chỉ với chain/deployment, không ghim H. Hiển thị `ok`/`degraded`/`unavailable`, database, indexer, publication và cảnh báo decode/projection. HTTP 503 health vẫn có thể chứa envelope `data` hợp lệ. Không suy ra RPC down hoặc độ trễ giây khi `lagSeconds` là null.
+- Health gọi `/api/health` mỗi5s chỉ với chain/deployment, không ghim H. Hiển thị `ok`/`degraded`/`unavailable`, DB/indexer/publication và cảnh báo decode/projection. Heartbeat quá30s hoặc publication bị trễ hiện cảnh báo dữ liệu cũ; tự bỏ cảnh báo khi phục hồi. HTTP503 health vẫn có thể chứa envelope `data` hợp lệ. `lagSeconds` là chỉ báo freshness, không phải phép đo chính xác event delay; fixture cũ có thể null.
 - Wallet dùng `window.ethereum` EIP-1193 (ví dụ MetaMask). Chưa kết nối vẫn đọc được API. Đọc GOV balance/delegate/current votes, hỗ trợ self-delegate và account/chain change; sai chain chặn giao dịch.
 - Trước thao tác quản trị, frontend đối chiếu chain RPC, bytecode và quan hệ Governor → Treasury/GOV/Timelock, Treasury → BUD. Summary phải khớp cả năm địa chỉ cấu hình.
 - Propose kiểm tra voting power tại `Governor.clock()-1` so với proposal threshold thật. Vote kiểm tra Active, `hasVoted` và voting power tại snapshot. Chỉ proposer hủy Pending; ai cũng có thể queue Succeeded và execute Queued/Ready qua Governor. Không gọi Timelock trực tiếp.
@@ -146,6 +146,7 @@ bốn route ở390/1366 và8ảnh: A+B700For chi1000BUD, queue/execute/cancel/de
 wrong network/refusal/HTML-safe, cancellation/repricing và stale-account regression
 trên Anvil/API thật. Sáu behavior tests và production build đã PASS sau sửa
 TS1294; log theo từng source ở [report](../docs/evidence/tv4-20261024-acceptance/report.md).
-Đây không phải wallet extension hoặc testnet. Reorg thật chưa được backend
-rollback/invalidate API; không coi kết quả frontend là release approval.
+Đây không phải wallet extension hoặc testnet. Bản tích hợp25/10 đã kiểm browser thật
+pause→stale-warning→watch-recovery và backend reorg/cursor invalidation; xem
+[tổng kết TV4](../docs/tv4-work-summary.md). Vẫn cần peer/testnet approval.
 

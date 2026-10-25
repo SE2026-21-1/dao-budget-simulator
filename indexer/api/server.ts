@@ -86,11 +86,14 @@ function decodeCursor(raw: string, secret: string): Cursor {
   const expected = createHmac('sha256', secret).update(parts[0]!).digest();
   let actual: Buffer;
   try { actual = Buffer.from(parts[1]!, 'base64url'); } catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
-  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
+  if (actual.toString('base64url') !== parts[1] || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
     throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   }
+  const payload = Buffer.from(parts[0]!, 'base64url');
+  if (payload.toString('base64url') !== parts[0])
+    throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   let value: unknown;
-  try { value = JSON.parse(Buffer.from(parts[0]!, 'base64url').toString('utf8')); }
+  try { value = JSON.parse(payload.toString('utf8')); }
   catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
   if (!value || typeof value !== 'object') throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   const c = value as Partial<Cursor>;
@@ -175,7 +178,8 @@ async function readHealth(pool: Pool, scope: Scope): Promise<{ status: number; b
 type ScopeState = {
   deploymentId: string; chainId: string; name: string; revision: string; governance: Json;
   publication: null | { h: string; hash: string; timestamp: string; revision: string; scope: string; ignored: number };
-  raw: null | { h: string; hash: string; head: string; confirmations: number; status: string; sourceScope: string; updatedAt: string };
+  raw: null | { h: string; hash: string; head: string; confirmations: number; status: string; sourceScope: string; updatedAt: string;
+    timestamp: string | null; headTimestamp: string | null };
   context: Context | null; sync: Json; notReadyContext: Json; ready: boolean; ignoredAncillaryEvents: number;
 };
 
@@ -187,6 +191,7 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
       p.source_scope AS projection_scope, p.ignored_ancillary_events,
       c.block_number::text AS raw_h, c.block_hash AS raw_hash, c.observed_head_block::text AS raw_head,
       c.confirmation_depth, c.sync_status, c.source_scope AS raw_scope, c.updated_at,
+      rb.block_timestamp::text AS raw_timestamp, hb.block_timestamp::text AS head_timestamp,
       (SELECT count(*)::text FROM indexed_blocks ib WHERE ib.deployment_id=d.deployment_id
         AND ib.block_number BETWEEN (SELECT deployment_block FROM deployments WHERE deployment_id=d.deployment_id)
         AND COALESCE(p.block_number,0)) AS projection_header_count,
@@ -196,11 +201,14 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
     LEFT JOIN projection_checkpoints p ON p.deployment_id=d.deployment_id
     LEFT JOIN indexed_blocks b ON b.deployment_id=p.deployment_id AND b.block_number=p.block_number AND b.block_hash=p.block_hash
     LEFT JOIN checkpoints c ON c.deployment_id=d.deployment_id
+    LEFT JOIN indexed_blocks rb ON rb.deployment_id=c.deployment_id AND rb.block_number=c.block_number AND rb.block_hash=c.block_hash
+    LEFT JOIN indexed_blocks hb ON hb.deployment_id=c.deployment_id AND hb.block_number=c.observed_head_block
     WHERE d.chain_id=$1::numeric AND d.deployment_name=$2`, [scope.chainId, scope.deploymentId]);
   const row = result.rows[0];
   if (!row) throw new ApiError(404, 'DEPLOYMENT_NOT_FOUND', 'Deployment không tồn tại trong chain đã chọn.', { deploymentId: scope.deploymentId });
   const raw = row.raw_h === null ? null : { h: String(row.raw_h), hash: String(row.raw_hash), head: String(row.raw_head),
-    confirmations: Number(row.confirmation_depth), status: String(row.sync_status), sourceScope: String(row.raw_scope), updatedAt: new Date(row.updated_at).toISOString() };
+    confirmations: Number(row.confirmation_depth), status: String(row.sync_status), sourceScope: String(row.raw_scope), updatedAt: new Date(row.updated_at).toISOString(),
+    timestamp: row.raw_timestamp === null ? null : String(row.raw_timestamp), headTimestamp: row.head_timestamp === null ? null : String(row.head_timestamp) };
   const publication = row.projection_h === null ? null : { h: String(row.projection_h), hash: String(row.projection_hash),
     timestamp: String(row.projection_timestamp), revision: String(row.projection_revision), scope: String(row.projection_scope),
     ignored: Number(row.ignored_ancillary_events) };
@@ -211,13 +219,7 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
   const ready = !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
     publication.revision === String(row.deployment_revision) && BigInt(raw.h) >= BigInt(publication.h) && row.projection_timestamp !== null &&
     prefixComplete && metadataReady;
-  const confirmed = raw ? (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
-  const indexed = raw?.h ?? null;
-  const lagBlocks = confirmed === null || indexed === null ? null : (confirmed > BigInt(indexed) ? confirmed - BigInt(indexed) : 0n);
-  const sync: Json = { status: !raw || !publication || raw.status === 'rebuild_required' ? 'not_ready' : lagBlocks === 0n ? 'synced' : 'lagging',
-    headBlock: raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null, indexedBlock: indexed,
-    lagBlocks: lagBlocks?.toString() ?? null, lagSeconds: null,
-    confirmations: raw ? String(raw.confirmations) : null, lastIndexedAt: raw?.updatedAt ?? null };
+  const sync = buildSync(raw, publication);
   const context: Context | null = ready && publication ? { chainId: String(row.chain_id), deploymentId: String(row.deployment_name),
     asOfBlock: publication.h, asOfBlockHash: publication.hash, asOfTimestamp: publication.timestamp,
     snapshotRevision: publication.revision, dataKind: 'chain', sync } : null;
@@ -234,13 +236,23 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
   return state;
 }
 
-function buildSync(raw: ScopeState['raw']): Json {
+function buildSync(raw: ScopeState['raw'], publication: ScopeState['publication']): Json {
   if (!raw) return { status: 'not_ready', headBlock: null, confirmedBlock: null, indexedBlock: null, lagBlocks: null, lagSeconds: null, confirmations: null, lastIndexedAt: null };
   const confirmed = BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n;
   const lag = confirmed > BigInt(raw.h) ? confirmed - BigInt(raw.h) : 0n;
-  return { status: raw.status === 'rebuild_required' ? 'not_ready' : lag === 0n ? 'synced' : 'lagging',
+  const heartbeatAgeMs = Math.max(0, Date.now() - Date.parse(raw.updatedAt));
+  let lagSeconds = BigInt(Math.floor(heartbeatAgeMs / 1000));
+  // Retained headers measure chain-time publication delay, not wall-clock age of a pinned H.
+  const latestTimestamp = raw.headTimestamp ?? raw.timestamp;
+  if (publication && latestTimestamp !== null && publication.timestamp !== 'null') {
+    const publicationDelay = BigInt(latestTimestamp) - BigInt(publication.timestamp);
+    if (publicationDelay > lagSeconds) lagSeconds = publicationDelay;
+  }
+  const projectionBehind = !!publication && BigInt(raw.h) > BigInt(publication.h);
+  return { status: !publication || raw.status === 'rebuild_required' ? 'not_ready'
+      : lag > 0n || projectionBehind || heartbeatAgeMs > 30_000 || lagSeconds > 30n ? 'lagging' : 'synced',
     headBlock: raw.head, confirmedBlock: confirmed.toString(), indexedBlock: raw.h,
-    lagBlocks: lag.toString(), lagSeconds: null, confirmations: String(raw.confirmations), lastIndexedAt: raw.updatedAt };
+    lagBlocks: lag.toString(), lagSeconds: lagSeconds.toString(), confirmations: String(raw.confirmations), lastIndexedAt: raw.updatedAt };
 }
 
 function requireGovernance(value: Json): { config: Json } {
@@ -388,7 +400,7 @@ async function materialize(client: PoolClient, scopeState: ScopeState, ttlSecond
       proposalThreshold: String(governance.proposalThreshold), votingDelay: String(governance.votingDelay), votingPeriod: String(governance.votingPeriod),
       timelockDelay: String(governance.minDelay), quorumNumerator: String(governance.quorumNumerator),
       quorumDenominator: String(governance.quorumDenominator), totalSupply: String(governance.govSupply) }, recentActivity: [] };
-  const sync = buildSync(scopeState.raw);
+  const sync = scopeState.sync;
   const expiry = Math.floor(Date.now() / 1000) + ttlSeconds;
   const inserted = await client.query(`INSERT INTO api_read_snapshots
       (deployment_id,chain_id,block_number,block_hash,block_timestamp,snapshot_revision,source_scope,summary,sync,expires_at)

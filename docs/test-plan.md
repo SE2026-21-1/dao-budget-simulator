@@ -4,6 +4,23 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+## Cập nhật sửa lỗi local — 25/10/2026
+
+[Evidence](evidence/tv4-20261025-recovery.json), [runbook và giới hạn](tv4-work-summary.md):
+TC11 đã kiểm interrupted reorg→API503/cursor409→ancestor/replay→publication mới,
+orphan bị loại, cursor cũ vẫn409. Tự phục hồi giới hạn64block; sâu hơn fail-closed
+và BE06 rebuild rõ ràng. NFR04 có retry đọc3attempt và permanent/mutation không retry.
+NFR03 có browser pause32,694s→warning tự hiện→resume tự mất, deposit đã đủK được
+quan sát sau3101ms ở sample local; không nâng thành SLA mọi event/mọi môi trường.
+Lượt hoàn tất: backend build/typecheck và165tests,54DBtests,185Foundrytests,
+frontend6tests/build PASS. SC05 có14ca Anvil kiểm gate trước renounce/funding và
+CLI deploy→check→export thật; cursor alias base64url bị từ chối bằng regression.
+Benchmark local100proposal/1000vote,10client/60s:8116success/0error,p95121,400ms.
+Xem [bằng chứng cuối](evidence/tv4-20261025-final.json) và
+[raw benchmark](evidence/tv4-20261025-final/benchmark.json).
+Testnet, extension, peer approval và máy khác vẫn chưa nghiệm thu; CI công bố ghi
+riêng trong bàn giao GitHub. Mục24/10 bên dưới giữ nguyên kết quả tại source lịch sử.
+
 ## 0. Trạng thái nghiệm thu cập nhật — 24/10/2026
 
 Các cột trạng thái/nhãn “chưa” trong bảng lịch sử21–23/10 được đọc theo ngày

@@ -5,7 +5,24 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Trạng thái hiện tại — 24/10/2026
+## Trạng thái local mới nhất — 25/10/2026
+
+- [x] Sửa reorg: barrier trước recovery, rollback/replay tối đa64block, API503/cursor409 trong khi phục hồi và invalidate cursor cũ sau revision mới.
+- [x] RPC đọc retry/backoff hữu hạn; permanent error không lặp; transaction và evm/anvil mutation không tự gửi lại.
+- [x] `--watch` sync→project tuần tự; heartbeat đã xác minh; UI poll5s, pause>30s→cảnh báo→resume tự phục hồi.
+- [x] Backend build/typecheck và 165 tests; 54 real-DB tests; native/live/rebuild/recovery PASS. Frontend 6 tests/build PASS, còn warning đã ghi.
+- [x] [Evidence cuối](evidence/tv4-20261025-final.json), [raw benchmark](evidence/tv4-20261025-final/benchmark.json) và [tổng kết/lệnh chạy lại](tv4-work-summary.md); giữ nguyên evidence lịch sử.
+- [x] Đồng bộ SC05 `21e53e1` và merge history TV2 BE03–BE06; 185 Foundry tests (38 SC05 mới), compiler ABI 46 entries và live governance smoke PASS.
+- [x] SC05 pre-renounce/pre-funding gates, receipt-backed role/operation-history audit; 14 ca Anvil clean/negative; CLI deploy → check → export ở H11/H13/H19 PASS.
+- [x] Cursor HMAC yêu cầu base64url canonical; regression alias padding bits và 4 API/DB tests PASS.
+- [x] Benchmark cuối local: 100 proposal/1.000 vote, 10 client/60s; 8.116 success, 0 error, p95 121,400ms; native cluster đã stop/xóa.
+- [ ] Peer review TV1/TV2/TV3, CI đúng source công bố, testnet, ví extension và clone máy thành viên khác; xem trạng thái công bố trong bàn giao GitHub.
+
+Ngoài cửa sổ64block: giữ `rebuild_required`, dùng BE06 vào DB mới; không tự
+nhận arbitrary-depth recovery hoặc production freshness SLA. Các mục24/10
+bên dưới là lịch sử trước sửa, không ghi đè kết quả FAIL ban đầu.
+
+## Lịch sử nghiệm thu — 24/10/2026
 
 Mục ngày 21–23/10 bên dưới là lịch sử theo source commit, không phải mô tả
 nhánh tích hợp hiện tại. [Báo cáo và giới hạn](evidence/tv4-20261024-acceptance/report.md)

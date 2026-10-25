@@ -47,6 +47,10 @@ jobs:
         run: |
           mkdir -p reports
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Exercise real Anvil bootstrap gates and fail-closed deployment
+        shell: bash
+        run: |
+          npm run test:bootstrap 2>&1 | tee reports/bootstrap-gates.log
       - name: Verify smoke interruption cleans owned processes and temporary files
         shell: bash
         run: |

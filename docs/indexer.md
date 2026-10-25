@@ -105,6 +105,26 @@ tọa độ/blockHash không khớp header hoặc dữ liệu RPC mâu thuẫn p
 thất bại. Những kiểm tra này phát hiện dữ liệu không nhất quán tại lúc quét;
 chúng chưa thay thế cơ chế theo dõi và rollback reorg của BE03/BE07.
 
+### RPC và retry có giới hạn
+
+`HttpRpc` chỉ retry các RPC đọc idempotent: `eth_chainId`, `eth_blockNumber`,
+`eth_getBlockByNumber`, `eth_getLogs`, `eth_getCode`, `eth_call`; tối đa **3 lần**
+cho lỗi transport/timeout, HTTP `429`, `500`, `502`, `503`, `504`.
+Các method khác (đặc biệt `eth_sendTransaction`, `evm_*`, `anvil_*`) không được
+gửi lại, tránh áp dụng giao dịch/thay đổi chain hai lần khi mất response.
+Mỗi lần có timeout mặc định **30 giây**, bao gồm cả lúc
+đọc response body. Backoff mặc định là **250 ms**, rồi **500 ms**; `Retry-After`
+(số giây hoặc HTTP-date) có thể tăng khoảng chờ nhưng luôn bị chặn ở **2 giây**.
+Body lỗi HTTP được hủy trước lần thử tiếp theo, không đọc để đưa vào báo lỗi.
+
+HTTP lỗi khác (kể cả `4xx` ngoài `429`, `501`, `505`), JSON hỏng, envelope
+JSON-RPC sai hoặc JSON-RPC `error` **không retry**. Hết số lần thử vẫn dừng lượt
+quét với mã lỗi hiện có; không ghi batch chưa hoàn tất. URL, credential, params
+và nội dung lỗi provider không xuất hiện trong thông báo lỗi transport/HTTP/RPC.
+Lỗi đọc RPC tạm thời sau khi hết retry có thêm `error.retryable: true` trong
+report để vòng vận hành có thể thử lại sau; lỗi vĩnh viễn và lỗi method có thể
+thay đổi chain không mang trường này. Mã lỗi cũ được giữ nguyên.
+
 ## Database và chạy CLI
 
 Chỉ dùng PostgreSQL test/local **mới, độc lập**. Không dùng database đang chứa

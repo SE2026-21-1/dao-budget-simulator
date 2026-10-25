@@ -1,12 +1,143 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
-Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10** ở mục5–6, **22/10** ở mục7–8, **23/10** ở mục9–10 và **24/10/2026** ở mục11. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả mới được ghi riêng.
+Ngày tổng kết ban đầu: **20/10/2026**; các mục 1–11 giữ đúng nguồn lịch sử 20–24/10. Phần hoàn tất 25/10 bên dưới là nghiệm thu local sau tích hợp SC05 và sửa lỗi vận hành; không phải peer approval hoặc testnet acceptance. Vai trò: kiểm thử bảo mật và vận hành.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao: `feature/tv4-operation` → `Dev`, hiện qua [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21); PR #5 thuộc lịch sử tích hợp trước.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
+
+## Hoàn tất triển khai và nghiệm thu TV4 — 25/10/2026
+
+[Bằng chứng cuối](evidence/tv4-20261025-final.json) ghi runtime, source hashes,
+deployment CLI, recovery và benchmark; không ghi đè các lượt FAIL hoặc bằng chứng cũ.
+
+| Kiểm tra | Kết quả đã quan sát |
+|---|---|
+| Contract sau nhận SC05 | 185 Foundry tests PASS, gồm 38 SC05; format và SC01 ABI/fixture checker PASS; ABI Timelock khớp compiler, 46 entries |
+| Backend và process cleanup | Build/typecheck PASS; 165 tests PASS, gồm 157 backend và 8 smoke-interruption |
+| PostgreSQL 18.4 native | BE01 SQL và 54 tests PASS: 21 storage, 18 checkpoint/crash, 10 projection, 4 API, 1 two-DB rebuild |
+| Deployment thực | `deploy_local` → `check_roles` → `export_local_handoff` PASS; pre-renounce H11, pre-funding H13, final H19; Anvil đã dừng |
+| Governance/recovery | 10 phase live, hai rebuild cùng H/hash, interrupted reorg → API503/cursor409 → replay → publication mới PASS; orphan 0 row, replacement 1 row |
+| Frontend | Lint exit0, 6 tests/build PASS; browser pause-warning-recovery đã ghi riêng ở mục sửa lỗi |
+| NFR02 local | 100 proposal/1.000 vote thật; 10 client/60s, 8.116 request thành công, 0 lỗi; p95 121,400 ms |
+
+SC05 đã thêm preflight trước **bất kỳ renounce nào**, audit lại sau renounce
+trước funding, đối chiếu role/operation logs với receipts canonical và trạng thái
+Timelock tại H/hash. Bootstrap có operation, kể cả Cancelled/Done, đều bị từ chối;
+log bị cắt ngầm không được coi là lịch sử sạch. Sau handoff chỉ nhận direct
+Governor batch đúng payload/salt/ETA; không mở public executor để “phục hồi”.
+CLI giữ failure report có format riêng và stage/H/hash khi audit lỗi.
+`npm run test:bootstrap` kiểm 14 ca Anvil thật, gồm clean và các ca từ chối
+role/code/constructor/minDelay/operation-history/RPC/wrong-chain.
+
+Lượt native đầu trong đợt hoàn tất phát hiện cursor HMAC có thể có biểu diễn
+base64url khác nhưng giải mã cùng bytes. Đã bắt buộc payload/signature canonical,
+giữ regression cho alias unused padding bits; lượt native cuối cả 4 API tests PASS.
+[Raw benchmark](evidence/tv4-20261025-final/benchmark.json) giữ toàn bộ samples,
+dataset và source hashes. Đây là loopback Anvil/PostgreSQL, không phải testnet
+hoặc browser-performance SLA. Native runner đã stop/xóa cluster riêng.
+
+Vẫn còn cảnh báo WalletProvider và bundle frontend >500kB, không suppress.
+Rollback tự động chỉ trong 64 block; ngoài cửa sổ fail-closed và BE06 rebuild rõ ràng.
+Peer review TV1/TV2/TV3, testnet có RPC/signer/gas được nhóm chốt, ví extension
+và clone trên máy thành viên khác chưa được nghiệm thu. SSH push không cấp quyền
+sửa PR body/comment/request-review qua GitHub API. Không tự merge hoặc approve.
+Trạng thái công bố ghi ở [bàn giao GitHub](tv4-handoff-20261024.md); thay đổi
+AD-064 riêng của người dùng không thuộc phần công bố TV4.
+
+
+## Đồng bộ bàn giao thành viên — 25/10/2026
+
+Đã fetch origin và tích hợp trên `feature/tv4-operation`, không push hoặc đổi
+base `Dev`:
+
+- TV1 `21e53e1`: SC05,38test tích hợp, ABI Timelock46entries và runbook quyền.
+- TV2 `cef601c`: lịch sử merge BE06 vào BE05; code đã có trong TV4.
+- TV2 `80d4522`/`dbadb73`: nhận nốt lịch sử merge BE03/BE04, không có code mới.
+- TV3 `9f4d57a` và `Dev1451779` đã tích hợp trước đó, không có commit mới cần nhận.
+- Merge local: `d7372f9` (BE05/06), `777e988` (SC05), `2ca6a30` (BE03/04).
+
+README có một conflict SC04/SC05: giữ nội dung TV4 còn đúng và nhận trạng thái
+SC05 mới. Stash backup `a9f97ef44c7de589c8af5659837687600916f4cc` đã được apply,
+chưa drop;32file local ngoài README được đối chiếu nguyên byte, gồm tài liệu
+`AD-064-architecture-review.md` của người dùng và evidence sửa lỗi. README giữ
+cả runbook phục hồi local và phần bàn giao SC05.
+
+Kiểm chứng sau merge SC05: `forge fmt --check` PASS; toàn bộ185Foundrytests
+PASS/0fail/0skip, gồm38SC05 mới, seed0x20261021/profileci. Backend build/typecheck
+PASS; Python SC01 ABI/fixture checker PASS; ABI Timelock chia sẻ khớp chính xác
+compiler đủ46entries. Smoke Governor→Timelock→Treasury trên Anvil riêng PASS,
+105receipt và14nhóm assertions; ledger13000BUD vào/ra, hai request paid.
+Smoke ghi source `777e988`; merge cuối chỉ nhận lịch sử, không thay source tree.
+Không chạy lại frontend/native DB vì incoming không đổi các phần này.
+
+SC05 có thêm acceptance gate preflight/operation-history **trước renounce** và
+kịch bản M-01 stale scheduled operation. Đã nhận test/tài liệu, chưa tự coi
+positive local smoke là nghiệm thu mọi negative gate của deployment script.
+Testnet, peer approval, CI đúng source mới và máy thành viên khác vẫn còn mở.
+
+
+## Nghiệm thu sửa lỗi vận hành — 25/10/2026
+
+Đã triển khai ba sửa lỗi từ đợt kiểm tra vận hành, không sửa contract hoặc dữ liệu
+người dùng. [Bằng chứng máy đọc](evidence/tv4-20261025-recovery.json).
+
+| Vấn đề trước sửa | Thay đổi | Quan sát sau sửa |
+|---|---|---|
+| Sync phát hiện reorg nhưng API trả200/hash orphan | Barrier `rebuild_required`, revision/cursor invalidation trước RPC recovery; tìm common ancestor, atomic rewind, replay và project | Ngắt ancestor RPC: summary503/cursor409; resume từ ancestor73, replay74–76; orphan0row/replacement1row, balance1002BUD, revision mới; cursor cũ vẫn409 |
+| Indexer dừng nhưng health báo synced/lag0 | `--watch` tuần tự; heartbeat sau canonical verification kể cả idle; API freshness và UI poll5s | Pause32,694s: API lagging/33s, UI tự cảnh báo; resume: synced/0s, cảnh báo tự mất. Deposit đủK được API/UI thấy sau3101ms trong sample |
+| RPC429 dừng ngay | Ba attempt cho RPC đọc idempotent; backoff250/500ms, Retry-After cap2s | Regression transient→success/exhaustion, header/body timeout, permanent404/invalid JSON không retry; gửi transaction/evm/anvil không tự lặp |
+
+### Kiểm tra và giới hạn
+
+- Node24.15.0, Foundry1.8.5, PostgreSQL18.4 native cô lập.
+- Backend build/typecheck và157tests PASS; PostgreSQL21+18+10+4+1=54tests PASS,
+  BE01 SQL, governance-storage,10phase live và hai BE06 rebuild cùngH PASS.
+- Frontend lint exit0 (còn1warning WalletProvider),6tests và build PASS;
+  main chunk599,14kB/gzip173,78kB còn cảnh báo500kB, không suppress.
+- Browser thật390px: pause→warning→recover không reload; không overflow.
+  Desktop1366px: quan sát balance10001BUD sau deposit đã đủK.
+  [Ảnh stale](evidence/tv4-20261025-stale.webp),
+  [ảnh phục hồi](evidence/tv4-20261025-recovered.webp).
+- 147Foundry PASS đã chạy trong lượt kiểm tra trước khi sửa backend/UI; contract
+  không đổi, không ghi là đã rerun lần nữa. Không chạy benchmark mới.
+- Native runner tự stop/xóa cluster. Browser harness bị service-stop ngắt cleanup;
+  đã stop rõ ràng hai cluster do harness sở hữu và xác minh10port đóng, xóa temp.
+  Script thử nghiệm ngoài repo được gỡ; không can thiệp DB/chain có sẵn.
+
+Cửa sổ tự rollback tối đa64block. Ngoài cửa sổ giữ API fail-closed và dùng
+BE06 rebuild vào DB mới theo manifest đã xác minh. `lagSeconds` là chỉ báo
+heartbeat/publication, không chứng minh mọi event≤30s trong mọi môi trường.
+NFR03 có proof pause-warning-recovery và sample local, chưa là production SLA.
+TC11/NFR04 có proof bounded recovery/retry; không tự nhận arbitrary-depth recovery.
+
+Lần build đầu phát hiện callsite `buildSync(raw)` chưa cập nhật; đã sửa dùng
+`scopeState.sync`, rồi build/typecheck/API/live PASS. Native preflight hashes được
+ghi trước sửa callsite này; final live sourceHashes giữ đúng bản đã chạy.
+Không sửa JSON evidence24/10 để đổi lịch sử FAIL thành PASS.
+
+### Chạy lại và phần bàn giao còn cần bên ngoài
+
+Sau deploy/migration/metadata và env đúng:
+
+```bash
+nvm use
+npm run indexer -- --config indexer/config/local.json --watch
+npm run test:tv4:native -- --postgres-bin /absolute/pg18.4/bin --output /tmp/tv4-recovery-new
+```
+
+Hai lệnh thuộc hai cách chạy khác nhau: watcher dùng DB local được cấu hình;
+native runner tự sở hữu DB/Anvil riêng và output phải mới. Không chạy test vào DB
+đang dùng. Native runner nay bắt buộc kiểm reorg bị ngắt/replay/cursor/heartbeat.
+
+Còn cần nhóm cung cấp/chốt network/RPC testnet hỗ trợ Osaka, signer an toàn đã có
+gas, ví extension thật và người khác chạy clone sạch trên máy khác. Không đưa
+private key lên chat/repo. TV1 review deployment/roles, TV2 review recovery/retry,
+TV3 review health UI. Chưa commit/push, publish PR/comment/CI mới hoặc nhận peer
+approval; không lấy CI24/10 làm chứng nhận source thay đổi25/10.
+
 
 ## 1. Tình trạng push và tích hợp
 

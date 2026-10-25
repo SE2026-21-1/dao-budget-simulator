@@ -10,11 +10,24 @@ class MemoryStorage implements SyncStorage {
   cp: Checkpoint | null = null;
   batches: LogBatch[] = [];
   issues = { unknownTopics: 0, decodeErrors: 0 };
+  invalidated = false;
+  headers = new Map<bigint, string>();
+  async completeSync() {}
+  async invalidate() { this.invalidated = true; }
+  async recentCheckpoints(_config: IndexerConfig, _expected: Checkpoint, from: bigint) {
+    return [...this.headers].filter(([n]) => n >= from).sort(([a], [b]) => a > b ? -1 : 1)
+      .map(([number, hash]) => ({ number, hash }));
+  }
+  async rewind(_config: IndexerConfig, _expected: Checkpoint, ancestor: Checkpoint | null) {
+    this.cp = ancestor;
+    for (const n of this.headers.keys()) if (!ancestor || n > ancestor.number) this.headers.delete(n);
+  }
   async loadCheckpoint() { return this.cp; }
   async decodeIssues() { return this.issues; }
   async writeCheckpointBatch(_config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null) {
     assert.deepEqual(expected, this.cp);
     this.batches.push(batch);
+    for (const b of batch.blocks) this.headers.set(b.number, b.hash);
     this.cp = { number: batch.toBlock, hash: batch.blocks.at(-1)!.hash };
     this.issues.unknownTopics += batch.logs.filter((l) => l.decode.status === 'unknown_topic').length;
     this.issues.decodeErrors += batch.logs.filter((l) => l.decode.status === 'decode_error').length;
@@ -87,17 +100,62 @@ test('restart with no new block still verifies hash; then continues from H+1', a
   rpc.head = 105n; rpc.calls = [];
   const idle = await sync(c, rpc, db);
   assert.equal(idle.committedBatches, 0);
-  assert.deepEqual(rpc.calls.map((c) => c.method), ['eth_chainId', 'eth_getBlockByNumber', 'eth_blockNumber']);
   rpc.head = 107n;
   await sync(c, rpc, db);
   assert.equal(db.batches.at(-1)!.fromBlock, 104n);
   assert.equal(db.cp?.number, 105n);
 });
-test('checkpoint mismatch even when idle leaves stored data unchanged', async () => {
-  const db = new MemoryStorage(); db.cp = { number: 103n, hash: hash(999) };
-  await assert.rejects(sync(input(), new FixtureRpc(), db), code('CHECKPOINT_HASH_MISMATCH'));
-  assert.equal(db.batches.length, 0);
-  assert.equal(db.cp.hash, hash(999));
+test('reorg replays from the most recent common ancestor, rather than adopting a new checkpoint hash', async () => {
+  const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc();
+  await sync(c, rpc, db);
+  const base = new FixtureRpc();
+  rpc.head = 105n;
+  rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value => {
+    const header = value as Record<string, unknown>; const n = BigInt(p[0] as string);
+    return n < 102n ? header : { ...header, hash: hash(n + 1000n), parentHash: hash(n === 102n ? 101n : n + 999n) };
+  }) : undefined;
+  const result = await sync(c, rpc, db);
+  assert.equal(db.invalidated, true);
+  assert.deepEqual(result.reorg, { from: '103', ancestor: '101', replayFrom: '102' });
+  assert.deepEqual(db.cp, { number: 103n, hash: hash(1103) });
+  assert.equal(db.headers.get(101n), hash(101));
+});
+
+test('deep reorg disables serving and preserves stored raw data for explicit rebuild', async () => {
+  const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc(); rpc.head = 172n;
+  await sync(c, rpc, db);
+  const original = new Map(db.headers);
+  const base = new FixtureRpc();
+  rpc.head = 172n;
+  rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value =>
+    ({ ...(value as object), hash: hash(BigInt(p[0] as string) + 1000n) })) : undefined;
+  await assert.rejects(sync(c, rpc, db), code('REORG_WINDOW_EXCEEDED'));
+  assert.equal(db.invalidated, true);
+  assert.deepEqual(db.headers, original);
+  assert.equal(db.cp?.number, 170n);
+});
+
+test('a shortened head rewinds to a still-confirmed ancestor even when the old hash is unchanged', async () => {
+  const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc();
+  await sync(c, rpc, db);
+  rpc.head = 103n;
+  const result = await sync(c, rpc, db);
+  assert.equal(result.checkpoint?.number, '101');
+  assert.equal(db.headers.has(102n), false);
+  assert.equal(db.invalidated, true);
+});
+
+test('replacement of the entire short deployment prefix replays from the first source block', async () => {
+  const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc();
+  await sync(c, rpc, db);
+  const base = new FixtureRpc(); rpc.head = 105n;
+  rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value => {
+    const n = BigInt(p[0] as string);
+    return { ...(value as object), hash: hash(n + 1000n), parentHash: hash(n + 999n) };
+  }) : undefined;
+  const result = await sync(c, rpc, db);
+  assert.deepEqual(result.reorg, { from: '103', ancestor: null, replayFrom: '100' });
+  assert.equal(db.cp?.hash, hash(1103));
 });
 for (const failure of ['missing', 'malformed', 'unavailable']) {
   test(`checkpoint RPC cannot verify: ${failure}`, async () => {

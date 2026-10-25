@@ -221,6 +221,8 @@ try {
   }
   for (const path of ['scripts/check_tv4_native.mjs', 'scripts/benchmark_api.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/check_be04_live.mjs',
     'scripts/smoke_governance.mjs', 'scripts/governance_storage.mjs', 'scripts/governance_local.mjs',
+    'indexer/syncer.ts', 'indexer/storage.ts', 'indexer/rpc.ts', 'indexer/types.ts',
+    'indexer/api/server.ts', 'indexer/projection/projector.ts', 'indexer/projection/chain.ts',
     'tests/indexer/storage.test.ts', 'tests/indexer/checkpoint-storage.test.ts', 'tests/indexer/projection-storage.test.ts',
     'tests/api/server.test.mjs', 'tests/indexer/be06-db.test.mjs', 'database/migrations/001_initial.sql',
     'database/migrations/002_be03.sql', 'database/migrations/003_be04.sql', 'database/migrations/004_be05_api.sql',
@@ -296,6 +298,7 @@ try {
         BE06_LIVE_ADVANCED_TARGET_DATABASE_URL: url('tv4_be06_live_advanced', 'be04_test') } });
     const result = JSON.parse(await readFile(join(output, 'live.json'), 'utf8'));
     assert.equal(result.status, 'PASS'); assert.equal(result.api?.status, 'PASS'); assert.equal(result.be06?.status, 'PASS');
+    assert.equal(result.recovery?.status, 'PASS', 'Reorg, cursor invalidation and heartbeat recovery are mandatory.');
     report.suites['live-api-be06'].evidence = 'live.json';
   });
   if (withBenchmark) await suite('api-benchmark', async () => {

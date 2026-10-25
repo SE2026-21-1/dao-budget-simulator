@@ -7,9 +7,12 @@ BE05 HTTP API, BE06 rebuild/compare và frontend TV3 `9f4d57a` có ví/giao dị
 Có deploy/seed/check-roles, invariant và nghiệm thu Anvil → PostgreSQL → API
 → UI thật bằng EIP-1193 transport local. Fixture BE01 vẫn dùng được khi không
 bật API; API lỗi không bị thay bằng fixture.
-**Chưa đủ điều kiện release:** reorg thật dừng ingestion nhưng API còn phục vụ
-snapshot nhánh cũ; BE07 rollback/backoff/invalidation, testnet và peer approval
-còn thiếu. Xem [báo cáo TV4 24/10](docs/evidence/tv4-20261024-acceptance/report.md).
+**Chưa chốt release:** bản local đã sửa reorg, freshness và RPC retry/backoff,
+có nghiệm thu phục hồi Anvil/PostgreSQL/API/UI ngày 25/10. Reorg tối đa 64 block
+được rollback/replay; sâu hơn giữ API không sẵn sàng và yêu cầu rebuild rõ ràng.
+Testnet, ví extension thật, máy thành viên khác và peer approval vẫn còn thiếu.
+Xem [tổng kết TV4](docs/tv4-work-summary.md) và
+[bằng chứng phục hồi](docs/evidence/tv4-20261025-recovery.json).
 
 ## Trạng thái các task TV1
 
@@ -19,7 +22,7 @@ còn thiếu. Xem [báo cáo TV4 24/10](docs/evidence/tv4-20261024-acceptance/re
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`, PR #13 đã merge; peer nghiệm thu SC05/deployment vẫn là đầu việc riêng |
-| SC05 — Timelock và quyền sau deploy | TV1 có test tích hợp final roles/ETA/retry và tài liệu bàn giao; chờ peer review, deployment/testnet riêng |
+| SC05 — Timelock và quyền sau deploy | Đã tích hợp TV1 `21e53e1`; TV4 có pre-renounce/pre-funding gates, operation-history audit và14ca Anvil PASS; peer review/testnet còn mở |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
 | SC08 — Tích hợp local | UI → EIP-1193 local → Governor/Timelock/Treasury → indexer/API → UI đã chạy; chưa thay test ví extension/testnet |
@@ -148,6 +151,34 @@ Binary NPM có version đóng gói beta; PostgreSQL thực chạy phải báo **
 Benchmark tạo database riêng trước khi runner dừng cluster, không tái dùng
 database live. Kết quả máy này không thay benchmark máy khác/testnet.
 
+### Đồng bộ liên tục và phục hồi
+
+Sau deploy/migration/đăng ký metadata, đặt `RPC_URL`, `DATABASE_URL` và
+`indexer/config/local.json` theo deployment thật, với `toBlock: "latest"`.
+File `.env` không được tự động nạp. Trong terminal indexer:
+
+```bash
+nvm use
+npm run indexer -- --config indexer/config/local.json --watch
+# Hoặc chọn chu kỳ riêng (100–60000 ms, mặc định 5000):
+npm run indexer -- --config indexer/config/local.json --watch --poll-interval-ms 1000
+```
+
+Chỉ chạy một trong hai lệnh trên; API/frontend chạy ở terminal riêng.
+Watch tuần tự sync → project; SIGINT/SIGTERM dừng lịch mới, đợi chu kỳ đang chạy
+và đóng pool (exit130/143). Heartbeat chỉ cập nhật sau xác minh canonical H,
+kể cả idle. API báo `lagging` khi heartbeat quá30s; UI tự kiểm tra health mỗi5s.
+Đây là chỉ báo freshness, không phải phép đo chính xác mọi event.
+
+Khi reorg, commit `rebuild_required`, đổi revision và invalidate cursor trước
+khi tìm common ancestor/rollback/replay. API summary trả503 trong lúc phục hồi,
+cursor cũ trả409 và không được dùng lại sau publication mới. Không tìm được
+ancestor trong64 block: giữ fail-closed, điều tra manifest/RPC rồi dùng
+[BE06 rebuild](docs/be06.md) vào DB mới; không sửa hash hoặc xóa DB để né lỗi.
+Không cần migration mới nếu đã áp dụng001–004. Native runner hiện bắt buộc
+nghiệm thu cả reorg bị ngắt giữa chừng, replay, cursor và heartbeat recovery.
+
+
 ## Unit test SC02
 
 Sau khi cài dependency và toolchain ở trên, chạy riêng từng token:
@@ -217,6 +248,7 @@ Test có Timelock thật làm fixture; production roles/deploy/check-roles thu�
 ```bash
 forge build
 forge test --match-path 'tests/integration/TimelockGovernance.t.sol' -vv
+npm run test:bootstrap
 FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261023 forge test -vv
 python3 scripts/check.py
 ```
@@ -225,8 +257,8 @@ python3 scripts/check.py
 trình tự grant/revoke/renounce và audit lịch sử role. Fixture dùng năm contract thật,
 bỏ mọi quyền bootstrap trước khi nạp BUD; kiểm tra queue/execute qua ví không có GOV,
 biên ETA, retry thiếu quỹ và chi trùng requestId. ABI [TimelockController](shared/abi/TimelockController.json)
-sinh từ compiler. Deploy/check-roles local đã có của TV4 giữ nguyên; kiểm chứng bằng Foundry
-không thay audit deployment/testnet hoặc UI/API E2E.
+sinh từ compiler. Script TV4 đã thêm preflight trước renounce và audit lại trước
+funding; kiểm chứng Foundry không thay audit deployment/testnet hoặc UI/API E2E.
 
 ## Deploy, audit role và demo governance local — TV4
 
@@ -247,14 +279,24 @@ node scripts/check_roles.mjs --rpc http://127.0.0.1:8545 --manifest /tmp/dao-loc
 
 Script chỉ nhận RPC deploy numeric loopback, không nhận key, từ chối chain có
 giao dịch và không ghi đè manifest. Deploy GOV/BUD/Treasury/Timelock/Governor
-thật; bỏ admin bootstrap, audit role **trước** funding10.000 BUD, rồi delegate
-400/300/200/100 GOV và mine checkpoint quá khứ. Funding wallet còn10.000 BUD.
-Manifest chứa receipt, từng deployment block, hash source/compiler/ABI, commit,
-scanFromBlock và chính sách K=2. K chỉ là cấu hình bàn giao, BE02 chưa tự thực thi
-confirmations/checkpoint. Checker read-only cùng H, đối chiếu creation/runtime,
-constructor/token links/config và toàn bộ lịch sử role với `hasRole`; exit khác0
-khi sai. Manifest ràng buộc đúng source commit/build; audit lại bản cũ phải dùng
-đúng checkout ghi trong manifest. Địa chỉ local không dùng làm cấu hình testnet.
+thật. Preflight ở `preRenounceRoleCheck` kiểm receipt/constructor/runtime/config,
+admin graph và toàn bộ role/operation history khi bootstrap admin vẫn còn.
+Script không tạo temporary operational roles, nên gate này cũng xác nhận cleanup
+đã hoàn tất. Sau renounce, `preFundingRoleCheck` kiểm lại trước giao dịch nạp đầu tiên.
+Bất kỳ operation bootstrap nào — kể cả đã Cancelled/Done — đều chặn bàn giao.
+Sau seed, `roleCheck` lưu final audit; Treasury/funding mỗi ví10.000BUD.
+
+Checker replay canonical receipts và đối chiếu `eth_getLogs` để phát hiện log bị
+thiếu; mọi state call ghim cùng H/hash. Operation sau bootstrap chỉ chấp nhận
+Governor batch đúng payload/salt/ETA và đối soát trạng thái Timelock ởH. Manifest
+chứa provenance/source/compiler/ABI, từng deployment receipt và K=2; K được BE03
+thực thi, không nhầm với raw reader BE02. Manifest gắn đúng source commit/build.
+Địa chỉ local không dùng làm cấu hình testnet.
+
+Gate lỗi phải giữ bootstrap authority nếu chưa renounce, không funding tiếp.
+CLI giữ file output với format `dao-budget-local-deployment-failure-v1`,
+statusFAIL, stage/H/hash đã thu được và lý do; đó **không phải manifest thành công**.
+Giữ chain/report để điều tra hoặc redeploy Anvil mới; không retry vào chain dở dang.
 
 Xuất bundle bàn giao từ chain **còn chạy**; thư mục đích phải chưa tồn tại:
 
@@ -338,7 +380,8 @@ production bỏ qua query này. Root build chỉ build backend.
 12 kiểm tra, bốn route ×390/1366, luồng A+B700 For chi1000 BUD, cancel/deposit,
 wrong network/refusal/HTML-safe, replacement và account-switch regressions.
 Provider kiểm chứng forward RPC thật tới Anvil unlocked riêng, **không** phải
-MetaMask extension hoặc testnet. Reorg chưa đạt, xem báo cáo trước khi demo.
+MetaMask extension hoặc testnet. Reorg local đã có bằng chứng phục hồi ngày25/10;
+không lấy kết quả local làm testnet/release approval.
 Xem [hướng dẫn frontend](frontend/README.md) và [checklist TV4](docs/tv4-checklist.md).
 
 

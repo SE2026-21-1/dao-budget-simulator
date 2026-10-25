@@ -805,6 +805,68 @@ try {
         'a BUD Transfer mined after H was returned by RPC but excluded from both target databases'],
     };
   }
+  if (withApi) {
+    // Reorg acceptance runs only after the fixed-H rebuild evidence is sealed.
+    config.toBlock = 'latest';
+    await sync(config, transport, storage);
+    const baseline = await project(config, transport, pool);
+    const forkPoint = await rpc('evm_snapshot');
+    const orphan = await tx('orphaned funding', accounts.funding, 'BUD', 'transfer', [address.Treasury, U]);
+    await rpc('anvil_mine', ['0x3', '0x1']);
+    await sync(config, transport, storage);
+    await project(config, transport, pool);
+    const old = await phaseApiGet('/proposals', new URLSearchParams({ chainId: '31337', deploymentId: 'be04-live', limit: '2' }));
+    assert.equal(old.status, 200);
+    const oldCursor = old.body.pagination.nextCursor;
+    assert.ok(oldCursor, 'Reorg must invalidate a real signed pagination cursor.');
+    await rpc('evm_revert', [forkPoint]);
+    const replacement = await tx('replacement funding', accounts.funding, 'BUD', 'transfer', [address.Treasury, 2n * U]);
+    await rpc('anvil_mine', ['0x4', '0x2']);
+    const oldH = BigInt(old.body.context.asOfBlock);
+    // Fail ancestor RPC after detecting the mismatch: the API must already be closed.
+    const interruptedRpc = { call: async (method, params) => {
+      if (method === 'eth_getBlockByNumber' && BigInt(params[0]) < oldH)
+        throw new Error('simulated temporary ancestor RPC outage');
+      return transport.call(method, params);
+    } };
+    await assert.rejects(sync(config, interruptedRpc, storage));
+    const during = await phaseApiGet('/summary');
+    const cursorParams = new URLSearchParams({ chainId: '31337', deploymentId: 'be04-live', limit: '2', cursor: oldCursor });
+    const duringCursor = await phaseApiGet('/proposals', cursorParams);
+    assert.equal(during.status, 503, 'No orphan publication may be served during interrupted recovery.');
+    assert.equal(duringCursor.status, 409, 'Old cursor must fail closed during recovery.');
+    const recovery = await sync(config, transport, storage);
+    assert.ok(recovery.reorg, 'Resume must actually find an ancestor and replay.');
+    const recovered = await project(config, transport, pool);
+    const after = await phaseApiGet('/summary');
+    assert.equal(after.status, 200);
+    assert.notEqual(after.body.context.snapshotRevision, old.body.context.snapshotRevision);
+    const canonicalH = await rpc('eth_getBlockByNumber', [toQuantity(BigInt(after.body.context.asOfBlock)), false]);
+    assert.equal(after.body.context.asOfBlockHash, canonicalH.hash);
+    assert.equal(after.body.data.treasury.balance, (BigInt(baseline.treasury.balance) + 2n * U).toString());
+    const oldCursorAfter = await phaseApiGet('/proposals', cursorParams);
+    assert.equal(oldCursorAfter.status, 409);
+    const orphanRows = await pool.query('SELECT count(*)::int AS count FROM raw_events WHERE deployment_id=$1 AND transaction_hash=$2',
+      [d, orphan.transactionHash]);
+    const replacementRows = await pool.query('SELECT count(*)::int AS count FROM raw_events WHERE deployment_id=$1 AND transaction_hash=$2',
+      [d, replacement.transactionHash]);
+    assert.equal(orphanRows.rows[0].count, 0);
+    assert.equal(replacementRows.rows[0].count, 1);
+    await pool.query("UPDATE checkpoints SET updated_at=clock_timestamp()-interval '31 seconds' WHERE deployment_id=$1", [d]);
+    const stale = await phaseApiGet('/health');
+    assert.equal(stale.body.context.sync.status, 'lagging');
+    assert.ok(BigInt(stale.body.context.sync.lagSeconds) >= 31n);
+    await sync(config, transport, storage);
+    const fresh = await phaseApiGet('/health');
+    assert.equal(fresh.body.context.sync.status, 'synced');
+    report.recovery = {
+      status: 'PASS', interrupted: { summaryStatus: during.status, cursorStatus: duringCursor.status },
+      recovery, context: recovered.context, oldRevision: old.body.context.snapshotRevision,
+      orphanTransaction: orphan.transactionHash, replacementTransaction: replacement.transactionHash,
+      orphanRows: 0, replacementRows: 1, oldCursorAfterStatus: oldCursorAfter.status,
+      balance: after.body.data.treasury.balance, freshness: { stale: stale.body.context.sync, fresh: fresh.body.context.sync },
+    };
+  }
 } catch (error) {
   report.status = 'FAIL';
   report.error = { name: error.name, message: error.message, stack: error.stack };

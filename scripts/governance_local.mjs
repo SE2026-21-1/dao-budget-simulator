@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { ContractFactory, Interface, ZeroAddress, ZeroHash, getAddress, id, keccak256, toQuantity } from 'ethers';
 import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
+import { auditTimelockOperations } from './governance_operations.mjs';
 
 // This is the agreed local project configuration, not an input supplied by a manifest.
 const UNIT = 10n ** 18n;
@@ -105,7 +106,7 @@ async function loadProject(root) {
     sourceHashes[path] = sha(contents);
     return contents;
   };
-  for (const path of ['foundry.toml', 'foundry.lock', 'package-lock.json', 'scripts/governance_local.mjs', 'scripts/deploy_local.mjs', 'scripts/check_roles.mjs']) await hashFile(path);
+  for (const path of ['foundry.toml', 'foundry.lock', 'package-lock.json', 'scripts/governance_local.mjs', 'scripts/governance_operations.mjs', 'scripts/deploy_local.mjs', 'scripts/check_roles.mjs']) await hashFile(path);
   const lock = JSON.parse(await readFile(join(root, 'foundry.lock'), 'utf8'));
   assert.equal(lock['lib/openzeppelin-contracts'].tag.name, 'v5.4.0', 'Unexpected OpenZeppelin lock');
   assert.equal(lock['lib/openzeppelin-contracts'].tag.rev, 'c64a1edb67b6e3f4a15cca8909c9482ad33a02b0', 'Unexpected OpenZeppelin revision');
@@ -218,20 +219,19 @@ export async function deployGovernance(rpc, { root, accounts }) {
   for (const [role, label] of [[PROPOSER, 'proposer'], [EXECUTOR, 'executor'], [CANCELLER, 'canceller']]) {
     await tx('Timelock', 'grantRole', [role, governor], `grant Timelock ${label} only to Governor`);
   }
-  await tx('Treasury', 'renounceRole', [ZeroHash, accounts.deployer], 'remove Treasury bootstrap admin');
-  await tx('Timelock', 'renounceRole', [ZeroHash, accounts.deployer], 'remove Timelock bootstrap admin');
-  // Make the fixed-supply checkpoint historical even when Anvil automines within one second.
+  // Make the token supply checkpoint historical while bootstrap admin can still repair/redeploy.
   const configuredBlock = await rpc('eth_getBlockByNumber', ['latest', false]);
   await rpc('evm_setNextBlockTimestamp', [toQuantity(BigInt(configuredBlock.timestamp) + 1n)]);
   await rpc('evm_mine');
+  // No temporary operational roles are introduced: this is also the cleanup-complete gate.
+  manifest.preRenounceRoleCheck = await checkGovernanceRoles(rpc, manifest, { root, stage: 'bootstrap' });
+  await tx('Treasury', 'renounceRole', [ZeroHash, accounts.deployer], 'remove Treasury bootstrap admin');
+  await tx('Timelock', 'renounceRole', [ZeroHash, accounts.deployer], 'remove Timelock bootstrap admin');
   // A complete event-reconstructed role check gates the very first BUD funding transaction.
   manifest.preFundingRoleCheck = await checkGovernanceRoles(rpc, manifest, { root });
   const call = async (key, name, values = []) => interfaces[key].decodeFunctionResult(name,
     await rpc('eth_call', [{ to: manifest.contracts[key].address, data: interfaces[key].encodeFunctionData(name, values) }, 'latest']))[0];
-  assert.equal(await call('BUD', 'balanceOf', [manifest.contracts.Treasury.address]), 0n, 'Treasury must be unfunded before final role validation');
-  assert.equal(await call('BUD', 'balanceOf', [accounts.funding]), 20000n * UNIT, 'Funding wallet must hold the full initial BUD supply');
-  for (const [name, amount] of [['A', 400n], ['B', 300n], ['C', 200n], ['D', 100n]]) {
-    assert.equal(await call('GOV', 'balanceOf', [accounts[name]]), amount * UNIT, `${name}: GOV allocation`);
+  for (const name of ['A', 'B', 'C', 'D']) {
     await tx('GOV', 'delegate', [accounts[name]], `self-delegate ${name}`, accounts[name]);
   }
   const delegatedBlock = await rpc('eth_getBlockByNumber', ['latest', false]);
@@ -250,8 +250,69 @@ export async function deployGovernance(rpc, { root, accounts }) {
   return { manifest, abis };
 }
 
+function logFingerprint(log) {
+  assert.equal(log.removed, false, 'Removed log in audit evidence');
+  return [log.address.toLowerCase(), BigInt(log.blockNumber).toString(), log.blockHash.toLowerCase(),
+    log.transactionHash.toLowerCase(), BigInt(log.transactionIndex).toString(), BigInt(log.logIndex).toString(),
+    log.topics.map(topic => topic.toLowerCase()), log.data.toLowerCase()];
+}
+
+/** Receipt replay also detects an eth_getLogs response silently omitting grant/revoke/operation events. */
+async function canonicalAuditLogs(rpc, manifest, height) {
+  const first = BigInt(manifest.scanFromBlock);
+  const addresses = new Set(Object.values(manifest.contracts).map(contract => lower(contract.address)));
+  const logs = [];
+  const headers = new Map();
+  let receipts = 0;
+  let parentHash = first === 1n ? manifest.localChain.genesisHash : undefined;
+  for (let number = first; number <= BigInt(height); number++) {
+    const block = await rpc('eth_getBlockByNumber', [toQuantity(number), false]);
+    assert.ok(block?.hash && Array.isArray(block.transactions), 'Missing canonical audit block');
+    assert.equal(BigInt(block.number), number, 'Wrong audit block number');
+    if (parentHash) assert.equal(block.parentHash, parentHash, 'Noncontiguous canonical audit history');
+    parentHash = block.hash;
+    headers.set(number.toString(), block);
+    let logIndex = 0n;
+    for (let index = 0; index < block.transactions.length; index++) {
+      const transactionHash = block.transactions[index];
+      assert.equal(typeof transactionHash, 'string', 'Audit needs transaction hashes, not partial transaction objects');
+      const receipt = await rpc('eth_getTransactionReceipt', [transactionHash]);
+      assert.ok(receipt && Array.isArray(receipt.logs), 'Missing canonical audit receipt');
+      assert.equal(receipt.transactionHash.toLowerCase(), transactionHash.toLowerCase(), 'Wrong audit receipt transaction');
+      assert.equal(receipt.blockHash, block.hash, 'Noncanonical audit receipt');
+      assert.equal(BigInt(receipt.blockNumber), number, 'Wrong audit receipt block');
+      assert.equal(BigInt(receipt.transactionIndex), BigInt(index), 'Wrong audit receipt transaction index');
+      assert.ok(['0x0', '0x1'].includes(receipt.status), 'Invalid audit receipt status');
+      if (receipt.status === '0x0') assert.equal(receipt.logs.length, 0, 'Reverted receipt contains committed logs');
+      receipts++;
+      for (const log of receipt.logs) {
+        assert.equal(log.removed, false, 'Removed receipt log');
+        assert.equal(BigInt(log.blockNumber), number, 'Wrong receipt log block');
+        assert.equal(log.blockHash, block.hash, 'Wrong receipt log block hash');
+        assert.equal(log.transactionHash.toLowerCase(), transactionHash.toLowerCase(), 'Wrong receipt log transaction');
+        assert.equal(BigInt(log.transactionIndex), BigInt(index), 'Wrong receipt log transaction index');
+        assert.equal(BigInt(log.logIndex), logIndex++, 'Missing/duplicate receipt log coordinate');
+        if (addresses.has(lower(log.address))) logs.push(log);
+      }
+    }
+  }
+  return { logs, headers, fromBlock: first.toString(), blocks: headers.size, receipts };
+}
+
 /** Read-only: every on-chain observation is pinned to one local height H, not consensus finality. */
-export async function checkGovernanceRoles(rpc, manifest, { root }) {
+export async function checkGovernanceRoles(rpc, manifest, { root, stage = 'final' }) {
+  const context = { stage, height: null, blockHash: null, manifestSourceCommit: manifest?.sourceCommit ?? null,
+    contracts: manifest?.contracts ?? null };
+  try {
+    return await auditGovernanceRoles(rpc, manifest, { root, stage, context });
+  } catch (error) {
+    error.audit = context;
+    throw error;
+  }
+}
+
+async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
+  assert.ok(['bootstrap', 'final'].includes(stage), 'Unknown role audit stage');
   assert.equal(manifest.format, 'dao-budget-local-governance-v1', 'Unsupported deployment manifest');
   assert.equal(manifest.chainId, '31337', 'Manifest must describe local chain 31337');
   assert.equal(BigInt(await rpc('eth_chainId')), 31337n, 'Wrong RPC chain');
@@ -267,6 +328,8 @@ export async function checkGovernanceRoles(rpc, manifest, { root }) {
   const block = await rpc('eth_getBlockByNumber', [height, false]);
   assert.ok(block?.hash, 'Missing validation block');
   const H = toQuantity(BigInt(height));
+  context.height = BigInt(height).toString();
+  context.blockHash = block.hash;
   const interfaces = Object.fromEntries(Object.entries(artifacts).map(([key, artifact]) => [key, new Interface(artifact.abi)]));
   const address = (key) => manifest.contracts[key].address;
   assert.equal(new Set(Object.keys(SPECS).map((key) => lower(address(key)))).size, 5, 'Contracts must be distinct');
@@ -323,11 +386,32 @@ export async function checkGovernanceRoles(rpc, manifest, { root }) {
   // H-1 in timestamp units is always a valid past lookup, even before demo delegation.
   const past = BigInt(block.timestamp) - 1n;
   assert.equal(await call('Governor', 'quorum', [past]), 200n * UNIT, 'Governor quorum must be 20% of the fixed GOV supply');
+  const evidence = await canonicalAuditLogs(rpc, manifest, H);
+  const fundingLogs = evidence.logs.filter(log => lower(log.address) === lower(address('BUD'))
+    && log.topics[0] === interfaces.BUD.getEvent('Transfer').topicHash)
+    .map(log => ({ log, event: interfaces.BUD.parseLog(log) }))
+    .filter(({ event }) => lower(event.args.to) === lower(address('Treasury')) && event.args.value > 0n);
+  const firstFunding = fundingLogs[0];
+  if (firstFunding) {
+    assert.equal(lower(firstFunding.event.args.from), lower(manifest.accounts.funding), 'Initial Treasury funding came from an unexpected account');
+    assert.equal(String(firstFunding.event.args.value), CONFIG.treasurySeed, 'Initial Treasury funding amount differs from the seed');
+  }
+  const bootstrapThrough = stage === 'bootstrap' || !firstFunding ? BigInt(H) : BigInt(firstFunding.log.blockNumber);
+  if (stage === 'bootstrap' || !firstFunding) {
+    if (stage === 'bootstrap') assert.equal(firstFunding, undefined, 'Treasury was funded before bootstrap handoff');
+    assert.equal(await call('BUD', 'balanceOf', [address('Treasury')]), 0n, 'Treasury must be unfunded at the bootstrap/final pre-funding gate');
+    assert.equal(String(await call('BUD', 'balanceOf', [manifest.accounts.funding])), CONFIG.budSupply, 'Funding wallet must retain the full BUD supply before handoff');
+    for (const [name, amount] of [['A', 400n], ['B', 300n], ['C', 200n], ['D', 100n]])
+      assert.equal(await call('GOV', 'balanceOf', [manifest.accounts[name]]), amount * UNIT, `${name}: bootstrap GOV allocation`);
+  }
   const roleReports = {};
   const expectedRoles = {
     Treasury: { [ZeroHash]: [address('Timelock')], [SPENDER]: [address('Timelock')] },
     Timelock: { [ZeroHash]: [address('Timelock')], [PROPOSER]: [address('Governor')], [EXECUTOR]: [address('Governor')], [CANCELLER]: [address('Governor')] },
   };
+  if (stage === 'bootstrap') {
+    for (const roles of Object.values(expectedRoles)) roles[ZeroHash].push(manifest.accounts.deployer);
+  }
   for (const [key, expected] of Object.entries(expectedRoles)) {
     const iface = interfaces[key];
     for (const [getter, value] of [['DEFAULT_ADMIN_ROLE', ZeroHash], ...(key === 'Treasury'
@@ -336,23 +420,28 @@ export async function checkGovernanceRoles(rpc, manifest, { root }) {
     }
     const logs = await rpc('eth_getLogs', [{ address: address(key), fromBlock: toQuantity(BigInt(manifest.contracts[key].deploymentBlock)), toBlock: H,
       topics: [[iface.getEvent('RoleGranted').topicHash, iface.getEvent('RoleRevoked').topicHash, iface.getEvent('RoleAdminChanged').topicHash]] }]);
+    assert.ok(Array.isArray(logs), `${key}: missing role log response`);
+    const expectedLogs = evidence.logs.filter(log => lower(log.address) === lower(address(key))
+      && ['RoleGranted', 'RoleRevoked', 'RoleAdminChanged'].some(name => log.topics[0] === iface.getEvent(name).topicHash));
     logs.sort((a, b) => BigInt(a.blockNumber) < BigInt(b.blockNumber) ? -1 : BigInt(a.blockNumber) > BigInt(b.blockNumber) ? 1
       : BigInt(a.logIndex) < BigInt(b.logIndex) ? -1 : BigInt(a.logIndex) > BigInt(b.logIndex) ? 1 : 0);
+    assert.deepEqual(logs.map(logFingerprint), expectedLogs.map(logFingerprint), `${key}: incomplete or contradictory role log evidence`);
     const holders = new Map(Object.keys(expected).map((role) => [role, new Set()]));
     const candidates = new Set([ZeroAddress, ...Object.values(manifest.accounts), ...Object.keys(SPECS).map(address)].map(lower));
     for (const log of logs) {
       assert.ok(!log.removed && lower(log.address) === lower(address(key)) && BigInt(log.blockNumber) <= BigInt(H), `${key}: invalid role log`);
       const event = iface.parseLog(log);
+      assert.ok(event, `${key}: undecodable role log`);
+      const encoded = iface.encodeEventLog(event.fragment, event.args);
+      assert.deepEqual(log.topics, encoded.topics, `${key}: noncanonical role event topics`);
+      assert.equal(log.data.toLowerCase(), encoded.data.toLowerCase(), `${key}: noncanonical role event data`);
       const role = event.args.role;
       assert.ok(holders.has(role), `${key}: unexpected role discovered in complete event history: ${role}`);
-      if (event.name === 'RoleAdminChanged') {
-        assert.equal(event.args.newAdminRole, ZeroHash, `${key}: unexpected role admin edge`);
-      } else {
-        const account = lower(event.args.account);
-        candidates.add(account);
-        if (event.name === 'RoleGranted') holders.get(role).add(account);
-        else holders.get(role).delete(account);
-      }
+      assert.notEqual(event.name, 'RoleAdminChanged', `${key}: unexpected role admin change`);
+      const account = lower(event.args.account);
+      candidates.add(account);
+      if (event.name === 'RoleGranted') holders.get(role).add(account);
+      else holders.get(role).delete(account);
     }
     const rows = [];
     for (const [role, expectedHolders] of Object.entries(expected)) {
@@ -366,8 +455,12 @@ export async function checkGovernanceRoles(rpc, manifest, { root }) {
     }
     roleReports[key] = { fromBlock: manifest.contracts[key].deploymentBlock, toBlock: String(BigInt(H)), eventCount: logs.length, roles: rows };
   }
+  const operations = await auditTimelockOperations(rpc, manifest, {
+    interfaces, height: H, blockHash: block.hash, bootstrapThrough, receiptLogs: evidence.logs, headers: evidence.headers,
+  });
   const finalBlock = await rpc('eth_getBlockByNumber', [H, false]);
   assert.equal(finalBlock.hash, block.hash, 'Validation block changed during role check');
-  return { height: String(BigInt(H)), blockHash: block.hash, timestamp: String(BigInt(block.timestamp)), chainId: '31337',
-    sourceCommit: provenance.sourceCommit, config: { ...CONFIG }, identities, roles: roleReports };
+  return { stage, height: String(BigInt(H)), blockHash: block.hash, timestamp: String(BigInt(block.timestamp)), chainId: '31337',
+    sourceCommit: provenance.sourceCommit, config: { ...CONFIG }, identities, roles: roleReports, operations,
+    canonicalEvidence: { fromBlock: evidence.fromBlock, blocks: evidence.blocks, receipts: evidence.receipts } };
 }

@@ -68,8 +68,17 @@ function assertScope(context: Pick<FixtureContext, "chainId" | "deploymentId" | 
   }
 }
 
+function assertSync(sync: FixtureContext["sync"]) {
+  if (sync && (!["synced", "lagging", "not_ready"].includes(sync.status) ||
+      (sync.lagSeconds !== null && (typeof sync.lagSeconds !== "string" || !/^(0|[1-9]\d*)$/.test(sync.lagSeconds))) ||
+      (sync.lagBlocks != null && (typeof sync.lagBlocks !== "string" || !/^(0|[1-9]\d*)$/.test(sync.lagBlocks))))) {
+    throw new Error("Thông tin đồng bộ API sai cấu trúc.");
+  }
+}
+
 function assertContext(context: FixtureContext, pinned?: FixtureContext) {
   assertScope(context);
+  assertSync(context.sync);
   if (!/^(0|[1-9]\d*)$/.test(context.asOfBlock) || !/^0x[0-9a-f]{64}$/i.test(context.asOfBlockHash) || !context.snapshotRevision ||
       (pinned && (context.asOfBlock !== pinned.asOfBlock || context.asOfBlockHash !== pinned.asOfBlockHash || context.snapshotRevision !== pinned.snapshotRevision))) {
     throw new Error("Snapshot API không khớp hoặc đã thay đổi khi phân trang. Tải lại từ trang đầu.");
@@ -82,7 +91,7 @@ export async function loadHealth(signal?: AbortSignal): Promise<Health> {
   if (body.error) throw new ApiError(response.status, body.error.code, body.error.message);
   // BE05 intentionally returns the health data envelope with 503 when unavailable.
   if (!body.data || !["ok", "degraded", "unavailable"].includes(body.data.status)) throw new Error("Health API sai cấu trúc.");
-  if (body.context) assertScope(body.context);
+  if (body.context) { assertScope(body.context); assertSync(body.context.sync); }
   return body;
 }
 

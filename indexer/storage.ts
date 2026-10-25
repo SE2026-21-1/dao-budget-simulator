@@ -169,6 +169,16 @@ async function verifyStoredBoundaries(client: PoolClient, config: IndexerConfig,
   }
 }
 
+/** Caller holds the chain advisory lock and owns the transaction. */
+export async function invalidatePublication(client: PoolClient, config: IndexerConfig, reason: string): Promise<void> {
+  await client.query(`UPDATE checkpoints SET sync_status='rebuild_required',last_error_code=$2
+    WHERE deployment_id=$1`, [config.deploymentId, reason]);
+  await client.query('UPDATE deployments SET snapshot_revision=gen_random_uuid() WHERE deployment_id=$1', [config.deploymentId]);
+  const tables = await client.query("SELECT to_regclass('api_read_snapshots') AS snapshots");
+  if (tables.rows[0].snapshots)
+    await client.query('UPDATE api_read_snapshots SET invalidated_at=clock_timestamp() WHERE deployment_id=$1 AND invalidated_at IS NULL', [config.deploymentId]);
+}
+
 export class PostgresStorage implements BatchStorage, SyncStorage {
   constructor(private readonly pool: Pool, private readonly hooks: TransactionHooks = {}) {}
 
@@ -185,6 +195,80 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
       await client.query('ROLLBACK');
       throw error;
     } finally { client.release(); }
+  }
+
+  private async checkpointTransaction<T>(config: IndexerConfig, expected: Checkpoint,
+    work: (client: PoolClient) => Promise<T>): Promise<T> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+      await verifyMetadata(client, config, true);
+      const current = await checkpoint(client, config);
+      if (current?.number !== expected.number || current.hash !== expected.hash)
+        throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery/heartbeat belongs to a stale checkpoint; restart sync.');
+      const result = await work(client);
+      await this.hooks.beforeCommit?.();
+      await client.query('COMMIT');
+      await this.hooks.afterCommit?.();
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK');
+      if (error instanceof StorageError) throw error;
+      throw new StorageError('STORAGE_DATABASE_ERROR', 'Checkpoint recovery/heartbeat transaction failed.');
+    } finally { client.release(); }
+  }
+
+  async completeSync(config: IndexerConfig, expected: Checkpoint, head: bigint): Promise<void> {
+    if (head < expected.number + BigInt(confirmationDepth(config)))
+      throw new StorageError('STORAGE_INVALID_BATCH', 'Verified checkpoint exceeds the confirmed head.');
+    await this.checkpointTransaction(config, expected, async client => {
+      await client.query(`UPDATE checkpoints SET observed_head_block=$2, updated_at=clock_timestamp(),
+        sync_status='ready' WHERE deployment_id=$1`, [config.deploymentId, head.toString()]);
+    });
+  }
+
+  /** Commit the serving barrier before attempting any network-dependent recovery. */
+  async invalidate(config: IndexerConfig, expected: Checkpoint, reason: string): Promise<void> {
+    await this.checkpointTransaction(config, expected, client => invalidatePublication(client, config, reason));
+  }
+
+  async recentCheckpoints(config: IndexerConfig, expected: Checkpoint, from: bigint): Promise<Checkpoint[]> {
+    return this.checkpointTransaction(config, expected, async client => {
+      const result = await client.query(`SELECT block_number::text,block_hash FROM indexed_blocks
+        WHERE deployment_id=$1 AND block_number BETWEEN $2 AND $3 ORDER BY block_number DESC`,
+      [config.deploymentId, from.toString(), expected.number.toString()]);
+      return result.rows.map(row => ({ number: BigInt(row.block_number), hash: row.block_hash }));
+    });
+  }
+
+  /** Drop the latest-only derived model, retaining the common canonical raw prefix. */
+  async rewind(config: IndexerConfig, expected: Checkpoint, ancestor: Checkpoint | null): Promise<void> {
+    await this.checkpointTransaction(config, expected, async client => {
+      if (ancestor) {
+        const found = await client.query(`SELECT 1 FROM indexed_blocks
+          WHERE deployment_id=$1 AND block_number=$2 AND block_hash=$3`,
+        [config.deploymentId, ancestor.number.toString(), ancestor.hash]);
+        if (!found.rowCount || ancestor.number >= expected.number)
+          throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery ancestor is not a stored predecessor.');
+      }
+      const optional = await client.query(`SELECT to_regclass('projection_checkpoints') AS publication,
+        to_regclass('proposal_states') AS states`);
+      if (optional.rows[0].publication)
+        await client.query('DELETE FROM projection_checkpoints WHERE deployment_id=$1', [config.deploymentId]);
+      for (const table of ['disbursements', ...(optional.rows[0].states ? ['proposal_states'] : []), 'votes', 'operations', 'transfers', 'proposals'])
+        await client.query(`DELETE FROM ${table} WHERE deployment_id=$1`, [config.deploymentId]);
+      if (ancestor) {
+        await client.query(`UPDATE checkpoints SET block_number=$2,block_hash=$3,sync_status='rebuild_required'
+          WHERE deployment_id=$1`, [config.deploymentId, ancestor.number.toString(), ancestor.hash]);
+      } else {
+        await client.query('DELETE FROM checkpoints WHERE deployment_id=$1', [config.deploymentId]);
+      }
+      const boundary = ancestor?.number.toString() ?? null;
+      await client.query('DELETE FROM raw_events WHERE deployment_id=$1 AND ($2::numeric IS NULL OR block_number>$2)', [config.deploymentId, boundary]);
+      // API snapshots at orphaned blocks cascade; surviving-prefix snapshots remain invalidated.
+      await client.query('DELETE FROM indexed_blocks WHERE deployment_id=$1 AND ($2::numeric IS NULL OR block_number>$2)', [config.deploymentId, boundary]);
+    });
   }
 
   async decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues: DecodeIssue[] }> {

@@ -5,6 +5,35 @@ manifest, vận hành local/testnet và kiểm thử độc lập. Không tạo 
 Base: origin/Dev ff26697, chứa commit SC04 f57fcfd qua PR #13 và công việc TV4 qua PR #5.
 Căn cứ FR07–FR08, BR03–BR07, NFR01/NFR08, TC01/06/07/09/10/14 và INV01–INV03.
 
+## TV4 triển khai gate thực tế — 25/10/2026
+
+`scripts/governance_local.mjs` đã thêm `preRenounceRoleCheck` trước bất kỳ
+renounce nào, và `preFundingRoleCheck` sau renounce/trước funding. Deploy tối giản
+không cấp temporary operational role; preflight chỉ cho phép final holders cộng
+deployer DEFAULT_ADMIN_ROLE. Mọi holder khác bị chặn, không tự revoke để che lỗi.
+Receipt/constructor/runtime/config/admin graph, GOV allocation và BUD chưa funding
+được kiểm ởH/hash. Nếu audit lỗi, exception giữ stage/H/hash; CLI giữ failure report
+với format riêng/statusFAIL, không gọi đó là manifest thành công.
+
+Role/operation log được đối chiếu replay receipts của mọi block trong range;
+`eth_getLogs` trả thiếu cũng fail-closed. Bootstrap không được có operation,
+kể cả Cancelled/Done. Cutoff được suy từ receipt seed thực, không tin mốc tự khai
+trong manifest. Sau handoff, checker chỉ nhận direct Governor batch transaction
+đúng single Treasury disburse/payload/salt/ETA, đối soát Ready/Done/Unset ởH.
+Contract-wallet relay/nested Governor transaction không thuộc local checker này.
+
+`npm run test:bootstrap` có14ca Anvil thật: clean, missing executor, holder lạ,
+zero executor, sai constructor/code/minDelay, stale/canceled/Done operation, log
+bị cắt ngầm, runtime/log RPC outage và wrong chain. Ca từ chối giữ bootstrap admin,
+Treasury0/funder20000BUD và không có renounce/funding tiếp. CLI deploy→check→export
+đã chạy riêng, gateH11/H13 và finalH19. Xem
+[tổng kết TV4](tv4-work-summary.md) và
+[bằng chứng hoàn tất](evidence/tv4-20261025-final.json).
+
+Các mục bên dưới giữ nguyên thiết kế/bằng chứng TV1; local gate không thay
+testnet, peer approval hoặc wallet-extension acceptance.
+
+
 ## Kiến trúc và ranh giới quyền
 
 User propose/vote qua BudgetGovernor → Succeeded → user queue qua Governor →

@@ -24,10 +24,8 @@ export async function canonical(config: IndexerConfig, rpc: RpcTransport, h: big
     quantity(await rpc.call('eth_chainId', []), 'eth_chainId') === config.chainId,
     'Projection RPC chain differs from deployment.',
   );
-  requireProjection(
-    (await readHeader(rpc, h)).hash === hash,
-    'Projection H hash differs from the raw checkpoint; rebuild/reorg investigation required.',
-  );
+  if ((await readHeader(rpc, h)).hash !== hash)
+    throw new IndexerError('PROJECTION_REORG', 'Projection H is no longer canonical; publication must be invalidated.');
 }
 
 /** Every eth_call is pinned to an EIP-1898 canonical block hash, never latest. */

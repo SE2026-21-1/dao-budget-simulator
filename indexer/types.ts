@@ -76,6 +76,10 @@ export interface SyncStorage {
   loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null>;
   writeCheckpointBatch(config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null, head: bigint): Promise<WriteResult>;
   decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues?: DecodeIssue[] }>;
+  completeSync(config: IndexerConfig, expected: Checkpoint, head: bigint): Promise<void>;
+  invalidate(config: IndexerConfig, expected: Checkpoint, reason: string): Promise<void>;
+  recentCheckpoints(config: IndexerConfig, expected: Checkpoint, from: bigint): Promise<Checkpoint[]>;
+  rewind(config: IndexerConfig, expected: Checkpoint, ancestor: Checkpoint | null): Promise<void>;
 }
 
 export interface WriteResult {

@@ -29,8 +29,18 @@ try {
   console.log(`Validated chain 31337 at block ${manifest.roleCheck.height}; bootstrap roles removed before Treasury funding.`);
 } catch (error) {
   if (outputHandle) {
-    await outputHandle.close().catch(() => {});
-    await unlink(output).catch(() => {});
+    try {
+      await outputHandle.writeFile(`${JSON.stringify({
+        format: 'dao-budget-local-deployment-failure-v1', status: 'FAIL',
+        audit: error.audit ?? null, error: { name: error.name, message: error.message },
+        recovery: 'Keep this report and chain for diagnosis. No automatic renounce/funding/retry; repair while bootstrap authority remains or redeploy a fresh chain.',
+      }, null, 2)}\n`);
+      console.error(`Failure evidence retained (not a deployment manifest): ${output}`);
+    } catch {
+      await unlink(output).catch(() => {});
+    } finally {
+      await outputHandle.close().catch(() => {});
+    }
   }
   console.error(`Local deployment failed: ${error.message}`);
   process.exitCode = 1;

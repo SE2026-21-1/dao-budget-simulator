@@ -1,0 +1,29 @@
+▶ BE03 isolated real PostgreSQL / child process crash and restart
+  ✔ fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash (49.594295ms)
+  ✔ K=0 indexes head; no safe block leaves checkpoint absent (38.663224ms)
+  ✔ PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint (33.770636ms)
+  ✔ missing required source or altered manifest/K refuses checkpoint adoption, including idle start (31.799459ms)
+  ✔ legacy unscoped checkpoint is refused (23.734244ms)
+  ✔ source failure and missing scan evidence never advance checkpoint (8.688806ms)
+  ✔ SQL failure after inserting a header and first event rolls back entire batch/checkpoint (48.409551ms)
+  ✔ COMMIT itself fails: no successful batch notification and no SQL data/checkpoint (15.588482ms)
+  ✔ same event key changed contents is a conflict; prior committed range survives (19.676429ms)
+  ✔ repeated range, retries and restart preserve event IDs and exact uint256 payload (44.328908ms)
+  ✔ hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint (30.080601ms)
+{"concurrencyEvidence":"advisory lock wait","pid":4070,"blockers":[4064]}
+  ✔ competing writers cannot rewind or commit beyond complete coverage; stale writer must restart (38.317638ms)
+  ✔ decode error and unknown topic are durable and remain visible after idle restart (37.159777ms)
+  ✔ legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params (43.789442ms)
+{"crashEvidence":"beforeCommit","beforeRestart":{"blocks":0,"events":0,"checkpoint":null},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at beforeCommit: SQL visibility and restart exactly once (1645.59209ms)
+{"crashEvidence":"afterCommit","beforeRestart":{"blocks":2,"events":1,"checkpoint":"101"},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at afterCommit: SQL visibility and restart exactly once (1850.989271ms)
+✔ BE03 isolated real PostgreSQL / child process crash and restart (4063.980393ms)
+ℹ tests 16
+ℹ suites 1
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4866.458827

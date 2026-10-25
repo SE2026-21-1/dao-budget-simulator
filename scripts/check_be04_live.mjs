@@ -6,7 +6,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { once } from 'node:events';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
-import { fileURLToPath } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { Interface, ZeroHash, id, toQuantity } from 'ethers';
 import pg from 'pg';
@@ -14,24 +14,31 @@ import { deployGovernance } from './governance_local.mjs';
 import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 import { parseConfig } from '../indexer/config.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
-import { PostgresStorage } from '../indexer/storage.ts';
-import { sync } from '../indexer/syncer.ts';
-import { project } from '../indexer/projection/projector.ts';
-import { createApiServer } from '../indexer/api/server.ts';
+import { PostgresStorage as CurrentPostgresStorage } from '../indexer/storage.ts';
+import { sync as Currentsync } from '../indexer/syncer.ts';
+import { project as Currentproject } from '../indexer/projection/projector.ts';
+import { createApiServer as CurrentcreateApiServer } from '../indexer/api/server.ts';
 import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
 
+// Baseline mode loads immutable c41a9ab modules from a detached local worktree.
+const baselineRoot = process.env.BE07_BASELINE_ROOT;
+const PostgresStorage = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/storage.ts')))).PostgresStorage : CurrentPostgresStorage;
+const sync = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/syncer.ts')))).sync : Currentsync;
+const project = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/projection/projector.ts')))).project : Currentproject;
+const createApiServer = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/api/server.ts')))).createApiServer : CurrentcreateApiServer;
 const args = process.argv.slice(2);
 const flags = args.slice(2);
-const withApi = flags.includes('--api');
+const withBe07 = flags.includes('--be07');
+const withApi = flags.includes('--api') || withBe07;
 const withBe06 = flags.includes('--be06');
-assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06'].includes(flag))
+assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06', '--be07'].includes(flag))
   && new Set(flags).size === flags.length,
   'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api] [--be06]');
 assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
 const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
 assert.equal(url.hostname, '127.0.0.1');
 assert.equal(url.username, 'be04_test');
-assert.equal(url.pathname, '/be04_live');
+assert.equal(url.pathname, baselineRoot ? '/be04_live_baseline' : '/be04_live');
 if (withBe06) assert.equal(process.env.BE06_LIVE_ISOLATED, '1', 'Use two new caller-owned isolated BE06 target databases.');
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = resolve(args[1]);
@@ -78,7 +85,7 @@ try {
   report.runtime.postgres = (await pool.query('SELECT version() AS version')).rows[0].version;
   report.runtime.tsx = JSON.parse(await readFile(new URL('../node_modules/tsx/package.json', import.meta.url), 'utf8')).version;
   report.runtime.typescript = JSON.parse(await readFile(new URL('../node_modules/typescript/package.json', import.meta.url), 'utf8')).version;
-  for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : [])])
+  for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : []), ...(withBe07 && !baselineRoot ? ['005_be07'] : [])])
     await pool.query(await readFile(new URL(`../database/migrations/${name}.sql`, import.meta.url), 'utf8'));
   const reserve = createServer();
   await new Promise((done, reject) => {
@@ -135,6 +142,8 @@ try {
   );
   const { manifest, abis } = await deployGovernance(rpc, { root, accounts });
   report.manifest = manifest;
+  const reorgSnapshot = withBe07 ? await rpc('evm_snapshot', []) : null;
+  const reorgAncestor = withBe07 ? await rpc('eth_getBlockByNumber', ['latest', false]) : null;
   const abi = Object.fromEntries(Object.entries(abis).map(([k, v]) => [k, new Interface(v)]));
   const address = Object.fromEntries(Object.entries(manifest.contracts).map(([k, v]) => [k, v.address]));
   const tx = async (label, from, name, method, values = [], at, success = true) => {
@@ -630,6 +639,11 @@ try {
           'proposal detail description/hash and votes read from the live projection'] };
     } finally { await new Promise((done) => api.close(done)); }
   }
+  if (withBe07) {
+    const { checkBe07Live } = await import('./check_be07_live.mjs');
+    report.be07 = await checkBe07Live({pool,config,rpc,transport,storage,project,sync,tx,accounts,address,manifest,
+      reorgSnapshot,reorgAncestor,apiGet:phaseApiGet,baselineRoot,stable,call,abi});
+  }
   if (withBe06) {
     const atBlock = finalProjection.context.asOfBlock;
     const manifestInput = {
@@ -819,6 +833,11 @@ try {
     'database/migrations/004_be05_api.sql',
     'database/migrations/003_be04.sql',
     'indexer/storage.ts',
+    'indexer/recovery.ts',
+    'indexer/worker.ts',
+    'indexer/rpc.ts',
+    'database/migrations/005_be07.sql',
+    'scripts/check_be07_live.mjs',
     'indexer/cli.ts',
     'indexer/api/main.ts',
     'scripts/check_be04_live.mjs',

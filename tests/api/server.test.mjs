@@ -61,7 +61,7 @@ async function seed() {
     (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public')::int AS relations,
     (SELECT count(*) FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace WHERE n.nspname='public')::int AS types`);
   assert.deepEqual(objects.rows[0], { relations: 0, types: 0 }, 'Refusing a nonempty database.');
-  for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql']) {
+  for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql', '005_be07.sql']) {
     await pool.query(await readFile(new URL(`../../database/migrations/${migration}`, import.meta.url), 'utf8'));
   }
   const governance = { proposalThreshold: '50000000000000000000', govSupply: '1000000000000000000000',
@@ -71,6 +71,7 @@ async function seed() {
     [chain, deploymentName, JSON.stringify(governance)]);
   deploymentId = dep.rows[0].deployment_id;
   snapshotRevision = dep.rows[0].snapshot_revision;
+  await pool.query(`UPDATE deployments SET indexer_state=jsonb_build_object('phase','ready','lastCheckedAt',clock_timestamp(),'head','3','confirmed','3') WHERE deployment_id=$1`,[deploymentId]);
   const contracts = [
     ['governor', governor, 'oz-5.4.0-governor'], ['timelock', timelock, 'oz-5.4.0-timelock'],
     ['treasury', treasury, 'sc01-itreasury-v1'], ['budget_token', bud, 'oz-5.4.0-erc20'],
@@ -182,7 +183,7 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
   assert.equal(summary.status, 200, JSON.stringify(summary.body));
   assert.equal(summary.body.context.dataKind, 'chain');
   assert.equal(summary.body.context.asOfBlock, '3');
-  assert.equal(summary.body.context.sync.lagSeconds, null, 'A persisted observed head does not measure current wall-clock pipeline lag.');
+  assert.ok(BigInt(summary.body.context.sync.lagSeconds) < 30n, 'BE07 reports elapsed time since the canonical RPC check.');
   assert.equal(summary.body.data.treasury.totalIn, '1000000000000000000000');
   assert.equal(summary.body.data.treasury.totalOut, '100000000000000000000');
   assert.equal(summary.body.data.treasury.balance, '900000000000000000000');
@@ -284,6 +285,11 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
   const firstIds = first.body.data.map((x) => x.proposalId);
   assert.equal(new Set(firstIds).size, 20);
   assert.deepEqual(firstIds, proposalIds.slice().reverse().slice(0, 20));
+  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  const signed=first.body.pagination.nextCursor;
+  const alias=signed.slice(0,-1)+alphabet[alphabet.indexOf(signed.at(-1))+1];
+  assert.deepEqual(Buffer.from(alias.split('.')[1],'base64url'),Buffer.from(signed.split('.')[1],'base64url'));
+  assert.equal((await get('/proposals',{limit:'20',cursor:alias})).body.error.code,'INVALID_CURSOR','noncanonical signature padding is rejected');
   const tampered = first.body.pagination.nextCursor.slice(0, -1) + (first.body.pagination.nextCursor.endsWith('A') ? 'B' : 'A');
   assert.equal((await get('/proposals', { limit: '20', cursor: tampered })).body.error.code, 'INVALID_CURSOR');
   assert.equal((await get('/proposals', { limit: '10', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
@@ -370,6 +376,22 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
     await pool.query('DELETE FROM raw_events WHERE deployment_id=$1 AND raw_event_id=$2', [deploymentId, futureEvent]);
     await pool.query('DELETE FROM indexed_blocks WHERE deployment_id=$1 AND block_number=6', [deploymentId]);
   }
+});
+
+test('BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases',async()=>{
+  const initial=await get('/proposals',{limit:'1'});assert.equal(initial.status,200);
+  const cursor=initial.body.pagination.nextCursor;assert.ok(cursor);
+  const saved=(await pool.query('SELECT indexer_state FROM deployments WHERE deployment_id=$1',[deploymentId])).rows[0].indexer_state;
+  try{
+    for(const phase of ['recovering','replaying','rebuild_required']){
+      await pool.query(`UPDATE deployments SET indexer_state=indexer_state || jsonb_build_object('phase',$2::text) WHERE deployment_id=$1`,[deploymentId,phase]);
+      for(const path of ['/summary','/proposals',`/proposals/${proposalIds[0]}`,`/proposals/${proposalIds[0]}/votes`,'/treasury/transfers']){
+        const denied=await get(path);assert.equal(denied.status,503,`${phase} ${path}`);assert.equal(denied.body.error.code,'DATA_NOT_READY');
+      }
+      const cached=await get('/proposals',{limit:'1',cursor});assert.equal(cached.status,409);assert.equal(cached.body.error.code,'SNAPSHOT_INVALIDATED');
+      const health=await get('/health');assert.equal(health.status,503);assert.equal(health.body.data.recoveryStatus,phase);
+    }
+  }finally{await pool.query('UPDATE deployments SET indexer_state=$2::jsonb WHERE deployment_id=$1',[deploymentId,JSON.stringify(saved)]);}
 });
 
 test('filter totals, snapshot errors, unavailable publication, rebuild health, and database failure', async () => {

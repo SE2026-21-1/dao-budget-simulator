@@ -86,7 +86,8 @@ function decodeCursor(raw: string, secret: string): Cursor {
   const expected = createHmac('sha256', secret).update(parts[0]!).digest();
   let actual: Buffer;
   try { actual = Buffer.from(parts[1]!, 'base64url'); } catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
-  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
+  if (actual.toString('base64url') !== parts[1] || Buffer.from(parts[0]!, 'base64url').toString('base64url') !== parts[0]
+      || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
     throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   }
   let value: unknown;
@@ -157,7 +158,7 @@ async function readHealth(pool: Pool, scope: Scope): Promise<{ status: number; b
     const body = {
       context: context ?? found.notReadyContext,
       data: { status, database: 'up', indexer: available ? (lag ? 'lagging' : 'synced') : 'not_ready',
-        publication: available ? 'ready' : 'not_ready', projectionStatus: !available ? 'not_ready' : projectionLag > 0n ? 'lagging' : 'current',
+        publication: available ? 'ready' : 'not_ready', recoveryStatus: sync.recoveryStatus, projectionStatus: !available ? 'not_ready' : projectionLag > 0n ? 'lagging' : 'current',
         publicationBlock: found.publication?.h ?? null, projectionLagBlocks: available ? projectionLag.toString() : null,
         rawDecodeComplete: unresolved === 0n,
         rawDecodeIssues: { unknownTopics: sqlCount(db.rows[0].unknown_topics), decodeErrors: sqlCount(db.rows[0].decode_errors) },
@@ -187,6 +188,7 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
       p.source_scope AS projection_scope, p.ignored_ancillary_events,
       c.block_number::text AS raw_h, c.block_hash AS raw_hash, c.observed_head_block::text AS raw_head,
       c.confirmation_depth, c.sync_status, c.source_scope AS raw_scope, c.updated_at,
+      to_jsonb(d)->'indexer_state' AS recovery_state,
       (SELECT count(*)::text FROM indexed_blocks ib WHERE ib.deployment_id=d.deployment_id
         AND ib.block_number BETWEEN (SELECT deployment_block FROM deployments WHERE deployment_id=d.deployment_id)
         AND COALESCE(p.block_number,0)) AS projection_header_count,
@@ -208,16 +210,11 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
     !!raw && BigInt(row.raw_header_count) === BigInt(raw.h) - BigInt(row.deployment_block) + 1n;
   const metadataReady = publication ? await servingMetadataReady(client, String(row.deployment_id), String(row.chain_id),
     publication.h, row.governance_config as Json) : false;
-  const ready = !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
+  const recovery = row.recovery_state as Json | null;
+  const ready = (!recovery || recovery.phase === 'ready') && !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
     publication.revision === String(row.deployment_revision) && BigInt(raw.h) >= BigInt(publication.h) && row.projection_timestamp !== null &&
     prefixComplete && metadataReady;
-  const confirmed = raw ? (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
-  const indexed = raw?.h ?? null;
-  const lagBlocks = confirmed === null || indexed === null ? null : (confirmed > BigInt(indexed) ? confirmed - BigInt(indexed) : 0n);
-  const sync: Json = { status: !raw || !publication || raw.status === 'rebuild_required' ? 'not_ready' : lagBlocks === 0n ? 'synced' : 'lagging',
-    headBlock: raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null, indexedBlock: indexed,
-    lagBlocks: lagBlocks?.toString() ?? null, lagSeconds: null,
-    confirmations: raw ? String(raw.confirmations) : null, lastIndexedAt: raw?.updatedAt ?? null };
+  const sync = freshness(raw, publication?.h ?? null, recovery);
   const context: Context | null = ready && publication ? { chainId: String(row.chain_id), deploymentId: String(row.deployment_name),
     asOfBlock: publication.h, asOfBlockHash: publication.hash, asOfTimestamp: publication.timestamp,
     snapshotRevision: publication.revision, dataKind: 'chain', sync } : null;
@@ -234,13 +231,21 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
   return state;
 }
 
-function buildSync(raw: ScopeState['raw']): Json {
-  if (!raw) return { status: 'not_ready', headBlock: null, confirmedBlock: null, indexedBlock: null, lagBlocks: null, lagSeconds: null, confirmations: null, lastIndexedAt: null };
-  const confirmed = BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n;
-  const lag = confirmed > BigInt(raw.h) ? confirmed - BigInt(raw.h) : 0n;
-  return { status: raw.status === 'rebuild_required' ? 'not_ready' : lag === 0n ? 'synced' : 'lagging',
-    headBlock: raw.head, confirmedBlock: confirmed.toString(), indexedBlock: raw.h,
-    lagBlocks: lag.toString(), lagSeconds: null, confirmations: String(raw.confirmations), lastIndexedAt: raw.updatedAt };
+export function freshness(raw: ScopeState['raw'], publication: string | null, recovery: Json | null, now = Date.now()): Json {
+  const confirmed = recovery?.confirmed !== undefined ? BigInt(String(recovery.confirmed)) : raw ?
+    (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
+  const lag = confirmed === null || publication === null ? null : confirmed > BigInt(publication) ? confirmed - BigInt(publication) : 0n;
+  const checked = recovery?.lastCheckedAt ? Date.parse(String(recovery.lastCheckedAt)) : NaN;
+  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince)) : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
+  const age = Number.isFinite(checked) ? Math.max(0, now - checked, now - since) : null;
+  const blocked = !raw || publication === null || raw.status === 'rebuild_required' ||
+    (!!recovery && recovery.phase !== 'ready');
+  return { status: blocked ? 'not_ready' : lag === 0n && age !== null && age <= 30000 ? 'synced' : 'lagging',
+    headBlock: recovery?.head ?? raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null,
+    indexedBlock: raw?.h ?? null, publicationBlock: publication, lagBlocks: lag?.toString() ?? null,
+    lagSeconds: age === null ? null : Math.floor(age / 1000).toString(), confirmations: raw ? String(raw.confirmations) : null,
+    lastIndexedAt: raw?.updatedAt ?? null, lastRpcCheckAt: recovery?.lastCheckedAt ?? null,
+    recoveryStatus: raw?.status === 'rebuild_required' ? 'rebuild_required' : recovery?.phase ?? 'unverified' };
 }
 
 function requireGovernance(value: Json): { config: Json } {
@@ -388,7 +393,7 @@ async function materialize(client: PoolClient, scopeState: ScopeState, ttlSecond
       proposalThreshold: String(governance.proposalThreshold), votingDelay: String(governance.votingDelay), votingPeriod: String(governance.votingPeriod),
       timelockDelay: String(governance.minDelay), quorumNumerator: String(governance.quorumNumerator),
       quorumDenominator: String(governance.quorumDenominator), totalSupply: String(governance.govSupply) }, recentActivity: [] };
-  const sync = buildSync(scopeState.raw);
+  const sync = scopeState.sync;
   const expiry = Math.floor(Date.now() / 1000) + ttlSeconds;
   const inserted = await client.query(`INSERT INTO api_read_snapshots
       (deployment_id,chain_id,block_number,block_hash,block_timestamp,snapshot_revision,source_scope,summary,sync,expires_at)
@@ -557,14 +562,14 @@ async function page(pool: Pool, snapshot: Snapshot, endpoint: string, filters: J
   try {
     await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
     const stillValid = await client.query(`SELECT s.invalidated_at,s.expires_at,d.snapshot_revision::text,s.source_scope::text AS snapshot_scope,
-        p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,ib.block_hash
+        p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,to_jsonb(d)->'indexer_state' AS recovery_state,ib.block_hash
       FROM api_read_snapshots s JOIN deployments d USING (deployment_id)
         JOIN checkpoints c USING (deployment_id) LEFT JOIN indexed_blocks ib
           ON ib.deployment_id=s.deployment_id AND ib.block_number=s.block_number
         LEFT JOIN projection_checkpoints p ON p.deployment_id=s.deployment_id
         WHERE s.snapshot_id=$1 AND d.deployment_name=$2 AND d.chain_id=$3`, [snapshot.id, scope.deploymentId, scope.chainId]);
     const validity = stillValid.rows[0];
-    if (!validity || validity.invalidated_at || new Date(validity.expires_at).getTime() <= Date.now() || validity.sync_status === 'rebuild_required' ||
+    if (!validity || validity.invalidated_at || new Date(validity.expires_at).getTime() <= Date.now() || validity.sync_status === 'rebuild_required' || (validity.recovery_state && validity.recovery_state.phase !== 'ready') ||
         String(validity.snapshot_scope) !== snapshot.sourceScope || String(validity.projection_scope) !== snapshot.sourceScope || String(validity.raw_scope) !== snapshot.sourceScope ||
         String(validity.snapshot_revision) !== snapshot.context.snapshotRevision || String(validity.block_hash).toLowerCase() !== snapshot.context.asOfBlockHash.toLowerCase())
       throw new ApiError(409, 'SNAPSHOT_INVALIDATED', 'Snapshot đã hết hạn hoặc bị invalidated.', {}, false, snapshot.context);
@@ -623,6 +628,7 @@ async function page(pool: Pool, snapshot: Snapshot, endpoint: string, filters: J
         b: snapshot.context.asOfBlockHash.toLowerCase(), r: snapshot.context.snapshotRevision, s: snapshot.sourceScope,
         e: endpoint, f: filters, l: limit, k: key, x: snapshot.expiresAt }, secret);
     }
+    snapshot.context.sync = (await scopeAndPublication(client, scope, false)).sync;
     await client.query('COMMIT');
     return { context: snapshot.context, data: selected.map((row) => row.payload), pagination: { limit, totalCount: sqlCount(count.rows[0].total), nextCursor } };
   } catch (error) {
@@ -699,14 +705,14 @@ export function createApiServer(options: ServerOptions): Server {
         try {
           await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
           const snapshotCheck = await client.query(`SELECT s.invalidated_at,s.expires_at,d.snapshot_revision::text,s.source_scope::text AS snapshot_scope,
-              p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,ib.block_hash
+              p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,to_jsonb(d)->'indexer_state' AS recovery_state,ib.block_hash
             FROM api_read_snapshots s JOIN deployments d USING (deployment_id)
               JOIN checkpoints c USING (deployment_id) LEFT JOIN indexed_blocks ib
                 ON ib.deployment_id=s.deployment_id AND ib.block_number=s.block_number
               LEFT JOIN projection_checkpoints p ON p.deployment_id=s.deployment_id
               WHERE s.snapshot_id=$1 AND d.deployment_name=$2 AND d.chain_id=$3`, [snapshot.id, scope.deploymentId, scope.chainId]);
           const meta = snapshotCheck.rows[0];
-          if (!meta || meta.invalidated_at || new Date(meta.expires_at).getTime() <= Date.now() || meta.sync_status === 'rebuild_required' ||
+          if (!meta || meta.invalidated_at || new Date(meta.expires_at).getTime() <= Date.now() || meta.sync_status === 'rebuild_required' || (meta.recovery_state && meta.recovery_state.phase !== 'ready') ||
               String(meta.snapshot_scope) !== snapshot.sourceScope || String(meta.projection_scope) !== snapshot.sourceScope || String(meta.raw_scope) !== snapshot.sourceScope ||
               String(meta.snapshot_revision) !== snapshot.context.snapshotRevision || String(meta.block_hash).toLowerCase() !== snapshot.context.asOfBlockHash.toLowerCase())
             throw new ApiError(409, 'SNAPSHOT_INVALIDATED', 'Snapshot đã hết hạn hoặc bị invalidated.', {}, false, snapshot.context);

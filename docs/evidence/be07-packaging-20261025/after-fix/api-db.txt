@@ -1,0 +1,40 @@
+✔ six endpoints, exact data types, validation, and financial semantics (407.275104ms)
+✖ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (18.594093ms)
+✔ BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases (71.943356ms)
+✖ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (17.149168ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 840.09377
+
+✖ failing tests:
+
+test at tests/api/server.test.mjs:278:1
+✖ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (18.594093ms)
+  TypeError: Cannot read properties of undefined (reading 'code')
+      at TestContext.<anonymous> (file:///mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/api/server.test.mjs:289:88)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/api/server.test.mjs:392:1
+✖ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (17.149168ms)
+  AssertionError [ERR_ASSERTION]: {"context":{"chainId":"31337","deploymentId":"be05-http-integration","asOfBlock":"3","asOfBlockHash":"0x0000000000000000000000000000000000000000000000000000000000000003","asOfTimestamp":"1101","snapshotRevision":"ead937b3-4aa6-41f6-b076-88ed548f59a1","dataKind":"chain","sync":{"status":"synced","headBlock":"3","confirmedBlock":"3","indexedBlock":"3","publicationBlock":"3","lagBlocks":"0","lagSeconds":"0","confirmations":"0","lastIndexedAt":"2026-10-25T16:06:48.574Z","lastRpcCheckAt":"2026-10-25T16:06:48.449445+00:00","recoveryStatus":"ready"}},"error":{"code":"DATA_NOT_READY","message":"H yêu cầu cao hơn publication hiện có.","details":{"requestedBlock":"5","publishedBlock":"3"},"retryable":true}}
+  
+  503 !== 409
+  
+      at TestContext.<anonymous> (file:///mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/api/server.test.mjs:400:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 503,
+    expected: 409,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

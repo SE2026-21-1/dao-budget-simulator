@@ -16,7 +16,9 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 - [x] SC05 pre-renounce/pre-funding gates, receipt-backed role/operation-history audit; 14 ca Anvil clean/negative; CLI deploy → check → export ở H11/H13/H19 PASS.
 - [x] Cursor HMAC yêu cầu base64url canonical; regression alias padding bits và 4 API/DB tests PASS.
 - [x] Benchmark cuối local: 100 proposal/1.000 vote, 10 client/60s; 8.116 success, 0 error, p95 121,400ms; native cluster đã stop/xóa.
-- [ ] Peer review TV1/TV2/TV3, CI đúng source công bố, testnet, ví extension và clone máy thành viên khác; xem trạng thái công bố trong bàn giao GitHub.
+- [x] Push code `fa498d6` lên TV4; CI push và CI PR đều 8/8 success đúng revision; [metadata](evidence/tv4-20261025-final/publication.json). Không merge `Dev` hoặc tự approve.
+- [x] Gitleaks raw exit1/550findings, đã đối chiếu public SHA/address; 0 credential xác nhận, 0 finding chưa xem; giữ report/triage, không suppress.
+- [ ] Peer review TV1/TV2/TV3, testnet, ví extension và clone máy thành viên khác; không thay bằng CI hoặc local PASS.
 
 Ngoài cửa sổ64block: giữ `rebuild_required`, dùng BE06 vào DB mới; không tự
 nhận arbitrary-depth recovery hoặc production freshness SLA. Các mục24/10

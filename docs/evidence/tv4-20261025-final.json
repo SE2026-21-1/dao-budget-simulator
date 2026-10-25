@@ -1515,6 +1515,14 @@
     "branch": "feature/tv4-operation",
     "pullRequest": 21,
     "base": "Dev",
-    "note": "Publication and CI tracked separately; no self-merge/approval"
+    "publishedCodeCommit": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+    "ciStatus": "PASS",
+    "ciEvents": [
+      "push",
+      "pull_request"
+    ],
+    "jobsPerRun": 8,
+    "evidence": "tv4-20261025-final/publication.json",
+    "note": "Later metadata-only seal is not the benchmark source commit; no self-merge/approval"
   }
 }

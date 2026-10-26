@@ -1,0 +1,4 @@
+{
+  "status": "INTERRUPTED",
+  "reason": "User interrupted execution; process namespace and /tmp reset before continuation. Only typecheck and build have recorded exit codes; no completion claimed for remaining suites."
+}

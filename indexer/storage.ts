@@ -1,16 +1,21 @@
 import type { Pool, PoolClient } from 'pg';
 import { isDeepStrictEqual } from 'node:util';
+import { runtime, recover, sameCheckpoint } from './recovery.js';
+import { quantity, type RpcTransport } from './rpc.js';
+import { readHeader } from './reader.js';
+import { IndexerError } from './errors.js';
 import { decodeLog } from './decoder.js';
-import { confirmationDepth, firstBlock, scopeHash, sourceKey } from './scope.js';
+import { confirmationDepth, firstBlock, safeBlock, scopeHash, sourceKey } from './scope.js';
 import type { BatchStorage, Checkpoint, DecodeIssue, IndexerConfig, LogBatch, NormalizedLog, SyncStorage, WriteResult } from './types.js';
 
-type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR' | 'CHECKPOINT_CONFLICT';
+type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR' | 'CHECKPOINT_CONFLICT' | 'REBUILD_REQUIRED';
 
 export class StorageError extends Error {
   constructor(
     public readonly code: StorageCode,
     message: string,
     public readonly details: Record<string, string> = {},
+    public readonly retryable = false,
   ) {
     super(message);
     this.name = 'StorageError';
@@ -149,6 +154,9 @@ export async function checkpoint(client: PoolClient, config: IndexerConfig): Pro
 interface Progress { expected: Checkpoint | null; head: bigint }
 export interface TransactionHooks {
   /** Test dependency injection only; production CLI never configures hooks. */
+  recoveryMarked?: () => Promise<void>;
+  beforeRollbackCommit?: () => Promise<void>;
+  afterRollbackCommit?: () => Promise<void>;
   beforeCommit?: () => Promise<void>;
   afterCommit?: () => Promise<void>;
 }
@@ -182,12 +190,74 @@ export async function invalidatePublication(client: PoolClient, config: IndexerC
 export class PostgresStorage implements BatchStorage, SyncStorage {
   constructor(private readonly pool: Pool, private readonly hooks: TransactionHooks = {}) {}
 
+  async recoveryPending(config: IndexerConfig): Promise<boolean> {
+    const c = await this.pool.connect();
+    try { return (await runtime(c, config.deploymentId))?.phase === 'recovering'; } finally { c.release(); }
+  }
+  async recoverShorterChain(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint): Promise<Checkpoint | null> {
+    const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
+    if (head >= expected.number) throw new IndexerError('RPC_INVALID_DATA', 'RPC omitted a checkpoint below its advertised head.');
+    const header = await readHeader(rpc, head);
+    const stored = await this.pool.query('SELECT block_hash FROM indexed_blocks WHERE deployment_id=$1 AND block_number=$2', [config.deploymentId, head.toString()]);
+    if (!stored.rowCount || stored.rows[0].block_hash === header.hash)
+      throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC is behind the saved checkpoint without proof of a fork; preserve data and retry.');
+    return this.recoverCheckpoint(config, rpc, expected);
+  }
+  async recoverCheckpoint(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint): Promise<Checkpoint | null> {
+    const client = await this.pool.connect();
+    let state;
+    try { state = await runtime(client, config.deploymentId); } finally { client.release(); }
+    if (state) return recover(this.pool, config, rpc, expected, this.hooks);
+
+    // Deployments still on migrations 001–004 retain TV4's bounded recovery.
+    await this.invalidate(config, expected, 'REORG_DETECTED');
+    const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
+    const safe = safeBlock(head, confirmationDepth(config));
+    const first = firstBlock(config);
+    const window = BigInt(config.reorgWindow ?? 128);
+    const lower = expected.number - window > first ? expected.number - window : first;
+    let ancestor: Checkpoint | null = null;
+    for (const candidate of await this.recentCheckpoints(config, expected, lower)) {
+      if (safe === null || candidate.number > safe || candidate.number >= expected.number) continue;
+      if ((await readHeader(rpc, candidate.number)).hash === candidate.hash) {
+        ancestor = candidate;
+        break;
+      }
+    }
+    if (!ancestor && expected.number - first + 1n > window)
+      throw new IndexerError('REORG_WINDOW_EXCEEDED', 'No common ancestor within reorgWindow; publication disabled. Rebuild in a new database.');
+    if (ancestor && (await readHeader(rpc, ancestor.number)).hash !== ancestor.hash)
+      throw new IndexerError('REORG_UNSTABLE', 'Canonical ancestor changed during recovery; publication remains disabled.');
+    await this.rewind(config, expected, ancestor);
+    return ancestor;
+  }
+
+  async observe(config: IndexerConfig, head: bigint, expected: Checkpoint | null): Promise<void> {
+    const verifiedAt = new Date().toISOString(); // RPC check completed before waiting for a DB connection/lock.
+    const c = await this.pool.connect();
+    try {
+      await c.query('BEGIN');
+      await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+      if (!sameCheckpoint(await checkpoint(c, config), expected)) throw new StorageError('CHECKPOINT_CONFLICT', 'Stale RPC observation.', {}, true);
+      if (await runtime(c, config.deploymentId)) {
+        await c.query(`UPDATE deployments SET indexer_state=indexer_state || jsonb_build_object(
+          'lastCheckedAt',$5::timestamptz,'head',$2::text,'confirmed',GREATEST(0,$2::numeric-$3)::text,
+          'lagSince',CASE WHEN $4::numeric IS NULL OR $4::numeric < $2::numeric-$3 THEN
+            COALESCE(NULLIF(indexer_state->'lagSince','null'::jsonb),to_jsonb($5::timestamptz)) ELSE NULL END)
+          WHERE deployment_id=$1`, [config.deploymentId, head.toString(), confirmationDepth(config), expected?.number.toString() ?? null, verifiedAt]);
+      }
+      await c.query('COMMIT');
+    } catch (e) { await c.query('ROLLBACK'); throw e; } finally { c.release(); }
+  }
+
   async loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null> {
     const client = await this.pool.connect();
     try {
       await client.query('BEGIN');
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
       await verifyMetadata(client, config, true);
+      const state = await runtime(client, config.deploymentId);
+      if (state?.phase === 'rebuild_required') throw new StorageError('REBUILD_REQUIRED', 'REBUILD_REQUIRED: use BE06 with a new database.');
       const result = await checkpoint(client, config);
       await client.query('COMMIT');
       return result;
@@ -304,11 +374,14 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
       // Lock metadata until COMMIT; never seed or overwrite user deployment data.
       await verifyMetadata(client, config, !!progress);
+      const state = await runtime(client, config.deploymentId);
+      if (state?.phase === 'recovering' || state?.phase === 'rebuild_required')
+        throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery gate blocks ingestion; restart sync.', {}, true);
       if (progress) {
         const current = await checkpoint(client, config);
         if (current?.number !== progress.expected?.number || current?.hash !== progress.expected?.hash
             || batch.fromBlock !== (current ? current.number + 1n : firstBlock(config))) {
-          throw new StorageError('CHECKPOINT_CONFLICT', 'Stale writer or noncontiguous checkpoint batch; restart and verify RPC hash.');
+          throw new StorageError('CHECKPOINT_CONFLICT', 'Stale writer or noncontiguous checkpoint batch; restart and verify RPC hash.', {}, true);
         }
         if (progress.head < batch.toBlock + BigInt(confirmationDepth(config))) invalid('Batch exceeds confirmed head.');
         const expectedSources = config.contracts.filter((c) => c.deploymentBlock <= batch.toBlock).map(sourceKey).sort();
@@ -420,6 +493,9 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
       await client.query('BEGIN');
       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
       await verifyMetadata(client, config, true);
+      const state = await runtime(client, config.deploymentId);
+      if (state?.phase === 'recovering' || state?.phase === 'rebuild_required')
+        throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery gate blocks re-decode.');
       const rawCheckpoint = await checkpoint(client, config);
       const rows = await client.query(`SELECT *, topics::text[] AS topics FROM raw_events WHERE deployment_id = $1
         AND ($2::numeric IS NULL OR block_number <= $2)

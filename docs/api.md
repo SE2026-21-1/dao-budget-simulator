@@ -393,11 +393,13 @@ Hash input/proposalId của 45 proposal và operationId/salt vẫn giữ nguyên
 
 ## 7. Chạy API BE05
 
-Chạy migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
-và có publication BE04:
+Áp dụng migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
+và có publication BE04. Nếu chạy worker/recovery BE07, áp dụng tiếp migration
+005 trước khi khởi động worker/API (xem [BE07](be07.md)):
 
 ```sh
 psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/004_be05_api.sql
+psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/005_be07.sql
 npm ci
 export API_CURSOR_SECRET="$(openssl rand -hex 32)"
 npm run api
@@ -432,7 +434,23 @@ Thiếu metadata đó trả `DATA_NOT_READY`, không dùng địa chỉ hoặc c
 
 Health trả 200 `ok`/`degraded` khi database và publication sẵn sàng, 503 khi
 database/publication chưa phục vụ được. Response tách tình trạng DB, raw
-indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head;
-`lagSeconds` theo heartbeat/publication như mục1, null chỉ khi chưa có raw checkpoint.
-Reorg đã phát hiện phải làm API trả503/`REBUILD_REQUIRED` trước rollback/replay;
-cursor cũ trả409, kể cả sau khi publication revision mới đã phục hồi.
+indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head; lag
+theo giây chưa quan sát được là null. Health không gọi RPC.
+
+
+## 8. BE07 — recovery và freshness của API runtime
+
+[BE07](be07.md) bổ sung migration 005 và heartbeat canonical cho API. Enum
+`sync.status` và error code BE05 giữ nguyên. Runtime thêm `recoveryStatus`
+(unverified/ready/recovering/replaying/rebuild_required), `lastRpcCheckAt` và
+`publicationBlock`. `lagSeconds` là chuỗi số tuổi quan sát theo wall clock,
+null khi chưa có quan sát; `lagBlocks` so confirmed với publication đang phục vụ.
+Quá 30000 ms chưa xác minh canonical, kể cả chain không có event, trạng thái là
+lagging và health degraded. Cache snapshot/cursor dùng trạng thái hiện tại.
+
+Recovering/replaying/rebuild_required chặn publication: health 503 với
+`data.recoveryStatus`, endpoint dữ liệu 503 DATA_NOT_READY, cursor cũ 409
+SNAPSHOT_INVALIDATED. Revision đổi ngay khi xác nhận mismatch, trước khi xóa
+suffix. Chỉ publication BE04 đã đối chiếu lại tại H/hash mới mở gate.
+Các giới hạn BE05 về lagSeconds=null/không ghi lần kiểm tra RPC trong các mục
+trước chỉ mô tả nền BE05; runtime có migration 005 dùng semantics BE07 này.

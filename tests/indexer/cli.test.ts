@@ -78,7 +78,7 @@ test('watch retries transient RPC failures sequentially and drains an active cyc
     calls++;
     maxActive = Math.max(maxActive, ++active);
     try {
-      if (calls === 4) { gate.emit('active'); await release; }
+      if (calls === 5) { gate.emit('active'); await release; }
       throw new Error('Transient provider failure');
     } finally { active--; }
   });
@@ -102,7 +102,7 @@ test('watch retries transient RPC failures sequentially and drains an active cyc
   const [code, signal] = await closed;
   assert.equal(code, 143);
   assert.equal(signal, null);
-  assert.equal(calls, 6, 'The second cycle drains its bounded retries, with no third cycle after termination.');
+  assert.equal(calls, 8, 'The second cycle drains its bounded retries, with no third cycle after termination.');
   assert.equal(maxActive, 1);
   const reports = stderr.trim().split('\n').map((line) => JSON.parse(line));
   assert.equal(reports.length, 2);
@@ -129,12 +129,12 @@ test('watch SIGINT interrupts the idle timer and permanent chain mismatch stops 
   await once(child.stderr, 'data');
   child.kill('SIGINT');
   assert.equal((await closed)[0], 130);
-  assert.equal(calls, 3);
+  assert.equal(calls, 4);
   permanent = true;
   const result = await run(['--config', path, '--watch'], env);
   assert.equal(result.code, 1);
   assert.equal(JSON.parse(result.stderr).error.code, 'CHAIN_ID_MISMATCH');
-  assert.equal(calls, 4);
+  assert.equal(calls, 5);
 });
 
 test('watch stops on permanent HTTP, malformed response, and JSON-RPC errors', { timeout: 10_000 }, async (t) => {

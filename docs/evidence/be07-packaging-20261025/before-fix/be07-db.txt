@@ -1,0 +1,106 @@
+✔ same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated (160.446487ms)
+✔ deep reorg outside window requires BE06; does not destroy diagnosis data or metadata (21.863767ms)
+✔ recovery crash boundary recoveryMarked resumes with a fresh storage instance (38.211843ms)
+✔ recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance (39.755853ms)
+✔ recovery crash boundary afterRollbackCommit resumes with a fresh storage instance (31.796111ms)
+✔ RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes (34.207345ms)
+✔ recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data (31.459893ms)
+✔ a fork between committed catch-up batches persists recovery and replays on the next invocation (30.080232ms)
+✔ SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart (461.555816ms)
+✔ SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart (481.898096ms)
+✔ SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart (479.118823ms)
+✔ worker exits on wrong chain and rebuild_required instead of retrying forever (102.8372ms)
+✔ shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data (38.901891ms)
+✔ wrong RPC chain during recovery never rolls back data (20.108463ms)
+✖ confirmed mismatch closes recovery gate even when the next chain RPC fails (17.656188ms)
+✖ heartbeat keeps RPC observation time when waiting for the chain writer lock (124.913149ms)
+✖ lag observation starts after a JSON null heartbeat and survives subsequent observations (21.195351ms)
+✖ shorter fork immediately after a committed batch persists recovery before worker retry (19.734321ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 14
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2720.369084
+
+✖ failing tests:
+
+test at tests/indexer/be07-db.test.mjs:135:1
+✖ confirmed mismatch closes recovery gate even when the next chain RPC fails (17.656188ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unverified'
+  - 'recovering'
+  
+      at TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:144:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unverified',
+    expected: 'recovering',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be07-db.test.mjs:147:1
+✖ heartbeat keeps RPC observation time when waiting for the chain writer lock (124.913149ms)
+  AssertionError [ERR_ASSERTION]: waiting for SQL lock must not manufacture a fresh RPC check
+      at TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:156:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be07-db.test.mjs:160:1
+✖ lag observation starts after a JSON null heartbeat and survives subsequent observations (21.195351ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'object' !== 'string'
+  
+      at TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:164:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'string',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be07-db.test.mjs:169:1
+✖ shorter fork immediately after a committed batch persists recovery before worker retry (19.734321ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: block header must be an object.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:172:3)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: block header must be an object.
+        at sync (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/indexer/syncer.ts:99:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:172:3)
+        at async Test.run (node:internal/test_runner/test:1208:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:831:7),
+    operator: 'rejects',
+    diff: 'simple'
+  }

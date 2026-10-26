@@ -173,7 +173,7 @@ test('RPC HTTP failures redact URL paths and body; prior batches remain explicit
   let requests = 0;
   const { url, server } = await serveRpc(() => { requests++; throw new Error('secret body'); });
   t.after(() => server.close());
-  await assert.rejects(scan(config(), new HttpRpc(url, 30_000, { sleep: async () => {} }), new RecordingStorage()), (error: unknown) => {
+  await assert.rejects(scan(config(), new HttpRpc(url, 30_000, { maxAttempts: 3, sleep: async () => {} }), new RecordingStorage()), (error: unknown) => {
     assert.ok(error instanceof ScanError);
     assert.equal(error.report.error?.code, 'RPC_HTTP_ERROR');
     assert.equal(error.report.error && 'retryable' in error.report.error && error.report.error.retryable, true);
@@ -183,7 +183,7 @@ test('RPC HTTP failures redact URL paths and body; prior batches remain explicit
   assert.equal(requests, 3);
 });
 
-for (const status of [429, 500, 502, 503, 504]) test(`RPC retries HTTP ${status}, releasing the body before recovering`, async (t) => {
+for (const status of [408, 429, 500, 501, 502, 503, 504, 505]) test(`RPC retries HTTP ${status}, releasing the body before recovering`, async (t) => {
   let requests = 0;
   let cancelled = false;
   const delays: number[] = [];
@@ -198,7 +198,7 @@ for (const status of [429, 500, 502, 503, 504]) test(`RPC retries HTTP ${status}
     return Response.json({ jsonrpc: '2.0', id: request.id, result: '0x7a69' });
   };
   t.mock.method(globalThis, 'fetch', transport);
-  const rpc = new HttpRpc('https://provider.invalid/rpc-secret', 100, { sleep: async (delay) => { delays.push(delay); } });
+  const rpc = new HttpRpc('https://provider.invalid/rpc-secret', 100, { random: () => 1, sleep: async (delay) => { delays.push(delay); } });
   assert.equal(await rpc.call('eth_chainId', []), '0x7a69');
   assert.equal(requests, 2);
   assert.deepEqual(delays, [250]);
@@ -209,7 +209,7 @@ test('RPC transport exhaustion is bounded and never exposes URL, params or provi
   const delays: number[] = [];
   const transport: typeof fetch = async () => { requests++; throw new TypeError('provider-secret https://user:password@provider.invalid/rpc-secret'); };
   t.mock.method(globalThis, 'fetch', transport);
-  const rpc = new HttpRpc('https://user:password@provider.invalid/rpc-secret', 100, { sleep: async (delay) => { delays.push(delay); } });
+  const rpc = new HttpRpc('https://user:password@provider.invalid/rpc-secret', 100, { maxAttempts: 3, random: () => 1, sleep: async (delay) => { delays.push(delay); } });
   await assert.rejects(rpc.call('eth_call', ['params-secret']), (error: unknown) => {
     assert.ok(error instanceof IndexerError);
     assert.equal(error.code, 'RPC_UNAVAILABLE');
@@ -265,7 +265,7 @@ for (const [retryAfter, delay] of [
     : Response.json({ jsonrpc: '2.0', id: 1, result: '0x1' });
   t.mock.method(globalThis, 'fetch', transport);
   const rpc = new HttpRpc('https://provider.invalid', 100, {
-    now: () => Date.UTC(2026, 9, 25),
+    now: () => Date.UTC(2026, 9, 25), random: () => 1,
     sleep: async (milliseconds) => { delays.push(milliseconds); },
   });
   assert.equal(await rpc.call('eth_chainId', []), '0x1');
@@ -273,7 +273,7 @@ for (const [retryAfter, delay] of [
   assert.deepEqual(delays, [delay]);
 });
 
-for (const status of [400, 401, 403, 404, 408, 501, 505]) test(`RPC never retries permanent HTTP ${status}`, async (t) => {
+for (const status of [400, 401, 403, 404]) test(`RPC never retries permanent HTTP ${status}`, async (t) => {
   let requests = 0;
   const transport: typeof fetch = async () => { requests++; return new Response('provider-secret', { status }); };
   t.mock.method(globalThis, 'fetch', transport);
@@ -332,7 +332,7 @@ for (const phase of ['headers', 'body']) test(`RPC timeout covers stalled respon
   const bound = server.address();
   assert.ok(bound && typeof bound !== 'string');
   const delays: number[] = [];
-  const rpc = new HttpRpc(`http://127.0.0.1:${bound.port}/rpc-secret`, 200, { sleep: async (delay) => { delays.push(delay); } });
+  const rpc = new HttpRpc(`http://127.0.0.1:${bound.port}/rpc-secret`, 200, { random: () => 1, sleep: async (delay) => { delays.push(delay); } });
   assert.equal(await rpc.call('eth_chainId', []), '0x1');
   assert.equal(requests, 3);
   assert.deepEqual(delays, [250, 500]);

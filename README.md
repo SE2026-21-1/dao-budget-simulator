@@ -7,9 +7,9 @@ BE05 HTTP API, BE06 rebuild/compare và frontend TV3 `9f4d57a` có ví/giao dị
 Có deploy/seed/check-roles, invariant và nghiệm thu Anvil → PostgreSQL → API
 → UI thật bằng EIP-1193 transport local. Fixture BE01 vẫn dùng được khi không
 bật API; API lỗi không bị thay bằng fixture.
-**Chưa chốt release:** bản local đã sửa reorg, freshness và RPC retry/backoff,
-có nghiệm thu phục hồi Anvil/PostgreSQL/API/UI ngày 25/10. Reorg tối đa 64 block
-được rollback/replay; sâu hơn giữ API không sẵn sàng và yêu cầu rebuild rõ ràng.
+**Chưa chốt release:** TV4 đã kiểm thử phục hồi local trên Anvil/PostgreSQL/API/UI;
+BE07 bổ sung worker, migration 005 và cửa sổ reorg mặc định 128 block. Nếu không
+tìm được tổ tiên trong cửa sổ, API vẫn đóng và cần rebuild vào database mới.
 Testnet, ví extension thật, máy thành viên khác và peer approval vẫn còn thiếu.
 Xem [tổng kết TV4](docs/tv4-work-summary.md) và
 [bằng chứng phục hồi](docs/evidence/tv4-20261025-recovery.json).
@@ -153,30 +153,29 @@ database live. Kết quả máy này không thay benchmark máy khác/testnet.
 
 ### Đồng bộ liên tục và phục hồi
 
-Sau deploy/migration/đăng ký metadata, đặt `RPC_URL`, `DATABASE_URL` và
-`indexer/config/local.json` theo deployment thật, với `toBlock: "latest"`.
-File `.env` không được tự động nạp. Trong terminal indexer:
+Sau deploy, migration 001–004 và đăng ký deployment metadata đã xác minh, áp
+dụng `database/migrations/005_be07.sql` một lần trên database đang dùng. Đặt
+`RPC_URL`, `DATABASE_URL` và `indexer/config/local.json` theo deployment thật,
+với `toBlock: "latest"`; `.env` không được tự động nạp:
 
 ```bash
-nvm use
-npm run indexer -- --config indexer/config/local.json --watch
-# Hoặc chọn chu kỳ riêng (100–60000 ms, mặc định 5000):
-npm run indexer -- --config indexer/config/local.json --watch --poll-interval-ms 1000
+psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/005_be07.sql
+npm run indexer -- --config indexer/config/local.json --worker
 ```
 
-Chỉ chạy một trong hai lệnh trên; API/frontend chạy ở terminal riêng.
-Watch tuần tự sync → project; SIGINT/SIGTERM dừng lịch mới, đợi chu kỳ đang chạy
-và đóng pool (exit130/143). Heartbeat chỉ cập nhật sau xác minh canonical H,
-kể cả idle. API báo `lagging` khi heartbeat quá30s; UI tự kiểm tra health mỗi5s.
-Đây là chỉ báo freshness, không phải phép đo chính xác mọi event.
+Worker tuần tự sync → project, polling theo `pollIntervalMs` (mặc định 1000 ms).
+API/frontend chạy ở terminal riêng. SIGINT/SIGTERM hủy RPC/backoff đang chờ,
+đóng pool sau transaction; heartbeat chỉ cập nhật sau kiểm tra canonical, kể cả
+idle. API báo `lagging` nếu quá 30 giây chưa xác minh; UI kiểm tra health mỗi 5
+giây. Đây là chỉ báo freshness, không phải phép đo chính xác mọi event.
 
-Khi reorg, commit `rebuild_required`, đổi revision và invalidate cursor trước
-khi tìm common ancestor/rollback/replay. API summary trả503 trong lúc phục hồi,
-cursor cũ trả409 và không được dùng lại sau publication mới. Không tìm được
-ancestor trong64 block: giữ fail-closed, điều tra manifest/RPC rồi dùng
-[BE06 rebuild](docs/be06.md) vào DB mới; không sửa hash hoặc xóa DB để né lỗi.
-Không cần migration mới nếu đã áp dụng001–004. Native runner hiện bắt buộc
-nghiệm thu cả reorg bị ngắt giữa chừng, replay, cursor và heartbeat recovery.
+Khi reorg, phase `recovering` đổi revision và vô hiệu hóa cursor trước khi tìm
+tổ tiên/rollback/replay; API trả 503 trong lúc phục hồi, cursor cũ trả 409.
+Nếu không có tổ tiên trong `reorgWindow` (mặc định 128 block), giữ trạng thái
+`rebuild_required` và dùng [BE06 rebuild](docs/be06.md) trên database mới;
+không sửa hash hoặc xóa DB đang chạy để né lỗi. Chế độ `--watch` cũ vẫn chạy
+chu kỳ sync/project trên DB đã migration 001–004, nhưng không thay cho worker
+BE07 khi cần phục hồi/replay tự động. Hướng dẫn đầy đủ: [BE07](docs/be07.md).
 
 
 ## Unit test SC02
@@ -588,3 +587,7 @@ publication BE04 đúng cùng H/hash; target không được là database API đ
 Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06.md) và
 [bằng chứng nghiệm thu](docs/evidence/be06-20261024/summary.md). Reorg/retry tự
 động thuộc BE07, benchmark thuộc BE08.
+
+## BE07 recovery và worker
+
+Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.

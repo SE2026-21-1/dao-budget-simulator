@@ -346,6 +346,52 @@ jobs:
           path: reports/be06-live*
           retention-days: 14
 
+  be07-recovery:
+    name: BE07 recovery, RPC failures and native database regressions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be04_test
+          POSTGRES_PASSWORD: be04_test
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U be04_test -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      PG_ADMIN_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/postgres
+      BE07_TEST_ISOLATED: '1'
+      BE07_EVIDENCE_DIR: reports/be07
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - run: forge build
+      - name: Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare
+        run: node scripts/check_be07_local.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: be07-recovery-${{ github.sha }}
+          path: reports/be07/
+          retention-days: 14
+
   frontend:
     name: Frontend lint and production build
     runs-on: ubuntu-24.04

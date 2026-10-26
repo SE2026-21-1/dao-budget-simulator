@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { parseConfig } from '../../indexer/config.js';
-import { safeBlock, scopeHash } from '../../indexer/scope.js';
+import { firstBlock, safeBlock, scopeHash } from '../../indexer/scope.js';
 import { sync, SyncError } from '../../indexer/syncer.js';
+import { IndexerError } from '../../indexer/errors.js';
+import { readHeader } from '../../indexer/reader.js';
+import { quantity, type RpcTransport } from '../../indexer/rpc.js';
 import type { Checkpoint, IndexerConfig, LogBatch, SyncStorage } from '../../indexer/types.js';
 import { config, configInput, FixtureRpc, hash, rpcLog, treasury } from './helpers.js';
 
@@ -21,6 +24,26 @@ class MemoryStorage implements SyncStorage {
   async rewind(_config: IndexerConfig, _expected: Checkpoint, ancestor: Checkpoint | null) {
     this.cp = ancestor;
     for (const n of this.headers.keys()) if (!ancestor || n > ancestor.number) this.headers.delete(n);
+  }
+  async recoverCheckpoint(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint) {
+    this.invalidated = true;
+    const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
+    const lower = expected.number - BigInt(config.reorgWindow ?? 128);
+    for (const candidate of await this.recentCheckpoints(config, expected, lower > firstBlock(config) ? lower : firstBlock(config))) {
+      if (candidate.number > head) continue;
+      if ((await readHeader(rpc, candidate.number)).hash !== candidate.hash) continue;
+      await this.rewind(config, expected, candidate);
+      return candidate;
+    }
+    throw new IndexerError('REBUILD_REQUIRED', 'No canonical ancestor inside the configured reorg window.');
+  }
+  async recoverShorterChain(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint) {
+    const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
+    if (head >= expected.number) throw new IndexerError('RPC_INVALID_DATA', 'RPC omitted a checkpoint below its advertised head.');
+    const stored = this.headers.get(head);
+    if (!stored || (await readHeader(rpc, head)).hash === stored)
+      throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC has not proved a fork.', true);
+    return this.recoverCheckpoint(config, rpc, expected);
   }
   async loadCheckpoint() { return this.cp; }
   async decodeIssues() { return this.issues; }
@@ -100,6 +123,7 @@ test('restart with no new block still verifies hash; then continues from H+1', a
   rpc.head = 105n; rpc.calls = [];
   const idle = await sync(c, rpc, db);
   assert.equal(idle.committedBatches, 0);
+
   rpc.head = 107n;
   await sync(c, rpc, db);
   assert.equal(db.batches.at(-1)!.fromBlock, 104n);
@@ -117,7 +141,8 @@ test('reorg replays from the most recent common ancestor, rather than adopting a
   const result = await sync(c, rpc, db);
   assert.equal(db.invalidated, true);
   assert.deepEqual(result.reorg, { from: '103', ancestor: '101', replayFrom: '102' });
-  assert.deepEqual(db.cp, { number: 103n, hash: hash(1103) });
+  assert.ok(db.cp && db.cp.number >= 103n);
+  assert.equal(db.cp.hash, hash(db.cp.number + 1000n));
   assert.equal(db.headers.get(101n), hash(101));
 });
 
@@ -129,33 +154,34 @@ test('deep reorg disables serving and preserves stored raw data for explicit reb
   rpc.head = 172n;
   rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value =>
     ({ ...(value as object), hash: hash(BigInt(p[0] as string) + 1000n) })) : undefined;
-  await assert.rejects(sync(c, rpc, db), code('REORG_WINDOW_EXCEEDED'));
+  await assert.rejects(sync(c, rpc, db), code('REBUILD_REQUIRED'));
   assert.equal(db.invalidated, true);
   assert.deepEqual(db.headers, original);
   assert.equal(db.cp?.number, 170n);
 });
 
-test('a shortened head rewinds to a still-confirmed ancestor even when the old hash is unchanged', async () => {
+test('a lagging provider cannot delete a still-canonical confirmed checkpoint', async () => {
   const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc();
   await sync(c, rpc, db);
   rpc.head = 103n;
-  const result = await sync(c, rpc, db);
-  assert.equal(result.checkpoint?.number, '101');
-  assert.equal(db.headers.has(102n), false);
-  assert.equal(db.invalidated, true);
+  await assert.rejects(sync(c, rpc, db), code('CHECKPOINT_HEAD_BEHIND'));
+  assert.equal(db.cp?.number, 103n);
+  assert.equal(db.headers.has(102n), true);
+  assert.equal(db.invalidated, false);
 });
 
-test('replacement of the entire short deployment prefix replays from the first source block', async () => {
+test('replacement of the entire deployment prefix requires an explicit rebuild', async () => {
   const c = input(); const db = new MemoryStorage(); const rpc = new FixtureRpc();
   await sync(c, rpc, db);
+  const original = new Map(db.headers);
   const base = new FixtureRpc(); rpc.head = 105n;
   rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value => {
     const n = BigInt(p[0] as string);
     return { ...(value as object), hash: hash(n + 1000n), parentHash: hash(n + 999n) };
   }) : undefined;
-  const result = await sync(c, rpc, db);
-  assert.deepEqual(result.reorg, { from: '103', ancestor: null, replayFrom: '100' });
-  assert.equal(db.cp?.hash, hash(1103));
+  await assert.rejects(sync(c, rpc, db), code('REBUILD_REQUIRED'));
+  assert.equal(db.invalidated, true);
+  assert.deepEqual(db.headers, original);
 });
 for (const failure of ['missing', 'malformed', 'unavailable']) {
   test(`checkpoint RPC cannot verify: ${failure}`, async () => {

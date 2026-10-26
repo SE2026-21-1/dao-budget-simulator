@@ -1,0 +1,36 @@
+✔ same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated (373.363675ms)
+✔ deep reorg outside window requires BE06; does not destroy diagnosis data or metadata (46.775696ms)
+✔ recovery crash boundary recoveryMarked resumes with a fresh storage instance (63.715647ms)
+✔ recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance (75.156117ms)
+✔ recovery crash boundary afterRollbackCommit resumes with a fresh storage instance (50.274124ms)
+✔ RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes (61.972502ms)
+✔ recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data (67.40956ms)
+✖ a fork between committed catch-up batches persists recovery and replays on the next invocation (30.468761ms)
+✔ SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart (860.799093ms)
+✔ SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart (884.358154ms)
+✔ SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart (1110.390291ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4419.792015
+
+✖ failing tests:
+
+test at tests/indexer/be07-db.test.mjs:80:1
+✖ a fork between committed catch-up batches persists recovery and replays on the next invocation (30.468761ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:83:3)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

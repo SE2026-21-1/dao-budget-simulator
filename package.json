@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
@@ -26,7 +28,11 @@
     "test:be06:live": "node --import tsx scripts/check_be04_live.mjs",
     "test:tv4:native": "node --import tsx scripts/check_tv4_native.mjs",
     "test:bootstrap": "node --test tests/smoke/bootstrap.test.mjs",
-    "benchmark:api": "node --import tsx scripts/benchmark_api.mjs"
+    "benchmark:api": "node --import tsx scripts/benchmark_api.mjs",
+    "test:be07": "node --import tsx --test tests/indexer/be07.test.ts",
+    "test:be07:db": "node --import tsx --test tests/indexer/be07-db.test.mjs",
+    "test:be07:live": "node --import tsx scripts/check_be04_live.mjs",
+    "test:be07:native": "node scripts/check_be07_native.mjs"
   },
   "dependencies": {
     "ethers": "6.17.0",

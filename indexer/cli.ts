@@ -1,3 +1,4 @@
+import { worker } from './worker.js';
 import { pathToFileURL } from 'node:url';
 import { setTimeout as sleep } from 'node:timers/promises';
 import pg from 'pg';
@@ -10,7 +11,7 @@ import { sync, SyncError } from './syncer.js';
 import { project } from './projection/projector.js';
 import type { IndexerConfig } from './types.js';
 
-const USAGE = '--config <file.json> [--sync|--redecode|--project|--sync-project|--watch [--poll-interval-ms <100..60000>]]';
+const USAGE = '--config <file.json> [--sync|--redecode|--project|--sync-project|--worker|--watch [--poll-interval-ms <100..60000>]]';
 
 function writeError(error: unknown): void {
   process.stderr.write(JSON.stringify(error instanceof SyncError ? { type: 'sync_result', ...error.report }
@@ -36,7 +37,7 @@ async function watch(config: IndexerConfig, pool: pg.Pool, intervalMs: number): 
       } catch (error) {
         writeError(error);
         const detail = error instanceof SyncError ? error.report.error : error instanceof IndexerError ? error : undefined;
-        const resumableReorg = detail && ['REORG_UNSTABLE', 'BLOCK_MISMATCH', 'LOG_BLOCK_MISMATCH', 'REMOVED_LOG', 'PROJECTION_REORG'].includes(detail.code);
+        const resumableReorg = detail && ['REORG_RETRY', 'REORG_UNSTABLE', 'BLOCK_CHANGED', 'BLOCK_MISMATCH', 'LOG_BLOCK_MISMATCH', 'REMOVED_LOG', 'PROJECTION_REORG', 'CHECKPOINT_HEAD_BEHIND'].includes(detail.code);
         if (detail?.retryable !== true && !resumableReorg) return stopCode || 1;
       }
       if (stopCode) break;
@@ -54,14 +55,14 @@ async function watch(config: IndexerConfig, pool: pg.Pool, intervalMs: number): 
 
 export async function main(args = process.argv.slice(2)): Promise<number> {
   if (args.length === 1 && ['--help', '-h'].includes(args[0]!)) {
-    process.stdout.write(`Usage: npm run indexer -- ${USAGE}\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint. --watch repeats sync + projection for toBlock=latest, default every 5000ms (INDEXER_POLL_INTERVAL_MS); SIGINT/SIGTERM drain the active cycle and exit 130/143.\n`);
+    process.stdout.write(`Usage: npm run indexer -- ${USAGE}\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint. --watch repeats sync + projection for toBlock=latest; --worker requires migration 005 and uses pollIntervalMs from config.\n`);
     return 0;
   }
   let pool: pg.Pool | undefined;
   try {
     const watchMode = args[2] === '--watch';
     const validWatch = watchMode && (args.length === 3 || (args.length === 5 && args[3] === '--poll-interval-ms'));
-    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project'].includes(args[2]!)) && !validWatch)
+    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project', '--worker'].includes(args[2]!)) && !validWatch)
         || args[0] !== '--config' || !args[1]) throw new IndexerError('INVALID_ARGUMENT', `Use ${USAGE} (or --help).`);
     const config = await loadConfig(args[1]);
     let intervalMs = 5000;
@@ -77,6 +78,14 @@ export async function main(args = process.argv.slice(2)): Promise<number> {
     pool = new pg.Pool({ connectionString, max: 1, connectionTimeoutMillis: 10_000,
       ...(watchMode ? { statement_timeout: 10_000, query_timeout: 15_000, lock_timeout: 10_000 } : {}) });
     if (watchMode) return await watch(config, pool, intervalMs);
+    if (args[2] === '--worker') {
+      const controller = new AbortController();
+      const stop = () => controller.abort();
+      process.once('SIGINT', stop); process.once('SIGTERM', stop);
+      try { await worker(config, pool, controller.signal, value => process.stdout.write(JSON.stringify(value) + '\n')); }
+      finally { process.removeListener('SIGINT', stop); process.removeListener('SIGTERM', stop); }
+      return 0;
+    }
     if (args[2] === '--project') {
       const report = await project(config,new HttpRpc(config.rpcUrl),pool);
       process.stdout.write(JSON.stringify({ type: 'projection_result', ...report }) + '\n');

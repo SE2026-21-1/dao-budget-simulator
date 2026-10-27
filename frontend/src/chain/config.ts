@@ -12,8 +12,8 @@ export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$
 export const deploymentId = import.meta.env.VITE_DEPLOYMENT_ID?.trim() ?? "";
 export const explorerUrl = import.meta.env.VITE_EXPLORER_URL?.trim().replace(/\/$/, "") ?? "";
 
-// Fixture addresses are deliberately never used as deployment defaults.
-export const deployment = Number.isSafeInteger(chainId) && chainId > 0 && rpcUrl &&
+// Fixture data has no live deployment, even when a stale .env.local is present.
+export const deployment = apiBaseUrl && Number.isSafeInteger(chainId) && chainId > 0 && rpcUrl &&
   [governor, treasury, govToken, budToken, timelock].every((address) => isAddress(address) && !/^0x0{40}$/i.test(address)) && deploymentId
   ? {
       chainId,

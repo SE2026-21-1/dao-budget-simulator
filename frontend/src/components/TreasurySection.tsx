@@ -4,7 +4,7 @@ import { deployment } from "../chain/config";
 import { useWallet, sendTokenTransaction } from "../chain/wallet";
 import { useTransaction } from "../chain/useTransaction";
 import { assertWritable } from "../chain/transactions";
-import { formatBUD } from "../data/formatBUD";
+import { formatBUD, formatCompactBUD } from "../data/formatBUD";
 import { loadSummary, loadTransfers, type Summary, type Transfer } from "../data/api";
 import type { FixtureContext } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
@@ -47,7 +47,7 @@ export default function TreasurySection({ context }: { context: FixtureContext }
     {!summary && !error && <p role="status">Đang tải dữ liệu Treasury…</p>}
     {summary && <>
       {context.sync?.status === "lagging" && <p className="notice">Indexer đang đồng bộ chậm; số liệu có thể cũ.</p>}
-      <div className="treasury-stats"><div><span>Số dư</span><strong>{formatBUD(summary.treasury.balance)}</strong></div><div><span>Tổng vào</span><strong>{formatBUD(summary.treasury.totalIn)}</strong></div><div><span>Tổng ra</span><strong>{formatBUD(summary.treasury.totalOut)}</strong></div></div>
+      <div className="treasury-stats"><div><span>Số dư</span><strong title={formatBUD(summary.treasury.balance)}>{formatCompactBUD(summary.treasury.balance)}</strong></div><div><span>Tổng vào</span><strong title={formatBUD(summary.treasury.totalIn)}>{formatCompactBUD(summary.treasury.totalIn)}</strong></div><div><span>Tổng ra</span><strong title={formatBUD(summary.treasury.totalOut)}>{formatCompactBUD(summary.treasury.totalOut)}</strong></div></div>
       <div className="treasury-deposit"><h3>Nạp BUD vào quỹ</h3><p>Ví gửi BUD trực tiếp tới Treasury. Khoản nạp chỉ hiện sau khi API index giao dịch.</p><div className="action-row"><label className="field-label" htmlFor="deposit-amount">Số BUD</label><input id="deposit-amount" className="field-control" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="100" /><button type="button" className="button-primary" disabled={context.dataKind !== "chain" || !deployment || !wallet.account || wallet.chainId !== deployment.chainId} onClick={() => void deposit()}>Nạp quỹ</button></div>{depositError && <p className="wallet-error" role="alert">{depositError}</p>}<TransactionStatus {...transaction} /></div>
       <div className="treasury-history"><h3>Lịch sử dòng tiền</h3>{transfers.length === 0 ? <p>Chưa có Transfer BUD.</p> : <><div className="treasury-history__list">{transfers.slice(page * 10, page * 10 + 10).map((transfer) => <div key={`${transfer.transactionHash}-${transfer.blockNumber}`}><span>{transfer.direction === "in" ? "Nạp" : transfer.direction === "out" ? "Chi" : "Chuyển nội bộ"}</span><strong>{formatBUD(transfer.amount)}</strong><small>Block {transfer.blockNumber} · {transfer.transactionHash.slice(0, 10)}…</small></div>)}</div><nav className="pagination" aria-label="Phân trang lịch sử"><button type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Trước</button><span>{page + 1} / {Math.ceil(transfers.length / 10)}</span><button type="button" disabled={(page + 1) * 10 >= transfers.length} onClick={() => setPage(page + 1)}>Sau</button></nav></>}</div>
     </>}

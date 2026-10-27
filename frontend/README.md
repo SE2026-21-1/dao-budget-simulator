@@ -36,6 +36,14 @@ Khi cấu hình deployment và API đầy đủ, frontend gọi `GET /api/propos
 
 Khu vực ví ở thanh bên dùng ví EVM được inject vào trình duyệt (ví dụ MetaMask). Sau khi kết nối đúng mạng, frontend đọc GOV `balanceOf`, `delegates`, `getVotes`; nút **Self-delegate** gửi giao dịch `delegate(account)`. Trang chi tiết đọc voting power tại snapshot và `hasVoted`. Ví ký propose/vote/cancel/queue/execute qua Governor; nạp quỹ dùng BUD `transfer` tới Treasury. Giao diện chờ receipt trước khi báo thành công, hiển thị transaction hash và lỗi/revert. API có thể cần thêm thời gian để index receipt trước khi trạng thái đề xuất thay đổi trên trang.
 
+### FE02: kết nối ví
+
+Web phát hiện ví qua [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) và `window.ethereum` kiểu cũ. Ví khởi tạo muộn được tìm lại khi có sự kiện khởi tạo, khi quay lại cửa sổ hoặc khi bấm **Tìm lại ví**. Nếu có nhiều tiện ích, chọn ví ở mục **Chọn ví**; giao dịch dùng đúng provider đã chọn. Web không tự mở yêu cầu cấp quyền khi vừa tải trang; chỉ khôi phục tài khoản đã được ví cấp quyền trước đó.
+
+Để kết nối ví thật, mở URL Vite trong trình duyệt đã cài/bật tiện ích ví, chọn ví (nếu có nhiều), bấm **Kết nối ví** và xác nhận trong popup của tiện ích. Trình duyệt tích hợp không có tiện ích ví sẽ không cung cấp provider; cần mở cùng URL trong trình duyệt có ví. Không cần API hoặc địa chỉ contract để kết nối và xem địa chỉ tài khoản. Việc kiểm tra mạng đích và đọc GOV vẫn cần cấu hình deployment của nhóm.
+
+Frontend cập nhật khi ví phát sự kiện đổi tài khoản, đổi mạng hoặc ngắt kết nối. **Ẩn tài khoản** chỉ xóa tài khoản khỏi giao diện; thu hồi quyền website cần thực hiện trong tiện ích ví. Lỗi từ chối cấp quyền và yêu cầu đang chờ được hiển thị riêng để người dùng biết cần xử lý gì trong ví.
+
 ## Nối deployment và API thật
 
 1. TV4 chạy local chain và tạo **manifest thật** bằng script deployment của nhóm. Đọc `chainId` và địa chỉ `contracts.Governor`, `contracts.Treasury`, `contracts.GOV`, `contracts.BUD` trong manifest. Không lấy địa chỉ từ `fixtures/`.
@@ -75,7 +83,7 @@ npm run lint
 ## Lỗi thường gặp
 
 - **Trang báo fixture, nút vote/cancel bị khóa:** chưa có đủ `.env.local` và API thật trả `dataKind: "chain"`. Đây là hành vi dự kiến.
-- **Không thấy ví:** cài/bật ví EVM trong trình duyệt rồi tải lại trang. Web vẫn xem được fixture mà không có ví.
+- **Không thấy ví:** mở cùng URL web trong trình duyệt đã cài/bật tiện ích ví EVM, sau đó bấm **Tìm lại ví**. Nếu ví đã xuất hiện, bấm **Kết nối ví** và xác nhận popup. Trình duyệt tích hợp có thể không có provider ví; đây không phải lỗi backend hoặc thiếu địa chỉ contract. Web vẫn xem được fixture mà không có ví.
 - **Sai mạng:** chuyển ví sang `VITE_CHAIN_ID`; nếu ví chưa có mạng local, thêm RPC và chain ID trong ví.
 - **API/RPC lỗi:** kiểm tra các service đang chạy, CORS cho origin của Vite, chain ID/deployment ID và các địa chỉ trong manifest. Frontend không dùng fixture thay cho API lỗi.
 - **Proposal mới chưa hiện sau receipt:** đợi indexer bắt kịp rồi tải lại. Không coi việc API chậm là giao dịch bị revert.

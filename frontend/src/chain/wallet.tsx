@@ -1,13 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type EIP1193Provider, type Hash } from "viem";
+import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash } from "viem";
 import { deployment } from "./config";
+import { discoverWallets, parseWalletChain, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
-declare global {
-  interface Window { ethereum?: EIP1193Provider & {
-    on?: (event: string, listener: (...args: unknown[]) => void) => void;
-    removeListener?: (event: string, listener: (...args: unknown[]) => void) => void;
-  } }
-}
+// Transactions must use the same provider that the user selected in FE02.
+let activeWalletProvider: InjectedProvider | null = null;
 
 const tokenAbi = parseAbi([
   "function balanceOf(address account) view returns (uint256)",
@@ -29,6 +26,10 @@ type WalletState = {
   balance: bigint | null;
   delegatee: Address | null;
   votingPower: bigint | null;
+  wallets: WalletOption[];
+  selectedWalletId: string | null;
+  selectWallet: (id: string) => void;
+  discover: () => void;
   connect: () => Promise<void>;
   disconnect: () => void;
   switchNetwork: () => Promise<void>;
@@ -36,12 +37,6 @@ type WalletState = {
 };
 
 const WalletContext = createContext<WalletState | null>(null);
-
-function parseChain(value: unknown): number | null {
-  if (typeof value !== "string" || !/^0x[0-9a-f]+$/i.test(value)) return null;
-  const parsed = Number(BigInt(value));
-  return Number.isSafeInteger(parsed) ? parsed : null;
-}
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [account, setAccount] = useState<Address | null>(null);
@@ -52,6 +47,19 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [delegatee, setDelegatee] = useState<Address | null>(null);
   const [votingPower, setVotingPower] = useState<bigint | null>(null);
   const readGeneration = useRef(0);
+  const sessionGeneration = useRef(0);
+  const [wallets, setWallets] = useState<WalletOption[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const discovery = useRef<ReturnType<typeof discoverWallets> | null>(null);
+  const selectedWallet = wallets.find((wallet) => wallet.id === selectedId) ?? wallets[0];
+  const provider = selectedWallet?.provider;
+  const invalidateSession = useCallback(() => { sessionGeneration.current++; }, []);
+
+  useEffect(() => {
+    const listener = discoverWallets(setWallets);
+    discovery.current = listener;
+    return () => { listener.stop(); discovery.current = null; };
+  }, []);
 
   const clearReads = useCallback(() => {
     readGeneration.current += 1;
@@ -59,22 +67,43 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const provider = window.ethereum;
     if (!provider) return;
+    activeWalletProvider = provider;
     let mounted = true;
+    let accountEvent = false;
+    let chainEvent = false;
+    const generation = ++sessionGeneration.current;
     const accountsChanged = (...args: unknown[]) => {
+      accountEvent = true;
       const next = Array.isArray(args[0]) && typeof args[0][0] === "string" && isAddress(args[0][0]) ? args[0][0] as Address : null;
       if (mounted) { setAccount(next); clearReads(); }
     };
     const chainChanged = (...args: unknown[]) => {
-      if (mounted) { setChainId(parseChain(args[0])); clearReads(); }
+      chainEvent = true;
+      if (mounted) { setChainId(parseWalletChain(args[0])); clearReads(); }
     };
-    provider.request({ method: "eth_accounts" }).then((accounts) => { if (mounted) accountsChanged(accounts); }).catch(() => {});
-    provider.request({ method: "eth_chainId" }).then((chain) => { if (mounted) chainChanged(chain); }).catch(() => {});
+    const disconnected = () => {
+      if (mounted) { sessionGeneration.current++; setAccount(null); setChainId(null); clearReads(); }
+    };
+    // Never prompt on mount. Only restore accounts already authorized in this wallet.
+    Promise.all([provider.request({ method: "eth_accounts" }), provider.request({ method: "eth_chainId" })])
+      .then(([accounts, chain]) => {
+        if (mounted && generation === sessionGeneration.current) {
+          if (!accountEvent) accountsChanged(accounts);
+          if (!chainEvent) chainChanged(chain);
+        }
+      }).catch(() => {});
     provider.on?.("accountsChanged", accountsChanged);
     provider.on?.("chainChanged", chainChanged);
-    return () => { mounted = false; provider.removeListener?.("accountsChanged", accountsChanged); provider.removeListener?.("chainChanged", chainChanged); };
-  }, [clearReads]);
+    provider.on?.("disconnect", disconnected);
+    return () => {
+      mounted = false; invalidateSession();
+      provider.removeListener?.("accountsChanged", accountsChanged);
+      provider.removeListener?.("chainChanged", chainChanged);
+      provider.removeListener?.("disconnect", disconnected);
+      if (activeWalletProvider === provider) activeWalletProvider = null;
+    };
+  }, [provider, clearReads, invalidateSession]);
 
   const refresh = useCallback(async () => {
     clearReads();
@@ -95,32 +124,43 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   useEffect(() => { void refresh(); }, [refresh]);
 
   const connect = async () => {
-    if (!window.ethereum) { setError("Chưa tìm thấy ví EVM trong trình duyệt."); return; }
+    if (!provider) { setError("Trang chưa nhận được ví. Hãy mở web trong trình duyệt đã cài và bật tiện ích ví EVM, rồi bấm Tìm lại ví."); return; }
+    if (busy) return;
+    const generation = ++sessionGeneration.current;
     setBusy(true); setError(null);
     try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await provider.request({ method: "eth_requestAccounts" });
       const address = Array.isArray(accounts) ? accounts[0] : null;
       if (typeof address !== "string" || !isAddress(address)) throw new Error("Ví không trả địa chỉ hợp lệ.");
+      const nextChain = parseWalletChain(await provider.request({ method: "eth_chainId" }));
+      if (generation !== sessionGeneration.current) return;
       clearReads();
+      activeWalletProvider = provider;
       setAccount(address);
-      setChainId(parseChain(await window.ethereum.request({ method: "eth_chainId" })));
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Không kết nối được ví."); }
+      setChainId(nextChain);
+    } catch (cause) { if (generation === sessionGeneration.current) setError(walletErrorMessage(cause, "Không kết nối được ví.")); }
     finally { setBusy(false); }
   };
 
-  const disconnect = () => { setAccount(null); clearReads(); };
+  const disconnect = () => { sessionGeneration.current++; setAccount(null); clearReads(); };
+  const selectWallet = (id: string) => {
+    if (busy || !wallets.some((wallet) => wallet.id === id) || id === selectedWallet?.id) return;
+    sessionGeneration.current++;
+    setAccount(null); setChainId(null); clearReads(); setSelectedId(id);
+  };
+  const discover = () => { setError(null); discovery.current?.scan(); };
   const switchNetwork = async () => {
-    if (!window.ethereum || !deployment) return;
+    if (!provider || !deployment) return;
     setBusy(true); setError(null);
     try {
-      await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: `0x${deployment.chainId.toString(16)}` }] });
+      await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: `0x${deployment.chainId.toString(16)}` }] });
       clearReads();
       setChainId(deployment.chainId);
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Không chuyển được mạng."); }
     finally { setBusy(false); }
   };
 
-  return <WalletContext.Provider value={{ account, chainId, busy, error, balance, delegatee, votingPower, connect, disconnect, switchNetwork, refresh }}>{children}</WalletContext.Provider>;
+  return <WalletContext.Provider value={{ account, chainId, busy, error, balance, delegatee, votingPower, wallets, selectedWalletId: selectedWallet?.id ?? null, selectWallet, discover, connect, disconnect, switchNetwork, refresh }}>{children}</WalletContext.Provider>;
 }
 
 export function useWallet() {
@@ -130,8 +170,8 @@ export function useWallet() {
 }
 
 export function walletClient() {
-  if (!window.ethereum || !deployment) throw new Error("Thiếu ví hoặc cấu hình deployment.");
-  return createWalletClient({ chain: deployment.chain, transport: custom(window.ethereum) });
+  if (!activeWalletProvider || !deployment) throw new Error("Thiếu ví hoặc cấu hình deployment.");
+  return createWalletClient({ chain: deployment.chain, transport: custom(activeWalletProvider) });
 }
 
 export function formatGOV(value: bigint | null): string {

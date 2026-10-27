@@ -51,7 +51,7 @@ function ProposalListPage() {
       </section>
 
       {state.status === "success" && <p className="result-count" aria-live="polite">
-        {filteredProposals.length} đề xuất · Fixture TV2 BE01 · Block {state.collection.context.asOfBlock}
+        {filteredProposals.length} đề xuất · {state.collection.context.dataKind === "chain" ? "Dữ liệu API" : "Fixture TV2 BE01"} · Block {state.collection.context.asOfBlock}
       </p>}
       {state.status !== "success" ? <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} /> : <>
       <div className="proposal-list">

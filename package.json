@@ -1,0 +1,47 @@
+{
+  "name": "dao-budget-simulator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "indexer": "tsx indexer/cli.ts",
+    "api": "tsx indexer/api/main.ts",
+    "be06": "tsx indexer/be06/cli.ts",
+    "test:api": "node --import tsx --test tests/api/server.test.mjs",
+    "test:api:db": "bash scripts/check_be05_database.sh",
+    "test:be05:live": "bash scripts/check_be05_live_database.sh --output reports/be05-live.json",
+    "test:be02": "tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts",
+    "test:be02:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be02_database.ps1",
+    "test:be02:db:linux": "bash scripts/check_be02_database.sh",
+    "test:be03": "tsx --test tests/indexer/syncer.test.ts",
+    "test:be03:db": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1",
+    "test:be04": "node --import tsx --test tests/indexer/projection.test.ts tests/indexer/be04-live-receipt.test.mjs",
+    "test:be04:db": "bash scripts/check_be04_database.sh",
+    "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json",
+    "test:be06": "tsx --test tests/indexer/be06.test.ts",
+    "test:be06:db": "node --import tsx --test tests/indexer/be06-db.test.mjs",
+    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs",
+    "test:tv4:native": "node --import tsx scripts/check_tv4_native.mjs",
+    "test:bootstrap": "node --test tests/smoke/bootstrap.test.mjs",
+    "benchmark:api": "node --import tsx scripts/benchmark_api.mjs",
+    "test:be07": "node --import tsx --test tests/indexer/be07.test.ts",
+    "test:be07:db": "node --import tsx --test tests/indexer/be07-db.test.mjs",
+    "test:be07:live": "node --import tsx scripts/check_be04_live.mjs",
+    "test:be07:native": "node scripts/check_be07_native.mjs"
+  },
+  "dependencies": {
+    "ethers": "6.17.0",
+    "pg": "8.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.0.0",
+    "tsx": "4.23.15",
+    "typescript": "~5.9.3"
+  }
+}

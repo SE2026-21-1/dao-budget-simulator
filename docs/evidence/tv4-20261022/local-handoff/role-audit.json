@@ -1,0 +1,221 @@
+{
+  "height": "19",
+  "blockHash": "0x4e037f8b39a14bdfed599b219ec68722c35d506c7daf584ebbd616e59a279cfa",
+  "timestamp": "1792644409",
+  "chainId": "31337",
+  "sourceCommit": "5fbf61581c5f975f967983022155bd27f2863142",
+  "config": {
+    "proposalThreshold": "50000000000000000000",
+    "quorumNumerator": "20",
+    "quorumDenominator": "100",
+    "votingDelay": "60",
+    "votingPeriod": "300",
+    "minDelay": "120",
+    "clockMode": "mode=timestamp",
+    "govSupply": "1000000000000000000000",
+    "budSupply": "20000000000000000000000",
+    "treasurySeed": "10000000000000000000000"
+  },
+  "identities": {
+    "GOV": {
+      "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "deploymentBlock": "1",
+      "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+      "runtimeSha256": "b4335ef0b627c9ef43a0675543e7aa2306823b6d8cd96148d5d6070482d4ca33",
+      "normalizedRuntimeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+      "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b"
+    },
+    "BUD": {
+      "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "deploymentBlock": "2",
+      "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+      "runtimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+      "normalizedRuntimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+      "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8"
+    },
+    "Treasury": {
+      "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "deploymentBlock": "3",
+      "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+      "runtimeSha256": "e2f42f862585834650b2df672e4ea56db6a377cd48a0d0e0310d7e84ca56f5a6",
+      "normalizedRuntimeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+      "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b"
+    },
+    "Timelock": {
+      "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "deploymentBlock": "4",
+      "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+      "runtimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+      "normalizedRuntimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+      "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa"
+    },
+    "Governor": {
+      "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+      "deploymentBlock": "5",
+      "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+      "runtimeSha256": "5d6d7ba79fc7d417d88fa079a78e5f678db9b8cabf9dd988d9b3d2e145d2d1ad",
+      "normalizedRuntimeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+      "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+    }
+  },
+  "roles": {
+    "Treasury": {
+      "fromBlock": "3",
+      "toBlock": "19",
+      "eventCount": 4,
+      "roles": [
+        {
+          "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        },
+        {
+          "role": "0x7434c6f201a551bfd17336985361933e0c4935b520dac8a49d937b325f7d5c0a",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        }
+      ]
+    },
+    "Timelock": {
+      "fromBlock": "4",
+      "toBlock": "19",
+      "eventCount": 6,
+      "roles": [
+        {
+          "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        },
+        {
+          "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        },
+        {
+          "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        },
+        {
+          "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+          "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "holders": [
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+          ],
+          "checkedCandidates": [
+            "0x0000000000000000000000000000000000000000",
+            "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+            "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+            "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+            "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+            "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+            "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+          ]
+        }
+      ]
+    }
+  }
+}

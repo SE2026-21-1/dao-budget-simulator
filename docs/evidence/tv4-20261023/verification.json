@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-23",
+  "scope": "TV4 local security regressions, owned-process cleanup, real raw PostgreSQL acceptance and production fixture browser. Not full TC01–TC14/INV acceptance, testnet or independent other-machine proof.",
+  "baseCommit": "877141cbf584998af08a60dc28baf9ed66844787",
+  "candidateSourceHashes": {
+    ".github/workflows/ci.yml": "eb901da15ed5547b7356f03561be396f1dba13e9ff68f9930c7528304d1534d2",
+    "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+    "scripts/smoke_governance.mjs": "47e0e502bc4a3925fdc4f96bf6a9aab04faa7c1392c0d27a7a79aa85c22f5f74",
+    "scripts/smoke_treasury.mjs": "b6b7c680fbc83b7babe9d4868d16ee754eeb5966f8bd9f13ddb5b76a54fb237b",
+    "scripts/governance_storage.mjs": "f2b6338e174d229c5840b9c5cdff1920c5c18b81f94480308f9b2675da3934d6",
+    "tests/smoke/interruption.test.mjs": "a2d7c91f8dd0ecdb1dca00de27a72594097b810517290652a51685858a9dd802",
+    "tests/attacks/GovernanceAttacks.t.sol": "d92de3872ff8c41b73bed3a855eacdf6f71deb8a0636f814cea9b4acc98043cf",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "frontend/package-lock.json": "a8134d21a92109ac03be7cbb96761ee9e967b3d9ce6bf601eea2459a514033b2"
+  },
+  "environment": {
+    "node": "24.15.0",
+    "foundry": "1.8.5",
+    "postgres": "18.4",
+    "postgresDistribution": "https://registry.npmjs.org/@embedded-postgres/linux-x64/-/linux-x64-18.4.0-beta.17.tgz",
+    "postgresDistributionIntegrity": "sha512-jVw/MdDtIX/vICH/DKIe6/mHpiCggdx6QVyza4vt/NbcZFsL0KhwglF6F1Koqx3gRBZ9XtN+vi63EsqSyqOSxA==",
+    "distributionIntegrityVerified": true,
+    "databaseIsolation": "owned native disposable loopback cluster, fresh owned databases; trust auth confined to this temporary cluster; stopped and removed",
+    "docker": "permission denied in prior check; no daemon permissions changed",
+    "seed": "0x20261021",
+    "fuzzRuns": 256,
+    "invariantRuns": 100,
+    "invariantDepth": 50
+  },
+  "checks": [
+    {
+      "label": "contracts",
+      "command": [
+        "bash",
+        "scripts/ci.sh"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 145.996,
+      "log": "contracts.txt"
+    },
+    {
+      "label": "smoke-interruption",
+      "command": [
+        "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+        "--test",
+        "tests/smoke/interruption.test.mjs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 47.452,
+      "log": "smoke-interruption.txt"
+    },
+    {
+      "label": "backend",
+      "command": [
+        "npm",
+        "exec",
+        "--yes",
+        "--package=node@24.15.0",
+        "--",
+        "sh",
+        "-c",
+        "npm run typecheck && npm run build && npm run test:be02 && node scripts/check_be01.mjs && node --import tsx --test tests/indexer/storage.test.ts"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 77.558,
+      "log": "backend.txt"
+    },
+    {
+      "label": "frontend",
+      "command": [
+        "npm",
+        "exec",
+        "--yes",
+        "--package=node@24.15.0",
+        "--",
+        "sh",
+        "-c",
+        "npm run lint --prefix frontend && npm run build --prefix frontend"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 24.867,
+      "log": "frontend.txt"
+    },
+    {
+      "label": "governance-check",
+      "command": [
+        "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+        "--import",
+        "tsx",
+        "scripts/smoke_governance.mjs",
+        "--output",
+        "docs/evidence/tv4-20261023/governance-storage.json",
+        "--database"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 30.236,
+      "log": "governance-check.txt"
+    },
+    {
+      "label": "treasury-check",
+      "command": [
+        "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+        "--import",
+        "tsx",
+        "scripts/smoke_treasury.mjs",
+        "--output",
+        "docs/evidence/tv4-20261023/treasury-smoke.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 4.258,
+      "log": "treasury-check.txt"
+    },
+    {
+      "label": "database-interruption",
+      "command": [
+        "python3",
+        "/tmp/tv4-database-interruption.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 36.625,
+      "log": "database-interruption.txt"
+    }
+  ],
+  "results": {
+    "foundryPassed": 147,
+    "foundryFailed": 0,
+    "foundrySkipped": 0,
+    "newAttackRegressions": 5,
+    "realAnvilInterruptionTests": 8,
+    "rpcConfigDecoderCliTests": 63,
+    "postgresStorageTests": 21,
+    "backendSkipped": 0,
+    "frontend": "lint and production build passed",
+    "browser": "frontend-browser.json",
+    "governance": "governance-storage.json",
+    "treasury": "treasury-smoke.json",
+    "realDatabaseInterruption": "database-interruption.txt"
+  },
+  "bugBefore": {
+    "scenario": "SIGTERM sent only to real smoke Node PID while child Anvil RPC is ready",
+    "nodeExitCode": -15,
+    "childRpcAfterParentExit": {
+      "method": "eth_chainId",
+      "result": "0x7a69"
+    },
+    "ownedOrphanCleanedAfterReproduction": true
+  },
+  "databaseInterruptionMethod": {
+    "signals": [
+      "SIGINT",
+      "SIGTERM"
+    ],
+    "trigger": "observe owned tv4-governance-storage-* plus real indexer/cli.ts child, then signal Node PID only",
+    "assertions": [
+      "exit 130/143",
+      "Anvil and CLI reaped",
+      "RPC closed",
+      "prior output sentinel unchanged",
+      "owned temporary files removed"
+    ],
+    "testHarnessCorrections": [
+      "Match absolute indexer/cli.ts argument, not only relative path",
+      "Disable tsx shared runtime cache inside harness-owned TMPDIR; cache is not a smoke resource"
+    ],
+    "productionChangesRequiredAfterHarnessCorrections": false
+  },
+  "captureNote": "Initial throwaway capture used same metadata filename as receipt output. Corrected to .command.json and regenerated complete receipts on new fresh databases. Only final complete receipts retained.",
+  "coordination": {
+    "githubUser": "dung0611",
+    "mergedPriorPullRequests": [
+      5,
+      12,
+      13
+    ],
+    "baselineCi": {
+      "commit": "877141c",
+      "run": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39726637732",
+      "conclusion": "success",
+      "scope": "baseline only, not changed source"
+    },
+    "backendBranch": "4c568d6",
+    "frontendBranch": "26ecca7",
+    "issues": {
+      "backend": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/18",
+      "wallet": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19",
+      "testnetPeerOtherMachine": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/20"
+    }
+  },
+  "blockers": [
+    "TV2 checkpoint/K/reorg/projection/API and semantic rebuild are not delivered",
+    "TV3 wallet/form/real transaction path not delivered; newest frontend branch remains fixture",
+    "No agreed testnet network/RPC or funded signer configuration",
+    "Independent other-machine rerun and peer approval require other team members"
+  ],
+  "preservedUnrelatedLocalChanges": [
+    "README.md architecture-review link",
+    "docs/AD-064-architecture-review.md"
+  ],
+  "verifiedImplementationCommit": "228077a6f18944fb7fc6852c65f217db8a368024",
+  "cleanClone": {
+    "provenance": "clean-clone.json",
+    "checks": [
+      {
+        "label": "clean-install",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "npm ci && npm ci --prefix frontend"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 9.288,
+        "log": "clean-install.txt"
+      },
+      {
+        "label": "clean-contracts",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "bash scripts/ci.sh && node --test tests/smoke/interruption.test.mjs && node --import tsx scripts/smoke_governance.mjs --output /tmp/tv4-clean-governance-228077a.json"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 173.609,
+        "log": "clean-contracts.txt"
+      },
+      {
+        "label": "clean-node",
+        "cwd": "/tmp/tv4-clean-228077a",
+        "command": [
+          "npm",
+          "exec",
+          "--yes",
+          "--package=node@24.15.0",
+          "--",
+          "sh",
+          "-c",
+          "npm run typecheck && npm run build && npm run test:be02 && node scripts/check_be01.mjs && npm run lint --prefix frontend && npm run build --prefix frontend"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 38.415,
+        "log": "clean-node.txt"
+      }
+    ],
+    "governance": "clean-governance-summary.json",
+    "sameMachine": true,
+    "independentOtherMachine": false
+  },
+  "githubSourceCi": {
+    "metadata": "ci-source.json",
+    "run": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940",
+    "commit": "228077a6f18944fb7fc6852c65f217db8a368024",
+    "conclusion": "success",
+    "jobs": 4
+  }
+}

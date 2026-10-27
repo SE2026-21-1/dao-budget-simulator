@@ -5,7 +5,8 @@ import ProposalDetailPage from "./pages/ProposalDetailPage";
 import CreateProposalPage from "./pages/CreateProposalPage";
 import WalletPanel from "./components/WalletPanel";
 import { useWallet } from "./chain/wallet";
-import { apiBaseUrl, deployment } from "./chain/config";
+import { apiBaseUrl, configurationError, deployment } from "./chain/config";
+import ApiHealth from "./components/ApiHealth";
 import { LogoPrism, IconHome, IconDocument, IconTreasury } from "./components/EditorialIcons";
 
 const navigation = [
@@ -58,14 +59,15 @@ function AppContent() {
           <div className="editorial-sidebar__wallet-section"><WalletPanel /></div>
           <div className="editorial-sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__mark" aria-hidden="true">DAO</span><strong>Minh bạch từng đề xuất.</strong><p>Khám phá ngân sách và cùng cộng đồng đưa ra quyết định.</p></div></div>
         </aside>
-        <main className="editorial-main-content" id="main-content">
+        <main className="editorial-main-content" id="main-content" tabIndex={-1}>
           <div className="demo-banner" role="note">
             <span className="demo-banner__dot" aria-hidden="true" />
-            <strong>{apiBaseUrl && deployment ? "Dữ liệu API" : "Dữ liệu mô phỏng"}</strong>
-            <span>{apiBaseUrl && deployment
-              ? "Đang đọc snapshot theo deployment đã cấu hình."
+            <strong>{apiBaseUrl ? "Dữ liệu API" : "Dữ liệu mô phỏng"}</strong>
+            <span>{apiBaseUrl
+              ? configurationError ?? "Đang đọc API BE05 theo deployment đã cấu hình; không dùng fixture khi API lỗi."
               : "Đang xem fixture BE01; giao dịch với dữ liệu này bị khóa."}</span>
           </div>
+          <ApiHealth />
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/proposals" element={<ProposalListPage />} />

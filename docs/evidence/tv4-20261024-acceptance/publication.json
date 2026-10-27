@@ -1,0 +1,124 @@
+{
+  "format": "dao-budget-tv4-publication-v1",
+  "observedAtUtc": "2026-10-24T17:03:29.190405+00:00",
+  "branch": "feature/tv4-operation",
+  "publishedCommit": "24f576e1be10bc0a2d0814a73a551067ca31b777",
+  "httpsPush": {
+    "exitCode": 128,
+    "reason": "HTTPS credential/Username unavailable; no secret value recorded"
+  },
+  "sshPush": {
+    "exitCode": 0,
+    "strictHostKeyVerification": true,
+    "existingAgentIdentity": true,
+    "originConfigurationUnchanged": true,
+    "forcePush": false
+  },
+  "ci": {
+    "id": 40113995662,
+    "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662",
+    "created_at": "2026-10-24T16:58:32Z",
+    "updated_at": "2026-10-24T17:00:18Z"
+  },
+  "jobs": [
+    {
+      "id": 120931387443,
+      "name": "BE01 fixtures and PostgreSQL constraints",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:34Z",
+      "completed_at": "2026-10-24T16:59:04Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387443",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387579,
+      "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:34Z",
+      "completed_at": "2026-10-24T17:00:17Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387579",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387645,
+      "name": "BE06 pinned-H rebuild and normalized compare",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:35Z",
+      "completed_at": "2026-10-24T16:59:50Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387645",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387667,
+      "name": "BE02 TypeScript and isolated PostgreSQL storage",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:35Z",
+      "completed_at": "2026-10-24T16:59:11Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387667",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387669,
+      "name": "BE04 projection semantics and atomic PostgreSQL publication",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:35Z",
+      "completed_at": "2026-10-24T16:59:06Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387669",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387701,
+      "name": "Frontend lint and production build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:34Z",
+      "completed_at": "2026-10-24T16:58:58Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387701",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387719,
+      "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:35Z",
+      "completed_at": "2026-10-24T16:59:25Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387719",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    },
+    {
+      "id": 120931387854,
+      "name": "BE03 confirmations, checkpoint and real-process crash recovery",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-24T16:58:35Z",
+      "completed_at": "2026-10-24T16:59:14Z",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/job/120931387854",
+      "head_sha": "24f576e1be10bc0a2d0814a73a551067ca31b777"
+    }
+  ],
+  "pullRequest": {
+    "number": 21,
+    "state": "open",
+    "headSha": "24f576e1be10bc0a2d0814a73a551067ca31b777",
+    "headBranch": "feature/tv4-operation",
+    "baseBranch": "Dev",
+    "htmlUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21",
+    "headUpdatedByGitPush": true,
+    "bodyOrNewReviewRequestEdited": false
+  },
+  "sourceUrls": [
+    "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662",
+    "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662/jobs?per_page=100",
+    "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/pulls/21"
+  ],
+  "scope": "CI conclusions observed from GitHub for exactly this revision; no claim that later documentation commits have completed CI, no release approval, and no log/test count inferred from CI metadata alone."
+}

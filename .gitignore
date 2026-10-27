@@ -23,5 +23,20 @@
 hs_err_pid*
 replay_pid*
 
+# Foundry generated files
+/cache/
+/out/
+/broadcast/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Node/TypeScript generated files
+/node_modules
+/dist/
+/coverage/
+/indexer/config/local*.json
 # Personal TV3 learning notes stay local.
 docs/tv3-learning-plan.md

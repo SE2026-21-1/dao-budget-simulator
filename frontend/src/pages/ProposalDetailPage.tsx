@@ -10,7 +10,7 @@ const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).t
 
 function ProposalDetailPage() {
   const { id } = useParams();
-  const { state, retry, simulateError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing } = useProposalFixtures();
   const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
 
   if (state.status !== "success") {
@@ -22,7 +22,8 @@ function ProposalDetailPage() {
       <div className="panel">
         <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
         <h1>Không tìm thấy đề xuất</h1>
-        <p className="muted">Proposal ID này không tồn tại trong bộ dữ liệu fixture BE01.</p>
+        <p className="muted">Proposal ID này không tồn tại trong snapshot đang xem. Nếu vừa gửi giao dịch, hãy đợi indexer xuất bản dữ liệu mới.</p>
+        <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
         <Link to="/proposals" className="button-primary">Quay lại danh sách</Link>
       </div>
     );
@@ -36,14 +37,16 @@ function ProposalDetailPage() {
           <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
           <h1 className="proposal-id">Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</h1>
           <p className="proposal-full-id">ID đầy đủ: {proposal.proposalId}</p>
-          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · Fixture BE01 tại block {state.collection.context.asOfBlock}.</p>
+          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · {state.collection.context.dataKind === "chain" ? "API BE05" : "Fixture BE01"} tại block {state.collection.context.asOfBlock}.</p>
         </div>
       </div>
+      <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+      {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
 
       <div className="detail-grid">
         <section className="panel">
           <div className="detail-title">
-            <h2>{proposal.title}</h2>
+            <h2>{proposal.title ?? `Proposal ${proposal.proposalId}`}</h2>
             <span className={`status-pill status-pill--${proposal.state.toLowerCase()}`}>{proposal.state}</span>
           </div>
           <p className="eyebrow">Số tiền đề xuất</p>
@@ -51,7 +54,7 @@ function ProposalDetailPage() {
           <dl className="detail-fields">
             <div><dt>Người tạo</dt><dd>{proposal.proposer}</dd></div>
             <div><dt>Địa chỉ nhận</dt><dd>{proposal.recipient}</dd></div>
-            <div><dt>Mô tả</dt><dd className="description-text">{proposal.body}</dd></div>
+            <div><dt>Mô tả</dt><dd className="description-text">{proposal.body ?? proposal.description}</dd></div>
           </dl>
         </section>
 
@@ -68,7 +71,7 @@ function ProposalDetailPage() {
             const url = transactionUrl(hash!);
             return <p key={kind}>{kind}: {url ? <a href={url} target="_blank" rel="noreferrer">{hash}</a> : <code>{hash}</code>}</p>;
           })}</div>}
-          <ProposalActions proposal={proposal} context={state.collection.context} />
+          <ProposalActions key={proposal.proposalId} proposal={proposal} context={state.collection.context} onConfirmed={retry} />
         </aside>
       </div>
     </div>

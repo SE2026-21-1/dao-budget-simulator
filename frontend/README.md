@@ -1,89 +1,157 @@
 # DAO Budget Simulator frontend
 
-Frontend của TV3 dùng React, TypeScript, Vite và viem. Có hai chế độ:
+React/TypeScript/Vite + viem, tích hợp wallet, form, Governor và Treasury của TV3 với API đọc BE05. Xem hợp đồng API tại [docs/api.md](../docs/api.md) và triển khai tại [docs/be06.md](../docs/be06.md).
 
-- **Fixture (mặc định):** mở giao diện ngay, không cần backend, RPC hay ví. Dữ liệu BE01 là tổng hợp; không có giao dịch thật.
-- **Deployment thật:** frontend đọc API BE01 cùng một snapshot và dùng ví EVM để gửi giao dịch trực tiếp tới contract. Chế độ này chỉ dùng được khi nhóm đã chạy API và có manifest deployment khớp chain. Hiện nhánh TV2 mới có reader/storage, chưa bàn giao HTTP API đầy đủ nên chưa có bằng chứng E2E cho chế độ này.
+## Chạy fixture
 
-## Chạy web để xem giao diện
+Cần Node.js 24 và npm. Từ repository root:
 
-Cần Node.js 24 và npm. Từ thư mục gốc repository:
-
-```powershell
-cd frontend
-npm ci
-npm run dev
+```sh
+npm --prefix frontend ci
+npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Mở địa chỉ Vite in trong terminal, thường là [http://localhost:5173/](http://localhost:5173/). Giữ terminal đang chạy; `Ctrl+C` để dừng. Nếu cổng 5173 bận, dùng đúng URL mới Vite in ra. Không cần tạo `.env.local` để xem fixture.
-
-Các màn hình:
+Mở `http://127.0.0.1:5173`. Không cần RPC, backend, ví hoặc `.env.local`.
 
 | Đường dẫn | Nội dung |
 | --- | --- |
-| `/` | Dashboard: thống kê đề xuất, số dư BUD và lịch sử Treasury từ fixture/API |
-| `/proposals` | Danh sách 45 đề xuất fixture, lọc trạng thái, tìm đúng Proposal ID, phân trang 20 mục |
-| `/proposals/:id` | Chi tiết, phiếu, quorum, snapshot/deadline/ETA, giao dịch và thao tác theo trạng thái |
-| `/proposals/new` | Form tạo đề xuất, kiểm tra nội dung/địa chỉ/số BUD và xem lại trước khi ký |
+| `/` | Dashboard, số dư BUD, tổng vào/ra và lịch sử Treasury |
+| `/proposals` | Danh sách, lọc state, tìm đúng ID thập phân, phân trang 20 mục |
+| `/proposals/:id` | Description, snapshot/deadline/ETA, phiếu/quorum, receipt và thao tác quản trị |
+| `/proposals/new` | Form khoản chi và xem lại trước khi ký |
 
-Để xem FE06, vào danh sách, lọc **Active** rồi mở chi tiết để thấy vote; lọc **Pending** để thấy cancel. Ở chế độ fixture các nút giao dịch bị khóa có chủ ý, vì địa chỉ và transaction hash trong fixture không phải deployment thật. Web vẫn cho xem dữ liệu khi chưa kết nối ví.
+Nguồn fixture duy nhất là **`../fixtures/api/`**; không duy trì JSON bản sao dưới `src/`. Ba trang proposal có 20/20/5 mục tổng hợp. Không gửi giao dịch quản trị/nạp quỹ từ context synthetic. Banner phân biệt fixture/API; địa chỉ fixture không là giá trị mặc định của cấu hình wallet.
 
-## Cách dữ liệu và ví hoạt động
+Trong Vite dev, thêm `?fixture=error` vào đường dẫn để xem lỗi tải fixture. Nút **Thử lại** tải lại; bỏ query để phục hồi. Cơ chế này không áp dụng khi API đã bật, và không phải công tắc giả lập giao dịch. Skip link **Bỏ qua điều hướng** trỏ tới main focusable; phân trang thông báo qua live region. Layout có breakpoint mobile; cần kiểm tra lại viewport 390px khi bàn giao.
 
-Nếu thiếu cấu hình deployment hoặc `VITE_API_BASE_URL`, frontend dùng fixture BE01 có sẵn trong `src/data/fixtures/`. Ba trang proposal có 20/20/5 mục; summary và Transfer Treasury cũng là dữ liệu tổng hợp. Banner đầu trang nêu rõ chế độ đang chạy.
+## Kết nối BE05 và deployment thật
 
-Khi cấu hình deployment và API đầy đủ, frontend gọi `GET /api/proposals`, `/api/summary` và `/api/treasury/transfers`. Nó gửi `chainId` và `deploymentId`, giữ cùng `asOfBlock`/`asOfBlockHash` qua các trang và từ chối dữ liệu không khớp snapshot/deployment. Frontend không tự quay về fixture nếu API thật bị lỗi; lỗi sẽ hiện trên màn hình để tránh nhầm dữ liệu thật với dữ liệu mẫu. API trả `dataKind: "chain"` mới cho phép các thao tác quản trị.
+BE05 đã có HTTP server, không còn là API dự kiến. API đọc PostgreSQL publication; không ký/gửi transaction hoặc tự chạy indexer. Cần chạy deployment, ingest và projection trước: [hướng dẫn BE06](../docs/be06.md), [chạy API BE05](../docs/api.md#7-chạy-api-be05).
 
-Khu vực ví ở thanh bên dùng ví EVM được inject vào trình duyệt (ví dụ MetaMask). Sau khi kết nối đúng mạng, frontend đọc GOV `balanceOf`, `delegates`, `getVotes`; nút **Self-delegate** gửi giao dịch `delegate(account)`. Trang chi tiết đọc voting power tại snapshot và `hasVoted`. Ví ký propose/vote/cancel/queue/execute qua Governor; nạp quỹ dùng BUD `transfer` tới Treasury. Giao diện chờ receipt trước khi báo thành công, hiển thị transaction hash và lỗi/revert. API có thể cần thêm thời gian để index receipt trước khi trạng thái đề xuất thay đổi trên trang.
+Server cần `DATABASE_URL`, `API_CURSOR_SECRET` ít nhất 32 byte và origin frontend chính xác trong `API_CORS_ORIGINS`, ví dụ `http://127.0.0.1:5173`. `localhost` và `127.0.0.1` là origin khác nhau. Không cấu hình CORS wildcard để che lỗi tích hợp.
 
-### FE02: kết nối ví
+Sao chép `.env.example` thành `.env.local` và điền từ manifest thật, hoặc truyền biến môi trường bên ngoài. Tất cả biến `VITE_` đều công khai trong trình duyệt; **không chứa private key, seed phrase, DATABASE_URL hoặc secret**.
 
-Web phát hiện ví qua [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) và `window.ethereum` kiểu cũ. Ví khởi tạo muộn được tìm lại khi có sự kiện khởi tạo, khi quay lại cửa sổ hoặc khi bấm **Tìm lại ví**. Nếu có nhiều tiện ích, chọn ví ở mục **Chọn ví**; giao dịch dùng đúng provider đã chọn. Web không tự mở yêu cầu cấp quyền khi vừa tải trang; chỉ khôi phục tài khoản đã được ví cấp quyền trước đó.
+| Biến | Giá trị |
+| --- | --- |
+| `VITE_API_BASE_URL` | Origin/base trước `/api`, ví dụ `http://127.0.0.1:3000`; code thêm `/api` |
+| `VITE_DEPLOYMENT_ID` | Chính xác `deployments.deployment_name` mà API trả trong `context.deploymentId`, **không phải** khóa nội bộ `deployment_id` |
+| `VITE_CHAIN_ID` | `manifest.chainId`, số nguyên dương an toàn cho wallet |
+| `VITE_CHAIN_NAME` | Tên hiển thị mạng |
+| `VITE_RPC_URL` | RPC thực của chain này |
+| `VITE_GOVERNOR_ADDRESS` | `manifest.contracts.Governor.address` |
+| `VITE_TIMELOCK_ADDRESS` | `manifest.contracts.Timelock.address` |
+| `VITE_TREASURY_ADDRESS` | `manifest.contracts.Treasury.address` |
+| `VITE_GOV_TOKEN_ADDRESS` | `manifest.contracts.GOV.address` |
+| `VITE_BUD_TOKEN_ADDRESS` | `manifest.contracts.BUD.address` |
+| `VITE_EXPLORER_URL` | Tùy chọn, base URL explorer thật để mở `/tx/<hash>` |
 
-Để kết nối ví thật, mở URL Vite trong trình duyệt đã cài/bật tiện ích ví, chọn ví (nếu có nhiều), bấm **Kết nối ví** và xác nhận trong popup của tiện ích. Trình duyệt tích hợp không có tiện ích ví sẽ không cung cấp provider; cần mở cùng URL trong trình duyệt có ví. Không cần API hoặc địa chỉ contract để kết nối và xem địa chỉ tài khoản. Việc kiểm tra mạng đích và đọc GOV vẫn cần cấu hình deployment của nhóm.
+Để chạy từ manifest mà không ghi `.env.local`, đặt các biến shell từ bàn giao thực rồi chạy từ repository root:
 
-Frontend cập nhật khi ví phát sự kiện đổi tài khoản, đổi mạng hoặc ngắt kết nối. **Ẩn tài khoản** chỉ xóa tài khoản khỏi giao diện; thu hồi quyền website cần thực hiện trong tiện ích ví. Lỗi từ chối cấp quyền và yêu cầu đang chờ được hiển thị riêng để người dùng biết cần xử lý gì trong ví.
-
-## Nối deployment và API thật
-
-1. TV4 chạy local chain và tạo **manifest thật** bằng script deployment của nhóm. Đọc `chainId` và địa chỉ `contracts.Governor`, `contracts.Treasury`, `contracts.GOV`, `contracts.BUD` trong manifest. Không lấy địa chỉ từ `fixtures/`.
-2. TV2 chạy HTTP API BE01 trỏ tới đúng deployment đó và cung cấp `deploymentId` cùng base URL. `VITE_API_BASE_URL` là origin/base trước `/api`; code sẽ tự thêm `/api`.
-3. Sao chép `.env.example` thành `.env.local` trong thư mục `frontend/`, điền các biến bên dưới, rồi khởi động lại `npm run dev`.
-4. Dùng ví có account demo trên đúng chain. Nếu ví chưa biết mạng local, thêm mạng với chain ID/RPC của manifest trong ví, sau đó kết nối từ giao diện.
-
-```dotenv
-VITE_API_BASE_URL=http://127.0.0.1:3000
-VITE_DEPLOYMENT_ID=<deploymentId do API cung cap>
-VITE_CHAIN_ID=31337
-VITE_CHAIN_NAME=Local Anvil
-VITE_RPC_URL=http://127.0.0.1:8545
-VITE_GOVERNOR_ADDRESS=<manifest.contracts.Governor.address>
-VITE_TREASURY_ADDRESS=<manifest.contracts.Treasury.address>
-VITE_GOV_TOKEN_ADDRESS=<manifest.contracts.GOV.address>
-VITE_BUD_TOKEN_ADDRESS=<manifest.contracts.BUD.address>
-VITE_EXPLORER_URL=
+```sh
+export MANIFEST=/absolute/path/to/manifest.json
+export RPC_URL=http://127.0.0.1:8545
+export API_BASE_URL=http://127.0.0.1:3000
+export DEPLOYMENT_NAME='name-returned-by-the-configured-api'
+export FRONTEND_PORT=5173
+node --input-type=module <<'NODE'
+import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+const m = JSON.parse(readFileSync(process.env.MANIFEST, 'utf8'));
+const env = {
+  ...process.env,
+  VITE_API_BASE_URL: process.env.API_BASE_URL,
+  VITE_DEPLOYMENT_ID: process.env.DEPLOYMENT_NAME,
+  VITE_RPC_URL: process.env.RPC_URL,
+  VITE_CHAIN_ID: m.chainId,
+  VITE_CHAIN_NAME: 'Local Anvil',
+  VITE_GOVERNOR_ADDRESS: m.contracts.Governor.address,
+  VITE_TIMELOCK_ADDRESS: m.contracts.Timelock.address,
+  VITE_TREASURY_ADDRESS: m.contracts.Treasury.address,
+  VITE_GOV_TOKEN_ADDRESS: m.contracts.GOV.address,
+  VITE_BUD_TOKEN_ADDRESS: m.contracts.BUD.address,
+};
+const result = spawnSync('npm', ['run', 'dev', '--', '--host', '127.0.0.1', '--port', process.env.FRONTEND_PORT, '--strictPort'], { cwd: 'frontend', env, stdio: 'inherit' });
+if (result.error) throw result.error;
+process.exit(result.status ?? 1);
+NODE
 ```
 
-Giá trị trong khối trên chỉ minh họa **tên trường**; các placeholder không dùng để chạy. `.env.local` bị Git bỏ qua. Không đưa private key, seed phrase hoặc secret vào biến `VITE_`: Vite đưa các biến này vào mã trình duyệt. Ví tự giữ khóa và ký giao dịch.
+Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. API được bật nhưng thiếu địa chỉ/chain/RPC hợp lệ sẽ báo lỗi cấu hình, **không âm thầm quay về fixture**. API bị lỗi cũng không thay bằng JSON mẫu.
 
-Frontend kiểm tra chain ID của ví/RPC, bytecode và quan hệ Governor → Treasury/GOV, Treasury → BUD trước giao dịch quản trị. Sai mạng hoặc API trả deployment/snapshot không khớp sẽ chặn giao dịch. Các thao tác queue/execute/cancel dùng nguyên `targets`, `values`, `calldatas` và `descriptionHash` mà API lưu từ proposal ban đầu; không dựng lại description.
+## Snapshot, health và giao dịch
 
-## Kiểm tra trước khi bàn giao
+- Client tải hết các trang proposal bằng cursor BE05 và giữ cùng H/hash/revision. Summary và Transfer dùng chính context đó; mỗi lượt tải mới bỏ context/cursor cũ. Mã lỗi đọc từ envelope `error.code`/`error.message`, không từ trường `message` ở root.
+- Health gọi `/api/health` mỗi5s chỉ với chain/deployment, không ghim H. Hiển thị `ok`/`degraded`/`unavailable`, DB/indexer/publication và cảnh báo decode/projection. Heartbeat quá30s hoặc publication bị trễ hiện cảnh báo dữ liệu cũ; tự bỏ cảnh báo khi phục hồi. HTTP503 health vẫn có thể chứa envelope `data` hợp lệ. `lagSeconds` là chỉ báo freshness, không phải phép đo chính xác event delay; fixture cũ có thể null.
+- Wallet phát hiện EIP-6963 và `window.ethereum` EIP-1193 (ví dụ MetaMask), cho chọn provider khi có nhiều tiện ích và tìm lại ví khởi tạo muộn. Chưa kết nối vẫn đọc được API. Đọc GOV balance/delegate/current votes, hỗ trợ self-delegate và account/chain change; sai chain chặn giao dịch.
+- Trước thao tác quản trị, frontend đối chiếu chain RPC, bytecode và quan hệ Governor → Treasury/GOV/Timelock, Treasury → BUD. Summary phải khớp cả năm địa chỉ cấu hình.
+- Propose kiểm tra voting power tại `Governor.clock()-1` so với proposal threshold thật. Vote kiểm tra Active, `hasVoted` và voting power tại snapshot. Chỉ proposer hủy Pending; ai cũng có thể queue Succeeded và execute Queued/Ready qua Governor. Không gọi Timelock trực tiếp.
+- `requestId` sinh một lần bằng CSPRNG và giữ qua retry; amount được parse từ chuỗi thành BigInt 18 decimals, từ chối > uint256, exponent hoặc >18 decimals. Title/body giữ nguyên khoảng trắng/Unicode; description được serialize một lần lúc propose. Queue/execute/cancel dùng nguyên actions/hash đã lưu, đối chiếu calldata disburse và proposal ID; không parse/stringify lại description.
+- Nạp quỹ là BUD `transfer(Treasury, amount)`, không có endpoint POST hoặc hàm deposit giả. Pending/Active/Queued không giữ chỗ ngân sách; insufficient Treasury khi execute vẫn có thể revert.
+- UI đợi receipt thành công, giữ dữ liệu form khi ký bị từ chối/lỗi, chặn gửi lặp khi giao dịch đang chờ. Sau receipt, thao tác quản trị/nạp quỹ tải lại snapshot mới nhất đã **xuất bản**. Nếu indexer chưa bắt kịp, bấm **Tải dữ liệu mới nhất** sau khi ingest/project; không tự ghi đè state/số dư dự đoán. Nút này cũng phục hồi snapshot/cursor đã hết TTL hoặc invalidated bằng lượt đọc mới, không dùng cursor cũ.
+- Receipt replacement chỉ thành công khi repricing cùng action; cancellation/thay action báo lỗi. Hash/Proposal ID lấy từ receipt thực đã mine, không tìm lại hash cũ. Khi account đổi giữa delegation và receipt, callback cũ không được ghi đè balance/delegate/votes của account mới.
+- Content có transaction owner được giữ mounted trong snapshot refresh thành công, có nhãn H cũ/đang tải; không xóa receipt chỉ vì publication chưa bắt kịp. API transport lỗi có thông báo tiếng Việt, giữ error thay vì fallback fixture.
 
-```powershell
-cd frontend
-npm ci
-npm run test
-npm run build
-npm run lint
+### Kết nối ví trong trình duyệt
+
+Mở URL Vite trong trình duyệt đã cài và bật tiện ích ví EVM. Chọn ví nếu có nhiều provider, bấm **Kết nối ví** rồi xác nhận popup. Nếu chưa thấy ví, bấm **Tìm lại ví**; trình duyệt tích hợp không có tiện ích sẽ không cung cấp provider. Kết nối và xem địa chỉ không cần API hoặc địa chỉ contract, còn thao tác on-chain cần cấu hình deployment khớp manifest.
+
+Trang không tự mở yêu cầu cấp quyền khi tải; `eth_accounts` chỉ khôi phục tài khoản đã được cấp quyền. **Ẩn tài khoản** chỉ xóa khỏi giao diện. Muốn thu hồi quyền website, thực hiện trong tiện ích ví.
+
+## Browser kiểm chứng bằng Anvil thật
+
+Không có production testing switch, mock receipt hoặc fake E2E. Với Anvil chỉ bind loopback, browser runner có thể inject EIP-1193 provider **trước khi tải ứng dụng**, dùng account unlocked trong manifest và forward RPC thật. Ví dụ Playwright (runner do người kiểm chứng cung cấp):
+
+```js
+await page.addInitScript(({ rpcUrl, account }) => {
+  let id = 0;
+  const rpc = async (method, params = []) => {
+    const response = await fetch(rpcUrl, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jsonrpc: '2.0', id: ++id, method, params }),
+    });
+    const body = await response.json();
+    if (body.error) throw Object.assign(new Error(body.error.message), body.error);
+    return body.result;
+  };
+  window.ethereum = { request: async ({ method, params }) => {
+    if (method === 'eth_accounts' || method === 'eth_requestAccounts') {
+      const accounts = await rpc('eth_accounts');
+      if (!accounts.some((value) => value.toLowerCase() === account.toLowerCase())) throw new Error('Account is not unlocked on this Anvil');
+      return [account];
+    }
+    if (method === 'wallet_switchEthereumChain') {
+      if ((await rpc('eth_chainId')).toLowerCase() !== params[0].chainId.toLowerCase()) throw Object.assign(new Error('Wrong local chain'), { code: 4902 });
+      return null;
+    }
+    return rpc(method, params);
+  } };
+}, { rpcUrl, account: manifest.accounts.A });
+await page.goto(frontendUrl);
 ```
 
-`npm run test` kiểm tra vector calldata/hash SC01, validation amount và fixture 45 proposal. `npm run build` bao gồm TypeScript typecheck. `npm run lint` hiện có cảnh báo React Fast Refresh/effect nhưng không có lỗi chặn lệnh. Testnet và luồng ví–API–chain cần TV2/TV4 phối hợp; build/test fixture không thay thế E2E.
+Đổi account bằng context/page mới hoặc provider có event `accountsChanged`; không gọi production app API giả. Tất cả `eth_sendTransaction`, `eth_call`, receipt và chain ID vẫn đến Anvil thật. Chỉ dùng account unlocked trên chain local do người kiểm chứng sở hữu; không mở RPC unlocked ra mạng công cộng.
 
-## Lỗi thường gặp
+Selectors: `#proposal-title`, `#proposal-body`, `#proposal-recipient`, `#proposal-amount`, `#vote-support`, `#deposit-amount`. Các nút: **Self-delegate**, **Tạo đề xuất** (submit trong form), **Bỏ phiếu**, **Hủy đề xuất**, **Queue**, **Execute**, **Nạp quỹ**, **Tải dữ liệu mới nhất**. Ví nạp BUD lấy `manifest.accounts.funding`; GOV voting power thuộc A/B/C/D theo manifest.
 
-- **Trang báo fixture, nút vote/cancel bị khóa:** chưa có đủ `.env.local` và API thật trả `dataKind: "chain"`. Đây là hành vi dự kiến.
-- **Không thấy ví:** mở cùng URL web trong trình duyệt đã cài/bật tiện ích ví EVM, sau đó bấm **Tìm lại ví**. Nếu ví đã xuất hiện, bấm **Kết nối ví** và xác nhận popup. Trình duyệt tích hợp có thể không có provider ví; đây không phải lỗi backend hoặc thiếu địa chỉ contract. Web vẫn xem được fixture mà không có ví.
-- **Sai mạng:** chuyển ví sang `VITE_CHAIN_ID`; nếu ví chưa có mạng local, thêm RPC và chain ID trong ví.
-- **API/RPC lỗi:** kiểm tra các service đang chạy, CORS cho origin của Vite, chain ID/deployment ID và các địa chỉ trong manifest. Frontend không dùng fixture thay cho API lỗi.
-- **Proposal mới chưa hiện sau receipt:** đợi indexer bắt kịp rồi tải lại. Không coi việc API chậm là giao dịch bị revert.
+## Các lệnh kiểm tra để người tích hợp chạy
+
+```sh
+npm --prefix frontend ci
+npm --prefix frontend test
+npm --prefix frontend run build
+npm --prefix frontend run lint
+```
+
+Behavior tests kiểm tra calldata/hash SC01, nguyên văn Unicode/description, uint256/precision, payload gốc và định dạng tiền; không kiểm tra wiring bằng mock-echo hoặc repin bản sao fixture. Build có TypeScript typecheck. Các lệnh này và browser real-chain phải được chạy sau khi tích hợp hoàn tất; tài liệu này không tự khẳng định chúng đã pass. Fixture/unit/build không thay thế bằng chứng ví–API–chain, negative case hoặc deployment testnet thật.
+
+## Kết quả nghiệm thu TV4 ngày 24/10/2026
+
+[Browser evidence](../docs/evidence/tv4-20261024-acceptance/browser.json) ghi12checks,
+bốn route ở390/1366 và8ảnh: A+B700For chi1000BUD, queue/execute/cancel/deposit,
+wrong network/refusal/HTML-safe, cancellation/repricing và stale-account regression
+trên Anvil/API thật. Sáu behavior tests và production build đã PASS sau sửa
+TS1294; log theo từng source ở [report](../docs/evidence/tv4-20261024-acceptance/report.md).
+Đây không phải wallet extension hoặc testnet. Bản tích hợp25/10 đã kiểm browser thật
+pause→stale-warning→watch-recovery và backend reorg/cursor invalidation; xem
+[tổng kết TV4](../docs/tv4-work-summary.md). Vẫn cần peer/testnet approval.

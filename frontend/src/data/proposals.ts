@@ -1,3 +1,7 @@
+import proposalsPage1 from "../../../fixtures/api/proposals-page-1.json";
+import proposalsPage2 from "../../../fixtures/api/proposals-page-2.json";
+import proposalsPage3 from "../../../fixtures/api/proposals-page-3.json";
+
 export const proposalStatuses = [
   "Pending", "Active", "Succeeded", "Defeated", "Queued", "Executed", "Canceled",
 ] as const;
@@ -8,8 +12,8 @@ export type ProposalStatus = (typeof proposalStatuses)[number];
 export interface Proposal {
   proposalId: string;
   requestId: string;
-  title: string;
-  body: string;
+  title: string | null;
+  body: string | null;
   description: string;
   amount: string;
   state: ProposalStatus;
@@ -34,7 +38,7 @@ export interface FixtureContext {
   asOfBlockHash: string;
   dataKind: string;
   asOfTimestamp?: string;
-  sync?: { status: string; lagSeconds: string | null };
+  sync?: { status: string; lagSeconds: string | null; lagBlocks?: string | null };
 }
 
 export interface ProposalCollection {
@@ -70,12 +74,7 @@ function validatePage(input: unknown): RawPage {
 export async function loadProposalFixtures(simulateError = false): Promise<ProposalCollection> {
   if (simulateError) throw new Error("Lỗi tải dữ liệu mô phỏng để kiểm tra giao diện.");
 
-  const modules = await Promise.all([
-    import("./fixtures/proposals-page-1.json"),
-    import("./fixtures/proposals-page-2.json"),
-    import("./fixtures/proposals-page-3.json"),
-  ]);
-  const pages = modules.map((module) => validatePage(module.default));
+  const pages = [proposalsPage1, proposalsPage2, proposalsPage3].map(validatePage);
   const context = pages[0].context;
   const totalCount = pages[0].pagination.totalCount;
   const proposals = pages.flatMap((page) => page.data).map((item) => ({ ...item, state: item.state as ProposalStatus }));

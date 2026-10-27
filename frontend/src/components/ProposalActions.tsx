@@ -7,52 +7,50 @@ import { useTransaction } from "../chain/useTransaction";
 import type { FixtureContext, Proposal } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
 
-export default function ProposalActions({ proposal, context }: { proposal: Proposal; context: FixtureContext }) {
+export default function ProposalActions({ proposal, context, onConfirmed }: { proposal: Proposal; context: FixtureContext; onConfirmed: () => void }) {
   const wallet = useWallet();
   const transaction = useTransaction();
   const [support, setSupport] = useState("1");
-  const [hasVoted, setHasVoted] = useState<boolean | null>(null);
-  const [snapshotPower, setSnapshotPower] = useState<bigint | null>(null);
-  const [readError, setReadError] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
-  const writable = Boolean(context.dataKind === "chain" && deployment && wallet.account && wallet.chainId === deployment.chainId);
+  const [eligibility, setEligibility] = useState<{ key: string; voted: boolean | null; power: bigint | null; error: string | null }>();
+  const writable = Boolean(context.dataKind === "chain" && deployment && context.chainId === String(deployment.chainId) && context.deploymentId === deployment.deploymentId && wallet.account && wallet.chainId === deployment.chainId);
+  const readKey = `${wallet.account}:${wallet.chainId}:${proposal.proposalId}:${proposal.snapshot}:${context.asOfBlock}:${transaction.phase === "success" ? transaction.hash : ""}:${writable}`;
+  const hasVoted = eligibility?.key === readKey ? eligibility.voted : null;
+  const snapshotPower = eligibility?.key === readKey ? eligibility.power : null;
+  const readError = eligibility?.key === readKey ? eligibility.error : null;
 
   useEffect(() => {
-    setHasVoted(null); setSnapshotPower(null); setReadError(null);
     if (!writable || !deployment || !publicClient || !wallet.account) return;
     let active = true;
     Promise.all([
       publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "hasVoted", args: [BigInt(proposal.proposalId), wallet.account] }) as Promise<boolean>,
       publicClient.getBlock(),
     ]).then(async ([voted, block]) => {
-      if (active) setHasVoted(voted);
-      if (block.timestamp > BigInt(proposal.snapshot)) {
-        const power = await pastVotingPower(wallet.account as Address, proposal.snapshot);
-        if (active) setSnapshotPower(power);
-      }
-    }).catch(() => { if (active) setReadError("Không đọc được quyền biểu quyết tại snapshot."); });
+      const power = block.timestamp > BigInt(proposal.snapshot) ? await pastVotingPower(wallet.account as Address, proposal.snapshot) : null;
+      if (active) setEligibility({ key: readKey, voted, power, error: null });
+    }).catch(() => { if (active) setEligibility({ key: readKey, voted: null, power: null, error: "Không đọc được quyền biểu quyết tại snapshot. Kiểm tra RPC rồi tải dữ liệu mới nhất." }); });
     return () => { active = false; };
-  }, [writable, wallet.account, proposal.proposalId, proposal.snapshot]);
+  }, [writable, wallet.account, proposal.proposalId, proposal.snapshot, readKey]);
 
   const act = async (kind: "vote" | "cancel" | "queue" | "execute") => {
-    setActionError(null);
-    try {
+    await transaction.run(async () => {
       assertWritable(wallet.account, wallet.chainId, context);
+      const args = originalActions(proposal, deployment!.treasury);
       const expected = { vote: 1, cancel: 0, queue: 4, execute: 5 }[kind];
-      if (await currentProposalState(proposal.proposalId) !== expected) throw new Error("Trạng thái on-chain đã thay đổi. Tải lại trang trước khi thao tác.");
+      if (await currentProposalState(proposal.proposalId) !== expected) throw new Error("Trạng thái on-chain đã thay đổi. Tải dữ liệu mới nhất trước khi thao tác.");
       if (kind === "vote") {
-        if (hasVoted) throw new Error("Ví này đã bỏ phiếu cho proposal.");
-        await transaction.run(() => sendGovernor(wallet.account!, "castVote", [BigInt(proposal.proposalId), Number(support)]));
-      } else {
-        const args = originalActions(proposal);
-        if (kind === "cancel" && proposal.proposer.toLowerCase() !== wallet.account!.toLowerCase()) throw new Error("Chỉ creator được hủy proposal Pending.");
-        if (kind === "execute") {
-          const block = await publicClient!.getBlock();
-          if (!proposal.operation?.eta || block.timestamp < BigInt(proposal.operation.eta)) throw new Error("Chưa tới ETA để execute.");
-        }
-        await transaction.run(() => sendGovernor(wallet.account!, kind, args));
+        const voted = await publicClient!.readContract({ address: deployment!.governor, abi: governorAbi, functionName: "hasVoted", args: [BigInt(proposal.proposalId), wallet.account!] });
+        if (voted) throw new Error("Ví này đã bỏ phiếu cho proposal.");
+        if (await pastVotingPower(wallet.account!, proposal.snapshot) === 0n) throw new Error("Ví không có voting power tại snapshot.");
+        if (!["0", "1", "2"].includes(support)) throw new Error("Lựa chọn phiếu không hợp lệ.");
+        return sendGovernor(wallet.account!, "castVote", [BigInt(proposal.proposalId), Number(support)]);
       }
-    } catch (cause) { setActionError(cause instanceof Error ? cause.message : "Không thể gửi giao dịch."); }
+      if (kind === "cancel" && proposal.proposer.toLowerCase() !== wallet.account!.toLowerCase()) throw new Error("Chỉ creator được hủy proposal Pending.");
+      if (kind === "execute") {
+        const block = await publicClient!.getBlock();
+        if (!proposal.operation?.eta || block.timestamp < BigInt(proposal.operation.eta)) throw new Error("Chưa tới ETA để execute.");
+      }
+      return sendGovernor(wallet.account!, kind, args);
+    }, onConfirmed);
   };
 
   return <div className="proposal-actions">
@@ -63,13 +61,12 @@ export default function ProposalActions({ proposal, context }: { proposal: Propo
     {proposal.state === "Active" && <div className="action-row">
       <label className="field-label" htmlFor="vote-support">Lựa chọn phiếu</label>
       <select id="vote-support" className="field-control" value={support} onChange={(event) => setSupport(event.target.value)}><option value="1">For</option><option value="0">Against</option><option value="2">Abstain</option></select>
-      <button className="button-primary" type="button" disabled={!writable || hasVoted !== false || transaction.phase === "signing" || transaction.phase === "confirming"} onClick={() => void act("vote")}>Bỏ phiếu</button>
+      <button className="button-primary" type="button" disabled={!writable || hasVoted !== false || snapshotPower === null || snapshotPower === 0n || transaction.busy} onClick={() => void act("vote")}>Bỏ phiếu</button>
     </div>}
-    {proposal.state === "Pending" && <button className="button-secondary" type="button" disabled={!writable || proposal.proposer.toLowerCase() !== wallet.account?.toLowerCase()} onClick={() => void act("cancel")}>Hủy đề xuất</button>}
-    {proposal.state === "Succeeded" && <button className="button-primary" type="button" disabled={!writable} onClick={() => void act("queue")}>Queue</button>}
-    {proposal.state === "Queued" && <button className="button-primary" type="button" disabled={!writable || proposal.operation?.status !== "Ready"} onClick={() => void act("execute")}>Execute</button>}
-    {actionError && <p className="wallet-error" role="alert">{actionError}</p>}
+    {proposal.state === "Pending" && <button className="button-secondary" type="button" disabled={!writable || transaction.busy || proposal.proposer.toLowerCase() !== wallet.account?.toLowerCase()} onClick={() => void act("cancel")}>Hủy đề xuất</button>}
+    {proposal.state === "Succeeded" && <button className="button-primary" type="button" disabled={!writable || transaction.busy} onClick={() => void act("queue")}>Queue</button>}
+    {proposal.state === "Queued" && <button className="button-primary" type="button" disabled={!writable || transaction.busy || proposal.operation?.status !== "Ready"} onClick={() => void act("execute")}>Execute</button>}
     <TransactionStatus {...transaction} />
-    {transaction.phase === "success" && <p className="notice">Giao dịch đã xác nhận. Tải lại sau khi API index tới block mới để xem trạng thái cập nhật.</p>}
+    <p className="notice">Sau receipt, giao diện tải snapshot mới nhất đã xuất bản. Nếu indexer chưa bắt kịp, bấm Tải dữ liệu mới nhất sau khi index.</p>
   </div>;
 }

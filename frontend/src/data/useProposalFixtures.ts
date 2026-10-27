@@ -11,19 +11,24 @@ type LoadState =
 
 export function useProposalFixtures() {
   const [searchParams] = useSearchParams();
-  const simulateError = import.meta.env.DEV && searchParams.get("fixture") === "error";
+  const simulateError = import.meta.env.DEV && !apiBaseUrl && searchParams.get("fixture") === "error";
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState<LoadState>({ status: "loading" });
+  const [loaded, setLoaded] = useState<{ simulateError: boolean; attempt: number; state: LoadState }>();
+  const sameSource = loaded?.simulateError === simulateError;
+  const refreshing = sameSource && loaded.attempt !== attempt && loaded.state.status === "success";
+  const state: LoadState = sameSource && (loaded.attempt === attempt || refreshing)
+    ? loaded.state : { status: "loading" };
 
   useEffect(() => {
     let active = true;
-    (simulateError && !apiBaseUrl ? Promise.reject(new Error("Lỗi tải dữ liệu mô phỏng để kiểm tra giao diện.")) : loadProposals()).then(
-      (collection) => { if (active) setState({ status: "success", collection }); },
-      (error: unknown) => { if (active) setState({ status: "error", message: error instanceof Error ? error.message : "Không tải được dữ liệu." }); },
+    const controller = new AbortController();
+    (simulateError ? Promise.reject(new Error("Lỗi tải dữ liệu mô phỏng để kiểm tra giao diện.")) : loadProposals(controller.signal)).then(
+      (collection) => { if (active) setLoaded({ simulateError, attempt, state: { status: "success", collection } }); },
+      (error: unknown) => { if (active) setLoaded({ simulateError, attempt, state: { status: "error", message: error instanceof Error ? error.message : "Không tải được dữ liệu." } }); },
     );
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
   }, [simulateError, attempt]);
 
-  const retry = () => { setState({ status: "loading" }); setAttempt((value) => value + 1); };
-  return { state, retry, simulateError };
+  const retry = () => setAttempt((value) => value + 1);
+  return { state, retry, simulateError, refreshing };
 }

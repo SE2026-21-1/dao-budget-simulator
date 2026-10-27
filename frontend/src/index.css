@@ -1952,6 +1952,9 @@ button, .button-primary, .button-secondary { white-space: nowrap; }
 .wallet-help p { margin: 8px 0; }
 .wallet-help .button-secondary { margin-top: 4px; }
 .wallet-panel .wallet-error { overflow-wrap: anywhere; }
+.api-health { margin: -12px 0 24px; padding: 12px 15px; border: 1px solid var(--border-card); border-radius: 9px; background: var(--bg-card); font-size: 12px; overflow-wrap: anywhere; }
+.api-health p { margin: 0 0 9px; }
+.api-health p:last-of-type { margin-bottom: 10px; }
 @media (max-width: 768px) {
   .editorial-stat-card__top { flex-direction: column; gap: 10px; }
   .editorial-stat-card__value--amount { font-size: 20px; }

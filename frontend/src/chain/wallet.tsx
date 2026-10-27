@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash } from "viem";
 import { deployment } from "./config";
 import { discoverWallets, parseWalletChain, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
@@ -47,6 +47,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [delegatee, setDelegatee] = useState<Address | null>(null);
   const [votingPower, setVotingPower] = useState<bigint | null>(null);
   const readGeneration = useRef(0);
+  const activeSelection = useRef({ account, chainId });
+  useLayoutEffect(() => { activeSelection.current = { account, chainId }; }, [account, chainId]);
   const sessionGeneration = useRef(0);
   const [wallets, setWallets] = useState<WalletOption[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -106,6 +108,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, [provider, clearReads, invalidateSession]);
 
   const refresh = useCallback(async () => {
+    if (activeSelection.current.account !== account || activeSelection.current.chainId !== chainId) return;
     clearReads();
     const generation = readGeneration.current;
     if (!account || !deployment || !publicClient || chainId !== deployment.chainId) return;

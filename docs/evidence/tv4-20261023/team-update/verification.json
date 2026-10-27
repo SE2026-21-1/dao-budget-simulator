@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-23",
+  "scope": "Updating teammate commits on feature/tv4-operation; UI fixture integration, not wallet/API/E2E",
+  "integrationCommit": "93225476558648404050dd85a8c6da40bf03357a",
+  "devMergeCommit": "ee2b7396abf09e7fccfc3b7de682c5bef1cb307f",
+  "devHead": "ff266977c3f3f16cdfa2eac8f787c38bbbf147f5",
+  "tv1Head": "f57fcfdeb92e5ecbdeeba523b1a6edfb20411776",
+  "tv2Head": "4c568d6af1c5ca1a6ca203e61bd5558b5b4d6ed7",
+  "tv3SourceCommit": "26ecca741259946dac7f04338219126437122947",
+  "integrationMethod": "Merge origin/Dev history (no content changes), then cherry-pick -x TV3 latest design commit; preserve TV4 canonical fixtures, loading/retry, skip link, focusable main and mobile safeguards. Do not reintroduce obsolete assets or JSON copies.",
+  "integratedAncestors": {
+    "origin/Dev": true,
+    "origin/feature/tv1-sc01": true,
+    "origin/feature/tv1-sc02": true,
+    "origin/feature/tv1-sc03": true,
+    "origin/feature/tv1-sc04": true,
+    "origin/feature/tv2-be01": true,
+    "origin/feature/tv2-be02": true
+  },
+  "sourceHashes": {
+    "frontend/src/App.tsx": "6f7cda610522885d051868b591ddeafb45c2a97980a99fe1b10e904fe53328fb",
+    "frontend/src/index.css": "90185748b8b764e493dee16d736de52f9bd4b50f1b04c62b377ab1ee1397cc54",
+    "frontend/src/data/formatBUD.ts": "0e9bf7071f039a0ba9890b358666a298ce4fa6cce7bca91331a8df203bc02cbc",
+    "frontend/src/pages/CreateProposalPage.tsx": "e0c088fe9ed8b50aeb2805a4b302ad87735ebcd88edc5a19ecfea0c360a0b85a",
+    "frontend/src/pages/DashboardPage.tsx": "0c14e18f2cbf43d5e620121a7c43260e8f390e729e7616543428dafc1c59bd9b",
+    "frontend/src/pages/ProposalDetailPage.tsx": "24ff51c4309d4970235c487a7d528172c303cf3514410d4f95fd7292411e4bc3",
+    "frontend/src/pages/ProposalListPage.tsx": "9c10ac711a9dce20da81bb4a2b6535a470e4d734c1fb59c2bb36738c30a0ec02",
+    "frontend/src/data/proposals.ts": "b12915d35d76480fe9b46494935e4353692112b62b46004b1c53198dd8bc2ecc",
+    "frontend/src/data/useProposalFixtures.ts": "23cbc55eee01768951982bf4a829290a04509d63262ed10f0b92b5985591ea0c"
+  },
+  "checks": {
+    "command": "npm exec --yes --package=node@24.15.0 -- sh -c \"npm run lint --prefix frontend && npm run build --prefix frontend && node scripts/check_be01.mjs\"",
+    "exitCode": 0,
+    "frontendLint": "passed",
+    "typescriptViteBuild": "passed",
+    "canonicalFixtureChecker": "123 JSON /45proposals /20,20,5 pages; passed",
+    "browser": "browser.json",
+    "screenshots": [
+      "dashboard-1366.png",
+      "dashboard-390.png"
+    ]
+  },
+  "independentFixtureExpectation": {
+    "proposalCount": 45,
+    "stateCounts": {
+      "Canceled": 6,
+      "Pending": 7,
+      "Active": 7,
+      "Defeated": 6,
+      "Succeeded": 6,
+      "Executed": 7,
+      "Queued": 6
+    },
+    "totalProposedRaw": "2871875000000000000015",
+    "firstProposalId": "32591545501524741886300998079617704300347801580532258275547383289645120742286",
+    "firstAmountRaw": "61000000000000000001"
+  },
+  "integrationBug": {
+    "before": "Focused skip link was covered by sticky topbar (z-index1 versus2); observed through hit testing and screenshot",
+    "fix": "Preserve skip link and use z-index3; Enter focuses main-content",
+    "after": "Focused skip link wins hit test and is visible; Enter moves focus to main-content"
+  },
+  "limits": [
+    "TV1/TV2 existing contract/backend heads were already integrated; no new contract/backend commits were fetched",
+    "No new wallet/API/checkpoint/reorg/state-rebuild implementation in these heads",
+    "No peer approval, testnet or full E2E acceptance claimed"
+  ],
+  "preservedUserChanges": [
+    "README.md existing AD-064 link remains unstaged",
+    "docs/AD-064-architecture-review.md remains untracked and untouched"
+  ]
+}

@@ -1,4 +1,4 @@
-import { decodeErrorResult, decodeEventLog, decodeFunctionData, encodeFunctionData, isAddress, keccak256, parseUnits, toHex, type Abi, type Address, type Hash, type Hex } from "viem";
+import { decodeErrorResult, decodeEventLog, decodeFunctionData, encodeAbiParameters, encodeFunctionData, isAddress, keccak256, parseAbiParameters, parseUnits, toHex, type Abi, type Address, type Hash, type Hex, type TransactionReceipt } from "viem";
 import governorAbiJson from "../abi/BudgetGovernor.json";
 import treasuryAbiJson from "../abi/Treasury.json";
 import type { Proposal, FixtureContext } from "../data/proposals";
@@ -8,6 +8,15 @@ import { publicClient, walletClient } from "./wallet";
 export const governorAbi = governorAbiJson as Abi;
 export const treasuryAbi = treasuryAbiJson as Abi;
 
+export const UINT256_MAX = (1n << 256n) - 1n;
+
+export function parseBUD(amount: string): bigint {
+  if (!/^(0|[1-9]\d*)(\.\d{1,18})?$/.test(amount)) throw new Error("Số BUD cần tối đa 18 chữ số thập phân, không dùng ký hiệu khoa học.");
+  const value = parseUnits(amount, 18);
+  if (value <= 0n) throw new Error("Số BUD phải lớn hơn 0.");
+  if (value > UINT256_MAX) throw new Error("Số BUD vượt giới hạn uint256.");
+  return value;
+}
 export type TransactionPhase = "idle" | "signing" | "submitted" | "confirming" | "success" | "reverted" | "error";
 
 export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext) {
@@ -29,28 +38,37 @@ export async function sendGovernor(account: Address, functionName: string, args:
 
 export async function verifyDeployment(): Promise<void> {
   if (!deployment || !publicClient) throw new Error("Thiếu cấu hình deployment.");
-  const [rpcChainId, governorCode, treasuryCode, govCode, budCode, governorTreasury, governorToken, treasuryToken] = await Promise.all([
+  const [rpcChainId, governorCode, treasuryCode, govCode, budCode, timelockCode, governorTreasury, governorToken, governorTimelock, treasuryToken] = await Promise.all([
     publicClient.getChainId(),
     publicClient.getBytecode({ address: deployment.governor }),
     publicClient.getBytecode({ address: deployment.treasury }),
     publicClient.getBytecode({ address: deployment.govToken }),
     publicClient.getBytecode({ address: deployment.budToken }),
+    publicClient.getBytecode({ address: deployment.timelock }),
     publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "treasury" }),
     publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "token" }),
+    publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "timelock" }),
     publicClient.readContract({ address: deployment.treasury, abi: treasuryAbi, functionName: "budgetToken" }),
   ]);
-  if (rpcChainId !== deployment.chainId || !governorCode || governorCode === "0x" || !treasuryCode || treasuryCode === "0x" || !govCode || govCode === "0x" || !budCode || budCode === "0x" ||
+  if (rpcChainId !== deployment.chainId || !governorCode || governorCode === "0x" || !treasuryCode || treasuryCode === "0x" || !govCode || govCode === "0x" || !budCode || budCode === "0x" || !timelockCode || timelockCode === "0x" ||
       String(governorTreasury).toLowerCase() !== deployment.treasury.toLowerCase() ||
       String(governorToken).toLowerCase() !== deployment.govToken.toLowerCase() ||
+      String(governorTimelock).toLowerCase() !== deployment.timelock.toLowerCase() ||
       String(treasuryToken).toLowerCase() !== deployment.budToken.toLowerCase()) {
     throw new Error("RPC hoặc địa chỉ contract không khớp deployment đã cấu hình.");
   }
 }
 
-export async function waitForReceipt(hash: Hash): Promise<void> {
+export async function waitForReceipt(hash: Hash): Promise<TransactionReceipt> {
   if (!publicClient) throw new Error("Thiếu RPC để kiểm tra giao dịch.");
-  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  let changedAction = false;
+  const receipt = await publicClient.waitForTransactionReceipt({
+    hash,
+    onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
+  });
+  if (changedAction) throw new Error("Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
   if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
+  return receipt;
 }
 
 export async function currentProposalState(proposalId: string): Promise<number> {
@@ -59,20 +77,36 @@ export async function currentProposalState(proposalId: string): Promise<number> 
   return Number(state);
 }
 
-export function originalActions(proposal: Proposal): [Address[], bigint[], Hex[], Hex] {
-  if (!deployment || proposal.targets?.length !== 1 || proposal.values?.length !== 1 || proposal.calldatas?.length !== 1 ||
-      !isAddress(proposal.targets[0]) || proposal.targets[0].toLowerCase() !== deployment.treasury.toLowerCase() ||
-      proposal.values[0] !== "0" || !/^0x[0-9a-f]+$/i.test(proposal.calldatas[0]) ||
+export async function assertCanPropose(account: Address): Promise<void> {
+  if (!publicClient || !deployment) throw new Error("Thiếu cấu hình deployment.");
+  const [clock, threshold] = await Promise.all([
+    publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "clock" }),
+    publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "proposalThreshold" }),
+  ]);
+  const timepoint = BigInt(String(clock)) - 1n;
+  const votes = await publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "getVotes", args: [account, timepoint] });
+  if (BigInt(String(votes)) < BigInt(String(threshold))) throw new Error("Chưa đủ voting power đã delegate tại checkpoint quá khứ để tạo proposal.");
+}
+
+export function originalActions(proposal: Proposal, treasury: Address): [Address[], bigint[], Hex[], Hex] {
+  if (proposal.targets?.length !== 1 || proposal.values?.length !== 1 || proposal.calldatas?.length !== 1 ||
+      !isAddress(proposal.targets[0]) || proposal.targets[0].toLowerCase() !== treasury.toLowerCase() ||
+      proposal.values[0] !== "0" || !/^0x(?:[0-9a-f]{2})+$/i.test(proposal.calldatas[0]) ||
       proposal.descriptionHash !== keccak256(toHex(proposal.description))) {
     throw new Error("Payload proposal không khớp Treasury/description gốc. Không thể gửi giao dịch.");
   }
   try {
     const decoded = decodeFunctionData({ abi: treasuryAbi, data: proposal.calldatas[0] as Hex });
-    if (decoded.functionName !== "disburse" || !decoded.args || decoded.args[0] !== proposal.requestId ||
+    if (decoded.functionName !== "disburse" || !decoded.args || String(decoded.args[0]).toLowerCase() !== proposal.requestId.toLowerCase() ||
         String(decoded.args[1]).toLowerCase() !== proposal.recipient.toLowerCase() || String(decoded.args[2]) !== proposal.amount) {
       throw new Error("Payload disburse không khớp proposal.");
     }
   } catch { throw new Error("Payload disburse không khớp proposal."); }
+  const id = BigInt(keccak256(encodeAbiParameters(
+    parseAbiParameters("address[], uint256[], bytes[], bytes32"),
+    [[proposal.targets[0]], [0n], [proposal.calldatas[0] as Hex], proposal.descriptionHash as Hex],
+  ))).toString();
+  if (id !== proposal.proposalId) throw new Error("Proposal ID không khớp payload gốc.");
   return [[proposal.targets[0]], [0n], [proposal.calldatas[0] as Hex], proposal.descriptionHash as Hex];
 }
 
@@ -82,17 +116,17 @@ export function validateProposalForm(title: string, body: string, recipient: str
   if (titleLength < 5 || titleLength > 120) return "Tiêu đề cần 5–120 ký tự.";
   if (bodyLength < 20 || bodyLength > 2000) return "Mô tả cần 20–2.000 ký tự.";
   if (!isAddress(recipient) || /^0x0{40}$/i.test(recipient) || recipient.toLowerCase() === treasury?.toLowerCase()) return "Địa chỉ nhận không hợp lệ.";
-  if (!/^(0|[1-9]\d*)(\.\d{1,18})?$/.test(amount)) return "Số BUD cần tối đa 18 chữ số thập phân, không dùng ký hiệu khoa học.";
-  try { if (parseUnits(amount, 18) <= 0n) return "Số BUD phải lớn hơn 0."; }
-  catch { return "Số BUD cần tối đa 18 chữ số thập phân, không dùng ký hiệu khoa học."; }
+  try { parseBUD(amount); }
+  catch (cause) { return cause instanceof Error ? cause.message : "Số BUD không hợp lệ."; }
   return null;
 }
 
 export function buildProposal(title: string, body: string, recipient: Address, amount: string, requestId: Hex, treasury: Address) {
   const error = validateProposalForm(title, body, recipient, amount, treasury);
   if (error) throw new Error(error);
+  if (!/^0x[0-9a-f]{64}$/i.test(requestId)) throw new Error("Request ID phải là bytes32.");
   const description = JSON.stringify({ version: 1, title, body });
-  const calldata = encodeFunctionData({ abi: treasuryAbi, functionName: "disburse", args: [requestId, recipient, parseUnits(amount, 18)] });
+  const calldata = encodeFunctionData({ abi: treasuryAbi, functionName: "disburse", args: [requestId, recipient, parseBUD(amount)] });
   return { targets: [treasury], values: [0n], calldatas: [calldata], description };
 }
 

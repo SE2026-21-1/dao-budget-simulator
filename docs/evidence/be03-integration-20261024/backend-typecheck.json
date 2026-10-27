@@ -1,0 +1,11 @@
+{
+  "label": "backend-typecheck",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "backend-typecheck.txt"
+}

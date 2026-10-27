@@ -1,0 +1,9 @@
+{
+  "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+  "command": "dist/be03-tools/cast-1.7.1/package/bin/cast.exe --version",
+  "sha256": "b2541a63789931fc4c170e2502c16c3be259f2da4daba1a8d05ea5cfa7729baa",
+  "started": true,
+  "exitCode": 0,
+  "error": null,
+  "output": "cast Version: 1.7.1\r\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\r\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\r\nBuild Profile: dist"
+}

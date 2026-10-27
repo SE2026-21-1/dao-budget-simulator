@@ -1,0 +1,37 @@
+{
+  "rpcUrl": "http://127.0.0.1:8545",
+  "chainId": "31337",
+  "deploymentId": "1",
+  "fromBlock": "100",
+  "toBlock": "110",
+  "batchSize": "5",
+  "confirmations": 2,
+  "contracts": [
+    {
+      "role": "budget_token",
+      "address": "0x4444444444444444444444444444444444444444",
+      "deploymentBlock": "100",
+      "abiVersion": "oz-5.4.0-erc20"
+    },
+    {
+      "role": "treasury",
+      "address": "0x1111111111111111111111111111111111111111",
+      "deploymentBlock": "101",
+      "abiVersion": "sc01-itreasury-v1"
+    },
+    {
+      "role": "timelock",
+      "address": "0x3333333333333333333333333333333333333333",
+      "deploymentBlock": "102",
+      "abiVersion": "oz-5.4.0-timelock"
+    },
+    {
+      "role": "governor",
+      "address": "0x2222222222222222222222222222222222222222",
+      "deploymentBlock": "103",
+      "abiVersion": "oz-5.4.0-governor"
+    }
+  ],
+  "reorgWindow": 128,
+  "pollIntervalMs": 1000
+}

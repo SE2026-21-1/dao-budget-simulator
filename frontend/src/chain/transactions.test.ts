@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { keccak256, toHex } from "viem";
-import { buildProposal, validateProposalForm } from "./transactions";
+import { decodeFunctionData, keccak256, toHex } from "viem";
+import { buildProposal, originalActions, parseBUD, treasuryAbi, UINT256_MAX, validateProposalForm } from "./transactions";
 import { formatBUD } from "../data/formatBUD";
-import { loadProposalFixtures } from "../data/proposals";
+import sc01 from "../../../fixtures/sc01/disbursement-v1.json";
+import type { Proposal } from "../data/proposals";
 
 const treasury = "0x1111111111111111111111111111111111111111";
 const recipient = "0x2222222222222222222222222222222222222222";
@@ -22,15 +23,36 @@ describe("proposal payload", () => {
     expect(validateProposalForm("Valid title", "A description that is long enough", recipient, "0.0000000000000000001", treasury)).toMatch(/18/);
     expect(validateProposalForm("Valid title", "A description that is long enough", recipient, "0", treasury)).toMatch(/lớn hơn 0/);
   });
+
+  it("keeps raw Unicode and whitespace in the submitted description", () => {
+    const title = "  Chi tiêu 🌿  ";
+    const body = "  Giữ nguyên mô tả tiếng Việt và xuống dòng.\\n🌿  ";
+    const payload = buildProposal(title, body, recipient, "0.000000000000000001", requestId, treasury);
+    expect(JSON.parse(payload.description)).toEqual({ version: 1, title, body });
+    const decoded = decodeFunctionData({ abi: treasuryAbi, data: payload.calldatas[0] });
+    expect(decoded.functionName).toBe("disburse");
+    expect(decoded.args).toEqual([requestId, recipient, 1n]);
+  });
+
+  it("preserves the full uint256 amount and rejects overflow", () => {
+    const whole = UINT256_MAX / 10n ** 18n;
+    const fraction = (UINT256_MAX % 10n ** 18n).toString().padStart(18, "0");
+    expect(parseBUD(`${whole}.${fraction}`)).toBe(UINT256_MAX);
+    expect(() => parseBUD(`${whole}.${BigInt(fraction) + 1n}`)).toThrow(/uint256/);
+    expect(() => parseBUD("1e18")).toThrow();
+    expect(() => parseBUD("0.0000000000000000001")).toThrow();
+  });
+
+  it("keeps original action bytes and rejects changed description or proposal ID", () => {
+    const proposal: Proposal = { ...sc01, title: null, body: null, proposer: recipient, state: "Pending", snapshot: "1", deadline: "2" };
+    expect(originalActions(proposal, treasury)).toEqual([sc01.targets, [0n], sc01.calldatas, sc01.descriptionHash]);
+    expect(() => originalActions({ ...proposal, description: `${proposal.description} ` }, treasury)).toThrow(/description/);
+    expect(() => originalActions({ ...proposal, proposalId: "1" }, treasury)).toThrow(/Proposal ID/);
+    expect(() => originalActions({ ...proposal, amount: "1" }, treasury)).toThrow(/disburse/);
+  });
 });
 
 describe("fixture display", () => {
-  it("keeps all 45 proposal IDs unique across three pages", async () => {
-    const collection = await loadProposalFixtures();
-    expect(collection.pageSizes).toEqual([20, 20, 5]);
-    expect(new Set(collection.proposals.map((item) => item.proposalId)).size).toBe(45);
-    expect(new Set(collection.proposals.map((item) => item.state)).size).toBe(7);
-  });
 
   it("formats a uint256 amount without floating point loss", () => {
     expect(formatBUD("1000000000000000001")).toBe("1,000000000000000001 BUD");

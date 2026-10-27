@@ -1,0 +1,20 @@
+﻿{
+    "recordedAt":  "2026-10-24T09:50:08.7233212+07:00",
+    "postgres":  {
+                     "command":  "pg_ctl.exe status -D C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-pg-cab3857d277a48b1941783ca08bcd460\\data",
+                     "exitCode":  3,
+                     "output":  "pg_ctl: no server running"
+                 },
+    "anvil":  [
+                  {
+                      "pid":  25152,
+                      "running":  false,
+                      "command":  "Get-Process -Id 25152"
+                  },
+                  {
+                      "pid":  28104,
+                      "running":  false,
+                      "command":  "Get-Process -Id 28104"
+                  }
+              ]
+}

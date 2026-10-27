@@ -1,0 +1,48 @@
+▶ BE03 isolated real PostgreSQL / child process crash and restart
+  ✔ fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash (28.1637ms)
+  ✔ K=0 indexes head; no safe block leaves checkpoint absent (18.1912ms)
+  ✔ PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint (15.6907ms)
+  ✔ missing required source or altered manifest/K refuses checkpoint adoption, including idle start (13.5549ms)
+  ✔ legacy unscoped checkpoint is refused (11.1318ms)
+  ✔ source failure and missing scan evidence never advance checkpoint (5.2393ms)
+  ✔ SQL failure after inserting a header and first event rolls back entire batch/checkpoint (22.1802ms)
+  ✔ COMMIT itself fails: no successful batch notification and no SQL data/checkpoint (13.741ms)
+  ✔ same event key changed contents is a conflict; prior committed range survives (10.0594ms)
+  ✔ repeated range, retries and restart preserve event IDs and exact uint256 payload (21.2524ms)
+  ✔ hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint (12.9717ms)
+  ✖ competing writers cannot rewind or commit beyond complete coverage; stale writer must restart (135.7276ms)
+  ✔ decode error and unknown topic are durable and remain visible after idle restart (24.8674ms)
+  ✔ legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params (24.9591ms)
+{"crashEvidence":"beforeCommit","beforeRestart":{"blocks":0,"events":0,"checkpoint":null},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at beforeCommit: SQL visibility and restart exactly once (929.5499ms)
+{"crashEvidence":"afterCommit","beforeRestart":{"blocks":2,"events":1,"checkpoint":"101"},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+  ✔ real process crash at afterCommit: SQL visibility and restart exactly once (822.5655ms)
+✖ BE03 isolated real PostgreSQL / child process crash and restart (2242.2232ms)
+ℹ tests 16
+ℹ suites 1
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2620.7909
+
+✖ failing tests:
+
+test at tests\indexer\checkpoint-storage.test.ts:8:2355
+✖ competing writers cannot rewind or commit beyond complete coverage; stale writer must restart (135.7276ms)
+  AssertionError [ERR_ASSERTION]: SQL must observe the second writer waiting on the first writer advisory lock.
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\dao-budget-simulator\tests\indexer\checkpoint-storage.test.ts:194:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

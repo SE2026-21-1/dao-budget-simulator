@@ -1,0 +1,200 @@
+Script started on 2026-10-24 19:03:52+07:00 [COMMAND="npm run typecheck && npm run build && npm run test:be02 && npm run test:be03 && npm run test:be04 && npm run test:be06 && node --test tests/smoke/interruption.test.mjs && node scripts/check_be01.mjs && node --import tsx scripts/smoke_treasury.mjs --output docs/evidence/tv4-20261024-acceptance/treasury.json" <not executed on terminal>]
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+> dao-budget-simulator@0.0.0 test:be02
+> tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts
+
+✔ CLI help and invalid arguments have appropriate exit codes (3225.672071ms)
+✔ CLI reports unsupported ABI as an actionable config error (1274.319166ms)
+✔ CLI rejects wrong chain before attempting PostgreSQL and never prints secrets (1365.044279ms)
+✔ config preserves bigint, validates scope and permits a pinned latest request (9.827575ms)
+✔ reject invalid config: numericChainId (1.136523ms)
+✔ reject invalid config: zeroChain (0.607728ms)
+✔ reject invalid config: overflow (1.48166ms)
+✔ reject invalid config: fractionalBlock (0.609094ms)
+✔ reject invalid config: negativeBlock (0.499402ms)
+✔ reject invalid config: reversedRange (0.502997ms)
+✔ reject invalid config: zeroBatch (3.414213ms)
+✔ reject invalid config: unboundedBatch (6.295933ms)
+✔ reject invalid config: invalidRpc (0.85177ms)
+✔ reject invalid config: deploymentOverflow (2.727668ms)
+✔ reject invalid config: emptyContracts (0.811119ms)
+✔ reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI (21.107584ms)
+✔ VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields (207.214042ms)
+✔ synthetic vectors cover all eleven required event types and source indexed layouts (0.82322ms)
+✔ decodes governor.ProposalCreated with exact named ABI values (42.112998ms)
+✔ decodes governor.VoteCast with exact named ABI values (20.378263ms)
+✔ decodes governor.ProposalQueued with exact named ABI values (9.680712ms)
+✔ decodes governor.ProposalExecuted with exact named ABI values (3.29713ms)
+✔ decodes governor.ProposalCanceled with exact named ABI values (5.615827ms)
+✔ decodes timelock.CallScheduled with exact named ABI values (27.563294ms)
+✔ decodes timelock.CallExecuted with exact named ABI values (9.541395ms)
+✔ decodes timelock.Cancelled with exact named ABI values (12.557882ms)
+✔ decodes timelock.CallSalt with exact named ABI values (6.403829ms)
+✔ decodes treasury.BudgetDisbursed with exact named ABI values (26.082471ms)
+✔ decodes budget_token.Transfer with exact named ABI values (5.67338ms)
+✔ independent hand-assembled canonical Transfer vector decodes without fixture encoder (5.800929ms)
+✔ preserves uint256 above 2^53 including indexed integers and maximum proposal ID (28.1334ms)
+✔ dynamic description and reason preserve exact Unicode and whitespace (15.707252ms)
+✔ registry Treasury fragment matches handed-over shared JSON ABI exactly (17.356457ms)
+✔ ABI version is explicitly bound to contract role and cannot use object prototype keys (4.068355ms)
+✔ unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC (0.924461ms)
+✔ known events reject missing, additional and malformed indexed topics (3.357538ms)
+✔ known events reject truncated, odd, nonhex and trailing data (6.887405ms)
+✔ known events reject noncanonical uint8 and invalid dynamic offsets (5.893515ms)
+✔ NUL in valid Solidity description or reason is raw-only for JSONB storage (11.164486ms)
+✔ invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error (4.165534ms)
+✔ decoded, unknown and malformed logs retain every original RPC field (8.814848ms)
+✔ range boundaries work above Number.MAX_SAFE_INTEGER without gaps (5.697843ms)
+✔ scan includes every boundary/empty block and sorts tx/log indices; preserves raw input (75.683762ms)
+✔ different deployment blocks retain early contract logs and clamp each RPC filter (14.291872ms)
+✔ RPC cannot return a known contract log before its deployment block (8.144413ms)
+✔ RPC cannot substitute another configured contract in a filter response (6.180341ms)
+✔ duplicate transaction hashes in a header are contradictory (2.277571ms)
+✔ wrong chain stops before any storage write or block request (1.873627ms)
+✔ latest is pinned once for the finite scan (10.214358ms)
+✔ outside-deployment log is dropped before ABI or canonical-log validation (13.203864ms)
+✔ unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics (30.503498ms)
+✔ reject contradictory/invalid log: removed (2.220489ms)
+✔ reject contradictory/invalid log: pending (0.862832ms)
+✔ reject contradictory/invalid log: blockHash (0.854623ms)
+✔ reject contradictory/invalid log: block number (0.857292ms)
+✔ reject contradictory/invalid log: txHash (1.243517ms)
+✔ reject contradictory/invalid log: txIndex (1.115393ms)
+✔ reject contradictory/invalid log: invalid hex (1.033153ms)
+✔ reject contradictory/invalid log: unsafe index (1.777029ms)
+✔ detect colliding log positions and transaction order disagreement (1.74289ms)
+✔ reports previous committed batch separately when a later header chain disagrees (4.630759ms)
+✔ changing final header prevents write (4.976265ms)
+✔ HTTP JSON-RPC transport reads synthetic logs through scanner (477.365394ms)
+✔ RPC HTTP failures redact URL paths and body; prior batches remain explicit (50.359933ms)
+ℹ tests 64
+ℹ suites 0
+ℹ pass 64
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7911.254823
+
+> dao-budget-simulator@0.0.0 test:be03
+> tsx --test tests/indexer/syncer.test.ts
+
+✔ K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block (5.279856ms)
+✔ invalid K rejected: -1 (12.436112ms)
+✔ invalid K rejected: 0.5 (2.968216ms)
+✔ invalid K rejected: 2 (2.071223ms)
+✔ invalid K rejected: null (5.02111ms)
+✔ invalid K rejected: true (1.708569ms)
+✔ invalid K rejected: 2147483648 (1.867475ms)
+✔ invalid K rejected: NaN (2.23222ms)
+✔ invalid K rejected: Infinity (2.71291ms)
+✔ K defaults to 2 and numeric 0 is valid (8.550597ms)
+✔ scope is order independent but bound to chain/deployment/address/block/ABI and sources (2.796191ms)
+✔ new DB starts at earliest deployment block, clamps later sources and empty batches advance (9.315188ms)
+✔ no safe block and deployment after safe boundary produce no negative RPC range/checkpoint (3.412336ms)
+✔ checkpoint block 0 is distinct from absent checkpoint and resumes at 1 (2.980489ms)
+✔ restart with no new block still verifies hash; then continues from H+1 (4.706322ms)
+✔ checkpoint mismatch even when idle leaves stored data unchanged (2.983416ms)
+✔ checkpoint RPC cannot verify: missing (1.531298ms)
+✔ checkpoint RPC cannot verify: malformed (2.089777ms)
+✔ checkpoint RPC cannot verify: unavailable (1.376472ms)
+✔ one required RPC source fails: entire batch and checkpoint stay unchanged (2.586396ms)
+✔ decode issues remain visible on idle restart after raw checkpoint advances (12.986199ms)
+✔ explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment (1.690878ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2713.297693
+
+> dao-budget-simulator@0.0.0 test:be04
+> node --import tsx --test tests/indexer/projection.test.ts tests/indexer/be04-live-receipt.test.mjs
+
+▶ BE04 live receipt polling
+  ✔ keeps polling after null and returns the eventual receipt (103.168857ms)
+  ✔ times out after a finite deadline with step and transaction hash (46.188969ms)
+  ✔ reports RPC failures without exposing provider error details (13.302778ms)
+  ✔ accepts an expected revert and rejects a revert when success was expected (14.376107ms)
+✔ BE04 live receipt polling (184.542326ms)
+✔ raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay (175.565827ms)
+✔ successful lifecycle links same-tx operation/request/Transfer and counts one payment (85.233795ms)
+✔ unrelated BUD, self and zero transfers do not change treasury totals (18.845624ms)
+✔ timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active (25.455258ms)
+✔ quorum/result 0/100/0 -> Defeated (22.542061ms)
+✔ quorum/result 0/100/100 -> Succeeded (14.216193ms)
+✔ quorum/result 200/200/0 -> Defeated (28.44121ms)
+✔ quorum/result 300/200/100 -> Defeated (15.495805ms)
+✔ ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable (53.127753ms)
+✔ Pending cancellation and direct Timelock cancellation are represented (111.953223ms)
+✔ reject inconsistent projection: wrong ID (43.608128ms)
+✔ reject inconsistent projection: wrong description (43.38239ms)
+✔ reject inconsistent projection: wrong salt (61.614616ms)
+✔ reject inconsistent projection: wrong ETA (52.429599ms)
+✔ reject inconsistent projection: wrong executed calldata (49.327532ms)
+✔ reject inconsistent projection: missing transfer (47.008399ms)
+✔ reject inconsistent projection: missing payment (117.424922ms)
+✔ reject inconsistent projection: wrong transaction (106.932045ms)
+✔ reject inconsistent projection: ambiguous transfer (66.733336ms)
+✔ reject inconsistent projection: duplicate vote (86.886016ms)
+✔ reject inconsistent projection: unlinked outflow (69.616425ms)
+✔ malformed/unknown business log cannot be silently skipped (5.293856ms)
+✔ replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events (139.553752ms)
+ℹ tests 27
+ℹ suites 1
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4184.605784
+
+> dao-budget-simulator@0.0.0 test:be06
+> tsx --test tests/indexer/be06.test.ts
+
+✔ BE06 parses the verified TV4 handoff without requiring a source deployment id (27.782987ms)
+✔ BE06 rejects an incomplete or unsupported manifest and a source range that skips deployment (3.753894ms)
+✔ manifest H and confirmation settings stay canonical and bounded (3.221731ms)
+✔ normalized compare ignores internal IDs, UUID revisions and ingestion timestamps by construction (5.88372ms)
+✔ normalized compare reports precise values for data, scope, H and hash mismatches (5.319402ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3051.452418
+✔ smoke_governance.mjs: SIGINT cleans real Anvil (2659.469461ms)
+✔ smoke_governance.mjs: SIGTERM cleans real Anvil with repeated signal and SIGKILL escalation (6992.529535ms)
+✔ smoke_treasury.mjs: SIGINT cleans real Anvil with repeated signal and SIGKILL escalation (6227.347804ms)
+✔ smoke_treasury.mjs: SIGTERM cleans real Anvil (1224.545664ms)
+✔ owned storage-style temporary directory: SIGINT cleans real Anvil and files (241.476684ms)
+✔ staged successful evidence: SIGINT discards files during concurrent final cleanup (5358.330211ms)
+✔ owned storage-style temporary directory: SIGTERM cleans real Anvil and files (260.200039ms)
+✔ staged successful evidence: SIGTERM discards files during concurrent final cleanup (5415.124774ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 28701.346294
+BE01 OK: 123 JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.
+Timeline OK: 105 timestamp-ordered blocks, 190 distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.
+Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.
+Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.
+PASS: Treasury local transactions and live BE02 receipt decoding. Evidence: /home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261024-acceptance/treasury.json
+
+Script done on 2026-10-24 19:05:05+07:00 [COMMAND_EXIT_CODE="0"]

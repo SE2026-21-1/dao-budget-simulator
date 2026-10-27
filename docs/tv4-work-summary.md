@@ -8,6 +8,47 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Cập nhật 27/10/2026 — nhận giao diện TV3
+
+- Fast-forward nhánh TV4 từ `387a489` tới `f3f3bc5` của TV3: dashboard mới, phát hiện ví EVM và script khởi chạy frontend trên Windows. Các thay đổi TV4/AD-064 đang để local không bị ghi đè.
+- Chromium với `VITE_API_BASE_URL=` xác nhận fixture chỉ đọc: 45 đề xuất, 7 Active, 7 Executed; danh sách trên viewport 390px không tràn ngang. Với cấu hình API local đã dừng, giao diện báo lỗi kết nối và không thay bằng fixture. Không có ví extension hoặc E2E UI→chain→API trong lượt này.
+- Phần vận hành/demo bên dưới là tình trạng quan sát ngày 26/10; không suy ra các cổng hoặc Anvil/PostgreSQL còn chạy ngày 27/10. Cần dựng chain và database mới nếu demo cũ mất, không nối checkpoint vào chain reset.
+
+## Cập nhật 26/10/2026 — tích hợp BE07 và thiết lập demo local
+
+- Nhận commit TV2 `2adcbfa` qua merge `b4c85fd` trên
+  `feature/tv4-operation`: recovery BE07, kiểm tra freshness RPC và migration
+  `database/migrations/005_be07.sql`. Viết `AGENTS.md` (`387a489`) từ khảo sát
+  song song source, tests, cấu hình/build và scripts/docs; tài liệu ghi kiến trúc,
+  quy ước, lệnh chạy và giới hạn nghiệm thu cho trợ lý lập trình.
+- Dựng riêng Anvil chain `31337` (Osaka) và PostgreSQL 18.4 native; chạy
+  `forge build`, `scripts/deploy_local.mjs` rồi `scripts/check_roles.mjs`.
+  Role audit cuối tại block 21 đạt; manifest đang dùng là
+  `/tmp/dao-tv4-be07-local-1Ja8WeT3/manifest-detached.json`. Đây là chain demo
+  mới, không phải testnet hay triển khai bằng signer của nhóm.
+- Áp dụng migrations `001`–`005` vào database `dao_budget_local_detached`,
+  đăng ký metadata của năm contract. First indexed block là **2** (BUD),
+  không phải block 1 của GOV; lưu đúng ranh giới này để API kiểm prefix header.
+  Tạo `.env.local`, `indexer/config/local.json`, `frontend/.env.local` cục bộ
+  (đều gitignored, quyền `600`), không đưa mật khẩu hay cursor secret vào repo.
+- Chạy Anvil, indexer `--worker`, API và Vite trên loopback. Kiểm tra trực tiếp:
+  worker publication tại H19, API health/summary/proposals trả HTTP 200,
+  indexer `synced`, publication `ready`, độ trễ 0 block; Treasury có
+  10.000 BUD, chưa có proposal. Browser thật hiển thị snapshot H19 tại
+  `http://127.0.0.1:46709/`; API ở `http://127.0.0.1:33253`, RPC ở
+  `http://127.0.0.1:8545`. Chưa kiểm luồng ký giao dịch bằng ví extension.
+- Health vẫn **degraded**, không ghi thành healthy: có 16 AccessControl log
+  ngoài topic được decoder hỗ trợ (`unknownTopics: 16`, `decodeErrors: 0`);
+  CLI sync một lượt có thể exit 2 dù publication đã có. Không tắt cảnh báo.
+- Trong lúc chuyển các service sang chế độ chạy tiếp sau phiên, Anvil đã
+  khởi động lại và mất chain trong RAM; worker bảo vệ dữ liệu bằng
+  `REBUILD_REQUIRED`. Đã triển khai lại trên chain mới, dùng database mới
+  thay vì ép checkpoint cũ, rồi kiểm lại role audit/API/UI. Không dùng manifest
+  cũ cho chain hiện tại. Các service đang chạy chỉ là demo tạm: nếu Anvil
+  dừng/khởi động lại phải triển khai và index lại, không nối database cũ vào
+  chain rỗng. Dừng toàn bộ bằng
+  `/tmp/dao-tv4-be07-local-1Ja8WeT3/stop.sh`.
+
 ## Hoàn tất triển khai và nghiệm thu TV4 — 25/10/2026
 
 [Bằng chứng cuối](evidence/tv4-20261025-final.json) ghi runtime, source hashes,

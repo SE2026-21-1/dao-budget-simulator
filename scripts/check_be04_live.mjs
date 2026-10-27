@@ -33,7 +33,7 @@ const withApi = flags.includes('--api') || withBe07;
 const withBe06 = flags.includes('--be06');
 assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06', '--be07'].includes(flag))
   && new Set(flags).size === flags.length,
-  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api] [--be06]');
+  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api|--be06|--be07]');
 assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
 const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
 assert.equal(url.hostname, '127.0.0.1');
@@ -58,9 +58,10 @@ function be06TargetPool(name) {
 const be06Target = withBe06 ? be06TargetPool('BE06_LIVE_TARGET_DATABASE_URL') : null;
 const be06AdvancedTarget = withBe06 ? be06TargetPool('BE06_LIVE_ADVANCED_TARGET_DATABASE_URL') : null;
 const report = {
-  scope: withBe06 ? 'Live local Anvil and isolated PostgreSQL: governance history, BE03/BE04 publication, independent BE06 rebuilds at the same H/hash, normalized compare, chain reconciliation, and post-H event exclusion.' :
-    withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet or reorg rollback.' :
-      'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. No HTTP API, reorg rollback or testnet.',
+  scope: withBe07 ? 'Live local Anvil and isolated PostgreSQL: governance, API, BE07 reorg rollback/replay, fail-closed serving, RPC outage/freshness, deep-fork rebuild requirement and BE06 same-H/hash comparison. No testnet or extension wallet.' :
+    withBe06 ? 'Live local Anvil and isolated PostgreSQL: governance history, BE03/BE04 publication, independent BE06 rebuilds at the same H/hash, normalized compare, chain reconciliation, and post-H event exclusion.' :
+      withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet or reorg rollback.' :
+        'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. No HTTP API, reorg rollback or testnet.',
   baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   runtime: { node: process.version },
   receipts: [],

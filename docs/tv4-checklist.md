@@ -5,24 +5,19 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Trạng thái local mới nhất — 25/10/2026
+## Trạng thái tích hợp — 27/10/2026
 
-- [x] Sửa reorg: barrier trước recovery, rollback/replay tối đa64block, API503/cursor409 trong khi phục hồi và invalidate cursor cũ sau revision mới.
-- [x] RPC đọc retry/backoff hữu hạn; permanent error không lặp; transaction và evm/anvil mutation không tự gửi lại.
-- [x] `--watch` sync→project tuần tự; heartbeat đã xác minh; UI poll5s, pause>30s→cảnh báo→resume tự phục hồi.
-- [x] Backend build/typecheck và 165 tests; 54 real-DB tests; native/live/rebuild/recovery PASS. Frontend 6 tests/build PASS, còn warning đã ghi.
-- [x] [Evidence cuối](evidence/tv4-20261025-final.json), [raw benchmark](evidence/tv4-20261025-final/benchmark.json) và [tổng kết/lệnh chạy lại](tv4-work-summary.md); giữ nguyên evidence lịch sử.
-- [x] Đồng bộ SC05 `21e53e1` và merge history TV2 BE03–BE06; 185 Foundry tests (38 SC05 mới), compiler ABI 46 entries và live governance smoke PASS.
-- [x] SC05 pre-renounce/pre-funding gates, receipt-backed role/operation-history audit; 14 ca Anvil clean/negative; CLI deploy → check → export ở H11/H13/H19 PASS.
-- [x] Cursor HMAC yêu cầu base64url canonical; regression alias padding bits và 4 API/DB tests PASS.
-- [x] Benchmark cuối local: 100 proposal/1.000 vote, 10 client/60s; 8.116 success, 0 error, p95 121,400ms; native cluster đã stop/xóa.
-- [x] Push code `fa498d6` lên TV4; CI push và CI PR đều 8/8 success đúng revision; [metadata](evidence/tv4-20261025-final/publication.json). Không merge `Dev` hoặc tự approve.
-- [x] Gitleaks raw exit1/550findings, đã đối chiếu public SHA/address; 0 credential xác nhận, 0 finding chưa xem; giữ report/triage, không suppress.
-- [ ] Peer review TV1/TV2/TV3, testnet, ví extension và clone máy thành viên khác; không thay bằng CI hoặc local PASS.
+- [x] Đã nhận BE07 `2adcbfa` vào nhánh TV4: migration `005_be07.sql`, worker sync → project, fence publication trước rollback/replay, cursor cũ 409 và API 503 khi recovery. Cửa sổ mặc định **128 block**; ngoài cửa sổ dùng BE06 rebuild trên DB mới. `--watch`/64 block là trạng thái **25/10 trước tích hợp**, không phải hướng dẫn vận hành hiện tại; xem `docs/be07.md` và `README.md`.
+- [x] Kiểm tra lại trên worktree hiện tại với Node 24.15.0: `npm run typecheck` exit 0; `npm run test:be07` **15 pass, 0 fail/skip**. Đây là unit/model không dùng PostgreSQL/Anvil, không thay nghiệm thu native.
+- [x] BE07 native **sau tích hợp**: `npm run test:be07:native` với Node 24.15.0/PostgreSQL 18.4/Foundry-Anvil 1.8.5 trên cluster riêng; typecheck/build exit 0, **172 unit + 73 DB pass, 0 fail/skip**. Live reorg rollback/replay, API 503/cursor 409, deep fork `rebuild_required`, RPC outage/freshness và BE06 compare `equal` đạt; đã sửa nhãn `scope` sai của report BE07 và chạy lại. [Lệnh, raw evidence `/tmp`, hashes và giới hạn](evidence/tv4-be07-20261027.md). Không trỏ vào database demo hay lấy lượt 25/10 làm bằng chứng này.
+- [x] Bằng chứng 25/10 trước tích hợp: 185 Foundry, 165 backend/process, 54 DB/API và 6 frontend tests; native/live/rebuild/recovery, 14 ca Anvil, cursor HMAC canonical, benchmark 100 proposal/1.000 vote với 8.116 request thành công và gitleaks triage. Xem [evidence cuối](evidence/tv4-20261025-final.json) và [tổng kết](tv4-work-summary.md); không gán kết quả này cho BE07 mới.
+- [x] Code `fa498d6` đã push với CI push/PR **8/8** đúng revision đó ([metadata](evidence/tv4-20261025-final/publication.json)). Workflow hiện tại khai báo **9 job** (thêm BE07); cần bằng chứng CI theo revision đang nghiệm thu, không lấy CI cũ thay thế.
+- [x] Demo 26/10 đã ngừng: ngày 27/10 cả RPC/API/UI cũ không nghe cổng. Đã dựng **Anvil mới và PostgreSQL 18.4 mới**, deploy/audit role lại, áp migrations 001–005, worker BE07 và API/UI từ manifest mới; không tái sử dụng DB/checkpoint cũ. Browser thật tại `http://127.0.0.1:46709/` hiển thị API snapshot H19, quỹ 10.000 BUD; health API `synced`/`ready`, `lagBlocks=0` nhưng **degraded** do 16 unknown topics. Runbook tạm ở `/tmp/dao-tv4-demo-20261027-uNp9gL/README-demo.md` đã không còn khi kiểm lại; đây là bằng chứng lịch sử, không phải demo đang chạy. Chain Anvil ở RAM, mất chain thì phải deploy và tạo DB mới; đây không phải test ví extension.
+- [x] Nhận TV3 `1b4b1ea`/`4ff1a13`/`f3f3bc5` bằng fast-forward từ `origin/feature/tv3-frontend`, không đụng các file TV4 đang sửa. Chromium 1366px ở chế độ fixture hiển thị 45 đề xuất, 7 Active, 7 Executed và khóa giao dịch; trang danh sách tại 390px không tràn ngang (`scrollWidth=clientWidth=390`). Không có ví extension trong phiên này; khi dùng cấu hình API local đã dừng, UI hiển thị lỗi kết nối thay vì lùi về fixture. Cần CI đúng revision sau khi công bố.
+- [ ] Peer review TV1/TV2/TV3, testnet với network/RPC/signer/gas đã chốt, ví extension thật và clone trên máy thành viên khác; không tự approve/merge hay coi local/CI là các gate này.
 
-Ngoài cửa sổ64block: giữ `rebuild_required`, dùng BE06 vào DB mới; không tự
-nhận arbitrary-depth recovery hoặc production freshness SLA. Các mục24/10
-bên dưới là lịch sử trước sửa, không ghi đè kết quả FAIL ban đầu.
+Các mục 24/10 bên dưới là lịch sử trước BE07, kể cả lỗi reorg đã ghi **KHÔNG ĐẠT**.
+Không sửa bằng chứng cũ để thay thất bại bằng lượt PASS mới.
 
 ## Lịch sử nghiệm thu — 24/10/2026
 

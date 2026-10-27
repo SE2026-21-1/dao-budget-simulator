@@ -4,14 +4,18 @@ React/TypeScript/Vite + viem, tích hợp wallet, form, Governor và Treasury c�
 
 ## Chạy fixture
 
-Cần Node.js 24 và npm. Từ repository root:
+Cần Node.js 24 và npm. Trên máy mới, chạy trong PowerShell hoặc terminal:
 
 ```sh
+git clone --branch feature/tv3-frontend https://github.com/SE2026-21-1/dao-budget-simulator.git
+cd dao-budget-simulator
 npm --prefix frontend ci
 npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Mở `http://127.0.0.1:5173`. Không cần RPC, backend, ví hoặc `.env.local`.
+Nếu đã clone repo thì chạy hai lệnh `npm` ở trên từ repository root. Mở `http://127.0.0.1:5173` trong Chrome/Edge trên **cùng máy** đang chạy Vite. Mỗi thành viên tự cài, thiết lập và mở khóa tiện ích ví EVM trong đúng profile trình duyệt đó; trên web bấm **Tìm lại ví** rồi **Kết nối ví**. Không chia sẻ seed phrase/private key và không commit `.env.local`.
+
+Chế độ fixture không cần RPC, backend, ví hoặc `.env.local`. Có thể kết nối ví để xem địa chỉ, nhưng mọi giao dịch với fixture đều bị khóa. Muốn thử GOV, self-delegate, propose/vote/queue/execute hoặc nạp BUD, làm theo phần cấu hình BE05 và deployment thật bên dưới.
 
 | Đường dẫn | Nội dung |
 | --- | --- |

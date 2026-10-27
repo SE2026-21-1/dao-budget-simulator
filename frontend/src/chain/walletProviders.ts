@@ -66,6 +66,35 @@ export function parseWalletChain(value: unknown): number | null {
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 }
 
+export async function switchWalletNetwork(provider: InjectedProvider, network: {
+  chainId: number;
+  name: string;
+  rpcUrl: string;
+}): Promise<void> {
+  const chainId = `0x${network.chainId.toString(16)}`;
+  const switchChain = () => provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId }] });
+  try {
+    await switchChain();
+  } catch (cause) {
+    if (walletErrorCode(cause) !== 4902) throw cause;
+    await provider.request({
+      method: "wallet_addEthereumChain",
+      params: [{
+        chainId,
+        chainName: network.name,
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        rpcUrls: [network.rpcUrl],
+      }],
+    });
+    if (parseWalletChain(await provider.request({ method: "eth_chainId" })) !== network.chainId) {
+      await switchChain();
+    }
+  }
+  if (parseWalletChain(await provider.request({ method: "eth_chainId" })) !== network.chainId) {
+    throw new Error("Ví chưa chuyển sang mạng được cấu hình. Kiểm tra mạng trong tiện ích ví rồi thử lại.");
+  }
+}
+
 export function walletErrorCode(error: unknown): number | undefined {
   if (typeof error !== "object" || error === null) return undefined;
   const value = error as { code?: unknown; data?: { originalError?: { code?: unknown } }; cause?: unknown };
@@ -80,6 +109,7 @@ export function walletErrorMessage(error: unknown, fallback: string): string {
     case -32002: return "Ví đang có yêu cầu chờ xử lý. Mở tiện ích ví để xác nhận hoặc hủy yêu cầu đó.";
     case 4100: return "Ví chưa cấp quyền cho trang này. Hãy kết nối lại và cho phép truy cập tài khoản.";
     case 4900: return "Ví đang mất kết nối. Mở ví, kiểm tra mạng rồi thử lại.";
+    case 4902: return "Ví chưa có mạng này. Kiểm tra RPC và thêm mạng trong tiện ích ví rồi thử lại.";
   }
   return error instanceof Error ? error.message : fallback;
 }

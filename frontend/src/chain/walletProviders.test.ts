@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { discoverWallets, parseWalletChain, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
+import { discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
 afterEach(() => { vi.unstubAllGlobals(); });
 
@@ -72,5 +72,45 @@ describe("FE02 wallet responses", () => {
     expect(walletErrorMessage({ code: -32002 }, "fallback")).toContain("chờ xử lý");
     expect(walletErrorMessage({ code: -32603, data: { originalError: { code: 4001 } } }, "fallback")).toContain("từ chối");
     expect(walletErrorMessage({}, "fallback")).toBe("fallback");
+  });
+});
+
+describe("wallet network switching", () => {
+  const network = { chainId: 31337, name: "DAO Budget Local", rpcUrl: "http://127.0.0.1:8545" };
+
+  it("adds an unknown chain and verifies the wallet switched", async () => {
+    const request = vi.fn()
+      .mockRejectedValueOnce({ code: 4902 })
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce("0x1")
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce("0x7a69");
+    await switchWalletNetwork({ request } as unknown as InjectedProvider, network);
+    expect(request.mock.calls.map(([value]) => value.method)).toEqual([
+      "wallet_switchEthereumChain", "wallet_addEthereumChain", "eth_chainId", "wallet_switchEthereumChain", "eth_chainId",
+    ]);
+    expect(request.mock.calls[1][0].params[0]).toMatchObject({
+      chainId: "0x7a69", chainName: network.name, rpcUrls: [network.rpcUrl],
+    });
+  });
+
+  it("does not switch twice when adding the chain already selected it", async () => {
+    const request = vi.fn()
+      .mockRejectedValueOnce({ code: 4902 })
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce("0x7a69")
+      .mockResolvedValueOnce("0x7a69");
+    await switchWalletNetwork({ request } as unknown as InjectedProvider, network);
+    expect(request.mock.calls.map(([value]) => value.method)).toEqual([
+      "wallet_switchEthereumChain", "wallet_addEthereumChain", "eth_chainId", "eth_chainId",
+    ]);
+  });
+
+  it("does not add a chain after rejection and does not accept a wrong network", async () => {
+    const rejected = vi.fn().mockRejectedValue({ code: 4001 });
+    await expect(switchWalletNetwork({ request: rejected } as unknown as InjectedProvider, network)).rejects.toMatchObject({ code: 4001 });
+    expect(rejected).toHaveBeenCalledTimes(1);
+    const wrongChain = vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce("0x1");
+    await expect(switchWalletNetwork({ request: wrongChain } as unknown as InjectedProvider, network)).rejects.toThrow("Ví chưa chuyển sang mạng");
   });
 });

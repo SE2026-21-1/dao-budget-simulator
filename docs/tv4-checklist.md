@@ -8,7 +8,9 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 ## Cập nhật 28/10/2026 — nhận sửa mạng ví TV3
 
 - [x] Merge `ae8c353` của TV3 vào TV4 (`0fac542`): khi MetaMask chưa biết mạng, thao tác do người dùng bấm yêu cầu thêm chain rồi mới chuyển, đọc lại `eth_chainId` để xác nhận; không tự gửi giao dịch. Node 24.15.0: frontend lint exit 0 (còn 8 warning), 14/14 tests và build đạt. Chromium với EIP-1193 thử nghiệm xác nhận luồng `switch → add → switch`, chain `31337`; không phải ví extension thật hay RPC Anvil đang chạy. Fixture vẫn không gợi chuyển mạng cũ và không cho giao dịch.
-- [ ] CI đúng revision sau công bố, review bởi TV3 trên ví extension thật và E2E với Anvil/API mới còn cần kiểm; không dùng bản demo đã mất chain hoặc địa chỉ cũ.
+- [x] CI đúng commit tích hợp `deb6347`: [push #90](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40621063257) và [PR #91](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40621068274) đều **9/9 job success**.
+- [x] Demo local mới từ chain/DB riêng ngày 28/10: Anvil 31337, PostgreSQL 18.4, deploy + check-roles, migrations 001–005, worker BE07/API/UI `http://127.0.0.1:5174/`. Browser đọc snapshot chain H19/hash `0x5527ad1c3f1b8f575facd0ed4938f059f73f77304f1ea084fe0a7000d2335aa4`, quỹ 10.000 BUD khớp `balanceOf` tại H19, 0 proposal; health `synced`/`ready`, `lagBlocks=0`, **degraded** do 16 unknown topics từ sự kiện phụ. Dữ liệu thuộc tiến trình demo đang chạy, không phải ví extension/testnet hoặc bản deploy bền vững; đừng dùng lại DB khi Anvil reset.
+- [ ] TV3 review trên ví extension thật, rồi thử tạo proposal/receipt/snapshot mới với deployment này; người dùng tự xác nhận thêm mạng trong MetaMask. Không coi EIP-1193 giả lập và dữ liệu ở H19 là E2E ví thật.
 
 ## Trạng thái tích hợp — 27/10/2026
 

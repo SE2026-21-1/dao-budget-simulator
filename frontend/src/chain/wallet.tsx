@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash } from "viem";
 import { deployment } from "./config";
-import { discoverWallets, parseWalletChain, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
+import { discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
 // Transactions must use the same provider that the user selected in FE02.
 let activeWalletProvider: InjectedProvider | null = null;
@@ -153,13 +153,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   };
   const discover = () => { setError(null); discovery.current?.scan(); };
   const switchNetwork = async () => {
-    if (!provider || !deployment) return;
+    if (!provider || !deployment || busy) return;
     setBusy(true); setError(null);
     try {
-      await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: `0x${deployment.chainId.toString(16)}` }] });
+      await switchWalletNetwork(provider, { chainId: deployment.chainId, name: deployment.chain.name, rpcUrl: deployment.rpcUrl });
       clearReads();
       setChainId(deployment.chainId);
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Không chuyển được mạng."); }
+    } catch (cause) { setError(walletErrorMessage(cause, "Không chuyển được mạng. Kiểm tra RPC và xác nhận trong tiện ích ví.")); }
     finally { setBusy(false); }
   };
 

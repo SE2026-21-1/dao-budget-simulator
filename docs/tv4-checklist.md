@@ -5,6 +5,11 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Cập nhật 28/10/2026 — nhận sửa mạng ví TV3
+
+- [x] Merge `ae8c353` của TV3 vào TV4 (`0fac542`): khi MetaMask chưa biết mạng, thao tác do người dùng bấm yêu cầu thêm chain rồi mới chuyển, đọc lại `eth_chainId` để xác nhận; không tự gửi giao dịch. Node 24.15.0: frontend lint exit 0 (còn 8 warning), 14/14 tests và build đạt. Chromium với EIP-1193 thử nghiệm xác nhận luồng `switch → add → switch`, chain `31337`; không phải ví extension thật hay RPC Anvil đang chạy. Fixture vẫn không gợi chuyển mạng cũ và không cho giao dịch.
+- [ ] CI đúng revision sau công bố, review bởi TV3 trên ví extension thật và E2E với Anvil/API mới còn cần kiểm; không dùng bản demo đã mất chain hoặc địa chỉ cũ.
+
 ## Trạng thái tích hợp — 27/10/2026
 
 - [x] Đã nhận BE07 `2adcbfa` vào nhánh TV4: migration `005_be07.sql`, worker sync → project, fence publication trước rollback/replay, cursor cũ 409 và API 503 khi recovery. Cửa sổ mặc định **128 block**; ngoài cửa sổ dùng BE06 rebuild trên DB mới. `--watch`/64 block là trạng thái **25/10 trước tích hợp**, không phải hướng dẫn vận hành hiện tại; xem `docs/be07.md` và `README.md`.

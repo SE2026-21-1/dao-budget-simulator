@@ -100,6 +100,8 @@ Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không d
 
 Mở URL Vite trong trình duyệt đã cài và bật tiện ích ví EVM. Chọn ví nếu có nhiều provider, bấm **Kết nối ví** rồi xác nhận popup. Nếu chưa thấy ví, bấm **Tìm lại ví**; trình duyệt tích hợp không có tiện ích sẽ không cung cấp provider. Kết nối và xem địa chỉ không cần API hoặc địa chỉ contract, còn thao tác on-chain cần cấu hình deployment khớp manifest.
 
+Khi đã có API/deployment thật, nút **Chuyển sang mạng** gửi yêu cầu tới ví. Nếu ví chưa biết chain (`4902`), trang yêu cầu ví thêm mạng với chain ID/RPC đã cấu hình rồi xác nhận đã chuyển đúng chain. Người dùng phải kiểm tra RPC và chấp thuận trong tiện ích ví; thao tác này không khởi chạy Anvil/API hoặc cấp GOV/BUD. Ở chế độ fixture nút chuyển mạng không xuất hiện.
+
 Trang không tự mở yêu cầu cấp quyền khi tải; `eth_accounts` chỉ khôi phục tài khoản đã được cấp quyền. **Ẩn tài khoản** chỉ xóa khỏi giao diện. Muốn thu hồi quyền website, thực hiện trong tiện ích ví.
 
 ## Browser kiểm chứng bằng Anvil thật

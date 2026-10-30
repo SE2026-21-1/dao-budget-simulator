@@ -22,8 +22,10 @@ for (const failure of [429, 500, 503, 'network', 'timeout', -32005] as const) {
       res.end(JSON.stringify({ jsonrpc: '2.0', id, result: '0x7a69' }));
     });
     server.listen(0, '127.0.0.1'); await once(server, 'listening');
+    const address = server.address();
+    assert.ok(address && typeof address !== 'string');
     try {
-      const rpc = new HttpRpc(`http://127.0.0.1:${(server.address() as {port:number}).port}`, failure === 'timeout' ? 40 : 1000,
+      const rpc = new HttpRpc(`http://127.0.0.1:${address.port}`, 1000,
         { baseDelayMs: 2, maxDelayMs: 8, random: () => 0 });
       assert.equal(await rpc.call('eth_chainId', []), '0x7a69'); assert.equal(attempts, 3);
     } finally { server.closeAllConnections(); await new Promise<void>(r => server.close(() => r())); }

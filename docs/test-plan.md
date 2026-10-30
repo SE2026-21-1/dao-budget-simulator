@@ -4,6 +4,17 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+**Trạng thái hiện hành đối chiếu 30/10:** xem [bảng tiến độ tích hợp và các
+release gate còn mở](tv4-checklist.md#đối-chiếu-tiến-độ-dự-án--30102026).
+BE07 native đã có lượt local PASS lại ngày 30/10: 172 unit + 73 DB tests,
+live reorg/replay và fail-closed API; TV4 native có 55 DB/API tests, live
+governance/rebuild và benchmark 100 proposal/1.000 vote. Xem
+[lệnh, kết quả, cả lượt test FAIL trước sửa](tv4-checklist.md#kiểm-tra-local-bổ-sung-ngày-30102026).
+TC11 “KHÔNG ĐẠT” trong bảng 24/10 là kết quả **trước BE07**, không phải
+kết luận về code hiện tại. Chưa có nghiệm thu toàn bộ TC01–TC14/INV01–04;
+testnet và ví extension thật cũng chưa được kiểm chứng. Giữ các checkbox
+nghiệm thu tổng thể mở.
+
 ## Cập nhật sửa lỗi local — 25/10/2026
 
 [Evidence](evidence/tv4-20261025-recovery.json), [runbook và giới hạn](tv4-work-summary.md):
@@ -23,10 +34,10 @@ riêng trong bàn giao GitHub. Mục24/10 bên dưới giữ nguyên kết quả
 
 ## 0. Trạng thái nghiệm thu cập nhật — 24/10/2026
 
-Các cột trạng thái/nhãn “chưa” trong bảng lịch sử21–23/10 được đọc theo ngày
-và source đã ghi; bảng dưới cùng [report mới](evidence/tv4-20261024-acceptance/report.md)
-là trạng thái hiện tại. Setup/kỳ vọng TC/Q/INV vẫn giữ nguyên, không giảm
-tiêu chí để khớp dữ liệu đã chạy.
+Các cột trạng thái/nhãn “chưa” trong bảng lịch sử 21–23/10 được đọc theo
+ngày và source đã ghi; bảng dưới cùng [report 24/10](evidence/tv4-20261024-acceptance/report.md)
+là trạng thái **tại 24/10**, không phải kết luận hiện tại sau BE07. Setup/kỳ
+vọng TC/Q/INV vẫn giữ nguyên, không giảm tiêu chí để khớp dữ liệu đã chạy.
 
 | Evidence mới | Phạm vi đã quan sát | Giới hạn |
 |---|---|---|

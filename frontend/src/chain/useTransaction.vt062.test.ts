@@ -28,13 +28,19 @@ vi.mock("react", () => ({
 }));
 
 vi.mock("./transactions", () => ({
+  ReceiptTerminalError: class ReceiptTerminalError extends Error {
+    readonly kind: "reverted" | "cancelled";
+    constructor(kind: "reverted" | "cancelled", message: string) { super(message); this.kind = kind; }
+  },
   transactionErrorMessage: (cause: unknown) => cause instanceof Error ? cause.message : String(cause),
   waitForReceipt: hookHarness.waitForReceipt,
 }));
 
 import { useTransaction } from "./useTransaction";
+import { ReceiptTerminalError } from "./transactions";
 
 const H1 = ("0x" + "11".repeat(32)) as Hash;
+const H2 = ("0x" + "22".repeat(32)) as Hash;
 const receiptFor = (transactionHash: Hash) => ({
   transactionHash,
   status: "success",
@@ -123,5 +129,71 @@ describe("VT-062 receipt retry", () => {
     waiting.resolve(receipt);
     expect(await firstRun).toBe(receipt);
     expect(useHarnessTransaction()).toMatchObject({ phase: "success", hash: H1, busy: false });
+  });
+
+  it("does not attach a changed request to H1 or send while H1 is unresolved", async () => {
+    hookHarness.waitForReceipt
+      .mockRejectedValueOnce(new Error("RPC timeout"))
+      .mockResolvedValueOnce(receiptFor(H1));
+    const sendOriginal = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
+    const sendChanged = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
+
+    expect(await useHarnessTransaction().run(sendOriginal, undefined, "draft/account/chain/deployment-A")).toBeNull();
+    expect(await useHarnessTransaction().run(sendChanged, undefined, "draft/account/chain/deployment-B")).toBeNull();
+    expect(sendChanged).not.toHaveBeenCalled();
+    expect(hookHarness.waitForReceipt).toHaveBeenCalledTimes(1);
+    expect(useHarnessTransaction()).toMatchObject({ phase: "error", hash: H1 });
+
+    expect(await useHarnessTransaction().run(sendOriginal, undefined, "draft/account/chain/deployment-A")).toMatchObject({ transactionHash: H1 });
+    expect(sendOriginal).toHaveBeenCalledTimes(1);
+    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H1);
+  });
+
+  it.each([
+    ["reverted", "reverted"],
+    ["cancelled", "error"],
+  ] as const)("clears the pending hash after a terminal %s outcome", async (kind, phase) => {
+    hookHarness.waitForReceipt
+      .mockRejectedValueOnce(new ReceiptTerminalError(kind, kind))
+      .mockResolvedValueOnce(receiptFor(H2));
+    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
+    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
+    const afterReceipt = vi.fn();
+
+    expect(await useHarnessTransaction().run(firstSend, afterReceipt, "request-A")).toBeNull();
+    expect(useHarnessTransaction()).toMatchObject({ phase, hash: H1, busy: false });
+    expect(afterReceipt).not.toHaveBeenCalled();
+
+    expect(await useHarnessTransaction().run(nextSend, afterReceipt, "request-B")).toMatchObject({ transactionHash: H2 });
+    expect(nextSend).toHaveBeenCalledTimes(1);
+    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H2);
+    expect(afterReceipt).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows a distinct action after H1 has succeeded", async () => {
+    hookHarness.waitForReceipt
+      .mockResolvedValueOnce(receiptFor(H1))
+      .mockResolvedValueOnce(receiptFor(H2));
+    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
+    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
+
+    expect(await useHarnessTransaction().run(firstSend, undefined, "request-A")).toMatchObject({ transactionHash: H1 });
+    expect(await useHarnessTransaction().run(nextSend, undefined, "request-B")).toMatchObject({ transactionHash: H2 });
+    expect(firstSend).toHaveBeenCalledTimes(1);
+    expect(nextSend).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves the old new-action behavior for callers without a request key", async () => {
+    hookHarness.waitForReceipt
+      .mockRejectedValueOnce(new Error("RPC timeout"))
+      .mockResolvedValueOnce(receiptFor(H2));
+    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
+    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
+
+    expect(await useHarnessTransaction().run(firstSend)).toBeNull();
+    expect(await useHarnessTransaction().run(nextSend)).toMatchObject({ transactionHash: H2 });
+    expect(firstSend).toHaveBeenCalledTimes(1);
+    expect(nextSend).toHaveBeenCalledTimes(1);
+    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H2);
   });
 });

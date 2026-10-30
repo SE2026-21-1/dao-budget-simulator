@@ -19,6 +19,16 @@ export function parseBUD(amount: string): bigint {
 }
 export type TransactionPhase = "idle" | "signing" | "submitted" | "confirming" | "success" | "reverted" | "error";
 
+export class ReceiptTerminalError extends Error {
+  readonly kind: "reverted" | "cancelled";
+
+  constructor(kind: "reverted" | "cancelled", message: string) {
+    super(message);
+    this.name = "ReceiptTerminalError";
+    this.kind = kind;
+  }
+}
+
 export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext) {
   if (!deployment || !publicClient) throw new Error("Chưa cấu hình deployment thật trong .env.");
   if (!account) throw new Error("Hãy kết nối ví trước.");
@@ -62,12 +72,18 @@ export async function verifyDeployment(): Promise<void> {
 export async function waitForReceipt(hash: Hash): Promise<TransactionReceipt> {
   if (!publicClient) throw new Error("Thiếu RPC để kiểm tra giao dịch.");
   let changedAction = false;
-  const receipt = await publicClient.waitForTransactionReceipt({
-    hash,
-    onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
-  });
-  if (changedAction) throw new Error("Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
-  if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
+  let receipt: TransactionReceipt;
+  try {
+    receipt = await publicClient.waitForTransactionReceipt({
+      hash,
+      onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
+    });
+  } catch (cause) {
+    if (changedAction) throw new ReceiptTerminalError("cancelled", "Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
+    throw cause;
+  }
+  if (changedAction) throw new ReceiptTerminalError("cancelled", "Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
+  if (receipt.status !== "success") throw new ReceiptTerminalError("reverted", "Giao dịch đã lên chain nhưng bị revert.");
   return receipt;
 }
 

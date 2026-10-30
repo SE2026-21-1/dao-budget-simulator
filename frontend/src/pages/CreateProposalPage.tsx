@@ -42,6 +42,12 @@ function CreateProposalPage() {
       assertWritable(wallet.account, wallet.chainId, summary?.context);
       if (validation) throw new Error(validation);
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
+      const requestKey = JSON.stringify([
+        wallet.account!.toLowerCase(), wallet.chainId, deployment!.chainId, deployment!.deploymentId,
+        deployment!.governor.toLowerCase(), deployment!.treasury.toLowerCase(),
+        payload.targets.map((target) => target.toLowerCase()), payload.values.map(String),
+        payload.calldatas.map((data) => data.toLowerCase()), payload.description,
+      ]);
       await transaction.run(
         async () => {
           await assertCanPropose(wallet.account!);
@@ -51,6 +57,7 @@ function CreateProposalPage() {
           setSubmittedId(proposalIdFromReceipt(receipt.logs));
           setLoadAttempt((value) => value + 1);
         },
+        requestKey,
       );
     } catch (cause) { setFormError(cause instanceof Error ? cause.message : "Không thể tạo đề xuất."); }
   };

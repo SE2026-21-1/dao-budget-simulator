@@ -27,6 +27,7 @@ vi.mock("../chain/config", () => ({
   deployment: {
     chainId: 31337,
     deploymentId: "vt062-local",
+    governor: "0xdddddddddddddddddddddddddddddddddddddddd",
     treasury: uiHarness.treasury,
   },
   transactionUrl: () => null,
@@ -37,6 +38,10 @@ vi.mock("../chain/wallet", () => ({
 }));
 
 vi.mock("../chain/transactions", () => ({
+  ReceiptTerminalError: class ReceiptTerminalError extends Error {
+    readonly kind: "reverted" | "cancelled";
+    constructor(kind: "reverted" | "cancelled", message: string) { super(message); this.kind = kind; }
+  },
   assertWritable: uiHarness.assertWritable,
   assertCanPropose: uiHarness.assertCanPropose,
   buildProposal: uiHarness.buildProposal,
@@ -194,6 +199,66 @@ describe("VT-062 proposal retry through the product form", () => {
     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
     expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarness.hash);
+    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
+    expect(container.textContent).toContain("Proposal ID: 42");
+  });
+
+  it("does not attach a changed payload or wallet account to the unresolved hash", async () => {
+    const firstReceiptWait = deferred<TransactionReceipt>();
+    const firstWaitStarted = deferred<void>();
+    const firstErrorHandled = deferred<void>();
+    uiHarness.buildProposal.mockImplementation((...args: unknown[]) => ({
+      targets: [uiHarness.treasury],
+      values: [0n],
+      calldatas: [args[3] === "1" ? "0x1234" : "0x5678"],
+      description: "same description",
+    }));
+    uiHarness.waitForReceipt
+      .mockImplementationOnce(() => {
+        firstWaitStarted.resolve(undefined);
+        return firstReceiptWait.promise;
+      })
+      .mockResolvedValueOnce({ transactionHash: uiHarness.hash, status: "success", logs: [] } as unknown as TransactionReceipt);
+    uiHarness.transactionErrorMessage.mockImplementation((cause: unknown) => {
+      firstErrorHandled.resolve(undefined);
+      return cause instanceof Error ? cause.message : String(cause);
+    });
+
+    await act(async () => {
+      root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>);
+      await Promise.resolve();
+    });
+    await act(async () => {
+      setFieldValue("proposal-title", "VT-062 retry");
+      setFieldValue("proposal-body", "Retry tracks the existing transaction hash.");
+      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
+      setFieldValue("proposal-amount", "1");
+    });
+    await act(async () => {
+      submitButton().click();
+      await firstWaitStarted.promise;
+    });
+    firstReceiptWait.reject(new Error("RPC timeout"));
+    await act(async () => { await firstErrorHandled.promise; });
+
+    await act(async () => { setFieldValue("proposal-amount", "2"); });
+    await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
+    expect(container.textContent).toContain("Chỉ có thể thử lại cùng yêu cầu");
+
+    await act(async () => { setFieldValue("proposal-amount", "1"); });
+    uiHarness.useWallet.mockReturnValue({ account: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", chainId: 31337 });
+    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); });
+    await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
+
+    uiHarness.useWallet.mockReturnValue({ account: uiHarness.account, chainId: 31337 });
+    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); });
+    await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
     expect(container.textContent).toContain("Proposal ID: 42");
   });

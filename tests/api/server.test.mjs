@@ -284,8 +284,14 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
   const firstIds = first.body.data.map((x) => x.proposalId);
   assert.equal(new Set(firstIds).size, 20);
   assert.deepEqual(firstIds, proposalIds.slice().reverse().slice(0, 20));
-  const tampered = first.body.pagination.nextCursor.slice(0, -1) + (first.body.pagination.nextCursor.endsWith('A') ? 'B' : 'A');
-  assert.equal((await get('/proposals', { limit: '20', cursor: tampered })).body.error.code, 'INVALID_CURSOR');
+  // Change a signature byte; changing the final base64url character can change only unused padding bits.
+  const [payload, signature] = first.body.pagination.nextCursor.split('.');
+  const tamperedSignature = Buffer.from(signature, 'base64url');
+  tamperedSignature[0] ^= 1;
+  const tampered = `${payload}.${tamperedSignature.toString('base64url')}`;
+  const rejected = await get('/proposals', { limit: '20', cursor: tampered });
+  assert.equal(rejected.status, 400, JSON.stringify(rejected.body));
+  assert.equal(rejected.body.error.code, 'INVALID_CURSOR');
   assert.equal((await get('/proposals', { limit: '10', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
   assert.equal((await get('/proposals', { state: 'Pending', limit: '20', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
   assert.equal((await get('/treasury/transfers', { limit: '20', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');

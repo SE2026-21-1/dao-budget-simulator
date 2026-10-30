@@ -2,7 +2,7 @@
 // Owns a new unforked Anvil; database must be new, isolated and explicitly selected.
 import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { once } from 'node:events';
 import { readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
@@ -17,12 +17,12 @@ import { HttpRpc } from '../indexer/rpc.ts';
 import { PostgresStorage } from '../indexer/storage.ts';
 import { sync } from '../indexer/syncer.ts';
 import { project } from '../indexer/projection/projector.ts';
+import { createApiServer } from '../indexer/api/server.ts';
 
 const args = process.argv.slice(2);
-assert.ok(
-  args.length === 2 && args[0] === '--output',
-  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json>',
-);
+const withApi = args.length === 3 && args[2] === '--api';
+assert.ok((args.length === 2 || withApi) && args[0] === '--output',
+  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api]');
 assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
 const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
 assert.equal(url.hostname, '127.0.0.1');
@@ -33,7 +33,8 @@ const output = resolve(args[1]);
 const pool = new pg.Pool({ connectionString: url.href, max: 3 });
 const report = {
   scope:
-    'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. Not HTTP API, reorg rollback, testnet or FR15 rebuild acceptance.',
+    withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet, reorg rollback or FR15 rebuild acceptance.' :
+      'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. Not HTTP API, reorg rollback, testnet or FR15 rebuild acceptance.',
   baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   runtime: { node: process.version },
   receipts: [],
@@ -41,6 +42,9 @@ const report = {
   checks: [],
 };
 let anvil;
+let phaseApi;
+let phaseApiBase;
+let phaseApiChecks = [];
 let anvilOutput = '';
 try {
   assert.equal(
@@ -49,7 +53,7 @@ try {
     'Refuse a nonempty database.',
   );
   report.runtime.postgres = (await pool.query('SELECT version() AS version')).rows[0].version;
-  for (const name of ['001_initial', '002_be03', '003_be04'])
+  for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : [])])
     await pool.query(await readFile(new URL(`../database/migrations/${name}.sql`, import.meta.url), 'utf8'));
   const reserve = createServer();
   await new Promise((done, reject) => {
@@ -175,12 +179,27 @@ try {
     deploymentBlock: manifest.contracts[k].deploymentBlock,
     abiVersion: manifest.contracts[k].abiVersion,
   }));
+  if (withApi) {
+    const govContract = manifest.contracts.GOV;
+    assert.ok(govContract, 'Manifest must provide the deployed governance token address and ABI version for BE05.');
+    await pool.query(`INSERT INTO deployment_contracts(deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
+      VALUES($1,31337,'governance_token',$2,$3,$4)`, [d, govContract.address.toLowerCase(), govContract.deploymentBlock, govContract.abiVersion]);
+  }
   for (const c of contracts)
     await pool.query(
       `INSERT INTO deployment_contracts(deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
     VALUES($1,31337,$2,$3,$4,$5)`,
       [d, c.role, c.address, c.deploymentBlock, c.abiVersion],
     );
+  if (withApi) {
+    phaseApi = createApiServer({ pool, cursorSecret: randomBytes(32).toString('hex'), snapshotTtlSeconds: 900 });
+    await new Promise((done, reject) => { phaseApi.once('error', reject); phaseApi.listen(0, '127.0.0.1', done); });
+    phaseApiBase = `http://127.0.0.1:${phaseApi.address().port}/api`;
+  }
+  const phaseApiGet = async (path, params = new URLSearchParams({ chainId: '31337', deploymentId: 'be04-live' })) => {
+    const response = await fetch(`${phaseApiBase}${path}?${params}`);
+    return { status: response.status, body: await response.json() };
+  };
   const config = parseConfig(
     {
       rpcUrl,
@@ -214,6 +233,58 @@ try {
       const row = states.find((s) => s.proposal_id === p.proposalId);
       assert.equal(row?.state, expected[p.label], `${label}/${p.label}`);
     }
+    if (withApi) {
+      const scope = new URLSearchParams({ chainId: '31337', deploymentId: 'be04-live' });
+      const summary = await phaseApiGet('/summary', scope);
+      assert.equal(summary.status, 200, `${label}/summary: ${JSON.stringify(summary.body)}`);
+      for (const key of ['chainId','asOfBlock','asOfBlockHash','asOfTimestamp','snapshotRevision','dataKind'])
+        assert.equal(summary.body.context[key], projection.context[key], `${label}/summary ${key}`);
+      assert.equal(summary.body.data.treasury.balance, projection.treasury.balance, `${label}/summary balance`);
+      assert.equal(summary.body.data.proposalCounts.total, proposals.length, `${label}/summary count`);
+      const pinned = new URLSearchParams({ ...Object.fromEntries(scope), asOfBlock: projection.context.asOfBlock,
+        asOfBlockHash: projection.context.asOfBlockHash });
+      const list = await phaseApiGet('/proposals', pinned);
+      assert.equal(list.status, 200, `${label}/proposals`);
+      assert.equal(list.body.pagination.totalCount, proposals.length, `${label}/proposal count`);
+      const sqlTotals = (await pool.query('SELECT total_in::text,total_out::text,balance::text FROM treasury_totals WHERE deployment_id=$1', [d])).rows[0];
+      for (const key of ['totalIn','totalOut','balance'])
+        assert.equal(summary.body.data.treasury[key], sqlTotals[{ totalIn: 'total_in', totalOut: 'total_out', balance: 'balance' }[key]], `${label}/SQL ${key}`);
+      let contractBalance;
+      const balanceCall = await rpc('eth_call', [
+        { to: address.BUD, data: abi.BUD.encodeFunctionData('balanceOf', [address.Treasury]) },
+        { blockHash: projection.context.asOfBlockHash, requireCanonical: true },
+      ]);
+      contractBalance = String(abi.BUD.decodeFunctionResult('balanceOf', balanceCall)[0]);
+      assert.equal(summary.body.data.treasury.balance, contractBalance, `${label}/balanceOf(H)`);
+      for (const p of proposals) {
+        const row = states.find((s) => s.proposal_id === p.proposalId);
+        const detail = await phaseApiGet(`/proposals/${p.proposalId}`, pinned);
+        assert.equal(detail.status, 200, `${label}/detail ${p.label}`);
+        assert.equal(detail.body.context.asOfBlockHash, projection.context.asOfBlockHash);
+        assert.equal(detail.body.data.state, row.state, `${label}/state ${p.label}`);
+        assert.equal(detail.body.data.votes.quorum, row.quorum === null ? null : String(row.quorum), `${label}/quorum ${p.label}`);
+        assert.equal(detail.body.data.operation?.status ?? null, row.operation_status, `${label}/operation ${p.label}`);
+        const votes = await phaseApiGet(`/proposals/${p.proposalId}/votes`, pinned);
+        assert.equal(votes.status, 200, `${label}/votes ${p.label}`);
+        const sums = [0n, 0n, 0n];
+        for (const vote of votes.body.data) sums[vote.support] += BigInt(vote.weight);
+        assert.deepEqual(sums.map(String), [detail.body.data.votes.against, detail.body.data.votes.for, detail.body.data.votes.abstain],
+          `${label}/vote totals ${p.label}`);
+      }
+      const transferParams = new URLSearchParams({ ...Object.fromEntries(pinned), limit: '100' });
+      const transfers = await phaseApiGet('/treasury/transfers', transferParams);
+      assert.equal(transfers.status, 200, `${label}/transfers`);
+      const transferCount = (await pool.query(`SELECT count(*)::text AS count FROM transfers
+        WHERE deployment_id=$1 AND token_address=$2 AND treasury_address=$3 AND (from_address=treasury_address OR to_address=treasury_address)`,
+      [d, address.BUD.toLowerCase(), address.Treasury.toLowerCase()])).rows[0].count;
+      assert.equal(transfers.body.pagination.totalCount, Number(transferCount), `${label}/transfer count`);
+      const health = await phaseApiGet('/health', scope);
+      assert.equal(health.status, 200, `${label}/health`);
+      assert.equal(health.body.data.publication, 'ready');
+      assert.equal(health.body.data.rawDecodeComplete, false);
+      phaseApiChecks.push({ label, context: summary.body.context, balance: contractBalance, totals: sqlTotals,
+        proposalCount: list.body.pagination.totalCount, transferCount, health: health.body.data.status });
+    }
     report.phases.push({
       label,
       raw: { checkpoint: raw.checkpoint, decodeComplete: raw.decodeComplete, unknownTopics: raw.unknownTopics },
@@ -239,7 +310,7 @@ try {
     'Governor',
     'cancel',
     [proposals[4].targets, proposals[4].values, proposals[4].calldatas, proposals[4].descriptionHash],
-    now,
+    snapshot - 1n,
   );
   await rpc('evm_setNextBlockTimestamp', [toQuantity(snapshot)]);
   await rpc('evm_mine');
@@ -309,6 +380,10 @@ try {
   const underfundProposalId = String(
     (await call('Governor', 'hashProposal', [underfundTargets, underfundValues, underfundCalldatas, id(underfundDescription)]))[0],
   );
+  const underfundProposal = { label: 'underfunded-retry', proposalId: underfundProposalId, requestId: underfundRequest,
+    description: underfundDescription, targets: underfundTargets, values: underfundValues, calldatas: underfundCalldatas,
+    descriptionHash: id(underfundDescription) };
+  proposals.push(underfundProposal);
   const underfundNow = BigInt((await rpc('eth_getBlockByNumber', ['latest', false])).timestamp) + 1n;
   await tx(
     'propose underfunded payment',
@@ -342,7 +417,7 @@ try {
   const balanceAfterRevert = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
   assert.equal(paidAfterRevert, false);
   assert.equal(balanceAfterRevert, underfundBalanceBefore);
-  const afterRevert = await phase('underfunded execute reverted', { ...queued, payment: 'Executed' });
+  const afterRevert = await phase('underfunded execute reverted', { ...queued, payment: 'Executed', 'underfunded-retry': 'Queued' });
   assert.equal(afterRevert.projection.treasury.balance, String(9000n * U));
   assert.deepEqual(afterRevert.projection.counts,
     { proposals: 6, votes: 9, operations: 3, transfers: 2, disbursements: 1 });
@@ -367,7 +442,7 @@ try {
   await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs, underfundEta + 2n);
   const paidAfterRetry = (await call('Treasury', 'paidRequests', [underfundRequest]))[0];
   assert.equal(paidAfterRetry, true);
-  const final = await phase('funded retry succeeds', { ...queued, payment: 'Executed' });
+  const final = await phase('funded retry succeeds', { ...queued, payment: 'Executed', 'underfunded-retry': 'Executed' });
   assert.equal(final.projection.treasury.balance, String(1000n * U));
   assert.equal(final.projection.treasury.totalIn, String(13000n * U));
   assert.equal(final.projection.treasury.totalOut, String(12000n * U));
@@ -403,11 +478,7 @@ try {
       [d],
     )
   ).rows;
-  for (const p of [...proposals, {
-    proposalId: underfundProposalId,
-    description: underfundDescription,
-    descriptionHash: id(underfundDescription),
-  }])
+  for (const p of proposals)
     assert.ok(
       rows
         .filter((r) => r.proposal_id === p.proposalId)
@@ -428,7 +499,7 @@ try {
     return snapshot;
   };
   const before = await stable();
-  await project(config, transport, pool);
+  const finalProjection = await project(config, transport, pool);
   assert.deepEqual(await stable(), before);
   const rawBefore = (
     await pool.query(
@@ -451,16 +522,7 @@ try {
     await readFile(new URL('../database/queries/be04_read_model.sql', import.meta.url), 'utf8')
   ).replaceAll(":'deployment_id'", d);
   await pool.query(readQueries);
-  report.proposals = [...proposals, {
-    label: 'underfunded-retry',
-    proposalId: underfundProposalId,
-    requestId: underfundRequest,
-    description: underfundDescription,
-    targets: underfundTargets,
-    values: underfundValues,
-    calldatas: underfundCalldatas,
-    descriptionHash: id(underfundDescription),
-  }];
+  report.proposals = [...proposals];
   report.finalRows = rows;
   report.finalSnapshot = before;
   report.checks.push(
@@ -474,6 +536,75 @@ try {
     'repeat projection is row-stable; idle BE03 restart preserves raw identity/unknown classifications',
   );
   report.status = 'PASS';
+  if (withApi) {
+    const api = createApiServer({ pool, cursorSecret: randomBytes(32).toString('hex'), snapshotTtlSeconds: 900 });
+    await new Promise((done, reject) => { api.once('error', reject); api.listen(0, '127.0.0.1', done); });
+    try {
+      const base = `http://127.0.0.1:${api.address().port}/api`;
+      const common = new URLSearchParams({ chainId: '31337', deploymentId: 'be04-live' });
+      const request = async (path, query = common) => {
+        const response = await fetch(`${base}${path}?${query}`);
+        return { status: response.status, body: await response.json() };
+      };
+      const summary = await request('/summary');
+      assert.equal(summary.status, 200);
+      const expectedContext = finalProjection.context;
+      for (const key of ['chainId','asOfBlock','asOfBlockHash','asOfTimestamp','snapshotRevision','dataKind'])
+        assert.equal(summary.body.context[key], expectedContext[key], `API summary ${key} must match BE04 H.`);
+      assert.equal(summary.body.context.deploymentId, 'be04-live', 'API scope uses the verified deployment name, not BE04 internal serial ID.');
+      const tagged = new URLSearchParams({ ...Object.fromEntries(common), asOfBlock: expectedContext.asOfBlock, asOfBlockHash: expectedContext.asOfBlockHash });
+      const detail = await request(`/proposals/${proposals[0].proposalId}`, tagged);
+      assert.equal(detail.status, 200);
+      assert.equal(detail.body.data.description, proposals[0].description);
+      assert.equal(detail.body.data.descriptionHash, proposals[0].descriptionHash);
+      assert.equal(detail.body.context.asOfBlockHash, expectedContext.asOfBlockHash);
+      const votes = await request(`/proposals/${proposals[0].proposalId}/votes`, tagged);
+      assert.equal(votes.status, 200);
+      assert.equal(votes.body.context.asOfBlock, expectedContext.asOfBlock);
+      const transferPage = await request('/treasury/transfers', new URLSearchParams({ ...Object.fromEntries(tagged), direction: 'out', limit: '1' }));
+      assert.equal(transferPage.status, 200);
+      assert.equal(transferPage.body.pagination.totalCount, 2);
+      assert.ok(transferPage.body.pagination.nextCursor);
+      const secondTransfers = await request('/treasury/transfers', new URLSearchParams({ ...Object.fromEntries(tagged), direction: 'out', limit: '1', cursor: transferPage.body.pagination.nextCursor }));
+      assert.equal(secondTransfers.status, 200);
+      assert.equal(secondTransfers.body.data.length, 1);
+      assert.equal(secondTransfers.body.pagination.nextCursor, null);
+      const proposalPage1 = await request('/proposals', new URLSearchParams({ ...Object.fromEntries(tagged), limit: '2' }));
+      const proposalIds = [...proposalPage1.body.data.map((p) => p.proposalId)];
+      let next = proposalPage1.body.pagination.nextCursor;
+      while (next) {
+        const page = await request('/proposals', new URLSearchParams({ ...Object.fromEntries(tagged), limit: '2', cursor: next }));
+        assert.equal(page.status, 200);
+        assert.equal(page.body.context.asOfBlockHash, expectedContext.asOfBlockHash);
+        proposalIds.push(...page.body.data.map((p) => p.proposalId));
+        next = page.body.pagination.nextCursor;
+      }
+      assert.equal(proposalIds.length, Number(summary.body.data.proposalCounts.total));
+      assert.equal(new Set(proposalIds).size, proposalIds.length);
+      const pinnedCall = await rpc('eth_call', [
+        { to: address.BUD, data: abi.BUD.encodeFunctionData('balanceOf', [address.Treasury]) },
+        { blockHash: expectedContext.asOfBlockHash, requireCanonical: true },
+      ]);
+      const contractBalance = String(abi.BUD.decodeFunctionResult('balanceOf', pinnedCall)[0]);
+      const sqlTotals = (await pool.query(`SELECT total_in::text,total_out::text,balance::text FROM treasury_totals WHERE deployment_id=$1`, [d])).rows[0];
+      assert.equal(summary.body.data.treasury.balance, contractBalance);
+      assert.equal(summary.body.data.treasury.balance, sqlTotals.balance);
+      assert.equal(summary.body.data.treasury.totalIn, sqlTotals.total_in);
+      assert.equal(summary.body.data.treasury.totalOut, sqlTotals.total_out);
+      const transferCount = (await pool.query(`SELECT count(*)::text AS count FROM transfers
+        WHERE deployment_id=$1 AND token_address=$2 AND treasury_address=$3 AND (from_address=treasury_address OR to_address=treasury_address)`,
+      [d, address.BUD.toLowerCase(), address.Treasury.toLowerCase()])).rows[0].count;
+      assert.equal((await request('/treasury/transfers', tagged)).body.pagination.totalCount, Number(transferCount));
+      const health = await request('/health');
+      assert.ok(health.status === 200 || health.status === 503);
+      report.api = { status: 'PASS', context: summary.body.context, summary: summary.body.data,
+        contractBalance, sqlTotals, transferCount, proposalsPaged: proposalIds.length,
+        phaseChecks: phaseApiChecks,
+        health: health.body, checks: ['all six GET routes responded from the live PostgreSQL deployment',
+          'proposal pages had no duplicates and retained one H/hash', 'Transfer totals and treasury balance match SQL and hash-pinned contract balanceOf(H)',
+          'proposal detail description/hash and votes read from the live projection'] };
+    } finally { await new Promise((done) => api.close(done)); }
+  }
 } catch (error) {
   report.status = 'FAIL';
   report.error = { name: error.name, message: error.message, stack: error.stack };
@@ -484,15 +615,25 @@ try {
     'indexer/projection/model.ts',
     'indexer/projection/chain.ts',
     'indexer/projection/projector.ts',
+    'indexer/api/server.ts',
+    'database/migrations/004_be05_api.sql',
     'database/migrations/003_be04.sql',
     'indexer/storage.ts',
     'indexer/cli.ts',
+    'indexer/api/main.ts',
     'scripts/check_be04_live.mjs',
+    'scripts/check_be05_database.sh',
+    'scripts/check_be05_live_database.sh',
     'scripts/governance_local.mjs',
     'scripts/receipt.mjs',
     'tests/indexer/projection-storage.test.ts',
     'tests/indexer/be04-live-receipt.test.mjs',
+    'tests/api/server.test.mjs',
     'package.json',
+    'package-lock.json',
+    '.github/workflows/ci.yml',
+    '.env.example',
+    'docs/api.md',
     'docs/be03.md',
     'docs/be04.md',
   ])
@@ -501,6 +642,7 @@ try {
       .digest('hex');
   await writeFile(output, JSON.stringify(report, null, 2) + '\n');
   await pool.end();
+  if (phaseApi && phaseApi.listening) await new Promise((done) => phaseApi.close(done));
   if (anvil && anvil.exitCode === null) {
     const exited = once(anvil, 'close');
     anvil.kill();

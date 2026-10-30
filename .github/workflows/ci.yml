@@ -188,6 +188,40 @@ jobs:
       - run: npm run test:be04
       - run: npm run test:be04:db
 
+  be05-api:
+    name: BE05 HTTP API and immutable PostgreSQL snapshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - run: npm run test:api:db
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - run: forge build
+      - run: forge test --match-path tests/unit/OperationAbiCompatibility.t.sol
+      - name: Run fresh Anvil, PostgreSQL and HTTP API integration
+        run: npm run test:be05:live
+      - name: Upload BE05 live evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: be05-live-${{ github.sha }}
+          path: reports/be05-live.json
+          retention-days: 14
+
   frontend:
     name: Frontend lint and production build
     runs-on: ubuntu-24.04

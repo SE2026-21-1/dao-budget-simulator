@@ -1,0 +1,1777 @@
+warning: in the working copy of '.github/workflows/be08.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/be08.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/be08_measurement.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/be08_worker_probe.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/benchmark_api.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/check_be08_native.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/indexer/be08-measurement.test.mjs', LF will be replaced by CRLF the next time Git touches it
+postgres (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg26.04+1)
+anvil Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+forge Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+The files belonging to this database system will be owned by user "cuongdz".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+creating directory /tmp/dao-be08-native-vZojNv/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    /home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl -D /tmp/dao-be08-native-vZojNv/data -l logfile start
+
+waiting for server to start.... done
+server started
+{"command":"SELECT","rows":[{"version":"PostgreSQL 18.4 (Ubuntu 18.4-1.pgdg26.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, 64-bit","directory":"/tmp/dao-be08-native-vZojNv/data","binding":"127.0.0.1:36773"}]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"BEGIN","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMENT","rows":[]}
+{"command":"COMMIT","rows":[]}
+BE01 checks passed: exact uint256, invalid domains, description bytes, zero/self transfer, raw dedup, scopes/FKs, payout link and checkpoint
+{"command":"BEGIN","rows":[]}
+{"command":"CREATE","rows":[]}
+{"command":"DO","rows":[]}
+{"command":"ROLLBACK","rows":[]}
+TAP version 13
+# Subtest: PostgreSQL storage (real isolated PostgreSQL)
+    # Subtest: writes complete headers including empty block, exact uint256, original JSON and scoped raw columns
+    ok 1 - writes complete headers including empty block, exact uint256, original JSON and scoped raw columns
+      ---
+      duration_ms: 13.256686
+      type: 'test'
+      ...
+    # Subtest: identical and concurrent retries do not duplicate events or blocks
+    ok 2 - identical and concurrent retries do not duplicate events or blocks
+      ---
+      duration_ms: 18.293544
+      type: 'test'
+      ...
+    # Subtest: detects changed block hash, parent hash and timestamp with the same block key
+    ok 3 - detects changed block hash, parent hash and timestamp with the same block key
+      ---
+      duration_ms: 21.777605
+      type: 'test'
+      ...
+    # Subtest: detects raw/decode content conflicts rather than suppressing the chain dedup key
+    ok 4 - detects raw/decode content conflicts rather than suppressing the chain dedup key
+      ---
+      duration_ms: 45.438401
+      type: 'test'
+      ...
+    # Subtest: same chain dedup key cannot be silently copied to another deployment
+    ok 5 - same chain dedup key cannot be silently copied to another deployment
+      ---
+      duration_ms: 11.196347
+      type: 'test'
+      ...
+    # Subtest: unknown topics and decoder errors retain raw data and NULL decode columns
+    ok 6 - unknown topics and decoder errors retain raw data and NULL decode columns
+      ---
+      duration_ms: 8.969303
+      type: 'test'
+      ...
+    # Subtest: missing deployment or chain mismatch fails before inserting any data
+    ok 7 - missing deployment or chain mismatch fails before inserting any data
+      ---
+      duration_ms: 2.737757
+      type: 'test'
+      ...
+    # Subtest: numeric metadata with an explicit zero scale still matches its exact integer configuration
+    ok 8 - numeric metadata with an explicit zero scale still matches its exact integer configuration
+      ---
+      duration_ms: 4.778852
+      type: 'test'
+      ...
+    # Subtest: detects disconnected stored neighbors on either boundary across separate runs
+    ok 9 - detects disconnected stored neighbors on either boundary across separate runs
+      ---
+      duration_ms: 11.407342
+      type: 'test'
+      ...
+    # Subtest: detects conflicting canonical coordinates even when the transaction dedup key differs
+    ok 10 - detects conflicting canonical coordinates even when the transaction dedup key differs
+      ---
+      duration_ms: 12.072065
+      type: 'test'
+      ...
+    # Subtest: detects inverse transaction/log ordering against logs saved by a previous run
+    ok 11 - detects inverse transaction/log ordering against logs saved by a previous run
+      ---
+      duration_ms: 12.625297
+      type: 'test'
+      ...
+    # Subtest: rejects a stored transaction appearing in a different connected block with a new log index
+    ok 12 - rejects a stored transaction appearing in a different connected block with a new log index
+      ---
+      duration_ms: 5.751803
+      type: 'test'
+      ...
+    # Subtest: every requested contract role/address/deploymentBlock/ABI must match existing metadata
+    ok 13 - every requested contract role/address/deploymentBlock/ABI must match existing metadata
+      ---
+      duration_ms: 8.341146
+      type: 'test'
+      ...
+    # Subtest: later event conflict rolls back newly inserted headers and earlier events, preserving prior batch
+    ok 14 - later event conflict rolls back newly inserted headers and earlier events, preserving prior batch
+      ---
+      duration_ms: 5.956354
+      type: 'test'
+      ...
+    # Subtest: database errors roll back inserted headers and raw events
+    ok 15 - database errors roll back inserted headers and raw events
+      ---
+      duration_ms: 4.703406
+      type: 'test'
+      ...
+    # Subtest: rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches
+    ok 16 - rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches
+      ---
+      duration_ms: 9.151145
+      type: 'test'
+      ...
+    # Subtest: BE01 foreign keys reject a log linked to another deployment contract or block hash
+    ok 17 - BE01 foreign keys reject a log linked to another deployment contract or block hash
+      ---
+      duration_ms: 15.998545
+      type: 'test'
+      ...
+    # Subtest: does not advance checkpoints or create projections or overwrite deployment metadata
+    ok 18 - does not advance checkpoints or create projections or overwrite deployment metadata
+      ---
+      duration_ms: 8.273025
+      type: 'test'
+      ...
+    # Subtest: actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates
+    ok 19 - actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates
+      ---
+      duration_ms: 6452.768816
+      type: 'test'
+      ...
+    # Subtest: actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields
+    ok 20 - actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields
+      ---
+      duration_ms: 3811.426805
+      type: 'test'
+      ...
+    # Subtest: actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back
+    ok 21 - actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back
+      ---
+      duration_ms: 3619.785051
+      type: 'test'
+      ...
+    1..21
+ok 1 - PostgreSQL storage (real isolated PostgreSQL)
+  ---
+  duration_ms: 14166.892496
+  type: 'suite'
+  ...
+1..1
+# tests 21
+# suites 1
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17406.634404
+TAP version 13
+# Subtest: BE03 isolated real PostgreSQL / child process crash and restart
+    # Subtest: fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash
+    ok 1 - fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash
+      ---
+      duration_ms: 30.063065
+      type: 'test'
+      ...
+    # Subtest: K=0 indexes head; no safe block leaves checkpoint absent
+    ok 2 - K=0 indexes head; no safe block leaves checkpoint absent
+      ---
+      duration_ms: 20.579018
+      type: 'test'
+      ...
+    # Subtest: PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint
+    ok 3 - PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint
+      ---
+      duration_ms: 19.321753
+      type: 'test'
+      ...
+    # Subtest: missing required source or altered manifest/K refuses checkpoint adoption, including idle start
+    ok 4 - missing required source or altered manifest/K refuses checkpoint adoption, including idle start
+      ---
+      duration_ms: 14.817781
+      type: 'test'
+      ...
+    # Subtest: legacy unscoped checkpoint is refused
+    ok 5 - legacy unscoped checkpoint is refused
+      ---
+      duration_ms: 13.867428
+      type: 'test'
+      ...
+    # Subtest: source failure and missing scan evidence never advance checkpoint
+    ok 6 - source failure and missing scan evidence never advance checkpoint
+      ---
+      duration_ms: 7.881275
+      type: 'test'
+      ...
+    # Subtest: SQL failure after inserting a header and first event rolls back entire batch/checkpoint
+    ok 7 - SQL failure after inserting a header and first event rolls back entire batch/checkpoint
+      ---
+      duration_ms: 22.876099
+      type: 'test'
+      ...
+    # Subtest: COMMIT itself fails: no successful batch notification and no SQL data/checkpoint
+    ok 8 - COMMIT itself fails: no successful batch notification and no SQL data/checkpoint
+      ---
+      duration_ms: 9.395741
+      type: 'test'
+      ...
+    # Subtest: same event key changed contents is a conflict; prior committed range survives
+    ok 9 - same event key changed contents is a conflict; prior committed range survives
+      ---
+      duration_ms: 10.075417
+      type: 'test'
+      ...
+    # Subtest: repeated range, retries and restart preserve event IDs and exact uint256 payload
+    ok 10 - repeated range, retries and restart preserve event IDs and exact uint256 payload
+      ---
+      duration_ms: 25.7836
+      type: 'test'
+      ...
+    # Subtest: hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint
+    ok 11 - hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint
+      ---
+      duration_ms: 19.377242
+      type: 'test'
+      ...
+# {"concurrencyEvidence":"advisory lock wait","pid":2589,"blockers":[2588]}
+    # Subtest: competing writers cannot rewind or commit beyond complete coverage; stale writer must restart
+    ok 12 - competing writers cannot rewind or commit beyond complete coverage; stale writer must restart
+      ---
+      duration_ms: 26.672513
+      type: 'test'
+      ...
+    # Subtest: decode error and unknown topic are durable and remain visible after idle restart
+    ok 13 - decode error and unknown topic are durable and remain visible after idle restart
+      ---
+      duration_ms: 17.829964
+      type: 'test'
+      ...
+    # Subtest: legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params
+    ok 14 - legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params
+      ---
+      duration_ms: 25.918265
+      type: 'test'
+      ...
+# {"crashEvidence":"beforeCommit","beforeRestart":{"blocks":0,"events":0,"checkpoint":null},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+    # Subtest: real process crash at beforeCommit: SQL visibility and restart exactly once
+    ok 15 - real process crash at beforeCommit: SQL visibility and restart exactly once
+      ---
+      duration_ms: 5861.831146
+      type: 'test'
+      ...
+# {"crashEvidence":"afterCommit","beforeRestart":{"blocks":2,"events":1,"checkpoint":"101"},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+    # Subtest: real process crash at afterCommit: SQL visibility and restart exactly once
+    ok 16 - real process crash at afterCommit: SQL visibility and restart exactly once
+      ---
+      duration_ms: 5749.030446
+      type: 'test'
+      ...
+    1..16
+ok 1 - BE03 isolated real PostgreSQL / child process crash and restart
+  ---
+  duration_ms: 11950.699422
+  type: 'suite'
+  ...
+1..1
+# tests 16
+# suites 1
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15483.153435
+TAP version 13
+# Subtest: BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic)
+    # Subtest: no raw checkpoint cannot publish a fake empty snapshot
+    ok 1 - no raw checkpoint cannot publish a fake empty snapshot
+      ---
+      duration_ms: 11.411314
+      type: 'test'
+      ...
+    # Subtest: empty blocks update Pending -> Active -> Succeeded; quorum is null through exact snapshot
+    ok 2 - empty blocks update Pending -> Active -> Succeeded; quorum is null through exact snapshot
+      ---
+      duration_ms: 130.300044
+      type: 'test'
+      ...
+    # Subtest: full lifecycle and replay produce stable rows, exact ledger and WithParams
+    ok 3 - full lifecycle and replay produce stable rows, exact ledger and WithParams
+      ---
+      duration_ms: 68.584693
+      type: 'test'
+      ...
+    # Subtest: RPC state/balance mismatch preserves old publication while raw checkpoint advances
+    ok 4 - RPC state/balance mismatch preserves old publication while raw checkpoint advances
+      ---
+      duration_ms: 48.300499
+      type: 'test'
+      ...
+    # Subtest: SQL failure after replacement begins rolls back all tables and projection checkpoint
+    ok 5 - SQL failure after replacement begins rolls back all tables and projection checkpoint
+      ---
+      duration_ms: 35.636627
+      type: 'test'
+      ...
+    # Subtest: unknown log and raw decode tampering block publication without changing raw identity
+    ok 6 - unknown log and raw decode tampering block publication without changing raw identity
+      ---
+      duration_ms: 40.787747
+      type: 'test'
+      ...
+    # Subtest: BE04 recovery: --redecode repairs a payload tampered after a successful decode
+    ok 7 - BE04 recovery: --redecode repairs a payload tampered after a successful decode
+      ---
+      duration_ms: 22.948327
+      type: 'test'
+      ...
+    # Subtest: BE03 recovery: redecode restores unknown and malformed classifications from raw bytes
+    ok 8 - BE03 recovery: redecode restores unknown and malformed classifications from raw bytes
+      ---
+      duration_ms: 31.607013
+      type: 'test'
+      ...
+    # Subtest: RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication
+    ok 9 - RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication
+      ---
+      duration_ms: 31.504654
+      type: 'test'
+      ...
+    # Subtest: real child CLI --sync-project and idle --project publish the same H/hash/revision
+    ok 10 - real child CLI --sync-project and idle --project publish the same H/hash/revision
+      ---
+      duration_ms: 8103.590554
+      type: 'test'
+      ...
+    1..10
+ok 1 - BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic)
+  ---
+  duration_ms: 8581.739525
+  type: 'suite'
+  ...
+1..1
+# tests 10
+# suites 1
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11620.643293
+TAP version 13
+# Subtest: six endpoints, exact data types, validation, and financial semantics
+ok 1 - six endpoints, exact data types, validation, and financial semantics
+  ---
+  duration_ms: 326.656196
+  type: 'test'
+  ...
+# Subtest: numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+ok 2 - numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+  ---
+  duration_ms: 113.796242
+  type: 'test'
+  ...
+# Subtest: BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+ok 3 - BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+  ---
+  duration_ms: 69.468578
+  type: 'test'
+  ...
+# Subtest: filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+ok 4 - filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+  ---
+  duration_ms: 57.85717
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3487.874936
+TAP version 13
+# Subtest: BE06 rebuilds a fresh DB exactly at H, exports/compares read-only, and rejects unsafe scopes
+ok 1 - BE06 rebuilds a fresh DB exactly at H, exports/compares read-only, and rejects unsafe scopes
+  ---
+  duration_ms: 218.766678
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3297.30476
+TAP version 13
+# Subtest: BE04 live receipt polling
+    # Subtest: keeps polling after null and returns the eventual receipt
+    ok 1 - keeps polling after null and returns the eventual receipt
+      ---
+      duration_ms: 6.043142
+      type: 'test'
+      ...
+    # Subtest: times out after a finite deadline with step and transaction hash
+    ok 2 - times out after a finite deadline with step and transaction hash
+      ---
+      duration_ms: 41.274413
+      type: 'test'
+      ...
+    # Subtest: reports RPC failures without exposing provider error details
+    ok 3 - reports RPC failures without exposing provider error details
+      ---
+      duration_ms: 4.516125
+      type: 'test'
+      ...
+    # Subtest: accepts an expected revert and rejects a revert when success was expected
+    ok 4 - accepts an expected revert and rejects a revert when success was expected
+      ---
+      duration_ms: 0.654338
+      type: 'test'
+      ...
+    1..4
+ok 1 - BE04 live receipt polling
+  ---
+  duration_ms: 53.793174
+  type: 'suite'
+  ...
+# Subtest: BE06 parses the verified TV4 handoff without requiring a source deployment id
+ok 2 - BE06 parses the verified TV4 handoff without requiring a source deployment id
+  ---
+  duration_ms: 3.292001
+  type: 'test'
+  ...
+# Subtest: BE06 rejects an incomplete or unsupported manifest and a source range that skips deployment
+ok 3 - BE06 rejects an incomplete or unsupported manifest and a source range that skips deployment
+  ---
+  duration_ms: 0.606296
+  type: 'test'
+  ...
+# Subtest: manifest H and confirmation settings stay canonical and bounded
+ok 4 - manifest H and confirmation settings stay canonical and bounded
+  ---
+  duration_ms: 0.436867
+  type: 'test'
+  ...
+# Subtest: normalized compare ignores internal IDs, UUID revisions and ingestion timestamps by construction
+ok 5 - normalized compare ignores internal IDs, UUID revisions and ingestion timestamps by construction
+  ---
+  duration_ms: 2.700426
+  type: 'test'
+  ...
+# Subtest: normalized compare reports precise values for data, scope, H and hash mismatches
+ok 6 - normalized compare reports precise values for data, scope, H and hash mismatches
+  ---
+  duration_ms: 0.691318
+  type: 'test'
+  ...
+# Subtest: RPC retries 429, then recovers (real HTTP)
+ok 7 - RPC retries 429, then recovers (real HTTP)
+  ---
+  duration_ms: 42.767199
+  type: 'test'
+  ...
+# Subtest: RPC retries 500, then recovers (real HTTP)
+ok 8 - RPC retries 500, then recovers (real HTTP)
+  ---
+  duration_ms: 13.2706
+  type: 'test'
+  ...
+# Subtest: RPC retries 503, then recovers (real HTTP)
+ok 9 - RPC retries 503, then recovers (real HTTP)
+  ---
+  duration_ms: 10.289601
+  type: 'test'
+  ...
+# Subtest: RPC retries network, then recovers (real HTTP)
+ok 10 - RPC retries network, then recovers (real HTTP)
+  ---
+  duration_ms: 12.060192
+  type: 'test'
+  ...
+# Subtest: RPC retries timeout, then recovers (real HTTP)
+ok 11 - RPC retries timeout, then recovers (real HTTP)
+  ---
+  duration_ms: 87.632165
+  type: 'test'
+  ...
+# Subtest: RPC retries -32005, then recovers (real HTTP)
+ok 12 - RPC retries -32005, then recovers (real HTTP)
+  ---
+  duration_ms: 6.878462
+  type: 'test'
+  ...
+# Subtest: RPC permanent -32601 is attempted once
+ok 13 - RPC permanent -32601 is attempted once
+  ---
+  duration_ms: 3.370063
+  type: 'test'
+  ...
+# Subtest: RPC permanent -32602 is attempted once
+ok 14 - RPC permanent -32602 is attempted once
+  ---
+  duration_ms: 2.252257
+  type: 'test'
+  ...
+# Subtest: RPC permanent -32000 is attempted once
+ok 15 - RPC permanent -32000 is attempted once
+  ---
+  duration_ms: 2.087814
+  type: 'test'
+  ...
+# Subtest: RPC permanent 401 is attempted once
+ok 16 - RPC permanent 401 is attempted once
+  ---
+  duration_ms: 2.221769
+  type: 'test'
+  ...
+# Subtest: RPC permanent 403 is attempted once
+ok 17 - RPC permanent 403 is attempted once
+  ---
+  duration_ms: 1.947421
+  type: 'test'
+  ...
+# Subtest: RPC retries are bounded, exponential, jittered and interruptible
+ok 18 - RPC retries are bounded, exponential, jittered and interruptible
+  ---
+  duration_ms: 95.97444
+  type: 'test'
+  ...
+# Subtest: freshness changes after 30 seconds with zero new events; recovery gates are explicit
+ok 19 - freshness changes after 30 seconds with zero new events; recovery gates are explicit
+  ---
+  duration_ms: 0.347718
+  type: 'test'
+  ...
+# Subtest: recovery config validates bounded window and polling interval
+ok 20 - recovery config validates bounded window and polling interval
+  ---
+  duration_ms: 3.233776
+  type: 'test'
+  ...
+# Subtest: invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response
+ok 21 - invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response
+  ---
+  duration_ms: 35.445318
+  type: 'test'
+  ...
+# Subtest: BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples
+ok 22 - BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples
+  ---
+  duration_ms: 278.122182
+  type: 'test'
+  ...
+# Subtest: BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results
+ok 23 - BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results
+  ---
+  duration_ms: 0.924556
+  type: 'test'
+  ...
+# Subtest: CLI help and invalid arguments have appropriate exit codes
+ok 24 - CLI help and invalid arguments have appropriate exit codes
+  ---
+  duration_ms: 5579.0345
+  type: 'test'
+  ...
+# Subtest: CLI reports unsupported ABI as an actionable config error
+ok 25 - CLI reports unsupported ABI as an actionable config error
+  ---
+  duration_ms: 2854.880344
+  type: 'test'
+  ...
+# Subtest: CLI rejects wrong chain before attempting PostgreSQL and never prints secrets
+ok 26 - CLI rejects wrong chain before attempting PostgreSQL and never prints secrets
+  ---
+  duration_ms: 2828.415014
+  type: 'test'
+  ...
+# Subtest: config preserves bigint, validates scope and permits a pinned latest request
+ok 27 - config preserves bigint, validates scope and permits a pinned latest request
+  ---
+  duration_ms: 2.995119
+  type: 'test'
+  ...
+# Subtest: reject invalid config: numericChainId
+ok 28 - reject invalid config: numericChainId
+  ---
+  duration_ms: 0.36387
+  type: 'test'
+  ...
+# Subtest: reject invalid config: zeroChain
+ok 29 - reject invalid config: zeroChain
+  ---
+  duration_ms: 0.101581
+  type: 'test'
+  ...
+# Subtest: reject invalid config: overflow
+ok 30 - reject invalid config: overflow
+  ---
+  duration_ms: 0.062034
+  type: 'test'
+  ...
+# Subtest: reject invalid config: fractionalBlock
+ok 31 - reject invalid config: fractionalBlock
+  ---
+  duration_ms: 0.117082
+  type: 'test'
+  ...
+# Subtest: reject invalid config: negativeBlock
+ok 32 - reject invalid config: negativeBlock
+  ---
+  duration_ms: 0.077472
+  type: 'test'
+  ...
+# Subtest: reject invalid config: reversedRange
+ok 33 - reject invalid config: reversedRange
+  ---
+  duration_ms: 0.066473
+  type: 'test'
+  ...
+# Subtest: reject invalid config: zeroBatch
+ok 34 - reject invalid config: zeroBatch
+  ---
+  duration_ms: 0.112172
+  type: 'test'
+  ...
+# Subtest: reject invalid config: unboundedBatch
+ok 35 - reject invalid config: unboundedBatch
+  ---
+  duration_ms: 0.131508
+  type: 'test'
+  ...
+# Subtest: reject invalid config: invalidRpc
+ok 36 - reject invalid config: invalidRpc
+  ---
+  duration_ms: 0.183364
+  type: 'test'
+  ...
+# Subtest: reject invalid config: deploymentOverflow
+ok 37 - reject invalid config: deploymentOverflow
+  ---
+  duration_ms: 0.08187
+  type: 'test'
+  ...
+# Subtest: reject invalid config: emptyContracts
+ok 38 - reject invalid config: emptyContracts
+  ---
+  duration_ms: 0.075883
+  type: 'test'
+  ...
+# Subtest: reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI
+ok 39 - reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI
+  ---
+  duration_ms: 2.808787
+  type: 'test'
+  ...
+# Subtest: VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields
+ok 40 - VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields
+  ---
+  duration_ms: 20.625
+  type: 'test'
+  ...
+# Subtest: synthetic vectors cover all eleven required event types and source indexed layouts
+ok 41 - synthetic vectors cover all eleven required event types and source indexed layouts
+  ---
+  duration_ms: 0.345147
+  type: 'test'
+  ...
+# Subtest: decodes governor.ProposalCreated with exact named ABI values
+ok 42 - decodes governor.ProposalCreated with exact named ABI values
+  ---
+  duration_ms: 3.703046
+  type: 'test'
+  ...
+# Subtest: decodes governor.VoteCast with exact named ABI values
+ok 43 - decodes governor.VoteCast with exact named ABI values
+  ---
+  duration_ms: 1.006537
+  type: 'test'
+  ...
+# Subtest: decodes governor.ProposalQueued with exact named ABI values
+ok 44 - decodes governor.ProposalQueued with exact named ABI values
+  ---
+  duration_ms: 0.935154
+  type: 'test'
+  ...
+# Subtest: decodes governor.ProposalExecuted with exact named ABI values
+ok 45 - decodes governor.ProposalExecuted with exact named ABI values
+  ---
+  duration_ms: 0.82234
+  type: 'test'
+  ...
+# Subtest: decodes governor.ProposalCanceled with exact named ABI values
+ok 46 - decodes governor.ProposalCanceled with exact named ABI values
+  ---
+  duration_ms: 0.528029
+  type: 'test'
+  ...
+# Subtest: decodes timelock.CallScheduled with exact named ABI values
+ok 47 - decodes timelock.CallScheduled with exact named ABI values
+  ---
+  duration_ms: 1.807256
+  type: 'test'
+  ...
+# Subtest: decodes timelock.CallExecuted with exact named ABI values
+ok 48 - decodes timelock.CallExecuted with exact named ABI values
+  ---
+  duration_ms: 1.435057
+  type: 'test'
+  ...
+# Subtest: decodes timelock.Cancelled with exact named ABI values
+ok 49 - decodes timelock.Cancelled with exact named ABI values
+  ---
+  duration_ms: 0.944433
+  type: 'test'
+  ...
+# Subtest: decodes timelock.CallSalt with exact named ABI values
+ok 50 - decodes timelock.CallSalt with exact named ABI values
+  ---
+  duration_ms: 0.731133
+  type: 'test'
+  ...
+# Subtest: decodes treasury.BudgetDisbursed with exact named ABI values
+ok 51 - decodes treasury.BudgetDisbursed with exact named ABI values
+  ---
+  duration_ms: 0.4574
+  type: 'test'
+  ...
+# Subtest: decodes budget_token.Transfer with exact named ABI values
+ok 52 - decodes budget_token.Transfer with exact named ABI values
+  ---
+  duration_ms: 0.508943
+  type: 'test'
+  ...
+# Subtest: independent hand-assembled canonical Transfer vector decodes without fixture encoder
+ok 53 - independent hand-assembled canonical Transfer vector decodes without fixture encoder
+  ---
+  duration_ms: 0.541962
+  type: 'test'
+  ...
+# Subtest: preserves uint256 above 2^53 including indexed integers and maximum proposal ID
+ok 54 - preserves uint256 above 2^53 including indexed integers and maximum proposal ID
+  ---
+  duration_ms: 1.755524
+  type: 'test'
+  ...
+# Subtest: dynamic description and reason preserve exact Unicode and whitespace
+ok 55 - dynamic description and reason preserve exact Unicode and whitespace
+  ---
+  duration_ms: 1.115423
+  type: 'test'
+  ...
+# Subtest: registry Treasury fragment matches handed-over shared JSON ABI exactly
+ok 56 - registry Treasury fragment matches handed-over shared JSON ABI exactly
+  ---
+  duration_ms: 5.123493
+  type: 'test'
+  ...
+# Subtest: ABI version is explicitly bound to contract role and cannot use object prototype keys
+ok 57 - ABI version is explicitly bound to contract role and cannot use object prototype keys
+  ---
+  duration_ms: 0.69235
+  type: 'test'
+  ...
+# Subtest: unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC
+ok 58 - unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC
+  ---
+  duration_ms: 0.219399
+  type: 'test'
+  ...
+# Subtest: known events reject missing, additional and malformed indexed topics
+ok 59 - known events reject missing, additional and malformed indexed topics
+  ---
+  duration_ms: 0.538224
+  type: 'test'
+  ...
+# Subtest: known events reject truncated, odd, nonhex and trailing data
+ok 60 - known events reject truncated, odd, nonhex and trailing data
+  ---
+  duration_ms: 1.154657
+  type: 'test'
+  ...
+# Subtest: known events reject noncanonical uint8 and invalid dynamic offsets
+ok 61 - known events reject noncanonical uint8 and invalid dynamic offsets
+  ---
+  duration_ms: 1.02315
+  type: 'test'
+  ...
+# Subtest: NUL in valid Solidity description or reason is raw-only for JSONB storage
+ok 62 - NUL in valid Solidity description or reason is raw-only for JSONB storage
+  ---
+  duration_ms: 1.70471
+  type: 'test'
+  ...
+# Subtest: invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error
+ok 63 - invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error
+  ---
+  duration_ms: 0.427065
+  type: 'test'
+  ...
+# Subtest: decoded, unknown and malformed logs retain every original RPC field
+ok 64 - decoded, unknown and malformed logs retain every original RPC field
+  ---
+  duration_ms: 1.035222
+  type: 'test'
+  ...
+# Subtest: raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay
+ok 65 - raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay
+  ---
+  duration_ms: 27.879461
+  type: 'test'
+  ...
+# Subtest: successful lifecycle links same-tx operation/request/Transfer and counts one payment
+ok 66 - successful lifecycle links same-tx operation/request/Transfer and counts one payment
+  ---
+  duration_ms: 15.179042
+  type: 'test'
+  ...
+# Subtest: unrelated BUD, self and zero transfers do not change treasury totals
+ok 67 - unrelated BUD, self and zero transfers do not change treasury totals
+  ---
+  duration_ms: 5.387435
+  type: 'test'
+  ...
+# Subtest: timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active
+ok 68 - timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active
+  ---
+  duration_ms: 6.778724
+  type: 'test'
+  ...
+# Subtest: quorum/result 0/100/0 -> Defeated
+ok 69 - quorum/result 0/100/0 -> Defeated
+  ---
+  duration_ms: 4.242173
+  type: 'test'
+  ...
+# Subtest: quorum/result 0/100/100 -> Succeeded
+ok 70 - quorum/result 0/100/100 -> Succeeded
+  ---
+  duration_ms: 3.84979
+  type: 'test'
+  ...
+# Subtest: quorum/result 200/200/0 -> Defeated
+ok 71 - quorum/result 200/200/0 -> Defeated
+  ---
+  duration_ms: 3.863733
+  type: 'test'
+  ...
+# Subtest: quorum/result 300/200/100 -> Defeated
+ok 72 - quorum/result 300/200/100 -> Defeated
+  ---
+  duration_ms: 4.867081
+  type: 'test'
+  ...
+# Subtest: ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable
+ok 73 - ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable
+  ---
+  duration_ms: 7.03359
+  type: 'test'
+  ...
+# Subtest: Pending cancellation and direct Timelock cancellation are represented
+ok 74 - Pending cancellation and direct Timelock cancellation are represented
+  ---
+  duration_ms: 13.6103
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong ID
+ok 75 - reject inconsistent projection: wrong ID
+  ---
+  duration_ms: 9.990085
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong description
+ok 76 - reject inconsistent projection: wrong description
+  ---
+  duration_ms: 9.929434
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong salt
+ok 77 - reject inconsistent projection: wrong salt
+  ---
+  duration_ms: 8.763369
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong ETA
+ok 78 - reject inconsistent projection: wrong ETA
+  ---
+  duration_ms: 6.617746
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong executed calldata
+ok 79 - reject inconsistent projection: wrong executed calldata
+  ---
+  duration_ms: 8.054493
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: missing transfer
+ok 80 - reject inconsistent projection: missing transfer
+  ---
+  duration_ms: 8.575165
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: missing payment
+ok 81 - reject inconsistent projection: missing payment
+  ---
+  duration_ms: 8.075226
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: wrong transaction
+ok 82 - reject inconsistent projection: wrong transaction
+  ---
+  duration_ms: 7.864889
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: ambiguous transfer
+ok 83 - reject inconsistent projection: ambiguous transfer
+  ---
+  duration_ms: 8.460906
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: duplicate vote
+ok 84 - reject inconsistent projection: duplicate vote
+  ---
+  duration_ms: 7.19401
+  type: 'test'
+  ...
+# Subtest: reject inconsistent projection: unlinked outflow
+ok 85 - reject inconsistent projection: unlinked outflow
+  ---
+  duration_ms: 11.797029
+  type: 'test'
+  ...
+# Subtest: malformed/unknown business log cannot be silently skipped
+ok 86 - malformed/unknown business log cannot be silently skipped
+  ---
+  duration_ms: 1.735565
+  type: 'test'
+  ...
+# Subtest: replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events
+ok 87 - replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events
+  ---
+  duration_ms: 37.645082
+  type: 'test'
+  ...
+# Subtest: range boundaries work above Number.MAX_SAFE_INTEGER without gaps
+ok 88 - range boundaries work above Number.MAX_SAFE_INTEGER without gaps
+  ---
+  duration_ms: 1.436064
+  type: 'test'
+  ...
+# Subtest: scan includes every boundary/empty block and sorts tx/log indices; preserves raw input
+ok 89 - scan includes every boundary/empty block and sorts tx/log indices; preserves raw input
+  ---
+  duration_ms: 10.459713
+  type: 'test'
+  ...
+# Subtest: different deployment blocks retain early contract logs and clamp each RPC filter
+ok 90 - different deployment blocks retain early contract logs and clamp each RPC filter
+  ---
+  duration_ms: 1.313099
+  type: 'test'
+  ...
+# Subtest: RPC cannot return a known contract log before its deployment block
+ok 91 - RPC cannot return a known contract log before its deployment block
+  ---
+  duration_ms: 0.728969
+  type: 'test'
+  ...
+# Subtest: RPC cannot substitute another configured contract in a filter response
+ok 92 - RPC cannot substitute another configured contract in a filter response
+  ---
+  duration_ms: 0.4173
+  type: 'test'
+  ...
+# Subtest: duplicate transaction hashes in a header are contradictory
+ok 93 - duplicate transaction hashes in a header are contradictory
+  ---
+  duration_ms: 0.355207
+  type: 'test'
+  ...
+# Subtest: wrong chain stops before any storage write or block request
+ok 94 - wrong chain stops before any storage write or block request
+  ---
+  duration_ms: 0.288579
+  type: 'test'
+  ...
+# Subtest: latest is pinned once for the finite scan
+ok 95 - latest is pinned once for the finite scan
+  ---
+  duration_ms: 0.671827
+  type: 'test'
+  ...
+# Subtest: outside-deployment log is dropped before ABI or canonical-log validation
+ok 96 - outside-deployment log is dropped before ABI or canonical-log validation
+  ---
+  duration_ms: 0.549022
+  type: 'test'
+  ...
+# Subtest: unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics
+ok 97 - unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics
+  ---
+  duration_ms: 1.091773
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: removed
+ok 98 - reject contradictory/invalid log: removed
+  ---
+  duration_ms: 0.309149
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: pending
+ok 99 - reject contradictory/invalid log: pending
+  ---
+  duration_ms: 0.218033
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: blockHash
+ok 100 - reject contradictory/invalid log: blockHash
+  ---
+  duration_ms: 0.158463
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: block number
+ok 101 - reject contradictory/invalid log: block number
+  ---
+  duration_ms: 0.200153
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: txHash
+ok 102 - reject contradictory/invalid log: txHash
+  ---
+  duration_ms: 0.255749
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: txIndex
+ok 103 - reject contradictory/invalid log: txIndex
+  ---
+  duration_ms: 0.210406
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: invalid hex
+ok 104 - reject contradictory/invalid log: invalid hex
+  ---
+  duration_ms: 0.157146
+  type: 'test'
+  ...
+# Subtest: reject contradictory/invalid log: unsafe index
+ok 105 - reject contradictory/invalid log: unsafe index
+  ---
+  duration_ms: 0.210724
+  type: 'test'
+  ...
+# Subtest: detect colliding log positions and transaction order disagreement
+ok 106 - detect colliding log positions and transaction order disagreement
+  ---
+  duration_ms: 0.37117
+  type: 'test'
+  ...
+# Subtest: reports previous committed batch separately when a later header chain disagrees
+ok 107 - reports previous committed batch separately when a later header chain disagrees
+  ---
+  duration_ms: 0.483809
+  type: 'test'
+  ...
+# Subtest: changing final header prevents write
+ok 108 - changing final header prevents write
+  ---
+  duration_ms: 0.247797
+  type: 'test'
+  ...
+# Subtest: HTTP JSON-RPC transport reads synthetic logs through scanner
+ok 109 - HTTP JSON-RPC transport reads synthetic logs through scanner
+  ---
+  duration_ms: 58.335525
+  type: 'test'
+  ...
+# Subtest: RPC HTTP failures redact URL paths and body; prior batches remain explicit
+ok 110 - RPC HTTP failures redact URL paths and body; prior batches remain explicit
+  ---
+  duration_ms: 1132.690103
+  type: 'test'
+  ...
+# Subtest: K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block
+ok 111 - K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block
+  ---
+  duration_ms: 0.822327
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: -1
+ok 112 - invalid K rejected: -1
+  ---
+  duration_ms: 1.607823
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: 0.5
+ok 113 - invalid K rejected: 0.5
+  ---
+  duration_ms: 0.690696
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: 2
+ok 114 - invalid K rejected: 2
+  ---
+  duration_ms: 0.400208
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: null
+ok 115 - invalid K rejected: null
+  ---
+  duration_ms: 0.365822
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: true
+ok 116 - invalid K rejected: true
+  ---
+  duration_ms: 0.191641
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: 2147483648
+ok 117 - invalid K rejected: 2147483648
+  ---
+  duration_ms: 0.18259
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: NaN
+ok 118 - invalid K rejected: NaN
+  ---
+  duration_ms: 0.144266
+  type: 'test'
+  ...
+# Subtest: invalid K rejected: Infinity
+ok 119 - invalid K rejected: Infinity
+  ---
+  duration_ms: 0.188065
+  type: 'test'
+  ...
+# Subtest: K defaults to 2 and numeric 0 is valid
+ok 120 - K defaults to 2 and numeric 0 is valid
+  ---
+  duration_ms: 1.269249
+  type: 'test'
+  ...
+# Subtest: scope is order independent but bound to chain/deployment/address/block/ABI and sources
+ok 121 - scope is order independent but bound to chain/deployment/address/block/ABI and sources
+  ---
+  duration_ms: 0.564942
+  type: 'test'
+  ...
+# Subtest: new DB starts at earliest deployment block, clamps later sources and empty batches advance
+ok 122 - new DB starts at earliest deployment block, clamps later sources and empty batches advance
+  ---
+  duration_ms: 2.147453
+  type: 'test'
+  ...
+# Subtest: no safe block and deployment after safe boundary produce no negative RPC range/checkpoint
+ok 123 - no safe block and deployment after safe boundary produce no negative RPC range/checkpoint
+  ---
+  duration_ms: 0.538914
+  type: 'test'
+  ...
+# Subtest: checkpoint block 0 is distinct from absent checkpoint and resumes at 1
+ok 124 - checkpoint block 0 is distinct from absent checkpoint and resumes at 1
+  ---
+  duration_ms: 0.402687
+  type: 'test'
+  ...
+# Subtest: restart with no new block still verifies hash; then continues from H+1
+ok 125 - restart with no new block still verifies hash; then continues from H+1
+  ---
+  duration_ms: 0.658207
+  type: 'test'
+  ...
+# Subtest: checkpoint mismatch even when idle leaves stored data unchanged
+ok 126 - checkpoint mismatch even when idle leaves stored data unchanged
+  ---
+  duration_ms: 0.473234
+  type: 'test'
+  ...
+# Subtest: checkpoint RPC cannot verify: missing
+ok 127 - checkpoint RPC cannot verify: missing
+  ---
+  duration_ms: 0.237576
+  type: 'test'
+  ...
+# Subtest: checkpoint RPC cannot verify: malformed
+ok 128 - checkpoint RPC cannot verify: malformed
+  ---
+  duration_ms: 0.207059
+  type: 'test'
+  ...
+# Subtest: checkpoint RPC cannot verify: unavailable
+ok 129 - checkpoint RPC cannot verify: unavailable
+  ---
+  duration_ms: 0.154
+  type: 'test'
+  ...
+# Subtest: one required RPC source fails: entire batch and checkpoint stay unchanged
+ok 130 - one required RPC source fails: entire batch and checkpoint stay unchanged
+  ---
+  duration_ms: 0.377272
+  type: 'test'
+  ...
+# Subtest: decode issues remain visible on idle restart after raw checkpoint advances
+ok 131 - decode issues remain visible on idle restart after raw checkpoint advances
+  ---
+  duration_ms: 2.661138
+  type: 'test'
+  ...
+# Subtest: explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment
+ok 132 - explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment
+  ---
+  duration_ms: 0.898602
+  type: 'test'
+  ...
+1..132
+# tests 135
+# suites 1
+# pass 135
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 14364.472095
+TAP version 13
+# Subtest: same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated
+ok 1 - same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated
+  ---
+  duration_ms: 154.638898
+  type: 'test'
+  ...
+# Subtest: deep reorg outside window requires BE06; does not destroy diagnosis data or metadata
+ok 2 - deep reorg outside window requires BE06; does not destroy diagnosis data or metadata
+  ---
+  duration_ms: 22.422708
+  type: 'test'
+  ...
+# Subtest: recovery crash boundary recoveryMarked resumes with a fresh storage instance
+ok 3 - recovery crash boundary recoveryMarked resumes with a fresh storage instance
+  ---
+  duration_ms: 38.549267
+  type: 'test'
+  ...
+# Subtest: recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance
+ok 4 - recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance
+  ---
+  duration_ms: 42.32868
+  type: 'test'
+  ...
+# Subtest: recovery crash boundary afterRollbackCommit resumes with a fresh storage instance
+ok 5 - recovery crash boundary afterRollbackCommit resumes with a fresh storage instance
+  ---
+  duration_ms: 30.687302
+  type: 'test'
+  ...
+# Subtest: RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes
+ok 6 - RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes
+  ---
+  duration_ms: 30.793029
+  type: 'test'
+  ...
+# Subtest: recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data
+ok 7 - recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data
+  ---
+  duration_ms: 29.3394
+  type: 'test'
+  ...
+# Subtest: a fork between committed catch-up batches persists recovery and replays on the next invocation
+ok 8 - a fork between committed catch-up batches persists recovery and replays on the next invocation
+  ---
+  duration_ms: 34.442903
+  type: 'test'
+  ...
+# Subtest: SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart
+ok 9 - SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart
+  ---
+  duration_ms: 3582.67806
+  type: 'test'
+  ...
+# Subtest: SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart
+ok 10 - SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart
+  ---
+  duration_ms: 5332.728392
+  type: 'test'
+  ...
+# Subtest: SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart
+ok 11 - SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart
+  ---
+  duration_ms: 4922.826907
+  type: 'test'
+  ...
+# Subtest: worker exits on wrong chain and rebuild_required instead of retrying forever
+ok 12 - worker exits on wrong chain and rebuild_required instead of retrying forever
+  ---
+  duration_ms: 91.259937
+  type: 'test'
+  ...
+# Subtest: shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data
+ok 13 - shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data
+  ---
+  duration_ms: 40.038495
+  type: 'test'
+  ...
+# Subtest: wrong RPC chain during recovery never rolls back data
+ok 14 - wrong RPC chain during recovery never rolls back data
+  ---
+  duration_ms: 21.60651
+  type: 'test'
+  ...
+# Subtest: confirmed mismatch closes recovery gate even when the next chain RPC fails
+ok 15 - confirmed mismatch closes recovery gate even when the next chain RPC fails
+  ---
+  duration_ms: 22.067871
+  type: 'test'
+  ...
+# Subtest: heartbeat keeps RPC observation time when waiting for the chain writer lock
+ok 16 - heartbeat keeps RPC observation time when waiting for the chain writer lock
+  ---
+  duration_ms: 125.937297
+  type: 'test'
+  ...
+# Subtest: lag observation starts after a JSON null heartbeat and survives subsequent observations
+ok 17 - lag observation starts after a JSON null heartbeat and survives subsequent observations
+  ---
+  duration_ms: 21.046026
+  type: 'test'
+  ...
+# Subtest: shorter fork immediately after a committed batch persists recovery before worker retry
+ok 18 - shorter fork immediately after a committed batch persists recovery before worker retry
+  ---
+  duration_ms: 42.954795
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18197.220729
+forge Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+cast Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+anvil Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+No files changed, compilation skipped
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+   ╭▸ contracts/BudgetGovernor.sol:57:20
+   │
+57 │                 || IERC6372(gov).clock() != block.timestamp
+   │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[unsafe-typecast]: typecast can truncate values
+   ╭▸ contracts/BudgetGovernor.sol:76:38
+   │
+76 │         if (payload.length != 100 || bytes4(payload) != ITreasury.disburse.selector) revert InvalidCalldata();
+   │                                      ━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'bytes4' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:165:13
+    │
+165 │         if (block.timestamp <= p.snapshot) return IGovernor.ProposalState.Pending;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:166:13
+    │
+166 │         if (block.timestamp <= p.deadline) return IGovernor.ProposalState.Active;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:209:18
+    │
+209 │         _advance(block.timestamp + bound(secondsSeed, 0, 600));
+    │                  ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:393:25
+    │
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                         ━━━━━━━━━━━━━━━  ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+No files changed, compilation skipped
+
+Ran 1 test for tests/attacks/GovernanceAttacks.t.sol:GovernanceAttacksTest
+[PASS] testConcurrentSnapshotsBudgetRaceRetryAndSharedRequestStayIndependent() (gas: 15850886)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 12.24ms (9.59ms CPU time)
+
+Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest
+[PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)
+[PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 229.11ms (213.68ms CPU time)
+
+Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest
+[PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)
+[PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)
+[PASS] testCurrentTimepointLookupReverts() (gas: 20959)
+[PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)
+[PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)
+[PASS] testFutureTimepointLookupReverts() (gas: 20922)
+[PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13999, ~: 14241)
+[PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 215056, ~: 215114)
+[PASS] testMetadataAndInitialDistribution() (gas: 83285)
+[PASS] testNoPublicMint() (gas: 45653)
+[PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)
+[PASS] testPastVotesAndPastSupply() (gas: 146978)
+[PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)
+[PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)
+[PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 238.21ms (473.27ms CPU time)
+
+Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest
+[PASS] testApproveAndTransferFrom() (gas: 164697)
+[PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)
+[PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86337, ~: 86628)
+[PASS] testMetadataAndInitialSupply() (gas: 53852)
+[PASS] testNoPublicMint() (gas: 45672)
+[PASS] testTransferAboveBalanceReverts() (gas: 51581)
+[PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)
+[PASS] testTransferHasNoFee() (gas: 84330)
+[PASS] testZeroInitialHolderReverts() (gas: 4012)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 238.30ms (240.98ms CPU time)
+
+Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest
+[PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)
+[PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)
+[PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)
+[PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)
+[PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)
+[PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)
+[PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)
+[PASS] testConstructorRejectsZeroAdmin() (gas: 6350)
+[PASS] testConstructorRejectsZeroToken() (gas: 6273)
+[PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)
+[PASS] testDuplicateRequestReverts() (gas: 139952)
+[PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)
+[PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)
+[PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)
+[PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)
+[PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 188035, ~: 187861)
+[PASS] testGrantAndRevokeSpendingRole() (gas: 237073)
+[PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)
+[PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)
+[PASS] testNativeValueRejected() (gas: 56431)
+[PASS] testOrdinaryWalletCannotPay() (gas: 60949)
+[PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)
+[PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)
+[PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)
+[PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)
+[PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)
+[PASS] testTreasuryRecipientReverts() (gas: 39549)
+[PASS] testZeroAmountReverts() (gas: 41310)
+[PASS] testZeroRecipientReverts() (gas: 38984)
+[PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 238.45ms (234.36ms CPU time)
+
+Ran 82 tests for tests/unit/BudgetGovernor.t.sol:BudgetGovernorTest
+[PASS] testAbstainAloneCannotWin() (gas: 270722)
+[PASS] testAllSensitiveCallsRejectOrdinaryWallet() (gas: 619536)
+[PASS] testBalanceTransferAfterSnapshotDoesNotChangeVoteWeight() (gas: 455801)
+[PASS] testBalanceWithoutDelegationCannotPropose() (gas: 187207)
+[PASS] testBelowThresholdCannotPropose() (gas: 269148)
+[PASS] testCannotQueueBeforeVotingCompletes() (gas: 293713)
+[PASS] testConstructorAndConfiguration() (gas: 130055)
+[PASS] testConstructorRejectsBlockNumberClock() (gas: 147809)
+[PASS] testCopiedProposalCannotReplaceFirstCreatorOrCancelRights() (gas: 480628)
+[PASS] testCorrectSelectorTruncatedTo35BytesRejected() (gas: 104004)
+[PASS] testCorrectSelectorTruncatedTo36BytesRejected() (gas: 104200)
+[PASS] testCorrectSelectorTruncatedTo4BytesRejected() (gas: 90500)
+[PASS] testCorrectSelectorTruncatedTo67BytesRejected() (gas: 112469)
+[PASS] testCorrectSelectorTruncatedTo68BytesRejected() (gas: 112553)
+[PASS] testCorrectSelectorTruncatedTo99BytesRejected() (gas: 117935)
+[PASS] testCreatorCanCancelAtSnapshotWhileStillPending() (gas: 222183)
+[PASS] testCreatorCancelsPendingAndBlocksAllActions() (gas: 335121)
+[PASS] testCreatorCannotCancelActive() (gas: 209480)
+[PASS] testCreatorCannotCancelDefeated() (gas: 255766)
+[PASS] testCreatorCannotCancelExecuted() (gas: 710818)
+[PASS] testCreatorCannotCancelQueued() (gas: 521186)
+[PASS] testCreatorCannotCancelSucceeded() (gas: 361699)
+[PASS] testDelegateAfterSnapshotDoesNotCreateVotes() (gas: 424914)
+[PASS] testDelegateChangeAfterSnapshotDoesNotChangeVoteWeight() (gas: 452479)
+[PASS] testDelegatingToAnotherWalletMovesVotesNotTokens() (gas: 437786)
+[PASS] testDelegationMustBePastForThreshold() (gas: 268354)
+[PASS] testDescriptionBytesAreNotReserialized() (gas: 63692)
+[PASS] testDirtyAddressPaddingRejected() (gas: 105786)
+[PASS] testDistinctProposalsSharingRequestPayOnlyOnce() (gas: 1173687)
+[PASS] testDuplicateVoteRejectedAcrossEntryPoints() (gas: 283476)
+[PASS] testExactlyThresholdCanPropose() (gas: 348529)
+[PASS] testExecuteChangedAmountRejected() (gas: 659889)
+[PASS] testExecuteChangedDescriptionHashRejected() (gas: 649970)
+[PASS] testExecuteChangedRecipientRejected() (gas: 659857)
+[PASS] testExecuteInsufficientBudgetRollsBackAndRetries() (gas: 981703)
+[PASS] testExecuteNonexistentProposalRejected() (gas: 172550)
+[PASS] testExecuteWithoutQueueRejected() (gas: 419301)
+[PASS] testExtendedSignedVoteSnapshotParamsAndReplay() (gas: 732656)
+[PASS] testFor400Against300SucceedsWithoutAutomaticPayment() (gas: 386310)
+[PASS] testForPlusAbstainReachesQuorum() (gas: 567575)
+[PASS] testFuzzConstructorRejectsZeroOrEOA(uint8,bool) (runs: 256, μ: 12953, ~: 12126)
+[PASS] testFuzzDirtyAddressPaddingWithValidSelector(uint8,uint8) (runs: 256, μ: 115638, ~: 115892)
+[PASS] testFuzzMalformedCalldataLengthRejected(uint8) (runs: 256, μ: 70674, ~: 70602)
+[PASS] testFuzzMismatchedArrayLengthsRejected(uint8,uint8) (runs: 256, μ: 77691, ~: 77882)
+[PASS] testFuzzValidPayloadWithTrailingBytesRejected(bytes) (runs: 256, μ: 124152, ~: 122571)
+[PASS] testGovernorSettingsProposalRejected() (gas: 84151)
+[PASS] testGrantRoleSelectorRejected() (gas: 87978)
+[PASS] testInsufficientQuorumDefeated() (gas: 350483)
+[PASS] testInvalidVoteTypeRejected() (gas: 213912)
+[PASS] testLossDespiteQuorumDefeated() (gas: 637681)
+[PASS] testMultipleActionsRejected() (gas: 227372)
+[PASS] testNativeValueRejected() (gas: 95588)
+[PASS] testOtherWalletCannotCancelPending() (gas: 186859)
+[PASS] testProposalCreatedPreservesRawIntegrationData() (gas: 180927)
+[PASS] testProposalDoesNotReserveBudgetOrRequireUnusedRequest() (gas: 294025)
+[PASS] testQueueChangedAmountRejected() (gas: 520039)
+[PASS] testQueueChangedDescriptionHashRejected() (gas: 510140)
+[PASS] testQueueChangedRecipientRejected() (gas: 520028)
+[PASS] testQueueNonexistentProposalRejected() (gas: 172515)
+[PASS] testRevokeRoleSelectorRejected() (gas: 87957)
+[PASS] testSC01FixtureHash() (gas: 11092)
+[PASS] testSettingsCannotBeChangedDirectlyByWallet() (gas: 32301)
+[PASS] testSignedVoteAfterDeadlineRejectedAndNonceUnchanged() (gas: 526827)
+[PASS] testSignedVoteBeforeActiveRollsBackNonceAndCanRetry() (gas: 569340)
+[PASS] testSignedVoteUsesSnapshotAndRejectsReplay() (gas: 718979)
+[PASS] testSuccessfulExecuteCannotReplay() (gas: 726441)
+[PASS] testTamperedSignedSupportRejectedWithoutConsumingNonce() (gas: 559409)
+[PASS] testTieDefeated() (gas: 454398)
+[PASS] testTimelockIdentityAloneCannotInvokeSensitiveCalls() (gas: 631883)
+[PASS] testTimelockTargetRejected() (gas: 80688)
+[PASS] testTokenTransferSelectorRejected() (gas: 90293)
+[PASS] testTrailingDataRejected() (gas: 80988)
+[PASS] testTreasuryRecipientRejected() (gas: 113310)
+[PASS] testValidProposalAndHash() (gas: 189784)
+[PASS] testVoteWithParamsCannotInjectWeightOrVoteTwice() (gas: 585505)
+[PASS] testVotingWindowBoundaries() (gas: 556662)
+[PASS] testWrongSelectorWithCorrectLengthRejected() (gas: 88041)
+[PASS] testWrongTargetRejectedOnDirectPropose() (gas: 80698)
+[PASS] testZeroAmountRejected() (gas: 105548)
+[PASS] testZeroRecipientRejected() (gas: 110764)
+[PASS] testZeroRequestAccepted() (gas: 159730)
+[PASS] testZeroVotingPowerWeightIsZero() (gas: 326441)
+Suite result: ok. 82 passed; 0 failed; 0 skipped; finished in 238.69ms (540.12ms CPU time)
+
+Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest
+[PASS]
+TreasuryAccountingInvariantTest invariants:
+[PASS] invariant_accountingMatchesSuccessfulPaymentOracle
+[PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs
+[PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay
+ TreasuryAccountingInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)
+
+╭---------------------------+--------------+-------+---------+----------╮
+| Contract                  | Selector     | Calls | Reverts | Discards |
++=======================================================================+
+| TreasuryAccountingHandler | changeRole   | 1254  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | fund         | 1291  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | pay          | 1234  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | payAvailable | 1221  | 0       | 0        |
+╰---------------------------+--------------+-------+---------+----------╯
+
+[PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 2.74s (2.74s CPU time)
+
+Ran 1 test for tests/invariant/GovernanceInvariant.t.sol:GovernanceInvariantTest
+[PASS]
+GovernanceInvariantTest invariants:
+[PASS] invariant_INV01_requestPaymentsAreUniqueAcrossProposalsAndRetries
+[PASS] invariant_INV02_everyPayoutHasValidGovernanceAndFinalRoles
+[PASS] invariant_INV03_treasuryAndRecipientsMatchCommittedLedger
+[PASS] invariant_INV04_snapshotWeightsAndTalliesRemainIndependentOfTokenChanges
+ GovernanceInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)
+
+╭-------------------------+-----------------+-------+---------+----------╮
+| Contract                | Selector        | Calls | Reverts | Discards |
++========================================================================+
+| GovernanceOracleHandler | advance         | 386   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | approveGov      | 371   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | cancel          | 340   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | delegateGov     | 332   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | execute         | 369   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | fund            | 355   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | lifecycle       | 344   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | propose         | 349   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | queue           | 343   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | tamper          | 374   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | transferFromGov | 392   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | transferGov     | 337   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | unauthorized    | 323   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | vote            | 385   | 0       | 0        |
+╰-------------------------+-----------------+-------+---------+----------╯
+
+Logs:
+  sequence actions: 51
+  reachable lifecycle calls: 5
+  Governor execute successes: 5
+  unassisted execute successes: 0
+  execute reverts: 2
+  vote successes: 25
+  queue successes: 5
+  cancel successes: 1
+  unauthorized reverts: 1
+  approval successes: 3
+  transferFrom successes: 0
+  transferFrom reverts: 5
+  model state visits 0: 5
+  model state visits 1: 10
+  model state visits 2: 39
+  model state visits 3: 47
+  model state visits 4: 0
+  model state visits 5: 0
+  model state visits 6: 0
+  model state visits 7: 131
+  total BUD funded: 13401000000004063927340
+  total BUD paid: 5000000000000000000
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 18.55s (18.54s CPU time)
+
+Ran 8 test suites in 18.56s (22.48s CPU time): 142 tests passed, 0 failed, 0 skipped (142 total tests)
+SC01 OK: compiler ABI, calldata, descriptionHash and proposalId agree
+{"phase":"created","H":"24","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact snapshot","H":"28","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Active block","H":"31","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact deadline","H":"41","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty result block","H":"44","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"queued Waiting","H":"48","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Ready block","H":"51","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"executed plus zero requestId duplicate revert","H":"55","counts":{"proposals":5,"votes":7,"operations":2,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"underfunded execute reverted","H":"63","counts":{"proposals":6,"votes":9,"operations":3,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"funded retry succeeds","H":"67","counts":{"proposals":6,"votes":9,"operations":3,"transfers":4,"disbursements":2},"balance":"1000000000000000000000"}
+waiting for server to shut down.... done
+server stopped
+PASS: native BE08 acceptance; evidence: /tmp/dao-be08-review-20261030-r2/report.json

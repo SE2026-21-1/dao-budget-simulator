@@ -315,7 +315,7 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
   const lagging = await get('/health');
   assert.equal(lagging.status, 200);
   assert.equal(lagging.body.data.status, 'degraded');
-  assert.equal(lagging.body.data.indexer, 'synced');
+  assert.equal(lagging.body.data.indexer, 'lagging', 'Raw checkpoint ahead of publication must not report synced, even with an earlier heartbeat.');
   assert.equal(lagging.body.data.projectionStatus, 'lagging');
   assert.equal(lagging.body.data.projectionLagBlocks, '1');
 

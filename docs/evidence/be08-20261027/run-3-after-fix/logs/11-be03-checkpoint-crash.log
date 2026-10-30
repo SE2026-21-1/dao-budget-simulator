@@ -1,0 +1,116 @@
+[stdout] TAP version 13
+[stdout] # Subtest: BE03 isolated real PostgreSQL / child process crash and restart
+[stdout]     # Subtest: fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash
+[stdout]     ok 1 - fresh deployment begins at 100; empty raw batches atomically checkpoint head-2; idle restart validates hash
+[stdout]       ---
+[stdout]       duration_ms: 31.421911
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: K=0 indexes head; no safe block leaves checkpoint absent
+[stdout]     ok 2 - K=0 indexes head; no safe block leaves checkpoint absent
+[stdout]       ---
+[stdout]       duration_ms: 23.779118
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint
+[stdout]     ok 3 - PostgreSQL distinguishes no checkpoint from a committed genesis checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 20.748764
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: missing required source or altered manifest/K refuses checkpoint adoption, including idle start
+[stdout]     ok 4 - missing required source or altered manifest/K refuses checkpoint adoption, including idle start
+[stdout]       ---
+[stdout]       duration_ms: 18.39238
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: legacy unscoped checkpoint is refused
+[stdout]     ok 5 - legacy unscoped checkpoint is refused
+[stdout]       ---
+[stdout]       duration_ms: 14.681693
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: source failure and missing scan evidence never advance checkpoint
+[stdout]     ok 6 - source failure and missing scan evidence never advance checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 6.673292
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: SQL failure after inserting a header and first event rolls back entire batch/checkpoint
+[stdout]     ok 7 - SQL failure after inserting a header and first event rolls back entire batch/checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 28.117219
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: COMMIT itself fails: no successful batch notification and no SQL data/checkpoint
+[stdout]     ok 8 - COMMIT itself fails: no successful batch notification and no SQL data/checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 11.871459
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: same event key changed contents is a conflict; prior committed range survives
+[stdout]     ok 9 - same event key changed contents is a conflict; prior committed range survives
+[stdout]       ---
+[stdout]       duration_ms: 13.38992
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: repeated range, retries and restart preserve event IDs and exact uint256 payload
+[stdout]     ok 10 - repeated range, retries and restart preserve event IDs and exact uint256 payload
+[stdout]       ---
+[stdout]       duration_ms: 22.872151
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint
+[stdout]     ok 11 - hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 16.77141
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout] # {"concurrencyEvidence":"advisory lock wait","pid":670,"blockers":[669]}
+[stdout]     # Subtest: competing writers cannot rewind or commit beyond complete coverage; stale writer must restart
+[stdout]     ok 12 - competing writers cannot rewind or commit beyond complete coverage; stale writer must restart
+[stdout]       ---
+[stdout]       duration_ms: 25.385562
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: decode error and unknown topic are durable and remain visible after idle restart
+[stdout]     ok 13 - decode error and unknown topic are durable and remain visible after idle restart
+[stdout]       ---
+[stdout]       duration_ms: 18.045065
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params
+[stdout]     ok 14 - legacy raw WithParams can be decoded again without changing raw identity/bytes or losing params
+[stdout]       ---
+[stdout]       duration_ms: 23.816074
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout] # {"crashEvidence":"beforeCommit","beforeRestart":{"blocks":0,"events":0,"checkpoint":null},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+[stdout]     # Subtest: real process crash at beforeCommit: SQL visibility and restart exactly once
+[stdout]     ok 15 - real process crash at beforeCommit: SQL visibility and restart exactly once
+[stdout]       ---
+[stdout]       duration_ms: 5531.482523
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout] # {"crashEvidence":"afterCommit","beforeRestart":{"blocks":2,"events":1,"checkpoint":"101"},"afterRestart":{"blocks":2,"events":1,"checkpoint":"101"},"sql":{"block_number":"101","block_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","header_hash":"0x0000000000000000000000000000000000000000000000000000000000000065","events":1}}
+[stdout]     # Subtest: real process crash at afterCommit: SQL visibility and restart exactly once
+[stdout]     ok 16 - real process crash at afterCommit: SQL visibility and restart exactly once
+[stdout]       ---
+[stdout]       duration_ms: 5645.449525
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     1..16
+[stdout] ok 1 - BE03 isolated real PostgreSQL / child process crash and restart
+[stdout]   ---
+[stdout]   duration_ms: 11524.305972
+[stdout]   type: 'suite'
+[stdout]   ...
+[stdout] 1..1
+[stdout] # tests 16
+[stdout] # suites 1
+[stdout] # pass 16
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 14476.506218

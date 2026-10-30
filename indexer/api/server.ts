@@ -240,7 +240,10 @@ export function freshness(raw: ScopeState['raw'], publication: string | null, re
   const age = Number.isFinite(checked) ? Math.max(0, now - checked, now - since) : null;
   const blocked = !raw || publication === null || raw.status === 'rebuild_required' ||
     (!!recovery && recovery.phase !== 'ready');
-  return { status: blocked ? 'not_ready' : lag === 0n && age !== null && age <= 30000 ? 'synced' : 'lagging',
+  // Raw ingestion can commit before the next heartbeat or projection. Its
+  // verified data must be published before the API advertises synced (TV4).
+  const projectionBehind = !!raw && publication !== null && BigInt(raw.h) > BigInt(publication);
+  return { status: blocked ? 'not_ready' : lag === 0n && !projectionBehind && age !== null && age <= 30000 ? 'synced' : 'lagging',
     headBlock: recovery?.head ?? raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null,
     indexedBlock: raw?.h ?? null, publicationBlock: publication, lagBlocks: lag?.toString() ?? null,
     lagSeconds: age === null ? null : Math.floor(age / 1000).toString(), confirmations: raw ? String(raw.confirmations) : null,

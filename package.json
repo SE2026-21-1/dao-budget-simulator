@@ -30,7 +30,7 @@
     "test:be07:db": "node --import tsx --test tests/indexer/be07-db.test.mjs",
     "test:be07:live": "node --import tsx scripts/check_be04_live.mjs",
     "test:be07:native": "node scripts/check_be07_native.mjs",
-    "test:be08": "node --import tsx --test tests/indexer/be08-measurement.test.mjs",
+    "test:be08": "node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs",
     "test:be08:native": "node scripts/check_be08_native.mjs",
     "benchmark:api": "node --import tsx scripts/benchmark_api.mjs"
   },

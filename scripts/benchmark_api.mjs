@@ -19,6 +19,7 @@ import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { startWorkerProbe } from './be08_worker_probe.mjs';
 import { measureJson, metrics } from './be08_measurement.mjs';
+import { verifyPostgresConnection } from './be08_postgres_identity.mjs';
 import { createApiServer } from '../indexer/api/server.ts';
 import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
 
@@ -116,9 +117,8 @@ try {
   assert.equal(identity.database, 'tv4_benchmark');
   assert.equal(identity.role, 'be04_test');
   assert.equal(identity.owned, true, 'Connecting role must own disposable database');
-  assert.ok(['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(lock.connection.stream.remoteAddress));
-  assert.ok(['127.0.0.1', '::1'].includes(identity.address), 'Native loopback PostgreSQL required');
-  assert.match(identity.version, /PostgreSQL 18\.4(?:\s|$)/, 'PostgreSQL18.4 required');
+  verifyPostgresConnection({ peer: { address: lock.connection.stream.remoteAddress, port: lock.connection.stream.remotePort },
+    server: identity, expectedPort: Number(dbUrl.port) });
   assert.equal((await lock.query('SELECT pg_try_advisory_lock(747004, 2) AS acquired')).rows[0].acquired, true, 'Another benchmark owns this database');
   await assertEmptyDatabase(pool);
   const extras = (await pool.query(`SELECT (SELECT count(*) FROM pg_extension WHERE extname<>'plpgsql')::text AS extensions,
@@ -129,7 +129,7 @@ try {
   for (const name of ['tsx', 'typescript', 'pg', 'ethers'])
     report.runtime[name] = JSON.parse(await readFile(new URL(`../node_modules/${name}/package.json`, import.meta.url), 'utf8')).version;
   for (const path of ['scripts/benchmark_api.mjs', 'scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs',
-    'scripts/be08_worker_probe.mjs','scripts/be08_measurement.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
+    'scripts/be08_worker_probe.mjs','scripts/be08_measurement.mjs','scripts/be08_postgres_identity.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
     ...['001_initial', '002_be03', '003_be04', '004_be05_api', '005_be07'].map(name => `database/migrations/${name}.sql`)])
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
   await timed('migrations', async () => {

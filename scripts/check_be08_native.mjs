@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { execFileSync } from 'node:child_process';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
+import { verifyPostgresConnection } from './be08_postgres_identity.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const usage = 'Usage: node scripts/check_be08_native.mjs (--postgres-bin <absolute-bin-dir> | --admin-env BE08_ADMIN_URL) --output <new-evidence-directory> [--benchmark]';
@@ -209,13 +210,14 @@ async function testSuite(name, file, settings) {
 
 // Run SQL in a bounded child using the installed pg driver, not an optional
 // psql binary. Arrays keep CREATE DATABASE outside implicit multi-query blocks.
-async function sqlCommand(name, statements, settings) {
+async function sqlCommand(name, statements, settings, reportPeer = false) {
   const code = `import pg from 'pg';
 let input = ''; for await (const chunk of process.stdin) input += chunk;
 const client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });
 client.on('notice', notice => console.log(notice.message));
 try {
   await client.connect();
+  if (${reportPeer}) console.log(JSON.stringify({ peer: { address: client.connection.stream.remoteAddress, port: client.connection.stream.remotePort } }));
   for (const sql of JSON.parse(input)) {
     const result = await client.query(sql);
     for (const item of Array.isArray(result) ? result : [result])
@@ -288,11 +290,15 @@ try {
   }
   const identity = await sqlCommand('postgres-identity', [
     "SELECT version(), current_setting('data_directory') AS directory, host(inet_server_addr()) || ':' || inet_server_port() AS binding"
-  ], sqlEnv);
-  if (!serviceMode) assert.ok(identity.stdout.includes(data), 'Connected server must be the newly owned cluster');
-  assert.ok(identity.stdout.includes(`127.0.0.1:${port}`), 'Server must use reserved numeric loopback binding');
-  report.runtime.postgresServer = JSON.parse(identity.stdout.trim().split('\n').at(-1)).rows[0].version;
-  assert.match(report.runtime.postgresServer, /PostgreSQL 18\.4(?:\s|$)/, 'PostgreSQL 18.4 server required');
+  ], sqlEnv, true);
+  const identityRecords = identity.stdout.trim().split('\n').map(line => JSON.parse(line));
+  const serverIdentity = identityRecords.at(-1).rows[0];
+  const peer = identityRecords.find(record => record.peer)?.peer;
+  verifyPostgresConnection({ peer, server: serverIdentity, expectedPort: port,
+    ...(serviceMode ? {} : { nativeDirectory: data }) });
+  report.isolation.postgresClientPeer = peer;
+  report.isolation.postgresServerBinding = serverIdentity.binding;
+  report.runtime.postgresServer = serverIdentity.version;
   const databases = [ ['be01_test', 'be01_test'], ['be02_test', 'be02_test'], ['be03_test', 'be03_test'],
     ['be04_test', 'be04_test'], ['tv4_be05_api', 'be05_test'], ['tv4_be06_reference', 'be06_test'],
     ['tv4_be06_target', 'be06_test'], ['be04_live', 'be04_test'], ['be07_test','be04_test'], ['be07_compare','be04_test'], ['tv4_be06_live_target', 'be04_test'],
@@ -318,7 +324,7 @@ try {
     BE06_TEST_REFERENCE_DATABASE_URL: url('tv4_be06_reference', 'be06_test'), BE06_TEST_TARGET_DATABASE_URL: url('tv4_be06_target', 'be06_test') });
   await suite('typecheck',()=>run('typecheck',process.execPath,['node_modules/typescript/bin/tsc','--noEmit'],{group:true}));
   await suite('build',()=>run('build',process.execPath,['node_modules/typescript/bin/tsc','-p','tsconfig.build.json'],{group:true}));
-  await testSuite('unit',['config.test.ts','decoder.test.ts','reader.test.ts','cli.test.ts','syncer.test.ts','projection.test.ts','be04-live-receipt.test.mjs','be06.test.ts','be07.test.ts','be08-measurement.test.mjs'].map(p=>'tests/indexer/'+p),{});
+  await testSuite('unit',['config.test.ts','decoder.test.ts','reader.test.ts','cli.test.ts','syncer.test.ts','projection.test.ts','be04-live-receipt.test.mjs','be06.test.ts','be07.test.ts','be08-measurement.test.mjs','be08-postgres-identity.test.mjs'].map(p=>'tests/indexer/'+p),{});
   await testSuite('be07-db','tests/indexer/be07-db.test.mjs',{BE07_TEST_ISOLATED:'1',BE07_TEST_DATABASE_URL:url('be07_test','be04_test')});
   await suite('contracts',()=>run('contracts','bash',['scripts/ci.sh'],{group:true,timeout:600_000,env:{FOUNDRY_PROFILE:'ci',FOUNDRY_FUZZ_SEED:'0x20261021'}}));
   await suite('live-be07',async()=>{

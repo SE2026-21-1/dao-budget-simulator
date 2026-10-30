@@ -7,9 +7,10 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 ## Đối chiếu tiến độ dự án — 30/10/2026
 
-Phạm vi: nhánh `feature/tv4-operation` tại `501eea1` (commit tài liệu
-28/10), đối chiếu nguồn cục bộ, evidence đã lưu và trạng thái GitHub công khai
-ngày 30/10. Đây là **tiến độ tích hợp local, chưa phải nghiệm thu release**.
+Phạm vi: nhánh `feature/tv4-operation` từ `501eea1` (commit tài liệu
+28/10) đến bản kiểm tra `b476be8` (30/10), đối chiếu nguồn cục bộ, evidence
+đã lưu và GitHub công khai. Đây là **tiến độ tích hợp local, chưa phải nghiệm
+thu release**.
 Các mục có ngày 24–28/10 bên dưới là lịch sử theo phiên bản; không lấy nhãn
 `[ ]` cũ của BE07 hoặc demo “đang chạy” làm trạng thái hiện tại.
 
@@ -18,19 +19,20 @@ Các mục có ngày 24–28/10 bên dưới là lịch sử theo phiên bản; 
 | TV1 — GOV/BUD, Treasury, Governor, Timelock/SC05 | Đã tích hợp; 185 Foundry tests và 14 ca bootstrap Anvil trong [lượt 25/10](evidence/tv4-20261025-final.json). Role audit và chống chi trùng có bằng chứng local. | Peer review deployment/roles, testnet và SC09 review tài liệu contract. |
 | TV2 — BE02–BE07, PostgreSQL, API, rebuild | Đã tích hợp worker BE07/migration 005, cửa sổ reorg mặc định 128 block; [native 27/10](evidence/tv4-be07-20261027.md) ghi 172 unit + 73 DB, reorg/replay, API 503/cursor 409 và BE06 compare cùng H/hash đạt local. | Peer review revision mới và acceptance ngoài local; issue [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18) còn mở, phần mô tả BE07 cũ chưa cập nhật. |
 | TV3 — UI/API/ví | Đã nhận sửa thêm mạng ví; [lượt 28/10](tv4-handoff-20261024.md#bàn-giao-cập-nhật--28102026) có browser EIP-1193 giả lập và demo đọc snapshot Anvil H19, 10.000 BUD, 0 proposal. | Ví extension thật, receipt proposal và snapshot xuất bản sau giao dịch; issue [#19](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19) còn mở với mô tả fixture cũ. |
-| TV4 — QA/CI/benchmark | [Lượt 25/10](evidence/tv4-20261025-final.json) có local 185 Foundry, 165 backend/process, 54 DB/API, 6 frontend và benchmark 100 proposal/1.000 vote (8.116 request thành công, p95 121,400 ms). [CI push/PR](tv4-handoff-20261024.md#bàn-giao-cập-nhật--28102026) đều 9/9 trên commit `deb6347` (28/10). | TC01–TC14 và INV01–04 chưa đủ bằng chứng để đánh dấu nghiệm thu toàn bộ; không suy CI trên `deb6347` là CI đúng `501eea1` hoặc worktree chưa commit. |
+| TV4 — QA/CI/benchmark | [Lượt 25/10](evidence/tv4-20261025-final.json) có local 185 Foundry, 165 backend/process, 54 DB/API, 6 frontend và benchmark 100 proposal/1.000 vote (8.116 request thành công, p95 121,400 ms). Lượt 30/10 chạy lại Foundry/BE07 native/TV4 native + benchmark, chi tiết bên dưới; [CI push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40988424204) và [PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40988428264) **9/9** đúng commit code/test `b476be8`. | TC01–TC14 và INV01–04 chưa đủ bằng chứng để đánh dấu nghiệm thu toàn bộ; CI của `b476be8` không chứng minh ví extension/testnet hoặc peer approval. |
 
-Kiểm tra bổ sung **trên worktree 30/10**, Node 24.15.0: `npm run
+Kiểm tra ban đầu **trên worktree 30/10**, Node 24.15.0: `npm run
 typecheck` exit 0, `npm run test:be07` **15/15 pass**, `npm run test
---prefix frontend -- --run` **14/14 pass**. Không chạy native PostgreSQL/Anvil,
-full Foundry hoặc browser extension trong lượt này; không nâng kết quả cũ thành
-kiểm chứng mới. RPC `127.0.0.1:8545`, API `:3000` và UI `:5174` đều từ chối
+--prefix frontend -- --run` **14/14 pass**. Lượt ban đầu này chưa chạy native
+PostgreSQL/Anvil hoặc full Foundry; các lượt tiếp theo có ở mục bổ sung bên
+dưới. Browser extension vẫn chưa chạy; không nâng kết quả cũ thành kiểm chứng
+mới. RPC `127.0.0.1:8545`, API `:3000` và UI `:5174` đều từ chối
 kết nối khi kiểm tra: demo 28/10 **không còn phục vụ trên các cổng đó**.
 Nếu dựng lại, dùng chain và database mới, không nối checkpoint cũ với Anvil
 đã reset.
 
 Trạng thái công bố ngày 30/10: [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21)
-vẫn open tại `501eea1`, base `Dev`; review duy nhất là `COMMENTED` của TV2
+vẫn open tại `b476be8`, base `Dev`; review duy nhất là `COMMENTED` của TV2
 trên `3b6869d` (25/10), chưa có approval trên head mới. Title/body PR vẫn mô
 tả đợt 23/10; cần cập nhật và nhờ TV1/TV2/TV3 review đúng revision. Các
 issue [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18),
@@ -85,8 +87,11 @@ SHA-256: `be07-after/commands.json`
 `056995dcb24392594f2da7649a7c9d0e7c476c2b990f79831d6b64fc33729203`;
 `tv4/benchmark.json`
 `2ad6ce1e6d9827a8463239400ff44d68e5b7eacb3ce4a3b74cd8b82bbac1dad9`.
-Nếu công bố commit mới, CI/review phải ghim đúng commit đó, không lấy các
-đường dẫn `/tmp` hoặc CI `deb6347` thay bằng chứng release.
+Commit code/test `b476be8` đã được công bố: [CI push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40988424204)
+và [CI PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40988428264)
+đều **9/9 job success** đúng revision; không lấy đường dẫn `/tmp` hoặc CI
+`deb6347` thay bằng chứng của revision khác. Nếu có thêm commit tài liệu,
+cần kiểm CI của chính head mới.
 
 ## Cập nhật 28/10/2026 — nhận sửa mạng ví TV3
 

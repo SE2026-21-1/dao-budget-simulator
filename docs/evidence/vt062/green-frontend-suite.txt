@@ -1,0 +1,15 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  29 passed (29)
+   Start at  17:55:01
+   Duration  615ms (transform 280ms, setup 0ms, import 840ms, tests 117ms, environment 188ms)
+
+
+EXIT_CODE=0

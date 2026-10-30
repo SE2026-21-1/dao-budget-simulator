@@ -1,0 +1,377 @@
+diff --git a/frontend/src/chain/transactions.ts b/frontend/src/chain/transactions.ts
+index 205fb66..e9e5b72 100644
+--- a/frontend/src/chain/transactions.ts
++++ b/frontend/src/chain/transactions.ts
+@@ -19,6 +19,16 @@ export function parseBUD(amount: string): bigint {
+ }
+ export type TransactionPhase = "idle" | "signing" | "submitted" | "confirming" | "success" | "reverted" | "error";
+ 
++export class ReceiptTerminalError extends Error {
++  readonly kind: "reverted" | "cancelled";
++
++  constructor(kind: "reverted" | "cancelled", message: string) {
++    super(message);
++    this.name = "ReceiptTerminalError";
++    this.kind = kind;
++  }
++}
++
+ export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext) {
+   if (!deployment || !publicClient) throw new Error("Chưa cấu hình deployment thật trong .env.");
+   if (!account) throw new Error("Hãy kết nối ví trước.");
+@@ -62,12 +72,18 @@ export async function verifyDeployment(): Promise<void> {
+ export async function waitForReceipt(hash: Hash): Promise<TransactionReceipt> {
+   if (!publicClient) throw new Error("Thiếu RPC để kiểm tra giao dịch.");
+   let changedAction = false;
+-  const receipt = await publicClient.waitForTransactionReceipt({
+-    hash,
+-    onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
+-  });
+-  if (changedAction) throw new Error("Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
+-  if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
++  let receipt: TransactionReceipt;
++  try {
++    receipt = await publicClient.waitForTransactionReceipt({
++      hash,
++      onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
++    });
++  } catch (cause) {
++    if (changedAction) throw new ReceiptTerminalError("cancelled", "Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
++    throw cause;
++  }
++  if (changedAction) throw new ReceiptTerminalError("cancelled", "Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
++  if (receipt.status !== "success") throw new ReceiptTerminalError("reverted", "Giao dịch đã lên chain nhưng bị revert.");
+   return receipt;
+ }
+ 
+diff --git a/frontend/src/chain/useTransaction.ts b/frontend/src/chain/useTransaction.ts
+index 0e1fb8c..e9175e0 100644
+--- a/frontend/src/chain/useTransaction.ts
++++ b/frontend/src/chain/useTransaction.ts
+@@ -1,30 +1,49 @@
+ import { useRef, useState } from "react";
+ import type { Hash, TransactionReceipt } from "viem";
+-import { transactionErrorMessage, waitForReceipt, type TransactionPhase } from "./transactions";
++import { ReceiptTerminalError, transactionErrorMessage, waitForReceipt, type TransactionPhase } from "./transactions";
+ 
+ export function useTransaction() {
+   const [phase, setPhase] = useState<TransactionPhase>("idle");
+   const [hash, setHash] = useState<Hash | null>(null);
+   const [error, setError] = useState<string | null>(null);
+   const running = useRef(false);
++  const pending = useRef<{ hash: Hash; key: string | (() => Promise<Hash>) } | null>(null);
+   const busy = phase === "signing" || phase === "submitted" || phase === "confirming";
+ 
+-  const run = async (send: () => Promise<Hash>, afterReceipt?: (receipt: TransactionReceipt) => Promise<void> | void) => {
++  const run = async (send: () => Promise<Hash>, afterReceipt?: (receipt: TransactionReceipt) => Promise<void> | void, requestKey?: string) => {
+     if (running.current) return null;
++    const key = requestKey ?? send;
++    if (pending.current && pending.current.key !== key) {
++      if (typeof pending.current.key === "string" || typeof key === "string") {
++        setError("Giao dịch trước vẫn chưa rõ kết quả. Chỉ có thể thử lại cùng yêu cầu và ví/mạng ban đầu.");
++        setPhase("error");
++        return null;
++      }
++      // Callers without a request key keep their prior behavior for a new callback/action.
++      pending.current = null;
++    }
+     running.current = true;
+-    setPhase("signing"); setHash(null); setError(null);
++    const previous = pending.current;
++    setPhase(previous ? "confirming" : "signing");
++    if (!previous) setHash(null);
++    setError(null);
+     try {
+-      const submitted = await send();
+-      setHash(submitted); setPhase("submitted");
++      const submitted = previous?.hash ?? await send();
++      if (!previous) {
++        pending.current = { hash: submitted, key };
++        setHash(submitted); setPhase("submitted");
++      }
+       setPhase("confirming");
+       const receipt = await waitForReceipt(submitted);
++      pending.current = null;
+       setHash(receipt.transactionHash); setPhase("success");
+       try { await afterReceipt?.(receipt); } catch { /* Receipt is still successful when optional UI refresh fails. */ }
+       return receipt;
+     } catch (cause) {
++      if (cause instanceof ReceiptTerminalError) pending.current = null;
+       const message = transactionErrorMessage(cause);
+       setError(message);
+-      setPhase(message.includes("revert") ? "reverted" : "error");
++      setPhase(cause instanceof ReceiptTerminalError && cause.kind === "reverted" ? "reverted" : "error");
+       return null;
+     }
+     finally { running.current = false; }
+diff --git a/frontend/src/chain/useTransaction.vt062.test.ts b/frontend/src/chain/useTransaction.vt062.test.ts
+index caad09c..682899b 100644
+--- a/frontend/src/chain/useTransaction.vt062.test.ts
++++ b/frontend/src/chain/useTransaction.vt062.test.ts
+@@ -28,13 +28,19 @@ vi.mock("react", () => ({
+ }));
+ 
+ vi.mock("./transactions", () => ({
++  ReceiptTerminalError: class ReceiptTerminalError extends Error {
++    readonly kind: "reverted" | "cancelled";
++    constructor(kind: "reverted" | "cancelled", message: string) { super(message); this.kind = kind; }
++  },
+   transactionErrorMessage: (cause: unknown) => cause instanceof Error ? cause.message : String(cause),
+   waitForReceipt: hookHarness.waitForReceipt,
+ }));
+ 
+ import { useTransaction } from "./useTransaction";
++import { ReceiptTerminalError } from "./transactions";
+ 
+ const H1 = ("0x" + "11".repeat(32)) as Hash;
++const H2 = ("0x" + "22".repeat(32)) as Hash;
+ const receiptFor = (transactionHash: Hash) => ({
+   transactionHash,
+   status: "success",
+@@ -124,4 +130,70 @@ describe("VT-062 receipt retry", () => {
+     expect(await firstRun).toBe(receipt);
+     expect(useHarnessTransaction()).toMatchObject({ phase: "success", hash: H1, busy: false });
+   });
++
++  it("does not attach a changed request to H1 or send while H1 is unresolved", async () => {
++    hookHarness.waitForReceipt
++      .mockRejectedValueOnce(new Error("RPC timeout"))
++      .mockResolvedValueOnce(receiptFor(H1));
++    const sendOriginal = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
++    const sendChanged = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
++
++    expect(await useHarnessTransaction().run(sendOriginal, undefined, "draft/account/chain/deployment-A")).toBeNull();
++    expect(await useHarnessTransaction().run(sendChanged, undefined, "draft/account/chain/deployment-B")).toBeNull();
++    expect(sendChanged).not.toHaveBeenCalled();
++    expect(hookHarness.waitForReceipt).toHaveBeenCalledTimes(1);
++    expect(useHarnessTransaction()).toMatchObject({ phase: "error", hash: H1 });
++
++    expect(await useHarnessTransaction().run(sendOriginal, undefined, "draft/account/chain/deployment-A")).toMatchObject({ transactionHash: H1 });
++    expect(sendOriginal).toHaveBeenCalledTimes(1);
++    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H1);
++  });
++
++  it.each([
++    ["reverted", "reverted"],
++    ["cancelled", "error"],
++  ] as const)("clears the pending hash after a terminal %s outcome", async (kind, phase) => {
++    hookHarness.waitForReceipt
++      .mockRejectedValueOnce(new ReceiptTerminalError(kind, kind))
++      .mockResolvedValueOnce(receiptFor(H2));
++    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
++    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
++    const afterReceipt = vi.fn();
++
++    expect(await useHarnessTransaction().run(firstSend, afterReceipt, "request-A")).toBeNull();
++    expect(useHarnessTransaction()).toMatchObject({ phase, hash: H1, busy: false });
++    expect(afterReceipt).not.toHaveBeenCalled();
++
++    expect(await useHarnessTransaction().run(nextSend, afterReceipt, "request-B")).toMatchObject({ transactionHash: H2 });
++    expect(nextSend).toHaveBeenCalledTimes(1);
++    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H2);
++    expect(afterReceipt).toHaveBeenCalledTimes(1);
++  });
++
++  it("allows a distinct action after H1 has succeeded", async () => {
++    hookHarness.waitForReceipt
++      .mockResolvedValueOnce(receiptFor(H1))
++      .mockResolvedValueOnce(receiptFor(H2));
++    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
++    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
++
++    expect(await useHarnessTransaction().run(firstSend, undefined, "request-A")).toMatchObject({ transactionHash: H1 });
++    expect(await useHarnessTransaction().run(nextSend, undefined, "request-B")).toMatchObject({ transactionHash: H2 });
++    expect(firstSend).toHaveBeenCalledTimes(1);
++    expect(nextSend).toHaveBeenCalledTimes(1);
++  });
++
++  it("preserves the old new-action behavior for callers without a request key", async () => {
++    hookHarness.waitForReceipt
++      .mockRejectedValueOnce(new Error("RPC timeout"))
++      .mockResolvedValueOnce(receiptFor(H2));
++    const firstSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H1);
++    const nextSend = vi.fn<() => Promise<Hash>>().mockResolvedValue(H2);
++
++    expect(await useHarnessTransaction().run(firstSend)).toBeNull();
++    expect(await useHarnessTransaction().run(nextSend)).toMatchObject({ transactionHash: H2 });
++    expect(firstSend).toHaveBeenCalledTimes(1);
++    expect(nextSend).toHaveBeenCalledTimes(1);
++    expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H2);
++  });
+ });
+diff --git a/frontend/src/chain/waitForReceipt.vt062.test.ts b/frontend/src/chain/waitForReceipt.vt062.test.ts
+new file mode 100644
+index 0000000..a396977
+--- /dev/null
++++ b/frontend/src/chain/waitForReceipt.vt062.test.ts
+@@ -0,0 +1,57 @@
++import { beforeEach, describe, expect, it, vi } from "vitest";
++import type { Hash, TransactionReceipt } from "viem";
++
++const receiptHarness = vi.hoisted(() => ({
++  wait: vi.fn(),
++}));
++
++vi.mock("./wallet", () => ({
++  publicClient: { waitForTransactionReceipt: receiptHarness.wait },
++}));
++
++vi.mock("./config", () => ({ deployment: null }));
++
++import { ReceiptTerminalError, waitForReceipt } from "./transactions";
++
++const H1 = ("0x" + "11".repeat(32)) as Hash;
++const receipt = (status: "success" | "reverted") => ({
++  transactionHash: H1,
++  status,
++}) as TransactionReceipt;
++
++describe("VT-062 receipt outcome classification", () => {
++  beforeEach(() => { receiptHarness.wait.mockReset(); });
++
++  it("keeps an RPC timeout retryable", async () => {
++    const timeout = new Error("RPC timeout");
++    receiptHarness.wait.mockRejectedValue(timeout);
++    await expect(waitForReceipt(H1)).rejects.toBe(timeout);
++    expect(receiptHarness.wait).toHaveBeenCalledWith(expect.objectContaining({ hash: H1 }));
++  });
++
++  it("marks an on-chain revert as terminal", async () => {
++    receiptHarness.wait.mockResolvedValue(receipt("reverted"));
++    await expect(waitForReceipt(H1)).rejects.toMatchObject({
++      kind: "reverted",
++      message: expect.stringContaining("revert"),
++    });
++  });
++
++  it.each(["cancelled", "replaced"] as const)("marks a %s wallet replacement as terminal", async (reason) => {
++    receiptHarness.wait.mockImplementation(({ onReplaced }: { onReplaced: (event: { reason: typeof reason }) => void }) => {
++      onReplaced({ reason });
++      return Promise.resolve(receipt("success"));
++    });
++    const error = await waitForReceipt(H1).catch((cause: unknown) => cause);
++    expect(error).toBeInstanceOf(ReceiptTerminalError);
++    expect(error).toMatchObject({ kind: "cancelled" });
++  });
++
++  it("accepts a repriced transaction for the same action", async () => {
++    receiptHarness.wait.mockImplementation(({ onReplaced }: { onReplaced: (event: { reason: "repriced" }) => void }) => {
++      onReplaced({ reason: "repriced" });
++      return Promise.resolve(receipt("success"));
++    });
++    await expect(waitForReceipt(H1)).resolves.toMatchObject({ transactionHash: H1, status: "success" });
++  });
++});
+diff --git a/frontend/src/pages/CreateProposalPage.tsx b/frontend/src/pages/CreateProposalPage.tsx
+index d9b94be..d8c78b5 100644
+--- a/frontend/src/pages/CreateProposalPage.tsx
++++ b/frontend/src/pages/CreateProposalPage.tsx
+@@ -42,6 +42,12 @@ function CreateProposalPage() {
+       assertWritable(wallet.account, wallet.chainId, summary?.context);
+       if (validation) throw new Error(validation);
+       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
++      const requestKey = JSON.stringify([
++        wallet.account!.toLowerCase(), wallet.chainId, deployment!.chainId, deployment!.deploymentId,
++        deployment!.governor.toLowerCase(), deployment!.treasury.toLowerCase(),
++        payload.targets.map((target) => target.toLowerCase()), payload.values.map(String),
++        payload.calldatas.map((data) => data.toLowerCase()), payload.description,
++      ]);
+       await transaction.run(
+         async () => {
+           await assertCanPropose(wallet.account!);
+@@ -51,6 +57,7 @@ function CreateProposalPage() {
+           setSubmittedId(proposalIdFromReceipt(receipt.logs));
+           setLoadAttempt((value) => value + 1);
+         },
++        requestKey,
+       );
+     } catch (cause) { setFormError(cause instanceof Error ? cause.message : "Không thể tạo đề xuất."); }
+   };
+diff --git a/frontend/src/pages/CreateProposalPage.vt062.test.tsx b/frontend/src/pages/CreateProposalPage.vt062.test.tsx
+index 705e446..cf1545f 100644
+--- a/frontend/src/pages/CreateProposalPage.vt062.test.tsx
++++ b/frontend/src/pages/CreateProposalPage.vt062.test.tsx
+@@ -27,6 +27,7 @@ vi.mock("../chain/config", () => ({
+   deployment: {
+     chainId: 31337,
+     deploymentId: "vt062-local",
++    governor: "0xdddddddddddddddddddddddddddddddddddddddd",
+     treasury: uiHarness.treasury,
+   },
+   transactionUrl: () => null,
+@@ -37,6 +38,10 @@ vi.mock("../chain/wallet", () => ({
+ }));
+ 
+ vi.mock("../chain/transactions", () => ({
++  ReceiptTerminalError: class ReceiptTerminalError extends Error {
++    readonly kind: "reverted" | "cancelled";
++    constructor(kind: "reverted" | "cancelled", message: string) { super(message); this.kind = kind; }
++  },
+   assertWritable: uiHarness.assertWritable,
+   assertCanPropose: uiHarness.assertCanPropose,
+   buildProposal: uiHarness.buildProposal,
+@@ -197,4 +202,64 @@ describe("VT-062 proposal retry through the product form", () => {
+     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
+     expect(container.textContent).toContain("Proposal ID: 42");
+   });
++
++  it("does not attach a changed payload or wallet account to the unresolved hash", async () => {
++    const firstReceiptWait = deferred<TransactionReceipt>();
++    const firstWaitStarted = deferred<void>();
++    const firstErrorHandled = deferred<void>();
++    uiHarness.buildProposal.mockImplementation((...args: unknown[]) => ({
++      targets: [uiHarness.treasury],
++      values: [0n],
++      calldatas: [args[3] === "1" ? "0x1234" : "0x5678"],
++      description: "same description",
++    }));
++    uiHarness.waitForReceipt
++      .mockImplementationOnce(() => {
++        firstWaitStarted.resolve(undefined);
++        return firstReceiptWait.promise;
++      })
++      .mockResolvedValueOnce({ transactionHash: uiHarness.hash, status: "success", logs: [] } as unknown as TransactionReceipt);
++    uiHarness.transactionErrorMessage.mockImplementation((cause: unknown) => {
++      firstErrorHandled.resolve(undefined);
++      return cause instanceof Error ? cause.message : String(cause);
++    });
++
++    await act(async () => {
++      root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>);
++      await Promise.resolve();
++    });
++    await act(async () => {
++      setFieldValue("proposal-title", "VT-062 retry");
++      setFieldValue("proposal-body", "Retry tracks the existing transaction hash.");
++      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
++      setFieldValue("proposal-amount", "1");
++    });
++    await act(async () => {
++      submitButton().click();
++      await firstWaitStarted.promise;
++    });
++    firstReceiptWait.reject(new Error("RPC timeout"));
++    await act(async () => { await firstErrorHandled.promise; });
++
++    await act(async () => { setFieldValue("proposal-amount", "2"); });
++    await act(async () => { submitButton().click(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
++    expect(container.textContent).toContain("Chỉ có thể thử lại cùng yêu cầu");
++
++    await act(async () => { setFieldValue("proposal-amount", "1"); });
++    uiHarness.useWallet.mockReturnValue({ account: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", chainId: 31337 });
++    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); });
++    await act(async () => { submitButton().click(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
++
++    uiHarness.useWallet.mockReturnValue({ account: uiHarness.account, chainId: 31337 });
++    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); });
++    await act(async () => { submitButton().click(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
++    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
++    expect(container.textContent).toContain("Proposal ID: 42");
++  });
+ });

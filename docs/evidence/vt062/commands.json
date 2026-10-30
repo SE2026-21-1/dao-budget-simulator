@@ -1,0 +1,55 @@
+{
+  "baseline": {
+    "sourceCommit": "ae8c3533e14a01f74ba4ea7b00c74365e1651be1",
+    "branch": "individual/23001841-vt062-idempotent-retry",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "lockfile": "frontend/package-lock.json"
+  },
+  "runs": [
+    {
+      "command": "npm install --prefix frontend --save-dev --save-exact happy-dom",
+      "exitCode": 0,
+      "output": "happy-dom-install.txt",
+      "result": "One direct test-only dependency, happy-dom 21.0.4; audited 94 packages, 0 vulnerabilities."
+    },
+    {
+      "command": "npm ci --prefix frontend --offline --no-audit",
+      "exitCode": 0,
+      "output": "frontend-npm-ci-final.txt",
+      "result": "Clean lockfile install: 93 packages."
+    },
+    {
+      "command": "npm test --prefix frontend -- src/chain/useTransaction.vt062.test.ts",
+      "exitCode": 1,
+      "output": "red-targeted.txt",
+      "result": "1 failed, 2 passed; expected send count 1, actual 2."
+    },
+    {
+      "command": "npm test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx",
+      "exitCode": 1,
+      "output": "red-ui.txt",
+      "result": "Rendered product page; expected sendGovernor count 1, actual 2."
+    },
+    {
+      "command": "npm run test --prefix frontend",
+      "exitCode": 1,
+      "output": "all-frontend-tests.txt",
+      "result": "16 passed, 2 failed; both failures are VT-062 duplicate-send behavior assertions."
+    },
+    {
+      "command": "npm run build --prefix frontend",
+      "exitCode": 0,
+      "output": "frontend-build.txt",
+      "result": "TypeScript and Vite build passed; existing bundle-size warning remains."
+    },
+    {
+      "command": "npm run lint --prefix frontend",
+      "exitCode": 0,
+      "output": "frontend-lint.txt",
+      "result": "No errors; 8 warnings remain in pre-existing frontend/src/chain/wallet.tsx."
+    }
+  ],
+  "productionSourceModified": false,
+  "secretsPrinted": false
+}

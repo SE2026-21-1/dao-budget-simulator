@@ -1,0 +1,7 @@
+## individual/23001841-vt062-idempotent-retry
+ M frontend/package-lock.json
+ M frontend/package.json
+?? docs/evidence/vt062/
+?? docs/individual/
+?? frontend/src/chain/useTransaction.vt062.test.ts
+?? frontend/src/pages/CreateProposalPage.vt062.test.tsx

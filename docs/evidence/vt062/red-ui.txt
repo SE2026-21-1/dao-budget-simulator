@@ -1,0 +1,32 @@
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /tmp/dao-budget-vt062-individual/frontend
+
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx (1 test | 1 failed) 50ms
+     × retries receipt tracking for H1 through the enabled form without sending a second transaction 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/CreateProposalPage.vt062.test.tsx > VT-062 proposal retry through the product form > retries receipt tracking for H1 through the enabled form without sending a second transaction
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx:194:36
+    192|     expect(uiHarness.buildProposal.mock.calls[0].slice(0, 5)).toEqual(…
+    193|     expect(uiHarness.buildProposal.mock.calls[1].slice(0, 5)).toEqual(…
+    194|     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+       |                                    ^
+    195|     expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
+    196|     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  17:43:33
+   Duration  611ms (transform 67ms, setup 0ms, import 258ms, tests 50ms, environment 187ms)
+
+
+EXIT_CODE=1

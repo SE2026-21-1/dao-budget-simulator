@@ -1,0 +1,38 @@
+# VT-062 — Source review và provenance
+
+Baseline: ae8c3533e14a01f74ba4ea7b00c74365e1651be1, origin/feature/tv3-frontend.
+Các vị trí được đọc bằng nl -ba tại checkout cô lập.
+
+frontend/src/chain/useTransaction.ts:
+- Dòng 12–20: run dùng running ref để chống gọi chồng; trước mỗi run set phase signing, setHash(null), xóa error; sau send lưu submitted hash và gọi waitForReceipt(submitted).
+- Dòng 21–30: receipt success gọi callback; catch chỉ set error/phase, finally nhả running. Hash đã nhận không bị xóa trong catch, nhưng lần run sau sẽ xóa hash rồi gọi send lại.
+- Dòng 32 trả phase/hash/error/busy/run.
+
+frontend/src/pages/CreateProposalPage.tsx:
+- Dòng 19: requestId được khởi tạo bằng useState(newRequestId), nên ổn định qua rerender trong cùng mount.
+- Dòng 39–54: mỗi lần submit build cùng payload từ form/requestId, sau đó truyền callback gửi propose vào transaction.run; callback receipt mới đặt submittedId.
+- Dòng 66–79: form vẫn giữ state; nút bị disable theo transaction.busy hoặc submittedId. Phase error không busy và submittedId còn null, vì vậy có thể submit lại sau wait failure.
+- Đây là code path khiến việc gọi lại send làm chain nhận một giao dịch/proposal thứ hai.
+
+frontend/src/chain/transactions.ts:
+- Dòng 62–71: waitForReceipt chờ hash; cancellation/changed action và receipt revert bị đổi thành lỗi. Cần phân biệt các terminal outcome này với lỗi RPC quan sát tạm thời.
+
+contracts/Treasury.sol:
+- Dòng 15 và 34–43: paidRequests kiểm tra/lưu requestId trong disburse; đây là guard giải ngân on-chain, không phải guard tạo proposal ở frontend.
+
+database/migrations/001_initial.sql:
+- Dòng 86–89: raw event unique key là chain_id + transaction_hash + log_index; guard này chống ingest trùng một event, không ngăn giao dịch mới từ ví.
+
+AGENTS.md:
+- Dòng 10–11: API read-only, wallet-signed writes đi trực tiếp tới contract.
+
+docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md:
+- Dòng 233: giao diện gửi qua ví; indexer đọc chain/ghi database; API chỉ đọc.
+- Dòng 270–273: TV1 contract, TV2 FR13–16/indexer-data-API, TV3 dashboard-wallet; review chéo TV2/TV3.
+
+indexer/api/server.ts dòng 381 dựng response field requestId từ row.request_id. tests/api/server.test.mjs là PostgreSQL integration test, cần database disposable; không chạy trong RED test chính.
+
+OpenZeppelin Governor provenance:
+- Candidate HEAD gitlink lib/openzeppelin-contracts points to c64a1edb67b6e3f4a15cca8909c9482ad33a02b0. Read the matching initialized submodule at the user's clean dao-bt3-vt062 clone; its submodule status matches that gitlink.
+- lib/openzeppelin-contracts/contracts/governance/Governor.sol lines 304–318 computes proposalId from targets, values, calldatas and keccak(description); if _proposals[proposalId].voteStart is already set, it reverts GovernorUnexpectedProposalState before state write/event.
+- Therefore, the exact unchanged proposal payload does not produce a second ProposalCreated event: H2 is still an unnecessary wallet/on-chain transaction attempt and is expected to revert. Different description/actions can yield a different proposalId even with reused requestId; that is outside the unchanged-draft test and remains protected from duplicate successful payout only by Treasury.paidRequests.

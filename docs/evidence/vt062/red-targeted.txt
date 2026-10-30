@@ -1,0 +1,32 @@
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts
+
+
+ RUN  v4.1.12 /tmp/dao-budget-vt062-individual/frontend
+
+ ❯ src/chain/useTransaction.vt062.test.ts (3 tests | 1 failed) 11ms
+     × resumes the known hash after a transient receipt failure without sending again 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/chain/useTransaction.vt062.test.ts > VT-062 receipt retry > resumes the known hash after a transient receipt failure without sending again
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/chain/useTransaction.vt062.test.ts:81:18
+     79|     const retryAttempt = await useHarnessTransaction().run(send, after…
+     80|
+     81|     expect(send).toHaveBeenCalledTimes(1);
+       |                  ^
+     82|     expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(1, H1);
+     83|     expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  17:34:02
+   Duration  243ms (transform 49ms, setup 0ms, import 68ms, tests 11ms, environment 0ms)
+
+
+EXIT_CODE=1

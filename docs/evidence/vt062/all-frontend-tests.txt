@@ -1,0 +1,46 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /tmp/dao-budget-vt062-individual/frontend
+
+ ❯ src/chain/useTransaction.vt062.test.ts (3 tests | 1 failed) 8ms
+     × resumes the known hash after a transient receipt failure without sending again 5ms
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx (1 test | 1 failed) 61ms
+     × retries receipt tracking for H1 through the enabled form without sending a second transaction 60ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/chain/useTransaction.vt062.test.ts > VT-062 receipt retry > resumes the known hash after a transient receipt failure without sending again
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/chain/useTransaction.vt062.test.ts:81:18
+     79|     const retryAttempt = await useHarnessTransaction().run(send, after…
+     80|
+     81|     expect(send).toHaveBeenCalledTimes(1);
+       |                  ^
+     82|     expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(1, H1);
+     83|     expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/pages/CreateProposalPage.vt062.test.tsx > VT-062 proposal retry through the product form > retries receipt tracking for H1 through the enabled form without sending a second transaction
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx:194:36
+    192|     expect(uiHarness.buildProposal.mock.calls[0].slice(0, 5)).toEqual(…
+    193|     expect(uiHarness.buildProposal.mock.calls[1].slice(0, 5)).toEqual(…
+    194|     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+       |                                    ^
+    195|     expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
+    196|     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 16 passed (18)
+   Start at  17:44:06
+   Duration  690ms (transform 235ms, setup 0ms, import 675ms, tests 109ms, environment 229ms)
+
+
+EXIT_CODE=1

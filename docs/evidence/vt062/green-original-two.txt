@@ -1,0 +1,15 @@
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  2 passed (2)
+      Tests  10 passed (10)
+   Start at  17:54:59
+   Duration  598ms (transform 89ms, setup 0ms, import 287ms, tests 83ms, environment 185ms)
+
+
+EXIT_CODE=0

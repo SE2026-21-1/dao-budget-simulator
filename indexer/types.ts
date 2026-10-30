@@ -19,6 +19,8 @@ export interface IndexerConfig {
   contracts: ContractConfig[];
   /** Number of following blocks required; BE03 defaults to 2. */
   confirmations?: number;
+  reorgWindow?: number;
+  pollIntervalMs?: number;
 }
 
 export interface BlockHeader {
@@ -73,9 +75,17 @@ export interface DecodeIssue {
 }
 
 export interface SyncStorage {
+  recoveryPending?(config: IndexerConfig): Promise<boolean>;
+  recoverShorterChain?(config: IndexerConfig, rpc: import('./rpc.js').RpcTransport, expected: Checkpoint): Promise<Checkpoint | null>;
+  recoverCheckpoint?(config: IndexerConfig, rpc: import('./rpc.js').RpcTransport, expected: Checkpoint): Promise<Checkpoint | null>;
+  observe?(config: IndexerConfig, head: bigint, expected: Checkpoint | null): Promise<void>;
   loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null>;
   writeCheckpointBatch(config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null, head: bigint): Promise<WriteResult>;
   decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues?: DecodeIssue[] }>;
+  completeSync(config: IndexerConfig, expected: Checkpoint, head: bigint): Promise<void>;
+  invalidate(config: IndexerConfig, expected: Checkpoint, reason: string): Promise<void>;
+  recentCheckpoints(config: IndexerConfig, expected: Checkpoint, from: bigint): Promise<Checkpoint[]>;
+  rewind(config: IndexerConfig, expected: Checkpoint, ancestor: Checkpoint | null): Promise<void>;
 }
 
 export interface WriteResult {

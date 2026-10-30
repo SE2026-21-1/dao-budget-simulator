@@ -2,10 +2,15 @@ import { Link, useParams } from "react-router";
 import FixtureLoadState from "../components/FixtureLoadState";
 import { formatBUD } from "../data/formatBUD";
 import { useProposalFixtures } from "../data/useProposalFixtures";
+import ProposalActions from "../components/ProposalActions";
+import { formatGOV } from "../chain/wallet";
+import { transactionUrl } from "../chain/config";
+
+const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).toLocaleString("vi-VN") : "—";
 
 function ProposalDetailPage() {
   const { id } = useParams();
-  const { state, retry, simulateError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing } = useProposalFixtures();
   const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
 
   if (state.status !== "success") {
@@ -17,7 +22,8 @@ function ProposalDetailPage() {
       <div className="panel">
         <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
         <h1>Không tìm thấy đề xuất</h1>
-        <p className="muted">Proposal ID này không tồn tại trong bộ dữ liệu fixture BE01.</p>
+        <p className="muted">Proposal ID này không tồn tại trong snapshot đang xem. Nếu vừa gửi giao dịch, hãy đợi indexer xuất bản dữ liệu mới.</p>
+        <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
         <Link to="/proposals" className="button-primary">Quay lại danh sách</Link>
       </div>
     );
@@ -29,30 +35,43 @@ function ProposalDetailPage() {
       <div className="page-heading">
         <div>
           <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
-          <h1 className="proposal-id">Proposal #{proposal.proposalId}</h1>
-          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · Fixture BE01 tại block {state.collection.context.asOfBlock}.</p>
+          <h1 className="proposal-id">Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</h1>
+          <p className="proposal-full-id">ID đầy đủ: {proposal.proposalId}</p>
+          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · {state.collection.context.dataKind === "chain" ? "API BE05" : "Fixture BE01"} tại block {state.collection.context.asOfBlock}.</p>
         </div>
       </div>
+      <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+      {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
 
       <div className="detail-grid">
         <section className="panel">
           <div className="detail-title">
-            <h2>{proposal.title}</h2>
-            <span className="status-pill">{proposal.state}</span>
+            <h2>{proposal.title ?? `Proposal ${proposal.proposalId}`}</h2>
+            <span className={`status-pill status-pill--${proposal.state.toLowerCase()}`}>{proposal.state}</span>
           </div>
           <p className="eyebrow">Số tiền đề xuất</p>
           <p className="detail-amount">{formatBUD(proposal.amount)}</p>
           <dl className="detail-fields">
             <div><dt>Người tạo</dt><dd>{proposal.proposer}</dd></div>
             <div><dt>Địa chỉ nhận</dt><dd>{proposal.recipient}</dd></div>
-            <div><dt>Mô tả</dt><dd className="description-text">{proposal.body}</dd></div>
+            <div><dt>Mô tả</dt><dd className="description-text">{proposal.body ?? proposal.description}</dd></div>
           </dl>
         </section>
 
         <aside className="panel">
           <div className="panel__header"><h2>Tiến trình đề xuất</h2></div>
-          <div className="empty-state">Snapshot, deadline, quorum, ETA và transaction sẽ hiện ở đây khi có API và contract.</div>
-          <p className="notice" style={{ marginTop: 18 }}>Đây là dữ liệu mô phỏng. Vote, cancel, queue và execute sẽ được tích hợp ở các ngày sau.</p>
+          <dl className="detail-fields">
+            <div><dt>Snapshot</dt><dd>{timestamp(proposal.snapshot)}</dd></div>
+            <div><dt>Deadline</dt><dd>{timestamp(proposal.deadline)}</dd></div>
+            <div><dt>ETA</dt><dd>{timestamp(proposal.operation?.eta)}</dd></div>
+            <div><dt>For / Against / Abstain</dt><dd>{proposal.votes ? `${formatGOV(BigInt(proposal.votes.for))} / ${formatGOV(BigInt(proposal.votes.against))} / ${formatGOV(BigInt(proposal.votes.abstain))}` : "—"}</dd></div>
+            <div><dt>Quorum tại snapshot</dt><dd>{proposal.votes?.quorum ? formatGOV(BigInt(proposal.votes.quorum)) : "Chưa xác định"}</dd></div>
+          </dl>
+          {proposal.transactions && <div className="transaction-list"><h3>Giao dịch</h3>{Object.entries(proposal.transactions).filter(([, hash]) => hash).map(([kind, hash]) => {
+            const url = transactionUrl(hash!);
+            return <p key={kind}>{kind}: {url ? <a href={url} target="_blank" rel="noreferrer">{hash}</a> : <code>{hash}</code>}</p>;
+          })}</div>}
+          <ProposalActions key={proposal.proposalId} proposal={proposal} context={state.collection.context} onConfirmed={retry} />
         </aside>
       </div>
     </div>

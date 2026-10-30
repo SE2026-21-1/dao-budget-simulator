@@ -1,0 +1,138 @@
+[
+  {
+    "label": "typecheck",
+    "command": "npm",
+    "args": [
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:42:53.194Z",
+    "end": "2026-10-25T15:42:55.543Z"
+  },
+  {
+    "label": "build",
+    "command": "npm",
+    "args": [
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:42:55.548Z",
+    "end": "2026-10-25T15:42:57.432Z"
+  },
+  {
+    "label": "unit",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/config.test.ts",
+      "tests/indexer/decoder.test.ts",
+      "tests/indexer/reader.test.ts",
+      "tests/indexer/cli.test.ts",
+      "tests/indexer/syncer.test.ts",
+      "tests/indexer/projection.test.ts",
+      "tests/indexer/be04-live-receipt.test.mjs",
+      "tests/indexer/be06.test.ts",
+      "tests/indexer/be07.test.ts"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:42:57.449Z",
+    "end": "2026-10-25T15:43:00.484Z"
+  },
+  {
+    "label": "be02-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/storage.test.ts"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:00.489Z",
+    "end": "2026-10-25T15:43:03.095Z"
+  },
+  {
+    "label": "be03-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/checkpoint-storage.test.ts"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:03.099Z",
+    "end": "2026-10-25T15:43:05.667Z"
+  },
+  {
+    "label": "be04-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/projection-storage.test.ts"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:05.673Z",
+    "end": "2026-10-25T15:43:08.082Z"
+  },
+  {
+    "label": "api-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/api/server.test.mjs"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:08.087Z",
+    "end": "2026-10-25T15:43:09.014Z"
+  },
+  {
+    "label": "be06-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/be06-db.test.mjs"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:09.019Z",
+    "end": "2026-10-25T15:43:09.961Z"
+  },
+  {
+    "label": "be07-db",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/be07-db.test.mjs"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:09.967Z",
+    "end": "2026-10-25T15:43:12.660Z"
+  },
+  {
+    "label": "be07-live",
+    "command": "node",
+    "args": [
+      "--import",
+      "tsx",
+      "scripts/check_be04_live.mjs",
+      "--output",
+      "/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "--be07"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:43:12.667Z",
+    "end": "2026-10-25T15:43:55.359Z"
+  }
+]

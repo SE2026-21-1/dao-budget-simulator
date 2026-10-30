@@ -105,6 +105,24 @@ tọa độ/blockHash không khớp header hoặc dữ liệu RPC mâu thuẫn p
 thất bại. Những kiểm tra này phát hiện dữ liệu không nhất quán tại lúc quét;
 chúng chưa thay thế cơ chế theo dõi và rollback reorg của BE03/BE07.
 
+### RPC và retry có giới hạn
+
+`HttpRpc` chỉ retry các RPC đọc idempotent: `eth_chainId`, `eth_blockNumber`,
+`eth_getBlockByNumber`, `eth_getLogs`, `eth_getCode`, `eth_call`; tối đa **4 lần**
+cho lỗi transport/timeout, HTTP `408`/`429`/`5xx` hoặc JSON-RPC
+`-32005`/`-32016`/`-32603`. Các method khác (đặc biệt
+`eth_sendTransaction`, `evm_*`, `anvil_*`) không được gửi lại khi mất response.
+Timeout mặc định **5 giây/lần**, gồm cả response body. Backoff 250/500/1000 ms
+với jitter 50–100%, cap 2 giây; `Retry-After` có thể tăng khoảng chờ trong cap.
+Body lỗi HTTP được hủy trước lần thử tiếp theo và không đưa vào báo lỗi.
+
+HTTP `4xx` khác, JSON hỏng, envelope sai, JSON-RPC error vĩnh viễn hoặc
+malformed data **không retry**. Hết số lần thử vẫn dừng lượt quét mà không ghi
+batch chưa hoàn tất. URL, credential, params và body provider không xuất hiện
+trong lỗi public. Lỗi đọc RPC tạm thời có `error.retryable: true`; worker BE07
+thử lại ở lượt sau nhưng không đánh dấu heartbeat thành công. Chi tiết:
+[BE07](be07.md).
+
 ## Database và chạy CLI
 
 Chỉ dùng PostgreSQL test/local **mới, độc lập**. Không dùng database đang chứa
@@ -375,3 +393,5 @@ export lại, chèn metadata `deployments`/`deployment_contracts` với bốn de
 BE02, lấy **deployment_id thực từ INSERT ... RETURNING** để cấu hình scanner.
 Bundle không phát minh `deploymentId`. ABI/role audit local không thay nghiệm
 thu SC06 chính thức, peer review indexed fields/IDs/salt hay production consumer.
+
+BE07 bổ sung [recovery, RPC retry và worker polling](be07.md). Áp dụng migration 005 sau 001–004; dùng `--worker` để kiểm tra cả khi idle và tự replay sau reorg.

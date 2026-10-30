@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import { IndexerError, publicError } from '../../indexer/errors.js';
 import { scan, ScanError } from '../../indexer/scanner.js';
 import { blockRanges } from '../../indexer/reader.js';
 import { HttpRpc } from '../../indexer/rpc.js';
@@ -167,12 +170,170 @@ test('HTTP JSON-RPC transport reads synthetic logs through scanner', async (t) =
 });
 
 test('RPC HTTP failures redact URL paths and body; prior batches remain explicit', async (t) => {
-  const { url, server } = await serveRpc(() => { throw new Error('secret body'); });
+  let requests = 0;
+  const { url, server } = await serveRpc(() => { requests++; throw new Error('secret body'); });
   t.after(() => server.close());
-  await assert.rejects(scan(config(), new HttpRpc(url), new RecordingStorage()), (error: unknown) => {
+  await assert.rejects(scan(config(), new HttpRpc(url, 30_000, { maxAttempts: 3, sleep: async () => {} }), new RecordingStorage()), (error: unknown) => {
     assert.ok(error instanceof ScanError);
     assert.equal(error.report.error?.code, 'RPC_HTTP_ERROR');
+    assert.equal(error.report.error && 'retryable' in error.report.error && error.report.error.retryable, true);
     assert.doesNotMatch(JSON.stringify(error.report), /rpc-secret|secret body/);
     return true;
   });
+  assert.equal(requests, 3);
+});
+
+for (const status of [408, 429, 500, 501, 502, 503, 504, 505]) test(`RPC retries HTTP ${status}, releasing the body before recovering`, async (t) => {
+  let requests = 0;
+  let cancelled = false;
+  const delays: number[] = [];
+  const transport: typeof fetch = async (_url, init) => {
+    const request = JSON.parse(String(init?.body));
+    assert.equal(request.id, 1);
+    assert.equal(request.method, 'eth_chainId');
+    if (++requests === 1) {
+      return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { status });
+    }
+    assert.equal(cancelled, true);
+    return Response.json({ jsonrpc: '2.0', id: request.id, result: '0x7a69' });
+  };
+  t.mock.method(globalThis, 'fetch', transport);
+  const rpc = new HttpRpc('https://provider.invalid/rpc-secret', 100, { random: () => 1, sleep: async (delay) => { delays.push(delay); } });
+  assert.equal(await rpc.call('eth_chainId', []), '0x7a69');
+  assert.equal(requests, 2);
+  assert.deepEqual(delays, [250]);
+});
+
+test('RPC transport exhaustion is bounded and never exposes URL, params or provider errors', async (t) => {
+  let requests = 0;
+  const delays: number[] = [];
+  const transport: typeof fetch = async () => { requests++; throw new TypeError('provider-secret https://user:password@provider.invalid/rpc-secret'); };
+  t.mock.method(globalThis, 'fetch', transport);
+  const rpc = new HttpRpc('https://user:password@provider.invalid/rpc-secret', 100, { maxAttempts: 3, random: () => 1, sleep: async (delay) => { delays.push(delay); } });
+  await assert.rejects(rpc.call('eth_call', ['params-secret']), (error: unknown) => {
+    assert.ok(error instanceof IndexerError);
+    assert.equal(error.code, 'RPC_UNAVAILABLE');
+    assert.deepEqual(publicError(error), { code: error.code, message: error.message, retryable: true });
+    assert.doesNotMatch(String(error), /provider-secret|password|rpc-secret|params-secret/);
+    return true;
+  });
+  assert.equal(requests, 3);
+  assert.deepEqual(delays, [250, 500]);
+});
+
+for (const method of ['eth_sendTransaction', 'eth_sendRawTransaction', 'evm_increaseTime', 'anvil_mine']) {
+  test(`RPC never replays ${method} after a lost response`, async (t) => {
+    let applied = 0;
+    const transport: typeof fetch = async () => {
+      applied++;
+      throw new TypeError('connection lost after applying request');
+    };
+    t.mock.method(globalThis, 'fetch', transport);
+    const rpc = new HttpRpc('https://provider.invalid', 100, {
+      sleep: async () => { assert.fail('Potentially mutating RPC requests must not back off or replay'); },
+    });
+    await assert.rejects(rpc.call(method, []), (error: unknown) => {
+      assert.ok(error instanceof IndexerError);
+      assert.equal(error.code, 'RPC_UNAVAILABLE');
+      assert.deepEqual(publicError(error), { code: error.code, message: error.message });
+      return true;
+    });
+    assert.equal(applied, 1);
+  });
+}
+
+test('RPC recovers from a transport failure', async (t) => {
+  let requests = 0;
+  const transport: typeof fetch = async () => {
+    if (++requests === 1) throw new TypeError('network failed');
+    return Response.json({ jsonrpc: '2.0', id: 1, result: '0x1' });
+  };
+  t.mock.method(globalThis, 'fetch', transport);
+  assert.equal(await new HttpRpc('https://provider.invalid', 100, { sleep: async () => {} }).call('eth_chainId', []), '0x1');
+  assert.equal(requests, 2);
+});
+
+for (const [retryAfter, delay] of [
+  ['1', 1_000], ['99999999999999999999999999999', 2_000],
+  ['Sun, 25 Oct 2026 00:00:01 GMT', 1_000], ['Mon, 26 Oct 2026 00:00:00 GMT', 2_000],
+  ['Sat, 24 Oct 2026 00:00:00 GMT', 250], ['invalid-secret', 250],
+] as const) test(`RPC Retry-After ${retryAfter} has a bounded delay`, async (t) => {
+  let requests = 0;
+  const delays: number[] = [];
+  const transport: typeof fetch = async () => ++requests === 1
+    ? new Response('provider-secret', { status: 429, headers: { 'retry-after': retryAfter } })
+    : Response.json({ jsonrpc: '2.0', id: 1, result: '0x1' });
+  t.mock.method(globalThis, 'fetch', transport);
+  const rpc = new HttpRpc('https://provider.invalid', 100, {
+    now: () => Date.UTC(2026, 9, 25), random: () => 1,
+    sleep: async (milliseconds) => { delays.push(milliseconds); },
+  });
+  assert.equal(await rpc.call('eth_chainId', []), '0x1');
+  assert.equal(requests, 2);
+  assert.deepEqual(delays, [delay]);
+});
+
+for (const status of [400, 401, 403, 404]) test(`RPC never retries permanent HTTP ${status}`, async (t) => {
+  let requests = 0;
+  const transport: typeof fetch = async () => { requests++; return new Response('provider-secret', { status }); };
+  t.mock.method(globalThis, 'fetch', transport);
+  const rpc = new HttpRpc('https://provider.invalid/rpc-secret', 100, {
+    sleep: async () => { assert.fail('Permanent HTTP errors must not back off'); },
+  });
+  await assert.rejects(rpc.call('eth_chainId', []), (error: unknown) => {
+    assert.ok(error instanceof IndexerError);
+    assert.equal(error.code, 'RPC_HTTP_ERROR');
+    assert.deepEqual(publicError(error), { code: error.code, message: error.message });
+    assert.doesNotMatch(String(error), /provider-secret|rpc-secret/);
+    return true;
+  });
+  assert.equal(requests, 1);
+});
+
+for (const [body, code] of [
+  ['not-json provider-secret', 'RPC_INVALID_RESPONSE'],
+  ['null', 'RPC_INVALID_RESPONSE'],
+  [JSON.stringify({ jsonrpc: '1.0', id: 1, result: 'provider-secret' }), 'RPC_INVALID_RESPONSE'],
+  [JSON.stringify({ jsonrpc: '2.0', id: 999, result: 'provider-secret' }), 'RPC_INVALID_RESPONSE'],
+  [JSON.stringify({ jsonrpc: '2.0', id: 1 }), 'RPC_INVALID_RESPONSE'],
+  [JSON.stringify({ jsonrpc: '2.0', id: 1, error: { code: -32000, message: 'provider-secret' } }), 'RPC_ERROR'],
+] as const) test(`RPC never retries malformed envelopes or JSON-RPC errors: ${body}`, async (t) => {
+  let requests = 0;
+  const transport: typeof fetch = async () => { requests++; return new Response(body); };
+  t.mock.method(globalThis, 'fetch', transport);
+  const rpc = new HttpRpc('https://provider.invalid/rpc-secret', 100, {
+    sleep: async () => { assert.fail('Invalid RPC responses must not back off'); },
+  });
+  await assert.rejects(rpc.call('eth_chainId', []), (error: unknown) => {
+    assert.ok(error instanceof IndexerError);
+    assert.equal(error.code, code);
+    assert.deepEqual(publicError(error), { code: error.code, message: error.message });
+    assert.doesNotMatch(String(error), /provider-secret|rpc-secret/);
+    return true;
+  });
+  assert.equal(requests, 1);
+});
+
+for (const phase of ['headers', 'body']) test(`RPC timeout covers stalled response ${phase} and recovers within the attempt bound`, async (t) => {
+  let requests = 0;
+  const server = createServer((_req, res) => {
+    if (++requests < 3) {
+      if (phase === 'body') {
+        res.writeHead(200, { 'content-type': 'application/json' });
+        res.write('{"jsonrpc":"2.0","id":1,"result":');
+      }
+      return;
+    }
+    res.end(JSON.stringify({ jsonrpc: '2.0', id: 1, result: '0x1' }));
+  });
+  t.after(() => { server.closeAllConnections(); server.close(); });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const bound = server.address();
+  assert.ok(bound && typeof bound !== 'string');
+  const delays: number[] = [];
+  const rpc = new HttpRpc(`http://127.0.0.1:${bound.port}/rpc-secret`, 200, { random: () => 1, sleep: async (delay) => { delays.push(delay); } });
+  assert.equal(await rpc.call('eth_chainId', []), '0x1');
+  assert.equal(requests, 3);
+  assert.deepEqual(delays, [250, 500]);
 });

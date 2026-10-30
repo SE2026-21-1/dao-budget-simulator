@@ -1,8 +1,10 @@
-# API đọc BE01 — đặc tả để TV3 làm song song
+# API đọc DAO Budget Simulator — hợp đồng BE01/BE05 cho TV3
 
-**Trạng thái: đề xuất chờ TV1/TV3 review; HTTP server thuộc BE05.** BE04 đã có
-[projection và snapshot tại H](be04.md), chưa triển khai HTTP endpoint này.
-BE02/BE03 cung cấp raw storage/checkpoint; chúng không phải HTTP API.
+**BE05 triển khai sáu endpoint đọc bên dưới.** TV1/TV3 vẫn cần review clock/quorum,
+salt, shape và cách dùng cursor trước khi chốt hợp đồng consumer. BE04 có
+[projection publication tại H](be04.md); BE05 chỉ phục vụ publication đã commit.
+BE02/BE03 cung cấp raw storage/checkpoint; raw checkpoint không được dùng để gắn
+nhãn cho projection BE04 cũ.
 [Fixture](../fixtures/api/README.md) vẫn là dữ liệu tổng hợp; địa chỉ, block,
 hash và operation trong fixture không chứng minh deployment/giao dịch thật.
 Không gửi giao dịch đến địa chỉ fixture.
@@ -15,7 +17,7 @@ Tất cả endpoint dưới đây là `GET`, trả JSON UTF-8, không yêu cầu
 
 | Quy ước | Ý nghĩa |
 |---|---|
-| Base path | `/api`; phiên bản BE01 nằm trong tài liệu, chưa là API đã triển khai |
+| Base path | `/api`; API chỉ đọc |
 | `chainId` | Chuỗi số nguyên thập phân, bắt buộc để tránh đọc nhầm mạng |
 | `deploymentId` | Mã deployment do cấu hình nhóm cấp, bắt buộc; không tự chọn bản deploy mới nhất |
 | `asOfBlock` | Block H của snapshot nhất quán; chuỗi số nguyên |
@@ -50,11 +52,26 @@ và chờ TV1/TV3 chốt cách cung cấp raw hex, không trả text đã sửa 
 ## 2. Snapshot, đồng bộ và phân trang
 
 Request đầu tiên truyền `chainId`, `deploymentId`; nếu không có H, server chọn
-checkpoint canonical mới nhất đã commit và đủ K xác nhận. Khi chỉ có `asOfBlock`,
-server tra hash canonical và trả về. `asOfBlockHash` không được đứng một mình.
+publication BE04 mới nhất đã commit. Client nên giữ cả `asOfBlock` và
+`asOfBlockHash` để ghim các endpoint trong một lượt xem. `asOfBlockHash` không
+được đứng một mình. API không gọi RPC để chọn H và không đọc raw checkpoint cao
+hơn rồi gắn nhãn cho projection cũ.
 Frontend dùng lại cả H/hash cho summary, list, detail, votes và transfers của
 cùng lượt xem. H phải thuộc deployment và còn dữ liệu lịch sử để phục vụ.
-Đọc database trong transaction có snapshot nhất quán; không trộn dữ liệu sau H.
+Mỗi request đọc trong transaction `REPEATABLE READ`; không trộn dữ liệu sau H.
+
+BE04 hiện chỉ giữ publication mới nhất. Vì `REPEATABLE READ` không giữ snapshot
+giữa các HTTP request, BE05 lần đầu sao chép publication và các hàng
+proposal/vote/Transfer vào `api_read_snapshots` và các bảng `api_read_*` trong
+cùng transaction. Bản sao bất biến có TTL mặc định 900 giây; request kế tiếp
+tra theo deployment + H/hash/revision hoặc snapshot ID trong cursor. Projection
+tiến lên H+1 không đổi trang cũ. Cursor HMAC-SHA256 ký bằng `API_CURSOR_SECRET`
+(ít nhất 32 byte), ràng buộc endpoint, scope, H/hash, revision, filter, limit,
+tuple cuối và thời hạn. Hết TTL, bị xóa, revision đổi, raw vào
+`rebuild_required` hoặc hash H không còn khớp thì API báo lỗi, không chuyển
+cursor sang H mới. H lịch sử chỉ phục vụ được khi snapshot API đã được lưu và
+chưa hết hạn; BE05 không dựng lại read model lịch sử từ raw. Snapshot hết hạn
+được dọn khi tạo snapshot mới, không xóa dữ liệu BE02–BE04.
 
 Mọi phản hồi dữ liệu có envelope:
 
@@ -74,7 +91,7 @@ Mọi phản hồi dữ liệu có envelope:
       "confirmedBlock": "1000",
       "indexedBlock": "1000",
       "lagBlocks": "0",
-      "lagSeconds": "0",
+      "lagSeconds": null,
       "confirmations": "2",
     "lastIndexedAt": "2026-10-18T03:46:40Z"
     }
@@ -84,26 +101,39 @@ Mọi phản hồi dữ liệu có envelope:
 ```
 
 Các con số trên chỉ minh họa envelope; mốc H thực tế của bộ mẫu nằm trong
-fixture, không lấy ví dụ này làm chain receipt. `dataKind` phân biệt `synthetic`
-và `chain` ở bước triển khai sau; `stateSource` của proposal mẫu là `synthetic`.
+fixture, không lấy ví dụ này làm chain receipt. Server trả `dataKind: "chain"`
+và `stateSource: "contract"`; fixture vẫn dùng `synthetic`.
 
 | Trường đồng bộ | Ý nghĩa |
 |---|---|
-| `status` | `synced`, `lagging` hoặc `not_ready` |
-| `headBlock` | Tip quan sát gần nhất qua RPC |
+| `status` | `synced`, `lagging` hoặc `not_ready`; `lagging` nếu heartbeat quá 30 giây, raw chưa tới confirmed block, hoặc publication chưa tới raw checkpoint |
+| `headBlock` | Tip được BE03 ghi nhận ở lần sync gần nhất; không phải phép thăm dò RPC trực tiếp |
 | `confirmedBlock` | Block cao nhất đủ K xác nhận, quy ước `max(headBlock-K, 0)`; testnet demo K=2 |
 | `indexedBlock` | Checkpoint đã commit, không phải block đang xử lý dở |
 | `lagBlocks` | `max(confirmedBlock-indexedBlock, 0)`; không tính K block đang chờ xác nhận |
-| `lagSeconds` | Thời gian từ khi quan sát block đủ xác nhận đầu tiên còn chưa xử lý; bằng `"0"` khi bắt kịp, null khi chưa đo được |
+| `lagSeconds` | Chuỗi số nguyên không âm: giá trị lớn nhất giữa tuổi heartbeat đã xác minh và chênh lệch timestamp của observed head với publication mới nhất. Nếu chưa giữ header của observed head, dùng raw checkpoint timestamp để đo projection delay và tuổi heartbeat làm tín hiệu freshness; null khi chưa có raw checkpoint. Fixture cũ vẫn có thể null |
 | `confirmations` | K cấu hình, chuỗi số nguyên |
-| `lastIndexedAt` | Lần commit checkpoint thành công; null nếu chưa từng có |
+| `lastIndexedAt` | Heartbeat raw-sync đã xác minh canonical H thành công (`checkpoints.updated_at`), kể cả chu kỳ idle không có block mới; null nếu chưa từng có |
 
-Mốc H là mốc dữ liệu đang xem; sync mô tả pipeline hiện tại, có thể mới hơn H.
-Không lấy tuổi của một H lịch sử làm độ trễ pipeline. Frontend báo đồng bộ chậm
-khi `lagSeconds > 30`, hoặc khi health báo degraded/RPC lỗi; không coi lagBlocks
-dương tự nó chứng minh vượt 30 giây. Khi chưa có checkpoint, H/hash/timestamp,
-indexedBlock và các độ trễ không biết được là null; không giả mạo H bằng zero.
-Khi RPC không truy cập được, head/confirmedBlock cũng có thể null.
+Mốc H là mốc dữ liệu đang xem; sync mô tả pipeline/publication gần nhất, có thể
+mới hơn H. API không probe RPC và không biết RPC hiện tại còn truy cập được hay
+không. `lagSeconds` là **chỉ báo freshness**, không phải độ trễ event chính xác,
+không lấy tuổi wall-clock của một H lịch sử làm độ trễ pipeline. Timestamp delay
+có thể gồm thời gian chờ K xác nhận. Các chênh lệch âm do clock skew được chặn
+ở zero. Heartbeat hơn 30 giây hoặc timestamp delay hơn 30 giây luôn chuyển sync
+thành `lagging`, ngay cả khi `lagBlocks="0"`; snapshot/cursor cũ vẫn giữ nguyên
+số liệu tài chính tại H nhưng dùng trạng thái sync hiện tại.
+
+Frontend tự kiểm tra health mỗi 5 giây, cảnh báo tiếng Việt khi sync `lagging`
+hoặc `lagSeconds>30`, và bỏ cảnh báo khi heartbeat/publication phục hồi, không
+cần tải lại trang. Dùng CLI `--watch` với `toBlock="latest"` để đồng bộ rồi
+project tuần tự liên tục; `INDEXER_POLL_INTERVAL_MS` hoặc `--poll-interval-ms`
+đặt chu kỳ 100–60000 ms (mặc định 5000 ms).
+Health degraded là cảnh báo freshness, projection lag hoặc raw decode issue,
+không tự chứng minh RPC đang down. Publication `rebuild_required` vẫn trả 503,
+không che việc invalidation bằng dữ liệu snapshot cũ. Khi chưa có checkpoint,
+H/hash/timestamp, indexedBlock và các độ trễ không biết được là null; không giả
+mạo H bằng zero. Khi chưa có observed head, head/confirmedBlock cũng null.
 
 List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cùng `cursor`:
 
@@ -122,6 +152,8 @@ List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cù
 - Server phải xác thực cursor trước khi dùng; bản triển khai có thể dùng HMAC
   hoặc token lưu phía server. Base64url trong fixture là token minh họa **chưa ký**,
   không phải cơ chế tin cậy để sao chép vào production.
+  BE05 dùng HMAC-SHA256; cả payload lẫn signature phải là base64url canonical.
+  Chuỗi đổi unused padding bits dù giải mã ra cùng signature bytes vẫn bị từ chối.
 - Cursor malformed/hết hạn/không xác thực trả 400 `INVALID_CURSOR`.
   Thay H, deployment, endpoint, filter hoặc limit trả 400 `CURSOR_CONTEXT_MISMATCH`.
   Hash bị reorg hoặc revision bị rebuild thay thế trả 409 `SNAPSHOT_INVALIDATED`;
@@ -194,7 +226,7 @@ không có trong deployment tại H (kể cả được tạo sau H).
 | `targets`, `values`, `calldatas` | Mảng đúng một lời gọi disburse Treasury; native `values: ["0"]`; không phải tiền BUD |
 | `snapshot`, `deadline` | Mốc timestamp của Governor, chuỗi số nguyên |
 | `state` | Một trong 7 state, được xác định tại H |
-| `stateSource` | Mẫu: `synthetic`; triển khai sau: `derived` hoặc `contract`, cần chốt TV1 |
+| `stateSource` | Chain: `contract`, được BE04 đối chiếu ở H; fixture dùng `synthetic` |
 | `votes.against`, `for`, `abstain` | Tổng weight GOV của từng lựa chọn tại H |
 | `votes.quorum` | Ngưỡng GOV tại snapshot; For + Abstain tham gia quorum; null khi snapshot chưa là quá khứ tại H, không giả nhận dữ liệu checkpoint tương lai |
 | `operation` | null trước queue; sau queue là object bên dưới |
@@ -202,7 +234,7 @@ không có trong deployment tại H (kể cả được tạo sau H).
 | `transactions` | `{created, queued, executed, canceled}` hash giao dịch thành công hoặc null; created khớp `created.transactionHash` |
 
 Operation có `{operationId, queuedAt, eta, status, predecessor, salt}`.
-`status` là `Waiting`, `Ready` hoặc `Done`; Ready thuộc operation của proposal
+`status` là `Waiting`, `Ready`, `Done` hoặc `Canceled`; Ready thuộc operation của proposal
 Queued. `predecessor`/`salt` phải lấy đúng cách Governor tích hợp Timelock,
 **không giả định salt bằng descriptionHash**. Fixture tự chọn salt được ghi rõ
 trong README, không khẳng định đó là thuật toán Governor thật.
@@ -273,9 +305,13 @@ tạo khoản tiền. Fixture có Transfer zero để kiểm tra UI và schema.
 Yêu cầu `chainId`, `deploymentId`; không phân trang, không nhận filter hoặc H
 lịch sử. Trả tình trạng pipeline hiện tại, không gọi contract thay ví.
 
-200 nếu database và snapshot phục vụ được; `data.status: "ok"` khi đồng bộ,
-`"degraded"` khi còn snapshot nhưng chậm/RPC lỗi. 503 nếu không có checkpoint
-đáng tin cậy, database down hoặc phải rebuild; `data.status: "unavailable"`.
+200 nếu database và snapshot phục vụ được; `data.status: "ok"` khi đồng bộ và
+không còn raw decode issue, `"degraded"` khi publication còn dùng được nhưng
+có lagBlocks, projection lag hoặc raw decode warning. API chỉ thấy lỗi RPC nếu
+được lưu trong trạng thái checkpoint; BE03 không ghi trạng thái cho mọi lần RPC
+thất bại nên health không tự probe hay khẳng định RPC hiện tại còn hoạt động.
+503 nếu không có checkpoint đáng tin cậy, database down, metadata deployment không
+được xác minh hoặc phải rebuild; `data.status: "unavailable"`.
 `data.database` là `up|down`, `data.indexer` là `synced|lagging|not_ready`.
 Các trường bổ sung trong fixture giải thích tình trạng vận hành. Health 503 vẫn
 trả envelope health, còn endpoint dữ liệu 503 dùng envelope lỗi dưới đây.
@@ -354,3 +390,67 @@ receipt hoặc bằng chứng hành vi smart contract thật.
 
 Sau sửa timeline/logIndex, fixture dùng revision `fixture-v2`; bỏ cursor v1.
 Hash input/proposalId của 45 proposal và operationId/salt vẫn giữ nguyên.
+
+## 7. Chạy API BE05
+
+Áp dụng migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
+và có publication BE04. Nếu chạy worker/recovery BE07, áp dụng tiếp migration
+005 trước khi khởi động worker/API (xem [BE07](be07.md)):
+
+```sh
+psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/004_be05_api.sql
+psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/005_be07.sql
+npm ci
+export API_CURSOR_SECRET="$(openssl rand -hex 32)"
+npm run api
+```
+
+`DATABASE_URL` là bắt buộc; server mặc định bind `127.0.0.1:3000`. Có thể đặt
+`API_HOST`, `API_PORT`, `API_SNAPSHOT_TTL_SECONDS` (60–86400 giây) và
+`API_CORS_ORIGINS` (các origin chính xác, phân tách bằng dấu phẩy). API không tự
+nạp `.env`. Pool giới hạn thời gian kết nối/truy vấn; SIGINT/SIGTERM đóng HTTP
+server và pool.
+
+Ví dụ đủ sáu endpoint:
+
+```sh
+BASE='http://127.0.0.1:3000/api'
+SCOPE='chainId=31337&deploymentId=local-governance'
+curl "$BASE/health?$SCOPE"
+curl "$BASE/summary?$SCOPE"
+curl "$BASE/proposals?$SCOPE&limit=20"
+curl "$BASE/proposals/123?$SCOPE&asOfBlock=456&asOfBlockHash=0x<64-hex>"
+curl "$BASE/proposals/123/votes?$SCOPE&asOfBlock=456&asOfBlockHash=0x<64-hex>&limit=20"
+curl "$BASE/treasury/transfers?$SCOPE&asOfBlock=456&asOfBlockHash=0x<64-hex>&direction=out"
+```
+
+Lấy H/hash từ context response đầu rồi dùng lại cho các màn hình. Khi có
+`nextCursor`, giữ nguyên endpoint, scope, filter và limit. API chỉ đọc về nghiệp
+vụ: GET đầu tiên có thể sao chép publication sang `api_read_*` trong PostgreSQL;
+các GET sau đọc bản cache bất biến. Không ghi raw/projection/business tables, gọi
+indexer/projector, RPC, ký hoặc gửi transaction. Governance config phải có các giá trị từ manifest đã
+xác minh và đúng ABI version; địa chỉ contract lấy từ `deployment_contracts`.
+Thiếu metadata đó trả `DATA_NOT_READY`, không dùng địa chỉ hoặc config fixture.
+
+Health trả 200 `ok`/`degraded` khi database và publication sẵn sàng, 503 khi
+database/publication chưa phục vụ được. Response tách tình trạng DB, raw
+indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head; lag
+theo giây chưa quan sát được là null. Health không gọi RPC.
+
+
+## 8. BE07 — recovery và freshness của API runtime
+
+[BE07](be07.md) bổ sung migration 005 và heartbeat canonical cho API. Enum
+`sync.status` và error code BE05 giữ nguyên. Runtime thêm `recoveryStatus`
+(unverified/ready/recovering/replaying/rebuild_required), `lastRpcCheckAt` và
+`publicationBlock`. `lagSeconds` là chuỗi số tuổi quan sát theo wall clock,
+null khi chưa có quan sát; `lagBlocks` so confirmed với publication đang phục vụ.
+Quá 30000 ms chưa xác minh canonical, kể cả chain không có event, trạng thái là
+lagging và health degraded. Cache snapshot/cursor dùng trạng thái hiện tại.
+
+Recovering/replaying/rebuild_required chặn publication: health 503 với
+`data.recoveryStatus`, endpoint dữ liệu 503 DATA_NOT_READY, cursor cũ 409
+SNAPSHOT_INVALIDATED. Revision đổi ngay khi xác nhận mismatch, trước khi xóa
+suffix. Chỉ publication BE04 đã đối chiếu lại tại H/hash mới mở gate.
+Các giới hạn BE05 về lagSeconds=null/không ghi lần kiểm tra RPC trong các mục
+trước chỉ mô tả nền BE05; runtime có migration 005 dùng semantics BE07 này.

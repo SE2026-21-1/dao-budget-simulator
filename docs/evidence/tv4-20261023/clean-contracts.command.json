@@ -1,0 +1,17 @@
+{
+  "label": "clean-contracts",
+  "cwd": "/tmp/tv4-clean-228077a",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=node@24.15.0",
+    "--",
+    "sh",
+    "-c",
+    "bash scripts/ci.sh && node --test tests/smoke/interruption.test.mjs && node --import tsx scripts/smoke_governance.mjs --output /tmp/tv4-clean-governance-228077a.json"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 173.609,
+  "log": "clean-contracts.txt"
+}

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // Local Treasury-only evidence. Owns its Anvil process; never accepts RPC URLs or keys.
 import assert from 'node:assert/strict';
-import { spawn, execFileSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFile, mkdtemp, writeFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ContractFactory, Interface, id, toQuantity, ZeroAddress } from 'ethers';
 import { decodeLog } from '../indexer/decoder.ts';
+import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const args = process.argv.slice(2);
@@ -19,7 +19,7 @@ if (args.length !== 2 || args[0] !== '--output') {
 }
 const output = resolve(args[1]);
 const pause = (ms) => new Promise((done) => setTimeout(done, ms));
-const temp = await mkdtemp(join(tmpdir(), 'dao-tv4-treasury-'));
+const lifecycle = createSmokeLifecycle();
 let anvil;
 let anvilOutput = '';
 let rpcId = 0;
@@ -33,7 +33,7 @@ const report = {
 };
 
 try {
-  for (const path of ['contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'contracts/interfaces/ITreasury.sol', 'scripts/smoke_treasury.mjs', 'indexer/decoder.ts', 'indexer/abi-registry.ts']) {
+  for (const path of ['contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'contracts/interfaces/ITreasury.sol', 'scripts/smoke_treasury.mjs', 'scripts/smoke_lifecycle.mjs', 'indexer/decoder.ts', 'indexer/abi-registry.ts']) {
     report.sourceHashes[path] = createHash('sha256').update(await readFile(join(root, path))).digest('hex');
   }
   report.runtime = {
@@ -46,14 +46,15 @@ try {
   await new Promise((done, reject) => { reserve.once('error', reject); reserve.listen(0, '127.0.0.1', done); });
   const port = reserve.address().port;
   await new Promise((done, reject) => reserve.close((error) => error ? reject(error) : done()));
-  anvil = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
+  anvil = lifecycle.spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '31337', '--hardfork', 'osaka', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
   anvil.on('error', (error) => { anvilOutput += error.message; });
   for (const stream of [anvil.stdout, anvil.stderr]) stream.on('data', (data) => { anvilOutput += data; });
   const rpc = async (method, params = []) => {
+    lifecycle.throwIfInterrupted();
     assert.equal(anvil.exitCode, null, `Owned Anvil exited: ${anvilOutput}`);
     const response = await fetch(`http://127.0.0.1:${port}`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jsonrpc: '2.0', id: ++rpcId, method, params }), signal: AbortSignal.timeout(10_000),
+      body: JSON.stringify({ jsonrpc: '2.0', id: ++rpcId, method, params }), signal: AbortSignal.any([lifecycle.signal, AbortSignal.timeout(10_000)]),
     });
     assert.equal(response.status, 200);
     const result = await response.json();
@@ -212,20 +213,7 @@ try {
   report.be02 = { decodedTransfers, decodedPayouts, scope: 'real receipt decoding only; no DB projection/API/checkpoint/reorg acceptance' };
   report.finalBlock = { number: BigInt(finalBlock.number).toString(), hash: finalBlock.hash };
   report.result = 'passed';
-  await writeFile(join(temp, 'completed.json'), JSON.stringify(report, null, 2) + '\n');
+  await lifecycle.complete(output, report, `PASS: Treasury local transactions and live BE02 receipt decoding. Evidence: ${output}`);
 } finally {
-  if (anvil && anvil.exitCode === null) {
-    const exited = new Promise((done) => anvil.once('exit', done));
-    anvil.kill('SIGTERM');
-    const timer = setTimeout(() => anvil.kill('SIGKILL'), 5_000);
-    await exited;
-    clearTimeout(timer);
-  }
-  try {
-    const completed = await readFile(join(temp, 'completed.json'), 'utf8');
-    await writeFile(output, completed);
-    console.log(`PASS: Treasury local transactions and live BE02 receipt decoding. Evidence: ${output}`);
-  } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
-  } finally { await rm(temp, { recursive: true, force: true }); }
+  try { await lifecycle.cleanup(); } finally { lifecycle.dispose(); }
 }

@@ -47,6 +47,14 @@ jobs:
         run: |
           mkdir -p reports
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Exercise real Anvil bootstrap gates and fail-closed deployment
+        shell: bash
+        run: |
+          npm run test:bootstrap 2>&1 | tee reports/bootstrap-gates.log
+      - name: Verify smoke interruption cleans owned processes and temporary files
+        shell: bash
+        run: |
+          node --test tests/smoke/interruption.test.mjs 2>&1 | tee reports/smoke-interruption.log
       - name: Exercise Treasury transactions and BE02 live receipt decoding
         shell: bash
         run: |
@@ -172,6 +180,49 @@ jobs:
           path: reports/
           retention-days: 14
 
+  be03:
+    name: BE03 confirmations, checkpoint and real-process crash recovery
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be03_test
+          POSTGRES_PASSWORD: be03_test
+          POSTGRES_DB: be03_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U be03_test -d be03_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      BE03_TEST_ISOLATED: '1'
+      BE03_TEST_DATABASE_URL: postgresql://be03_test:be03_test@127.0.0.1:5432/be03_test
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - name: Check confirmation and resume boundaries
+        run: |
+          mkdir -p reports
+          npm run test:be03 2>&1 | tee reports/be03-unit.log
+      - name: Check PostgreSQL commit, kill and restart boundaries
+        run: node --import tsx --test tests/indexer/checkpoint-storage.test.ts 2>&1 | tee reports/be03-postgres.log
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: tv4-be03-${{ github.sha }}
+          path: reports/
+          retention-days: 14
+
   be04:
     name: BE04 projection semantics and atomic PostgreSQL publication
     runs-on: ubuntu-24.04
@@ -187,6 +238,159 @@ jobs:
       - run: npm run typecheck && npm run build
       - run: npm run test:be04
       - run: npm run test:be04:db
+
+  be05-api:
+    name: BE05 HTTP API and immutable PostgreSQL snapshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck && npm run build
+      - run: npm run test:api:db
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - run: forge build
+      - run: forge test --match-path tests/unit/OperationAbiCompatibility.t.sol
+      - name: Run fresh Anvil, PostgreSQL and HTTP API integration
+        run: npm run test:be05:live
+      - name: Upload BE05 live evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: be05-live-${{ github.sha }}
+          path: reports/be05-live.json
+          retention-days: 14
+
+  be06-rebuild-compare:
+    name: BE06 pinned-H rebuild and normalized compare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be04_test
+          POSTGRES_PASSWORD: be04_test
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U be04_test -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      FOUNDRY_PROFILE: ci
+      PG_ADMIN_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/postgres
+      BE06_TEST_ISOLATED: '1'
+      BE06_TEST_REFERENCE_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_test_reference
+      BE06_TEST_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_test_target
+      BE04_LIVE_ISOLATED: '1'
+      BE04_LIVE_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be04_live
+      BE06_LIVE_ISOLATED: '1'
+      BE06_LIVE_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_live_target
+      BE06_LIVE_ADVANCED_TARGET_DATABASE_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/be06_live_advanced_target
+    steps:
+      - name: Checkout with pinned submodules
+        uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - name: Build and test BE06
+        run: |
+          mkdir -p reports
+          npm run typecheck
+          npm run build
+          forge build
+          npm run test:be06
+      - name: Create disposable BE06 databases
+        run: |
+          node --input-type=module <<'NODE'
+          import pg from 'pg';
+          const client = new pg.Client({ connectionString: process.env.PG_ADMIN_URL });
+          await client.connect();
+          for (const name of ['be06_test_reference', 'be06_test_target', 'be04_live', 'be06_live_target', 'be06_live_advanced_target'])
+            await client.query(`CREATE DATABASE ${name}`);
+          await client.end();
+          NODE
+      - name: Test BE06 against isolated PostgreSQL
+        run: npm run test:be06:db
+      - name: Run fresh Anvil and PostgreSQL rebuild/compare acceptance
+        run: npm run test:be06:live -- --output reports/be06-live.json --be06
+      - name: Upload BE06 live evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: be06-live-${{ github.sha }}
+          path: reports/be06-live*
+          retention-days: 14
+
+  be07-recovery:
+    name: BE07 recovery, RPC failures and native database regressions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be04_test
+          POSTGRES_PASSWORD: be04_test
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U be04_test -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      PG_ADMIN_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/postgres
+      BE07_TEST_ISOLATED: '1'
+      BE07_EVIDENCE_DIR: reports/be07
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - run: forge build
+      - name: Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare
+        run: node scripts/check_be07_local.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: be07-recovery-${{ github.sha }}
+          path: reports/be07/
+          retention-days: 14
 
   frontend:
     name: Frontend lint and production build
@@ -210,6 +414,10 @@ jobs:
         shell: bash
         run: |
           npm run lint --prefix frontend 2>&1 | tee reports/frontend-lint.log
+      - name: Check wallet transaction behavior
+        shell: bash
+        run: |
+          npm run test --prefix frontend 2>&1 | tee reports/frontend-tests.log
       - name: Typecheck and build production frontend
         shell: bash
         run: |
@@ -224,7 +432,7 @@ jobs:
           node --version > reports/node-version.txt
           npm --version > reports/npm-version.txt
           npm ls --prefix frontend --depth=0 > reports/frontend-packages.txt 2>&1
-          echo 'Frontend lint/typecheck/build only. Browser evidence is recorded separately; no wallet/API/chain E2E is claimed.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Frontend lint, transaction behavior tests and production build. Local browser acceptance is recorded separately; CI does not run a wallet extension.' >> "$GITHUB_STEP_SUMMARY"
       - name: Upload frontend build and evidence
         if: always()
         uses: actions/upload-artifact@v7.0.2

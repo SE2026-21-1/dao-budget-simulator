@@ -1,0 +1,170 @@
+{
+  "status": "NOT_ACCEPTED",
+  "requirement": "TC11/FR14/NFR04 BE07 rollback, replay and API/cursor invalidation",
+  "scope": "Owned Anvil evm_snapshot/revert, fresh alternate branch reaching same head64; SQL state retained for diagnosis",
+  "sourceBaseCommit": "c34889604ecfa1a0d85539ef25250363ad49596b",
+  "headBefore": 64,
+  "headAfter": 64,
+  "command": [
+    "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+    "--import",
+    "tsx",
+    "indexer/cli.ts",
+    "--config",
+    "/tmp/dao-tv4-browser-o5zsrk6t/config.json",
+    "--sync"
+  ],
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "{\"type\":\"sync_result\",\"status\":\"failed\",\"chainId\":\"31337\",\"deploymentId\":\"1\",\"checkpoint\":{\"number\":\"62\",\"hash\":\"0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0\"},\"decodeComplete\":false,\"unknownTopics\":0,\"decodeErrors\":0,\"issues\":[],\"committedBatches\":0,\"error\":{\"code\":\"CHECKPOINT_HASH_MISMATCH\",\"message\":\"RPC checkpoint hash differs; stopped without modifying stored data. Investigate before BE07 rollback.\"}}\n",
+  "before": {
+    "deployments": {
+      "count": 1,
+      "sha256": "a659c6a16ccb0f563412cfd9ef4bad8a7362dcf8b668b53c753c25fe6ae338db"
+    },
+    "deployment_contracts": {
+      "count": 5,
+      "sha256": "f7cad28e3616fe2c2e1fd5af70ff53e7d55a08fd4936686bc17692cd0d32b540"
+    },
+    "indexed_blocks": {
+      "count": 61,
+      "sha256": "7e97a1915adbd8f021cc29fa6b88ea601dab8beadc62a2edd6e9a28b580f9661"
+    },
+    "raw_events": {
+      "count": 31,
+      "sha256": "5df7859d0f3ccbe61b51d0cae109a8b8b37a23d44c1e94694aef1dc6ceb091b5"
+    },
+    "checkpoints": {
+      "count": 1,
+      "sha256": "691d213986b3292b46013c79008d405881976ed595ac543939f35df78c7ac96a"
+    },
+    "projection_checkpoints": {
+      "count": 1,
+      "sha256": "59e25cff0a9fceb59bbc4560024b35ebaf22241b9f8dea0603263a32c1d698d7"
+    },
+    "proposals": {
+      "count": 2,
+      "sha256": "0131209ef338995c354b146e278bb0a9ba70dbbd25e2df40848d57c43453abe4"
+    },
+    "votes": {
+      "count": 2,
+      "sha256": "7e8ff541c5454573e75de739f1994cf993be33f209c4bc0d065d40b8bbb21d33"
+    },
+    "operations": {
+      "count": 1,
+      "sha256": "2e86bb3f38cf4df988187288062ee3da87abf93af9c648d2263383998abdf8cc"
+    },
+    "transfers": {
+      "count": 3,
+      "sha256": "d8c360613dad0e5dcaf1387cece79813156ebc884a054718ed2189daec91d4d0"
+    },
+    "disbursements": {
+      "count": 1,
+      "sha256": "5c84c1e4ff649389a49a3cb67280cbc9650760e8b2d59bff0a89068c7f07a126"
+    },
+    "proposal_states": {
+      "count": 2,
+      "sha256": "1b3f047bb112f077fcb74739416072574918428559e3610cd01722ea4fc01c7a"
+    },
+    "raw": [
+      {
+        "block_number": "62",
+        "block_hash": "0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0",
+        "sync_status": "syncing"
+      }
+    ],
+    "publication": [
+      {
+        "block_number": "62",
+        "block_hash": "0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0"
+      }
+    ]
+  },
+  "after": {
+    "deployments": {
+      "count": 1,
+      "sha256": "a659c6a16ccb0f563412cfd9ef4bad8a7362dcf8b668b53c753c25fe6ae338db"
+    },
+    "deployment_contracts": {
+      "count": 5,
+      "sha256": "f7cad28e3616fe2c2e1fd5af70ff53e7d55a08fd4936686bc17692cd0d32b540"
+    },
+    "indexed_blocks": {
+      "count": 61,
+      "sha256": "7e97a1915adbd8f021cc29fa6b88ea601dab8beadc62a2edd6e9a28b580f9661"
+    },
+    "raw_events": {
+      "count": 31,
+      "sha256": "5df7859d0f3ccbe61b51d0cae109a8b8b37a23d44c1e94694aef1dc6ceb091b5"
+    },
+    "checkpoints": {
+      "count": 1,
+      "sha256": "691d213986b3292b46013c79008d405881976ed595ac543939f35df78c7ac96a"
+    },
+    "projection_checkpoints": {
+      "count": 1,
+      "sha256": "59e25cff0a9fceb59bbc4560024b35ebaf22241b9f8dea0603263a32c1d698d7"
+    },
+    "proposals": {
+      "count": 2,
+      "sha256": "0131209ef338995c354b146e278bb0a9ba70dbbd25e2df40848d57c43453abe4"
+    },
+    "votes": {
+      "count": 2,
+      "sha256": "7e8ff541c5454573e75de739f1994cf993be33f209c4bc0d065d40b8bbb21d33"
+    },
+    "operations": {
+      "count": 1,
+      "sha256": "2e86bb3f38cf4df988187288062ee3da87abf93af9c648d2263383998abdf8cc"
+    },
+    "transfers": {
+      "count": 3,
+      "sha256": "d8c360613dad0e5dcaf1387cece79813156ebc884a054718ed2189daec91d4d0"
+    },
+    "disbursements": {
+      "count": 1,
+      "sha256": "5c84c1e4ff649389a49a3cb67280cbc9650760e8b2d59bff0a89068c7f07a126"
+    },
+    "proposal_states": {
+      "count": 2,
+      "sha256": "1b3f047bb112f077fcb74739416072574918428559e3610cd01722ea4fc01c7a"
+    },
+    "raw": [
+      {
+        "block_number": "62",
+        "block_hash": "0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0",
+        "sync_status": "syncing"
+      }
+    ],
+    "publication": [
+      {
+        "block_number": "62",
+        "block_hash": "0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0"
+      }
+    ]
+  },
+  "databaseUnchanged": true,
+  "apiStatusAfterReorg": 200,
+  "apiContextAfterReorg": {
+    "chainId": "31337",
+    "deploymentId": "be06-2ee1062475e87e9b19504aaf",
+    "asOfBlock": "62",
+    "asOfBlockHash": "0x5fa77d853af951d708d96f9452c136b740f7ee0e1577c8a913584972b17d58b0",
+    "asOfTimestamp": "1800001689",
+    "snapshotRevision": "18f8d2c2-02f9-43e7-a048-d6f3210de0f1",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "64",
+      "confirmedBlock": "62",
+      "indexedBlock": "62",
+      "lagBlocks": "0",
+      "lagSeconds": null,
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-24T12:29:07.178Z"
+    }
+  },
+  "canonicalHashAtPublishedH": "0x515b480dc73c99a9c790c19c39169a20d09b08b7383a6d8059773660854391fd",
+  "apiStillServesOrphanedHash": true,
+  "owner": "TV2 BE07; TV4 supplies reproduction/evidence, does not mark full TC11/NFR04 PASS"
+}

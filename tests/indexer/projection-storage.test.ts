@@ -484,8 +484,12 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
       call: async (m, p) =>
         m === 'eth_getBlockByNumber' ? { ...((await rpc.call(m, p)) as object), hash: hash(999) } : rpc.call(m, p),
     };
-    await assert.rejects(project(config, reorg, pool), { code: 'PROJECTION_INCOMPLETE' });
+    await assert.rejects(project(config, reorg, pool), { code: 'PROJECTION_REORG' });
     assert.deepEqual(await snapshot(config.deploymentId), before);
+    const barrier = (await pool.query(`SELECT c.sync_status,d.snapshot_revision::text
+      FROM checkpoints c JOIN deployments d USING(deployment_id) WHERE deployment_id=$1`, [config.deploymentId])).rows[0];
+    assert.equal(barrier.sync_status, 'rebuild_required');
+    assert.notEqual(barrier.snapshot_revision, (before.checkpoint as { snapshot_revision: string }[])[0]!.snapshot_revision);
   });
   test('real child CLI --sync-project and idle --project publish the same H/hash/revision', async (t) => {
     const s = new Scenario();

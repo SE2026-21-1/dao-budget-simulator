@@ -1,0 +1,272 @@
+{
+  "wallet": "Injected EIP-1193 transport to owned unlocked Anvil, not a browser wallet extension",
+  "checks": [
+    {
+      "name": "wrong network",
+      "result": "PASS"
+    },
+    {
+      "name": "signature rejection keeps form",
+      "result": "PASS"
+    },
+    {
+      "name": "confirmed vote receipt survives API refresh",
+      "result": "PASS"
+    },
+    {
+      "name": "HTML description remains text",
+      "result": "PASS"
+    },
+    {
+      "name": "execute guarded before ETA",
+      "result": "PASS"
+    },
+    {
+      "name": "UI chain API TC01 pays1000 with A+B700 votes",
+      "result": "PASS"
+    },
+    {
+      "name": "account-switch delegation preserves current balance",
+      "result": "PASS"
+    },
+    {
+      "name": "wallet cancellation is not a successful proposal",
+      "result": "PASS"
+    },
+    {
+      "name": "repriced proposal uses actual receipt and discovers proposal ID",
+      "result": "PASS"
+    },
+    {
+      "name": "only creator can cancel Pending via UI",
+      "result": "PASS"
+    },
+    {
+      "name": "skip link keyboard focuses main",
+      "result": "PASS"
+    },
+    {
+      "name": "API down shows error, no fixture fallback; retry recovers real data",
+      "result": "PASS"
+    }
+  ],
+  "transactions": [
+    {
+      "action": "propose",
+      "hash": "0xcca7c0f19d19505942eeff09b73c8946daae4c10a72c05ddd73feb32b14cfddb",
+      "proposalId": "104851840216961106729966738551854160830372898502683126132722444421099838561152"
+    },
+    {
+      "action": "voteA",
+      "hash": "0x070ab5ed7edd1318fc03cc5ad03dacbbbb0f26d4f6b33906ce20c745818efd20"
+    },
+    {
+      "action": "voteB",
+      "hash": "0x3c5ece174fda9d36c57592612cfd635dde288586a3688363783ebcb7d9595e2a"
+    },
+    {
+      "action": "queue",
+      "hash": "0x4ae24977a483b0202501ff0b392c848c21aa7ec10a6484a7d2906efa5f1bacb4"
+    },
+    {
+      "action": "execute",
+      "hash": "0x21ba8710aa5b30e214ccb08c2b73b5d1821f847fbd63e42595a2e2806c1825ad"
+    },
+    {
+      "action": "deposit",
+      "hash": "0x814f6413af3e505da4954f92f28ba86cae7d10a9e27577934de806b7725a97b9"
+    },
+    {
+      "action": "cancelPending",
+      "hash": "0x0360504034f734656d04e605ccfddb7d1449e33595c2030b490670b31f1a0d7f"
+    }
+  ],
+  "viewports": [
+    {
+      "name": "dashboard",
+      "width": 1366,
+      "viewport": 1366,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 1366,
+      "bodyWidth": 1366,
+      "pass": true
+    },
+    {
+      "name": "proposals",
+      "width": 1366,
+      "viewport": 1366,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 1366,
+      "bodyWidth": 1366,
+      "pass": true
+    },
+    {
+      "name": "detail",
+      "width": 1366,
+      "viewport": 1366,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 1366,
+      "bodyWidth": 1366,
+      "pass": true
+    },
+    {
+      "name": "create",
+      "width": 1366,
+      "viewport": 1366,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 1366,
+      "bodyWidth": 1366,
+      "pass": true
+    },
+    {
+      "name": "dashboard",
+      "width": 390,
+      "viewport": 390,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "pass": true
+    },
+    {
+      "name": "proposals",
+      "width": 390,
+      "viewport": 390,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "pass": true
+    },
+    {
+      "name": "detail",
+      "width": 390,
+      "viewport": 390,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "pass": true
+    },
+    {
+      "name": "create",
+      "width": 390,
+      "viewport": 390,
+      "height": 1000,
+      "deviceScaleFactor": 1.25,
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "pass": true
+    }
+  ],
+  "screenshots": [
+    "dashboard-1366.png",
+    "proposals-1366.png",
+    "detail-1366.png",
+    "create-1366.png",
+    "dashboard-390.png",
+    "proposals-390.png",
+    "detail-390.png",
+    "create-390.png"
+  ],
+  "regressions": {
+    "cancelledBeforeFix": {
+      "originalHash": "0x84a2a3c4162054face7a8ab55cc0c3eafd8d2563a6fc2b7967ca74d9e2eaabc4",
+      "cancellationHash": "0x488721b7f5c072b500b880628fa5808d59e11d6d3ade3eec0fe3eaba7dd62434",
+      "uiIncorrectlyReportedSuccess": true,
+      "proposalLinkCount": 0
+    },
+    "cancelledAfterFix": {
+      "originalHash": "0xd60a2d1d99d165f3208a1dea873cbc26b836112bbae55cc1a40919ec4acd53c7",
+      "cancellationHash": "0xcd3c18140a09bb34d8bc3dce0bc80ca8723607f2dd691e32f0975df53d37931f",
+      "errorShown": true,
+      "successShown": false,
+      "formPreserved": true
+    },
+    "staleRefreshBeforeFix": {
+      "transactionHash": "0x9e161cbfd4f3fa2349a0ffa09feadd8a4bea8ae23a9e9f771d4e43601c1e8bd3",
+      "currentAccount": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "expectedBalanceGOV": 300,
+      "displayedWrongBalanceZero": true
+    },
+    "staleRefreshAfterFix": {
+      "transactionHash": "0x69f5f3b78e5015de97457b5e7bb24ee8500a564b368510c64ad1777d2699cba1",
+      "currentAccount": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "balanceRemains300": true
+    },
+    "reloadBeforeFix": {
+      "transactionHash": "0x070ab5ed7edd1318fc03cc5ad03dacbbbb0f26d4f6b33906ce20c745818efd20",
+      "successStatusStillVisible": true,
+      "transactionStatusCount": 0
+    },
+    "repricingAfterFix": {
+      "originalHash": "0xc862d3873abe46f53653487580980dc61d25392ef2a8c0e3c9d1e6dc726fe609",
+      "repricedHash": "0x9957aae131ce9bc8d61c12ada3869108ee64b218bffbd44bc41fbd06aab73d34",
+      "displayedActualReceipt": true,
+      "proposalPath": "/proposals/11263665428661624624310457712832504879520605620949743122587508047157838841900"
+    }
+  },
+  "mobileOverflow": {
+    "before": {
+      "viewport": 390,
+      "documentWidth": 395,
+      "cause": "absolute sr-only table header escaped its scrolling container"
+    },
+    "after": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    }
+  },
+  "fixture": {
+    "proposalCount": 45,
+    "pageSizes": [
+      20,
+      20,
+      5
+    ],
+    "writesDisabled": true,
+    "productionIgnoresErrorInjection": true
+  },
+  "apiFailure": {
+    "showsError": true,
+    "fixtureFallback": false,
+    "vietnameseTransportError": true,
+    "recovery": true
+  },
+  "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+  "date": "2026-10-24T12:38:07.374Z",
+  "limits": [
+    "Injected EIP-1193 Anvil transport, not MetaMask extension or testnet",
+    "Snapshot refresh is manual after indexed K confirmations; production BE07 polling/reorg/backoff absent",
+    "Viewport screenshots use prefers-reduced-motion for stable visual capture"
+  ],
+  "provenance": {
+    "baseCommit": "c34889604ecfa1a0d85539ef25250363ad49596b",
+    "uncommittedFrontendChanges": [
+      "frontend/src/data/api.ts"
+    ],
+    "sourceHashes": {
+      "frontend/src/App.tsx": "73b717449f3d057a926a8f2fd037f6ce3c4f38a830b14ec1e0824544d611601b",
+      "frontend/src/main.tsx": "cbb077e3e4840e7b0213504edb8fa14a71351905152f2210c1e2a1e586fe77d3",
+      "frontend/src/index.css": "0ccec719ca84004c439b4fdeae050391c8ca565d42bcf88aae55b6a7b2ccee12",
+      "frontend/src/chain/WalletProvider.tsx": "dd598344f87a938511518c4f703fa64dd9b46b34dee0c22e70655a2729ab5604",
+      "frontend/src/chain/wallet.ts": "1e5f5402fcae91dbfe08c6d927bf425a389870fae8de34f3d1879decb75a3f87",
+      "frontend/src/chain/wallet-context.ts": "6bac8039890342fe4ad5308ba36ee8401c5f406efabd0fd45bc8df769f0eba48",
+      "frontend/src/chain/transactions.ts": "39b89173cd47addcb78d9a28cc95d2a13c8d88a39f4449510b5970579c306be9",
+      "frontend/src/chain/useTransaction.ts": "632249c8480d114bb6e7bbe05b9c2296072e30e2f05c6436fbfd888eafc32c7f",
+      "frontend/src/data/api.ts": "c0d690ccadc8eb824082b3e4f47b48037278da8590e723818178333e1ea2edc2",
+      "frontend/src/data/useProposalFixtures.ts": "6cef194ed89144c4a65ebdb448922ed022ccd4eba5b287807f0311db7e29731a",
+      "frontend/src/pages/CreateProposalPage.tsx": "20e7a6822e9c4ef52cadcd55e8257887332af0a0c435f1499d7e74cc66c423e3",
+      "frontend/src/pages/DashboardPage.tsx": "e2cae66a7090a64d3ac96709e1a48c79950cef12674307ecea2dc6ce55dcbe86",
+      "frontend/src/pages/ProposalDetailPage.tsx": "96ca86ce13e479d6ec7a94f9487571463b8d9500a405a2f2e3e873fd29cd9b15",
+      "frontend/src/components/ProposalActions.tsx": "091a963d2cab5fd8d4cc5c2f001dbac428e6587b7c8784504ea1b301b0f2a666",
+      "frontend/src/components/TreasurySection.tsx": "8322705dd426b0ec6a977d7933f939c4995247dd1bd9aa1005abc1db6f094695"
+    }
+  },
+  "status": "PASS"
+}

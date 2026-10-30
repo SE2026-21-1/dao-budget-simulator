@@ -1,0 +1,35 @@
+[
+  {
+    "command": "git fetch origin --prune",
+    "exitCode": 0,
+    "scope": "read remote history; initial sandbox DNS failure retried outside sandbox"
+  },
+  {
+    "command": "forge build",
+    "exitCode": 0,
+    "log": "forge-build.txt",
+    "scope": "Contracts/artifacts; no contract source edits"
+  },
+  {
+    "command": "node --import tsx --test tests/indexer/syncer.test.ts",
+    "exitCode": 0,
+    "log": "baseline-be03.txt",
+    "scope": "Baseline unit behavior; synthetic RPC/in-memory storage"
+  },
+  {
+    "command": "PATH=/home/cuongdz/.local/share/be06-tools/node/bin:/home/cuongdz/.foundry/bin:$PATH LD_LIBRARY_PATH=/tmp/dao-be07-pg184/usr/lib/x86_64-linux-gnu:/home/cuongdz/.local/share/be06-tools/postgres-root/usr/lib/x86_64-linux-gnu BE07_PG_BIN=/tmp/dao-be07-pg184/usr/lib/postgresql/18/bin BE07_EVIDENCE_DIR=docs/evidence/be07-20261025/run-7-pg184 node scripts/check_be07_native.mjs",
+    "exitCode": 0,
+    "commands": "run-7-pg184/commands.json"
+  },
+  {
+    "command": "node scripts/check_be01.mjs",
+    "exitCode": 0,
+    "log": "be01-fixtures.txt",
+    "scope": "Synthetic fixture compatibility"
+  },
+  {
+    "command": "git diff --check",
+    "exitCode": 0,
+    "scope": "Whitespace only"
+  }
+]

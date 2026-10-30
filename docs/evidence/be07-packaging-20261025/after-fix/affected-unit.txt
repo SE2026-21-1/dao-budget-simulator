@@ -1,0 +1,45 @@
+✔ RPC retries 429, then recovers (real HTTP) (77.983519ms)
+✔ RPC retries 500, then recovers (real HTTP) (20.773908ms)
+✔ RPC retries 503, then recovers (real HTTP) (15.506024ms)
+✔ RPC retries network, then recovers (real HTTP) (16.573509ms)
+✔ RPC retries timeout, then recovers (real HTTP) (88.729978ms)
+✔ RPC retries -32005, then recovers (real HTTP) (6.773818ms)
+✔ RPC permanent -32601 is attempted once (3.823005ms)
+✔ RPC permanent -32602 is attempted once (2.032054ms)
+✔ RPC permanent -32000 is attempted once (3.187496ms)
+✔ RPC permanent 401 is attempted once (2.357316ms)
+✔ RPC permanent 403 is attempted once (1.669807ms)
+✔ RPC retries are bounded, exponential, jittered and interruptible (96.375653ms)
+✔ freshness changes after 30 seconds with zero new events; recovery gates are explicit (0.355797ms)
+✔ recovery config validates bounded window and polling interval (3.708282ms)
+✔ invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response (34.66347ms)
+✔ K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block (3.439459ms)
+✔ invalid K rejected: -1 (2.604674ms)
+✔ invalid K rejected: 0.5 (0.82182ms)
+✔ invalid K rejected: 2 (0.785052ms)
+✔ invalid K rejected: null (0.75094ms)
+✔ invalid K rejected: true (0.601093ms)
+✔ invalid K rejected: 2147483648 (0.20607ms)
+✔ invalid K rejected: NaN (0.124768ms)
+✔ invalid K rejected: Infinity (0.171203ms)
+✔ K defaults to 2 and numeric 0 is valid (0.506636ms)
+✔ scope is order independent but bound to chain/deployment/address/block/ABI and sources (2.805544ms)
+✔ new DB starts at earliest deployment block, clamps later sources and empty batches advance (2.611276ms)
+✔ no safe block and deployment after safe boundary produce no negative RPC range/checkpoint (0.946408ms)
+✔ checkpoint block 0 is distinct from absent checkpoint and resumes at 1 (0.545106ms)
+✔ restart with no new block still verifies hash; then continues from H+1 (0.615411ms)
+✔ checkpoint mismatch even when idle leaves stored data unchanged (0.43539ms)
+✔ checkpoint RPC cannot verify: missing (0.241801ms)
+✔ checkpoint RPC cannot verify: malformed (0.184433ms)
+✔ checkpoint RPC cannot verify: unavailable (0.144893ms)
+✔ one required RPC source fails: entire batch and checkpoint stay unchanged (0.322506ms)
+✔ decode issues remain visible on idle restart after raw checkpoint advances (2.84354ms)
+✔ explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment (0.488788ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 801.025636

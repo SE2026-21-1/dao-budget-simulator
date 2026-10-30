@@ -75,7 +75,12 @@ export function parseConfig(value: unknown, env: NodeJS.ProcessEnv = process.env
   if (typeof confirmations !== 'number' || !Number.isInteger(confirmations) || confirmations < 0 || confirmations > 2_147_483_647) {
     throw new IndexerError('INVALID_CONFIG', 'confirmations must be an integer number in [0, 2147483647].');
   }
-  return { rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts, confirmations };
+  const reorgWindow = input.reorgWindow ?? 128;
+  const pollIntervalMs = input.pollIntervalMs ?? 1000;
+  if (!Number.isInteger(reorgWindow) || typeof reorgWindow !== 'number' || reorgWindow < 1 || reorgWindow > 10000 ||
+      !Number.isInteger(pollIntervalMs) || typeof pollIntervalMs !== 'number' || pollIntervalMs < 100 || pollIntervalMs > 10000)
+    throw new IndexerError('INVALID_CONFIG', 'reorgWindow must be 1..10000; pollIntervalMs must be 100..10000.');
+  return { reorgWindow, pollIntervalMs, rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts, confirmations };
 }
 
 export async function loadConfig(path: string, env: NodeJS.ProcessEnv = process.env): Promise<IndexerConfig> {

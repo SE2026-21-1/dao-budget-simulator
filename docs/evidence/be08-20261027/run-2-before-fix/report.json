@@ -1,0 +1,711 @@
+{
+  "format": "dao-budget-be08-native-v1",
+  "status": "FAIL",
+  "startedAt": "2026-10-27T14:07:31.641Z",
+  "scope": "Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, live Anvil/API/two-target rebuild; optional real-chain NFR02 benchmark. No testnet or browser acceptance.",
+  "isolation": {
+    "currentUid": 1000,
+    "currentGid": 1000,
+    "callerDatabaseAndRpcIgnored": true,
+    "privilegesChanged": false,
+    "freshCluster": true,
+    "numericLoopback": "127.0.0.1",
+    "portAllocation": "Kernel-reserved ephemeral TCP port, held through initdb; released immediately before pg_ctl. Bind collision fails closed.",
+    "migrations": "Dedicated BE01 DB uses SQL files; every other suite owns its own migrations on separate empty databases.",
+    "postgresPort": 45417,
+    "databases": [
+      {
+        "database": "be01_test",
+        "owner": "be01_test"
+      },
+      {
+        "database": "be02_test",
+        "owner": "be02_test"
+      },
+      {
+        "database": "be03_test",
+        "owner": "be03_test"
+      },
+      {
+        "database": "be04_test",
+        "owner": "be04_test"
+      },
+      {
+        "database": "tv4_be05_api",
+        "owner": "be05_test"
+      },
+      {
+        "database": "tv4_be06_reference",
+        "owner": "be06_test"
+      },
+      {
+        "database": "tv4_be06_target",
+        "owner": "be06_test"
+      },
+      {
+        "database": "be04_live",
+        "owner": "be04_test"
+      },
+      {
+        "database": "be07_test",
+        "owner": "be04_test"
+      },
+      {
+        "database": "be07_compare",
+        "owner": "be04_test"
+      },
+      {
+        "database": "tv4_be06_live_target",
+        "owner": "be04_test"
+      },
+      {
+        "database": "tv4_be06_live_advanced",
+        "owner": "be04_test"
+      },
+      {
+        "database": "tv4_governance",
+        "owner": "tv4_smoke"
+      },
+      {
+        "database": "tv4_governance_rebuild",
+        "owner": "tv4_smoke"
+      }
+    ]
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+    "platform": "linux",
+    "arch": "x64",
+    "postgresBin": "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin",
+    "postgres": "postgres (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg26.04+1)",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "pg": "8.23.1",
+    "postgresServer": "PostgreSQL 18.4 (Ubuntu 18.4-1.pgdg26.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, 64-bit"
+  },
+  "provenance": {
+    "sourceHashes": {
+      ".github/workflows/ci.yml": "97ebac766e6c3acc82bc48bcd3c8e855614a6d638edb9edde22a8be86359e5b5",
+      ".nvmrc": "3c4283f87409f21d4f0d98dad3cf48501cdc957b3282e8c03436226caed1b8a4",
+      "contracts/BudgetGovernor.sol": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+      "contracts/BudgetToken.sol": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+      "contracts/GovernanceToken.sol": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+      "contracts/Treasury.sol": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+      "contracts/interfaces/ITreasury.sol": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+      "database/migrations/001_initial.sql": "ee6ed9fd4170c1a11f648c310fdf7e0ed187917d6131eabd3e3983cca3b89709",
+      "database/migrations/002_be03.sql": "87334e1d74fb9163eab125a48cbe5fd2b7d9f4840681ccdf025924c2da3b2220",
+      "database/migrations/003_be04.sql": "5f8beaced805ac012c55e227f7d2bc9c0196c0f21fddbf1dc9595b2887ded967",
+      "database/migrations/004_be05_api.sql": "af81b64c16374c4dc99b753dd2476bb3b450ced97784111398b752ca9c2aeac5",
+      "database/migrations/005_be07.sql": "a131b476802913076807eac0a3fe4390a302e6ac12b7f1fd448c62a8950f05a1",
+      "database/queries/be04_read_model.sql": "d53836c8626b57b284a71ae09bb59867369ba35b631bfdb01e1def093c65b9d7",
+      "database/tests/001_initial_checks.sql": "afb67189c2d3fca2bd21a1e894d06863695a281ceea910837e291c1c69732bf2",
+      "foundry.lock": "515030960082805b0e943111b2d62127f5f85548dfcd1ba71cc2746bd4da8113",
+      "foundry.toml": "211fdac51a1fcdfe6bf67860d57ea89975569e6f4fa14d79d5259082a330868e",
+      "indexer/abi-registry.ts": "01300c829a967a5cd3045d556fcf28030ee06e8eedca02455056f6b8796568f3",
+      "indexer/api/main.ts": "aa40c90c70ebe711f41a40ea7ef5832eeedf7c9505b1ebcd59be85b57f099134",
+      "indexer/api/server.ts": "d60ba8d84d8c250c3a25b671e52d19ea02fcf3ea17387cc74e650f8cad112155",
+      "indexer/be06/cli.ts": "34fc1428886b645ec6d5998939d57e2ae14fa73c0176730295aa9fe9178836e6",
+      "indexer/be06/compare.ts": "4cc94543495de9761f93651a30b87e2128bb055657d2e68d633bf785446a5b93",
+      "indexer/be06/manifest.ts": "d48e382cb85cb59f2df82e9914ce50ebe7a8cd0c77e4236071792853a52fc4ac",
+      "indexer/be06/rebuild.ts": "936d922e2289f41240976184f332086c964ff01a3ca64ebdc96fe2cfceba19f8",
+      "indexer/cli.ts": "f14305b0862bf4836ef5c97eaf7bbd0eaf5b17df9fce84bc696287fa787e0c36",
+      "indexer/config.ts": "7d346c95b789fd0e57550b70474a9d1572f84a9504b9c1fbe25b4abf40cb486e",
+      "indexer/config/be06.manifest.example.json": "c5e3805e1a7263f961ce3da93fbccc70e7cb16b585a8c9bdc565e6b26f6417ae",
+      "indexer/config/example.json": "c0fddf10184cbf35edf80b2a6d07d59b7af53db8b4e3d1a02bc235f2ca811f25",
+      "indexer/config/example.metadata.sql": "907e5778e4b2ea1895b223d96b132a072f404df9d775d189bf5e342ef9435995",
+      "indexer/decoder.ts": "3436c7162f37178ca48a1c868b738f2e8a44fadc8f0763572d3aa329ab31b4c8",
+      "indexer/errors.ts": "4b4f0390366281463771d3013d690d6966e23ca9c02c334594aeee631f4e9031",
+      "indexer/projection/chain.ts": "59d9a70777d0be61eed633767df184948de9f3468428d3709206d46ec581619e",
+      "indexer/projection/model.ts": "598380703a6f7013852071b53b59933a781242e8921e85e3cc4869272ed1eb0f",
+      "indexer/projection/projector.ts": "9d9d32cb88de83d5dd2efe4f465fbe70e8a0b8d3e555156d9b384750a0e17ff6",
+      "indexer/reader.ts": "58368306ddd4099ad2411eba15b5c14be30dfbbdfb6717356fb628fbde5f48ad",
+      "indexer/recovery.ts": "8f308f397f01d28c9fed3537cf46d1189fbd29a67afdac4095aed559826f57a8",
+      "indexer/rpc.ts": "3e0e77e040665a24f4eb16b6cace494259b60ac739e41a6d930cf6cb1d5054e4",
+      "indexer/scanner.ts": "bf7e109dea29e0ee6d2eaf15427062ad744da53b0385f14e8bc984b5d85cbca7",
+      "indexer/scope.ts": "3bbec25cff491a5b2b1393781ce346b0d300df95638145ec9770a31319c54884",
+      "indexer/storage.ts": "46ea36bd2bfdc03ee9a4d2ddc7f37ddfff19367cd10ab5fe600efb67b42608e5",
+      "indexer/syncer.ts": "5daa34f4adc4d8c81aba6acfd6e6bfc3c5c9d93a2971fa67b0514a96c8cc0e44",
+      "indexer/types.ts": "f999c67e96ddd964fe51541b4221cb5db7e2efab4cffc85508560a3ea1871bac",
+      "indexer/worker.ts": "74353f8654fe2866a0470bf8851b2ddea7f3407c5dc695f858a4cfea510bcf00",
+      "package-lock.json": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "package.json": "bd21c61bda526e768dd2ab0349eed7958427d43d29568e44013ad046797ce921",
+      "scripts/be08_measurement.mjs": "1244efa23b475246f4ed59a0e33196cc452c3baf6f77c807bcf43191d7d98930",
+      "scripts/benchmark_api.mjs": "26f5ec7a1c227aa5b901f79a8560a75c3669bf7a37759ff7985557a7b05d1a2b",
+      "scripts/check.py": "f3e9e689557820042b5f493051c30da463cb98926401ae8caa337c294f7de472",
+      "scripts/check_be01.mjs": "cfeffe9fa0806c034e30873e434a89d1ec84817ec87e53632e0f546dcb10a8a2",
+      "scripts/check_be01_database.ps1": "59e993f0d11183e41511a18950c0fd8a514456c7151b4e6fd08ad86c6e114d0e",
+      "scripts/check_be01_database.sh": "21246c61e97d0764281eaedbfebf1c4b5fe7db33f65d52665cc4563d03d3514d",
+      "scripts/check_be02_database.ps1": "8a827b4d16cda803addfa2e6e7c455b938c80b061e69deb1ed9b18acf744b958",
+      "scripts/check_be02_database.sh": "01d54741eb8077ff0388a01520bb71666181219763c44910b05d5c8edd1357f5",
+      "scripts/check_be03_database.ps1": "49999d009fb1a25122420f306025c1f3313bc9d976d411a4ac32c1da43eb290a",
+      "scripts/check_be04_database.sh": "c450ccd2e10363cc9b0e4bc2f1ffbe45c306e3480af6c61d0ac23e6ef43ec0ae",
+      "scripts/check_be04_live.mjs": "3cf793ed015f78a3beaba28cad6af2ad951d734538ed9e0d05145b6433598602",
+      "scripts/check_be05_database.sh": "bc027174e553d042610e8f5c40cd818c6d2cf9abcaf11bdd814b81160410d794",
+      "scripts/check_be05_live_database.sh": "1a127fe4b07b93a2060b357c31afde4f8539ee5c0188a85d73abdb134f2741bb",
+      "scripts/check_be07_live.mjs": "dcbfa48cdf9b60cc72e920cca081b65bd7460d75bf3f3fc77de5ad744a725f68",
+      "scripts/check_be07_local.mjs": "371bdcfd617979894ee321c25e8ed1c11ba95becb4d61e53e32e5b54b28971bc",
+      "scripts/check_be07_native.mjs": "9f1152e575c2854dc4124adc8cfb2fc698a3c98dc27fcf5b1ea3d3bc180d6494",
+      "scripts/check_be08_native.mjs": "663455d8ff983e4a2aef5d48880f6a149189693be2b7ab907294af864ac91abf",
+      "scripts/check_governance_database.sh": "6e51002653259c60f4b36efe5f428536fb3a53ad0f4b0e7964d47134a68e65e7",
+      "scripts/check_roles.mjs": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+      "scripts/ci.sh": "b341dc868ee52a1072a694c4a36a59fa110ba50b00b5b0b0a114ec0eb3453982",
+      "scripts/deploy_local.mjs": "ce40fb5f4b14ce22e100a694e72c0ddb2217f36920b62d7edec94abb9898c0db",
+      "scripts/export_local_handoff.mjs": "1186ac1c951a37982ddf92379ff69d7a6d953b45f1af97b55231624d22646495",
+      "scripts/generate_be01_fixtures.mjs": "0b10aa10d4e090335f17cc58fcf7629c58b2c62368975a9f3ae0ee6ef12ee2f6",
+      "scripts/governance_local.mjs": "c6f4d80af1e8e69284e3e4d19390cfd0535ea83e2e5bf2614535631bc67476f6",
+      "scripts/governance_storage.mjs": "3814c36c386f43790b4a6c8523e53047db14e38d5a5f32944a9a8ba465da7bab",
+      "scripts/receipt.mjs": "ede82362a16f1a7a2be726315c57e59a7b51c6b6fb4ada1a8ff2a61b326133b5",
+      "scripts/smoke_governance.mjs": "803e567459a58e62410b4d763e8bdd4bf3ee33fffe253212af584d7800b72417",
+      "scripts/smoke_lifecycle.mjs": "1e5fc195de37d782d7488999c3d3d4a7049845504e8840dc4fa760cfac1fb19a",
+      "scripts/smoke_treasury.mjs": "6c841910f75ba491a4e098309225877c89fffe037159eddf58888a167e5f3e9f",
+      "shared/abi/BudgetGovernor.json": "534f464886e3870b0883f576b61cba845ae54541b8157ebe1b22b989877b9451",
+      "shared/abi/ITreasury.json": "5ca2b5813678f7a794cd9fddfd55b0f72514b533b4344c7db35fe418eeffcd47",
+      "shared/abi/Treasury.json": "5f5f380963ecdd3682e2e243d3cea0ed016dc3cfd50caafd3567b94844384705",
+      "tests/api/server.test.mjs": "3773449fc94d9830c10ebe8c8a5f6bb668222ccb73c9495beedb567569d77ede",
+      "tests/attacks/GovernanceAttacks.t.sol": "188ecc6ffdf4fd73ea1d95fd518a1992fe57d7bc572b614f355a745f1719365e",
+      "tests/indexer/be04-live-receipt.test.mjs": "e45e656b05c676d2e441ca1367b4956317b7d4fc4b3859d7a94b74c8b7166581",
+      "tests/indexer/be06-db.test.mjs": "97eb4ff4901f7026a861cbed5f791ffd9d00dd0ebdaded21b8667c7aa0d731ee",
+      "tests/indexer/be06.test.ts": "d6b869c6e5dc78146e6ea748c8930801fbf428aa5a5e19cd6b08020256da6635",
+      "tests/indexer/be07-crash-worker.ts": "fe58030313f801327fe04a85c5355caaa4b6372c22cd2bb095f16eb7d65e18d7",
+      "tests/indexer/be07-db.test.mjs": "73fcddc702c56724f50b525b21735b69a5b2f9285d5adf0deca87b9ed51eda60",
+      "tests/indexer/be07-publication-worker.mjs": "63a8cccf39ae1d7b611b32c81906c6dea07795a563ca4f8810d2193246247410",
+      "tests/indexer/be07.test.ts": "5f6ef4af67c99228a51d51b79175bd99be0a73a2e980a02bb124e3af3b80a896",
+      "tests/indexer/be08-measurement.test.mjs": "d8b49c3d30c6cbfc2133cac1d3381ef91106a8b2a313a447f028f1d3c31435ad",
+      "tests/indexer/checkpoint-storage.test.ts": "68e216b55f5138ed7ffa83c509e812eee9454b3882e05f90b2334ceb7a7e5183",
+      "tests/indexer/cli.test.ts": "8ce54b1c1590a6b5e576a452efd7df7ce514dde6adef1f3d5425053eeb0033ed",
+      "tests/indexer/config.test.ts": "40770f4f506119b918c76a5c4cbc567ea9b2a6e0d355fd6a0f7cfb8cd40ab1f9",
+      "tests/indexer/crash-worker.ts": "94eca12a50815820dacb4f7aff0f300fae29cb41760288119577cac63e74358f",
+      "tests/indexer/decoder.test.ts": "68d58dc7aaafeca8633937a58071d8138fc7beb57da1306aab92e6cc442722e6",
+      "tests/indexer/helpers.ts": "d1d0fd9a84c1481eff13822dd1661e8724ed32ee0e3231b38948ab15e5dbd8fd",
+      "tests/indexer/projection-fixture.ts": "7034c92259c886eea7a1475803c66eedfc595d640be89409ac8fc24fa600d701",
+      "tests/indexer/projection-storage.test.ts": "92fcce3a76443afda5316314f0403deb68a4babf33c6c714f16badf367634c97",
+      "tests/indexer/projection.test.ts": "b69ae4e5b4e4b8a075ac539bf826ee714ac337d15b924e1b8cbd3e6374a0af32",
+      "tests/indexer/reader.test.ts": "fb80bec1a2c582fb4eea892cd9dd52bc9f9eab53f8d55439c920d6620047aebb",
+      "tests/indexer/storage.test.ts": "ab5f7277fe92c09bbef2edb9fe9df25b021ef8c8d9a7c2ba1ecda0d885ee736f",
+      "tests/indexer/syncer.test.ts": "c9c955f28d8322ff034bf9dff98782ac57f2c87d7205877a16e3ecb76cf5c640",
+      "tests/invariant/GovernanceInvariant.t.sol": "d3a1c77a10594742dcae12c1ba3d143aae6ec91fa4752656fbb6de870bd9ef22",
+      "tests/invariant/TreasuryAccounting.t.sol": "3935249427b6990ddeb6d9ef117645fa5a9d1b807a26c56d481d21fb3cf86f04",
+      "tests/unit/BudgetGovernor.t.sol": "1a2527ce1df724fa0c855e4ac3276abe8d89c19099671989d312d2e55bc3462b",
+      "tests/unit/BudgetToken.t.sol": "4a8fd76ca0a660232ec6e7978ff200d0ec2d14cce75f2c0545c20a4dd084db6b",
+      "tests/unit/GovernanceToken.t.sol": "ce75f069af275fedc0062232b4d7040f367d49bf5a39e18f88d2ea52822a604f",
+      "tests/unit/OperationAbiCompatibility.t.sol": "289cc1a2b31905925e8c3aad6d3c5d5f56807b3a0d53dc33f4502bb9a67dc23d",
+      "tests/unit/Treasury.t.sol": "f10ff50110cd647f8123367704dcb7f7e3e86235c37fb83cbe95f34f5aca3f6e",
+      "tsconfig.build.json": "8db01678ef177b0e5cd5ff125c7d911ca72e3e28eaf6248e2c34f2526cbbf5d9",
+      "tsconfig.json": "8357f0a82f39cf9a3cafcee52bd7fd1e01d9c38e6287cf40f0b72717944423f7"
+    },
+    "binaryHashes": {
+      "initdb": "45880079a897a2c6e404bbf20111f6fdbd7d63d6681d2cc32f3ccff4d476a045",
+      "pg_ctl": "ce5b66105637e88da5e84c510458bcdfb85ff3f53bd046fc7c01641eb403ad12",
+      "postgres": "5300e05436b833f2c75700d7a3922f9e5f99311695950ea3c0419eb5e7b2c719"
+    },
+    "baseCommit": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+    "branch": "feature/tv2-be08",
+    "patchSha256": "b60391f03c1af5b6300971463298ff863996dace2a949dc26729090748c286af",
+    "submodules": "160000 commit f3dae6e6ee381f25eb6a246f7da9b85c91a68219\tlib/forge-std\n160000 commit c64a1edb67b6e3f4a15cca8909c9482ad33a02b0\tlib/openzeppelin-contracts"
+  },
+  "commands": [
+    {
+      "name": "postgres-version",
+      "argv": [
+        "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/postgres",
+        "--version"
+      ],
+      "startedAt": "2026-10-27T14:07:45.212Z",
+      "timeoutMs": 180000,
+      "log": "logs/01-postgres-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 40
+    },
+    {
+      "name": "anvil-version",
+      "argv": [
+        "anvil",
+        "--version"
+      ],
+      "startedAt": "2026-10-27T14:07:45.254Z",
+      "timeoutMs": 180000,
+      "log": "logs/02-anvil-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 39
+    },
+    {
+      "name": "forge-version",
+      "argv": [
+        "forge",
+        "--version"
+      ],
+      "startedAt": "2026-10-27T14:07:45.296Z",
+      "timeoutMs": 180000,
+      "log": "logs/03-forge-version.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 82
+    },
+    {
+      "name": "initdb",
+      "argv": [
+        "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/initdb",
+        "-D",
+        "/tmp/dao-tv4-native-6Paodi/data",
+        "-U",
+        "tv4_native_admin",
+        "--auth-local=trust",
+        "--auth-host=scram-sha-256",
+        "--pwfile",
+        "/tmp/dao-tv4-native-6Paodi/password",
+        "--encoding=UTF8",
+        "--locale=C"
+      ],
+      "startedAt": "2026-10-27T14:07:45.391Z",
+      "timeoutMs": 60000,
+      "log": "logs/04-initdb.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 391
+    },
+    {
+      "name": "postgres-start",
+      "argv": [
+        "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl",
+        "start",
+        "-w",
+        "-t",
+        "30",
+        "-D",
+        "/tmp/dao-tv4-native-6Paodi/data",
+        "-l",
+        "/tmp/dao-tv4-native-6Paodi/postgres.log"
+      ],
+      "startedAt": "2026-10-27T14:07:45.785Z",
+      "timeoutMs": 40000,
+      "log": "logs/05-postgres-start.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 111
+    },
+    {
+      "name": "postgres-identity",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--input-type=module",
+        "-e",
+        "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+      ],
+      "startedAt": "2026-10-27T14:07:45.900Z",
+      "timeoutMs": 120000,
+      "log": "logs/06-postgres-identity.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 512
+    },
+    {
+      "name": "create-fresh-databases",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--input-type=module",
+        "-e",
+        "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+      ],
+      "startedAt": "2026-10-27T14:07:46.416Z",
+      "timeoutMs": 120000,
+      "log": "logs/07-create-fresh-databases.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 712
+    },
+    {
+      "name": "be01-migrate",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--input-type=module",
+        "-e",
+        "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+      ],
+      "startedAt": "2026-10-27T14:07:47.136Z",
+      "timeoutMs": 120000,
+      "log": "logs/08-be01-migrate.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 455
+    },
+    {
+      "name": "be01-constraints",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--input-type=module",
+        "-e",
+        "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+      ],
+      "startedAt": "2026-10-27T14:07:47.597Z",
+      "timeoutMs": 120000,
+      "log": "logs/09-be01-constraints.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 552
+    },
+    {
+      "name": "be02-storage",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/storage.test.ts"
+      ],
+      "startedAt": "2026-10-27T14:07:48.152Z",
+      "timeoutMs": 300000,
+      "log": "logs/10-be02-storage.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 14362
+    },
+    {
+      "name": "be03-checkpoint-crash",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/checkpoint-storage.test.ts"
+      ],
+      "startedAt": "2026-10-27T14:08:02.517Z",
+      "timeoutMs": 300000,
+      "log": "logs/11-be03-checkpoint-crash.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 13412
+    },
+    {
+      "name": "be04-projection",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/projection-storage.test.ts"
+      ],
+      "startedAt": "2026-10-27T14:08:15.930Z",
+      "timeoutMs": 300000,
+      "log": "logs/12-be04-projection.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 10746
+    },
+    {
+      "name": "be05-api",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/api/server.test.mjs"
+      ],
+      "startedAt": "2026-10-27T14:08:26.680Z",
+      "timeoutMs": 300000,
+      "log": "logs/13-be05-api.log",
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "status": "FAIL",
+      "error": "be05-api exited 1",
+      "durationMs": 3067
+    },
+    {
+      "name": "be06-two-db",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/be06-db.test.mjs"
+      ],
+      "startedAt": "2026-10-27T14:08:29.750Z",
+      "timeoutMs": 300000,
+      "log": "logs/14-be06-two-db.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 3498
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAt": "2026-10-27T14:08:33.250Z",
+      "timeoutMs": 180000,
+      "log": "logs/15-typecheck.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 3289
+    },
+    {
+      "name": "build",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.build.json"
+      ],
+      "startedAt": "2026-10-27T14:08:36.544Z",
+      "timeoutMs": 180000,
+      "log": "logs/16-build.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 3732
+    },
+    {
+      "name": "unit",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/config.test.ts",
+        "tests/indexer/decoder.test.ts",
+        "tests/indexer/reader.test.ts",
+        "tests/indexer/cli.test.ts",
+        "tests/indexer/syncer.test.ts",
+        "tests/indexer/projection.test.ts",
+        "tests/indexer/be04-live-receipt.test.mjs",
+        "tests/indexer/be06.test.ts",
+        "tests/indexer/be07.test.ts",
+        "tests/indexer/be08-measurement.test.mjs"
+      ],
+      "startedAt": "2026-10-27T14:08:40.280Z",
+      "timeoutMs": 300000,
+      "log": "logs/17-unit.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 13787
+    },
+    {
+      "name": "be07-db",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-reporter=tap",
+        "tests/indexer/be07-db.test.mjs"
+      ],
+      "startedAt": "2026-10-27T14:08:54.071Z",
+      "timeoutMs": 300000,
+      "log": "logs/18-be07-db.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 12428
+    },
+    {
+      "name": "contracts",
+      "argv": [
+        "bash",
+        "scripts/ci.sh"
+      ],
+      "startedAt": "2026-10-27T14:09:06.502Z",
+      "timeoutMs": 600000,
+      "log": "logs/19-contracts.log",
+      "exitCode": 2,
+      "signal": null,
+      "timedOut": false,
+      "status": "FAIL",
+      "error": "contracts exited 2",
+      "durationMs": 6
+    },
+    {
+      "name": "live-be07",
+      "argv": [
+        "/home/cuongdz/.local/share/be06-tools/node/bin/node",
+        "--import",
+        "tsx",
+        "scripts/check_be04_live.mjs",
+        "--output",
+        "/mnt/d/dao-budget-simulator-be08/docs/evidence/be08-20261027/run-2-before-fix/live.json",
+        "--be07"
+      ],
+      "startedAt": "2026-10-27T14:09:06.513Z",
+      "timeoutMs": 600000,
+      "log": "logs/20-live-be07.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 51517
+    },
+    {
+      "name": "postgres-stop-fast",
+      "argv": [
+        "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl",
+        "stop",
+        "-w",
+        "-t",
+        "15",
+        "-m",
+        "fast",
+        "-D",
+        "/tmp/dao-tv4-native-6Paodi/data"
+      ],
+      "startedAt": "2026-10-27T14:09:58.040Z",
+      "timeoutMs": 20000,
+      "log": "logs/21-postgres-stop-fast.log",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "status": "PASS",
+      "durationMs": 208
+    }
+  ],
+  "suites": {
+    "be01-sql": {
+      "status": "PASS",
+      "durationMs": 1020
+    },
+    "be02-storage": {
+      "status": "PASS",
+      "tests": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 14365
+    },
+    "be03-checkpoint-crash": {
+      "status": "PASS",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 13414
+    },
+    "be04-projection": {
+      "status": "PASS",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 10749
+    },
+    "be05-api": {
+      "status": "FAIL",
+      "error": "be05-api exited 1",
+      "durationMs": 3070
+    },
+    "be06-two-db": {
+      "status": "PASS",
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 3500
+    },
+    "typecheck": {
+      "status": "PASS",
+      "durationMs": 3294
+    },
+    "build": {
+      "status": "PASS",
+      "durationMs": 3736
+    },
+    "unit": {
+      "status": "PASS",
+      "tests": {
+        "tests": 135,
+        "pass": 135,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 13791
+    },
+    "contracts": {
+      "status": "FAIL",
+      "error": "contracts exited 2",
+      "durationMs": 11
+    },
+    "be07-db": {
+      "status": "PASS",
+      "tests": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 12431
+    },
+    "live-be07": {
+      "status": "PASS",
+      "durationMs": 51527
+    }
+  },
+  "cleanup": {
+    "status": "PASS",
+    "clusterStopped": true,
+    "temporaryFilesRemoved": true,
+    "errors": []
+  },
+  "finishedAt": "2026-10-27T14:09:58.519Z"
+}

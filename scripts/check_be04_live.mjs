@@ -58,7 +58,9 @@ function be06TargetPool(name) {
 const be06Target = withBe06 ? be06TargetPool('BE06_LIVE_TARGET_DATABASE_URL') : null;
 const be06AdvancedTarget = withBe06 ? be06TargetPool('BE06_LIVE_ADVANCED_TARGET_DATABASE_URL') : null;
 const report = {
-  scope: withBe06 ? 'Live local Anvil and isolated PostgreSQL: governance history, BE03/BE04 publication, independent BE06 rebuilds at the same H/hash, normalized compare, chain reconciliation, and post-H event exclusion.' :
+  // BE08 adopts the BE07 scope correction from TV4 213f9f7 (Phan Thanh Dũng).
+  scope: withBe07 ? 'Live local Anvil and isolated PostgreSQL: governance, API, BE07 reorg rollback/replay, fail-closed serving, RPC outage/freshness, deep-fork rebuild requirement and BE06 same-H/hash comparison. No testnet or extension wallet.' :
+    withBe06 ? 'Live local Anvil and isolated PostgreSQL: governance history, BE03/BE04 publication, independent BE06 rebuilds at the same H/hash, normalized compare, chain reconciliation, and post-H event exclusion.' :
     withApi ? 'BE05 live local Anvil→deploy→governance→BE03→BE04→HTTP API integration, including contract/SQL reconciliation at H. No testnet or reorg rollback.' :
       'BE04 live local projection, K=2, canonical hash-pinned contract reconciliation. No HTTP API, reorg rollback or testnet.',
   baseCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),

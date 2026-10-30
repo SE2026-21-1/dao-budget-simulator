@@ -1,0 +1,5 @@
+[stdout] BE01 checks passed: exact uint256, invalid domains, description bytes, zero/self transfer, raw dedup, scopes/FKs, payout link and checkpoint
+[stdout] {"command":"BEGIN","rows":[]}
+[stdout] {"command":"CREATE","rows":[]}
+[stdout] {"command":"DO","rows":[]}
+[stdout] {"command":"ROLLBACK","rows":[]}

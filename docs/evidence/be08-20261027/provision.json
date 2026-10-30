@@ -1,0 +1,13 @@
+{
+  "node": "24.15.0, existing private WSL runtime",
+  "foundry": "1.8.5, existing private WSL runtime",
+  "postgres": "18.4, extracted into /home/cuongdz/.local/share/be08-tools/pg184; does not replace an installed server",
+  "packages": [
+    { "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.4-1.pgdg26.04%2B1_amd64.deb", "sha256": "d6bf3a9859fc330bace41abbf49c50ca8950e3b65c9bc9021827e150830659aa" },
+    { "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.4-1.pgdg26.04%2B1_amd64.deb", "sha256": "132f93fab0975234d9a703dc7bca6f05958e7e4a2f8def1e87dce9d42ee0a9f1" },
+    { "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.4-1.pgdg26.04%2B1_amd64.deb", "sha256": "ae7268947f1e3b60503c6e113c4cc279e73695176eb3bcdbf0879868aa652b25" }
+  ],
+  "versionsAndBinaryHashes": "toolchain-provision.log and each run report.json",
+  "compiler": "Solc0.8.37+commit.f401782d, Osaka, repository foundry.toml/foundry.lock",
+  "sharedLibraryNote": "Additional shared libraries are reused from an existing private extraction. PostgreSQL binary and connected server are both asserted exactly18.4; no18.6 result is used for BE08."
+}

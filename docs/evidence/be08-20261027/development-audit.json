@@ -1,0 +1,53 @@
+{
+  "recalculated": {
+    "global": {
+      "N": 34152,
+      "rank": 32445,
+      "p95Ms": 26.165681999991648,
+      "allOk": true
+    },
+    "list": {
+      "N": 11389,
+      "rank": 10820,
+      "p95Ms": 27.829080000024987,
+      "allOk": true
+    },
+    "summary": {
+      "N": 5693,
+      "rank": 5409,
+      "p95Ms": 15.500594000011915,
+      "allOk": true
+    },
+    "detail": {
+      "N": 5691,
+      "rank": 5407,
+      "p95Ms": 22.818173999985447,
+      "allOk": true
+    },
+    "votes": {
+      "N": 5690,
+      "rank": 5406,
+      "p95Ms": 28.61169700001483,
+      "allOk": true
+    },
+    "transfers": {
+      "N": 5689,
+      "rank": 5405,
+      "p95Ms": 27.225153000006685,
+      "allOk": true
+    }
+  },
+  "patchChecks": {
+    "run-2-before-fix": {
+      "declared": "b60391f03c1af5b6300971463298ff863996dace2a949dc26729090748c286af",
+      "actual": "d7e52b9d7d3fd4d7815af11bdf3f064da63f376a2bb0d11d141ffff6c7597923",
+      "matches": false
+    },
+    "run-3-after-fix": {
+      "declared": "cac51ba18f037192ac03c21cccb8b08244df6bcdfbda04b970718a28ad90115b",
+      "actual": "cac51ba18f037192ac03c21cccb8b08244df6bcdfbda04b970718a28ad90115b",
+      "matches": true
+    }
+  },
+  "note": "run-2 patch was scrubbed after hashing by inherited cleanup; final runner preserves source.patch byte-exact. run-3 is not final due CRLF format check."
+}

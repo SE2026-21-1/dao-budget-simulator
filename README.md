@@ -476,3 +476,7 @@ publication BE04 đúng cùng H/hash; target không được là database API đ
 Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06.md) và
 [bằng chứng nghiệm thu](docs/evidence/be06-20261024/summary.md). Reorg/retry tự
 động thuộc BE07, benchmark thuộc BE08.
+
+## BE07 recovery và worker
+
+Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.

@@ -375,3 +375,5 @@ export lại, chèn metadata `deployments`/`deployment_contracts` với bốn de
 BE02, lấy **deployment_id thực từ INSERT ... RETURNING** để cấu hình scanner.
 Bundle không phát minh `deploymentId`. ABI/role audit local không thay nghiệm
 thu SC06 chính thức, peer review indexed fields/IDs/salt hay production consumer.
+
+BE07 bổ sung [recovery, RPC retry và worker polling](be07.md). Áp dụng migration 005 sau 001–004; dùng `--worker` để kiểm tra cả khi idle và tự replay sau reorg.

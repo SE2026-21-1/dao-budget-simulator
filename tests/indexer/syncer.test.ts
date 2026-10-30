@@ -87,7 +87,7 @@ test('restart with no new block still verifies hash; then continues from H+1', a
   rpc.head = 105n; rpc.calls = [];
   const idle = await sync(c, rpc, db);
   assert.equal(idle.committedBatches, 0);
-  assert.deepEqual(rpc.calls.map((c) => c.method), ['eth_chainId', 'eth_getBlockByNumber', 'eth_blockNumber']);
+  assert.deepEqual(rpc.calls.map((c) => c.method), ['eth_chainId', 'eth_getBlockByNumber', 'eth_blockNumber', 'eth_getBlockByNumber']);
   rpc.head = 107n;
   await sync(c, rpc, db);
   assert.equal(db.batches.at(-1)!.fromBlock, 104n);

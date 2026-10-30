@@ -1,0 +1,26 @@
+{
+  "implementationWorktree": "/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07",
+  "branch": "feature/tv2-be07",
+  "baseCommit": "c41a9ab97ad24d9b156eb03baa504dff43b165ec",
+  "remoteRefsVerifiedAfterFetch": {
+    "origin/feature/tv2-be06": "c41a9ab97ad24d9b156eb03baa504dff43b165ec",
+    "origin/feature/tv4-operation": "3b6869d154b8d71d5ef36a5325cb893eadd6002e",
+    "origin/Dev": "14517796d3b3641160735e202a12008e71ebebb2"
+  },
+  "originalCheckout": "/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator",
+  "originalStatus": "## docs/add-requirements...origin/docs/add-requirements [gone]\n M .gitignore\n",
+  "originalGitignoreSha256": "2b1770e5a30f104c7d22820e56978af00540997d243f1803690c8b8847957f27",
+  "originalGitignoreDiffSha256": "808b4b3a2e70ebe014c26eafb2f8e8d02929e0b24e9541109817d3ff2952d752",
+  "submodules": {
+    "forge-std": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219",
+    "openzeppelin-contracts": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+  },
+  "dependencies": "Existing node_modules reused through a local symlink; package-lock.json bytes matched the audited local checkout before reuse; no npm ci claimed for this session.",
+  "packageLockSha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+  "baseline": "Immutable c41a9ab modules were loaded from an owned detached worktree by the new driver. Baseline Anvil reproduction ran after constructing the driver; baseline BE03 unit suite ran before syncer changes. This is not BE07 acceptance.",
+  "tv4Evidence": "Read from origin/feature/tv4-operation at 3b6869d; inherited evidence, not a local rerun.",
+  "issue": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/18 (read-only web fallback; GitHub connector transport failed)",
+  "publication": "No commit, push, PR, merge, or GitHub comment performed.",
+  "agentsMdFound": false,
+  "postgresFinal": "18.4-1.pgdg26.04+1 from official PGDG pool; extracted into /tmp only. Earlier development runs used installed 18.6."
+}

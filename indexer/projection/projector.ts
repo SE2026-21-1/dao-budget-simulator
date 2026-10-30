@@ -1,8 +1,12 @@
 import type { Pool, PoolClient } from 'pg';
+import { PostgresStorage } from '../storage.js';
+import { readHeader } from '../reader.js';
+import { quantity } from '../rpc.js';
+import { runtime } from '../recovery.js';
 import { IndexerError } from '../errors.js';
 import type { RpcTransport } from '../rpc.js';
 import { checkpoint, verifyMetadata } from '../storage.js';
-import { scopeHash } from '../scope.js';
+import { confirmationDepth, scopeHash } from '../scope.js';
 import type { IndexerConfig, JsonObject, NormalizedLog } from '../types.js';
 import { canonical, reconcile } from './chain.js';
 import { buildModel, classify, requireProjection, type Evaluated, type Model, type SourceEvent } from './model.js';
@@ -27,6 +31,32 @@ export interface ProjectionReport {
  * Full replay is intentional for the BE04 MVP; no external metadata/previous projection is used.
  */
 export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
+  try { return await projectTransaction(config, rpc, pool); }
+  catch (error) {
+    // The failed publication transaction has released its lock/connection first.
+    const state = (await pool.query("SELECT to_jsonb(d)->'indexer_state' AS s FROM deployments d WHERE deployment_id=$1", [config.deploymentId])).rows[0]?.s;
+    if (state && state.phase !== 'rebuild_required' && quantity(await rpc.call('eth_chainId', []), 'chainId') === config.chainId) {
+      const storage = new PostgresStorage(pool);
+      const cp = await storage.loadCheckpoint(config);
+      let header;
+      if (cp) {
+        try { header = await readHeader(rpc, cp.number); }
+        catch (verifyError) {
+          if (!(verifyError instanceof IndexerError) || verifyError.code !== 'RPC_INVALID_DATA') throw verifyError;
+          await storage.recoverShorterChain(config, rpc, cp);
+          throw new IndexerError('REORG_RETRY', 'Shorter fork detected during projection; recovery persisted.');
+        }
+      }
+      if (cp && header?.hash !== cp.hash) {
+        await storage.recoverCheckpoint(config, rpc, cp);
+        throw new IndexerError('REORG_RETRY', 'Reorg detected during projection; recovery persisted.');
+      }
+    }
+    throw error;
+  }
+}
+
+async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -51,7 +81,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
     const status = (
       await client.query('SELECT sync_status FROM checkpoints WHERE deployment_id=$1', [config.deploymentId])
     ).rows[0];
-    requireProjection(status.sync_status !== 'rebuild_required', 'Raw checkpoint requires rebuild.');
+    const recovery = await runtime(client, config.deploymentId);
+    requireProjection(status.sync_status !== 'rebuild_required' && recovery?.phase !== 'rebuild_required' && recovery?.phase !== 'recovering', 'Recovery gate blocks publication.');
     const old = (
       await client.query('SELECT block_number::text FROM projection_checkpoints WHERE deployment_id=$1', [
         config.deploymentId,
@@ -123,6 +154,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
     const model = buildModel(events, treasury, governor);
     const evaluated = await reconcile(config, rpc, cp.hash, BigInt(header.block_timestamp), model);
     await canonical(config, rpc, cp.number, cp.hash);
+    if (recovery && quantity(await rpc.call('eth_blockNumber', []), 'head') < cp.number + BigInt(confirmationDepth(config)))
+      throw new IndexerError('RPC_UNAVAILABLE', 'Projection H no longer has K following blocks; wait for confirmed head.');
     await publish(client, config, model, evaluated);
     await client.query(
       `INSERT INTO projection_checkpoints
@@ -132,6 +165,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
       snapshot_revision=EXCLUDED.snapshot_revision,ignored_ancillary_events=EXCLUDED.ignored_ancillary_events,published_at=CURRENT_TIMESTAMP`,
       [config.deploymentId, cp.number.toString(), cp.hash, scopeHash(config), meta.snapshot_revision, ignored],
     );
+    if (recovery) await client.query(`UPDATE deployments SET indexer_state=indexer_state ||
+      jsonb_build_object('phase','ready','lastPublishedAt',clock_timestamp()) WHERE deployment_id=$1`, [config.deploymentId]);
     await client.query('COMMIT');
     return {
       context: {

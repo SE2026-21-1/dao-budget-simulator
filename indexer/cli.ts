@@ -1,3 +1,4 @@
+import { worker } from './worker.js';
 import { pathToFileURL } from 'node:url';
 import pg from 'pg';
 import { loadConfig } from './config.js';
@@ -10,16 +11,24 @@ import { project } from './projection/projector.js';
 
 export async function main(args = process.argv.slice(2)): Promise<number> {
   if (args.length === 1 && ['--help', '-h'].includes(args[0]!)) {
-    process.stdout.write('Usage: npm run indexer -- --config <file.json> [--sync|--redecode|--project|--sync-project]\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint.\n');
+    process.stdout.write('Usage: npm run indexer -- --config <file.json> [--sync|--redecode|--project|--sync-project|--worker]\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint.\n');
     return 0;
   }
   let pool: pg.Pool | undefined;
   try {
-    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project'].includes(args[2]!))) || args[0] !== '--config' || !args[1]) throw new IndexerError('INVALID_ARGUMENT', 'Use --config <file.json> [--sync|--redecode|--project|--sync-project] (or --help).');
+    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project', '--worker'].includes(args[2]!))) || args[0] !== '--config' || !args[1]) throw new IndexerError('INVALID_ARGUMENT', 'Use --config <file.json> [--sync|--redecode|--project|--sync-project|--worker] (or --help).');
     const config = await loadConfig(args[1]);
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) throw new IndexerError('INVALID_CONFIG', 'Set DATABASE_URL to the intended migrated PostgreSQL database.');
     pool = new pg.Pool({ connectionString, max: 1, connectionTimeoutMillis: 10_000 });
+    if (args[2] === '--worker') {
+      const controller = new AbortController();
+      const stop = () => controller.abort();
+      process.once('SIGINT', stop); process.once('SIGTERM', stop);
+      try { await worker(config, pool, controller.signal, value => process.stdout.write(JSON.stringify(value) + '\n')); }
+      finally { process.removeListener('SIGINT', stop); process.removeListener('SIGTERM', stop); }
+      return 0;
+    }
     if (args[2] === '--project') {
       const report = await project(config,new HttpRpc(config.rpcUrl),pool);
       process.stdout.write(JSON.stringify({ type: 'projection_result', ...report }) + '\n');

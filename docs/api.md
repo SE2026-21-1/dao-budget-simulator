@@ -421,3 +421,21 @@ Health trả 200 `ok`/`degraded` khi database và publication sẵn sàng, 503 k
 database/publication chưa phục vụ được. Response tách tình trạng DB, raw
 indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head; lag
 theo giây chưa quan sát được là null. Health không gọi RPC.
+
+
+## 8. BE07 — recovery và freshness của API runtime
+
+[BE07](be07.md) bổ sung migration 005 và heartbeat canonical cho API. Enum
+`sync.status` và error code BE05 giữ nguyên. Runtime thêm `recoveryStatus`
+(unverified/ready/recovering/replaying/rebuild_required), `lastRpcCheckAt` và
+`publicationBlock`. `lagSeconds` là chuỗi số tuổi quan sát theo wall clock,
+null khi chưa có quan sát; `lagBlocks` so confirmed với publication đang phục vụ.
+Quá 30000 ms chưa xác minh canonical, kể cả chain không có event, trạng thái là
+lagging và health degraded. Cache snapshot/cursor dùng trạng thái hiện tại.
+
+Recovering/replaying/rebuild_required chặn publication: health 503 với
+`data.recoveryStatus`, endpoint dữ liệu 503 DATA_NOT_READY, cursor cũ 409
+SNAPSHOT_INVALIDATED. Revision đổi ngay khi xác nhận mismatch, trước khi xóa
+suffix. Chỉ publication BE04 đã đối chiếu lại tại H/hash mới mở gate.
+Các giới hạn BE05 về lagSeconds=null/không ghi lần kiểm tra RPC trong các mục
+trước chỉ mô tả nền BE05; runtime có migration 005 dùng semantics BE07 này.

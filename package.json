@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
@@ -23,7 +25,11 @@
     "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json",
     "test:be06": "tsx --test tests/indexer/be06.test.ts",
     "test:be06:db": "node --import tsx --test tests/indexer/be06-db.test.mjs",
-    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs"
+    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs",
+    "test:be07": "node --import tsx --test tests/indexer/be07.test.ts",
+    "test:be07:db": "node --import tsx --test tests/indexer/be07-db.test.mjs",
+    "test:be07:live": "node --import tsx scripts/check_be04_live.mjs",
+    "test:be07:native": "node scripts/check_be07_native.mjs"
   },
   "dependencies": {
     "ethers": "6.17.0",

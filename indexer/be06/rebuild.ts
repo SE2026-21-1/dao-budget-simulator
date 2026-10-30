@@ -230,7 +230,7 @@ export async function readChainMetadata(config: LoadedManifest['config'], rpc: R
 async function applyMigrations(pool: Pool): Promise<void> {
   const client = await pool.connect();
   try {
-    for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql']) {
+    for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql', '005_be07.sql']) {
       const sql = await readFile(new URL(`../../database/migrations/${migration}`, import.meta.url), 'utf8');
       await client.query(sql);
     }

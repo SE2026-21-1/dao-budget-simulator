@@ -1,0 +1,193 @@
+diff --git a/frontend/src/pages/CreateProposalPage.tsx b/frontend/src/pages/CreateProposalPage.tsx
+index d8c78b5..41ceebf 100644
+--- a/frontend/src/pages/CreateProposalPage.tsx
++++ b/frontend/src/pages/CreateProposalPage.tsx
+@@ -1,6 +1,6 @@
+-import { useEffect, useState, type FormEvent } from "react";
++import { useEffect, useRef, useState, type FormEvent } from "react";
+ import { Link } from "react-router";
+-import { type Address } from "viem";
++import { type Address, type Hash } from "viem";
+ import { deployment } from "../chain/config";
+ import { useWallet } from "../chain/wallet";
+ import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
+@@ -17,7 +17,8 @@ function CreateProposalPage() {
+   const [recipient, setRecipient] = useState("");
+   const [amount, setAmount] = useState("");
+   const [requestId] = useState(newRequestId);
+-  const [submittedId, setSubmittedId] = useState<string | null>(null);
++  const confirmedRequests = useRef(new Map<string, { hash: Hash; proposalId: string | null }>());
++  const [confirmedView, setConfirmedView] = useState<{ draftKey: string; hash: Hash; proposalId: string | null } | null>(null);
+   const [formError, setFormError] = useState<string | null>(null);
+   const [loadAttempt, setLoadAttempt] = useState(0);
+   const summary = loadedSummary?.attempt === loadAttempt ? loadedSummary.summary ?? null : null;
+@@ -35,12 +36,21 @@ function CreateProposalPage() {
+ 
+   const validation = validateProposalForm(title, body, recipient, amount, deployment?.treasury);
+   const ready = Boolean(summary?.context.dataKind === "chain" && deployment && wallet.account && wallet.chainId === deployment.chainId);
++  const draftKey = JSON.stringify([
++    wallet.account?.toLowerCase(), wallet.chainId, deployment?.chainId, deployment?.deploymentId,
++    deployment?.governor.toLowerCase(), deployment?.treasury.toLowerCase(),
++    title, body, recipient, amount, requestId,
++  ]);
++  const currentConfirmation = confirmedView?.draftKey === draftKey ? confirmedView : null;
+ 
+   const submit = async (event: FormEvent) => {
+-    event.preventDefault(); setFormError(null); setSubmittedId(null);
++    event.preventDefault(); setFormError(null);
+     try {
+-      assertWritable(wallet.account, wallet.chainId, summary?.context);
+       if (validation) throw new Error(validation);
++      if (!wallet.account || !deployment) {
++        assertWritable(wallet.account, wallet.chainId, summary?.context);
++        return;
++      }
+       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
+       const requestKey = JSON.stringify([
+         wallet.account!.toLowerCase(), wallet.chainId, deployment!.chainId, deployment!.deploymentId,
+@@ -48,13 +58,24 @@ function CreateProposalPage() {
+         payload.targets.map((target) => target.toLowerCase()), payload.values.map(String),
+         payload.calldatas.map((data) => data.toLowerCase()), payload.description,
+       ]);
++      const confirmed = confirmedRequests.current.get(requestKey);
++      if (confirmed) {
++        setConfirmedView({ draftKey, ...confirmed });
++        return;
++      }
++      assertWritable(wallet.account, wallet.chainId, summary?.context);
++      setConfirmedView(null);
+       await transaction.run(
+         async () => {
+           await assertCanPropose(wallet.account!);
+           return sendGovernor(wallet.account!, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
+         },
+         (receipt) => {
+-          setSubmittedId(proposalIdFromReceipt(receipt.logs));
++          let proposalId: string | null = null;
++          try { proposalId = proposalIdFromReceipt(receipt.logs); } catch { /* The receipt remains successful when its ID cannot be decoded. */ }
++          const confirmation = { hash: receipt.transactionHash, proposalId };
++          confirmedRequests.current.set(requestKey, confirmation);
++          setConfirmedView({ draftKey, ...confirmation });
+           setLoadAttempt((value) => value + 1);
+         },
+         requestKey,
+@@ -81,9 +102,10 @@ function CreateProposalPage() {
+       {validation && (title || body || recipient || amount) && <p className="wallet-error" role="status">{validation}</p>}
+       <div className="proposal-review"><h3>Kiểm tra trước khi ký</h3><p>Người nhận: <code>{recipient || "—"}</code></p><p>Số tiền: {amount || "—"} BUD</p><p>Request ID: <code>{requestId}</code></p><p>Native value: 0 ETH</p></div>
+       {formError && <p className="wallet-error" role="alert">{formError}</p>}
+-      {submittedId && <p role="status">Proposal ID: <Link to={`/proposals/${submittedId}`}>{submittedId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
+-      <TransactionStatus {...transaction} />
+-      <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || submittedId !== null}>Tạo đề xuất</button>
++      {currentConfirmation?.proposalId && <p role="status">Proposal ID: <Link to={`/proposals/${currentConfirmation.proposalId}`}>{currentConfirmation.proposalId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
++      {currentConfirmation && !currentConfirmation.proposalId && <p role="status">Giao dịch đã xác nhận, nhưng chưa đọc được Proposal ID. Đối chiếu Tx: <code>{currentConfirmation.hash}</code>. Tải dữ liệu mới nhất để xem kết quả khi API cập nhật.</p>}
++      {(currentConfirmation || transaction.phase !== "success") && <TransactionStatus phase={currentConfirmation ? "success" : transaction.phase} hash={currentConfirmation?.hash ?? transaction.hash} error={currentConfirmation ? null : transaction.error} />}
++      <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || currentConfirmation !== null}>Tạo đề xuất</button>
+     </form>
+   </div>;
+ }
+diff --git a/frontend/src/pages/CreateProposalPage.vt062.test.tsx b/frontend/src/pages/CreateProposalPage.vt062.test.tsx
+index 63f9838..ec7a9de 100644
+--- a/frontend/src/pages/CreateProposalPage.vt062.test.tsx
++++ b/frontend/src/pages/CreateProposalPage.vt062.test.tsx
+@@ -122,6 +122,11 @@ function submitButton() {
+   return container.querySelector('button[type="submit"]') as HTMLButtonElement;
+ }
+ 
++function submitFormDirectly() {
++  const form = container.querySelector("form") as HTMLFormElement;
++  form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
++}
++
+ describe("VT-062 proposal retry through the product form", () => {
+   it("retries receipt tracking for H1 through the enabled form without sending a second transaction", async () => {
+     const receipt = {
+@@ -205,6 +210,9 @@ describe("VT-062 proposal retry through the product form", () => {
+     await act(async () => { submitButton().click(); });
+     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+     expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
++    await act(async () => { submitFormDirectly(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
+   });
+ 
+   it("does not attach a changed payload or wallet account to the unresolved hash", async () => {
+@@ -325,5 +333,79 @@ describe("VT-062 proposal retry through the product form", () => {
+     expect(uiHarness.buildProposal.mock.calls.every((args) =>
+       JSON.stringify(args.slice(0, 5)) === JSON.stringify(expectedDraft))).toBe(true);
+     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    await act(async () => { submitFormDirectly(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++  });
++
++  it("keeps H1 confirmed when decoding and summary refresh fail, including a direct form submit", async () => {
++    uiHarness.loadSummary.mockReset()
++      .mockResolvedValueOnce({ context })
++      .mockRejectedValueOnce(new Error("summary refresh timeout"))
++      .mockRejectedValueOnce(new Error("manual refresh timeout"));
++    uiHarness.assertWritable.mockImplementation((_account: unknown, _chainId: unknown, value: unknown) => {
++      if (!value) throw new Error("Dữ liệu API không sẵn sàng để gửi giao dịch.");
++    });
++    uiHarness.proposalIdFromReceipt.mockImplementation(() => { throw new Error("cannot decode ProposalCreated"); });
++    uiHarness.waitForReceipt.mockResolvedValue({ transactionHash: uiHarness.hash, status: "success", logs: [] } as unknown as TransactionReceipt);
++
++    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); await Promise.resolve(); });
++    await act(async () => {
++      setFieldValue("proposal-title", "VT-062 decode error");
++      setFieldValue("proposal-body", "The receipt is successful even if result decoding fails.");
++      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
++      setFieldValue("proposal-amount", "1");
++    });
++    await act(async () => { submitButton().click(); });
++
++    expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
++    expect(container.textContent).toContain("chưa đọc được Proposal ID");
++    expect(container.textContent).toContain(uiHarness.hash);
++    expect(container.textContent).toContain("summary refresh timeout");
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    await act(async () => {
++      (Array.from(container.querySelectorAll('button[type="button"]')) as HTMLButtonElement[])
++        .find((button) => button.textContent?.includes("Tải dữ liệu mới nhất"))?.click();
++    });
++    expect(container.textContent).toContain("manual refresh timeout");
++    expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
++    await act(async () => { submitFormDirectly(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
++    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
++    expect(container.textContent).not.toContain("Dữ liệu API không sẵn sàng để gửi giao dịch.");
++    expect(uiHarness.newRequestId).toHaveBeenCalledTimes(1);
++  });
++
++  it("allows a different payload after H1 succeeded without reusing H1", async () => {
++    const h2 = ("0x" + "33".repeat(32)) as Hash;
++    uiHarness.buildProposal.mockImplementation((...args: unknown[]) => ({
++      targets: [uiHarness.treasury], values: [0n],
++      calldatas: [args[3] === "1" ? "0x1234" : "0x5678"],
++      description: "same description",
++    }));
++    uiHarness.sendGovernor.mockResolvedValueOnce(uiHarness.hash).mockResolvedValueOnce(h2);
++    uiHarness.waitForReceipt.mockImplementation(async (hash: Hash) =>
++      ({ transactionHash: hash, status: "success", logs: [] }) as unknown as TransactionReceipt);
++    uiHarness.proposalIdFromReceipt.mockReturnValueOnce("42").mockReturnValueOnce("43");
++
++    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); await Promise.resolve(); });
++    await act(async () => {
++      setFieldValue("proposal-title", "VT-062 distinct payload");
++      setFieldValue("proposal-body", "A changed amount creates a distinct proposal payload.");
++      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
++      setFieldValue("proposal-amount", "1");
++    });
++    await act(async () => { submitButton().click(); });
++    expect(container.textContent).toContain("Proposal ID: 42");
++    expect(submitButton().disabled).toBe(true);
++
++    await act(async () => { setFieldValue("proposal-amount", "2"); });
++    expect(submitButton().disabled).toBe(false);
++    await act(async () => { submitButton().click(); });
++    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(2);
++    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarness.hash);
++    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, h2);
++    expect(container.textContent).toContain("Proposal ID: 43");
++    expect(container.textContent).toContain(h2);
++    expect(uiHarness.newRequestId).toHaveBeenCalledTimes(1);
+   });
+ });

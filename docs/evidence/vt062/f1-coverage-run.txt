@@ -1,0 +1,35 @@
+COMMAND: npm run test --prefix frontend -- --coverage --coverage.provider=v8 --coverage.include=src/chain/transactions.ts --coverage.include=src/chain/useTransaction.ts --coverage.include=src/pages/CreateProposalPage.tsx --coverage.reporter=text --coverage.reporter=json --coverage.reporter=json-summary --coverage.reportsDirectory=../docs/evidence/vt062/f1-coverage
+
+> frontend@0.0.0 test
+> vitest run --coverage --coverage.provider=v8 --coverage.include=src/chain/transactions.ts --coverage.include=src/chain/useTransaction.ts --coverage.include=src/pages/CreateProposalPage.tsx --coverage.reporter=text --coverage.reporter=json --coverage.reporter=json-summary --coverage.reportsDirectory=../docs/evidence/vt062/f1-coverage
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Coverage enabled with v8
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  05:59:18
+   Duration  801ms (transform 262ms, setup 0ms, import 899ms, tests 204ms, environment 205ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   72.64 |    57.14 |   77.14 |   75.82 |                   
+ chain             |   62.65 |     48.4 |   52.94 |   65.87 |                   
+  transactions.ts  |   48.24 |     37.5 |   46.66 |   51.13 | ...91-104,150-190 
+  ...ransaction.ts |     100 |    96.55 |     100 |     100 | 32                
+ pages             |   96.92 |       80 |     100 |   98.21 |                   
+  ...posalPage.tsx |   96.92 |       80 |     100 |   98.21 | 79                
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 72.64% ( 162/223 )
+Branches     : 57.14% ( 124/217 )
+Functions    : 77.14% ( 27/35 )
+Lines        : 75.82% ( 138/182 )
+================================================================================
+
+EXIT_CODE=0

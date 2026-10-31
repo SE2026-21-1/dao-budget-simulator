@@ -1,0 +1,510 @@
+RUN=1 SEED=62301 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62301
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62301
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62301"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:11
+   Duration  643ms (transform 80ms, setup 0ms, import 253ms, tests 117ms, environment 173ms)
+
+
+EXIT_CODE=0
+RUN=2 SEED=62302 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62302
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62302
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62302"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:12
+   Duration  631ms (transform 72ms, setup 0ms, import 244ms, tests 120ms, environment 171ms)
+
+
+EXIT_CODE=0
+RUN=3 SEED=62303 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62303
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62303
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62303"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:13
+   Duration  678ms (transform 80ms, setup 0ms, import 253ms, tests 123ms, environment 191ms)
+
+
+EXIT_CODE=0
+RUN=4 SEED=62304 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62304
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62304
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62304"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:14
+   Duration  630ms (transform 70ms, setup 0ms, import 237ms, tests 120ms, environment 170ms)
+
+
+EXIT_CODE=0
+RUN=5 SEED=62305 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62305
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62305
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62305"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:15
+   Duration  653ms (transform 75ms, setup 0ms, import 260ms, tests 132ms, environment 167ms)
+
+
+EXIT_CODE=0
+RUN=6 SEED=62306 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62306
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62306
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62306"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:16
+   Duration  661ms (transform 77ms, setup 0ms, import 256ms, tests 126ms, environment 179ms)
+
+
+EXIT_CODE=0
+RUN=7 SEED=62307 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62307
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62307
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62307"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:18
+   Duration  642ms (transform 70ms, setup 0ms, import 241ms, tests 119ms, environment 177ms)
+
+
+EXIT_CODE=0
+RUN=8 SEED=62308 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62308
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62308
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62308"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:19
+   Duration  623ms (transform 71ms, setup 0ms, import 244ms, tests 120ms, environment 166ms)
+
+
+EXIT_CODE=0
+RUN=9 SEED=62309 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62309
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62309
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62309"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:20
+   Duration  715ms (transform 79ms, setup 0ms, import 280ms, tests 120ms, environment 198ms)
+
+
+EXIT_CODE=0
+RUN=10 SEED=62310 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62310
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62310
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62310"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:21
+   Duration  641ms (transform 72ms, setup 0ms, import 249ms, tests 124ms, environment 176ms)
+
+
+EXIT_CODE=0
+RUN=11 SEED=62311 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62311
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62311
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62311"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:22
+   Duration  653ms (transform 72ms, setup 0ms, import 250ms, tests 132ms, environment 174ms)
+
+
+EXIT_CODE=0
+RUN=12 SEED=62312 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62312
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62312
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62312"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:23
+   Duration  672ms (transform 76ms, setup 0ms, import 262ms, tests 127ms, environment 180ms)
+
+
+EXIT_CODE=0
+RUN=13 SEED=62313 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62313
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62313
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62313"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:24
+   Duration  659ms (transform 81ms, setup 0ms, import 260ms, tests 119ms, environment 178ms)
+
+
+EXIT_CODE=0
+RUN=14 SEED=62314 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62314
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62314
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62314"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:25
+   Duration  664ms (transform 77ms, setup 0ms, import 268ms, tests 130ms, environment 171ms)
+
+
+EXIT_CODE=0
+RUN=15 SEED=62315 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62315
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62315
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62315"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:26
+   Duration  645ms (transform 69ms, setup 0ms, import 244ms, tests 131ms, environment 174ms)
+
+
+EXIT_CODE=0
+RUN=16 SEED=62316 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62316
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62316
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62316"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:27
+   Duration  634ms (transform 74ms, setup 0ms, import 250ms, tests 115ms, environment 177ms)
+
+
+EXIT_CODE=0
+RUN=17 SEED=62317 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62317
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62317
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62317"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:28
+   Duration  647ms (transform 72ms, setup 0ms, import 245ms, tests 123ms, environment 172ms)
+
+
+EXIT_CODE=0
+RUN=18 SEED=62318 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62318
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62318
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62318"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:29
+   Duration  657ms (transform 73ms, setup 0ms, import 250ms, tests 126ms, environment 178ms)
+
+
+EXIT_CODE=0
+RUN=19 SEED=62319 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62319
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62319
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62319"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:30
+   Duration  683ms (transform 74ms, setup 0ms, import 258ms, tests 143ms, environment 180ms)
+
+
+EXIT_CODE=0
+RUN=20 SEED=62320 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62320
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62320
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62320"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:31
+   Duration  641ms (transform 72ms, setup 0ms, import 240ms, tests 120ms, environment 172ms)
+
+
+EXIT_CODE=0
+RUN=21 SEED=62321 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62321
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62321
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62321"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:32
+   Duration  647ms (transform 73ms, setup 0ms, import 246ms, tests 120ms, environment 174ms)
+
+
+EXIT_CODE=0
+RUN=22 SEED=62322 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62322
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62322
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62322"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:33
+   Duration  648ms (transform 75ms, setup 0ms, import 249ms, tests 127ms, environment 174ms)
+
+
+EXIT_CODE=0
+RUN=23 SEED=62323 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62323
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62323
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62323"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:34
+   Duration  658ms (transform 72ms, setup 0ms, import 252ms, tests 118ms, environment 184ms)
+
+
+EXIT_CODE=0
+RUN=24 SEED=62324 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62324
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62324
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62324"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:35
+   Duration  693ms (transform 77ms, setup 0ms, import 261ms, tests 142ms, environment 178ms)
+
+
+EXIT_CODE=0
+RUN=25 SEED=62325 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62325
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62325
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62325"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:36
+   Duration  681ms (transform 77ms, setup 0ms, import 260ms, tests 125ms, environment 191ms)
+
+
+EXIT_CODE=0
+RUN=26 SEED=62326 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62326
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62326
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62326"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:37
+   Duration  638ms (transform 71ms, setup 0ms, import 244ms, tests 117ms, environment 176ms)
+
+
+EXIT_CODE=0
+RUN=27 SEED=62327 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62327
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62327
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62327"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:38
+   Duration  686ms (transform 112ms, setup 0ms, import 293ms, tests 117ms, environment 171ms)
+
+
+EXIT_CODE=0
+RUN=28 SEED=62328 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62328
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62328
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62328"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:39
+   Duration  639ms (transform 72ms, setup 0ms, import 243ms, tests 120ms, environment 177ms)
+
+
+EXIT_CODE=0
+RUN=29 SEED=62329 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62329
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62329
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62329"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:40
+   Duration  689ms (transform 79ms, setup 0ms, import 286ms, tests 133ms, environment 173ms)
+
+
+EXIT_CODE=0
+RUN=30 SEED=62330 COMMAND=npm run test --prefix frontend -- src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62330
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx --sequence.shuffle --sequence.seed=62330
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62330"
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  06:01:42
+   Duration  744ms (transform 100ms, setup 0ms, import 301ms, tests 127ms, environment 222ms)
+
+
+EXIT_CODE=0

@@ -1,0 +1,35 @@
+COMMAND: npm run test --prefix frontend -- --coverage --coverage.provider=v8 --coverage.include=src/chain/transactions.ts --coverage.include=src/chain/useTransaction.ts --coverage.include=src/pages/CreateProposalPage.tsx --coverage.reporter=text --coverage.reporter=json --coverage.reporter=json-summary --coverage.reportsDirectory=../docs/evidence/vt062/f1-coverage-final
+
+> frontend@0.0.0 test
+> vitest run --coverage --coverage.provider=v8 --coverage.include=src/chain/transactions.ts --coverage.include=src/chain/useTransaction.ts --coverage.include=src/pages/CreateProposalPage.tsx --coverage.reporter=text --coverage.reporter=json --coverage.reporter=json-summary --coverage.reportsDirectory=../docs/evidence/vt062/f1-coverage-final
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Coverage enabled with v8
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:01:04
+   Duration  995ms (transform 455ms, setup 0ms, import 1.23s, tests 240ms, environment 294ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   72.12 |    57.46 |   77.14 |   75.13 |                   
+ chain             |   62.65 |     48.4 |   52.94 |   65.87 |                   
+  transactions.ts  |   48.24 |     37.5 |   46.66 |   51.13 | ...91-104,150-190 
+  ...ransaction.ts |     100 |    96.55 |     100 |     100 | 32                
+ pages             |   94.11 |    79.68 |     100 |   94.91 |                   
+  ...posalPage.tsx |   94.11 |    79.68 |     100 |   94.91 | 51-52,83          
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 72.12% ( 163/226 )
+Branches     : 57.46% ( 127/221 )
+Functions    : 77.14% ( 27/35 )
+Lines        : 75.13% ( 139/185 )
+================================================================================
+
+EXIT_CODE=0

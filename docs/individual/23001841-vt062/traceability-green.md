@@ -34,3 +34,18 @@ Tải 60 task, p95, mutation khác, E2E ví/chain và PDF vẫn chưa thực hi�
 ## Bổ sung F1 test-first RED (2026-10-31)
 
 Finding F1 trong `evaluation-review.md` trước đây chỉ là suy luận source. `CreateProposalPage.vt062.test.tsx:270–328` nay tái hiện có kiểm soát: send → H1, receipt `success`, decoder boundary trả null, UI vẫn hiển thị success/H1 và giữ draft/requestId; lần click tiếp theo gọi sendGovernor lần hai. Oracle expected 1, actual 2 tại `:327`. `f1-red-ui-all-final.txt`: 2 pass/1 fail; `f1-red-frontend-suite-final.txt`: 30 pass/1 fail. Nguồn chi tiết và giới hạn của fault injection: `docs/evidence/vt062/f1-red-review.md`. Chưa có patch production hoặc GREEN cho F1.
+
+## Bổ sung F1 GREEN sau khi sinh viên xác nhận nguyên nhân RED
+
+Đoạn F1 RED trên là lịch sử trước patch; assertion chống gửi trùng vẫn ở test, nay dòng `:335` do các case bổ sung. Source commit `0d0a5f697f3ccc1a76333177f34508f721e8a2b4` và `f1-green-code-tests.diff` là patch thực.
+
+| Requirement/risk F1 | Oracle trên source cuối | Source/evidence |
+|---|---|---|
+| Receipt H1 success, decoder null | F1 test giữ expected `sendGovernor` 1 sau cùng draft/requestId; UI thấy success/H1, không có Proposal ID | `CreateProposalPage.tsx:73–79,105–108`; `f1-green-final-original-two.txt` |
+| Guard trong handler | Submit event trực tiếp khi nút disabled không làm tăng send/wait; áp dụng cả đường có ID và không ID | `CreateProposalPage.tsx:61–65`; `CreateProposalPage.vt062.test.tsx:210–215,335–337` |
+| Decoder throw và refresh lỗi | UI vẫn thấy success/H1, submit trực tiếp không gửi lại, lỗi API không bị gắn thành lỗi transaction | `CreateProposalPage.vt062.test.tsx:340–375`; `f1-green-final-suite.txt` |
+| Identity khác | Payload/calldata khác sau H1 success được gửi giao dịch H2 và nhận ID 43; unresolved H1 với account/payload khác vẫn bị chặn theo test cũ | `CreateProposalPage.vt062.test.tsx:378–410,217–275`; `f1-green-final-suite.txt` |
+| Regression timeout/terminal/caller khác | 33/33 frontend pass, hook/transactions production không đổi | `f1-green-final-suite.txt`, `f1-green-source-identity.txt` |
+| Coverage và flakiness trên source F1 | Trang line/branch 94.91/79.68%; UI 30/30 lượt và shuffle suite 6/6 lượt không fail | `f1-coverage-final-run.txt`, `f1-flaky-ui-30-final-*`, `f1-flaky-suite-6-final-*` |
+
+Mutation API good/mutant/restored là evidence trước F1 trên mapper/API không đổi; xem `f1-green-review.md`. Tải 60 task, ví/chain E2E và PDF chưa làm. Sinh viên chưa review/chấp thuận patch.

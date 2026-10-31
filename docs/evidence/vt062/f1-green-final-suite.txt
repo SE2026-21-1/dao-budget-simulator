@@ -1,0 +1,16 @@
+COMMAND: npm run test --prefix frontend
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:54
+   Duration  686ms (transform 304ms, setup 0ms, import 875ms, tests 176ms, environment 206ms)
+
+
+EXIT_CODE=0

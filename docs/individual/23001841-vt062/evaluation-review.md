@@ -20,3 +20,7 @@ Phạm vi source được đọc: production diff `ae8c353..8a4cb64`, hai test R
 ## Giới hạn review
 
 Không có ví extension, RPC chain thật hoặc testnet. UI tests mock API/wallet/transaction; test API dùng PostgreSQL 18.4 và HTTP loopback thật. Kết luận về byte identity và mapper dựa trên source + test; chưa chứng minh khôi phục sau reload hoặc đa thiết bị. Không dùng mutation ở indexer để khẳng định frontend đã chống giao dịch trùng.
+
+## Cập nhật F1 sau test-first RED và patch (2026-10-31 UTC)
+
+Đoạn finding phía trên là nhận định lịch sử tại lúc review diff; F1 sau đó được tái hiện bằng test-only commit `198fd22` và RED evidence `9e5458f`. Sinh viên đã xác nhận assertion fail send count expected 1, actual 2, rồi yêu cầu patch. Commit `0d0a5f6` sửa riêng trang proposal: map confirmation theo requestKey, chặn submit trong handler sau receipt success kể cả decoder trả null, hiển thị H1 và thông báo ID chưa đọc được. `f1-green-review.md` ghi diff, log 33/33 pass, coverage và flaky checks trên source mới. Đây là kết quả AI thực hiện; sinh viên chưa review/chấp thuận patch. Giới hạn reload/multi-tab và ví/RPC thật vẫn còn.

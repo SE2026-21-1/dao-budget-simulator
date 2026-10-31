@@ -1,0 +1,16 @@
+COMMAND: npm run test --prefix frontend -- src/chain/useTransaction.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  2 passed (2)
+      Tests  13 passed (13)
+   Start at  05:58:57
+   Duration  638ms (transform 87ms, setup 0ms, import 292ms, tests 131ms, environment 176ms)
+
+
+EXIT_CODE=0

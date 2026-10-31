@@ -1,0 +1,11 @@
+BASELINE_F1_RED=9e5458f81d13402f4c5120299c54dbc3e59f23c0
+PATCH_COMMIT=0d0a5f697f3ccc1a76333177f34508f721e8a2b4
+BRANCH=individual/23001841-vt062-idempotent-retry
+NODE=v24.15.0
+NPM=11.12.1
+SOURCE_SHA256:
+121365f2fccb44af4df14dc08a7e16708a337c1ae83e1534d81aaad9dce9ff13  frontend/src/pages/CreateProposalPage.tsx
+c600630e2da48664d3757cced0ac164cdeed12e927efb7c45a04a8f7189973df  frontend/src/pages/CreateProposalPage.vt062.test.tsx
+4cb742fd8f10a08af84c9b5b678541d26070b9e52350b22ebd8213de970d258d  frontend/src/chain/useTransaction.ts
+5aed140355fb5f5cb427c90c7a174575c8f7e58759fe989878eff59abbf79f7e  frontend/src/chain/transactions.ts
+7513723c854f2bfb022aaa6870e6c2dfc465add57e45816eb51d91bb609deaf6  indexer/api/server.ts

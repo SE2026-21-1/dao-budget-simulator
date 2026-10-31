@@ -1,0 +1,102 @@
+RUN=1 SEED=62201 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62201 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62201 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62201"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:10
+   Duration  1.44s (transform 163ms, setup 0ms, import 634ms, tests 165ms, environment 173ms)
+
+
+EXIT_CODE=0
+RUN=2 SEED=62202 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62202 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62202 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62202"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:12
+   Duration  1.47s (transform 172ms, setup 0ms, import 650ms, tests 174ms, environment 179ms)
+
+
+EXIT_CODE=0
+RUN=3 SEED=62203 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62203 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62203 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62203"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:14
+   Duration  1.48s (transform 166ms, setup 0ms, import 671ms, tests 165ms, environment 178ms)
+
+
+EXIT_CODE=0
+RUN=4 SEED=62204 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62204 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62204 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62204"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:16
+   Duration  1.50s (transform 152ms, setup 0ms, import 639ms, tests 185ms, environment 175ms)
+
+
+EXIT_CODE=0
+RUN=5 SEED=62205 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62205 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62205 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62205"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:17
+   Duration  1.48s (transform 156ms, setup 0ms, import 648ms, tests 163ms, environment 173ms)
+
+
+EXIT_CODE=0
+RUN=6 SEED=62206 COMMAND=npm run test --prefix frontend -- --sequence.shuffle --sequence.seed=62206 --no-file-parallelism
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62206 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62206"
+
+
+ Test Files  5 passed (5)
+      Tests  33 passed (33)
+   Start at  06:00:19
+   Duration  1.53s (transform 167ms, setup 0ms, import 677ms, tests 172ms, environment 178ms)
+
+
+EXIT_CODE=0

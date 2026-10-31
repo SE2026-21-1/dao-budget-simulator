@@ -1,0 +1,450 @@
+RUN=1 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:43
+   Duration  633ms (transform 185ms, setup 0ms, import 554ms, tests 94ms, environment 194ms)
+
+EXIT_CODE=0
+RUN=2 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:44
+   Duration  565ms (transform 132ms, setup 0ms, import 492ms, tests 83ms, environment 186ms)
+
+EXIT_CODE=0
+RUN=3 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:45
+   Duration  605ms (transform 177ms, setup 0ms, import 527ms, tests 94ms, environment 200ms)
+
+EXIT_CODE=0
+RUN=4 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:46
+   Duration  622ms (transform 166ms, setup 0ms, import 534ms, tests 90ms, environment 201ms)
+
+EXIT_CODE=0
+RUN=5 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:47
+   Duration  633ms (transform 182ms, setup 0ms, import 564ms, tests 86ms, environment 203ms)
+
+EXIT_CODE=0
+RUN=6 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:48
+   Duration  629ms (transform 196ms, setup 0ms, import 550ms, tests 100ms, environment 218ms)
+
+EXIT_CODE=0
+RUN=7 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:49
+   Duration  725ms (transform 179ms, setup 0ms, import 618ms, tests 126ms, environment 196ms)
+
+EXIT_CODE=0
+RUN=8 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:50
+   Duration  788ms (transform 171ms, setup 0ms, import 684ms, tests 109ms, environment 212ms)
+
+EXIT_CODE=0
+RUN=9 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:51
+   Duration  798ms (transform 238ms, setup 0ms, import 718ms, tests 107ms, environment 278ms)
+
+EXIT_CODE=0
+RUN=10 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:53
+   Duration  740ms (transform 245ms, setup 0ms, import 680ms, tests 101ms, environment 274ms)
+
+EXIT_CODE=0
+RUN=11 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:54
+   Duration  728ms (transform 195ms, setup 0ms, import 629ms, tests 101ms, environment 246ms)
+
+EXIT_CODE=0
+RUN=12 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:55
+   Duration  734ms (transform 187ms, setup 0ms, import 610ms, tests 132ms, environment 207ms)
+
+EXIT_CODE=0
+RUN=13 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:56
+   Duration  741ms (transform 251ms, setup 0ms, import 654ms, tests 109ms, environment 252ms)
+
+EXIT_CODE=0
+RUN=14 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:57
+   Duration  669ms (transform 146ms, setup 0ms, import 571ms, tests 94ms, environment 225ms)
+
+EXIT_CODE=0
+RUN=15 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:33:58
+   Duration  796ms (transform 230ms, setup 0ms, import 703ms, tests 142ms, environment 236ms)
+
+EXIT_CODE=0
+RUN=16 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:00
+   Duration  712ms (transform 210ms, setup 0ms, import 617ms, tests 112ms, environment 232ms)
+
+EXIT_CODE=0
+RUN=17 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:01
+   Duration  642ms (transform 162ms, setup 0ms, import 541ms, tests 96ms, environment 207ms)
+
+EXIT_CODE=0
+RUN=18 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:02
+   Duration  648ms (transform 179ms, setup 0ms, import 549ms, tests 105ms, environment 198ms)
+
+EXIT_CODE=0
+RUN=19 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:03
+   Duration  852ms (transform 255ms, setup 0ms, import 773ms, tests 128ms, environment 286ms)
+
+EXIT_CODE=0
+RUN=20 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:04
+   Duration  608ms (transform 174ms, setup 0ms, import 538ms, tests 87ms, environment 198ms)
+
+EXIT_CODE=0
+RUN=21 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:05
+   Duration  599ms (transform 175ms, setup 0ms, import 526ms, tests 100ms, environment 189ms)
+
+EXIT_CODE=0
+RUN=22 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:06
+   Duration  590ms (transform 173ms, setup 0ms, import 520ms, tests 88ms, environment 192ms)
+
+EXIT_CODE=0
+RUN=23 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:07
+   Duration  565ms (transform 165ms, setup 0ms, import 499ms, tests 82ms, environment 178ms)
+
+EXIT_CODE=0
+RUN=24 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:08
+   Duration  561ms (transform 167ms, setup 0ms, import 498ms, tests 85ms, environment 178ms)
+
+EXIT_CODE=0
+RUN=25 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:09
+   Duration  608ms (transform 133ms, setup 0ms, import 498ms, tests 88ms, environment 183ms)
+
+EXIT_CODE=0
+RUN=26 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:10
+   Duration  601ms (transform 163ms, setup 0ms, import 522ms, tests 89ms, environment 178ms)
+
+EXIT_CODE=0
+RUN=27 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:11
+   Duration  554ms (transform 138ms, setup 0ms, import 484ms, tests 88ms, environment 174ms)
+
+EXIT_CODE=0
+RUN=28 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:12
+   Duration  664ms (transform 183ms, setup 0ms, import 599ms, tests 102ms, environment 200ms)
+
+EXIT_CODE=0
+RUN=29 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:13
+   Duration  691ms (transform 194ms, setup 0ms, import 607ms, tests 105ms, environment 215ms)
+
+EXIT_CODE=0
+RUN=30 SEED=none
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts src/chain/waitForReceipt.vt062.test.ts src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  16 passed (16)
+   Start at  05:34:14
+   Duration  568ms (transform 170ms, setup 0ms, import 493ms, tests 85ms, environment 181ms)
+
+EXIT_CODE=0

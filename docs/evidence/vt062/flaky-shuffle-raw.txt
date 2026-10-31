@@ -1,0 +1,96 @@
+RUN=1 SEED=62031
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62031 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62031"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:37
+   Duration  1.37s (transform 157ms, setup 0ms, import 617ms, tests 110ms, environment 167ms)
+
+EXIT_CODE=0
+RUN=2 SEED=62032
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62032 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62032"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:39
+   Duration  1.36s (transform 148ms, setup 0ms, import 617ms, tests 121ms, environment 169ms)
+
+EXIT_CODE=0
+RUN=3 SEED=62033
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62033 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62033"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:41
+   Duration  1.39s (transform 157ms, setup 0ms, import 640ms, tests 111ms, environment 168ms)
+
+EXIT_CODE=0
+RUN=4 SEED=62034
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62034 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62034"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:42
+   Duration  1.44s (transform 150ms, setup 0ms, import 665ms, tests 117ms, environment 171ms)
+
+EXIT_CODE=0
+RUN=5 SEED=62035
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62035 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62035"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:44
+   Duration  1.39s (transform 153ms, setup 0ms, import 646ms, tests 114ms, environment 171ms)
+
+EXIT_CODE=0
+RUN=6 SEED=62036
+
+> frontend@0.0.0 test
+> vitest run --sequence.shuffle --sequence.seed=62036 --no-file-parallelism
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+      Running tests with seed "62036"
+
+
+ Test Files  5 passed (5)
+      Tests  30 passed (30)
+   Start at  05:32:46
+   Duration  1.40s (transform 151ms, setup 0ms, import 628ms, tests 116ms, environment 175ms)
+
+EXIT_CODE=0

@@ -1,0 +1,45 @@
+FILE=src/chain/useTransaction.vt062.test.ts
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  05:32:55
+   Duration  168ms (transform 43ms, setup 0ms, import 57ms, tests 7ms, environment 0ms)
+
+EXIT_CODE=0
+FILE=src/chain/waitForReceipt.vt062.test.ts
+
+> frontend@0.0.0 test
+> vitest run src/chain/waitForReceipt.vt062.test.ts
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  05:32:56
+   Duration  292ms (transform 55ms, setup 0ms, import 191ms, tests 6ms, environment 0ms)
+
+EXIT_CODE=0
+FILE=src/pages/CreateProposalPage.vt062.test.tsx
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  05:32:57
+   Duration  564ms (transform 65ms, setup 0ms, import 229ms, tests 72ms, environment 167ms)
+
+EXIT_CODE=0

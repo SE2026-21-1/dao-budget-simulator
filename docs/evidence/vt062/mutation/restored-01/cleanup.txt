@@ -1,0 +1,2 @@
+cluster_stopped=true
+cluster_removed=true

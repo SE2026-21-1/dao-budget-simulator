@@ -1,0 +1,33 @@
+✖ VT-062 API response maps requestId from request_id in a fresh published PostgreSQL snapshot (108.970806ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 451.516699
+
+✖ failing tests:
+
+test at tests/api/vt062-request-id.test.mjs:120:1
+✖ VT-062 API response maps requestId from request_id in a fresh published PostgreSQL snapshot (108.970806ms)
+  AssertionError [ERR_ASSERTION]: list requestId must come from fixture request_id
+  + actual - expected
+  
+  + '54612022350460919842760889079100287211258693419720423745560677417927857660082'
+  - '0xabababababababababababababababababababababababababababababababab'
+  
+      at TestContext.<anonymous> (file:///tmp/dao-budget-vt062-mutant-20261031/tests/api/vt062-request-id.test.mjs:131:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '54612022350460919842760889079100287211258693419720423745560677417927857660082',
+    expected: '0xabababababababababababababababababababababababababababababababab',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+EXIT_CODE=1

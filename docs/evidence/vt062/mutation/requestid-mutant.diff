@@ -1,0 +1,13 @@
+diff --git a/indexer/api/server.ts b/indexer/api/server.ts
+index 29f019d..d543e33 100644
+--- a/indexer/api/server.ts
++++ b/indexer/api/server.ts
+@@ -378,7 +378,7 @@ async function materialize(client: PoolClient, scopeState: ScopeState, ttlSecond
+       throw new ApiError(503, 'DATA_NOT_READY', 'Operation projection thiếu trạng thái hợp lệ.', { proposalId: String(row.proposal_id) }, true, context);
+     const operation = row.operation_id === null ? null : { operationId: String(row.operation_id), queuedAt: String(row.queued_at), eta: String(row.eta),
+       status: String(row.operation_status), predecessor: String(row.predecessor), salt: String(row.salt) };
+-    const payload: Json = { proposalId: String(row.proposal_id), requestId: String(row.request_id), proposer: String(row.proposer),
++    const payload: Json = { proposalId: String(row.proposal_id), requestId: String(row.proposal_id), proposer: String(row.proposer),
+       recipient: String(row.recipient), amount: String(row.amount), description: row.description, descriptionHash: String(row.description_hash),
+       ...display, targets: (row.targets as string[]).map((x) => x.toLowerCase()), values: (row.native_values as string[]).map(String),
+       calldatas: (row.calldatas as string[]).map((x) => x.toLowerCase()), snapshot: String(row.snapshot), deadline: String(row.deadline),

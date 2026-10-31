@@ -1,0 +1,27 @@
+✔ mixed import retains both valid neighbors and exact values (74.480602ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (9.854316ms)
+✔ seeded generated batches persist exactly their valid records (709.837136ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (22.676314ms)
+✔ persistence failure cannot be returned as success (4.969981ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (7.950164ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (1673.301276ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3348.52062
+ℹ start of coverage report
+ℹ ------------------------------------------------------------
+ℹ file        | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------
+ℹ indexer     |        |          |         | 
+ℹ  import     |        |          |         | 
+ℹ   cli.ts    |  90.91 |    75.00 |  100.00 | 8-10
+ℹ   drafts.ts | 100.00 |   100.00 |   90.91 | 
+ℹ ------------------------------------------------------------
+ℹ all files   |  97.71 |    96.36 |   92.31 | 
+ℹ ------------------------------------------------------------
+ℹ end of coverage report

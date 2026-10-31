@@ -1,0 +1,92 @@
+COMMAND: python3 scripts/summarize_vt062_load.py --input docs/evidence/vt062/load
+{
+  "measured_samples": 36000,
+  "results": {
+    "DUPLICATE": {
+      "samples": 18000,
+      "outcomes": {
+        "receipt_success": {
+          "count": 300,
+          "p50_ms": 0.089555,
+          "p95_ms": 0.18463,
+          "max_ms": 0.609894
+        },
+        "blocked_inflight": {
+          "count": 17700,
+          "p50_ms": 0.036675,
+          "p95_ms": 0.096189,
+          "max_ms": 0.399151
+        },
+        "cached_result": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "unexpected_null": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "wrong_receipt": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "error": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        }
+      },
+      "error_count": 0
+    },
+    "DISTINCT": {
+      "samples": 18000,
+      "outcomes": {
+        "receipt_success": {
+          "count": 18000,
+          "p50_ms": 0.09758,
+          "p95_ms": 0.262156,
+          "max_ms": 0.484102
+        },
+        "blocked_inflight": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "cached_result": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "unexpected_null": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "wrong_receipt": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        },
+        "error": {
+          "count": 0,
+          "p50_ms": null,
+          "p95_ms": null,
+          "max_ms": null
+        }
+      },
+      "error_count": 0
+    }
+  }
+}
+
+EXIT_CODE=0

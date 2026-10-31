@@ -1,0 +1,373 @@
+{
+  "source_head_during_runs": "d7ecc1cd40d88753a511459fedaf1a0db322f542",
+  "source_sha256": {
+    "hook": "4cb742fd8f10a08af84c9b5b678541d26070b9e52350b22ebd8213de970d258d",
+    "page": "121365f2fccb44af4df14dc08a7e16708a337c1ae83e1534d81aaad9dce9ff13"
+  },
+  "raw_sha256": {
+    "1": "a85df481fa182438c1bac224ac1c31a89213d948eae1de5c6898883cde248962",
+    "2": "86ea8aea2190e5ee0828e766cccd71f08e6692fca5b6e3887f49f12148f81b29",
+    "3": "acaef62732eab512af03b4972824d088ba3fa4289c52c97e0707bb67a5fb98aa"
+  },
+  "runs": 3,
+  "warmup_waves_per_run_workload": 10,
+  "measured_waves_per_run_workload": 100,
+  "tasks_per_wave": 60,
+  "warmup_samples": 3600,
+  "measured_samples": 36000,
+  "latency_boundary": "performance.now() immediately before production useTransaction.run through its Promise settlement; fake receipt released at waiter barrier, no fixed delay",
+  "nearest_rank": "sorted latency[ceil(p*N)-1] with 0-based index; rounded raw CSV values (6 decimal places)",
+  "target_ms": 2000,
+  "results": {
+    "DUPLICATE": {
+      "combined": {
+        "samples": 18000,
+        "outcomes": {
+          "receipt_success": {
+            "count": 300,
+            "p50_ms": 0.089555,
+            "p95_ms": 0.18463,
+            "max_ms": 0.609894
+          },
+          "blocked_inflight": {
+            "count": 17700,
+            "p50_ms": 0.036675,
+            "p95_ms": 0.096189,
+            "max_ms": 0.399151
+          },
+          "cached_result": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "unexpected_null": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "wrong_receipt": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "error": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          }
+        },
+        "error_count": 0
+      },
+      "by_run": {
+        "1": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 100,
+              "p50_ms": 0.103695,
+              "p95_ms": 0.18463,
+              "max_ms": 0.448126
+            },
+            "blocked_inflight": {
+              "count": 5900,
+              "p50_ms": 0.037224,
+              "p95_ms": 0.100714,
+              "max_ms": 0.270872
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        },
+        "2": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 100,
+              "p50_ms": 0.086854,
+              "p95_ms": 0.174087,
+              "max_ms": 0.320051
+            },
+            "blocked_inflight": {
+              "count": 5900,
+              "p50_ms": 0.035529,
+              "p95_ms": 0.075767,
+              "max_ms": 0.234924
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        },
+        "3": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 100,
+              "p50_ms": 0.089555,
+              "p95_ms": 0.214916,
+              "max_ms": 0.609894
+            },
+            "blocked_inflight": {
+              "count": 5900,
+              "p50_ms": 0.037493,
+              "p95_ms": 0.105352,
+              "max_ms": 0.399151
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        }
+      },
+      "send_count": 300,
+      "peak_logical_inflight": 60,
+      "peak_receipt_waiters": 1
+    },
+    "DISTINCT": {
+      "combined": {
+        "samples": 18000,
+        "outcomes": {
+          "receipt_success": {
+            "count": 18000,
+            "p50_ms": 0.09758,
+            "p95_ms": 0.262156,
+            "max_ms": 0.484102
+          },
+          "blocked_inflight": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "cached_result": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "unexpected_null": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "wrong_receipt": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          },
+          "error": {
+            "count": 0,
+            "p50_ms": null,
+            "p95_ms": null,
+            "max_ms": null
+          }
+        },
+        "error_count": 0
+      },
+      "by_run": {
+        "1": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 6000,
+              "p50_ms": 0.101988,
+              "p95_ms": 0.274879,
+              "max_ms": 0.415979
+            },
+            "blocked_inflight": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        },
+        "2": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 6000,
+              "p50_ms": 0.100178,
+              "p95_ms": 0.232717,
+              "max_ms": 0.414022
+            },
+            "blocked_inflight": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        },
+        "3": {
+          "samples": 6000,
+          "outcomes": {
+            "receipt_success": {
+              "count": 6000,
+              "p50_ms": 0.091306,
+              "p95_ms": 0.274817,
+              "max_ms": 0.484102
+            },
+            "blocked_inflight": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "cached_result": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "unexpected_null": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "wrong_receipt": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            },
+            "error": {
+              "count": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "max_ms": null
+            }
+          },
+          "error_count": 0
+        }
+      },
+      "send_count": 18000,
+      "peak_logical_inflight": 60,
+      "peak_receipt_waiters": 60
+    }
+  }
+}

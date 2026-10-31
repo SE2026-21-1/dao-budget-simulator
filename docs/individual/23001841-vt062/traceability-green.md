@@ -49,3 +49,7 @@ Finding F1 trong `evaluation-review.md` trước đây chỉ là suy luận sour
 | Coverage và flakiness trên source F1 | Trang line/branch 94.91/79.68%; UI 30/30 lượt và shuffle suite 6/6 lượt không fail | `f1-coverage-final-run.txt`, `f1-flaky-ui-30-final-*`, `f1-flaky-suite-6-final-*` |
 
 Mutation API good/mutant/restored là evidence trước F1 trên mapper/API không đổi; xem `f1-green-review.md`. Tải 60 task, ví/chain E2E và PDF chưa làm. Sinh viên chưa review/chấp thuận patch.
+
+## Bổ sung thí nghiệm tải và đóng gói (sau F1)
+
+Đoạn cuối mục trước là trạng thái lịch sử sau F1. Trên đúng source hook/page F1 (SHA ở `docs/evidence/vt062/load-runbook.md`), harness mới `frontend/scripts/vt062-load.load.tsx` kiểm T13. Ba process, 10 warm-up +100 measured waves/workload/process, 60 task/wave: 36.000 measured samples, raw CSV và nearest-rank ở `docs/evidence/vt062/load/`. DUPLICATE 300 receipt success đầu wave +17.700 `blocked_inflight`, fake send 300, p95 riêng 0,184630/0,096189 ms, peak logical/waiter 60/1. DISTINCT 18.000 receipt success đúng hash, fake send 18.000, p95 0,262156 ms, peak 60/60; error 0. Đây là hook production + React với fake send/receipt, không đo F1 handler hoặc SLA hệ thống. Báo cáo MD/PDF và README ở thư mục này; sinh viên chưa review/chấp thuận patch.

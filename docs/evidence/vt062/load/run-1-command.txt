@@ -1,0 +1,17 @@
+ENV: VT062_LOAD_RUN=1 VT062_LOAD_WARMUP=10 VT062_LOAD_WAVES=100 VT062_LOAD_OUTPUT=../docs/evidence/vt062/load
+COMMAND: npm run test --prefix frontend -- --config vitest.load.config.ts
+
+> frontend@0.0.0 test
+> vitest run --config vitest.load.config.ts
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  06:27:02
+   Duration  592ms (transform 47ms, setup 0ms, import 85ms, tests 204ms, environment 191ms)
+
+
+EXIT_CODE=0

@@ -30,3 +30,7 @@ T10 API response-field mapping/mutation và tải 60 task chưa thuộc lượt 
 | Risk coverage ba module production | V8 line/branch: hook 100/96.55, trang 93.18/63.63, transactions 51.13/37.50 | `coverage-run.txt`, `coverage/coverage-summary.json`; indexer API không nằm trong phép đo này. |
 
 Tải 60 task, p95, mutation khác, E2E ví/chain và PDF vẫn chưa thực hiện.
+
+## Bổ sung F1 test-first RED (2026-10-31)
+
+Finding F1 trong `evaluation-review.md` trước đây chỉ là suy luận source. `CreateProposalPage.vt062.test.tsx:270–328` nay tái hiện có kiểm soát: send → H1, receipt `success`, decoder boundary trả null, UI vẫn hiển thị success/H1 và giữ draft/requestId; lần click tiếp theo gọi sendGovernor lần hai. Oracle expected 1, actual 2 tại `:327`. `f1-red-ui-all-final.txt`: 2 pass/1 fail; `f1-red-frontend-suite-final.txt`: 30 pass/1 fail. Nguồn chi tiết và giới hạn của fault injection: `docs/evidence/vt062/f1-red-review.md`. Chưa có patch production hoặc GREEN cho F1.

@@ -1,0 +1,32 @@
+
+> frontend@0.0.0 test
+> vitest run src/pages/CreateProposalPage.vt062.test.tsx
+
+
+ RUN  v4.1.12 /home/cuongdz/projects/dao-budget-vt062-individual/frontend
+
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx (3 tests | 1 failed) 84ms
+     × does not submit the same draft again when H1 succeeded but no Proposal ID was read 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/CreateProposalPage.vt062.test.tsx > VT-062 proposal retry through the product form > does not submit the same draft again when H1 succeeded but no Proposal ID was read
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/pages/CreateProposalPage.vt062.test.tsx:327:36
+    325|     expect(uiHarness.buildProposal.mock.calls.every((args) =>
+    326|       JSON.stringify(args.slice(0, 5)) === JSON.stringify(expectedDraf…
+    327|     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+       |                                    ^
+    328|   });
+    329| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  05:48:29
+   Duration  577ms (transform 64ms, setup 0ms, import 235ms, tests 84ms, environment 159ms)
+
+
+EXIT_CODE=1

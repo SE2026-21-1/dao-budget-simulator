@@ -1,0 +1,16 @@
+## individual/23001841-vt062-idempotent-retry
+ M frontend/src/pages/CreateProposalPage.vt062.test.tsx
+?? docs/evidence/vt062/f1-precommit-status.txt
+?? docs/evidence/vt062/f1-production-diff.txt
+?? docs/evidence/vt062/f1-red-build-final.txt
+?? docs/evidence/vt062/f1-red-build-initial.txt
+?? docs/evidence/vt062/f1-red-frontend-suite-final.txt
+?? docs/evidence/vt062/f1-red-frontend-suite-initial.txt
+?? docs/evidence/vt062/f1-red-lint-final.txt
+?? docs/evidence/vt062/f1-red-lint-initial.txt
+?? docs/evidence/vt062/f1-red-page-final.txt
+?? docs/evidence/vt062/f1-red-page-initial.txt
+?? docs/evidence/vt062/f1-red-ui-all-final.txt
+?? docs/evidence/vt062/f1-red-ui-all-initial.txt
+?? docs/evidence/vt062/f1-source-sha256.txt
+?? docs/evidence/vt062/f1-test-only.diff

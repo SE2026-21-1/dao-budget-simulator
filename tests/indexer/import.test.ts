@@ -10,6 +10,48 @@ import { ImportFailure, importDrafts, saveDraft, type Draft, type ImportedDraft 
 const exec = promisify(execFile);
 const recipient = `0x${'1'.repeat(40)}`;
 const draft = (id: string, amount = '1000000000000000000') => ({ id, recipient, amount, description: `Spend ${id}` });
+
+// T13: valid-row membership is unchanged by invalid-row insertion or reversal.
+// Oracle comes from generation labels, not the production validator.
+test('property: invalid insertion and order preserve the exact valid draft set', async (t) => {
+  const dir = await temporary(t);
+  let state = 0x06401850;
+  const next = () => { state = Math.imul(state, 1664525) + 1013904223 | 0; return state >>> 0; };
+  for (let sample = 0; sample < 16; sample++) {
+    const good = Array.from({ length: 1 + next() % 8 }, (_, i) =>
+      draft(`s${sample}_${i}`, [ '1', ((1n << 256n) - 1n).toString(), String(1 + next()) ][next() % 3]!));
+    const mixed: unknown[] = [null];
+    for (const row of good) mixed.push(row, { ...row, amount: '01' });
+    mixed.push({ ...draft('bad'), recipient: 'broken' });
+    const expected = [...good].sort((a, b) => a.id.localeCompare(b.id));
+    for (const [label, rows] of [['forward', mixed], ['reverse', [...mixed].reverse()]] as const) {
+      const out = join(dir, `${sample}-${label}`);
+      const report = await importDrafts(rows, out);
+      const actual = await Promise.all((await readdir(out)).sort().map(async (name) =>
+        JSON.parse(await readFile(join(out, name), 'utf8')) as Draft));
+      actual.sort((a, b) => a.id.localeCompare(b.id));
+      assert.deepEqual(actual, expected, `seed=0x06401850 sample=${sample} order=${label}`);
+      assert.equal(report.rejected.length, good.length + 2);
+      assert.deepEqual(report.imported.map(({ index, id }) => ({ index, id })),
+        rows.flatMap((row, index) => good.includes(row as Draft) ? [{ index, id: (row as Draft).id }] : []));
+    }
+  }
+});
+
+// T14: a focused validation unit test injects a recording store (no disk oracle).
+test('property: canonical fields reject generated line terminator suffixes', async () => {
+  const rows: Draft[] = [];
+  for (const suffix of ['\n', '\r', '\r\n', '\u2028', '\u2029'])
+    for (const field of ['id', 'recipient', 'amount'] as const)
+      rows.push({ ...draft(`bad${rows.length}`), [field]: draft('safe')[field] + suffix });
+  const saved: Draft[] = [];
+  // All rows must fail validation before mkdir or save is invoked.
+  const result = await importDrafts(rows, '/unused-vt064-invalid-only', async (_, row) => { saved.push(row); });
+  assert.deepEqual(saved, []);
+  assert.deepEqual(result.imported, []);
+  assert.deepEqual(result.rejected, rows.map((_, index) => ({ index,
+    reason: ['INVALID_ID', 'INVALID_RECIPIENT', 'INVALID_AMOUNT'][index % 3] })));
+});
 async function temporary(t: { after: (fn: () => Promise<void>) => void }): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), 'vt064-'));
   t.after(() => rm(dir, { recursive: true, force: true }));

@@ -266,4 +266,64 @@ describe("VT-062 proposal retry through the product form", () => {
     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
     expect(container.textContent).toContain("Proposal ID: 42");
   });
+
+  it("does not submit the same draft again when H1 succeeded but no Proposal ID was read", async () => {
+    const receipt = { transactionHash: uiHarness.hash, status: "success", logs: [] } as unknown as TransactionReceipt;
+    const firstReceiptWait = deferred<TransactionReceipt>();
+    const firstWaitStarted = deferred<void>();
+    const resultRead = deferred<void>();
+    uiHarness.waitForReceipt
+      .mockImplementationOnce(() => {
+        firstWaitStarted.resolve(undefined);
+        return firstReceiptWait.promise;
+      })
+      .mockResolvedValue(receipt);
+    uiHarness.proposalIdFromReceipt.mockImplementation(() => {
+      resultRead.resolve(undefined);
+      return null;
+    });
+
+    await act(async () => {
+      root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>);
+      await Promise.resolve();
+    });
+    await act(async () => {
+      setFieldValue("proposal-title", "VT-062 same draft");
+      setFieldValue("proposal-body", "Receipt confirmed, but the Proposal ID is unavailable.");
+      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
+      setFieldValue("proposal-amount", "1");
+    });
+    await act(async () => {
+      submitButton().click();
+      await firstWaitStarted.promise;
+    });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledWith(uiHarness.hash);
+
+    await act(async () => {
+      firstReceiptWait.resolve(receipt);
+      await resultRead.promise;
+    });
+    expect(uiHarness.proposalIdFromReceipt).toHaveBeenCalledWith(receipt.logs);
+    expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
+    expect(container.textContent).toContain(uiHarness.hash);
+    expect(container.textContent).not.toContain("Proposal ID:");
+    expect(container.textContent).not.toContain("Giao dịch bị revert.");
+    expect((container.querySelector("#proposal-title") as HTMLInputElement).value).toBe("VT-062 same draft");
+    expect((container.querySelector("#proposal-body") as HTMLTextAreaElement).value).toBe("Receipt confirmed, but the Proposal ID is unavailable.");
+    expect((container.querySelector("#proposal-recipient") as HTMLInputElement).value).toBe("0xcccccccccccccccccccccccccccccccccccccccc");
+    expect((container.querySelector("#proposal-amount") as HTMLInputElement).value).toBe("1");
+    expect(container.textContent).toContain(uiHarness.requestId);
+    expect(uiHarness.newRequestId).toHaveBeenCalledTimes(1);
+
+    await act(async () => { submitButton().click(); });
+    const expectedDraft = [
+      "VT-062 same draft", "Receipt confirmed, but the Proposal ID is unavailable.",
+      "0xcccccccccccccccccccccccccccccccccccccccc", "1", uiHarness.requestId,
+    ];
+    expect(uiHarness.buildProposal).toHaveBeenCalled();
+    expect(uiHarness.buildProposal.mock.calls.every((args) =>
+      JSON.stringify(args.slice(0, 5)) === JSON.stringify(expectedDraft))).toBe(true);
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+  });
 });

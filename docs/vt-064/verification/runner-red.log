@@ -1,0 +1,28 @@
+$ npm run test:vt064
+
+> dao-budget-simulator@0.0.0 test:vt064
+> tsx --test tests/indexer/import.test.ts
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+node:net:2368
+      const error = new UVExceptionWithHostPort(rval, 'listen', address, port);
+                    ^
+
+Error: listen EPERM: operation not permitted /tmp/tsx-0/49.pipe
+    at Server.setupListenHandle [as _listen2] (node:net:2368:21)
+    at listenInCluster (node:net:2499:12)
+    at Server.listen (node:net:2641:5)
+    at file:///workspace/scratch/c774f6c3c1cf/repo/node_modules/tsx/dist/cli.mjs:53:32174
+    at new Promise (<anonymous>)
+    at createIpcServer (file:///workspace/scratch/c774f6c3c1cf/repo/node_modules/tsx/dist/cli.mjs:53:32152)
+    at async file:///workspace/scratch/c774f6c3c1cf/repo/node_modules/tsx/dist/cli.mjs:55:542 {
+  code: 'EPERM',
+  errno: -1,
+  syscall: 'listen',
+  address: '/tmp/tsx-0/49.pipe',
+  port: -1
+}
+
+Node.js v24.22.1
+
+exit=1

@@ -1,63 +1,111 @@
-# BT cá nhân 3 — BC-03 — VT-064
+# BT cá nhân 3 - BC-03 - VT-064
 
-**Phan Thanh Dũng — 23001850. Nhóm SE2026-T16; vai trò thành viên.** Repository: https://github.com/SE2026-21-1/dao-budget-simulator. Baseline: `1bb182144d516c13d6bb32fc30d2778af71a8169`. Branch: https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt-064-bulk-import. Cam kết: “Tôi chịu trách nhiệm về toàn bộ code, test và nội dung bài làm; tôi đã khai báo việc sử dụng AI.”
+**Phan Thanh Dũng - 23001850 | SE2026-T16 | Thành viên**
 
-## 1. Spec → AI plan → review
+Dự án: DAO Budget Simulator. Repository: https://github.com/SE2026-21-1/dao-budget-simulator
 
-Vấn đề: cần import hàng loạt **bản nháp** yêu cầu chi BUD, giữ bản ghi đúng dù đầu vào lẫn bản ghi sai. Scope thực hiện là CLI + thư mục lưu bản nháp offline; **không** import proposal on-chain, không mở API ghi, không được xem dữ liệu nhập là sự kiện canonical. `docs/vt-064/spec.md` ghi prompt/plan trước khi viết code. Invariant: mọi ID trong `imported` phải có file tồn tại nguyên vẹn cùng dữ liệu, và một dòng sai không được xóa/ghi đè dòng đúng.
+Baseline chức năng: `1bb182144d516c13d6bb32fc30d2778af71a8169`. Bản có sẵn được kiểm lại: `cdc8740c5b1123d612962ffad467657bd4f8444b`. Nhánh bàn giao: https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt-064-submission
 
-AC1: Nhận file JSON <=1 MiB, 1–1000 dòng; mỗi dòng có ID an toàn, địa chỉ EVM lower-case, amount canonical uint256 dương theo đơn vị nhỏ nhất và description khác rỗng; trả chỉ số lỗi. AC2: Dòng sai ở đầu/giữa/cuối không chặn các dòng đúng; giữ giá trị chính xác. AC3: Ghi atomically từng file, duplicate không ghi đè. AC4: Hỏng persistence phải exit 1, không có stdout success; nêu chỉ số lỗi và ID đã commit. AC5: Không đụng chain read model, API GET, checkpoint, ví. NFR: 80 tác vụ đồng thời, p95 <=2,5 giây tại workstation; input bounded, no network/secret và báo lỗi có thể tái lập.
+Cam kết: “Tôi chịu trách nhiệm về toàn bộ code, test và nội dung bài làm; tôi đã khai báo việc sử dụng AI.” Đây là bản dự thảo có AI hỗ trợ, người nộp cần tự kiểm tra code, reflection và cam kết trước khi nộp Classroom. Chưa merge hoặc có review của nhóm.
 
-Hai phương án AI có vẻ hợp lý nhưng bị bác bỏ: POST `/api/import` chèn thẳng `proposals` trái kiến trúc chain-derived (`database/migrations/001_initial.sql:102–120`, `indexer/storage.ts:38–61` và API GET-only `indexer/api/server.ts:1–10`); giao dịch SQL all-or-nothing sao chép từ checkpoint (`indexer/storage.ts:270–289`) làm một dòng sai phá AC2. Kế hoạch sau review: `indexer/import/drafts.ts` có validate + file save độc lập; `indexer/import/cli.ts` xuất report/exit; `tests/indexer/import.test.ts` test trước; benchmark script + README. Context chỉ module liên quan cho hai reviewer agent; assistant chính vốn đã có repo instructions/progress, không thể tuyên bố mọi lần tương tác AI đều chỉ có module context. Rủi ro thiếu context: nếu chỉ nhìn bảng `proposals`, AI có thể hiểu nhầm đó là kho draft cho phép ghi; review repository cho thấy nó được projection từ chain.
+## 1. Specification và phạm vi vertical slice
 
-## 2. Strategy và test cases
+Problem statement: người vận hành cần nhập nhiều bản nháp yêu cầu chi BUD từ JSON. Một dòng sai không được làm mất dòng đúng; báo cáo kết quả phải phản ánh dữ liệu đã lưu thật. Slice chạy được là CLI và kho file bản nháp offline. Dữ liệu này chưa phải proposal được Governor xác nhận, không phải sự kiện chain và không được ghi trực tiếp vào read model PostgreSQL.
 
-Unit/property: seed `0x23001850`, 40 batch dài 1–24, xen kẽ ID không an toàn, amount sai, address sai và amount biên 1/10^18/(2^256−1); oracle so **tập ID và nội dung file thật** với tập valid đã tạo, không chỉ check độ dài. Integration dùng temp filesystem thật để thử duplicate/race/mkdir fail/giữa batch; CLI E2E khởi chạy Node process thật kiểm exit/stdout/stderr/file. Không cần wallet E2E hay POST API test vì slice không đổi chain/UI/API; cần chúng khi nối draft vào giao dịch thật.
+| Mã | Acceptance criterion kiểm thử được |
+|---|---|
+| AC1 | File JSON tối đa 1 MiB, mảng 1-1000 dòng. ID khớp `[a-z0-9][a-z0-9_-]{0,63}`, recipient EVM lower-case 20 byte, amount là chuỗi canonical uint256 dương theo base units, description không trắng và dài tối đa 1024 ký tự. Trả index và lý do của từng dòng bị từ chối. |
+| AC2 | Dòng không hợp lệ ở đầu, giữa hoặc cuối được bỏ qua độc lập; mọi dòng hợp lệ không trùng ID trước/sau nó được lưu nguyên dữ liệu. Mảng rỗng bị từ chối; mảng toàn sai có imported rỗng. |
+| AC3 | Mỗi file được công bố atomically, trùng ID không ghi đè. Hai task cùng ID chỉ có một winner; dữ liệu file phải khớp report của winner. |
+| AC4 | Lỗi persistence trả exit 1 và PERSISTENCE_FAILED trên stderr, không stdout success; báo đúng index lỗi và các dòng đã commit. Dòng trước lỗi còn nguyên; lỗi hạ tầng dừng phần chưa ghi. |
+| AC5 | Không thay chain read model, checkpoint, API đọc hoặc giao dịch ví. Bộ hồi quy BE07 cũ vẫn pass. |
 
-| ID | Risk / AC | Level | Input / precondition | Expected | P |
+Invariant quan trọng nhất: mỗi phần tử `{index,id}` trong imported tương ứng file đã công bố với đúng recipient, amount, description; rejected không được xóa hoặc ghi đè dữ liệu hợp lệ. “Giữ dòng đúng” áp dụng cho lỗi dữ liệu; khi ổ đĩa hỏng thì không thể hứa lưu các dòng chưa thực hiện.
+
+NFR1: kiểm chứng 80 tác vụ đồng thời, p95 không quá 2,5 giây; báo workload và giới hạn thay vì suy rộng thành SLA. NFR2: giới hạn đầu vào, lỗi có thể tái lập, không dùng RPC/secret cho slice. NFR3: duplicate/race không overwrite; destination do người vận hành tin cậy cung cấp. Sync file + hardlink đảm bảo publish nguyên vẹn ở filesystem hỗ trợ; chưa cam kết phục hồi sau mất điện vì chưa fsync thư mục.
+
+## 2. AI-assisted plan và review bằng repository
+
+Kế hoạch gốc được lưu trong `docs/vt-064/spec.md`: tạo drafts.ts, cli.ts, import.test.ts, npm scripts, benchmark và tài liệu. Baseline cùng patch gốc `b61cec8`/`69ca712` có trên GitHub. Spec và code nằm cùng commit gốc, nên lịch sử commit đơn độc không chứng minh thứ tự soạn; red.log là evidence bổ sung, không phải bằng chứng tuyệt đối.
+
+Lần kiểm lại này gọi coding agent với context chỉ gồm kiểu Draft, biểu thức validate, contract import/save, giới hạn CLI và hai đường dẫn module, không truyền lịch sử hội thoại. Prompt và output trước sửa được ghi ở `verification/plan.md`; commit test/plan GitHub `aca614da8c4842eadecd87434ddc98f9f41813ec`. Agent đề nghị kiểm tra canonical strings, property test, lỗi lưu và tái dùng dependency/harness. Các quyết định review cụ thể:
+
+| Đề xuất | Evidence và quyết định |
+|---|---|
+| Sửa regex vì `$` có thể nhận newline cuối chuỗi | Probe Node 24.22.1 trả false cho amount `1\n` và ID `a\n`; T14 kiểm 15 tổ hợp suffix/field cũng pass. Bác bỏ patch speculative, giữ validator. |
+| Tái dùng thư viện property testing có sẵn | package.json/lock không có fast-check; import.test.ts đã có seeded generator. Sửa plan: mở rộng generator và metamorphic property, không thêm dependency, không tuyên bố shrinking. |
+| Dùng tsx CLI như scripts hiện hữu | `verification/runner-red.log` ghi EPERM khi tsx tạo IPC. Đổi riêng hai import scripts sang `node --import tsx`; `runner-green.log` pass. Patch GitHub `969acb370f1a10ebd1f75728afa6d91b035a453d`. |
+| Mở POST và dùng transaction như storage | API chỉ GET tại server.ts:685-686; storage.ts:274-286 transaction cho canonical chain batch. Giữ import độc lập offline, không chèn proposal giả hoặc rollback toàn bộ do một dòng người dùng sai. |
+
+Rủi ro context thiếu: AI chỉ nhìn module không biết draft khác proposal được ký và có thể đề xuất ghi tắt vào bảng chain. Reviewer đối chiếu repository để giữ ranh giới này. Assistant điều phối đã có hướng dẫn repository và bối cảnh hệ thống; chỉ lần lập plan cô lập nói trên được xác nhận là module-only, không tuyên bố mọi tương tác AI đều chỉ có module context.
+
+## 3. Risk-based test strategy và thiết kế dữ liệu
+
+Risk trọng tâm VT-064 là thay đổi nhỏ phá behavior cũ không liên quan: hạn chế production diff vào module import và npm scripts, chạy BE07 như canary. Unit T14 dùng save spy để kiểm validation không chạm lưu trữ. Integration dùng filesystem thật và fault injection T08; CLI E2E chạy process Node thật, kiểm exit/stdout/stderr/file. Chưa cần wallet/browser E2E hoặc POST API test trong slice này; chúng cần khi nối draft vào luồng proposal thật. Không dùng DB giả để tuyên bố DB integration đã pass.
+
+| ID | Risk / AC | Level | Precondition / input | Expected result | P |
 |---|---|---|---|---|---|
-| T01 | AC1/2 | integration | good–bad(0)–null–good | hai file đúng, lỗi index 1/2 | 0 |
-| T02 | AC1/path | unit | `../`, address sai, 0/01/overflow | từ chối, không thoát thư mục | 0 |
-| T03 | AC2 | property | 40 batch seed cố định | tập file bằng tập valid, byte/data khớp | 0 |
-| T04 | AC2 | integration | toàn invalid, mảng rỗng | 0 file hoặc reject input | 1 |
-| T05 | AC3 | integration | trùng ID, amount khác | file cũ không đổi, ID mới được ghi | 0 |
-| T06 | AC3 | integration | hai task cùng ID | một thắng, một conflict | 0 |
-| T07 | AC4/mutation | integration | destination là file | ImportFailure, không success giả | 0 |
-| T08 | AC4 | integration | store fail sau file thứ nhất | file đầu còn, ID sau không được tính | 0 |
-| T09 | AC1 | CLI/unit | JSON sai, >1 MiB, `/dev/zero` Linux; >1000 qua function | exit 1/INVALID_INPUT, không file | 1 |
-| T10 | AC1/4 | CLI E2E | good+bad, rồi blocked dir | stdout thành công đúng hoặc stderr fail | 0 |
-| T11 | AC5 | regression | BE07 suite hiện hữu | 15/15 pass, không sửa code cũ | 1 |
-| T12 | NFR | load | 80 task cùng lúc, file thật | 80 hoàn thành, p95 so 2500 ms | 1 |
+| T01 | AC1/2, giữ dòng đúng | Integration | good, amount=0, null, good | Hai file đúng; lỗi index 1,2 | 0 |
+| T02 | AC1, dữ liệu/path sai | Integration | ../, 0, 01, overflow, address/description sai | Từ chối, không tạo file | 0 |
+| T03 | AC2, tổ hợp chưa nghĩ tới | Property/integration | 40 batch seed 0x23001850, dài 1-24 | Tập ID/file và dữ liệu khớp oracle | 0 |
+| T04 | AC1/2 | Integration | Toàn sai, [], 1001 dòng | imported rỗng hoặc INVALID_INPUT | 1 |
+| T05 | AC3, overwrite | Integration | ID đã có, amount khác; thêm ID mới | File cũ nguyên, ID mới được lưu | 0 |
+| T06 | AC3, race/shared state | Integration | Hai task cùng ID, amount 30/40 | Một winner, một duplicate; disk khớp winner | 0 |
+| T07 | AC4, false success | Failure path | Destination là một file | ImportFailure, imported rỗng | 0 |
+| T08 | AC4, mất commit trước lỗi | Integration | Ghi đầu thành công, save thứ hai ném lỗi | Chỉ file đầu tồn tại; report đúng | 0 |
+| T09 | AC1, input bound | CLI/integration | JSON sai, >1 MiB, /dev/zero Linux | Exit 1, INVALID_INPUT | 1 |
+| T10 | AC1/4 | CLI E2E | Mixed batch rồi blocked destination | Exit/report và file khớp, không success giả | 0 |
+| T11 | AC5, regression khác module | Regression | BE07 suite không sửa | 15/15 pass | 0 |
+| T12 | NFR1 | Load harness | 80 task, một file/task, ID riêng | 80 hoàn tất; p95 <=2500 ms | 1 |
+| T13 | AC2, phụ thuộc thứ tự | Property/integration | 16 batch seed 0x06401850; chèn invalid rồi đảo | Hai hướng cùng tập file/dữ liệu hợp lệ | 0 |
+| T14 | AC1, canonical suffix | Unit/property | 5 suffix CR/LF/Unicode x 3 trường | 15 dòng bị từ chối; save không gọi | 1 |
 
-## 3. Fail → patch → pass và mutation
+Property chính: với batch có ID hợp lệ duy nhất, tập persisted bằng tập dòng được gắn nhãn valid khi sinh; chèn dòng invalid và đảo batch không đổi tập persisted. T03 chọn amount 1, 10^18, 2^256-1; negatives chọn 0, leading zero và 2^256. T13 oracle dùng nhãn/identity của generator, không gọi lại production validate. Seed/sample/order được ghi khi assert fail; T14 duyệt tích Descartes hữu hạn. Đây là property-based testing tự triển khai, không có shrinker; chưa chứng minh toàn bộ không gian dữ liệu hay mọi permutation.
 
-Nhánh riêng bắt đầu từ baseline trên. Test được viết trước module: `docs/vt-064/red.log` ghi Node 24.15.0 exit 1 `ERR_MODULE_NOT_FOUND` cho `indexer/import/drafts.js`; đây là thất bại vì chức năng chưa có, **chưa** chứng minh logic chống mất dòng. Sau patch (commit `b61cec8`), `green.log`: 7/7 pass. Review phát hiện thiếu accepted indexes: test bổ sung fail đúng hành vi trong `review-red.log`, rồi commit sửa `69ca712` làm 7/7 pass; `npm run typecheck` và `npm run build` exit 0. BE07 15/15 pass trên patch ban đầu (không sửa BE07 ở patch review). Diff đã review: chỉ tạo `indexer/import/*`, test/script/docs và hai npm scripts; không sửa storage/API/contract. CLI thật được gọi trong T10 và smoke trực tiếp nhập good–bad–good cho ra hai file đúng. Reviewer phải kiểm lại file/commit trước merge.
+## 4. Test-first evidence, diff review và mutation
 
-Mutation tách ở nhánh `experiment/23001850-vt064-false-success`, commit `7bc4ac6`: thay catch mkdir lỗi bằng `imported.push(draft.id); continue`, tức công bố thành công dù không có file. Chạy đúng test T07 trả exit 1 `Missing expected rejection` (`docs/vt-064/mutation.log`); trở về nhánh nộp, 7/7 pass. Không merge mutation. Trường hợp fail sau một write (T08) xác minh file đầu và report partial. Mutation này chỉ chứng minh một lỗi cụ thể bị bắt, không chứng minh tất cả lỗi I/O.
+Fail ban đầu trong red.log là module chưa tồn tại, không phải assertion logic. Để kiểm chứng behavior-level red, checkout b61cec8 trong worktree tách biệt, dùng test đã review: `node --import tsx --test --test-name-pattern="mixed import retains" tests/indexer/import.test.ts`. `verification/red-replay.log`: exit 1 vì actual imported là chuỗi a/b, expected `{index,id}`. Patch 69ca712 thêm index và bảo toàn rejected trong failure report; nguồn hiện tại giữ nguyên patch này. Đây là replay lịch sử, không giả là một lỗi mới được phát hiện trước khi patch gốc ra đời.
 
-## 4. Coverage, flakiness và tải
+Đợt bổ sung: commit test/plan aca614d trước runner patch 969acb3. runner-red ghi lỗi IPC EPERM; sau sửa scripts, `npm run test:vt064` pass 9/9. Phân biệt rõ lỗi hạ tầng runner với behavior red ở trên. Review diff xác nhận chỉ đổi cách nạp tsx cho hai import commands; validator, storage/API/contract cũ không bị sửa trong lần bổ sung. `typecheck.log`, `build.log` exit 0; `regression.log` BE07 15/15 pass.
 
-Node `--experimental-test-coverage` sau review: `drafts.ts` line 100%, branch 100%; `cli.ts` line 90,91%, branch 75%; tổng hai file line 97,71%, branch 96,36% (`coverage.log`). Chưa cover usage sai và một số nhánh I/O khó tái hiện; tỷ lệ không thay thế oracle file và mutation. Flaky (1) timing/hiệu năng: dùng monotonic clock, warm-up 8; benchmark một máy/một lượt không là SLA. (2) race/order/random: T06 chấp nhận bất kỳ winner nhưng buộc report người thắng khớp file; mỗi test temp dir riêng; T03 seed cố định, báo batch phản ví dụ. Không dùng network hay sleep để quyết định đúng/sai.
+Mutation bắt buộc được thực thi lại ở local experiment branch `experiment/23001850-vt064-verify-false-success`, commit `12c53e2f515256da9fa70c15a6428badb7f317b8`: catch mkdir lỗi vẫn thêm `{index,id}` vào imported và continue. T07 fail exit 1, assertion “Missing expected rejection”; nghĩa là suite bắt được success giả. `verification/mutation.patch` và mutation-replay.log được commit vào nhánh nộp để tái lập; commit mutant local không được merge/publish như code nộp. Kiểm tra ancestor trả 1; drafts.ts nhánh nộp giữ throw ImportFailure. Không dựa vào hash mutant 7bc4ac6 trong PDF cũ vì lần này không truy xuất được object đó. Một mutant bị kill không chứng minh toàn bộ lỗi persistence đều được bắt.
 
-`scripts/benchmark_vt064.mjs`: 80 task import đồng thời, mỗi task lưu và đọc lại 1 file với ID riêng trong cùng thư mục. `load.json` sau review: 80/80, 0 lỗi, p95 167,685 ms < 2500 ms trên Linux x64/Node 24.15.0. Đây là tải **in-process local filesystem**, không phải 80 người dùng qua HTTP, PostgreSQL, RPC hay ví; không tuyên bố hệ thống chung đạt NFR này.
+## 5. Coverage, flaky risks và tải
 
-## 5. Traceability và giới hạn bàn giao
+Coverage trên Node v24.22.1/Linux x64 bằng `node --import tsx --experimental-test-coverage --test-coverage-include='indexer/import/*.ts' --test tests/indexer/import.test.ts`: drafts.ts line 100%, branch 100%, functions 90,91%; cli.ts line 90,91%, branch 75%; tổng line 97,71%, branch 96,36%, functions 92,31%. Các dòng usage 8-10 chưa cover; cleanup callback/I/O hiếm chưa được fault-inject đầy đủ. V8 coverage có thể tính nhánh theo cách không phản ánh mọi lỗi filesystem, vì vậy oracle disk, negative paths và mutation quan trọng hơn một tỷ lệ đẹp.
 
-| AC / risk | Cases | Test file / source | Commit | Result |
+Flaky review: (1) race/order: mỗi test có temp dir riêng, T06 không chọn cố định winner; ba lần chạy lại case race đều pass. T13 kiểm hai thứ tự trong thư mục riêng. (2) random: seed cố định, IDs duy nhất, không Date.now; báo sample để tái lập, chưa có shrinking. (3) time/network: slice không gọi mạng/sleep, benchmark dùng monotonic clock và warm-up 8. BE07 có HTTP loopback/timeout thật; lần này pass nhưng timing CI khác vẫn là residual risk, không thay timer để ép xanh.
+
+Benchmark dùng scripts/benchmark_vt064.mjs: 80 tác vụ Promise cùng thư mục, mỗi tác vụ một draft, fsync file, đọc lại và đối chiếu dữ liệu. p95 nearest-rank = mẫu thứ 76/80, tính từ mốc khởi chạy chung nên gồm queueing và read-back; không phải chỉ thời gian write. Ba lượt standalone chạy tuần tự, mỗi lượt temp dir mới:
+
+| Lượt | Hoàn thành / lỗi | p95 (ms) | Mục tiêu | Kết quả |
 |---|---|---|---|---|
-| AC1/validation | T01,T02,T09,T10 | `tests/indexer/import.test.ts` | b61cec8 + 69ca712 | 7/7 PASS |
-| AC2/retention | T01,T03,T04 | `tests/indexer/import.test.ts` | b61cec8 + 69ca712 | PASS |
-| AC3/conflict | T05,T06 | `tests/indexer/import.test.ts` | b61cec8 + 69ca712 | PASS |
-| AC4/false success | T07,T08,T10 | `tests/indexer/import.test.ts` | b61cec8 + 69ca712; mutant 7bc4ac6 | PASS; mutation killed |
-| AC5/old behavior | T11 | `tests/indexer/be07.test.ts` | baseline 1bb1821 | 15/15 PASS |
-| NFR/local load | T12 | `scripts/benchmark_vt064.mjs` | b61cec8 + 69ca712 | 80/80, p95 167,685 ms |
+| 1 | 80/80; 0 | 74,422 | <=2500 ms | Đạt trong harness |
+| 2 | 80/80; 0 | 68,251 | <=2500 ms | Đạt trong harness |
+| 3 | 80/80; 0 | 71,762 | <=2500 ms | Đạt trong harness |
 
-CLI chỉ tạo **draft offline**, không có CRUD/UI/API integration, không có database deployment hoặc E2E wallet; không review/merge thay nhóm. README chạy test ở `docs/vt-064/README.md`. Hai điểm AI code/test cần cảnh giác: (a) bắt mọi lỗi filesystem thành duplicate sẽ báo sai permission (thực tế chỉ `EEXIST` từ `link` mới là duplicate); (b) test chỉ so `imported.length` có thể pass khi không file nào được ghi, nên oracle phải đọc disk + mutation. AI Usage Log là phụ lục riêng.
+Dữ liệu giả lập recipient 0x111...111, amount 1-80, ID task0-task79; có 8 file warm-up. Giới hạn: 80 tác vụ cùng process trên filesystem local, không phải 80 người dùng HTTP, PostgreSQL/RPC/ví hoặc batch 1000 dòng/task. Không suy rộng thành hiệu năng toàn ứng dụng. Log thô và environment ở verification/load-1.json đến load-3.json.
 
-## 6. Reflection (bản nháp cá nhân để người nộp đối chiếu)
+## 6. Traceability, review và reflection
 
-Ban đầu tôi nghĩ import hàng loạt chỉ cần đọc JSON, lọc dòng lỗi rồi lưu phần còn lại. Đọc repository làm nhận định thay đổi: bảng proposals là projection on-chain, không phải nơi ghi bản nháp. API ghi vào đó có thể hiển thị đề xuất chưa được Governor xác nhận. Tôi giới hạn sửa đổi thành import offline; file ấy chưa thể dùng để biểu quyết hoặc giải ngân.
+| AC / risk | Test cases | Test/source file | Commit | Kết quả |
+|---|---|---|---|---|
+| AC1 / validation | T01,02,04,09,10,14 | tests/indexer/import.test.ts | 69ca712 + aca614d | PASS; coverage-green.log |
+| AC2 / giữ valid | T01,03,04,13 | tests/indexer/import.test.ts | b61cec8 + aca614d | Tập file chính xác, 9/9 suite |
+| AC3 / duplicate/race | T05,06 | tests/indexer/import.test.ts | 69ca712 | PASS + 3 lần lặp race |
+| AC4 / persistence | T07,08,10 | tests/indexer/import.test.ts; mutation.patch | 69ca712; mutant local 12c53e2 | PASS sạch; mutant bị kill |
+| AC5 / regression | T11 | tests/indexer/be07.test.ts | baseline 1bb1821 | 15/15 PASS trên nguồn kiểm lại |
+| NFR1 / p95 | T12 | scripts/benchmark_vt064.mjs | 69ca712 | 3 lượt 80/80; p95 <2500 ms |
+| Runner portability | T01-10,13,14 | package.json | 969acb3 | EPERM trước, 9/9 sau |
 
-Confidence tăng nhờ ba quan sát. Trước patch, test không chạy vì module chưa tồn tại; điều này chỉ chứng minh thiếu chức năng. Sau patch, test hỗn hợp xác nhận dòng đúng hai phía dòng sai vẫn có file nguyên vẹn. Bộ sinh dữ liệu seed cố định kiểm vị trí lỗi và amount biên bằng cách đọc file, không chỉ đếm report. Reviewer phát hiện test race chưa gắn người thắng với file, còn CLI đọc đầu vào không giới hạn trước khi kiểm kích thước; tôi sửa và chạy lại. Khi cố ý sửa catch lỗi persistence để báo thành công giả, test failure-path thất bại ở kỳ vọng phải từ chối; bỏ mutation thì suite xanh. Kiểm tra BE07 cũ theo dõi rủi ro hỏng behavior không liên quan, dù chưa là hồi quy toàn dự án.
+Lệnh chạy và replay ở docs/vt-064/README.md; log mới ở verification/, log cũ vẫn giữ để phân biệt lịch sử. Hai output AI chưa đáng tin ngay: đề xuất sửa regex chưa có phản ví dụ, và test chỉ đếm imported có thể pass khi không ghi file nào. Đã bác bỏ patch regex, thêm oracle đọc disk và mutation. Người nộp cần tự review diff/giải thích hardlink, partial report, generator và boundary tests. Nhánh không được merge trước review nhóm.
 
-Tôi chưa chứng minh khôi phục sau mất điện, ghi trên NFS, hoặc tính đúng proposal ký bằng ví thật. Tám mươi tác vụ cùng tiến trình và ổ đĩa chỉ đo slice này, không cam kết p95 cho người dùng HTTP. Test tiếp theo cần nhóm review: chuyển draft thành giao dịch Governor bằng ví extension, chờ indexer xuất bản snapshot, đối chiếu cùng request trên chain và API. Cần xác minh file offline không đi tắt quyền phê duyệt và ghi receipt/revision để tái lập.
+## Reflection - bản nháp cá nhân (cần người nộp đối chiếu)
+
+Ban đầu tôi xem import hàng loạt là đọc JSON rồi lưu từng dòng. Đối chiếu repository cho thấy cần phân biệt bản nháp với proposal đã được chain xác nhận. Vì vậy, tôi chọn slice offline và giữ nguyên API đọc. Quyết định này giảm phạm vi thay đổi nhưng chưa giải quyết việc đưa bản nháp vào luồng ký giao dịch.
+
+Confidence tăng khi bằng chứng kiểm được bằng code. Test hỗn hợp đọc lại file trước và sau dòng lỗi. Property test sinh nhiều batch, rồi chèn dữ liệu sai và đảo thứ tự để kiểm tra tập kết quả. Oracle đối chiếu dữ liệu thật thay vì chỉ đếm số dòng thành công. Khi cố ý bỏ qua lỗi tạo thư mục, test failure-path thất bại đúng kỳ vọng. Suite sạch và BE07 cùng pass giúp giảm lo ngại hồi quy ngoài module.
+
+Tôi cũng học được cách bác bỏ AI. Agent đề nghị sửa regex nhưng probe và test suffix không tái hiện lỗi. Sửa theo lời đề nghị đó sẽ tạo diff không có lý do. Lỗi IPC của runner cần được tách khỏi lỗi nghiệp vụ; đổi cách nạp tsx giúp chạy test nhưng không chứng minh importer đúng. Replay trên phiên bản cũ làm rõ contract index đã được bảo vệ.
+
+Ba lượt tải đều đạt mục tiêu cho tám mươi tác vụ local, nhưng chưa chứng minh trải nghiệm của tám mươi người dùng mạng. Tôi chưa kiểm mất điện, NFS hoặc filesystem không hỗ trợ hardlink. Test tiếp theo có giá trị cao nhất là luồng draft sang giao dịch Governor bằng ví thật, chờ indexer công bố rồi đối chiếu API với chain. Test đó cần xác minh quyền phê duyệt không bị đi tắt và lưu receipt để truy vết. Trước khi nộp, tôi phải tự giải thích và chịu trách nhiệm về từng phần bằng chứng.

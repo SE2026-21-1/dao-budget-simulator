@@ -1,0 +1,15 @@
+✔ mixed import retains both valid neighbors and exact values (20.074385ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (3.364516ms)
+✔ seeded generated batches persist exactly their valid records (446.599976ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (13.19233ms)
+✔ persistence failure cannot be returned as success (3.949249ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (6.395731ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (1047.290797ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1870.45149

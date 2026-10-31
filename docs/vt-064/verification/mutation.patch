@@ -1,0 +1,13 @@
+diff --git a/indexer/import/drafts.ts b/indexer/import/drafts.ts
+index f591a94..06631cb 100644
+--- a/indexer/import/drafts.ts
++++ b/indexer/import/drafts.ts
+@@ -85,7 +85,7 @@ export async function importDrafts(rows: unknown, destination: string,
+     if (!draft) { rejected.push({ index, reason: reason! }); continue; }
+     if (!directoryReady) {
+       try { await mkdir(destination, { recursive: true }); }
+-      catch (error) { throw new ImportFailure(index, imported, rejected, error); }
++      catch { imported.push({ index, id: draft.id }); continue; }
+       directoryReady = true;
+     }
+     try { await save(destination, draft); imported.push({ index, id: draft.id }); }

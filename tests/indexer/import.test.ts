@@ -39,14 +39,15 @@ test('property: invalid insertion and order preserve the exact valid draft set',
 });
 
 // T14: a focused validation unit test injects a recording store (no disk oracle).
-test('property: canonical fields reject generated line terminator suffixes', async () => {
+test('property: canonical fields reject generated line terminator suffixes', async (t) => {
+  const out = join(await temporary(t), 'unused');
   const rows: Draft[] = [];
   for (const suffix of ['\n', '\r', '\r\n', '\u2028', '\u2029'])
     for (const field of ['id', 'recipient', 'amount'] as const)
       rows.push({ ...draft(`bad${rows.length}`), [field]: draft('safe')[field] + suffix });
   const saved: Draft[] = [];
   // All rows must fail validation before mkdir or save is invoked.
-  const result = await importDrafts(rows, '/unused-vt064-invalid-only', async (_, row) => { saved.push(row); });
+  const result = await importDrafts(rows, out, async (_, row) => { saved.push(row); });
   assert.deepEqual(saved, []);
   assert.deepEqual(result.imported, []);
   assert.deepEqual(result.rejected, rows.map((_, index) => ({ index,

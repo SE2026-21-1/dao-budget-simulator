@@ -23,12 +23,12 @@ pdfmetrics.registerFont(TTFont("DejaVu", "/usr/share/fonts/truetype/dejavu/DejaV
 pdfmetrics.registerFont(TTFont("DejaVuBold", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
 pdfmetrics.registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVuBold")
 
-BODY = ParagraphStyle("Body", fontName="DejaVu", fontSize=8.1, leading=12, spaceAfter=6)
-HEADING = ParagraphStyle("Heading", parent=BODY, fontName="DejaVuBold", fontSize=11, leading=15, spaceBefore=11, spaceAfter=5)
+BODY = ParagraphStyle("Body", fontName="DejaVu", fontSize=9.2, leading=13.3, spaceAfter=6)
+HEADING = ParagraphStyle("Heading", parent=BODY, fontName="DejaVuBold", fontSize=11.5, leading=16, spaceBefore=10, spaceAfter=6, keepWithNext=True)
 TITLE = ParagraphStyle("Title", parent=BODY, fontName="DejaVuBold", fontSize=15, leading=20, spaceAfter=12)
-SMALL = ParagraphStyle("Small", parent=BODY, fontSize=6.8, leading=9, spaceAfter=1)
+SMALL = ParagraphStyle("Small", parent=BODY, fontSize=7.5, leading=10.4, spaceAfter=1)
 LABEL = ParagraphStyle("Label", parent=SMALL, fontName="DejaVuBold", alignment=TA_CENTER)
-MONO = ParagraphStyle("Evidence", parent=SMALL, fontSize=7, leading=10)
+MONO = ParagraphStyle("Evidence", parent=SMALL, fontSize=7.2, leading=10.2)
 
 
 def marked(text: str) -> str:
@@ -97,12 +97,12 @@ def footer(canvas, doc):
 def build(path: Path, appendix: bool):
     flow = markdown(HERE / "report.md")
     if appendix:
-        flow.extend([PageBreak(), Paragraph("Phụ lục A — AI Usage Log", TITLE)])
+        flow.append(PageBreak())
         flow.extend(markdown(HERE / "AI-usage.md"))
         flow.extend([PageBreak(), Paragraph("Phụ lục B — bằng chứng chạy", TITLE)])
-        for name in ("red.log", "review-red.log", "mutation.log", "green.log", "coverage.log", "load.json"):
+        for name in ("verification/red-replay.log", "verification/mutation-replay.log", "verification/runner-green.log", "verification/coverage-green.log", "verification/regression.log", "verification/load-1.json", "verification/load-2.json", "verification/load-3.json"):
             text = (HERE / name).read_text(encoding="utf8").splitlines()
-            excerpt = text[:12] if name not in ("load.json", "coverage.log") else text[-25:]
+            excerpt = text if name.endswith(".json") else (text[-20:] if "red-replay" in name or "mutation" in name or "coverage" in name else text[-12:])
             flow.append(Paragraph(name, HEADING))
             flow.extend(Paragraph(html.escape(line) or " ", MONO) for line in excerpt)
     doc = SimpleDocTemplate(str(path), pagesize=A4, leftMargin=36, rightMargin=36,

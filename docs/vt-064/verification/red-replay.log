@@ -1,0 +1,44 @@
+$ node --import tsx --test --test-name-pattern=mixed import retains tests/indexer/import.test.ts
+source=b61cec8; tests=58a9798; expected exit 1
+✖ mixed import retains both valid neighbors and exact values (19.329354ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 329.253763
+
+✖ failing tests:
+
+test at tests/indexer/import.test.ts:1:2723
+✖ mixed import retains both valid neighbors and exact values (19.329354ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'a',
+  +   'b'
+  -   {
+  -     id: 'a',
+  -     index: 0
+  -   },
+  -   {
+  -     id: 'b',
+  -     index: 3
+  -   }
+    ]
+  
+      at TestContext.<anonymous> (/workspace/scratch/c774f6c3c1cf/red-replay/tests/indexer/import.test.ts:69:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'a', 'b' ],
+    expected: [ { index: 0, id: 'a' }, { index: 3, id: 'b' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+exit=1

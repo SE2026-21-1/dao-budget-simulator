@@ -1,0 +1,28 @@
+$ node --import tsx --test --test-name-pattern=persistence failure cannot tests/indexer/import.test.ts
+mutant=12c53e2f515256da9fa70c15a6428badb7f317b8
+✖ persistence failure cannot be returned as success (13.16744ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 357.2712
+
+✖ failing tests:
+
+test at tests/indexer/import.test.ts:1:5997
+✖ persistence failure cannot be returned as success (13.16744ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/workspace/scratch/c774f6c3c1cf/mutant-replay/tests/indexer/import.test.ts:141:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+exit=1

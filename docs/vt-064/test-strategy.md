@@ -22,3 +22,15 @@ Generator: fixed seed xorshift32, no external faker; choose batch sizes 1–32, 
 ## Execution deviations after review
 
 The pre-code matrix is preserved above. Actual T01 also inserts `null` before B (two rejects, indexes 1/2). T09 checks malformed JSON and >1 MiB through CLI, >1000 through `importDrafts`, and `/dev/zero` through CLI only on Linux; it does not separately assert non-array JSON. T12 runs 80 tasks with distinct IDs in one **shared** disposable directory, not distinct directories. Generator length is 1–24, with ~2/5 valid rows in each generated batch; empty description is tested in T02, not generated. T11 ran the existing BE07 unit suite (15/15); no API suite was run. Reviewer feedback added accepted input indexes, preservation of earlier rejections, hard-bounded stream input, and a stored-winner race oracle. Unrun table variants remain proposed, not PASS.
+
+## Fresh verification extension (2026-11-01)
+
+T02 uses a real temporary filesystem and is integration-level (the earlier unit
+label was imprecise). T14 adds a focused validation unit property with injected
+recording save and invalid-only input. T13 adds the metamorphic invariant that
+inserting invalid rows and reversing order leaves exactly the same valid data
+set for unique IDs. It generates 16 batches with seed 0x06401850, independent
+forward/reverse directories, compares file contents and accepted indexes.
+T14 covers five CR/LF/Unicode suffixes times ID/recipient/amount (15 cases).
+No shrinking is implemented. Coverage and results in verification/ supersede
+historical measurements; report.md contains the complete 14-case traceability.

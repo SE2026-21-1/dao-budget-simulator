@@ -1,0 +1,54 @@
+{
+  "runs": [
+    {
+      "tasks": 80,
+      "completed": 80,
+      "errors": 0,
+      "p95Ms": 74.421922,
+      "maxMs": 74.653885,
+      "targetMs": 2500,
+      "meetsTarget": true,
+      "method": "80 concurrent in-process importer tasks; one real file persisted and read back per task",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux",
+        "arch": "x64"
+      },
+      "limits": "Local filesystem and Node task scheduling only; no HTTP, PostgreSQL, RPC, wallet or 80 external users."
+    },
+    {
+      "tasks": 80,
+      "completed": 80,
+      "errors": 0,
+      "p95Ms": 68.25055299999997,
+      "maxMs": 68.27722799999998,
+      "targetMs": 2500,
+      "meetsTarget": true,
+      "method": "80 concurrent in-process importer tasks; one real file persisted and read back per task",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux",
+        "arch": "x64"
+      },
+      "limits": "Local filesystem and Node task scheduling only; no HTTP, PostgreSQL, RPC, wallet or 80 external users."
+    },
+    {
+      "tasks": 80,
+      "completed": 80,
+      "errors": 0,
+      "p95Ms": 71.761977,
+      "maxMs": 72.166224,
+      "targetMs": 2500,
+      "meetsTarget": true,
+      "method": "80 concurrent in-process importer tasks; one real file persisted and read back per task",
+      "environment": {
+        "node": "v24.22.1",
+        "platform": "linux",
+        "arch": "x64"
+      },
+      "limits": "Local filesystem and Node task scheduling only; no HTTP, PostgreSQL, RPC, wallet or 80 external users."
+    }
+  ],
+  "measurement": "Fresh standalone sequential runs; original benchmark uses common launch epoch, includes queueing and read-back.",
+  "noProductionSLA": true
+}

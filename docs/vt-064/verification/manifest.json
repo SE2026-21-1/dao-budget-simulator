@@ -1,0 +1,17 @@
+{
+  "featureBaseline": "1bb182144d516c13d6bb32fc30d2778af71a8169",
+  "reviewBaseline": "cdc8740c5b1123d612962ffad467657bd4f8444b",
+  "githubTestCommit": "aca614da8c4842eadecd87434ddc98f9f41813ec",
+  "githubRunnerCommit": "969acb370f1a10ebd1f75728afa6d91b035a453d",
+  "runtime": "v24.22.1",
+  "sha256": {
+    "indexer/import/drafts.ts": "ab1bb02dc7e529a5e6390c2754534ef4466261265faeab80fdecae3006bf85c1",
+    "indexer/import/cli.ts": "1868d3bb6641cf54977dc577c54e5a194a38955703f74647d21e2c53fa088dd8",
+    "tests/indexer/import.test.ts": "7b9e682bacf02686b04c34b0ffb7b95c78892875de221f4cbd2820e91cdebf8d",
+    "scripts/benchmark_vt064.mjs": "7d557909d0d6957ff8dadecc52c6fcdf557bcd551edcb34ff2d9241008581e90",
+    "package.json": "fad841602d11e167e3084ec793aabb58f96011263b984d46773c9aa33bb0ea16"
+  },
+  "mainPages": 4,
+  "totalPages": 8,
+  "reflectionWhitespaceWords": 319
+}

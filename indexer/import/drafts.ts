@@ -11,10 +11,13 @@ export interface Draft {
   description: string;
 }
 
+export interface ImportedDraft { index: number; id: string }
+export interface RejectedDraft { index: number; reason: string }
+
 export interface ImportReport {
   status: 'completed';
-  imported: string[];
-  rejected: { index: number; reason: string }[];
+  imported: ImportedDraft[];
+  rejected: RejectedDraft[];
 }
 
 export class InputError extends Error {
@@ -23,7 +26,8 @@ export class InputError extends Error {
 
 export class ImportFailure extends Error {
   readonly code = 'PERSISTENCE_FAILED';
-  constructor(public readonly index: number, public readonly imported: string[], cause: unknown) {
+  constructor(public readonly index: number, public readonly imported: ImportedDraft[],
+    public readonly rejected: RejectedDraft[], cause: unknown) {
     super('Draft persistence failed; earlier committed drafts remain available.', { cause });
   }
 }
@@ -73,21 +77,21 @@ export async function importDrafts(rows: unknown, destination: string,
   save: (directory: string, draft: Draft) => Promise<void> = saveDraft): Promise<ImportReport> {
   if (!Array.isArray(rows) || rows.length < 1 || rows.length > 1000)
     throw new InputError('Expected a JSON array containing 1 to 1000 drafts.');
-  const imported: string[] = [];
-  const rejected: ImportReport['rejected'] = [];
+  const imported: ImportedDraft[] = [];
+  const rejected: RejectedDraft[] = [];
   let directoryReady = false;
   for (const [index, input] of rows.entries()) {
     const { draft, reason } = validate(input);
     if (!draft) { rejected.push({ index, reason: reason! }); continue; }
     if (!directoryReady) {
       try { await mkdir(destination, { recursive: true }); }
-      catch (error) { throw new ImportFailure(index, imported, error); }
+      catch (error) { throw new ImportFailure(index, imported, rejected, error); }
       directoryReady = true;
     }
-    try { await save(destination, draft); imported.push(draft.id); }
+    try { await save(destination, draft); imported.push({ index, id: draft.id }); }
     catch (error) {
       if (error instanceof DuplicateDraftError) rejected.push({ index, reason: 'DUPLICATE_ID' });
-      else throw new ImportFailure(index, imported, error);
+      else throw new ImportFailure(index, imported, rejected, error);
     }
   }
   return { status: 'completed', imported, rejected };

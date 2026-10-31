@@ -16,7 +16,7 @@ try {
   const samples = await Promise.all(Array.from({ length: tasks }, async (_, i) => {
     const id = `task${i}`;
     const result = await importDrafts([{ id, recipient, amount: String(i + 1), description: `Draft ${i}` }], directory);
-    assert.deepEqual(result.imported, [id]);
+    assert.deepEqual(result.imported, [{ index: 0, id }]);
     assert.deepEqual(result.rejected, []);
     assert.deepEqual(JSON.parse(await readFile(join(directory, `${id}.json`), 'utf8')),
       { id, recipient, amount: String(i + 1), description: `Draft ${i}` });

@@ -122,6 +122,11 @@ function submitButton() {
   return container.querySelector('button[type="submit"]') as HTMLButtonElement;
 }
 
+function submitFormDirectly() {
+  const form = container.querySelector("form") as HTMLFormElement;
+  form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+}
+
 describe("VT-062 proposal retry through the product form", () => {
   it("retries receipt tracking for H1 through the enabled form without sending a second transaction", async () => {
     const receipt = {
@@ -203,6 +208,9 @@ describe("VT-062 proposal retry through the product form", () => {
     expect(container.textContent).toContain("Proposal ID: 42");
     expect(submitButton().disabled).toBe(true);
     await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
+    await act(async () => { submitFormDirectly(); });
     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
     expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
   });
@@ -325,5 +333,79 @@ describe("VT-062 proposal retry through the product form", () => {
     expect(uiHarness.buildProposal.mock.calls.every((args) =>
       JSON.stringify(args.slice(0, 5)) === JSON.stringify(expectedDraft))).toBe(true);
     expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    await act(async () => { submitFormDirectly(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps H1 confirmed when decoding and summary refresh fail, including a direct form submit", async () => {
+    uiHarness.loadSummary.mockReset()
+      .mockResolvedValueOnce({ context })
+      .mockRejectedValueOnce(new Error("summary refresh timeout"))
+      .mockRejectedValueOnce(new Error("manual refresh timeout"));
+    uiHarness.assertWritable.mockImplementation((_account: unknown, _chainId: unknown, value: unknown) => {
+      if (!value) throw new Error("Dữ liệu API không sẵn sàng để gửi giao dịch.");
+    });
+    uiHarness.proposalIdFromReceipt.mockImplementation(() => { throw new Error("cannot decode ProposalCreated"); });
+    uiHarness.waitForReceipt.mockResolvedValue({ transactionHash: uiHarness.hash, status: "success", logs: [] } as unknown as TransactionReceipt);
+
+    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); await Promise.resolve(); });
+    await act(async () => {
+      setFieldValue("proposal-title", "VT-062 decode error");
+      setFieldValue("proposal-body", "The receipt is successful even if result decoding fails.");
+      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
+      setFieldValue("proposal-amount", "1");
+    });
+    await act(async () => { submitButton().click(); });
+
+    expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
+    expect(container.textContent).toContain("chưa đọc được Proposal ID");
+    expect(container.textContent).toContain(uiHarness.hash);
+    expect(container.textContent).toContain("summary refresh timeout");
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      (Array.from(container.querySelectorAll('button[type="button"]')) as HTMLButtonElement[])
+        .find((button) => button.textContent?.includes("Tải dữ liệu mới nhất"))?.click();
+    });
+    expect(container.textContent).toContain("manual refresh timeout");
+    expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
+    await act(async () => { submitFormDirectly(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(1);
+    expect(container.textContent).not.toContain("Dữ liệu API không sẵn sàng để gửi giao dịch.");
+    expect(uiHarness.newRequestId).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows a different payload after H1 succeeded without reusing H1", async () => {
+    const h2 = ("0x" + "33".repeat(32)) as Hash;
+    uiHarness.buildProposal.mockImplementation((...args: unknown[]) => ({
+      targets: [uiHarness.treasury], values: [0n],
+      calldatas: [args[3] === "1" ? "0x1234" : "0x5678"],
+      description: "same description",
+    }));
+    uiHarness.sendGovernor.mockResolvedValueOnce(uiHarness.hash).mockResolvedValueOnce(h2);
+    uiHarness.waitForReceipt.mockImplementation(async (hash: Hash) =>
+      ({ transactionHash: hash, status: "success", logs: [] }) as unknown as TransactionReceipt);
+    uiHarness.proposalIdFromReceipt.mockReturnValueOnce("42").mockReturnValueOnce("43");
+
+    await act(async () => { root.render(<MemoryRouter><CreateProposalPage /></MemoryRouter>); await Promise.resolve(); });
+    await act(async () => {
+      setFieldValue("proposal-title", "VT-062 distinct payload");
+      setFieldValue("proposal-body", "A changed amount creates a distinct proposal payload.");
+      setFieldValue("proposal-recipient", "0xcccccccccccccccccccccccccccccccccccccccc");
+      setFieldValue("proposal-amount", "1");
+    });
+    await act(async () => { submitButton().click(); });
+    expect(container.textContent).toContain("Proposal ID: 42");
+    expect(submitButton().disabled).toBe(true);
+
+    await act(async () => { setFieldValue("proposal-amount", "2"); });
+    expect(submitButton().disabled).toBe(false);
+    await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(2);
+    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarness.hash);
+    expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, h2);
+    expect(container.textContent).toContain("Proposal ID: 43");
+    expect(container.textContent).toContain(h2);
+    expect(uiHarness.newRequestId).toHaveBeenCalledTimes(1);
   });
 });

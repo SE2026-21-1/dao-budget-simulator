@@ -1,6 +1,6 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router";
-import { type Address } from "viem";
+import { type Address, type Hash } from "viem";
 import { deployment } from "../chain/config";
 import { useWallet } from "../chain/wallet";
 import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
@@ -17,7 +17,8 @@ function CreateProposalPage() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [requestId] = useState(newRequestId);
-  const [submittedId, setSubmittedId] = useState<string | null>(null);
+  const confirmedRequests = useRef(new Map<string, { hash: Hash; proposalId: string | null }>());
+  const [confirmedView, setConfirmedView] = useState<{ draftKey: string; hash: Hash; proposalId: string | null } | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const summary = loadedSummary?.attempt === loadAttempt ? loadedSummary.summary ?? null : null;
@@ -35,12 +36,21 @@ function CreateProposalPage() {
 
   const validation = validateProposalForm(title, body, recipient, amount, deployment?.treasury);
   const ready = Boolean(summary?.context.dataKind === "chain" && deployment && wallet.account && wallet.chainId === deployment.chainId);
+  const draftKey = JSON.stringify([
+    wallet.account?.toLowerCase(), wallet.chainId, deployment?.chainId, deployment?.deploymentId,
+    deployment?.governor.toLowerCase(), deployment?.treasury.toLowerCase(),
+    title, body, recipient, amount, requestId,
+  ]);
+  const currentConfirmation = confirmedView?.draftKey === draftKey ? confirmedView : null;
 
   const submit = async (event: FormEvent) => {
-    event.preventDefault(); setFormError(null); setSubmittedId(null);
+    event.preventDefault(); setFormError(null);
     try {
-      assertWritable(wallet.account, wallet.chainId, summary?.context);
       if (validation) throw new Error(validation);
+      if (!wallet.account || !deployment) {
+        assertWritable(wallet.account, wallet.chainId, summary?.context);
+        return;
+      }
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
       const requestKey = JSON.stringify([
         wallet.account!.toLowerCase(), wallet.chainId, deployment!.chainId, deployment!.deploymentId,
@@ -48,13 +58,24 @@ function CreateProposalPage() {
         payload.targets.map((target) => target.toLowerCase()), payload.values.map(String),
         payload.calldatas.map((data) => data.toLowerCase()), payload.description,
       ]);
+      const confirmed = confirmedRequests.current.get(requestKey);
+      if (confirmed) {
+        setConfirmedView({ draftKey, ...confirmed });
+        return;
+      }
+      assertWritable(wallet.account, wallet.chainId, summary?.context);
+      setConfirmedView(null);
       await transaction.run(
         async () => {
           await assertCanPropose(wallet.account!);
           return sendGovernor(wallet.account!, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
         },
         (receipt) => {
-          setSubmittedId(proposalIdFromReceipt(receipt.logs));
+          let proposalId: string | null = null;
+          try { proposalId = proposalIdFromReceipt(receipt.logs); } catch { /* The receipt remains successful when its ID cannot be decoded. */ }
+          const confirmation = { hash: receipt.transactionHash, proposalId };
+          confirmedRequests.current.set(requestKey, confirmation);
+          setConfirmedView({ draftKey, ...confirmation });
           setLoadAttempt((value) => value + 1);
         },
         requestKey,
@@ -81,9 +102,10 @@ function CreateProposalPage() {
       {validation && (title || body || recipient || amount) && <p className="wallet-error" role="status">{validation}</p>}
       <div className="proposal-review"><h3>Kiểm tra trước khi ký</h3><p>Người nhận: <code>{recipient || "—"}</code></p><p>Số tiền: {amount || "—"} BUD</p><p>Request ID: <code>{requestId}</code></p><p>Native value: 0 ETH</p></div>
       {formError && <p className="wallet-error" role="alert">{formError}</p>}
-      {submittedId && <p role="status">Proposal ID: <Link to={`/proposals/${submittedId}`}>{submittedId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
-      <TransactionStatus {...transaction} />
-      <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || submittedId !== null}>Tạo đề xuất</button>
+      {currentConfirmation?.proposalId && <p role="status">Proposal ID: <Link to={`/proposals/${currentConfirmation.proposalId}`}>{currentConfirmation.proposalId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
+      {currentConfirmation && !currentConfirmation.proposalId && <p role="status">Giao dịch đã xác nhận, nhưng chưa đọc được Proposal ID. Đối chiếu Tx: <code>{currentConfirmation.hash}</code>. Tải dữ liệu mới nhất để xem kết quả khi API cập nhật.</p>}
+      {(currentConfirmation || transaction.phase !== "success") && <TransactionStatus phase={currentConfirmation ? "success" : transaction.phase} hash={currentConfirmation?.hash ?? transaction.hash} error={currentConfirmation ? null : transaction.error} />}
+      <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || currentConfirmation !== null}>Tạo đề xuất</button>
     </form>
   </div>;
 }

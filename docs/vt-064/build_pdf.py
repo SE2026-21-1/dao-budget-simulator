@@ -100,9 +100,12 @@ def build(path: Path, appendix: bool):
         flow.extend([PageBreak(), Paragraph("Phụ lục A — AI Usage Log", TITLE)])
         flow.extend(markdown(HERE / "AI-usage.md"))
         flow.extend([PageBreak(), Paragraph("Phụ lục B — bằng chứng chạy", TITLE)])
-        for name in ("red.log", "review-red.log", "mutation.log", "green.log", "coverage.log", "load.json"):
+        for name in ("red.log", "review-red.log", "mutation.patch", "mutation.log", "green.log", "coverage.log", "load.json"):
             text = (HERE / name).read_text(encoding="utf8").splitlines()
-            excerpt = text[:12] if name not in ("load.json", "coverage.log") else text[-25:]
+            if name == "mutation.patch":
+                excerpt = text
+            else:
+                excerpt = text[-25:] if name in ("load.json", "coverage.log") else text[:12]
             flow.append(Paragraph(name, HEADING))
             flow.extend(Paragraph(html.escape(line) or " ", MONO) for line in excerpt)
     doc = SimpleDocTemplate(str(path), pagesize=A4, leftMargin=36, rightMargin=36,

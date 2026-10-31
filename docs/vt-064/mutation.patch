@@ -1,0 +1,19 @@
+diff --git a/indexer/import/drafts.ts b/indexer/import/drafts.ts
+index df9e9bd..eafc5ee 100644
+--- a/indexer/import/drafts.ts
++++ b/indexer/import/drafts.ts
+@@ -78,13 +78,13 @@ export async function importDrafts(rows: unknown, destination: string,
+   let directoryReady = false;
+   for (const [index, input] of rows.entries()) {
+     const { draft, reason } = validate(input);
+     if (!draft) { rejected.push({ index, reason: reason! }); continue; }
+     if (!directoryReady) {
+       try { await mkdir(destination, { recursive: true }); }
+-      catch (error) { throw new ImportFailure(index, imported, error); }
++      catch { imported.push(draft.id); continue; } // Deliberate VT-064 mutation: claim success on mkdir failure.
+       directoryReady = true;
+     }
+     try { await save(destination, draft); imported.push(draft.id); }
+     catch (error) {
+       if (error instanceof DuplicateDraftError) rejected.push({ index, reason: 'DUPLICATE_ID' });
+       else throw new ImportFailure(index, imported, error);

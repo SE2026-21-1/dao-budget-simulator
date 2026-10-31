@@ -47,6 +47,16 @@ describe("VT-062 receipt outcome classification", () => {
     expect(error).toMatchObject({ kind: "cancelled" });
   });
 
+  it("keeps cancellation terminal when the RPC wait rejects after replacement notification", async () => {
+    receiptHarness.wait.mockImplementation(({ onReplaced }: { onReplaced: (event: { reason: "cancelled" }) => void }) => {
+      onReplaced({ reason: "cancelled" });
+      return Promise.reject(new Error("RPC stopped tracking replacement"));
+    });
+    const error = await waitForReceipt(H1).catch((cause: unknown) => cause);
+    expect(error).toBeInstanceOf(ReceiptTerminalError);
+    expect(error).toMatchObject({ kind: "cancelled" });
+  });
+
   it("accepts a repriced transaction for the same action", async () => {
     receiptHarness.wait.mockImplementation(({ onReplaced }: { onReplaced: (event: { reason: "repriced" }) => void }) => {
       onReplaced({ reason: "repriced" });

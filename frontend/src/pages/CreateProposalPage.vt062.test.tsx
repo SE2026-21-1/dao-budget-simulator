@@ -201,6 +201,10 @@ describe("VT-062 proposal retry through the product form", () => {
     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(1, uiHarness.hash);
     expect(uiHarness.waitForReceipt).toHaveBeenNthCalledWith(2, uiHarness.hash);
     expect(container.textContent).toContain("Proposal ID: 42");
+    expect(submitButton().disabled).toBe(true);
+    await act(async () => { submitButton().click(); });
+    expect(uiHarness.sendGovernor).toHaveBeenCalledTimes(1);
+    expect(uiHarness.waitForReceipt).toHaveBeenCalledTimes(2);
   });
 
   it("does not attach a changed payload or wallet account to the unresolved hash", async () => {

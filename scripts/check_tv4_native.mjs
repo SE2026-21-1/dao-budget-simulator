@@ -12,10 +12,11 @@ import { performance } from 'node:perf_hooks';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const usage = 'Usage: node --import tsx scripts/check_tv4_native.mjs --postgres-bin <absolute-bin-dir> --output <new-evidence-directory> [--benchmark]';
+const usage = 'Usage: node --import tsx scripts/check_tv4_native.mjs --postgres-bin <absolute-bin-dir> --output <new-evidence-directory> [--benchmark|--ui]';
 const args = process.argv.slice(2);
-assert.ok(args.length === 4 || (args.length === 5 && args[4] === '--benchmark'), usage);
+assert.ok(args.length === 4 || (args.length === 5 && ['--benchmark', '--ui'].includes(args[4])), usage);
 const withBenchmark = args[4] === '--benchmark';
+const withUi = args[4] === '--ui';
 assert.equal(args[0], '--postgres-bin', usage);
 assert.equal(args[2], '--output', usage);
 assert.ok(isAbsolute(args[1]), '--postgres-bin must be absolute');
@@ -60,7 +61,7 @@ env.PGCONNECT_TIMEOUT = '5';
 env.PGAPPNAME = 'tv4-native-acceptance';
 const report = {
   format: 'dao-budget-tv4-native-v1', status: 'RUNNING', startedAt: new Date().toISOString(),
-  scope: 'Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, live Anvil/API/two-target rebuild; optional real-chain NFR02 benchmark. No testnet or browser acceptance.',
+  scope: 'Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, live Anvil/API/two-target rebuild; optional real-chain NFR02 benchmark or browser UI. No testnet or extension-wallet acceptance.',
   isolation: { currentUid: process.getuid(), currentGid: process.getgid(), callerDatabaseAndRpcIgnored: true,
     privilegesChanged: false, freshCluster: true, numericLoopback: '127.0.0.1',
     portAllocation: 'Kernel-reserved ephemeral TCP port, held through initdb; released immediately before pg_ctl. Bind collision fails closed.',
@@ -292,13 +293,17 @@ try {
     assert.equal(result.result, 'passed'); assert.ok(result.storage, 'Storage evidence is mandatory');
   });
   await suite('live-api-be06', async () => {
-    await run('live-api-be06', process.execPath, ['--import', 'tsx', 'scripts/check_be04_live.mjs', '--output', join(output, 'live.json'), '--api', '--be06'],
-      { group: true, timeout: 600_000, env: { BE04_LIVE_ISOLATED: '1', BE04_LIVE_DATABASE_URL: url('be04_live', 'be04_test'),
+    await run('live-api-be06', process.execPath, ['--import', 'tsx', 'scripts/check_be04_live.mjs', '--output', join(output, 'live.json'), '--api', '--be06', ...(withUi ? ['--ui'] : [])],
+      { group: true, timeout: withUi ? 900_000 : 600_000, env: { BE04_LIVE_ISOLATED: '1', BE04_LIVE_DATABASE_URL: url('be04_live', 'be04_test'),
         BE06_LIVE_ISOLATED: '1', BE06_LIVE_TARGET_DATABASE_URL: url('tv4_be06_live_target', 'be04_test'),
         BE06_LIVE_ADVANCED_TARGET_DATABASE_URL: url('tv4_be06_live_advanced', 'be04_test') } });
     const result = JSON.parse(await readFile(join(output, 'live.json'), 'utf8'));
     assert.equal(result.status, 'PASS'); assert.equal(result.api?.status, 'PASS'); assert.equal(result.be06?.status, 'PASS');
     assert.equal(result.recovery?.status, 'PASS', 'Reorg, cursor invalidation and heartbeat recovery are mandatory.');
+    if (withUi) {
+      assert.equal(result.browser?.status, 'PASS', 'Browser acceptance must be verified before services stop.');
+      report.suites['live-api-be06'].browserEvidence = 'browser-ui-finished.json';
+    }
     report.suites['live-api-be06'].evidence = 'live.json';
   });
   if (withBenchmark) await suite('api-benchmark', async () => {

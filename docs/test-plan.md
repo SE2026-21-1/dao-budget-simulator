@@ -4,16 +4,34 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
-**Trạng thái hiện hành đối chiếu 30/10:** xem [bảng tiến độ tích hợp và các
-release gate còn mở](tv4-checklist.md#đối-chiếu-tiến-độ-dự-án--30102026).
-BE07 native đã có lượt local PASS lại ngày 30/10: 172 unit + 73 DB tests,
-live reorg/replay và fail-closed API; TV4 native có 55 DB/API tests, live
-governance/rebuild và benchmark 100 proposal/1.000 vote. Xem
-[lệnh, kết quả, cả lượt test FAIL trước sửa](tv4-checklist.md#kiểm-tra-local-bổ-sung-ngày-30102026).
-TC11 “KHÔNG ĐẠT” trong bảng 24/10 là kết quả **trước BE07**, không phải
-kết luận về code hiện tại. Chưa có nghiệm thu toàn bộ TC01–TC14/INV01–04;
-testnet và ví extension thật cũng chưa được kiểm chứng. Giữ các checkbox
-nghiệm thu tổng thể mở.
+**Đối chiếu mới nhất của worktree local:** [ma trận ngày 02/11 bên dưới](#đối-chiếu-theo-head-và-worktree--02112026) và [evidence](evidence/tv4-20261102-0328eea.md). Kết quả 30/10 tại `b476be8` là lịch sử; không gán cho HEAD mới, và CI của HEAD không bao gồm các sửa đổi chưa commit. Chưa có nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension và testnet; giữ gate release mở.
+
+## Đối chiếu theo HEAD và worktree — 02/11/2026
+
+HEAD `0328eea8e3f5fca5fb7c5e1f92fa744720e4f43c`, branch `personal/23001850-vt-064-bulk-import`; hai regression TC02/TC10 và runner browser ở **worktree chưa commit**, không phải CI của HEAD. `PASS` chỉ có nghĩa đã chứng minh ca local được ghi; `PARTIAL` chưa đủ toàn bộ biến thể/reset/peer approval; `BLOCKED` thiếu điều kiện không thể tạo từ local. File và raw logs xem [evidence cùng ngày](evidence/tv4-20261102-0328eea.md); các bảng ngày 21–30/10 bên dưới giữ nguyên tính lịch sử.
+
+| Ca | Trạng thái acceptance | Bằng chứng ở revision này / phần chưa đạt |
+|---|---|---|
+| TC01 | PARTIAL | `live.json` H67/hash: A+B For700, payment Executed, Treasury 1.000 BUD sau hai khoản chi; Chromium H76/hash hiện receipt/payment/ledger và không cộng đôi Transfer. Chưa tạo/ký proposal bằng ví extension và chưa reset F0 cho riêng ca này. |
+| TC02 | PARTIAL | `live.json` low-quorum For100<200, Defeated/queue revert; `tests/integration/TimelockGovernance.t.sol::testAgainstVotesDoNotSupplyQuorumForFailedProposal` thêm For100/Against200/quorum200/không chi; unit `testForPlusAbstainReachesQuorum` có For100+Abstain100. Chưa có đủ ba biến thể độc lập trên browser/UI. |
+| TC03 | PARTIAL | `tests/unit/BudgetGovernor.t.sol::testTieDefeated`/`testLossDespiteQuorumDefeated` trong Foundry 186/186 trước regression; chưa có trace reset và UI cho cả hòa/thua ở HEAD. |
+| TC04 | PARTIAL | Live phase ở snapshot/deadline/empty blocks và unit vote biên; thiếu reset riêng và receipt/UI mọi mốc S−1/S/S+1/D/D+1. |
+| TC05 | PARTIAL | `tests/attacks/GovernanceAttacks.t.sol` snapshot transfer/delegate/transferFrom và invariant 100×50; thiếu actor×biên độc lập + UI. |
+| TC06 | PARTIAL | `governance-storage.json`, `tests/integration/TimelockGovernance.t.sol` role graph/deployer/direct Treasury/Timelock và positive qua Governor. Chưa peer review/testnet. |
+| TC07 | PARTIAL | Integration ETA−1/E, replay và tampered-description; `live.json` một receipt chi thật. Chưa đủ UI negative/reset riêng. |
+| TC08 | PARTIAL | `tests/unit/BudgetGovernor.t.sol`, integration payload/role bypass, Foundry; chưa đủ vector form/description policy và browser input độc lập. |
+| TC09 | PARTIAL | `live.json` underfunded revert → topup 3.000 → retry **cùng operation** execute 11.000, SQL/API/chain cùng H67/hash; read-only UI ở H76. Chưa có ví extension ký/receipt/UI sau transaction. |
+| TC10 | PARTIAL | Worktree regression đảo thứ tự P2 trước P1, dù đủ 8.000 BUD vẫn chỉ một Transfer và BudgetDisbursed; live zero requestId và duplicate revert, API/ledger H67. Chưa raw receipt/API cả hai thứ tự qua hai fixture độc lập. |
+| TC11 | PARTIAL | Native TV4 local reorg API503/cursor409, replay orphan0/replacement1; BE07 native clean checkout kiểm crash/retry/deep fork theo report riêng. Chưa nghiệm thu tổ hợp đầy đủ fail-injection và môi trường khác. |
+| TC12 | PARTIAL | `live.json` hai DB mới compare equal H67/hash, loại post-H, mismatch probe exit2, replay H76/hash. Bộ tám trạng thái + sáu boundary H49 trong `evidence/tv4-20261024-acceptance/tc12-complete/report.json` thuộc revision cũ; chưa chạy lại bộ tám riêng ở HEAD. |
+| TC13 | BLOCKED | Chromium không extension đọc API thật ở 1366/390px, receipt Executed và Defeated, không tràn ngang; EIP-1193 test local lịch sử và frontend 14/14 ở HEAD. Cần ví extension thật, account đã cấp GOV/BUD, người dùng xác nhận giao dịch, đủ form/keyboard/error variants. |
+| TC14 | PARTIAL | Integration role/deployer/creator cancel negative và `live.json` Canceled; còn reset actor×state/boundary, UI và peer approval. |
+| INV01 | PARTIAL | `tests/invariant/GovernanceInvariant.t.sol` ghost paid requests + campaign 100×50, successful execute trong chuỗi cuối; live duplicate request revert. Oracle bounded, không chứng minh arbitrary strategy. |
+| INV02 | PARTIAL | Handler role/operation/time/oracle, positive Governor→Timelock→Treasury; local role audit và attack tests. Universe hữu hạn, peer review chưa có. |
+| INV03 | PARTIAL | Ghost Transfer ledger, `live.json` SQL/API/BUD balanceOf(H67), H76 browser RPC balance; không cộng BudgetDisbursed lần hai. Boundaries khác và testnet chưa nghiệm thu. |
+| INV04 | PARTIAL | Handler ghost snapshot weights + transfer/delegate và regression attack, 100×50; thống kê chuỗi cuối không phải tổng 100 runs, không có ERC1271/signature campaign. |
+
+NFR02: benchmark local mới trên 100 proposal/1.000 vote, 10 clients/60s, 5.947 thành công/0 lỗi, p95 179,998ms; xem [evidence revision hiện tại](evidence/tv4-20261102-0328eea.md); chưa phải đo testnet. NFR05: clone sạch cùng máy tại đúng `0328eea`, không phải nghiệm thu máy thành viên khác. NFR07: CI 9/9 **chỉ trên committed HEAD**; chạy lại Foundry sau regression local mới, không nhận CI cho worktree. NFR08: audit role/manifest local; thiếu testnet, review secret và xác nhận network/compiler.
 
 ## Cập nhật sửa lỗi local — 25/10/2026
 
@@ -220,6 +238,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R0+R1/F0; request chung=`keccak256(UTF8("tv4:TC10"))`; P1 chi1000U→R, P2 chi2000U→R2, descriptions khác nguyên bytes nên proposalId khác; cả hai A+B For700U và queue đúng delay, quỹ10000U. Nhánh khác reset rồi dùng bytes32(0), không mặc định cấm zero.
 - **Hành động/kỳ vọng:** execute P1 trước => quỹ9000U/R1000U, paid=true, P1 Executed. Execute P2 sau ETA revert vì request đã trả dù đủ9000U, P2 vẫn Queued/operation chưa done, R2=0, chỉ một Transfer/BudgetDisbursed thành công cho request. Reset rồi đảo thứ tự: P2 thành công2000U, P1 bị chặn => quỹ8000U/R2=2000U/R0. Phân biệt uniqueness proposalId với thanh toán requestId; không vô tình kiểm hai lần cùng operation thay cho TC10.
 - **Test/evidence:** E-SC04-L có proposalId/operationId khác nhau cùngrequest:7000 trả,2000 bị RequestAlreadyPaid dù quỹ còn3000. Attack regression còn refill để loại lý do thiếu tiền; invariant bao gồm request0. **CỤC BỘ TC10**, chưa chạy raw-receipt cả hai thứ tự với bytes32zero/reset từng biến thể; linkage/dedup API chưa có, không đánh toàn bộ PASS.
+- **Bổ sung regression local (worktree sau `0328eea`, chưa có commit/CI GitHub mới):** `tests/integration/TimelockGovernance.t.sol::testSecondProposalWithSharedRequestPaysFirstAndBlocksFirstProposal` chạy nhánh đảo thứ tự trên fixture `setUp` riêng. P2 trả 2000U trước, P1 revert `RequestAlreadyPaid` dù còn 8000U; P1 giữ Queued/Ready, quỹ/R/R2 và đúng một BUD Transfer/BudgetDisbursed được kiểm tra từ logs. `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/integration/TimelockGovernance.t.sol -vv`: **40/40** local sau thêm TC02; `bash scripts/ci.sh` cùng env **187/187** local. Chưa có raw receipt của cả hai thứ tự trên Anvil hoặc đối chiếu API tại cùng H, nên TC10 vẫn **CỤC BỘ**.
 
 ### TC11 — Crash/restart, RPC lỗi và reorg
 

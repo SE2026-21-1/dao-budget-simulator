@@ -12,11 +12,12 @@ import { performance } from 'node:perf_hooks';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const usage = 'Usage: node --import tsx scripts/check_tv4_native.mjs --postgres-bin <absolute-bin-dir> --output <new-evidence-directory> [--benchmark|--ui]';
+const usage = 'Usage: node --import tsx scripts/check_tv4_native.mjs --postgres-bin <absolute-bin-dir> --output <new-evidence-directory> [--benchmark|--ui|--tc12]';
 const args = process.argv.slice(2);
-assert.ok(args.length === 4 || (args.length === 5 && ['--benchmark', '--ui'].includes(args[4])), usage);
+assert.ok(args.length === 4 || (args.length === 5 && ['--benchmark', '--ui', '--tc12'].includes(args[4])), usage);
 const withBenchmark = args[4] === '--benchmark';
 const withUi = args[4] === '--ui';
+const withTc12 = args[4] === '--tc12';
 assert.equal(args[0], '--postgres-bin', usage);
 assert.equal(args[2], '--output', usage);
 assert.ok(isAbsolute(args[1]), '--postgres-bin must be absolute');
@@ -61,14 +62,14 @@ env.PGCONNECT_TIMEOUT = '5';
 env.PGAPPNAME = 'tv4-native-acceptance';
 const report = {
   format: 'dao-budget-tv4-native-v1', status: 'RUNNING', startedAt: new Date().toISOString(),
-  scope: 'Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, live Anvil/API/two-target rebuild; optional real-chain NFR02 benchmark or browser UI. No testnet or extension-wallet acceptance.',
+  scope: 'Fresh native PostgreSQL, BE01 SQL, BE02/03/04/05/06 DB suites, governance storage smoke, live Anvil/API/two-target rebuild; optional real-chain NFR02 benchmark, browser UI or TC12 eight-state rebuild. No testnet or extension-wallet acceptance.',
   isolation: { currentUid: process.getuid(), currentGid: process.getgid(), callerDatabaseAndRpcIgnored: true,
     privilegesChanged: false, freshCluster: true, numericLoopback: '127.0.0.1',
     portAllocation: 'Kernel-reserved ephemeral TCP port, held through initdb; released immediately before pg_ctl. Bind collision fails closed.',
     migrations: 'Dedicated BE01 DB uses SQL files; every other suite owns its own migrations on separate empty databases.' },
   runtime: { node: process.version, executable: process.execPath, platform: process.platform, arch: process.arch, postgresBin: bin },
   provenance: { sourceHashes: {}, binaryHashes: {} }, commands: [],
-  suites: Object.fromEntries(['be01-sql', 'be02-storage', 'be03-checkpoint-crash', 'be04-projection', 'be05-api', 'be06-two-db', 'governance-storage', 'live-api-be06', ...(withBenchmark ? ['api-benchmark'] : [])].map(name => [name, { status: 'NOT_RUN' }])),
+  suites: Object.fromEntries(['be01-sql', 'be02-storage', 'be03-checkpoint-crash', 'be04-projection', 'be05-api', 'be06-two-db', 'governance-storage', 'live-api-be06', ...(withBenchmark ? ['api-benchmark'] : []), ...(withTc12 ? ['tc12-eight-states'] : [])].map(name => [name, { status: 'NOT_RUN' }])),
   cleanup: { status: 'NOT_RUN' },
 };
 let directory;
@@ -214,13 +215,59 @@ try {
     { env: settings, input: JSON.stringify(statements), timeout: 120_000, group: true });
 }
 
+async function runTc12(settings) {
+  const reserve = createServer();
+  await new Promise((done, reject) => { reserve.once('error', reject); reserve.listen(0, '127.0.0.1', done); });
+  const port = reserve.address().port;
+  await new Promise((done, reject) => reserve.close(error => error ? reject(error) : done()));
+  const anvil = lifecycle.spawn(env.ANVIL_BIN ?? 'anvil',
+    ['--host', '127.0.0.1', '--port', String(port), '--accounts', '10', '--chain-id', '31337',
+      '--hardfork', 'osaka', '--timestamp', '1800000000', '--silent'],
+    { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  if (anvil.pid) groups.add(anvil.pid);
+  let diagnostics = '';
+  for (const stream of [anvil.stdout, anvil.stderr]) stream.on('data', chunk => {
+    diagnostics = (diagnostics + clean(chunk)).slice(-2048);
+  });
+  try {
+    const rpcUrl = `http://127.0.0.1:${port}`;
+    let ready = false;
+    for (let attempt = 0; attempt < 100; attempt++) {
+      checkSignal();
+      assert.ok(anvil.pid && anvil.exitCode === null, `TC12 Anvil exited: ${diagnostics}`);
+      try {
+        const response = await fetch(rpcUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_chainId', params: [] }),
+          signal: AbortSignal.timeout(1000) });
+        ready = response.ok && (await response.json()).result === '0x7a69';
+      } catch { /* Wait only for this owned Anvil to bind its loopback port. */ }
+      if (ready) break;
+      await sleep(50);
+    }
+    assert.ok(ready, `TC12 Anvil did not become ready: ${diagnostics}`);
+    await run('tc12-eight-states', process.execPath,
+      ['--import', 'tsx', 'docs/evidence/tv4-20261024-acceptance/run-tc12.mjs'],
+      { group: true, timeout: 900_000, env: { ...settings, TV4_TC12_ISOLATED: '1', TV4_TC12_RPC_URL: rpcUrl,
+        TV4_TC12_POSTGRES_URL: settings.TV4_TC12_POSTGRES_URL, TV4_TC12_OUTPUT: join(output, 'tc12') } });
+    const result = JSON.parse(await readFile(join(output, 'tc12/report.json'), 'utf8'));
+    assert.equal(result.status, 'PASS');
+    assert.equal(result.cases.length, 7);
+    assert.ok(result.cases.every(item => item.comparison.result === 'equal'));
+    assert.equal(result.cases.at(-1).states.length, 8);
+    report.suites['tc12-eight-states'].evidence = 'tc12/report.json';
+  } finally {
+    if (anvil.pid) { await stopGroup(anvil.pid); groups.delete(anvil.pid); }
+  }
+}
+
+
 try {
   for (const executable of ['initdb', 'pg_ctl', 'postgres']) {
     const path = join(bin, executable);
     await access(path, constants.X_OK);
     report.provenance.binaryHashes[executable] = createHash('sha256').update(await readFile(await realpath(path))).digest('hex');
   }
-  for (const path of ['scripts/check_tv4_native.mjs', 'scripts/benchmark_api.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/check_be04_live.mjs',
+  for (const path of ['scripts/check_tv4_native.mjs', 'docs/evidence/tv4-20261024-acceptance/run-tc12.mjs', 'scripts/benchmark_api.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/check_be04_live.mjs',
     'scripts/smoke_governance.mjs', 'scripts/governance_storage.mjs', 'scripts/governance_local.mjs',
     'indexer/syncer.ts', 'indexer/storage.ts', 'indexer/rpc.ts', 'indexer/types.ts',
     'indexer/api/server.ts', 'indexer/projection/projector.ts', 'indexer/projection/chain.ts',
@@ -267,9 +314,10 @@ try {
     ['tv4_be06_target', 'be06_test'], ['be04_live', 'be04_test'], ['tv4_be06_live_target', 'be04_test'],
     ['tv4_be06_live_advanced', 'be04_test'], ['tv4_governance', 'tv4_smoke'], ['tv4_governance_rebuild', 'tv4_smoke'] ];
   if (withBenchmark) databases.push(['tv4_benchmark', 'be04_test']);
-  // Password is stdin only, never argv or evidence. Roles have no elevated privileges.
+  // The TC12 driver creates only its own 14 databases on this fresh cluster.
+  // CREATEDB is never granted for the default runner or a caller-owned server.
   const roles = [...new Set(databases.map(([, role]) => role))];
-  const sql = roles.map(role => `CREATE ROLE ${role} LOGIN PASSWORD '${password}';`).concat(
+  const sql = roles.map(role => `CREATE ROLE ${role} LOGIN ${withTc12 && role === 'be04_test' ? 'CREATEDB ' : ''}PASSWORD '${password}';`).concat(
     databases.map(([database, role]) => `CREATE DATABASE ${database} OWNER ${role} TEMPLATE template0;`));
   await sqlCommand('create-fresh-databases', sql, sqlEnv);
   report.isolation.databases = databases.map(([database, owner]) => ({ database, owner }));
@@ -313,6 +361,8 @@ try {
     assert.equal(result.status, 'PASS');
     report.suites['api-benchmark'].evidence = 'benchmark.json';
   });
+  if (withTc12) await suite('tc12-eight-states', () =>
+    runTc12({ TV4_TC12_POSTGRES_URL: url('postgres', 'be04_test') }));
 } catch (error) {
   report.error = clean(error.message);
 } finally {

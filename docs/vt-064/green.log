@@ -1,0 +1,19 @@
+
+> dao-budget-simulator@0.0.0 test:vt064
+> tsx --test tests/indexer/import.test.ts
+
+✔ mixed import retains both valid neighbors and exact values (80.634364ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (13.140436ms)
+✔ seeded generated batches persist exactly their valid records (1425.669819ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (90.834691ms)
+✔ persistence failure cannot be returned as success (15.012995ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (18.452643ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (2734.847822ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5210.575125

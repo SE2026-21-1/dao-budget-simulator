@@ -1,0 +1,35 @@
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/ptdung/solidity-projects/dao-budget-simulator/indexer/import/drafts.js' imported from /home/ptdung/solidity-projects/dao-budget-simulator/tests/indexer/import.test.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:861:10)
+    at defaultResolve (node:internal/modules/esm/resolve:988:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:697:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:714:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveBaseSync (file:///home/ptdung/solidity-projects/dao-budget-simulator/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    at resolveDirectorySync (file:///home/ptdung/solidity-projects/dao-budget-simulator/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    at resolveTsPathsSync (file:///home/ptdung/solidity-projects/dao-budget-simulator/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    at resolve (file:///home/ptdung/solidity-projects/dao-budget-simulator/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/ptdung/solidity-projects/dao-budget-simulator/indexer/import/drafts.js'
+}
+
+Node.js v24.15.0
+✖ tests/indexer/import.test.ts (536.434787ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 563.534614
+
+✖ failing tests:
+
+test at tests/indexer/import.test.ts:1:1
+✖ tests/indexer/import.test.ts (536.434787ms)
+  'test failed'

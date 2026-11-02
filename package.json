@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit",
     "indexer": "tsx indexer/cli.ts",
     "api": "tsx indexer/api/main.ts",
+    "import:drafts": "tsx indexer/import/cli.ts",
+    "test:vt064": "tsx --test tests/indexer/import.test.ts",
     "be06": "tsx indexer/be06/cli.ts",
     "test:api": "node --import tsx --test tests/api/server.test.mjs",
     "test:api:db": "bash scripts/check_be05_database.sh",

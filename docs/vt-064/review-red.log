@@ -1,0 +1,40 @@
+✖ mixed import retains both valid neighbors and exact values (34.391696ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 479.407523
+
+✖ failing tests:
+
+test at tests/indexer/import.test.ts:23:1
+✖ mixed import retains both valid neighbors and exact values (34.391696ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'a',
+  +   'b'
+  -   {
+  -     id: 'a',
+  -     index: 0
+  -   },
+  -   {
+  -     id: 'b',
+  -     index: 3
+  -   }
+    ]
+  
+      at TestContext.<anonymous> (/home/ptdung/solidity-projects/dao-budget-simulator/tests/indexer/import.test.ts:27:10)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'a', 'b' ],
+    expected: [ { index: 0, id: 'a' }, { index: 3, id: 'b' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -4,10 +4,10 @@ import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { once } from 'node:events';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, watch, access } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { pathToFileURL, fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { dirname, resolve, join } from 'node:path';
 import { Interface, ZeroHash, id, toQuantity } from 'ethers';
 import pg from 'pg';
 import { deployGovernance } from './governance_local.mjs';
@@ -31,9 +31,9 @@ const flags = args.slice(2);
 const withBe07 = flags.includes('--be07');
 const withApi = flags.includes('--api') || withBe07;
 const withBe06 = flags.includes('--be06');
-assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06', '--be07'].includes(flag))
-  && new Set(flags).size === flags.length,
-  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api|--be06|--be07]');
+assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06', '--be07', '--ui'].includes(flag))
+  && new Set(flags).size === flags.length && (!flags.includes('--ui') || (withApi && !withBe07)),
+  'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api] [--be06] [--be07] [--ui (requires --api, excludes --be07)]');
 assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
 const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
 assert.equal(url.hostname, '127.0.0.1');
@@ -227,7 +227,8 @@ try {
       [d, c.role, c.address, c.deploymentBlock, c.abiVersion],
     );
   if (withApi) {
-    phaseApi = createApiServer({ pool, cursorSecret: randomBytes(32).toString('hex'), snapshotTtlSeconds: 900 });
+    phaseApi = createApiServer({ pool, cursorSecret: randomBytes(32).toString('hex'), snapshotTtlSeconds: 900,
+      ...(flags.includes('--ui') ? { corsOrigins: 'http://127.0.0.1:5173' } : {}) });
     await new Promise((done, reject) => { phaseApi.once('error', reject); phaseApi.listen(0, '127.0.0.1', done); });
     phaseApiBase = `http://127.0.0.1:${phaseApi.address().port}/api`;
   }
@@ -881,6 +882,44 @@ try {
       orphanRows: 0, replacementRows: 1, oldCursorAfterStatus: oldCursorAfter.status,
       balance: after.body.data.treasury.balance, freshness: { stale: stale.body.context.sync, fresh: fresh.body.context.sync },
     };
+  }
+  if (flags.includes('--ui')) {
+    const summary = await phaseApiGet('/summary');
+    assert.equal(summary.status, 200, 'UI must read a published canonical snapshot.');
+    const current = summary.body.context;
+    const canonical = await rpc('eth_getBlockByNumber', [toQuantity(BigInt(current.asOfBlock)), false]);
+    assert.equal(current.asOfBlockHash, canonical.hash, 'UI must not read an orphaned publication.');
+    const ready = join(dirname(output), 'browser-ui-ready.json');
+    const release = join(dirname(output), 'browser-ui-release');
+    await writeFile(ready, JSON.stringify({
+      rpcUrl, apiBase: phaseApiBase.slice(0, -4), deploymentId: 'be04-live', addresses: address,
+      context: current, proposals: report.proposals.map(({ label, proposalId }) => ({ label, proposalId })),
+      balance: summary.body.data.treasury.balance,
+    }, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
+    console.log(`TV4_UI_READY ${ready}`);
+    const events = watch(dirname(output), { signal: AbortSignal.timeout(600_000) });
+    try {
+      for await (const event of events) {
+        if (event.filename !== 'browser-ui-release') continue;
+        assert.equal((await readFile(release, 'utf8')).trim(), 'done');
+        const proof = JSON.parse(await readFile(join(dirname(output), 'browser-ui-finished.json'), 'utf8'));
+        for (const field of ['asOfBlock', 'asOfBlockHash', 'snapshotRevision'])
+          assert.equal(proof.context[field], current[field], `Browser snapshot ${field} must match canonical API.`);
+        assert.deepEqual(proof.states, { payment: 'Executed', 'low-quorum': 'Defeated' });
+        assert.equal(proof.balance, summary.body.data.treasury.balance);
+        assert.ok(Array.isArray(proof.screenshots) && proof.screenshots.length >= 2);
+        for (const filename of proof.screenshots) {
+          assert.match(filename, /^browser-[a-z0-9-]+\.png$/);
+          await access(join(dirname(output), filename));
+        }
+        report.browser = { status: 'PASS', context: current, states: proof.states, balance: proof.balance,
+          screenshots: proof.screenshots, evidence: 'browser-ui-finished.json', wallet: 'not an extension' };
+        break;
+      }
+    } finally {
+      await events.return();
+    }
+    assert.equal(report.browser?.status, 'PASS', 'Browser proof was not released before the deadline.');
   }
 } catch (error) {
   report.status = 'FAIL';

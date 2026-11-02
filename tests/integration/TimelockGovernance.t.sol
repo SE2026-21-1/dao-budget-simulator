@@ -506,6 +506,22 @@ contract TimelockGovernanceTest is Test {
         _rejectQueue(p, IGovernor.ProposalState.Defeated);
     }
 
+    function testAgainstVotesDoNotSupplyQuorumForFailedProposal() public {
+        Payment memory p = _create(REQUEST, recipient, 1_000 ether, "Against excluded from quorum");
+        vm.warp(governor.proposalSnapshot(p.id) + 1);
+        vm.prank(d);
+        assertEq(governor.castVote(p.id, 1), 100 ether);
+        vm.prank(c);
+        assertEq(governor.castVote(p.id, 0), 200 ether);
+        (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes) = governor.proposalVotes(p.id);
+        assertEq(againstVotes, 200 ether);
+        assertEq(forVotes, 100 ether);
+        assertEq(abstainVotes, 0);
+        assertLt(forVotes + abstainVotes, governor.quorum(governor.proposalSnapshot(p.id)));
+        vm.warp(governor.proposalDeadline(p.id) + 1);
+        _rejectQueue(p, IGovernor.ProposalState.Defeated);
+    }
+
     function testCannotQueueCanceled() public {
         Payment memory p = _create(REQUEST, recipient, 1_000 ether, "Canceled queue");
         (address[] memory targets, uint256[] memory values, bytes[] memory data) = _actions(p);
@@ -694,6 +710,50 @@ contract TimelockGovernanceTest is Test {
         assertEq(bud.balanceOf(address(treasury)), 9_000 ether);
         assertEq(bud.balanceOf(recipient), 1_000 ether);
         assertEq(bud.balanceOf(otherRecipient), 0);
+    }
+
+    function testSecondProposalWithSharedRequestPaysFirstAndBlocksFirstProposal() public {
+        Payment memory first = _create(REQUEST, recipient, 1_000 ether, "First shared request");
+        Payment memory second = _create(REQUEST, otherRecipient, 2_000 ether, "Second shared request");
+        assertTrue(first.id != second.id);
+        assertTrue(first.operation != second.operation);
+        _approveBoth(first, second);
+
+        vm.recordLogs();
+        _execute(second);
+        vm.expectRevert(abi.encodeWithSelector(Treasury.RequestAlreadyPaid.selector, REQUEST));
+        _execute(first);
+
+        _state(second, IGovernor.ProposalState.Executed);
+        _state(first, IGovernor.ProposalState.Queued);
+        assertTrue(timelock.isOperationDone(second.operation));
+        assertTrue(timelock.isOperationReady(first.operation));
+        assertFalse(timelock.isOperationDone(first.operation));
+        assertTrue(treasury.paidRequests(REQUEST));
+        assertEq(bud.balanceOf(address(treasury)), 8_000 ether);
+        assertEq(bud.balanceOf(recipient), 0);
+        assertEq(bud.balanceOf(otherRecipient), 2_000 ether);
+
+        VmSafe.Log[] memory logs = vm.getRecordedLogs();
+        uint256 payouts;
+        uint256 transfers;
+        bytes32 transferTopic = keccak256("Transfer(address,address,uint256)");
+        for (uint256 i; i < logs.length; ++i) {
+            if (logs[i].emitter == address(treasury) && logs[i].topics[0] == ITreasury.BudgetDisbursed.selector) {
+                assertEq(logs[i].topics[1], REQUEST);
+                assertEq(logs[i].topics[2], bytes32(uint256(uint160(otherRecipient))));
+                assertEq(abi.decode(logs[i].data, (uint256)), 2_000 ether);
+                ++payouts;
+            }
+            if (logs[i].emitter == address(bud) && logs[i].topics[0] == transferTopic) {
+                assertEq(logs[i].topics[1], bytes32(uint256(uint160(address(treasury)))));
+                assertEq(logs[i].topics[2], bytes32(uint256(uint160(otherRecipient))));
+                assertEq(abi.decode(logs[i].data, (uint256)), 2_000 ether);
+                ++transfers;
+            }
+        }
+        assertEq(payouts, 1);
+        assertEq(transfers, 1);
     }
 
     function testConcurrentProposalsDoNotReserveBudgetAndRetryAfterTopup() public {

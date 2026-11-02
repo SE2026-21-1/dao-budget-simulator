@@ -5,6 +5,25 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Kiểm tra revision mới — 02/11/2026
+
+Trên branch `personal/23001850-vt-064-bulk-import`, committed HEAD `0328eea8e3f5fca5fb7c5e1f92fa744720e4f43c`; `feature/tv4-operation` remote `1bb1821`, `Dev` `3ed88c9`. [Lệnh/log, receipt, runtime và giới hạn](evidence/tv4-20261102-0328eea.md); [TC/INV theo revision](test-plan.md#đối-chiếu-theo-head-và-worktree--02112026). [GitHub CI 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41223339668) là của **committed HEAD**, không gồm test/runner/tài liệu đang sửa. PR #21 open, review `COMMENTED` trước head mới; PR #31 draft; issue #18/#19/#20 open. Báo cáo 30/10 ở dưới là lịch sử tại `b476be8`, không phải nghiệm thu HEAD này.
+
+| QA | Trạng thái hiện tại | Evidence local và gate còn mở |
+|---|---|---|
+| QA01 — môi trường/CI | Đã hoàn thành phần local | Node24.15.0, Foundry1.8.5, PG18.4; root/frontend install/build/test, CI HEAD 9/9; worktree sau sửa Foundry 187/187, frontend 14/14, còn warning. CI worktree phải có sau khi commit/push nếu được duyệt. |
+| QA02 — deploy/seed/manifest | Một phần | Native runner deploy chain+DB mới, manifest/receipt trong `governance-storage.json`/`live.json`, bootstrap Anvil 14/14; script `deploy_local.mjs` cố ý chỉ cho unforked Anvil 31337. Chưa có testnet manifest/signer path. |
+| QA03 — role/contract | Một phần | Bootstrap 14/14, integration40/40, former deployer/direct Treasury/Timelock bị từ chối; role graph/120s/links từ actual local. Chờ peer review TV1 và testnet. |
+| QA04 — test matrix | Một phần | [14 TC + 4 INV](test-plan.md#đối-chiếu-theo-head-và-worktree--02112026) có nhãn PARTIAL/BLOCKED và lý do; chưa có đủ independent reset/UI variants. |
+| QA05 — attack | Một phần | Foundry187/187 và Anvil role/replay/underfunded; thêm regression Against không đủ quorum và đảo thứ tự request, integration40/40. Còn raw receipt/API từng variant/reset và peer review. |
+| QA06 — invariant | Một phần | Seed `0x20261021`, 100×50, 5.000 calls, 5 forced execute trong chuỗi cuối; oracle bounded/không phải tổng thống kê100runs hay chứng minh mọi strategy. |
+| QA07 — E2E/rebuild | Một phần | Fresh 55/55 native DB/API, chain→API→Chromium H76/hash Executed và Defeated, SQL/chain H67, hai BE06 compare equal, reorg 503/409/orphan0; chưa có ví extension ký thật hoặc peer. |
+| QA08 — chất lượng/testnet | Một phần | Browser API live 390/1366 không tràn, keyboard Tab/Enter skip/nav trên fixture; frontend lint0error/8warning, build bundle warning. Benchmark **HEAD/worktree mới** 100 proposal/1.000 vote, 10 clients/60s, 5.947 thành công/0 lỗi, p95 179,998ms; raw/evidence tạm ngoài repo. Chưa toàn bộ keyboard/form với ví extension và chưa testnet. |
+| QA09 — evidence/tài liệu | Một phần | Evidence report tại link trên gắn SHA/lệnh/hash, raw logs và ảnh vẫn tạm ở `/tmp`, chưa publish GitHub hay peer xác nhận. Không dùng CI cũ thay chứng cứ mới. |
+| QA10 — chốt/diễn tập | Còn thiếu | Chưa có CI cho worktree, peer approval, ví thật, testnet Executed/Defeated, clone máy khác và tag; không tự merge/đóng issue. |
+
+**Ưu tiên tiếp:** (1) giữ gate an toàn chi/role, rà TC02/TC10 và peer review; (2) clone sạch/rebuild cùng H/hash và kiểm phục hồi; (3) extension-wallet/account thật, UX/keyboard/performance ở revision mới; (4) testnet chỉ sau khi nhóm chốt network/RPC/signer/Osaka và cho phép; (5) công bố evidence/CI đúng SHA rồi mới diễn tập/tag. Lượt này đã chạy lại Foundry **187/187**, bootstrap **14/14**, frontend **14/14**, native TV4 **55/55**, BE07 trên clone sạch **172 unit + 73 DB** và Chromium live read-only. Đây là kết quả **local**, không phải CI của worktree hoặc testnet. Các phần cần thiết bị/peer/ủy quyền giữ mở.
+
 ## Đối chiếu tiến độ dự án — 30/10/2026
 
 Phạm vi: nhánh `feature/tv4-operation` từ `501eea1` (commit tài liệu

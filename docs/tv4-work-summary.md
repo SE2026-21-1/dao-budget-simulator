@@ -8,6 +8,12 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Cập nhật 02/11/2026 — đúng HEAD `0328eea`, local không thay testnet
+
+[Evidence revision mới](evidence/tv4-20261102-0328eea.md) và [QA01–QA10/ma trận TC/INV](tv4-checklist.md#kiểm-tra-revision-mới--02112026) ghi lệnh, môi trường, giới hạn và blocker. Worktree TV4 bổ sung regression TC02 For100/Against200 không đủ quorum và TC10 đảo thứ tự proposal chung request, cùng runner `--ui` giữ chain/DB/API đến khi Chromium kiểm browser. Sau sửa, Foundry187/187, integration40/40, Anvil bootstrap14/14; native55/55 trên chain/DB mới, API/UI Executed+Defeated cùng H76/hash, reorg/cursor 503/409 và BE06 compare equal; clone sạch cùng máy ở committed HEAD có BE07 172 unit+73 DB. CI GitHub9/9 chỉ thuộc committed HEAD; diff local chưa được CI. Chromium dùng API thật nhưng **không có ví extension**, demo đã dừng sau cleanup. Chưa deploy testnet, chưa peer approval/clone máy khác, không coi lệnh hoặc số liệu ngày 25–30/10 dưới đây là bằng chứng HEAD hiện tại.
+
+NFR02 benchmark riêng trên fresh local Anvil/PostgreSQL: 100 proposal/1.000 vote, 10 clients/60s, 5.947 thành công/0 lỗi, p95 179,998ms; [raw report và giới hạn](evidence/tv4-20261102-0328eea.md). Không phải số liệu testnet hay xác nhận trên máy khác.
+
 ## Cập nhật 27/10/2026 — nhận giao diện TV3
 
 - Fast-forward nhánh TV4 từ `387a489` tới `f3f3bc5` của TV3: dashboard mới, phát hiện ví EVM và script khởi chạy frontend trên Windows. Các thay đổi TV4/AD-064 đang để local không bị ghi đè.

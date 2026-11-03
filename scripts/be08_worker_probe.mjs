@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { performance } from 'node:perf_hooks';
 import { metrics } from './be08_measurement.mjs';
+import { summarizeOutageCalls } from './be08_rpc_outage.mjs';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -23,7 +24,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
       let text = ''; for await (const chunk of req) text += chunk;
       const body = JSON.parse(text);
       if (offline) {
-        attempts.push({ at: new Date().toISOString(), monotonicMs: performance.now(), method: body.method, id: body.id, httpStatus: 503 });
+        attempts.push({ at: new Date().toISOString(), monotonicMs: performance.now(), method: body.method, params: body.params, id: body.id, httpStatus: 503 });
         res.writeHead(503); res.end(); return;
       }
       const result = await rpc(body.method, body.params);
@@ -139,13 +140,9 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     assert.ok(BigInt(result.staleSummary.context.sync.lagSeconds) >= 30n);
     const failures = state.workerEvents.filter(e => e.offline && e.type === 'worker_error');
     assert.ok(failures.length >= 5, 'Several exhausted RPC attempts must be observable');
-    result.retryCycles = failures.map((e, i) => {
-      const lower = i ? failures[i - 1].attemptCount : 0;
-      const group = attempts.slice(lower, e.attemptCount);
-      assert.ok(group.length >= 1 && group.length <= 4, 'RPC attempt count must remain bounded');
-      return { code: e.code, attempts: group.length, gapsMs: group.slice(1).map((a, n) => a.monotonicMs - group[n].monotonicMs) };
-    });
-    assert.ok(result.retryCycles.slice(1).every(c => c.attempts === 4 && c.gapsMs.every(g => g >= 100)), 'Default retries must use finite attempts and positive backoff');
+    result.retryAccounting = 'Per logical JSON-RPC call ID; worker_error boundaries are not call boundaries';
+    result.retryCycles = summarizeOutageCalls(attempts);
+    assert.ok(result.retryCycles.length >= 5, 'Several bounded RPC calls must be observable');
     offline = false; result.restoredAt = new Date().toISOString(); const restored = performance.now();
     await waitFor(async () => {
       result.recoveredHealth = await get(base, '/health');

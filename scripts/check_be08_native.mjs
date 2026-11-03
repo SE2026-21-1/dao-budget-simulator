@@ -324,7 +324,7 @@ try {
     BE06_TEST_REFERENCE_DATABASE_URL: url('tv4_be06_reference', 'be06_test'), BE06_TEST_TARGET_DATABASE_URL: url('tv4_be06_target', 'be06_test') });
   await suite('typecheck',()=>run('typecheck',process.execPath,['node_modules/typescript/bin/tsc','--noEmit'],{group:true}));
   await suite('build',()=>run('build',process.execPath,['node_modules/typescript/bin/tsc','-p','tsconfig.build.json'],{group:true}));
-  await testSuite('unit',['config.test.ts','decoder.test.ts','reader.test.ts','cli.test.ts','syncer.test.ts','projection.test.ts','be04-live-receipt.test.mjs','be06.test.ts','be07.test.ts','be08-measurement.test.mjs','be08-postgres-identity.test.mjs'].map(p=>'tests/indexer/'+p),{});
+  await testSuite('unit',['config.test.ts','decoder.test.ts','reader.test.ts','cli.test.ts','syncer.test.ts','projection.test.ts','be04-live-receipt.test.mjs','be06.test.ts','be07.test.ts','be08-measurement.test.mjs','be08-postgres-identity.test.mjs','be08-rpc-outage.test.mjs'].map(p=>'tests/indexer/'+p),{});
   await testSuite('be07-db','tests/indexer/be07-db.test.mjs',{BE07_TEST_ISOLATED:'1',BE07_TEST_DATABASE_URL:url('be07_test','be04_test')});
   await suite('contracts',()=>run('contracts','bash',['scripts/ci.sh'],{group:true,timeout:600_000,env:{FOUNDRY_PROFILE:'ci',FOUNDRY_FUZZ_SEED:'0x20261021'}}));
   await suite('live-be07',async()=>{

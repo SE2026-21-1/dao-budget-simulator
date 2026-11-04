@@ -475,7 +475,7 @@ try {
   );
   const balanceAfterTopUp = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
   assert.equal(balanceAfterTopUp, 12000n * U);
-  await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs, underfundEta + 2n);
+  await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs);
   const paidAfterRetry = (await call('Treasury', 'paidRequests', [underfundRequest]))[0];
   assert.equal(paidAfterRetry, true);
   const final = await phase('funded retry succeeds', { ...queued, payment: 'Executed', 'underfunded-retry': 'Executed' });

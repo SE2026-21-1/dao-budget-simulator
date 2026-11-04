@@ -96,10 +96,23 @@ không tự viết lại kiểm tra quyền/voting tiêu chuẩn. Không đưa l
 | Timelock CANCELLER_ROLE | BudgetGovernor |
 | Timelock DEFAULT_ADMIN_ROLE | chính TimelockController |
 
-TV4 viết deploy/check-roles. Trình tự dự kiến: deploy token/Treasury/Timelock theo constructor
-đã thống nhất → deploy Governor với các địa chỉ → cấp role cuối cùng → cấp BUD demo →
-deployer renounce mọi admin tạm → kiểm tra role/số dư trước bàn giao.
-Thứ tự chi tiết token/Treasury phải tránh phụ thuộc constructor vòng; chốt khi SC02–SC05.
+TV1 sở hữu thiết kế quyền, integration tests và tài liệu SC05; TV4 sở hữu deploy/check-roles,
+operation preflight và bằng chứng triển khai. Trình tự bàn giao SC05:
+deploy GOV/BUD → Treasury → Timelock → Governor → grant role cuối cùng → preflight →
+cleanup/revoke role tạm → kiểm lại trước renounce → renounce admin bootstrap cuối cùng →
+final audit → funding Treasury. Không nạp BUD trước khi final audit đạt.
+
+Preflight kiểm identity/config/liên kết contract, admin graph, toàn bộ lịch sử role và operation
+từ deployment đến cùng block H/hash. Trước cleanup chỉ chấp nhận final holders cộng bootstrap
+đã duyệt; trước renounce chỉ còn bootstrap admin cuối cùng ngoài final matrix. Chính sách bootstrap
+mới là không có operation từng được schedule, kể cả đã cancel hoặc Done. Revoke proposer không
+xóa operation cũ. Gate lỗi phải dừng renounce/funding; sau renounce audit lại trước funding.
+Xem trình tự và giới hạn đầy đủ trong [SC05](sc05-timelock-roles.md).
+
+**Bàn giao còn mở cho TV4:** `scripts/governance_local.mjs` hiện renounce trước role audit và
+chưa audit lịch sử operation. Helper preflight trong Foundry không thay thế gate của deployment
+script. TV4 cần bổ sung gate và negative controls, lưu bằng chứng local; TV1 review trước testnet.
+Test contract xanh chưa đồng nghĩa SC05 đã nghiệm thu deployment hoàn toàn.
 Mọi ví có thể queue/execute qua Governor khi hợp lệ; ví thường không schedule/execute trực tiếp Timelock.
 Không có đường chi riêng của deployer hoặc hủy khẩn cấp sau Pending; chỉ creator hủy Pending.
 

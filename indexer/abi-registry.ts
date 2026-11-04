@@ -1,7 +1,7 @@
 import { Interface } from 'ethers';
 import type { ContractConfig, ContractRole } from './types.js';
 
-/** Event subsets only: these are not the ABI of a deployed BudgetGovernor. */
+/** Event subsets only, not a full implementation ABI or a deployment claim. */
 export interface AbiRegistration {
   role: ContractRole;
   version: string;
@@ -27,11 +27,14 @@ function register(role: ContractRole, version: string, source: string, abi: stri
 
 // The OpenZeppelin revision is the v5.4.0 revision pinned in foundry.lock.
 // Event indexed flags were verified against these pinned upstream Solidity files.
-// SC06 has not supplied implementation ABIs or real deployment receipts yet.
+// Fresh BE03 local raw/checkpoint/WithParams acceptance is recorded in
+// docs/evidence/be03-integration-20261024. The awaiting-sc06 compatibility label
+// tracks pending SC06/TV1/TV4 handoff approval, not the result of that local run.
 export const ABI_REGISTRY: Readonly<Record<string, AbiRegistration>> = Object.freeze({
   'oz-5.4.0-governor': register('governor', 'oz-5.4.0-governor', `${ozSource}governance/IGovernor.sol`, [
     'event ProposalCreated(uint256 proposalId, address proposer, address[] targets, uint256[] values, string[] signatures, bytes[] calldatas, uint256 voteStart, uint256 voteEnd, string description)',
     'event VoteCast(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason)',
+    'event VoteCastWithParams(address indexed voter, uint256 proposalId, uint8 support, uint256 weight, string reason, bytes params)',
     'event ProposalQueued(uint256 proposalId, uint256 etaSeconds)',
     'event ProposalExecuted(uint256 proposalId)',
     'event ProposalCanceled(uint256 proposalId)',

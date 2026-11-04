@@ -1,0 +1,31 @@
+{
+  "sourceBinding": "PASS",
+  "baselineRun7ImplementationUnchangedExceptSixAuditPathsVerifiedAgainstAuditManifest": true,
+  "auditPaths": [
+    "indexer/api/server.ts",
+    "indexer/recovery.ts",
+    "indexer/storage.ts",
+    "indexer/syncer.ts",
+    "tests/api/server.test.mjs",
+    "tests/indexer/be07-db.test.mjs"
+  ],
+  "originalEvidenceChecksums": "117/117 match",
+  "whitespace": {
+    "codeDocsJson": "PASS",
+    "rawEvidenceLogsAndPatchContext": "original whitespace preserved; full cached diff check flags only these raw artifacts"
+  },
+  "secretScan": {
+    "tool": "gitleaks 8.30.1",
+    "rawExitCode": 1,
+    "findings": 248,
+    "confirmedCredentials": 0,
+    "triage": "gitleaks-triage.json"
+  },
+  "originalUserDirtyCheckout": "preserved",
+  "prBase": "feature/tv2-be06",
+  "DevContainsBE05": false,
+  "DevContainsBE06": false,
+  "ciRemote": "not run before publication",
+  "tv4Acceptance": "not run",
+  "NFR03Limit": "local workload sample only"
+}

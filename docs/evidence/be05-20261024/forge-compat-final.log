@@ -1,0 +1,11 @@
+command=forge test --match-path tests/unit/OperationAbiCompatibility.t.sol
+No files changed, compilation skipped
+
+Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest
+[PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)
+[PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 1.88ms (1.72ms CPU time)
+
+Ran 1 test suite in 6.85ms (1.88ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
+
+exit_code=0

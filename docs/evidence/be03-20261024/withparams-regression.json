@@ -1,0 +1,26 @@
+{
+  "source": "Synthetic log encoded from shared/abi/BudgetGovernor.json compiler ABI; not a mined receipt",
+  "command": "node --import tsx --test --test-name-pattern=VoteCastWithParams tests/indexer/decoder.test.ts",
+  "beforeRegistryFix": {
+    "exitCode": 1,
+    "passed": 0,
+    "failed": 1,
+    "actualStatus": "unknown_topic",
+    "actualCode": "UNKNOWN_TOPIC",
+    "topic": "0xe2babfbac5889a709b63bb7f598b324e08bc5a4fb9ec647fb3cbc9ec07eb8712"
+  },
+  "afterRegistryFix": {
+    "status": "PASS in test:be02 (64/64)",
+    "fields": ["voter", "proposalId", "support", "weight", "reason", "params"],
+    "proposalId": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+    "weight": "57896044618658097711785492504343953926634992332820282019728792003956564820091",
+    "params": "0x0001ff00",
+    "rawPreserved": true
+  },
+  "contractCrossCheck": {
+    "implementation": "contracts/BudgetGovernor.sol inherits OpenZeppelin Governor",
+    "lockedOZRevision": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+    "source": "lib/openzeppelin-contracts/contracts/governance/Governor.sol",
+    "behavior": "Nonempty params emit VoteCastWithParams; empty params emit VoteCast"
+  }
+}

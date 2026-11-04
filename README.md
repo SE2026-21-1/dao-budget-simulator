@@ -5,7 +5,8 @@ Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích h�
 Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
 Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
 → PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
-HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API end-to-end.
+BE05 HTTP API đọc PostgreSQL đã có, nhưng frontend/wallet chưa tích hợp API và
+chưa có demo UI→chain→API end-to-end.
 
 ## Trạng thái các task TV1
 
@@ -18,7 +19,7 @@ HTTP API và ví giao dịch chưa hoàn tất, chưa có demo UI→chain→API 
 | SC05 — Timelock và quyền sau deploy | TV1 có test tích hợp final roles/ETA/retry và tài liệu bàn giao; chờ peer review, deployment/testnet riêng |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | Có script contract local; E2E frontend/indexer/API vẫn chờ module thật |
+| SC08 — Tích hợp local | Có script contract local; E2E frontend/wallet/API còn chờ tích hợp consumer |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
 | SC10 — Testnet và bàn giao | Chưa thực hiện |
 
@@ -359,7 +360,7 @@ nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
 ## BE02 — RPC log reader và decoder
 
 BE02 được tích hợp từ `4c568d6`; [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12)
-được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 11 event
+được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 12 event
 và ghi header/raw log trong transaction PostgreSQL. Chưa có projection,
 HTTP API, checkpoint, K confirmations, resume/reorg rollback hoặc rebuild.
 Suite BE02 dùng synthetic RPC; smoke SC03 bổ sung decode receipt Treasury/BUD
@@ -408,3 +409,92 @@ deployment block, ABI version và `deploymentId` bằng metadata đã xác minh.
 Địa chỉ trong mẫu là synthetic. CLI không tự nạp `.env`, không tạo deployment;
 exit code `2` báo raw log đã lưu nhưng có unknown topic/decode error.
 Xem [checklist BE02](docs/be02-checklist.md) để biết kết quả và phần chờ SC06.
+
+## BE03 — checkpoint, confirmations và resume
+
+Luồng BE03 dùng `--sync`, lưu checkpoint raw theo chain/deployment và bộ nguồn
+manifest; restart tự kiểm tra hash rồi tiếp tục H+1. `confirmations` là số nguyên
+JSON, mặc định `2`: chỉ nhận H ≤ head−K. Cần chạy thêm migration
+`database/migrations/002_be03.sql`; giữ nguyên migration BE01.
+
+```powershell
+npm run indexer -- --config indexer/config/local.json --sync
+npm run test:be03
+npm run test:be03:db
+```
+
+Chạy lại lệnh `--sync` để resume. Dải BE02 không có cờ vẫn là công cụ quét hữu
+hạn; không dùng nó ghi vào deployment đã có checkpoint BE03. Đọc
+[quy trình migrate/start/restart và phục hồi decode](docs/be03.md),
+[checklist BE03](docs/be03-checklist.md) và
+[bằng chứng tích hợp mới](docs/evidence/be03-integration-20261024/report.md).
+Lịch sử BLOCKED giữ trong checklist. Tích hợp raw/checkpoint PASS tại H=32,
+head=34; 16 topic quản trị bootstrap ngoài ABI subset vẫn unknown, nên CLI
+trả exit 2 / DECODE_INCOMPLETE, không phải decodeComplete=true.
+
+## BE04 — proposal và sổ dòng tiền
+
+BE04 bổ sung projection proposal/vote/operation/transfer/disbursement, đối chiếu
+contract tại cùng H và công bố một snapshot nhất quán. Chạy migration
+`database/migrations/003_be04.sql` sau 001/002 rồi dùng:
+
+```bash
+npm run indexer -- --config indexer/config/local.json --sync-project
+# Hoặc tạo lại projection từ raw checkpoint hiện có, không quét lại log:
+npm run indexer -- --config indexer/config/local.json --project
+npm run test:be04
+npm run test:be04:db
+# Cần forge build, Anvil và Docker; tự tạo chain/DB local mới:
+mkdir -p reports
+npm run test:be04:live
+```
+
+H/hash/revision của bảng truy vấn lấy từ `projection_checkpoints`, có thể thấp
+hơn raw checkpoint khi đối soát chưa thành công. Chỉ BUD Transfer được tính
+dòng tiền; BudgetDisbursed nối đúng khoản chi và proposal thực thi. Trạng thái
+được cập nhật cả ở block trống, không cần event mới. RPC phải hỗ trợ historical
+`eth_call` với EIP-1898 canonical block hash.
+
+Xem [hướng dẫn BE04](docs/be04.md), [checklist](docs/be04-checklist.md),
+[SQL truy vấn](database/queries/be04_read_model.sql) và
+[evidence baseline](docs/evidence/be04-20261024/report.md). Hai lỗi P2 có
+regression trước/sau và live runner chính thức 10/10 phase tại
+[báo cáo sửa P2](docs/evidence/be04-p2-fix-20261024/report.md).
+HTTP API thuộc BE05, rebuild/compare thuộc BE06, reorg rollback/retry thuộc
+BE07 và benchmark thuộc BE08.
+
+## BE05 — HTTP API đọc
+
+API có sáu GET endpoint theo [đặc tả API](docs/api.md). Chạy migration
+`database/migrations/004_be05_api.sql` sau 001–003, cấu hình `DATABASE_URL` tới
+database BE03/BE04 và đặt secret HMAC ổn định:
+
+```bash
+npm ci
+export API_CURSOR_SECRET="$(openssl rand -hex 32)"
+npm run api
+npm run typecheck
+npm run build
+npm run test:api:db
+```
+
+Mặc định server chỉ bind `127.0.0.1:3000`; có thể cấu hình `API_HOST`,
+`API_PORT`, `API_SNAPSHOT_TTL_SECONDS` và `API_CORS_ORIGINS`. Snapshot immutable
+được lưu riêng để cursor tiếp tục đọc đúng H sau khi BE04 tiến lên; GET đầu tạo
+cache chỉ đọc trong các bảng `api_read_*`, không sửa raw/projection/business tables. H lịch sử
+chỉ còn phục vụ trong TTL nếu đã được API lưu. API không gọi RPC/indexer/projector
+và không gửi transaction. Test database dùng container PostgreSQL 18.4 mới,
+port chỉ bind loopback; wrapper từ chối dùng `DATABASE_URL` hiện có. Xem
+[hướng dẫn chạy, cursor và ví dụ curl](docs/api.md#7-chạy-api-be05).
+
+## BE06 — rebuild và compare tại H
+
+BE06 dựng database riêng từ verified manifest + RPC ở H cụ thể, rồi compare với
+publication BE04 đúng cùng H/hash; target không được là database API đang chạy.
+Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06.md) và
+[bằng chứng nghiệm thu](docs/evidence/be06-20261024/summary.md). Reorg/retry tự
+động thuộc BE07, benchmark thuộc BE08.
+
+## BE07 recovery và worker
+
+Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.

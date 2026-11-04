@@ -1,5 +1,12 @@
 # BE02 — checklist triển khai và bằng chứng
 
+Bổ sung ngày **24/10/2026** trên `feature/tv2-be03`, nền Dev `1a4c262`:
+đã tái hiện regression `VoteCastWithParams` trả UNKNOWN_TOPIC, thêm fragment
+đúng `shared/abi/BudgetGovernor.json` và IGovernor v5.4.0. Test compiler-ABI
+synthetic giữ đủ voter/proposalId/support/weight/reason/params, PASS sau sửa.
+Suite BE02 hiện **64/64**, PostgreSQL **21/21**. Fixture trong regression không
+phải receipt thật. BE03 và giới hạn tích hợp mới ghi ở [checklist BE03](be03-checklist.md).
+
 Ghi nhận gốc TV2: **20/10/2026** (Asia/Bangkok), nhánh `feature/tv2-be02`,
 nền `origin/Dev` tại `1b247000396c3209bedf823c94e1ec1255239293` (merge BE01
 PR #4). Kết quả Windows bên dưới thuộc lần bàn giao này, không phải kết quả

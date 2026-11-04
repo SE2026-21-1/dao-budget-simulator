@@ -1,0 +1,80 @@
+[
+  {
+    "label": "be07-db",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/be07-db.test.mjs"
+    ],
+    "start": "2026-10-25T16:06:45.305Z",
+    "end": "2026-10-25T16:06:48.034Z",
+    "exitCode": 0
+  },
+  {
+    "label": "api-db",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/api/server.test.mjs"
+    ],
+    "start": "2026-10-25T16:06:48.040Z",
+    "end": "2026-10-25T16:06:48.915Z",
+    "exitCode": 1
+  },
+  {
+    "label": "affected-unit",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/syncer.test.ts",
+      "tests/indexer/be07.test.ts"
+    ],
+    "start": "2026-10-25T16:06:48.921Z",
+    "end": "2026-10-25T16:06:49.762Z",
+    "exitCode": 0
+  },
+  {
+    "label": "typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "start": "2026-10-25T16:06:49.769Z",
+    "end": "2026-10-25T16:06:52.706Z",
+    "exitCode": 0
+  },
+  {
+    "label": "build",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.build.json"
+    ],
+    "start": "2026-10-25T16:06:52.712Z",
+    "end": "2026-10-25T16:06:54.641Z",
+    "exitCode": 0
+  },
+  {
+    "label": "live",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "scripts/check_be04_live.mjs",
+      "--output",
+      "/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "--be07"
+    ],
+    "start": "2026-10-25T16:06:54.646Z",
+    "end": "2026-10-25T16:07:37.914Z",
+    "exitCode": 0
+  }
+]

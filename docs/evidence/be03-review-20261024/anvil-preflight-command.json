@@ -1,0 +1,7 @@
+{
+  "command": "node docs/evidence/be03-review-20261024/probe-anvil.mjs",
+  "executionContext": "require_escalated",
+  "exitCode": 0,
+  "log": "anvil-preflight.json",
+  "precedingSandboxFailure": "Cast chain-id: loopback connection refused (os error 10061); Node RPC succeeded, Anvil stopped in finally"
+}

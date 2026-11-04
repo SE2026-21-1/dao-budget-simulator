@@ -1,0 +1,324 @@
+{
+  "dateUtc": "2026-10-24T08:14:26Z",
+  "repository": "https://github.com/SE2026-21-1/dao-budget-simulator",
+  "auditBase": "9ea62ec93e0ec309d85d5d21dcd1ab9b4f5345ed",
+  "be03Base": "4b9f060e8e2bdef7849b09d55ddeaf6a90545d4d",
+  "fixBranch": "fix/be04-audit-p2-20261024",
+  "workingTreeCommit": "9ea62ec93e0ec309d85d5d21dcd1ab9b4f5345ed",
+  "environment": {
+    "uid": 1000,
+    "uname": {
+      "system": "Linux",
+      "node": "CuONGTUF",
+      "release": "6.18.54.1-microsoft-standard-WSL2",
+      "version": "#1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026",
+      "machine": "x86_64",
+      "processor": ""
+    },
+    "distribution": [
+      "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"",
+      "NAME=\"Ubuntu\"",
+      "VERSION_ID=\"26.04\"",
+      "VERSION=\"26.04.1 LTS (Resolute Raccoon)\""
+    ],
+    "postgresCluster": "/tmp/dao-be04-fix-p2-20261024/pgdata",
+    "postgresPort": "127.0.0.1:55474",
+    "postgresRunUid": 1000,
+    "dockerAvailable": false,
+    "powershellAvailable": false
+  },
+  "commands": {
+    "git_head": {
+      "command": "git rev-parse HEAD",
+      "exitCode": 0,
+      "output": "9ea62ec93e0ec309d85d5d21dcd1ab9b4f5345ed"
+    },
+    "git_branch": {
+      "command": "git branch --show-current",
+      "exitCode": 0,
+      "output": "fix/be04-audit-p2-20261024"
+    },
+    "submodules": {
+      "command": "git submodule status --recursive",
+      "exitCode": 0,
+      "output": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219 lib/forge-std (v1.17.0)\n c64a1edb67b6e3f4a15cca8909c9482ad33a02b0 lib/openzeppelin-contracts (v4.8.0-952-gc64a1edb)\n 232ff9ba8194e406967f52ecc5cb52ed764209e9 lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.1)\n 3b20d60d14b343ee4f908cb8079495c07f5e8981 lib/openzeppelin-contracts/lib/forge-std (v1.9.6)\n 7328abe100445fc53885c21d0e713b95293cf14c lib/openzeppelin-contracts/lib/halmos-cheatcodes (7328abe)"
+    },
+    "git_status": {
+      "command": "git status --short --branch",
+      "exitCode": 0,
+      "output": "## fix/be04-audit-p2-20261024\n M docs/be03.md\n M docs/be04.md\n M indexer/cli.ts\n M indexer/storage.ts\n M package.json\n M scripts/check_be04_live.mjs\n M scripts/governance_local.mjs\n M tests/indexer/projection-storage.test.ts\n?? scripts/audit_be04_live.mjs\n?? scripts/receipt.mjs\n?? tests/indexer/be04-live-receipt.test.mjs"
+    },
+    "remote_be03": {
+      "command": "git ls-remote origin refs/heads/feature/tv2-be03",
+      "exitCode": 0,
+      "output": "4b9f060e8e2bdef7849b09d55ddeaf6a90545d4d\trefs/heads/feature/tv2-be03"
+    },
+    "remote_be04": {
+      "command": "git ls-remote origin refs/heads/feature/tv2-be04",
+      "exitCode": 0,
+      "output": "9ea62ec93e0ec309d85d5d21dcd1ab9b4f5345ed\trefs/heads/feature/tv2-be04"
+    },
+    "os": {
+      "command": "uname -a",
+      "exitCode": 0,
+      "output": "Linux CuONGTUF 6.18.54.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026 x86_64 GNU/Linux"
+    },
+    "node": {
+      "command": "/home/cuongdz/projects/dao-be04-audit/tools-audit/node-v24.15.0-linux-x64/bin/node --version",
+      "exitCode": 0,
+      "output": "v24.15.0"
+    },
+    "npm": {
+      "command": "/home/cuongdz/projects/dao-be04-audit/tools-audit/node-v24.15.0-linux-x64/bin/npm --version",
+      "exitCode": 0,
+      "output": "11.12.1"
+    },
+    "forge": {
+      "command": "/home/cuongdz/.foundry/bin/forge --version",
+      "exitCode": 0,
+      "output": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist"
+    },
+    "anvil": {
+      "command": "/home/cuongdz/.foundry/bin/anvil --version",
+      "exitCode": 0,
+      "output": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist"
+    },
+    "solc": {
+      "command": "/home/cuongdz/.svm/0.8.37/solc-0.8.37 --version",
+      "exitCode": 0,
+      "output": "solc, the solidity compiler commandline interface\nVersion: 0.8.37+commit.f401782d.Linux.g++"
+    },
+    "postgres_client": {
+      "command": "/home/cuongdz/projects/dao-be04-audit/tools-audit/pg18/usr/lib/postgresql/18/bin/psql --version",
+      "exitCode": 0,
+      "output": "psql (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg26.04+1)"
+    },
+    "postgres_server_version": {
+      "command": "/home/cuongdz/projects/dao-be04-audit/tools-audit/pg18/usr/lib/postgresql/18/bin/psql -h 127.0.0.1 -p 55474 -U be04_test -d be04_live -Atc SELECT version()",
+      "exitCode": 0,
+      "output": "PostgreSQL 18.4 (Ubuntu 18.4-1.pgdg26.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, 64-bit"
+    },
+    "postgres_identity": {
+      "command": "/home/cuongdz/projects/dao-be04-audit/tools-audit/pg18/usr/lib/postgresql/18/bin/psql -h 127.0.0.1 -p 55474 -U be04_test -d be04_live -Atc SELECT current_user,inet_server_addr(),inet_server_port()",
+      "exitCode": 0,
+      "output": "be04_test|127.0.0.1|55474"
+    },
+    "docker_path": {
+      "command": "/usr/bin/env bash -lc command -v docker",
+      "exitCode": 1,
+      "output": ""
+    },
+    "powershell_path": {
+      "command": "/usr/bin/env bash -lc command -v powershell",
+      "exitCode": 1,
+      "output": ""
+    }
+  },
+  "checks": [
+    {
+      "name": "dependency install",
+      "command": "npm ci",
+      "status": "PASS",
+      "exitCode": 0,
+      "result": "30 packages from lockfile; 0 vulnerabilities",
+      "evidence": "npm-ci.log"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "typecheck-final.log"
+    },
+    {
+      "name": "TypeScript build",
+      "command": "npm run build",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "build-final.log"
+    },
+    {
+      "name": "BE02 unit",
+      "command": "npm run test:be02",
+      "status": "PASS",
+      "tests": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be02-unit.log"
+    },
+    {
+      "name": "BE03 unit",
+      "command": "npm run test:be03",
+      "status": "PASS",
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be03-unit.log"
+    },
+    {
+      "name": "BE04 unit plus receipt waiter regression",
+      "command": "npm run test:be04",
+      "status": "PASS",
+      "tests": 27,
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be04-unit-final.log"
+    },
+    {
+      "name": "BE01 migration and SQL checks",
+      "command": "psql ... -f database/migrations/001_initial.sql -f database/tests/001_initial_checks.sql",
+      "status": "PASS",
+      "exitCode": 0,
+      "result": "BE01 checks passed on new PostgreSQL database",
+      "evidence": "be01-migration.log"
+    },
+    {
+      "name": "BE02 PostgreSQL storage",
+      "command": "node --import tsx --test tests/indexer/storage.test.ts with BE02_TEST_ISOLATED=1 against isolated be02_test DB",
+      "status": "PASS",
+      "tests": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be02-db.log"
+    },
+    {
+      "name": "BE03 PostgreSQL checkpoint/crash/restart",
+      "command": "node --import tsx --test tests/indexer/checkpoint-storage.test.ts with BE03_TEST_ISOLATED=1 against isolated be03_test DB",
+      "status": "PASS",
+      "tests": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be03-db.log"
+    },
+    {
+      "name": "BE04 PostgreSQL projection/recovery",
+      "command": "node --import tsx --test tests/indexer/projection-storage.test.ts with BE04_TEST_ISOLATED=1 against isolated be04_test DB",
+      "status": "PASS",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "be04-db-final.log"
+    },
+    {
+      "name": "BE04 redecode regression on pre-fix SHA",
+      "command": "same 10-test BE04 DB suite in detached worktree at 9ea62ec with current regression test copied in; fresh isolated be04_test DB",
+      "status": "FAIL_AS_EXPECTED",
+      "exitCode": 1,
+      "tests": 10,
+      "passed": 7,
+      "failed": 3,
+      "skipped": 0,
+      "evidence": "redecode-before-fix.log"
+    },
+    {
+      "name": "Solidity contract/ABI CI",
+      "command": "FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh",
+      "status": "PASS",
+      "tests": 142,
+      "passed": 142,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "contracts-ci.log"
+    },
+    {
+      "name": "Forge build",
+      "command": "forge build",
+      "status": "PASS",
+      "exitCode": 0,
+      "result": "pinned compiler/metadata; no changed Solidity files, compilation was cached",
+      "evidence": "forge-build.log"
+    },
+    {
+      "name": "official BE04 live integration runner",
+      "command": "node --import tsx scripts/check_be04_live.mjs --output ../audit-artifacts/fix-p2-20261024/be04-live-final-run.json; direct invocation with owned unforked Anvil and isolated be04_live PostgreSQL 18.4 DB",
+      "status": "PASS",
+      "exitCode": 0,
+      "phases": 10,
+      "H": "67",
+      "hash": "0x7b66ac580f1eac86167d0bdc26a7534fe8c15b852fa38d671bf23b488014c836",
+      "evidence": "be04-live-final-run.json; be04-live-final-run.log",
+      "projectionRevision": "33fb82ad-8298-4174-ba36-06b23bb3a2a0",
+      "receipts": 24
+    },
+    {
+      "name": "live PostgreSQL SQL verification and dump",
+      "command": "pg_dump and psql summary against isolated be04_live DB",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "be04-live-final-run-sql.log; full SQL dump retained locally outside PR bundle"
+    },
+    {
+      "name": "source hashes and deployment provenance",
+      "command": "live runner sourceHashes compared with working tree SHA-256; contract ABI/compiler artifacts checked by deployment helper",
+      "status": "PASS",
+      "filesMatching": 14,
+      "evidence": "source-provenance.json; be04-live-final-run.json",
+      "filesChecked": 14
+    },
+    {
+      "name": "diff whitespace check",
+      "command": "git diff --check",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "diff-check.log"
+    },
+    {
+      "name": "JavaScript syntax check",
+      "command": "node --check scripts/receipt.mjs && node --check scripts/check_be04_live.mjs && node --check scripts/governance_local.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "node-syntax-check.log"
+    },
+    {
+      "name": "Docker DB wrappers",
+      "command": "npm run test:be02:db:linux; npm run test:be04:db; npm run test:be04:live",
+      "status": "BLOCKED",
+      "result": "Docker executable unavailable; direct PostgreSQL 18.4 suites and live runner passed",
+      "evidence": "be02-db-wrapper-blocked.log; be04-db-wrapper-blocked.log; be04-live-wrapper-blocked.log"
+    },
+    {
+      "name": "PowerShell BE03 wrapper",
+      "command": "npm run test:be03:db",
+      "status": "BLOCKED",
+      "result": "powershell: not found; direct PostgreSQL 18.4 BE03 suite passed",
+      "evidence": "be03-db-wrapper-blocked.log"
+    },
+    {
+      "name": "GitHub Actions after fix",
+      "command": "No push or PR update was authorized",
+      "status": "NOT RUN",
+      "result": "PR #23 remains on the original remote SHA; its old live-runner failure is retained as pre-fix evidence",
+      "evidence": "../ci-live-failure.log"
+    }
+  ],
+  "cleanup": {
+    "temporaryBaselineWorktreeRemoved": true,
+    "isolatedPostgresClusterStoppedAndRemoved": true,
+    "evidenceRetained": "/home/cuongdz/projects/dao-be04-audit/audit-artifacts/fix-p2-20261024"
+  },
+  "finalLiveContext": {
+    "H": "67",
+    "hash": "0x7b66ac580f1eac86167d0bdc26a7534fe8c15b852fa38d671bf23b488014c836",
+    "projectionRevision": "33fb82ad-8298-4174-ba36-06b23bb3a2a0",
+    "chainId": "31337",
+    "deploymentId": "1",
+    "anvilInstanceId": "0x19f445e23529d1be117592c26335a5826302e622ff0c82ec5949c113e2bf6252",
+    "anvilGenesisHash": "0xbf48bc3c82308c9f095294b82fb69a9d32425e21de16ef725a531fd6ff2d8c9c",
+    "database": "be04_live",
+    "databaseHost": "127.0.0.1",
+    "databasePort": 55474,
+    "transferIn": "13000000000000000000000",
+    "transferOut": "12000000000000000000000",
+    "treasuryBalance": "1000000000000000000000"
+  },
+  "prBundle": {
+    "databaseDumpIncluded": false,
+    "reason": "Only the compact SQL verification output and live receipt/projection JSON are included; the isolated database dump remains in local audit artifacts."
+  }
+}

@@ -1,0 +1,34 @@
+[stdout] TAP version 13
+[stdout] # Subtest: six endpoints, exact data types, validation, and financial semantics
+[stdout] ok 1 - six endpoints, exact data types, validation, and financial semantics
+[stdout]   ---
+[stdout]   duration_ms: 328.128211
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+[stdout] ok 2 - numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+[stdout]   ---
+[stdout]   duration_ms: 117.205754
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+[stdout] ok 3 - BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+[stdout]   ---
+[stdout]   duration_ms: 72.982956
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+[stdout] ok 4 - filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+[stdout]   ---
+[stdout]   duration_ms: 61.557698
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] 1..4
+[stdout] # tests 4
+[stdout] # suites 0
+[stdout] # pass 4
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 4052.561889

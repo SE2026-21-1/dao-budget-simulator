@@ -1,0 +1,633 @@
+{
+  "status": "PASS",
+  "before": {
+    "h": "67",
+    "hash": "0xdbc8df2afb814de2a58a731e38d8ef5775da60342cc2c82c2a2dd203a61a97d6",
+    "head": "69"
+  },
+  "ancestor": {
+    "h": "19",
+    "hash": "0xa7d096d0da530ccbc308ed873dc6ba2800c4e947a2b9e674df10e0c21c8f9972"
+  },
+  "canonical": {
+    "h": "67",
+    "hash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359",
+    "head": "69"
+  },
+  "publicationCrashes": [
+    {
+      "boundary": "beforePublicationCommit",
+      "signal": "SIGKILL",
+      "visiblePhase": "replaying",
+      "publication": []
+    },
+    {
+      "boundary": "afterPublicationCommit",
+      "signal": "SIGKILL",
+      "visiblePhase": "ready",
+      "publication": [
+        {
+          "block_hash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359"
+        }
+      ]
+    }
+  ],
+  "projection": {
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "1",
+      "asOfBlock": "67",
+      "asOfBlockHash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359",
+      "asOfTimestamp": "1800000535",
+      "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+      "dataKind": "chain"
+    },
+    "counts": {
+      "proposals": 1,
+      "votes": 1,
+      "operations": 1,
+      "transfers": 3,
+      "disbursements": 1
+    },
+    "treasury": {
+      "totalIn": "10007000000000000000000",
+      "totalOut": "11000000000000000000",
+      "balance": "9996000000000000000000"
+    },
+    "ignoredAncillaryEvents": 16,
+    "rawDecodeIssues": 16
+  },
+  "gateHealth": {
+    "status": 503,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+        "asOfBlock": null,
+        "asOfBlockHash": null,
+        "asOfTimestamp": null,
+        "dataKind": "chain",
+        "sync": {
+          "status": "not_ready",
+          "headBlock": "69",
+          "confirmedBlock": "67",
+          "indexedBlock": "67",
+          "publicationBlock": null,
+          "lagBlocks": null,
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:22.142Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:22.146924+00:00",
+          "recoveryStatus": "replaying"
+        }
+      },
+      "data": {
+        "status": "unavailable",
+        "database": "up",
+        "indexer": "not_ready",
+        "publication": "not_ready",
+        "recoveryStatus": "replaying",
+        "projectionStatus": "not_ready",
+        "publicationBlock": null,
+        "projectionLagBlocks": null,
+        "rawDecodeComplete": false,
+        "rawDecodeIssues": {
+          "unknownTopics": 16,
+          "decodeErrors": 0
+        },
+        "ignoredAncillaryEvents": 0
+      }
+    }
+  },
+  "gateData": {
+    "status": 503,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+        "asOfBlock": null,
+        "asOfBlockHash": null,
+        "asOfTimestamp": null,
+        "dataKind": "chain",
+        "sync": {
+          "status": "not_ready",
+          "headBlock": "69",
+          "confirmedBlock": "67",
+          "indexedBlock": "67",
+          "publicationBlock": null,
+          "lagBlocks": null,
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:22.142Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:22.146924+00:00",
+          "recoveryStatus": "replaying"
+        }
+      },
+      "error": {
+        "code": "DATA_NOT_READY",
+        "message": "Chưa có publication BE04 đáng tin cậy.",
+        "details": {},
+        "retryable": true
+      }
+    }
+  },
+  "duringCursor": {
+    "status": 409,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+        "asOfBlock": null,
+        "asOfBlockHash": null,
+        "asOfTimestamp": null,
+        "dataKind": "chain",
+        "sync": {
+          "status": "not_ready",
+          "headBlock": "69",
+          "confirmedBlock": "67",
+          "indexedBlock": "67",
+          "publicationBlock": null,
+          "lagBlocks": null,
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:22.142Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:22.146924+00:00",
+          "recoveryStatus": "replaying"
+        }
+      },
+      "error": {
+        "code": "SNAPSHOT_INVALIDATED",
+        "message": "Snapshot không còn hợp lệ sau thay đổi raw/projection.",
+        "details": {},
+        "retryable": false
+      }
+    }
+  },
+  "recovered": {
+    "status": 200,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "asOfBlock": "67",
+        "asOfBlockHash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359",
+        "asOfTimestamp": "1800000535",
+        "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "69",
+          "confirmedBlock": "67",
+          "indexedBlock": "67",
+          "publicationBlock": "67",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:22.142Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:22.146924+00:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "data": {
+        "treasury": {
+          "token": {
+            "symbol": "BUD",
+            "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "decimals": 18
+          },
+          "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+          "balance": "9996000000000000000000",
+          "totalIn": "10007000000000000000000",
+          "totalOut": "11000000000000000000"
+        },
+        "governance": {
+          "govToken": {
+            "symbol": "GOV",
+            "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+            "decimals": 18
+          },
+          "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+          "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+          "clockMode": "mode=timestamp",
+          "totalSupply": "1000000000000000000000",
+          "votingDelay": "60",
+          "votingPeriod": "300",
+          "timelockDelay": "120",
+          "quorumNumerator": "20",
+          "proposalThreshold": "50000000000000000000",
+          "quorumDenominator": "100"
+        },
+        "proposalCounts": {
+          "total": 1,
+          "byState": {
+            "Active": 0,
+            "Queued": 0,
+            "Pending": 0,
+            "Canceled": 0,
+            "Defeated": 0,
+            "Executed": 1,
+            "Succeeded": 0
+          }
+        },
+        "recentActivity": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "type": "Transfer",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "11000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x5a695f9795dc32e54925cc6996fd7415443a0747336caed47a99bf1e3914977f",
+            "direction": "out",
+            "requestId": "0x4e56e44841b2b1d9ecae2a2a9eca9bceb85ee7ea8b1fe1af21cb52962dacd4e6",
+            "proposalId": "71860086112921887701458286523317291997552618536503322068392942925548813952882",
+            "blockNumber": "24",
+            "transactionHash": "0xaa512ec41334c12b2e38edca4492ca41fe76295d1b8d9adb8152809fbe749467",
+            "transactionIndex": "0"
+          },
+          {
+            "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "type": "Transfer",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "7000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x0e4881886065781f2507a92776aa19ce064bc3981d19f2e1f0c1b26a6c6725fe",
+            "direction": "in",
+            "requestId": null,
+            "proposalId": null,
+            "blockNumber": "20",
+            "transactionHash": "0xdda9571650e90a11eefc70bd16e3ab79275b1cad963b821e766710d7e8d01f4c",
+            "transactionIndex": "0"
+          },
+          {
+            "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "type": "Transfer",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "10000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0xa7d096d0da530ccbc308ed873dc6ba2800c4e947a2b9e674df10e0c21c8f9972",
+            "direction": "in",
+            "requestId": null,
+            "proposalId": null,
+            "blockNumber": "19",
+            "transactionHash": "0x498cf262e27653f80af145fb6649fa7d1ee2257e3e76e1324a6c2d8f592dd2a6",
+            "transactionIndex": "0"
+          }
+        ]
+      }
+    }
+  },
+  "oldCursor": {
+    "status": 409,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "asOfBlock": "67",
+        "asOfBlockHash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359",
+        "asOfTimestamp": "1800000535",
+        "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "69",
+          "confirmedBlock": "67",
+          "indexedBlock": "67",
+          "publicationBlock": "67",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:22.142Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:22.146924+00:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "error": {
+        "code": "SNAPSHOT_INVALIDATED",
+        "message": "Snapshot revision đã thay đổi.",
+        "details": {},
+        "retryable": false
+      }
+    }
+  },
+  "normalRpcFreshness": {
+    "eligibleBlock": "70",
+    "elapsedMs": 180,
+    "eventVisible": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be04-live",
+          "asOfBlock": "70",
+          "asOfBlockHash": "0x9d739926da2dd72e1a7e8cc2cc28820e16bb30a43d6af3e4b0d349c5979eca74",
+          "asOfTimestamp": "1800000538",
+          "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "72",
+            "confirmedBlock": "70",
+            "indexedBlock": "70",
+            "publicationBlock": "70",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T15:43:23.764Z",
+            "lastRpcCheckAt": "2026-10-25T15:43:23.774984+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "treasury": {
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": {
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "symbol": "BUD",
+              "decimals": 18
+            },
+            "balance": "9998000000000000000000",
+            "totalIn": "10009000000000000000000",
+            "totalOut": "11000000000000000000"
+          },
+          "proposalCounts": {
+            "total": 1,
+            "byState": {
+              "Pending": 0,
+              "Active": 0,
+              "Succeeded": 0,
+              "Defeated": 0,
+              "Queued": 0,
+              "Executed": 1,
+              "Canceled": 0
+            }
+          },
+          "governance": {
+            "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "govToken": {
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "symbol": "GOV",
+              "decimals": 18
+            },
+            "clockMode": "mode=timestamp",
+            "proposalThreshold": "50000000000000000000",
+            "votingDelay": "60",
+            "votingPeriod": "300",
+            "timelockDelay": "120",
+            "quorumNumerator": "20",
+            "quorumDenominator": "100",
+            "totalSupply": "1000000000000000000000"
+          },
+          "recentActivity": [
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "2000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x9d739926da2dd72e1a7e8cc2cc28820e16bb30a43d6af3e4b0d349c5979eca74",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "70",
+              "transactionHash": "0xfd31836811dda895963fbef88410f91f835644e9e670b0a540cf902c8194956a",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "11000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x5a695f9795dc32e54925cc6996fd7415443a0747336caed47a99bf1e3914977f",
+              "direction": "out",
+              "requestId": "0x4e56e44841b2b1d9ecae2a2a9eca9bceb85ee7ea8b1fe1af21cb52962dacd4e6",
+              "proposalId": "71860086112921887701458286523317291997552618536503322068392942925548813952882",
+              "blockNumber": "24",
+              "transactionHash": "0xaa512ec41334c12b2e38edca4492ca41fe76295d1b8d9adb8152809fbe749467",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "7000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x0e4881886065781f2507a92776aa19ce064bc3981d19f2e1f0c1b26a6c6725fe",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "20",
+              "transactionHash": "0xdda9571650e90a11eefc70bd16e3ab79275b1cad963b821e766710d7e8d01f4c",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "10000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0xa7d096d0da530ccbc308ed873dc6ba2800c4e947a2b9e674df10e0c21c8f9972",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "19",
+              "transactionHash": "0x498cf262e27653f80af145fb6649fa7d1ee2257e3e76e1324a6c2d8f592dd2a6",
+              "transactionIndex": "0"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "deepHealth": {
+    "status": 503,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "snapshotRevision": "dae6c484-d7a8-4dbd-84f3-f730c06aacb8",
+        "asOfBlock": null,
+        "asOfBlockHash": null,
+        "asOfTimestamp": null,
+        "dataKind": "chain",
+        "sync": {
+          "status": "not_ready",
+          "headBlock": "72",
+          "confirmedBlock": "70",
+          "indexedBlock": "70",
+          "publicationBlock": "70",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:23.764Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:54.970223+00:00",
+          "recoveryStatus": "rebuild_required"
+        }
+      },
+      "data": {
+        "status": "unavailable",
+        "database": "up",
+        "indexer": "not_ready",
+        "publication": "not_ready",
+        "recoveryStatus": "rebuild_required",
+        "projectionStatus": "not_ready",
+        "publicationBlock": "70",
+        "projectionLagBlocks": null,
+        "rawDecodeComplete": false,
+        "rawDecodeIssues": {
+          "unknownTopics": 16,
+          "decodeErrors": 0
+        },
+        "ignoredAncillaryEvents": 16
+      }
+    }
+  },
+  "deepData": {
+    "status": 503,
+    "body": {
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "be04-live",
+        "snapshotRevision": "dae6c484-d7a8-4dbd-84f3-f730c06aacb8",
+        "asOfBlock": null,
+        "asOfBlockHash": null,
+        "asOfTimestamp": null,
+        "dataKind": "chain",
+        "sync": {
+          "status": "not_ready",
+          "headBlock": "72",
+          "confirmedBlock": "70",
+          "indexedBlock": "70",
+          "publicationBlock": "70",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T15:43:23.764Z",
+          "lastRpcCheckAt": "2026-10-25T15:43:54.970223+00:00",
+          "recoveryStatus": "rebuild_required"
+        }
+      },
+      "error": {
+        "code": "DATA_NOT_READY",
+        "message": "Chưa có publication BE04 đáng tin cậy.",
+        "details": {},
+        "retryable": true
+      }
+    }
+  },
+  "compare": {
+    "result": "equal",
+    "requestedBlock": "67",
+    "chainCrossCheck": {
+      "block": "67",
+      "hash": "0x7da95efaa33320e9c98d1198af5bb5ea7c86475d5dc8cb3383e26736f74a9359",
+      "reference": "PASS",
+      "rebuild": "PASS",
+      "proposals": 1,
+      "operations": 1,
+      "treasuryBalance": "9996000000000000000000"
+    },
+    "mismatches": []
+  },
+  "outage": {
+    "durationMs": 31176,
+    "requests": 360,
+    "staleHealth": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be04-live",
+          "asOfBlock": "70",
+          "asOfBlockHash": "0x9d739926da2dd72e1a7e8cc2cc28820e16bb30a43d6af3e4b0d349c5979eca74",
+          "asOfTimestamp": "1800000538",
+          "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+          "dataKind": "chain",
+          "sync": {
+            "status": "lagging",
+            "headBlock": "72",
+            "confirmedBlock": "70",
+            "indexedBlock": "70",
+            "publicationBlock": "70",
+            "lagBlocks": "0",
+            "lagSeconds": "31",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T15:43:23.764Z",
+            "lastRpcCheckAt": "2026-10-25T15:43:23.774984+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "lagging",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "70",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    "fresh": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be04-live",
+          "asOfBlock": "70",
+          "asOfBlockHash": "0x9d739926da2dd72e1a7e8cc2cc28820e16bb30a43d6af3e4b0d349c5979eca74",
+          "asOfTimestamp": "1800000538",
+          "snapshotRevision": "43a4019a-a1c6-41dc-84be-73c1a6a9fddc",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "72",
+            "confirmedBlock": "70",
+            "indexedBlock": "70",
+            "publicationBlock": "70",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T15:43:23.764Z",
+            "lastRpcCheckAt": "2026-10-25T15:43:54.970223+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "70",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    }
+  }
+}

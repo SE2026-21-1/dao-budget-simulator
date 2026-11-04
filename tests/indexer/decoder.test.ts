@@ -52,6 +52,25 @@ function expectDecodeError(log: NormalizedLog): void {
   assert.equal(result.abiVersion, log.contract.abiVersion);
 }
 
+test('VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields', () => {
+  // Synthetic log encoded from the handed-over compiler ABI, NOT a receipt.
+  const abi = new Interface(JSON.parse(readFileSync(new URL('../../shared/abi/BudgetGovernor.json', import.meta.url), 'utf8')));
+  const values = ['0x1234567890abcdef1234567890abcdef12345678', (1n << 256n) - 1n, 2n,
+    (1n << 255n) + 123n, '  Đồng ý 🚀\n', '0x0001ff00'];
+  const encoded = abi.encodeEventLog('VoteCastWithParams', values);
+  const log = normalize(vector('VoteCast'));
+  Object.assign(log, encoded);
+  Object.assign(log.rawLog, encoded);
+  const original = structuredClone(log);
+  assert.deepEqual(decodeLog(log), { status: 'decoded', eventName: 'VoteCastWithParams',
+    abiVersion: log.contract.abiVersion, payload: { voter: values[0], proposalId: String(values[1]),
+      support: '2', weight: String(values[3]), reason: values[4], params: values[5] } });
+  assert.deepEqual(log, original);
+  const fragment = getAbi(log.contract).interface.getEvent('VoteCastWithParams')!;
+  assert.equal(fragment.format('full'), abi.getEvent('VoteCastWithParams')!.format('full'));
+  expectDecodeError({ ...log, data: '0x' });
+});
+
 test('synthetic vectors cover all eleven required event types and source indexed layouts', () => {
   assert.equal(fixtureFile.synthetic, true);
   const indexedCounts: Record<string, number> = {

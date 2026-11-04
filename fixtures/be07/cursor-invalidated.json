@@ -1,0 +1,30 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "be04-live",
+    "asOfBlock": "67",
+    "asOfBlockHash": "0x1a7b1b33f516709fc3b079b95fa478362aead72ae35d0fe5dee3eb0c39bc6ed4",
+    "asOfTimestamp": "1800000534",
+    "snapshotRevision": "b1c50b2c-eb79-4458-a4af-31a91c1c94ed",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "69",
+      "confirmedBlock": "67",
+      "indexedBlock": "67",
+      "publicationBlock": "67",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-25T15:39:22.107Z",
+      "lastRpcCheckAt": "2026-10-25T15:39:22.111568+00:00",
+      "recoveryStatus": "ready"
+    }
+  },
+  "error": {
+    "code": "SNAPSHOT_INVALIDATED",
+    "message": "Snapshot revision đã thay đổi.",
+    "details": {},
+    "retryable": false
+  }
+}

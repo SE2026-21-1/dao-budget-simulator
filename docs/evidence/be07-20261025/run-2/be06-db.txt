@@ -1,0 +1,9 @@
+✔ BE06 rebuilds a fresh DB exactly at H, exports/compares read-only, and rejects unsafe scopes (429.832124ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2258.105586

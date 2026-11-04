@@ -1,0 +1,70 @@
+[stdout] TAP version 13
+[stdout] # Subtest: six endpoints, exact data types, validation, and financial semantics
+[stdout] ok 1 - six endpoints, exact data types, validation, and financial semantics
+[stdout]   ---
+[stdout]   duration_ms: 332.03938
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+[stdout] not ok 2 - numeric keyset pages are complete, filters bind cursors, and old H survives publication progress
+[stdout]   ---
+[stdout]   duration_ms: 30.513014
+[stdout]   type: 'test'
+[stdout]   location: '/mnt/d/dao-budget-simulator-be08/tests/api/server.test.mjs:278:1'
+[stdout]   failureType: 'testCodeFailure'
+[stdout]   error: |-
+[stdout]     Raw checkpoint ahead of publication must not report synced, even with an earlier heartbeat.
+[stdout]     + actual - expected
+[stdout]     
+[stdout]     + 'synced'
+[stdout]     - 'lagging'
+[stdout]     
+[stdout]   code: 'ERR_ASSERTION'
+[stdout]   name: 'AssertionError'
+[stdout]   expected: 'lagging'
+[stdout]   actual: 'synced'
+[stdout]   operator: 'strictEqual'
+[stdout]   stack: |-
+[stdout]     TestContext.<anonymous> (file:///mnt/d/dao-budget-simulator-be08/tests/api/server.test.mjs:318:10)
+[stdout]     process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[stdout]     async Test.run (node:internal/test_runner/test:1208:7)
+[stdout]     async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+[stdout]   ...
+[stdout] # Subtest: BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+[stdout] ok 3 - BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases
+[stdout]   ---
+[stdout]   duration_ms: 54.795111
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+[stdout] not ok 4 - filter totals, snapshot errors, unavailable publication, rebuild health, and database failure
+[stdout]   ---
+[stdout]   duration_ms: 11.492235
+[stdout]   type: 'test'
+[stdout]   location: '/mnt/d/dao-budget-simulator-be08/tests/api/server.test.mjs:397:1'
+[stdout]   failureType: 'testCodeFailure'
+[stdout]   error: |-
+[stdout]     {"context":{"chainId":"31337","deploymentId":"be05-http-integration","asOfBlock":"3","asOfBlockHash":"0x0000000000000000000000000000000000000000000000000000000000000003","asOfTimestamp":"1101","snapshotRevision":"d10c286a-d396-4bda-8b92-f330f64688c0","dataKind":"chain","sync":{"status":"synced","headBlock":"3","confirmedBlock":"3","indexedBlock":"4","publicationBlock":"3","lagBlocks":"0","lagSeconds":"0","confirmations":"0","lastIndexedAt":"2026-10-27T14:08:29.633Z","lastRpcCheckAt":"2026-10-27T14:08:29.353974+00:00","recoveryStatus":"ready"}},"error":{"code":"DATA_NOT_READY","message":"H yêu cầu cao hơn publication hiện có.","details":{"requestedBlock":"5","publishedBlock":"3"},"retryable":true}}
+[stdout]     
+[stdout]     503 !== 409
+[stdout]     
+[stdout]   code: 'ERR_ASSERTION'
+[stdout]   name: 'AssertionError'
+[stdout]   expected: 409
+[stdout]   actual: 503
+[stdout]   operator: 'strictEqual'
+[stdout]   stack: |-
+[stdout]     TestContext.<anonymous> (file:///mnt/d/dao-budget-simulator-be08/tests/api/server.test.mjs:405:10)
+[stdout]     process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[stdout]     async Test.run (node:internal/test_runner/test:1208:7)
+[stdout]     async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+[stdout]   ...
+[stdout] 1..4
+[stdout] # tests 4
+[stdout] # suites 0
+[stdout] # pass 2
+[stdout] # fail 2
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 3019.078051

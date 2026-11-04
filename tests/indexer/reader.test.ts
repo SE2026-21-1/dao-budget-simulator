@@ -171,7 +171,7 @@ test('RPC HTTP failures redact URL paths and body; prior batches remain explicit
   t.after(() => server.close());
   await assert.rejects(scan(config(), new HttpRpc(url), new RecordingStorage()), (error: unknown) => {
     assert.ok(error instanceof ScanError);
-    assert.equal(error.report.error?.code, 'RPC_HTTP_ERROR');
+    assert.equal(error.report.error?.code, 'RPC_UNAVAILABLE');
     assert.doesNotMatch(JSON.stringify(error.report), /rpc-secret|secret body/);
     return true;
   });

@@ -1,0 +1,18 @@
+▶ BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic)
+  ✔ no raw checkpoint cannot publish a fake empty snapshot (13.614157ms)
+  ✔ empty blocks update Pending -> Active -> Succeeded; quorum is null through exact snapshot (137.344095ms)
+  ✔ full lifecycle and replay produce stable rows, exact ledger and WithParams (87.888498ms)
+  ✔ RPC state/balance mismatch preserves old publication while raw checkpoint advances (63.171366ms)
+  ✔ SQL failure after replacement begins rolls back all tables and projection checkpoint (36.669221ms)
+  ✔ unknown log and raw decode tampering block publication without changing raw identity (38.710706ms)
+  ✔ RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication (38.831851ms)
+  ✔ real child CLI --sync-project and idle --project publish the same H/hash/revision (800.825641ms)
+✔ BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic) (1309.003731ms)
+ℹ tests 8
+ℹ suites 1
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1679.014236

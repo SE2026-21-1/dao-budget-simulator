@@ -1,0 +1,6 @@
+{
+  "command": "npm pack @foundry-rs/cast-win32-amd64@1.7.1 --pack-destination dist/be03-tools --ignore-scripts --fetch-retries=0 --fetch-timeout=20000",
+  "exitCode": 0,
+  "executionContext": "require_escalated",
+  "precedingSandboxFailure": "EACCES requesting https://registry.npmjs.org/@foundry-rs%2fcast-win32-amd64"
+}

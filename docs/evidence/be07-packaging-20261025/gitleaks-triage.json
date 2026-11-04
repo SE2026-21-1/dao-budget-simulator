@@ -1,0 +1,1501 @@
+{
+  "version": "8.30.1",
+  "scope": "Every staged new/modified file exported from the index, excluding the subsequently generated scan/triage/check metadata itself.",
+  "rawExitCode": 1,
+  "findings": 248,
+  "confirmedCredentials": 0,
+  "classifications": {
+    "SHA-256 source file fingerprint": 57,
+    "public local EVM token contract address": 191
+  },
+  "triage": [
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/tested-source.json",
+      "line": 10,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/tested-source.json",
+      "line": 10,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/final-tested-source.json",
+      "line": 10,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 240,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 255,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 270,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 392,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 422,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/acceptance-summary.json",
+      "line": 437,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 2870,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 2895,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 2898,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 2899,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 2870,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 2895,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 2898,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 2899,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 2588,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 2613,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 2616,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 2617,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 2870,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 2895,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 2898,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 2899,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 2870,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 2895,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 2898,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 2899,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 2870,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 2895,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 2898,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 2899,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 2588,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 2613,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 2616,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 2617,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 2623,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 2648,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 2651,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 2652,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 2835,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 2860,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 2863,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 2864,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4393,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4421,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4435,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4620,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4635,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4650,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 4665,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4393,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4421,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4435,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4620,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4635,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4650,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 4665,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5198,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4111,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4125,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4139,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4153,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4335,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4350,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4365,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4380,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4393,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4421,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4435,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4620,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4635,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4650,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 4665,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4859,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4874,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4889,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4904,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4925,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/baseline-live.json",
+      "line": 4947,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4393,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4421,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4435,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4620,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4635,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4650,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 4665,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 5085,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-3/be07-live.json",
+      "line": 5107,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4111,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4125,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4139,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4153,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4335,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4350,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4365,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4380,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4393,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4407,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4421,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4435,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4620,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4635,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4650,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 4665,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5198,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5216,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5231,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5234,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5416,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5432,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5448,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5213,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5216,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5398,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5414,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5430,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4358,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4372,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4386,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4400,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5213,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5216,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5398,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5414,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5430,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5216,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5231,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5234,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5416,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5432,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5448,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4859,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4874,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4889,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4904,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4925,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/baseline-live.json",
+      "line": 4947,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5882,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 5898,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6249,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6264,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6279,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6294,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6427,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6442,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6457,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 6472,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5884,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5900,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 5916,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6267,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6282,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6297,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6312,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6445,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6460,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6475,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 6490,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4146,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4160,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4174,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4188,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4373,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4388,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4403,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4418,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4585,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4600,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4615,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 4630,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5163,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5178,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5181,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5884,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5900,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 5916,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6267,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6282,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6297,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6312,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6445,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6460,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6475,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 6490,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5882,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 5898,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6249,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6264,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6279,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6294,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6427,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6442,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6457,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 6472,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 7349,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 7364,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 7379,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 7516,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-6/be07-live.json",
+      "line": 7538,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4951,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4966,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 4969,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5044,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5060,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5363,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5363,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5379,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5395,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5831,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5847,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 5863,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 7366,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 7381,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 7396,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 7533,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-packaging-20261025/after-fix/live.json",
+      "line": 7555,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 7366,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 7381,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 7396,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 7533,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-7-pg184/be07-live.json",
+      "line": 7555,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 7348,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 7363,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 7378,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 7515,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-5/be07-live.json",
+      "line": 7537,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 6257,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 6272,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 6287,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5379,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5747,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 5762,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 6631,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 6646,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 6783,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-1/be07-live.json",
+      "line": 6805,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 7157,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 7172,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 7187,
+      "classification": "public local EVM token contract address"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 7324,
+      "classification": "SHA-256 source file fingerprint"
+    },
+    {
+      "rule": "generic-api-key",
+      "file": "docs/evidence/be07-20261025/run-2/be07-live.json",
+      "line": 7346,
+      "classification": "SHA-256 source file fingerprint"
+    }
+  ]
+}

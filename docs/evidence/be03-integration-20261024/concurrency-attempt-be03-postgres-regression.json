@@ -1,0 +1,13 @@
+{
+  "label": "be03-postgres-regression",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/indexer/checkpoint-storage.test.ts"
+  ],
+  "exitCode": 1,
+  "signal": null,
+  "log": "be03-postgres-regression.txt"
+}

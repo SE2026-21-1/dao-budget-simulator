@@ -1,0 +1,8 @@
+{
+  "indexer/recovery.ts": "330b99e7aaaad8d56bfd06ec5ed114360691aca27c4cb95873070eb9a9ba9418",
+  "indexer/storage.ts": "4863d6a2def6aa014c2811e86f9a4359a60fe8c8de067c3d3ce22112986b71ed",
+  "indexer/syncer.ts": "0add0e6b79e49017e3d7307b06223210e345b5bc32b95a78f5874a7827e36f27",
+  "tests/indexer/be07-db.test.mjs": "f203b3f4ac13c922428a39f8fed7a4336bbf9352a0f4d3540c1b3ae10442ba28",
+  "tests/api/server.test.mjs": "dc8ff100fe2cb594df3e1830f3c8562d467948d18ad568ed2b1a696faa53c93f",
+  "indexer/api/server.ts": "dd8dde7c28f29bc0de9fb33ca6c8461e142ab08758777d091afcc354afb9dd52"
+}

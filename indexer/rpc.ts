@@ -39,8 +39,10 @@ export class HttpRpc implements RpcTransport {
       throw new IndexerError('INVALID_CONFIG', 'Invalid bounded RPC retry/timeout configuration.');
   }
   async call(method: string, params: unknown[]): Promise<unknown> {
-    const attempts = this.options.maxAttempts ?? 4;
+    // Retries belong to the same logical JSON-RPC request. Allocate once so
+    // independent calls (including concurrent identical ones) remain distinct.
     const id = ++this.id;
+    const attempts = this.options.maxAttempts ?? 4;
     for (let attempt = 0; ; attempt++) {
       if (this.options.signal?.aborted) throw new IndexerError('STOPPED', 'RPC stopped.');
       try { return await this.request(method, params, id); }

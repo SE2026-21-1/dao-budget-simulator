@@ -1,0 +1,714 @@
+﻿2026-10-30T02:41:48.5476340Z Current runner version: '2.338.0'
+2026-10-30T02:41:48.5501088Z ##[group]Runner Image Provisioner
+2026-10-30T02:41:48.5502291Z Hosted Compute Agent
+2026-10-30T02:41:48.5503018Z Version: 20261021.618
+2026-10-30T02:41:48.5503664Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-30T02:41:48.5504473Z Build Date: 2026-10-21T00:45:21Z
+2026-10-30T02:41:48.5505317Z Worker ID: {6687c3b6-8353-492b-b1d1-4ce1fbfd4d2c}
+2026-10-30T02:41:48.5506277Z Region: westus2
+2026-10-30T02:41:48.5506936Z Cloud: Azure
+2026-10-30T02:41:48.5507490Z ##[endgroup]
+2026-10-30T02:41:48.5509083Z ##[group]Operating System
+2026-10-30T02:41:48.5509759Z Ubuntu
+2026-10-30T02:41:48.5510289Z 24.04.5
+2026-10-30T02:41:48.5510867Z LTS
+2026-10-30T02:41:48.5511385Z ##[endgroup]
+2026-10-30T02:41:48.5511955Z ##[group]Runner Image
+2026-10-30T02:41:48.5512673Z Image: ubuntu-24.04
+2026-10-30T02:41:48.5513252Z Version: 20261025.353.1
+2026-10-30T02:41:48.5514556Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261025.353/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-30T02:41:48.5516342Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261025.353
+2026-10-30T02:41:48.5517465Z ##[endgroup]
+2026-10-30T02:41:48.5518580Z ##[group]GITHUB_TOKEN Permissions
+2026-10-30T02:41:48.5520775Z Contents: read
+2026-10-30T02:41:48.5521467Z Metadata: read
+2026-10-30T02:41:48.5522124Z ##[endgroup]
+2026-10-30T02:41:48.5524160Z Secret source: Actions
+2026-10-30T02:41:48.5525221Z Cache mode: write
+2026-10-30T02:41:48.5526333Z Prepare workflow directory
+2026-10-30T02:41:48.6029504Z Prepare all required actions
+2026-10-30T02:41:48.6076614Z Getting action download info
+2026-10-30T02:41:48.9810091Z Download action repository 'actions/checkout@v7.0.1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-30T02:41:49.0883595Z Download action repository 'actions/setup-node@v7.1.0' (SHA:949feb2413d6458794dcd2491c4babbbce0c15c1)
+2026-10-30T02:41:49.1656852Z Download action repository 'foundry-rs/foundry-toolchain@v1' (SHA:dba66c27052e63476d886f22216e119ba7e615bf)
+2026-10-30T02:41:49.4186276Z Download action repository 'actions/setup-python@v7.0.0' (SHA:5fda3b95a4ea91299a34e894583c3862153e4b97)
+2026-10-30T02:41:49.5017172Z Download action repository 'actions/upload-artifact@v7.0.2' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+2026-10-30T02:41:49.6894517Z Complete job name: be08
+2026-10-30T02:41:49.7525108Z ##[group]Checking docker version
+2026-10-30T02:41:49.7538637Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+2026-10-30T02:41:49.8499409Z '1.48'
+2026-10-30T02:41:49.8521686Z Docker daemon API version: '1.48'
+2026-10-30T02:41:49.8522475Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+2026-10-30T02:41:49.8722114Z '1.48'
+2026-10-30T02:41:49.8739064Z Docker client API version: '1.48'
+2026-10-30T02:41:49.8744704Z ##[endgroup]
+2026-10-30T02:41:49.8748046Z ##[group]Clean up resources from previous jobs
+2026-10-30T02:41:49.8753327Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=5ece43"
+2026-10-30T02:41:49.8920312Z ##[command]/usr/bin/docker network prune --force --filter "label=5ece43"
+2026-10-30T02:41:49.9081471Z ##[endgroup]
+2026-10-30T02:41:49.9082297Z ##[group]Create local container network
+2026-10-30T02:41:49.9093166Z ##[command]/usr/bin/docker network create --label 5ece43 github_network_841fdb1ed8a34244995c63881e3c23ea
+2026-10-30T02:41:49.9652867Z ace533080215c1f3e64aa61f9daab0d13837427b85e4929eb0f1ca3bd8f60abc
+2026-10-30T02:41:49.9678385Z ##[endgroup]
+2026-10-30T02:41:49.9704087Z ##[group]Starting postgres service container
+2026-10-30T02:41:49.9725828Z ##[command]/usr/bin/docker pull postgres:18.4
+2026-10-30T02:41:50.8677413Z 18.4: Pulling from library/postgres
+2026-10-30T02:41:51.1238915Z 26c307b5e35a: Pulling fs layer
+2026-10-30T02:41:51.1240400Z 5db2b7edf527: Pulling fs layer
+2026-10-30T02:41:51.1241741Z 130549402290: Pulling fs layer
+2026-10-30T02:41:51.1243273Z 8241f4a14319: Pulling fs layer
+2026-10-30T02:41:51.1244610Z a4dcdc0137d7: Pulling fs layer
+2026-10-30T02:41:51.1246169Z d1052e262c2e: Pulling fs layer
+2026-10-30T02:41:51.1247265Z 39762d0b4bb2: Pulling fs layer
+2026-10-30T02:41:51.1248284Z 38639b9be6a6: Pulling fs layer
+2026-10-30T02:41:51.1249144Z 4e6c52c74256: Pulling fs layer
+2026-10-30T02:41:51.1249797Z f51baa0c6c0d: Pulling fs layer
+2026-10-30T02:41:51.1250441Z 88bb22edda9b: Pulling fs layer
+2026-10-30T02:41:51.1251189Z f7d54729e84b: Pulling fs layer
+2026-10-30T02:41:51.1251810Z f90dd111f2e5: Pulling fs layer
+2026-10-30T02:41:51.1252446Z 8241f4a14319: Waiting
+2026-10-30T02:41:51.1253040Z a4dcdc0137d7: Waiting
+2026-10-30T02:41:51.1253575Z d1052e262c2e: Waiting
+2026-10-30T02:41:51.1254232Z 39762d0b4bb2: Waiting
+2026-10-30T02:41:51.1254896Z 38639b9be6a6: Waiting
+2026-10-30T02:41:51.1255539Z 4e6c52c74256: Waiting
+2026-10-30T02:41:51.1256570Z f51baa0c6c0d: Waiting
+2026-10-30T02:41:51.1257219Z 88bb22edda9b: Waiting
+2026-10-30T02:41:51.4034531Z 5db2b7edf527: Verifying Checksum
+2026-10-30T02:41:51.4035369Z 5db2b7edf527: Download complete
+2026-10-30T02:41:51.4833125Z 130549402290: Verifying Checksum
+2026-10-30T02:41:51.5379838Z 130549402290: Download complete
+2026-10-30T02:41:51.5380980Z 26c307b5e35a: Verifying Checksum
+2026-10-30T02:41:51.5382300Z 26c307b5e35a: Download complete
+2026-10-30T02:41:51.6862767Z 8241f4a14319: Verifying Checksum
+2026-10-30T02:41:51.6864322Z 8241f4a14319: Download complete
+2026-10-30T02:41:51.7979256Z a4dcdc0137d7: Verifying Checksum
+2026-10-30T02:41:51.7980466Z a4dcdc0137d7: Download complete
+2026-10-30T02:41:51.8151869Z d1052e262c2e: Verifying Checksum
+2026-10-30T02:41:51.8153510Z d1052e262c2e: Download complete
+2026-10-30T02:41:51.9168147Z 39762d0b4bb2: Verifying Checksum
+2026-10-30T02:41:51.9169607Z 39762d0b4bb2: Download complete
+2026-10-30T02:41:52.0301791Z 38639b9be6a6: Verifying Checksum
+2026-10-30T02:41:52.0306344Z 38639b9be6a6: Download complete
+2026-10-30T02:41:52.1412286Z f51baa0c6c0d: Verifying Checksum
+2026-10-30T02:41:52.1414406Z f51baa0c6c0d: Download complete
+2026-10-30T02:41:52.2681016Z 88bb22edda9b: Verifying Checksum
+2026-10-30T02:41:52.2683015Z 88bb22edda9b: Download complete
+2026-10-30T02:41:52.3754237Z f7d54729e84b: Verifying Checksum
+2026-10-30T02:41:52.3756398Z f7d54729e84b: Download complete
+2026-10-30T02:41:52.5089396Z f90dd111f2e5: Verifying Checksum
+2026-10-30T02:41:52.5091379Z f90dd111f2e5: Download complete
+2026-10-30T02:41:52.5355607Z 4e6c52c74256: Verifying Checksum
+2026-10-30T02:41:52.5356551Z 4e6c52c74256: Download complete
+2026-10-30T02:41:52.6348175Z 26c307b5e35a: Pull complete
+2026-10-30T02:41:52.8238761Z 5db2b7edf527: Pull complete
+2026-10-30T02:41:52.9917450Z 130549402290: Pull complete
+2026-10-30T02:41:53.0259263Z 8241f4a14319: Pull complete
+2026-10-30T02:41:53.3213239Z a4dcdc0137d7: Pull complete
+2026-10-30T02:41:53.3764737Z d1052e262c2e: Pull complete
+2026-10-30T02:41:53.3843525Z 39762d0b4bb2: Pull complete
+2026-10-30T02:41:53.3941032Z 38639b9be6a6: Pull complete
+2026-10-30T02:41:56.4589452Z 4e6c52c74256: Pull complete
+2026-10-30T02:41:56.4733418Z f51baa0c6c0d: Pull complete
+2026-10-30T02:41:56.4831595Z 88bb22edda9b: Pull complete
+2026-10-30T02:41:56.4931276Z f7d54729e84b: Pull complete
+2026-10-30T02:41:56.5052002Z f90dd111f2e5: Pull complete
+2026-10-30T02:41:56.5092343Z Digest: sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
+2026-10-30T02:41:56.5103369Z Status: Downloaded newer image for postgres:18.4
+2026-10-30T02:41:56.5112059Z docker.io/library/postgres:18.4
+2026-10-30T02:41:56.5178090Z ##[command]/usr/bin/docker create --name d1defb317bf14737869b0c7a881aa19a_postgres184_bca893 --label 5ece43 --network github_network_841fdb1ed8a34244995c63881e3c23ea --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U be08_admin -d postgres" --health-interval 5s --health-timeout 3s --health-retries 20 -e "POSTGRES_USER=be08_admin" -e "POSTGRES_PASSWORD=be08_ci_disposable" -e "POSTGRES_DB=postgres" -e GITHUB_ACTIONS=true -e CI=true postgres:18.4
+2026-10-30T02:41:56.5451933Z 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:56.5478165Z ##[command]/usr/bin/docker start 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:56.7731396Z 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:56.7754408Z ##[command]/usr/bin/docker ps --all --filter id=04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+2026-10-30T02:41:56.7997064Z 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0 Up Less than a second (health: starting)
+2026-10-30T02:41:56.8024953Z ##[command]/usr/bin/docker port 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:56.8198841Z 5432/tcp -> 0.0.0.0:5432
+2026-10-30T02:41:56.8199324Z 5432/tcp -> [::]:5432
+2026-10-30T02:41:56.8265555Z ##[endgroup]
+2026-10-30T02:41:56.8278121Z ##[group]Waiting for all services to be ready
+2026-10-30T02:41:56.8295537Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:56.8476755Z starting
+2026-10-30T02:41:56.8503422Z postgres service is starting, waiting 2 seconds before checking again.
+2026-10-30T02:41:58.8492435Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:41:58.8652399Z starting
+2026-10-30T02:41:58.8669588Z postgres service is starting, waiting 4 seconds before checking again.
+2026-10-30T02:42:03.0779250Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:42:03.0933198Z healthy
+2026-10-30T02:42:03.0952900Z postgres service is healthy.
+2026-10-30T02:42:03.0953683Z ##[endgroup]
+2026-10-30T02:42:03.1251871Z ##[group]Run actions/checkout@v7.0.1
+2026-10-30T02:42:03.1252466Z with:
+2026-10-30T02:42:03.1252671Z   submodules: recursive
+2026-10-30T02:42:03.1252936Z   persist-credentials: false
+2026-10-30T02:42:03.1253213Z   repository: SE2026-21-1/dao-budget-simulator
+2026-10-30T02:42:03.1255707Z   token: ***
+2026-10-30T02:42:03.1256122Z   ssh-strict: true
+2026-10-30T02:42:03.1256335Z   ssh-user: git
+2026-10-30T02:42:03.1256526Z   clean: true
+2026-10-30T02:42:03.1256730Z   sparse-checkout-cone-mode: true
+2026-10-30T02:42:03.1256990Z   fetch-depth: 1
+2026-10-30T02:42:03.1257191Z   fetch-tags: false
+2026-10-30T02:42:03.1257394Z   show-progress: true
+2026-10-30T02:42:03.1257597Z   lfs: false
+2026-10-30T02:42:03.1257878Z   set-safe-directory: true
+2026-10-30T02:42:03.1258122Z   allow-unsafe-pr-checkout: false
+2026-10-30T02:42:03.1258633Z env:
+2026-10-30T02:42:03.1259134Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:03.1259619Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:03.1259924Z ##[endgroup]
+2026-10-30T02:42:03.4145197Z Syncing repository: SE2026-21-1/dao-budget-simulator
+2026-10-30T02:42:03.4147499Z ##[group]Getting Git version info
+2026-10-30T02:42:03.4148027Z Working directory is '/home/runner/work/dao-budget-simulator/dao-budget-simulator'
+2026-10-30T02:42:03.4148721Z [command]/usr/bin/git version
+2026-10-30T02:42:03.4255636Z git version 2.56.0
+2026-10-30T02:42:03.4282822Z ##[endgroup]
+2026-10-30T02:42:03.4308199Z Temporarily overriding HOME='/home/runner/work/_temp/ab33c3d1-f2f5-4740-988a-5c6a4d2e0045' before making global git config changes
+2026-10-30T02:42:03.4309642Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T02:42:03.4320322Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/dao-budget-simulator/dao-budget-simulator
+2026-10-30T02:42:03.4398853Z Deleting the contents of '/home/runner/work/dao-budget-simulator/dao-budget-simulator'
+2026-10-30T02:42:03.4400134Z ##[group]Determining repository object format
+2026-10-30T02:42:03.4400988Z ##[endgroup]
+2026-10-30T02:42:03.4401639Z ##[group]Initializing the repository
+2026-10-30T02:42:03.4406706Z [command]/usr/bin/git init /home/runner/work/dao-budget-simulator/dao-budget-simulator
+2026-10-30T02:42:03.4533410Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-30T02:42:03.4534541Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-30T02:42:03.4535596Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-30T02:42:03.4536746Z hint: call:
+2026-10-30T02:42:03.4537170Z hint:
+2026-10-30T02:42:03.4537788Z hint: 	git config --global init.defaultBranch <name>
+2026-10-30T02:42:03.4538333Z hint:
+2026-10-30T02:42:03.4538751Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-30T02:42:03.4539600Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-30T02:42:03.4540160Z hint:
+2026-10-30T02:42:03.4540456Z hint: 	git branch -m <name>
+2026-10-30T02:42:03.4540778Z hint:
+2026-10-30T02:42:03.4541227Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-30T02:42:03.4549712Z Initialized empty Git repository in /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/
+2026-10-30T02:42:03.4561276Z [command]/usr/bin/git remote add origin https://github.com/SE2026-21-1/dao-budget-simulator
+2026-10-30T02:42:03.4620391Z ##[endgroup]
+2026-10-30T02:42:03.4621114Z ##[group]Disabling automatic garbage collection
+2026-10-30T02:42:03.4623778Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-30T02:42:03.4672720Z ##[endgroup]
+2026-10-30T02:42:03.4673523Z ##[group]Setting up auth
+2026-10-30T02:42:03.4675105Z Removing SSH command configuration
+2026-10-30T02:42:03.4676097Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T02:42:03.4717910Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T02:42:03.5129974Z Removing HTTP extra header
+2026-10-30T02:42:03.5130979Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T02:42:03.5180207Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T02:42:03.5421229Z Removing includeIf entries pointing to credentials config files
+2026-10-30T02:42:03.5428258Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:03.5481704Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T02:42:03.5726496Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-30T02:42:03.5775864Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git.path /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:03.5820370Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:03.5864955Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:03.5908749Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:03.5955593Z ##[endgroup]
+2026-10-30T02:42:03.5956772Z ##[group]Fetching the repository
+2026-10-30T02:42:03.5957618Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d6fbd19ded61c9c1ee2e402a37eb2629452dee0b:refs/remotes/origin/feature/tv2-be08
+2026-10-30T02:42:04.3999830Z From https://github.com/SE2026-21-1/dao-budget-simulator
+2026-10-30T02:42:04.4000532Z  * [new ref]         d6fbd19ded61c9c1ee2e402a37eb2629452dee0b -> origin/feature/tv2-be08
+2026-10-30T02:42:04.4011030Z [command]/usr/bin/git branch --list --remote origin/feature/tv2-be08
+2026-10-30T02:42:04.4052279Z   origin/feature/tv2-be08
+2026-10-30T02:42:04.4061880Z [command]/usr/bin/git rev-parse refs/remotes/origin/feature/tv2-be08
+2026-10-30T02:42:04.4100491Z d6fbd19ded61c9c1ee2e402a37eb2629452dee0b
+2026-10-30T02:42:04.4105395Z ##[endgroup]
+2026-10-30T02:42:04.4106461Z ##[group]Determining the checkout info
+2026-10-30T02:42:04.4107271Z ##[endgroup]
+2026-10-30T02:42:04.4117010Z [command]/usr/bin/git sparse-checkout disable
+2026-10-30T02:42:04.4190168Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-30T02:42:04.4236108Z ##[group]Checking out the ref
+2026-10-30T02:42:04.4247098Z [command]/usr/bin/git checkout --progress --force -B feature/tv2-be08 refs/remotes/origin/feature/tv2-be08
+2026-10-30T02:42:04.5687230Z Switched to a new branch 'feature/tv2-be08'
+2026-10-30T02:42:04.5692025Z branch 'feature/tv2-be08' set up to track 'origin/feature/tv2-be08'.
+2026-10-30T02:42:04.5713141Z ##[endgroup]
+2026-10-30T02:42:04.5713571Z ##[group]Setting up auth for fetching submodules
+2026-10-30T02:42:04.5720448Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-30T02:42:04.5777533Z [command]/usr/bin/git config --global include.path /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:04.5824393Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+2026-10-30T02:42:04.5868962Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+2026-10-30T02:42:04.5917518Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-337942653@github.com:
+2026-10-30T02:42:04.5958924Z ##[endgroup]
+2026-10-30T02:42:04.5960753Z ##[group]Fetching submodules
+2026-10-30T02:42:04.5963218Z [command]/usr/bin/git submodule sync --recursive
+2026-10-30T02:42:04.6239255Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --depth=1 --recursive
+2026-10-30T02:42:04.6493890Z Submodule 'lib/forge-std' (https://github.com/foundry-rs/forge-std) registered for path 'lib/forge-std'
+2026-10-30T02:42:04.6500582Z Submodule 'lib/openzeppelin-contracts' (https://github.com/OpenZeppelin/openzeppelin-contracts) registered for path 'lib/openzeppelin-contracts'
+2026-10-30T02:42:04.6529651Z Cloning into '/home/runner/work/dao-budget-simulator/dao-budget-simulator/lib/forge-std'...
+2026-10-30T02:42:05.1166928Z Cloning into '/home/runner/work/dao-budget-simulator/dao-budget-simulator/lib/openzeppelin-contracts'...
+2026-10-30T02:42:06.6173822Z From https://github.com/foundry-rs/forge-std
+2026-10-30T02:42:06.6174827Z  * branch            f3dae6e6ee381f25eb6a246f7da9b85c91a68219 -> FETCH_HEAD
+2026-10-30T02:42:06.6297757Z Submodule path 'lib/forge-std': checked out 'f3dae6e6ee381f25eb6a246f7da9b85c91a68219'
+2026-10-30T02:42:07.8374557Z From https://github.com/OpenZeppelin/openzeppelin-contracts
+2026-10-30T02:42:07.8375419Z  * branch            c64a1edb67b6e3f4a15cca8909c9482ad33a02b0 -> FETCH_HEAD
+2026-10-30T02:42:07.9349235Z Submodule path 'lib/openzeppelin-contracts': checked out 'c64a1edb67b6e3f4a15cca8909c9482ad33a02b0'
+2026-10-30T02:42:07.9365687Z Submodule 'lib/erc4626-tests' (https://github.com/a16z/erc4626-tests.git) registered for path 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:07.9375188Z Submodule 'lib/forge-std' (https://github.com/foundry-rs/forge-std) registered for path 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:07.9378993Z Submodule 'lib/halmos-cheatcodes' (https://github.com/a16z/halmos-cheatcodes) registered for path 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:07.9417406Z Cloning into '/home/runner/work/dao-budget-simulator/dao-budget-simulator/lib/openzeppelin-contracts/lib/erc4626-tests'...
+2026-10-30T02:42:08.3760537Z Cloning into '/home/runner/work/dao-budget-simulator/dao-budget-simulator/lib/openzeppelin-contracts/lib/forge-std'...
+2026-10-30T02:42:08.8411442Z Cloning into '/home/runner/work/dao-budget-simulator/dao-budget-simulator/lib/openzeppelin-contracts/lib/halmos-cheatcodes'...
+2026-10-30T02:42:10.3019013Z From https://github.com/a16z/erc4626-tests
+2026-10-30T02:42:10.3019824Z  * branch            232ff9ba8194e406967f52ecc5cb52ed764209e9 -> FETCH_HEAD
+2026-10-30T02:42:10.3077700Z Submodule path 'lib/openzeppelin-contracts/lib/erc4626-tests': checked out '232ff9ba8194e406967f52ecc5cb52ed764209e9'
+2026-10-30T02:42:11.2349567Z From https://github.com/foundry-rs/forge-std
+2026-10-30T02:42:11.2350688Z  * branch            3b20d60d14b343ee4f908cb8079495c07f5e8981 -> FETCH_HEAD
+2026-10-30T02:42:11.2461190Z Submodule path 'lib/openzeppelin-contracts/lib/forge-std': checked out '3b20d60d14b343ee4f908cb8079495c07f5e8981'
+2026-10-30T02:42:12.1011911Z From https://github.com/a16z/halmos-cheatcodes
+2026-10-30T02:42:12.1012403Z  * branch            7328abe100445fc53885c21d0e713b95293cf14c -> FETCH_HEAD
+2026-10-30T02:42:12.1072653Z Submodule path 'lib/openzeppelin-contracts/lib/halmos-cheatcodes': checked out '7328abe100445fc53885c21d0e713b95293cf14c'
+2026-10-30T02:42:12.1110904Z [command]/usr/bin/git submodule foreach --recursive git config --local gc.auto 0
+2026-10-30T02:42:12.1354302Z Entering 'lib/forge-std'
+2026-10-30T02:42:12.1401234Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:12.1441505Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:12.1483336Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:12.1524139Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:12.1575218Z ##[endgroup]
+2026-10-30T02:42:12.1629492Z [command]/usr/bin/git log -1 --format=%H
+2026-10-30T02:42:12.1670599Z d6fbd19ded61c9c1ee2e402a37eb2629452dee0b
+2026-10-30T02:42:12.1680610Z ##[group]Removing auth
+2026-10-30T02:42:12.1681054Z Removing SSH command configuration
+2026-10-30T02:42:12.1685639Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T02:42:12.1731621Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T02:42:12.1976322Z Entering 'lib/forge-std'
+2026-10-30T02:42:12.2026585Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:12.2071376Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:12.2118186Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:12.2164870Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:12.2221754Z Removing HTTP extra header
+2026-10-30T02:42:12.2226891Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T02:42:12.2271136Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T02:42:12.2509311Z Entering 'lib/forge-std'
+2026-10-30T02:42:12.2555337Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:12.2600669Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:12.2646783Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:12.2692863Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:12.2752513Z Removing includeIf entries pointing to credentials config files
+2026-10-30T02:42:12.2757807Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.2801529Z includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git.path
+2026-10-30T02:42:12.2803137Z includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/worktrees/*.path
+2026-10-30T02:42:12.2804471Z includeif.gitdir:/github/workspace/.git.path
+2026-10-30T02:42:12.2805377Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T02:42:12.2811535Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git.path
+2026-10-30T02:42:12.2847928Z /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:12.2860391Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-46ecf5ca\-d990\-4145\-9779\-36d683427943\.config
+2026-10-30T02:42:12.2914634Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/worktrees/*.path
+2026-10-30T02:42:12.2952153Z /home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:12.2961800Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-46ecf5ca\-d990\-4145\-9779\-36d683427943\.config
+2026-10-30T02:42:12.3009762Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-30T02:42:12.3059153Z /github/runner_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:12.3068729Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-46ecf5ca\-d990\-4145\-9779\-36d683427943\.config
+2026-10-30T02:42:12.3122592Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-30T02:42:12.3159497Z /github/runner_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config
+2026-10-30T02:42:12.3170273Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-46ecf5ca\-d990\-4145\-9779\-36d683427943\.config
+2026-10-30T02:42:12.3219012Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T02:42:12.3455776Z Entering 'lib/forge-std'
+2026-10-30T02:42:12.3479272Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/forge-std/config	remote.origin.url
+2026-10-30T02:42:12.3499671Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:12.3520189Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/config	remote.origin.url
+2026-10-30T02:42:12.3539208Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:12.3560325Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config	remote.origin.url
+2026-10-30T02:42:12.3580625Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:12.3601940Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/forge-std/config	remote.origin.url
+2026-10-30T02:42:12.3622212Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:12.3642915Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config	remote.origin.url
+2026-10-30T02:42:12.3675400Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.3717812Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.3759663Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.3800856Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.3843239Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:12.3881330Z Removing credentials config '/home/runner/work/_temp/git-credentials-46ecf5ca-d990-4145-9779-36d683427943.config'
+2026-10-30T02:42:12.3891268Z ##[endgroup]
+2026-10-30T02:42:12.4144482Z ##[group]Run actions/setup-node@v7.1.0
+2026-10-30T02:42:12.4144799Z with:
+2026-10-30T02:42:12.4145008Z   node-version: 24.15.0
+2026-10-30T02:42:12.4145226Z   cache: npm
+2026-10-30T02:42:12.4145422Z   check-latest: false
+2026-10-30T02:42:12.4148152Z   token: ***
+2026-10-30T02:42:12.4148388Z   package-manager-cache: true
+2026-10-30T02:42:12.4148634Z env:
+2026-10-30T02:42:12.4148819Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:12.4149271Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:12.4149543Z ##[endgroup]
+2026-10-30T02:42:12.5466835Z Attempting to download 24.15.0...
+2026-10-30T02:42:13.2228953Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-30T02:42:13.7122675Z Extracting ...
+2026-10-30T02:42:13.7271253Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/125d778f-6f0e-4e6c-9d01-eef44ef3a114 -f /home/runner/work/_temp/c6a7b60d-72e6-4247-b7d2-bd68441f72ca
+2026-10-30T02:42:14.9207745Z Adding to the cache ...
+2026-10-30T02:42:16.6294580Z ##[group]Environment details
+2026-10-30T02:42:16.8753888Z node: v24.15.0
+2026-10-30T02:42:16.8754294Z npm: 11.12.1
+2026-10-30T02:42:16.8754503Z yarn: 1.22.22
+2026-10-30T02:42:16.8754982Z ##[endgroup]
+2026-10-30T02:42:16.8771438Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-30T02:42:16.9785687Z /home/runner/.npm
+2026-10-30T02:42:17.2183691Z npm cache is not found
+2026-10-30T02:42:17.2429396Z ##[group]Run foundry-rs/foundry-toolchain@v1
+2026-10-30T02:42:17.2429725Z with:
+2026-10-30T02:42:17.2429923Z   version: v1.8.5
+2026-10-30T02:42:17.2430131Z   cache: false
+2026-10-30T02:42:17.2430326Z   network: ethereum
+2026-10-30T02:42:17.2430601Z   cache-key: be08-d6fbd19ded61c9c1ee2e402a37eb2629452dee0b
+2026-10-30T02:42:17.2430953Z   cache-restore-keys: be08-
+2026-10-30T02:42:17.2431187Z env:
+2026-10-30T02:42:17.2431370Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:17.2431905Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:17.2432188Z ##[endgroup]
+2026-10-30T02:42:17.3771151Z Installing Foundry (version: v1.8.5)
+2026-10-30T02:42:17.3772121Z Downloading foundryup installer from foundry-rs/foundryup@a27902ef04dcb43061fabf343365cb5afc95fc48...
+2026-10-30T02:42:17.4238646Z Running foundryup installer...
+2026-10-30T02:42:18.5362594Z Running: foundryup --install 1.8.5
+2026-10-30T02:42:23.8400703Z Added /home/runner/.foundry/bin to PATH
+2026-10-30T02:42:23.8401535Z Cache not requested, not restoring cache
+2026-10-30T02:42:23.8402034Z Running: forge --version
+2026-10-30T02:42:23.8487648Z forge Version: 1.8.5
+2026-10-30T02:42:23.8488285Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:23.8489105Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:23.8489701Z Build Profile: dist
+2026-10-30T02:42:23.8495480Z Running: cast --version
+2026-10-30T02:42:23.8608087Z cast Version: 1.8.5
+2026-10-30T02:42:23.8608727Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:23.8609604Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:23.8610554Z Build Profile: dist
+2026-10-30T02:42:23.8619014Z Running: anvil --version
+2026-10-30T02:42:23.8667527Z anvil Version: 1.8.5
+2026-10-30T02:42:23.8668160Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:23.8668989Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:23.8669610Z Build Profile: dist
+2026-10-30T02:42:23.8672439Z Running: chisel --version
+2026-10-30T02:42:23.8719579Z chisel Version: 1.8.5
+2026-10-30T02:42:23.8720253Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:23.8721118Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:23.8721772Z Build Profile: dist
+2026-10-30T02:42:23.8890587Z ##[group]Run actions/setup-python@v7.0.0
+2026-10-30T02:42:23.8890900Z with:
+2026-10-30T02:42:23.8891105Z   python-version: 3.12
+2026-10-30T02:42:23.8891335Z   check-latest: false
+2026-10-30T02:42:23.8893708Z   token: ***
+2026-10-30T02:42:23.8893922Z   update-environment: true
+2026-10-30T02:42:23.8894190Z   allow-prereleases: false
+2026-10-30T02:42:23.8894422Z   freethreaded: false
+2026-10-30T02:42:23.8894628Z env:
+2026-10-30T02:42:23.8894809Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:23.8895220Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:23.8895490Z ##[endgroup]
+2026-10-30T02:42:24.0178512Z ##[group]Installed versions
+2026-10-30T02:42:24.0265687Z Successfully set up CPython (3.12.15)
+2026-10-30T02:42:24.0266855Z ##[endgroup]
+2026-10-30T02:42:24.0383242Z ##[group]Run npm ci
+2026-10-30T02:42:24.0383576Z [36;1mnpm ci[0m
+2026-10-30T02:42:24.0418618Z shell: /usr/bin/bash -e {0}
+2026-10-30T02:42:24.0418886Z env:
+2026-10-30T02:42:24.0419088Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:24.0419632Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:24.0419992Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:24.0420440Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-30T02:42:24.0420901Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:24.0421288Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:24.0421678Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:24.0422072Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-30T02:42:24.0422395Z ##[endgroup]
+2026-10-30T02:42:25.6119679Z 
+2026-10-30T02:42:25.6120418Z added 30 packages, and audited 31 packages in 2s
+2026-10-30T02:42:25.6121091Z 
+2026-10-30T02:42:25.6121902Z 3 packages are looking for funding
+2026-10-30T02:42:25.6122402Z   run `npm fund` for details
+2026-10-30T02:42:25.6132501Z 
+2026-10-30T02:42:25.6132751Z found 0 vulnerabilities
+2026-10-30T02:42:25.6621405Z ##[group]Run mkdir -p reports && forge build
+2026-10-30T02:42:25.6621816Z [36;1mmkdir -p reports && forge build[0m
+2026-10-30T02:42:25.6647534Z shell: /usr/bin/bash -e {0}
+2026-10-30T02:42:25.6647789Z env:
+2026-10-30T02:42:25.6647978Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:25.6648765Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:25.6649143Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:25.6649586Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-30T02:42:25.6650015Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:25.6650732Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:25.6651129Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:25.6651517Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-30T02:42:25.6651841Z ##[endgroup]
+2026-10-30T02:42:26.2568156Z Compiling 83 files with Solc 0.8.37
+2026-10-30T02:42:31.0889314Z Solc 0.8.37 finished in 4.83s
+2026-10-30T02:42:31.1131636Z Compiler run successful with warnings:
+2026-10-30T02:42:31.1133374Z Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1135396Z   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:92:29:
+2026-10-30T02:42:31.1137206Z    |
+2026-10-30T02:42:31.1138381Z 92 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
+2026-10-30T02:42:31.1139592Z    |                             ^^^^^^^^^^^^^^^^^^
+2026-10-30T02:42:31.1140051Z 
+2026-10-30T02:42:31.1141137Z Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1142832Z    --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:119:29:
+2026-10-30T02:42:31.1143801Z     |
+2026-10-30T02:42:31.1144927Z 119 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
+2026-10-30T02:42:31.1146296Z     |                             ^^^^^^^^^^^^^^^^^^
+2026-10-30T02:42:31.1146755Z 
+2026-10-30T02:42:31.1147799Z Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1148525Z    --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:161:29:
+2026-10-30T02:42:31.1148930Z     |
+2026-10-30T02:42:31.1149402Z 161 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
+2026-10-30T02:42:31.1149903Z     |                             ^^^^^^^^^^^^^^^^^^
+2026-10-30T02:42:31.1150107Z 
+2026-10-30T02:42:31.1150551Z Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1151254Z    --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:169:26:
+2026-10-30T02:42:31.1151660Z     |
+2026-10-30T02:42:31.1152074Z 169 |     function _throwError(RecoverError error, bytes32 errorArg) private pure {
+2026-10-30T02:42:31.1152514Z     |                          ^^^^^^^^^^^^^^^^^^
+2026-10-30T02:42:31.1152708Z 
+2026-10-30T02:42:31.1153122Z Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1153824Z    --> lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol:122:5:
+2026-10-30T02:42:31.1154247Z     |
+2026-10-30T02:42:31.1154736Z 122 |     function at(Bytes32Deque storage deque, uint256 index) internal view returns (bytes32 value) {
+2026-10-30T02:42:31.1155355Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+2026-10-30T02:42:31.1155649Z 
+2026-10-30T02:42:31.1156348Z Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1157043Z    --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:126:5:
+2026-10-30T02:42:31.1157796Z     |
+2026-10-30T02:42:31.1158437Z 126 |     function at(Trace224 storage self, uint32 pos) internal view returns (Checkpoint224 memory) {
+2026-10-30T02:42:31.1159049Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+2026-10-30T02:42:31.1159336Z 
+2026-10-30T02:42:31.1159757Z Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1160428Z    --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:329:5:
+2026-10-30T02:42:31.1160817Z     |
+2026-10-30T02:42:31.1161295Z 329 |     function at(Trace208 storage self, uint32 pos) internal view returns (Checkpoint208 memory) {
+2026-10-30T02:42:31.1161892Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+2026-10-30T02:42:31.1162176Z 
+2026-10-30T02:42:31.1162588Z Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+2026-10-30T02:42:31.1163252Z    --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:532:5:
+2026-10-30T02:42:31.1163645Z     |
+2026-10-30T02:42:31.1164119Z 532 |     function at(Trace160 storage self, uint32 pos) internal view returns (Checkpoint160 memory) {
+2026-10-30T02:42:31.1164713Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+2026-10-30T02:42:31.1165134Z 
+2026-10-30T02:42:31.1728346Z warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+2026-10-30T02:42:31.1757061Z    ╭▸ contracts/BudgetGovernor.sol:57:20
+2026-10-30T02:42:31.1776631Z    │
+2026-10-30T02:42:31.1786973Z 57 │                 || IERC6372(gov).clock() != block.timestamp
+2026-10-30T02:42:31.1816850Z    │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2026-10-30T02:42:31.1846547Z    │
+2026-10-30T02:42:31.1866813Z    ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+2026-10-30T02:42:31.1876364Z 
+2026-10-30T02:42:31.1907057Z warning[unsafe-typecast]: typecast can truncate values
+2026-10-30T02:42:31.1908665Z    ╭▸ contracts/BudgetGovernor.sol:76:38
+2026-10-30T02:42:31.1909914Z    │
+2026-10-30T02:42:31.1911398Z 76 │         if (payload.length != 100 || bytes4(payload) != ITreasury.disburse.selector) revert InvalidCalldata();
+2026-10-30T02:42:31.1912747Z    │                                      ━━━━━━━━━━━━━━━
+2026-10-30T02:42:31.1913588Z    │
+2026-10-30T02:42:31.1914510Z    ├ note: consider disabling this lint if you're certain the cast is safe
+2026-10-30T02:42:31.1915439Z    │       
+2026-10-30T02:42:31.1916625Z    │       // casting to 'bytes4' is safe because [explain why]
+2026-10-30T02:42:31.1917722Z    │       // forge-lint: disable-next-line(unsafe-typecast)
+2026-10-30T02:42:31.1918646Z    │       
+2026-10-30T02:42:31.1919215Z    │       
+2026-10-30T02:42:31.1920105Z    ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+2026-10-30T02:42:31.1920725Z 
+2026-10-30T02:42:31.3194170Z warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+2026-10-30T02:42:31.3195408Z     ╭▸ tests/invariant/GovernanceInvariant.t.sol:165:13
+2026-10-30T02:42:31.3196285Z     │
+2026-10-30T02:42:31.3197051Z 165 │         if (block.timestamp <= p.snapshot) return IGovernor.ProposalState.Pending;
+2026-10-30T02:42:31.3197609Z     │             ━━━━━━━━━━━━━━━
+2026-10-30T02:42:31.3197900Z     ‡
+2026-10-30T02:42:31.3198328Z 393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+2026-10-30T02:42:31.3198946Z     │                                          ────────────────── `vm.warp` changes this environment here
+2026-10-30T02:42:31.3199349Z     │
+2026-10-30T02:42:31.3199725Z     ├ help: capture it with `vm.getBlockTimestamp()` instead
+2026-10-30T02:42:31.3200353Z     ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+2026-10-30T02:42:31.3200701Z 
+2026-10-30T02:42:31.3201161Z warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+2026-10-30T02:42:31.3202167Z     ╭▸ tests/invariant/GovernanceInvariant.t.sol:166:13
+2026-10-30T02:42:31.3202533Z     │
+2026-10-30T02:42:31.3203031Z 166 │         if (block.timestamp <= p.deadline) return IGovernor.ProposalState.Active;
+2026-10-30T02:42:31.3203517Z     │             ━━━━━━━━━━━━━━━
+2026-10-30T02:42:31.3203764Z     ‡
+2026-10-30T02:42:31.3204141Z 393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+2026-10-30T02:42:31.3204744Z     │                                          ────────────────── `vm.warp` changes this environment here
+2026-10-30T02:42:31.3205132Z     │
+2026-10-30T02:42:31.3205479Z     ├ help: capture it with `vm.getBlockTimestamp()` instead
+2026-10-30T02:42:31.3206357Z     ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+2026-10-30T02:42:31.3206700Z 
+2026-10-30T02:42:31.3207089Z warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+2026-10-30T02:42:31.3207726Z     ╭▸ tests/invariant/GovernanceInvariant.t.sol:209:18
+2026-10-30T02:42:31.3208044Z     │
+2026-10-30T02:42:31.3208456Z 209 │         _advance(block.timestamp + bound(secondsSeed, 0, 600));
+2026-10-30T02:42:31.3208879Z     │                  ━━━━━━━━━━━━━━━
+2026-10-30T02:42:31.3209137Z     ‡
+2026-10-30T02:42:31.3209515Z 393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+2026-10-30T02:42:31.3210314Z     │                                          ────────────────── `vm.warp` changes this environment here
+2026-10-30T02:42:31.3210693Z     │
+2026-10-30T02:42:31.3211044Z     ├ help: capture it with `vm.getBlockTimestamp()` instead
+2026-10-30T02:42:31.3211619Z     ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+2026-10-30T02:42:31.3211946Z 
+2026-10-30T02:42:31.3212320Z warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+2026-10-30T02:42:31.3212925Z     ╭▸ tests/invariant/GovernanceInvariant.t.sol:393:25
+2026-10-30T02:42:31.3213238Z     │
+2026-10-30T02:42:31.3213611Z 393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+2026-10-30T02:42:31.3214195Z     │                         ━━━━━━━━━━━━━━━  ────────────────── `vm.warp` changes this environment here
+2026-10-30T02:42:31.3214569Z     │
+2026-10-30T02:42:31.3214903Z     ├ help: capture it with `vm.getBlockTimestamp()` instead
+2026-10-30T02:42:31.3215462Z     ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+2026-10-30T02:42:31.3215791Z 
+2026-10-30T02:42:31.3649547Z ##[group]Run npm run test:be08:native -- --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark
+2026-10-30T02:42:31.3650846Z [36;1mnpm run test:be08:native -- --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark[0m
+2026-10-30T02:42:31.3684265Z shell: /usr/bin/bash -e {0}
+2026-10-30T02:42:31.3684709Z env:
+2026-10-30T02:42:31.3685090Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:31.3686328Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:31.3687005Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.3687816Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-30T02:42:31.3688619Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.3689344Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.3690059Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.3690842Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-30T02:42:31.3691437Z ##[endgroup]
+2026-10-30T02:42:31.4699574Z 
+2026-10-30T02:42:31.4700158Z > dao-budget-simulator@0.0.0 test:be08:native
+2026-10-30T02:42:31.4701192Z > node scripts/check_be08_native.mjs --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark
+2026-10-30T02:42:31.4701722Z 
+2026-10-30T02:42:31.7170133Z anvil Version: 1.8.5
+2026-10-30T02:42:31.7170920Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:31.7171849Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:31.7172519Z Build Profile: dist
+2026-10-30T02:42:31.7244490Z forge Version: 1.8.5
+2026-10-30T02:42:31.7245271Z Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+2026-10-30T02:42:31.7246189Z Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+2026-10-30T02:42:31.7246861Z Build Profile: dist
+2026-10-30T02:42:31.7876270Z {"command":"SELECT","rows":[{"version":"PostgreSQL 18.4 (Debian 18.4-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit","directory":"/var/lib/postgresql/18/docker","binding":"172.18.0.2:5432"}]}
+2026-10-30T02:42:31.7960689Z FAIL: native BE08 acceptance; evidence: /home/runner/work/dao-budget-simulator/dao-budget-simulator/reports/be08/report.json
+2026-10-30T02:42:31.8077466Z ##[error]Process completed with exit code 1.
+2026-10-30T02:42:31.8151081Z ##[group]Run actions/upload-artifact@v7.0.2
+2026-10-30T02:42:31.8151402Z with:
+2026-10-30T02:42:31.8151655Z   name: be08-d6fbd19ded61c9c1ee2e402a37eb2629452dee0b
+2026-10-30T02:42:31.8151969Z   path: reports/be08/
+2026-10-30T02:42:31.8152195Z   retention-days: 14
+2026-10-30T02:42:31.8152418Z   if-no-files-found: warn
+2026-10-30T02:42:31.8152648Z   compression-level: 6
+2026-10-30T02:42:31.8152858Z   overwrite: false
+2026-10-30T02:42:31.8153070Z   include-hidden-files: false
+2026-10-30T02:42:31.8153305Z   archive: true
+2026-10-30T02:42:31.8153493Z env:
+2026-10-30T02:42:31.8153676Z   BE08_TEST_ISOLATED: 1
+2026-10-30T02:42:31.8154356Z   BE08_ADMIN_URL: ***127.0.0.1:5432/postgres
+2026-10-30T02:42:31.8154711Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.8155138Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+2026-10-30T02:42:31.8155563Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.8156327Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.8156770Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+2026-10-30T02:42:31.8157164Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+2026-10-30T02:42:31.8157488Z ##[endgroup]
+2026-10-30T02:42:31.9704734Z With the provided path, there will be 6 files uploaded
+2026-10-30T02:42:31.9711517Z Artifact name is valid!
+2026-10-30T02:42:31.9712242Z Root directory input is valid!
+2026-10-30T02:42:32.3774321Z Uploading artifact: be08-d6fbd19ded61c9c1ee2e402a37eb2629452dee0b.zip
+2026-10-30T02:42:32.3816786Z Beginning upload of artifact content to blob storage
+2026-10-30T02:42:32.7831846Z Uploaded bytes 28684
+2026-10-30T02:42:32.8591268Z Finished uploading artifact content to blob storage!
+2026-10-30T02:42:32.8592825Z SHA256 digest of uploaded artifact is 62d822e1037caf6d747a49e09a1fab50fd3dc475546ca29e65a87bbcafb0d3e3
+2026-10-30T02:42:32.8593843Z Finalizing artifact upload
+2026-10-30T02:42:33.4677623Z Artifact be08-d6fbd19ded61c9c1ee2e402a37eb2629452dee0b successfully finalized. Artifact ID 12950535906
+2026-10-30T02:42:33.4679669Z Artifact be08-d6fbd19ded61c9c1ee2e402a37eb2629452dee0b has been successfully uploaded! Final size is 28684 bytes. Artifact ID is 12950535906
+2026-10-30T02:42:33.4682149Z Artifact download URL: https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40993175782/artifacts/12950535906
+2026-10-30T02:42:33.4890586Z Post job cleanup.
+2026-10-30T02:42:33.5779337Z [command]/usr/bin/git version
+2026-10-30T02:42:33.5828248Z git version 2.56.0
+2026-10-30T02:42:33.5869103Z Temporarily overriding HOME='/home/runner/work/_temp/245cc4d3-91af-4ab6-8137-64b12ed1ba91' before making global git config changes
+2026-10-30T02:42:33.5870779Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-30T02:42:33.5875124Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/dao-budget-simulator/dao-budget-simulator
+2026-10-30T02:42:33.5914561Z Removing SSH command configuration
+2026-10-30T02:42:33.5922991Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-30T02:42:33.5969261Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-30T02:42:33.6234034Z Entering 'lib/forge-std'
+2026-10-30T02:42:33.6286714Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:33.6336905Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:33.6385527Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:33.6432900Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:33.6500151Z Removing HTTP extra header
+2026-10-30T02:42:33.6506540Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-30T02:42:33.6569641Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-30T02:42:33.6832442Z Entering 'lib/forge-std'
+2026-10-30T02:42:33.6880709Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:33.6932696Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:33.6980301Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:33.7029867Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:33.7092909Z Removing includeIf entries pointing to credentials config files
+2026-10-30T02:42:33.7102577Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7149835Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-30T02:42:33.7403866Z Entering 'lib/forge-std'
+2026-10-30T02:42:33.7424538Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/forge-std/config	remote.origin.url
+2026-10-30T02:42:33.7443750Z Entering 'lib/openzeppelin-contracts'
+2026-10-30T02:42:33.7464341Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/config	remote.origin.url
+2026-10-30T02:42:33.7482524Z Entering 'lib/openzeppelin-contracts/lib/erc4626-tests'
+2026-10-30T02:42:33.7503650Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config	remote.origin.url
+2026-10-30T02:42:33.7522706Z Entering 'lib/openzeppelin-contracts/lib/forge-std'
+2026-10-30T02:42:33.7543132Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/forge-std/config	remote.origin.url
+2026-10-30T02:42:33.7563320Z Entering 'lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+2026-10-30T02:42:33.7584208Z file:/home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config	remote.origin.url
+2026-10-30T02:42:33.7628127Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7669361Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7719115Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7759819Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7799678Z [command]/usr/bin/git config --file /home/runner/work/dao-budget-simulator/dao-budget-simulator/.git/modules/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-30T02:42:33.7961289Z Print service container logs: d1defb317bf14737869b0c7a881aa19a_postgres184_bca893
+2026-10-30T02:42:33.7966574Z ##[command]/usr/bin/docker logs --details 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:42:33.8123461Z  The files belonging to this database system will be owned by user "postgres".
+2026-10-30T02:42:33.8125362Z  initdb: warning: enabling "trust" authentication for local connections
+2026-10-30T02:42:33.8126795Z  This user must also own the server process.
+2026-10-30T02:42:33.8128296Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+2026-10-30T02:42:33.8129549Z  
+2026-10-30T02:42:33.8130662Z  2026-10-30 02:41:57.694 UTC [1] LOG:  starting PostgreSQL 18.4 (Debian 18.4-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-10-30T02:42:33.8131671Z  2026-10-30 02:41:57.695 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-10-30T02:42:33.8132277Z  2026-10-30 02:41:57.695 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2026-10-30T02:42:33.8132935Z  2026-10-30 02:41:57.696 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-30T02:42:33.8133653Z  2026-10-30 02:41:57.701 UTC [73] LOG:  database system was shut down at 2026-10-30 02:41:57 UTC
+2026-10-30T02:42:33.8134296Z  2026-10-30 02:41:57.706 UTC [1] LOG:  database system is ready to accept connections
+2026-10-30T02:42:33.8135152Z  The database cluster will be initialized with locale "en_US.utf8".
+2026-10-30T02:42:33.8135699Z  The default database encoding has accordingly been set to "UTF8".
+2026-10-30T02:42:33.8136532Z  The default text search configuration will be set to "english".
+2026-10-30T02:42:33.8136945Z  
+2026-10-30T02:42:33.8137176Z  Data page checksums are enabled.
+2026-10-30T02:42:33.8137474Z  
+2026-10-30T02:42:33.8137848Z  fixing permissions on existing directory /var/lib/postgresql/18/docker ... ok
+2026-10-30T02:42:33.8138341Z  creating subdirectories ... ok
+2026-10-30T02:42:33.8138730Z  selecting dynamic shared memory implementation ... posix
+2026-10-30T02:42:33.8139128Z  selecting default "max_connections" ... 100
+2026-10-30T02:42:33.8139481Z  selecting default "shared_buffers" ... 128MB
+2026-10-30T02:42:33.8139815Z  selecting default time zone ... Etc/UTC
+2026-10-30T02:42:33.8140130Z  creating configuration files ... ok
+2026-10-30T02:42:33.8140447Z  running bootstrap script ... ok
+2026-10-30T02:42:33.8140771Z  performing post-bootstrap initialization ... ok
+2026-10-30T02:42:33.8141114Z  syncing data to disk ... ok
+2026-10-30T02:42:33.8141366Z  
+2026-10-30T02:42:33.8141559Z  
+2026-10-30T02:42:33.8141810Z  Success. You can now start the database server using:
+2026-10-30T02:42:33.8142275Z  
+2026-10-30T02:42:33.8142706Z      pg_ctl -D /var/lib/postgresql/18/docker -l logfile start
+2026-10-30T02:42:33.8143285Z  
+2026-10-30T02:42:33.8144126Z  waiting for server to start....2026-10-30 02:41:57.451 UTC [53] LOG:  starting PostgreSQL 18.4 (Debian 18.4-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+2026-10-30T02:42:33.8145148Z  2026-10-30 02:41:57.451 UTC [53] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-30T02:42:33.8145792Z  2026-10-30 02:41:57.455 UTC [59] LOG:  database system was shut down at 2026-10-30 02:41:57 UTC
+2026-10-30T02:42:33.8146794Z  2026-10-30 02:41:57.458 UTC [53] LOG:  database system is ready to accept connections
+2026-10-30T02:42:33.8147332Z   done
+2026-10-30T02:42:33.8147547Z  server started
+2026-10-30T02:42:33.8147763Z  
+2026-10-30T02:42:33.8148113Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2026-10-30T02:42:33.8148526Z  
+2026-10-30T02:42:33.8148778Z  2026-10-30 02:41:57.569 UTC [53] LOG:  received fast shutdown request
+2026-10-30T02:42:33.8149324Z  waiting for server to shut down....2026-10-30 02:41:57.569 UTC [53] LOG:  aborting any active transactions
+2026-10-30T02:42:33.8150258Z  2026-10-30 02:41:57.572 UTC [53] LOG:  background worker "logical replication launcher" (PID 62) exited with exit code 1
+2026-10-30T02:42:33.8150811Z  2026-10-30 02:41:57.572 UTC [57] LOG:  shutting down
+2026-10-30T02:42:33.8151206Z  2026-10-30 02:41:57.573 UTC [57] LOG:  checkpoint starting: shutdown immediate
+2026-10-30T02:42:33.8152340Z  2026-10-30 02:41:57.575 UTC [57] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.004 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/175F8E0, redo lsn=0/175F8E0
+2026-10-30T02:42:33.8153547Z  2026-10-30 02:41:57.585 UTC [53] LOG:  database system is shut down
+2026-10-30T02:42:33.8153907Z   done
+2026-10-30T02:42:33.8154085Z  server stopped
+2026-10-30T02:42:33.8154282Z  
+2026-10-30T02:42:33.8154516Z  PostgreSQL init process complete; ready for start up.
+2026-10-30T02:42:33.8154814Z  
+2026-10-30T02:42:33.8160712Z Stop and remove container: d1defb317bf14737869b0c7a881aa19a_postgres184_bca893
+2026-10-30T02:42:33.8165146Z ##[command]/usr/bin/docker rm --force 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:42:35.4160364Z 04279251887ee3525fc3dbaf457dbd4d061c3ed2ebc654752f99676b3fb263f0
+2026-10-30T02:42:35.4193229Z Remove container network: github_network_841fdb1ed8a34244995c63881e3c23ea
+2026-10-30T02:42:35.4198009Z ##[command]/usr/bin/docker network rm github_network_841fdb1ed8a34244995c63881e3c23ea
+2026-10-30T02:42:35.5285376Z github_network_841fdb1ed8a34244995c63881e3c23ea
+2026-10-30T02:42:35.5369290Z Cleaning up orphan processes
+

@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "baseCommit": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+  "functionalDir": "docs/evidence/be08-20261027/run-6-service-final",
+  "performanceDir": "docs/evidence/be08-20261027/run-4-final",
+  "calculated": {
+    "global": {
+      "count": 38159,
+      "rank": 36252,
+      "p95Ms": 19.45018600000185,
+      "maxMs": 3581.6358399999735
+    },
+    "list": {
+      "count": 12726,
+      "rank": 12090,
+      "p95Ms": 20.701997999974992,
+      "maxMs": 3564.8826490000065,
+      "percentOfRequests": 33.34993055373568
+    },
+    "summary": {
+      "count": 6361,
+      "rank": 6043,
+      "p95Ms": 11.522607000020798,
+      "maxMs": 2081.295495999977,
+      "percentOfRequests": 16.669724049372363
+    },
+    "detail": {
+      "count": 6359,
+      "rank": 6042,
+      "p95Ms": 16.647243000013987,
+      "maxMs": 3579.216905999987,
+      "percentOfRequests": 16.664482821876884
+    },
+    "votes": {
+      "count": 6357,
+      "rank": 6040,
+      "p95Ms": 20.62738000001991,
+      "maxMs": 2785.9374909999897,
+      "percentOfRequests": 16.659241594381406
+    },
+    "transfers": {
+      "count": 6356,
+      "rank": 6039,
+      "p95Ms": 19.77786400000332,
+      "maxMs": 3581.6358399999735,
+      "percentOfRequests": 16.656620980633665
+    }
+  },
+  "freshness": {
+    "idle": {
+      "count": 10,
+      "rank": 10,
+      "p95Ms": 2729.0519189999904,
+      "maxMs": 2729.0519189999904
+    },
+    "load": {
+      "count": 10,
+      "rank": 10,
+      "p95Ms": 6593.748701999983,
+      "maxMs": 6593.748701999983
+    },
+    "normal": {
+      "count": 20,
+      "rank": 19,
+      "p95Ms": 5140.509151000006,
+      "maxMs": 6593.748701999983
+    }
+  },
+  "health": {
+    "count": 100,
+    "rank": 95,
+    "p95Ms": 2.621729000005871,
+    "maxMs": 6.024429999990389
+  },
+  "inputsMatchCurrentFiles": true,
+  "patchesMatchRecordedHashes": true,
+  "allDataRequestsValid": true,
+  "functionalPatchSha256": "1ba258fb132e3ffa1de980d3e934a8b947fad0b698709a8721cc5262ed8632ea",
+  "performancePatchSha256": "50fb690274fbf543cdbbb475495a62d1fb8c11b175b6898ff89e11d2c639e140"
+}

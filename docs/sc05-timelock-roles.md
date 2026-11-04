@@ -315,3 +315,28 @@ trước renounce, audit final sau renounce rồi mới funding. Kết quả reg
 SC05 đủ điều kiện commit/peer review về thiết kế và kiểm thử Foundry local. Chưa tự commit, push hoặc
 mở PR. Chưa chạy mới deploy/role checker/smoke/testnet của TV4 trong đợt này; không lấy kết quả unit
 hoặc invariant làm bằng chứng deployment/testnet/consumer E2E đã được nghiệm thu.
+
+## Kiểm tra bàn giao sau merge Dev — 04/11/2026
+
+- Giữ commit SC05 `21e53e1`; merge `origin/Dev` tại `0b43364` bằng
+  `f37752648ab42bfea64d834d79059228a82c4801`, không conflict, không rebase/force push.
+- Giữ trạng thái PDF như Dev; không khôi phục hoặc đưa deletion PDF vào diff PR.
+- Chạy `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261023 bash scripts/ci.sh`:
+  format/build, 180 tests/9 suites và ABI/fixture SC01 đạt; 0 failed, 0 skipped.
+  Riêng SC05 38 tests; mỗi fuzz test 256 runs; hai invariant campaigns mỗi campaign
+  100 runs × 50 = 5.000 handler calls. Không nhân calls với số invariant properties.
+- ABI Timelock chia sẻ khớp ABI compiler (46 entries); submodule revisions đúng lock;
+  `git diff --check` đạt. Foundry cảnh báo không ghi được signature cache ngoài workspace
+  do filesystem read-only; command vẫn exit 0.
+- `docs/contracts.md` thống nhất preflight → cleanup/revoke → kiểm lại → renounce →
+  final audit → funding. Contracts, module TV2/TV3/TV4, scripts, CI và dependency không
+  thay đổi so với Dev trong PR SC05.
+- Chưa chạy Node/backend/frontend/database/live deployment smoke trong đợt này:
+  shell chưa có Node.js. Không coi kiểm tra contract local là GitHub CI hoặc E2E.
+
+**Còn mở, chưa nghiệm thu deployment:** script TV4 `scripts/governance_local.mjs`
+vẫn renounce trước role audit, chưa audit operation history trước renounce/funding.
+TV4 bổ sung gate preflight và negative controls, lưu H/hash/receipt/evidence deployment;
+TV1 review kết quả. Không sửa script TV4 hoặc contract production trong bàn giao này.
+Test helper Foundry không chứng minh CLI đã thực hiện gate. SC05 bàn giao để peer review,
+chưa tuyên bố nghiệm thu hoàn toàn; không deploy testnet trong đợt này.

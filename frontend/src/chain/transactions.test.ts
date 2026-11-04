@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { decodeFunctionData, encodeFunctionData, formatUnits, keccak256, toHex, type Address, type Hex } from "viem";
-import { buildProposal, governorAbi, originalActions, parseBUD, proposalIdForActions, proposalIdFromReceipt, treasuryAbi, UINT256_MAX, validateProposalForm } from "./transactions";
+import { decodeFunctionData, encodeFunctionData, formatUnits, keccak256, toHex, type Address, type Hex, type TransactionReceipt } from "viem";
+import { buildProposal, governorAbi, originalActions, parseBUD, proposalIdForActions, proposalIdFromReceipt, transactionErrorMessage, treasuryAbi, UINT256_MAX, validateProposalForm, waitForReceipt } from "./transactions";
 import { formatBUD } from "../data/formatBUD";
 import sc01 from "../../../fixtures/sc01/disbursement-v1.json";
 import sc06 from "./sc06-v1.vectors.json";
@@ -57,6 +57,28 @@ describe("fixture display", () => {
 
   it("formats a uint256 amount without floating point loss", () => {
     expect(formatBUD("1000000000000000001")).toBe("1,000000000000000001 BUD");
+  });
+});
+
+describe("wallet failure reporting", () => {
+  it("distinguishes a rejected signature from an on-chain revert", () => {
+    expect(transactionErrorMessage({ code: 4001, message: "User rejected the request" })).toMatch(/từ chối ký/);
+    expect(transactionErrorMessage(new Error("Giao dịch đã lên chain nhưng bị revert."))).toMatch(/revert/);
+  });
+
+  it("accepts a confirmed or repriced receipt, rejects revert and changed actions", async () => {
+    const hash = `0x${"1".repeat(64)}` as Hex;
+    const success = { status: "success", transactionHash: hash } as TransactionReceipt;
+    const waiter = (receipt: TransactionReceipt, reason?: string) => ({
+      waitForTransactionReceipt: async ({ onReplaced }: { onReplaced?: (value: { reason: string }) => void }) => {
+        if (reason) onReplaced?.({ reason });
+        return receipt;
+      },
+    }) as unknown as NonNullable<Parameters<typeof waitForReceipt>[1]>;
+    await expect(waitForReceipt(hash, waiter(success))).resolves.toBe(success);
+    await expect(waitForReceipt(hash, waiter(success, "repriced"))).resolves.toBe(success);
+    await expect(waitForReceipt(hash, waiter({ ...success, status: "reverted" }))).rejects.toThrow(/revert/);
+    await expect(waitForReceipt(hash, waiter(success, "cancelled"))).rejects.toThrow(/thay/);
   });
 });
 

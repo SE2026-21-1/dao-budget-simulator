@@ -1,11 +1,30 @@
 import { useEffect, useState } from "react";
-import { type Address } from "viem";
+import { parseAbi, type Address } from "viem";
 import { deployment } from "../chain/config";
 import { useWallet, pastVotingPower, publicClient, formatGOV } from "../chain/wallet";
-import { assertWritable, currentProposalState, governorAbi, originalActions, sendGovernor } from "../chain/transactions";
+import { assertWritable, governorAbi, sendGovernor, treasuryAbi } from "../chain/transactions";
+import { preflightGovernanceAction, verifyGovernanceOutcome, type GovernanceAction, type GovernanceReads } from "../chain/governanceActions";
 import { useTransaction } from "../chain/useTransaction";
 import type { FixtureContext, Proposal } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
+
+const timelockAbi = parseAbi([
+  "function hasRole(bytes32 role, address account) view returns (bool)",
+  "function getOperationState(bytes32 operationId) view returns (uint8)",
+  "function getTimestamp(bytes32 operationId) view returns (uint256)",
+]);
+
+const reads: GovernanceReads = {
+  state: async (id, blockNumber) => Number(await publicClient!.readContract({ address: deployment!.governor, abi: governorAbi, functionName: "state", args: [id], blockNumber })),
+  hasVoted: async (id, account, blockNumber) => Boolean(await publicClient!.readContract({ address: deployment!.governor, abi: governorAbi, functionName: "hasVoted", args: [id, account], blockNumber })),
+  votingPower: (account, snapshot) => pastVotingPower(account, String(snapshot)),
+  timestamp: async () => (await publicClient!.getBlock()).timestamp,
+  role: async (contract, role, account) => Boolean(await publicClient!.readContract({ address: deployment![contract], abi: contract === "treasury" ? treasuryAbi : timelockAbi, functionName: "hasRole", args: [role, account] })),
+  operationState: async (id, blockNumber) => Number(await publicClient!.readContract({ address: deployment!.timelock, abi: timelockAbi, functionName: "getOperationState", args: [id], blockNumber })),
+  operationTimestamp: async (id, blockNumber) => BigInt(String(await publicClient!.readContract({ address: deployment!.timelock, abi: timelockAbi, functionName: "getTimestamp", args: [id], blockNumber }))),
+  proposalEta: async (id, blockNumber) => BigInt(String(await publicClient!.readContract({ address: deployment!.governor, abi: governorAbi, functionName: "proposalEta", args: [id], blockNumber }))),
+  paid: async (id, blockNumber) => Boolean(await publicClient!.readContract({ address: deployment!.treasury, abi: treasuryAbi, functionName: "paidRequests", args: [id], blockNumber })),
+};
 
 export default function ProposalActions({ proposal, context, onConfirmed }: { proposal: Proposal; context: FixtureContext; onConfirmed: () => void }) {
   const wallet = useWallet();
@@ -31,26 +50,12 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
     return () => { active = false; };
   }, [writable, wallet.account, proposal.proposalId, proposal.snapshot, readKey]);
 
-  const act = async (kind: "vote" | "cancel" | "queue" | "execute") => {
+  const act = async (kind: GovernanceAction) => {
     await transaction.run(async () => {
       assertWritable(wallet.account, wallet.chainId, context);
-      const args = originalActions(proposal, deployment!.treasury);
-      const expected = { vote: 1, cancel: 0, queue: 4, execute: 5 }[kind];
-      if (await currentProposalState(proposal.proposalId) !== expected) throw new Error("Trạng thái on-chain đã thay đổi. Tải dữ liệu mới nhất trước khi thao tác.");
-      if (kind === "vote") {
-        const voted = await publicClient!.readContract({ address: deployment!.governor, abi: governorAbi, functionName: "hasVoted", args: [BigInt(proposal.proposalId), wallet.account!] });
-        if (voted) throw new Error("Ví này đã bỏ phiếu cho proposal.");
-        if (await pastVotingPower(wallet.account!, proposal.snapshot) === 0n) throw new Error("Ví không có voting power tại snapshot.");
-        if (!["0", "1", "2"].includes(support)) throw new Error("Lựa chọn phiếu không hợp lệ.");
-        return sendGovernor(wallet.account!, "castVote", [BigInt(proposal.proposalId), Number(support)]);
-      }
-      if (kind === "cancel" && proposal.proposer.toLowerCase() !== wallet.account!.toLowerCase()) throw new Error("Chỉ creator được hủy proposal Pending.");
-      if (kind === "execute") {
-        const block = await publicClient!.getBlock();
-        if (!proposal.operation?.eta || block.timestamp < BigInt(proposal.operation.eta)) throw new Error("Chưa tới ETA để execute.");
-      }
-      return sendGovernor(wallet.account!, kind, args);
-    }, onConfirmed);
+      const action = await preflightGovernanceAction(kind, proposal, wallet.account!, support, deployment!, reads);
+      return sendGovernor(wallet.account!, action.functionName, action.args);
+    }, onConfirmed, (receipt) => verifyGovernanceOutcome(kind, proposal, wallet.account!, support, deployment!, reads, receipt));
   };
 
   return <div className="proposal-actions">

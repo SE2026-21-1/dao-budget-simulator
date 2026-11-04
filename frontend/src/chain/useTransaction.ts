@@ -9,7 +9,8 @@ export function useTransaction() {
   const running = useRef(false);
   const busy = phase === "signing" || phase === "submitted" || phase === "confirming";
 
-  const run = async (send: () => Promise<Hash>, afterReceipt?: (receipt: TransactionReceipt) => Promise<void> | void) => {
+  const run = async (send: () => Promise<Hash>, afterReceipt?: (receipt: TransactionReceipt) => Promise<void> | void,
+    verifyReceipt?: (receipt: TransactionReceipt) => Promise<void> | void) => {
     if (running.current) return null;
     running.current = true;
     setPhase("signing"); setHash(null); setError(null);
@@ -18,7 +19,13 @@ export function useTransaction() {
       setHash(submitted); setPhase("submitted");
       setPhase("confirming");
       const receipt = await waitForReceipt(submitted);
-      setHash(receipt.transactionHash); setPhase("success");
+      setHash(receipt.transactionHash);
+      try { await verifyReceipt?.(receipt); }
+      catch (cause) {
+        try { await afterReceipt?.(receipt); } catch { /* A refresh cannot change receipt verification. */ }
+        throw cause;
+      }
+      setPhase("success");
       try { await afterReceipt?.(receipt); } catch { /* Receipt is still successful when optional UI refresh fails. */ }
       return receipt;
     } catch (cause) {

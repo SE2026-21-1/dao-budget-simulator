@@ -8,6 +8,22 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Đồng bộ vào feature/tv4-operation — 04/11/2026
+
+`feature/tv4-operation` đã nhập `origin/feature/tv1-sc05` (nhánh này bao gồm
+`origin/Dev` tại `0b43364`), chọn hai commit TV4 về kiểm tra tích hợp
+`0e9828e` và `9dc2ba9`, cùng sửa preflight holder lịch sử tại `0c99757`.
+Không nhập bài VT-064 cá nhân/PDF, nhánh thí nghiệm false-success, SC06 draft
+hoặc nhánh TV3 mới chưa vào Dev. Thao tác trong worktree riêng; các thay đổi
+`AGENTS.md`, `README.md`, AD-064 chưa commit của nhánh cá nhân không bị sửa.
+
+[Kiểm tra tại revision `0c99757`](evidence/tv4-20261104-merge.json): bootstrap
+15/15, Foundry 187/187, backend typecheck/build, frontend 14/14 và live BE07
+đạt trên PostgreSQL 18.4/Anvil cô lập. **Native BE08 kèm benchmark FAIL**:
+một publication khi 10 client cùng tải mất 30.269 ms so với ngưỡng nghiêm
+`<30.000 ms`; cluster đã cleanup, không gọi NFR04 hoặc CI là đạt. Kết quả
+local này không chứng minh benchmark trên máy GitHub hoặc testnet.
+
 ## Kiểm tra 04/11/2026 — PR #33, SC06 và tích hợp local
 
 - Review PR #33: role matrix của Timelock/Governor/Treasury và thứ tự preflight → renounce → final audit → funding đáp ứng thiết kế SC05; PR không tự thay deployment script TV4. Bổ sung fail-closed khi log cấp role lịch sử thiếu (kể cả holder đã bị revoke), cùng regression Anvil fail-trước/pass-sau; `npm run test:bootstrap` 15/15. Cần nhập thay đổi deployment TV4 vào nhánh tích hợp trước khi gọi SC05 hoàn tất.

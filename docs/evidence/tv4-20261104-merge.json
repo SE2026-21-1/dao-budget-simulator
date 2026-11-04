@@ -1,0 +1,17 @@
+{
+  "scope": "Local merge verification on Node 24.15.0, Foundry 1.8.5, isolated PostgreSQL 18.4 and Anvil; not GitHub CI or testnet",
+  "verifiedCommit": "0c9975754909a0eb4a80b3b2a7be278bed7ffd50",
+  "branches": ["origin/Dev", "origin/feature/tv1-sc05", "TV4 integration commits 0e9828e and 9dc2ba9 (cherry-picked without VT-064 personal history)"],
+  "bootstrap": {"pass": 15, "fail": 0},
+  "native": {
+    "status": "FAIL",
+    "passedSuites": ["be01-sql", "be02-storage:21", "be03-checkpoint-crash:18", "be04-projection:10", "be05-api:5", "be06-two-db:1", "typecheck", "build", "unit:182", "contracts:187 Foundry", "be07-db:18", "live-be07"],
+    "failedSuite": "api-benchmark",
+    "failure": "One of ten on-load freshness publications took 30269.061231 ms; strict requirement <30000 ms. First seven load freshness samples passed, 16402 measured HTTP responses with zero errors before the failure. Do not claim NFR04 acceptance.",
+    "cleanup": "PASS: disposable PostgreSQL stopped and temporary cluster removed",
+    "localReport": "/tmp/dao-tv4-integrated-20261104/report.json",
+    "localBenchmarkReport": "/tmp/dao-tv4-integrated-20261104/benchmark.json"
+  },
+  "frontend": "lint exit 0 with warnings, 14/14 tests, production build PASS",
+  "limits": "Unmerged SC06 draft, TV3 new feature branch, personal VT-064 importer/PDF, and deliberate false-success experiment excluded by scope. No CI result for merged branch yet."
+}

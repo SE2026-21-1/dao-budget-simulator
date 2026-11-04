@@ -1,9 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router";
-import { type Address } from "viem";
+import { keccak256, toHex, type Address } from "viem";
 import { deployment } from "../chain/config";
 import { useWallet } from "../chain/wallet";
-import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
+import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdForActions, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
 import { useTransaction } from "../chain/useTransaction";
 import TransactionStatus from "../components/TransactionStatus";
 import { loadSummary, type Summary } from "../data/api";
@@ -42,13 +42,14 @@ function CreateProposalPage() {
       assertWritable(wallet.account, wallet.chainId, summary?.context);
       if (validation) throw new Error(validation);
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
+      const expectedId = proposalIdForActions(payload.targets, payload.values, payload.calldatas, keccak256(toHex(payload.description)));
       await transaction.run(
         async () => {
           await assertCanPropose(wallet.account!);
           return sendGovernor(wallet.account!, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
         },
         (receipt) => {
-          setSubmittedId(proposalIdFromReceipt(receipt.logs));
+          setSubmittedId(proposalIdFromReceipt(receipt.logs, deployment!.governor, expectedId));
           setLoadAttempt((value) => value + 1);
         },
       );

@@ -33,7 +33,7 @@ export async function sendGovernor(account: Address, functionName: string, args:
   await verifyDeployment();
   if (!deployment) throw new Error("Thiếu cấu hình deployment.");
   const data = encodeFunctionData({ abi: governorAbi, functionName, args });
-  return walletClient().sendTransaction({ account, to: deployment.governor, data });
+  return (await walletClient(account)).sendTransaction({ account, to: deployment.governor, data });
 }
 
 export async function verifyDeployment(): Promise<void> {

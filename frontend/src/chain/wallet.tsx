@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash } from "viem";
 import { deployment } from "./config";
-import { discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
+import { assertWalletReady, discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
 // Transactions must use the same provider that the user selected in FE02.
 let activeWalletProvider: InjectedProvider | null = null;
@@ -172,9 +172,12 @@ export function useWallet() {
   return context;
 }
 
-export function walletClient() {
+export async function walletClient(account: Address) {
   if (!activeWalletProvider || !deployment) throw new Error("Thiếu ví hoặc cấu hình deployment.");
-  return createWalletClient({ chain: deployment.chain, transport: custom(activeWalletProvider) });
+  const provider = activeWalletProvider;
+  await assertWalletReady(provider, account, deployment.chainId);
+  if (activeWalletProvider !== provider) throw new Error("Ví đã thay đổi trước khi gửi giao dịch. Kiểm tra lại ví rồi thử lại.");
+  return createWalletClient({ chain: deployment.chain, transport: custom(provider) });
 }
 
 export function formatGOV(value: bigint | null): string {
@@ -194,5 +197,5 @@ export async function sendTokenTransaction(functionName: "delegate" | "transfer"
     throw new Error("RPC hoặc token không khớp deployment đã cấu hình.");
   }
   const data = encodeFunctionData({ abi: tokenAbi, functionName, args });
-  return walletClient().sendTransaction({ account, to: target, data });
+  return (await walletClient(account)).sendTransaction({ account, to: target, data });
 }

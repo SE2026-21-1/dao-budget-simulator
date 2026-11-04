@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
+import { assertWalletReady, discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
 afterEach(() => { vi.unstubAllGlobals(); });
 
@@ -72,6 +72,25 @@ describe("FE02 wallet responses", () => {
     expect(walletErrorMessage({ code: -32002 }, "fallback")).toContain("chờ xử lý");
     expect(walletErrorMessage({ code: -32603, data: { originalError: { code: 4001 } } }, "fallback")).toContain("từ chối");
     expect(walletErrorMessage({}, "fallback")).toBe("fallback");
+  });
+});
+
+describe("wallet transaction preflight", () => {
+  const account = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+  it("allows the selected account and chain, regardless of address case", async () => {
+    const request = vi.fn().mockImplementation(({ method }) =>
+      Promise.resolve(method === "eth_accounts" ? [account.toUpperCase().replace("0X", "0x")] : "0x7a69"));
+    await expect(assertWalletReady({ request } as unknown as InjectedProvider, account, 31337)).resolves.toBeUndefined();
+  });
+
+  it("blocks account or network changes before opening the signing request", async () => {
+    const changedAccount = vi.fn().mockImplementation(({ method }) =>
+      Promise.resolve(method === "eth_accounts" ? ["0x2222222222222222222222222222222222222222"] : "0x7a69"));
+    await expect(assertWalletReady({ request: changedAccount } as unknown as InjectedProvider, account, 31337)).rejects.toThrow(/đổi tài khoản/);
+    const changedChain = vi.fn().mockImplementation(({ method }) =>
+      Promise.resolve(method === "eth_accounts" ? [account] : "0x1"));
+    await expect(assertWalletReady({ request: changedChain } as unknown as InjectedProvider, account, 31337)).rejects.toThrow(/đổi mạng/);
   });
 });
 

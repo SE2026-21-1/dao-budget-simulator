@@ -1,4 +1,5 @@
 import type { EIP1193Provider } from "viem";
+import { isAddress, type Address } from "viem";
 
 export type InjectedProvider = EIP1193Provider & {
   on?: (event: string, listener: (...args: unknown[]) => void) => void;
@@ -64,6 +65,18 @@ export function parseWalletChain(value: unknown): number | null {
   if (typeof value !== "string" || !/^0x[0-9a-f]+$/i.test(value)) return null;
   const parsed = Number(BigInt(value));
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+export async function assertWalletReady(provider: InjectedProvider, account: Address, chainId: number): Promise<void> {
+  const [accounts, chain] = await Promise.all([
+    provider.request({ method: "eth_accounts" }),
+    provider.request({ method: "eth_chainId" }),
+  ]);
+  if (parseWalletChain(chain) !== chainId) throw new Error("Ví đã đổi mạng trước khi gửi giao dịch. Kiểm tra lại mạng rồi thử lại.");
+  if (!Array.isArray(accounts) || !accounts.some((candidate) =>
+    typeof candidate === "string" && isAddress(candidate, { strict: false }) && candidate.toLowerCase() === account.toLowerCase())) {
+    throw new Error("Ví đã đổi tài khoản hoặc ngắt kết nối trước khi gửi giao dịch. Kiểm tra lại tài khoản rồi thử lại.");
+  }
 }
 
 export async function switchWalletNetwork(provider: InjectedProvider, network: {

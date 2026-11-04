@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "readyForFeaturePush": true,
+  "baseCommit": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+  "branch": "feature/tv2-be08",
+  "functionalReport": "functional/report.json",
+  "functionalStatus": "PASS",
+  "sourceUnchangedThroughRun": true,
+  "historicalEvidenceHashesVerified": 154,
+  "ignoredHistoricalLogsExplicitlyIncluded": 116,
+  "performanceEvidence": "../be08-20261027/run-4-final/benchmark.json",
+  "performanceRecalculated": {
+    "requests": 38159,
+    "errors": 0,
+    "p95Ms": 19.45018600000185,
+    "allBenchmarkDependenciesMatchWorkingFiles": true
+  },
+  "setupFailure": "First attempt stopped before test suites: LD_LIBRARY_PATH omitted installed PostgreSQL dependency libraries. Second attempt uses the existing local libraries and passes.",
+  "remoteCI": "NOT_RUN_AT_COMMIT",
+  "peerApproval": "NOT_CLAIMED",
+  "integrationBase": "feature/tv2-be07; Dev does not yet contain BE05-BE07 dependencies",
+  "commitMessage": "feat(be08): add backend acceptance and API performance benchmarks",
+  "packagingOnlyChange": {
+    "file": ".gitattributes",
+    "beforeSha256": "35c22e056dec266da8871bb4964c40a759a966ac7f89907712c4c7fedb18b8d0",
+    "afterSha256": "3730ace3637a9863e217a224a97d08421b39022eb57f6f18bcb3a6b134f49a26",
+    "reason": "Recognize preserved CRLF in the raw DOCX requirements excerpt during whitespace checks; do not change evidence bytes.",
+    "runtimeSourceUnchanged": true
+  }
+}

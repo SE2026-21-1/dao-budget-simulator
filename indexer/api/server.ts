@@ -86,14 +86,12 @@ function decodeCursor(raw: string, secret: string): Cursor {
   const expected = createHmac('sha256', secret).update(parts[0]!).digest();
   let actual: Buffer;
   try { actual = Buffer.from(parts[1]!, 'base64url'); } catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
-  if (actual.toString('base64url') !== parts[1] || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
+  if (actual.toString('base64url') !== parts[1] || Buffer.from(parts[0]!, 'base64url').toString('base64url') !== parts[0]
+      || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
     throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   }
-  const payload = Buffer.from(parts[0]!, 'base64url');
-  if (payload.toString('base64url') !== parts[0])
-    throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   let value: unknown;
-  try { value = JSON.parse(payload.toString('utf8')); }
+  try { value = JSON.parse(Buffer.from(parts[0]!, 'base64url').toString('utf8')); }
   catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
   if (!value || typeof value !== 'object') throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   const c = value as Partial<Cursor>;
@@ -178,8 +176,7 @@ async function readHealth(pool: Pool, scope: Scope): Promise<{ status: number; b
 type ScopeState = {
   deploymentId: string; chainId: string; name: string; revision: string; governance: Json;
   publication: null | { h: string; hash: string; timestamp: string; revision: string; scope: string; ignored: number };
-  raw: null | { h: string; hash: string; head: string; confirmations: number; status: string; sourceScope: string; updatedAt: string;
-    timestamp: string | null; headTimestamp: string | null };
+  raw: null | { h: string; hash: string; head: string; confirmations: number; status: string; sourceScope: string; updatedAt: string };
   context: Context | null; sync: Json; notReadyContext: Json; ready: boolean; ignoredAncillaryEvents: number;
 };
 
@@ -191,7 +188,6 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
       p.source_scope AS projection_scope, p.ignored_ancillary_events,
       c.block_number::text AS raw_h, c.block_hash AS raw_hash, c.observed_head_block::text AS raw_head,
       c.confirmation_depth, c.sync_status, c.source_scope AS raw_scope, c.updated_at,
-      rb.block_timestamp::text AS raw_timestamp, hb.block_timestamp::text AS head_timestamp,
       to_jsonb(d)->'indexer_state' AS recovery_state,
       (SELECT count(*)::text FROM indexed_blocks ib WHERE ib.deployment_id=d.deployment_id
         AND ib.block_number BETWEEN (SELECT deployment_block FROM deployments WHERE deployment_id=d.deployment_id)
@@ -202,14 +198,11 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
     LEFT JOIN projection_checkpoints p ON p.deployment_id=d.deployment_id
     LEFT JOIN indexed_blocks b ON b.deployment_id=p.deployment_id AND b.block_number=p.block_number AND b.block_hash=p.block_hash
     LEFT JOIN checkpoints c ON c.deployment_id=d.deployment_id
-    LEFT JOIN indexed_blocks rb ON rb.deployment_id=c.deployment_id AND rb.block_number=c.block_number AND rb.block_hash=c.block_hash
-    LEFT JOIN indexed_blocks hb ON hb.deployment_id=c.deployment_id AND hb.block_number=c.observed_head_block
     WHERE d.chain_id=$1::numeric AND d.deployment_name=$2`, [scope.chainId, scope.deploymentId]);
   const row = result.rows[0];
   if (!row) throw new ApiError(404, 'DEPLOYMENT_NOT_FOUND', 'Deployment không tồn tại trong chain đã chọn.', { deploymentId: scope.deploymentId });
   const raw = row.raw_h === null ? null : { h: String(row.raw_h), hash: String(row.raw_hash), head: String(row.raw_head),
-    confirmations: Number(row.confirmation_depth), status: String(row.sync_status), sourceScope: String(row.raw_scope), updatedAt: new Date(row.updated_at).toISOString(),
-    timestamp: row.raw_timestamp === null ? null : String(row.raw_timestamp), headTimestamp: row.head_timestamp === null ? null : String(row.head_timestamp) };
+    confirmations: Number(row.confirmation_depth), status: String(row.sync_status), sourceScope: String(row.raw_scope), updatedAt: new Date(row.updated_at).toISOString() };
   const publication = row.projection_h === null ? null : { h: String(row.projection_h), hash: String(row.projection_hash),
     timestamp: String(row.projection_timestamp), revision: String(row.projection_revision), scope: String(row.projection_scope),
     ignored: Number(row.ignored_ancillary_events) };
@@ -221,7 +214,7 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
   const ready = (!recovery || recovery.phase === 'ready') && !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
     publication.revision === String(row.deployment_revision) && BigInt(raw.h) >= BigInt(publication.h) && row.projection_timestamp !== null &&
     prefixComplete && metadataReady;
-  const sync = recovery ? freshness(raw, publication?.h ?? null, recovery) : buildSync(raw, publication);
+  const sync = freshness(raw, publication?.h ?? null, recovery);
   const context: Context | null = ready && publication ? { chainId: String(row.chain_id), deploymentId: String(row.deployment_name),
     asOfBlock: publication.h, asOfBlockHash: publication.hash, asOfTimestamp: publication.timestamp,
     snapshotRevision: publication.revision, dataKind: 'chain', sync } : null;
@@ -238,38 +231,19 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
   return state;
 }
 
-function buildSync(raw: ScopeState['raw'], publication: ScopeState['publication']): Json {
-  if (!raw) return { status: 'not_ready', headBlock: null, confirmedBlock: null, indexedBlock: null, lagBlocks: null, lagSeconds: null, confirmations: null, lastIndexedAt: null };
-  const confirmed = BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n;
-  const lag = confirmed > BigInt(raw.h) ? confirmed - BigInt(raw.h) : 0n;
-  const heartbeatAgeMs = Math.max(0, Date.now() - Date.parse(raw.updatedAt));
-  let lagSeconds = BigInt(Math.floor(heartbeatAgeMs / 1000));
-  // Retained headers measure chain-time publication delay, not wall-clock age of a pinned H.
-  const latestTimestamp = raw.headTimestamp ?? raw.timestamp;
-  if (publication && latestTimestamp !== null && publication.timestamp !== 'null') {
-    const publicationDelay = BigInt(latestTimestamp) - BigInt(publication.timestamp);
-    if (publicationDelay > lagSeconds) lagSeconds = publicationDelay;
-  }
-  const projectionBehind = !!publication && BigInt(raw.h) > BigInt(publication.h);
-  return { status: !publication || raw.status === 'rebuild_required' ? 'not_ready'
-      : lag > 0n || projectionBehind || heartbeatAgeMs > 30_000 || lagSeconds > 30n ? 'lagging' : 'synced',
-    headBlock: raw.head, confirmedBlock: confirmed.toString(), indexedBlock: raw.h,
-    lagBlocks: lag.toString(), lagSeconds: lagSeconds.toString(), confirmations: String(raw.confirmations), lastIndexedAt: raw.updatedAt };
-}
-
-export function freshness(raw: Pick<NonNullable<ScopeState['raw']>, 'h' | 'head' | 'confirmations' | 'status' | 'updatedAt'> | null,
-  publication: string | null, recovery: Json | null, now = Date.now()): Json {
-  const confirmed = recovery?.confirmed != null ? BigInt(String(recovery.confirmed)) : raw
-    ? (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
+export function freshness(raw: ScopeState['raw'], publication: string | null, recovery: Json | null, now = Date.now()): Json {
+  const confirmed = recovery?.confirmed !== undefined ? BigInt(String(recovery.confirmed)) : raw ?
+    (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
   const lag = confirmed === null || publication === null ? null : confirmed > BigInt(publication) ? confirmed - BigInt(publication) : 0n;
   const checked = recovery?.lastCheckedAt ? Date.parse(String(recovery.lastCheckedAt)) : NaN;
-  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince))
-    : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
+  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince)) : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
   const age = Number.isFinite(checked) ? Math.max(0, now - checked, now - since) : null;
   const blocked = !raw || publication === null || raw.status === 'rebuild_required' ||
     (!!recovery && recovery.phase !== 'ready');
+  // Raw ingestion can commit before the next heartbeat or projection. Its
+  // verified data must be published before the API advertises synced (TV4).
   const projectionBehind = !!raw && publication !== null && BigInt(raw.h) > BigInt(publication);
-  return { status: blocked ? 'not_ready' : lag === 0n && !projectionBehind && age !== null && age <= 30_000 ? 'synced' : 'lagging',
+  return { status: blocked ? 'not_ready' : lag === 0n && !projectionBehind && age !== null && age <= 30000 ? 'synced' : 'lagging',
     headBlock: recovery?.head ?? raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null,
     indexedBlock: raw?.h ?? null, publicationBlock: publication, lagBlocks: lag?.toString() ?? null,
     lagSeconds: age === null ? null : Math.floor(age / 1000).toString(), confirmations: raw ? String(raw.confirmations) : null,

@@ -1,0 +1,65 @@
+[
+  {
+    "label": "initdb",
+    "command": "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/initdb",
+    "args": [
+      "-D",
+      "/tmp/dao-be08-ci-service-FTDTKj/data",
+      "-U",
+      "be08_admin",
+      "--auth-local=trust",
+      "--auth-host=scram-sha-256",
+      "--pwfile",
+      "/tmp/dao-be08-ci-service-FTDTKj/password",
+      "--encoding=UTF8",
+      "--locale=C"
+    ],
+    "startedAt": "2026-10-27T14:32:02.117Z",
+    "exitCode": 0
+  },
+  {
+    "label": "start",
+    "command": "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl",
+    "args": [
+      "-D",
+      "/tmp/dao-be08-ci-service-FTDTKj/data",
+      "-l",
+      "/tmp/dao-be08-ci-service-FTDTKj/postgres.log",
+      "-w",
+      "-t",
+      "30",
+      "start"
+    ],
+    "startedAt": "2026-10-27T14:32:02.552Z",
+    "exitCode": 0
+  },
+  {
+    "label": "ci-service-mode",
+    "command": "node",
+    "args": [
+      "scripts/check_be08_native.mjs",
+      "--admin-env",
+      "BE08_ADMIN_URL",
+      "--output",
+      "docs/evidence/be08-20261027/run-5-service-final"
+    ],
+    "startedAt": "2026-10-27T14:32:02.665Z",
+    "exitCode": 1
+  },
+  {
+    "label": "stop",
+    "command": "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl",
+    "args": [
+      "-D",
+      "/tmp/dao-be08-ci-service-FTDTKj/data",
+      "-w",
+      "-t",
+      "30",
+      "-m",
+      "fast",
+      "stop"
+    ],
+    "startedAt": "2026-10-27T14:34:50.493Z",
+    "exitCode": 0
+  }
+]

@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Derived from TV4 d2617d0/fa498d6, Phan Thanh Dũng (ref 213f9f7).
+// BE08 uses migration 005, the real CLI worker, and NFR03/04 probes.
 // NFR02: caller supplies one NEW disposable native database; this script owns Anvil.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -14,11 +16,10 @@ import pg from 'pg';
 import { deployGovernance } from './governance_local.mjs';
 import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
-import { parseConfig } from '../indexer/config.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
-import { PostgresStorage } from '../indexer/storage.ts';
-import { sync } from '../indexer/syncer.ts';
-import { project } from '../indexer/projection/projector.ts';
+import { startWorkerProbe } from './be08_worker_probe.mjs';
+import { measureJson, metrics } from './be08_measurement.mjs';
+import { verifyPostgresConnection } from './be08_postgres_identity.mjs';
 import { createApiServer } from '../indexer/api/server.ts';
 import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
 
@@ -56,15 +57,15 @@ const U = 10n ** 18n;
 const durationMs = 60_000;
 const concurrency = 10;
 const report = {
-  format: 'dao-budget-nfr02-real-api-v1', status: 'RUNNING', startedAt: new Date().toISOString(),
+  format: 'dao-budget-be08-nfr02-04-v2', status: 'RUNNING', startedAt: new Date().toISOString(),
   command: ['node', '--import', 'tsx', 'scripts/benchmark_api.mjs', '--output', args[1]],
   environment: { required: ['TV4_BENCHMARK_ISOLATED=1', 'TV4_BENCHMARK_DATABASE_URL'],
     database: { host: dbUrl.hostname, port: Number(dbUrl.port), user: 'be04_test', name: 'tv4_benchmark' },
     optional: ['ANVIL_BIN', 'FORGE_BIN'], callerDatabaseAndRpcIgnored: true },
-  scope: 'Real unforked owned Anvil, deployed production contracts, genuine transactions, BE03/BE04/BE05, loopback HTTP. Not testnet, remote-client, or browser performance.',
-  method: { concurrency, durationMs, model: 'Ten closed-loop HTTP clients, one outstanding request each, no think time or request retries; starts stop at 60s and in-flight requests drain.',
-    timedCycle: ['list', 'list', 'summary', 'detail', 'votes'], intendedPercent: { list: 40, summary: 20, detail: 20, votes: 20 },
-    extraRoutes: 'Transfers and health validated outside measured load; not included in latency percentiles.',
+  scope: 'Real unforked owned Anvil, deployed production contracts, genuine transactions, BE03/BE04/BE05/BE07, actual CLI worker, loopback HTTP. Not testnet, remote-client, or browser performance.',
+  method: { concurrency, durationMs, model: 'Ten closed-loop HTTP clients, one outstanding request each, no think time or request retries; starts stop after at least 60s and completion of ten concurrent freshness samples; in-flight requests drain. Client, API and PostgreSQL are loopback; client/API share one Node process, worker is a separate CLI process.',
+    timedCycle: ['list', 'list', 'summary', 'detail', 'votes', 'transfers'], intendedPercent: { list: 100/3, summary: 100/6, detail: 100/6, votes: 100/6, transfers: 100/6 },
+    extraRoutes: 'Health measured separately (100 sequential reads), excluded from data percentiles. Data reads pin the baseline H/hash snapshot; event probes use latest transfers and verify the new publication.',
     latency: 'Monotonic performance.now(), immediately before fetch through complete JSON body consumption; semantic validation occurs afterward.',
     percentile: 'Exact nearest-rank: sorted successful request latencies at ceil(0.95*N)-1. Errors reported separately and any error fails acceptance.',
     threshold: 'Global and each timed endpoint successful p95 strictly <1000ms, zero errors, exact 100 proposals/1000 indexed votes.',
@@ -75,9 +76,12 @@ const report = {
     cpus: os.cpus().map(({ model, speed }) => ({ model, nominalMHz: speed })),
     totalRamBytes: os.totalmem(), freeRamBytesAtStart: os.freemem(), loadAverageAtStart: os.loadavg() },
   runtime: { node: process.version, versions: process.versions, compiler: '0.8.37+commit.f401782d', evm: 'osaka' },
+  baseCommit: execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
   timingsMs: {}, sourceHashes: {}, transactions: [], cleanup: { status: 'NOT_RUN' },
 };
 let pool;
+let workerProbe;
+let freshnessDeposits = 0;
 let lock;
 let api;
 let anvil;
@@ -97,11 +101,7 @@ async function reservePort() {
   await new Promise((done, reject) => reservation.close(error => error ? reject(error) : done()));
   return port;
 }
-function metrics(samples) {
-  if (!samples.length) return { count: 0, p95Ms: null, maxMs: null };
-  const sorted = [...samples].sort((a, b) => a - b);
-  return { count: sorted.length, p95Ms: sorted[Math.ceil(0.95 * sorted.length) - 1], maxMs: sorted.at(-1) };
-}
+
 try {
   // Explicit connection fields, including TLS/options, prevent libpq/PG* ambient
   // settings from selecting a different destination or schema.
@@ -117,9 +117,8 @@ try {
   assert.equal(identity.database, 'tv4_benchmark');
   assert.equal(identity.role, 'be04_test');
   assert.equal(identity.owned, true, 'Connecting role must own disposable database');
-  assert.ok(['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(lock.connection.stream.remoteAddress));
-  assert.ok(['127.0.0.1', '::1'].includes(identity.address), 'Native loopback PostgreSQL required');
-  assert.match(identity.version, /PostgreSQL 18\.4(?:\s|$)/, 'PostgreSQL18.4 required');
+  verifyPostgresConnection({ peer: { address: lock.connection.stream.remoteAddress, port: lock.connection.stream.remotePort },
+    server: identity, expectedPort: Number(dbUrl.port) });
   assert.equal((await lock.query('SELECT pg_try_advisory_lock(747004, 2) AS acquired')).rows[0].acquired, true, 'Another benchmark owns this database');
   await assertEmptyDatabase(pool);
   const extras = (await pool.query(`SELECT (SELECT count(*) FROM pg_extension WHERE extname<>'plpgsql')::text AS extensions,
@@ -130,11 +129,11 @@ try {
   for (const name of ['tsx', 'typescript', 'pg', 'ethers'])
     report.runtime[name] = JSON.parse(await readFile(new URL(`../node_modules/${name}/package.json`, import.meta.url), 'utf8')).version;
   for (const path of ['scripts/benchmark_api.mjs', 'scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs',
-    'indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
-    ...['001_initial', '002_be03', '003_be04', '004_be05_api'].map(name => `database/migrations/${name}.sql`)])
+    'scripts/be08_worker_probe.mjs','scripts/be08_rpc_outage.mjs','scripts/be08_measurement.mjs','scripts/be08_postgres_identity.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
+    ...['001_initial', '002_be03', '003_be04', '004_be05_api', '005_be07'].map(name => `database/migrations/${name}.sql`)])
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
   await timed('migrations', async () => {
-    for (const name of ['001_initial', '002_be03', '003_be04', '004_be05_api'])
+    for (const name of ['001_initial', '002_be03', '003_be04', '004_be05_api', '005_be07'])
       await pool.query(await readFile(new URL(`../database/migrations/${name}.sql`, import.meta.url), 'utf8'));
   });
   const port = await reservePort();
@@ -272,15 +271,9 @@ try {
     await pool.query(`INSERT INTO deployment_contracts(deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
       VALUES($1,31337,$2,$3,$4,$5)`, [deploymentId, c.role, c.address.toLowerCase(), c.deploymentBlock, c.abiVersion]);
   report.deployment = { internalId: deploymentId, apiName: 'tv4-benchmark', contracts };
-  const config = parseConfig({ rpcUrl, chainId: '31337', deploymentId, fromBlock: String(start), toBlock: String(BigInt(h.number)), batchSize: '100', confirmations: 2, contracts }, {});
-  const raw = await timed('indexing', () => sync(config, transport, new PostgresStorage(pool)));
-  assert.deepEqual(raw.checkpoint, { number: String(BigInt(h.number)), hash: h.hash });
-  assert.equal(raw.decodeErrors, 0);
-  report.indexing = raw;
-  const projection = await timed('projection', () => project(config, transport, pool));
-  assert.equal(projection.context.asOfBlock, String(BigInt(h.number)));
-  assert.equal(projection.context.asOfBlockHash, h.hash);
-  report.projection = projection;
+  const workerConfig = { rpcUrl, chainId:'31337', deploymentId, fromBlock:String(start), toBlock:'latest', batchSize:'100', confirmations:2, contracts };
+  workerProbe = await startWorkerProbe({scope,root,dbUrl:dbUrl.href,rpc,config:workerConfig,pool,deploymentId,report});
+  await timed('worker_initial_publication',()=>workerProbe.ready(String(BigInt(h.number)),h.hash));
   const countsSql = `SELECT
     (SELECT count(*) FROM proposals WHERE deployment_id=$1)::text AS proposals,
     (SELECT count(*) FROM votes WHERE deployment_id=$1)::text AS votes,
@@ -290,7 +283,7 @@ try {
     (SELECT count(*) FROM raw_events WHERE deployment_id=$1 AND event_name='VoteCast')::text AS raw_votes`;
   const assertDataset = async () => {
     const counts = (await pool.query(countsSql, [deploymentId])).rows[0];
-    assert.deepEqual(counts, { proposals: '100', votes: '1000', succeeded: '100', transfers: '1', raw_proposals: '100', raw_votes: '1000' });
+    assert.deepEqual(counts, { proposals: '100', votes: '1000', succeeded: '100', transfers: String(1+freshnessDeposits), raw_proposals: '100', raw_votes: '1000' });
     const ids = (await pool.query('SELECT proposal_id::text FROM proposals WHERE deployment_id=$1', [deploymentId])).rows.map(row => row.proposal_id).sort();
     assert.deepEqual(ids, proposals.map(p => p.proposalId).sort());
     const votes = (await pool.query('SELECT proposal_id::text,voter,support,weight::text FROM votes WHERE deployment_id=$1 ORDER BY proposal_id,voter', [deploymentId])).rows;
@@ -302,7 +295,7 @@ try {
     }
     assert.equal(expected.size, 0);
     const treasury = (await pool.query('SELECT total_in::text,total_out::text,balance::text FROM treasury_totals WHERE deployment_id=$1', [deploymentId])).rows[0];
-    assert.deepEqual(treasury, { total_in: String(10000n * U), total_out: '0', balance: String(10000n * U) });
+    assert.deepEqual(treasury, { total_in: String(10000n * U + BigInt(freshnessDeposits)), total_out: '0', balance: String(10000n * U + BigInt(freshnessDeposits)) });
     return { counts, proposalIds: ids, votes, treasury };
   };
   report.dataset = await timed('sql_reconciliation', assertDataset);
@@ -319,18 +312,10 @@ try {
     const path = endpoint === 'detail' ? `/proposals/${proposalId}` : endpoint === 'votes' ? `/proposals/${proposalId}/votes` : paths[endpoint];
     const params = new URLSearchParams(endpoint === 'health' ? common : snapshot);
     if (['list', 'votes', 'transfers'].includes(endpoint)) params.set('limit', endpoint === 'list' ? '20' : '100');
-    const started = performance.now();
-    let status = null;
-    let latencyMs;
-    try {
-      const response = await fetch(`${baseUrl}${path}?${params}`, { redirect: 'error', signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]) });
-      status = response.status;
-      const body = await response.json();
-      latencyMs = performance.now() - started;
+    return measureJson(`${baseUrl}${path}?${params}`, (body,status) => {
       assert.equal(status, 200, `${endpoint}: HTTP ${status}, ${JSON.stringify(body.error ?? body.data)}`);
       assert.ok(!body.error, `${endpoint}: error response is not a success`);
-      assert.equal(body.context?.asOfBlock, report.chain.H);
-      assert.equal(body.context?.asOfBlockHash, h.hash);
+      if(endpoint !== 'health') { assert.equal(body.context?.asOfBlock, report.chain.H); assert.equal(body.context?.asOfBlockHash, h.hash); }
       assert.equal(body.context?.deploymentId, 'tv4-benchmark');
       assert.equal(body.context?.dataKind, 'chain');
       if (endpoint === 'list') {
@@ -366,10 +351,7 @@ try {
         assert.equal(body.data?.publication, 'ready'); assert.equal(body.data?.database, 'up');
         assert.equal(body.data?.rawDecodeIssues?.decodeErrors, 0);
       }
-      return { status, latencyMs, ok: true };
-    } catch (error) {
-      return { status, latencyMs: latencyMs ?? performance.now() - started, ok: false, error: redact(error.message) };
-    }
+    }, {signal:controller.signal});
   };
   await timed('preflight_outside_measurement', async () => {
     report.preflight = [];
@@ -385,6 +367,23 @@ try {
     }
     report.preflightAllProposalDetailsAndVotes = 100;
   });
+  const sendFreshness = async () => {
+    const receipt = await tx('BE08 freshness deposit '+(freshnessDeposits+1),accounts.funding,'BUD','transfer',[address.Treasury,1n],t0+363n+BigInt(freshnessDeposits));
+    freshnessDeposits++; return receipt;
+  };
+  await timed('normal_rpc_idle',()=>workerProbe.samples({phase:'idle',base:baseUrl,send:sendFreshness},10));
+  report.datasetBeforeMeasurement = await assertDataset();
+  await timed('warmup',async()=>{
+    const warmup=report.warmup={durationMs:5000,concurrency,rawSamples:[],errors:[]}; const started=performance.now();
+    await Promise.all(Array.from({length:concurrency},async(_,worker)=>{
+      let sequence=0; while(performance.now()-started<5000) {
+        const endpoint=report.method.timedCycle[sequence++ % report.method.timedCycle.length];
+        const result=await request(endpoint,proposals[worker].proposalId);
+        warmup.rawSamples.push({worker,endpoint,...result}); if(!result.ok)warmup.errors.push(result);
+      }
+    }));
+    warmup.elapsedMs=performance.now()-started; assert.equal(warmup.errors.length,0,'Warm-up errors must be retained and fail acceptance');
+  });
   await timed('http_load', async () => {
     const load = report.load = { status: 'RUNNING', concurrency, durationMs, startedAt: new Date().toISOString(),
       rawSampleColumns: ['worker', 'sequence', 'endpoint', 'proposalId', 'startOffsetMs', 'latencyMs', 'httpStatus', 'ok'],
@@ -392,10 +391,12 @@ try {
     const cycle = report.method.timedCycle;
     const start = performance.now();
     const deadline = start + durationMs;
-    await Promise.all(Array.from({ length: concurrency }, async (_, worker) => {
+    let activeClients=0, freshnessDone=false;
+    const clients = Array.from({ length: concurrency }, async (_, worker) => {
+      activeClients++;
       let sequence = 0;
       const workerStart = performance.now();
-      while (performance.now() < deadline && !controller.signal.aborted) {
+      while ((performance.now() < deadline || !freshnessDone) && !controller.signal.aborted) {
         const endpoint = cycle[sequence % cycle.length];
         const proposalId = proposals[(worker + Math.floor(sequence / cycle.length) * concurrency) % proposals.length].proposalId;
         const offset = performance.now() - start;
@@ -405,8 +406,15 @@ try {
         if (!result.ok) load.errors.push({ sampleIndex: index, worker, sequence, endpoint, proposalId, ...result });
         sequence++;
       }
+      activeClients--;
       load.workers.push({ worker, requests: sequence, startOffsetMs: workerStart - start, finishedOffsetMs: performance.now() - start });
-    }));
+    });
+    const freshness = (async()=>{ try {
+      await new Promise(resolve=>setTimeout(resolve,1000));
+      await workerProbe.samples({phase:'load',base:baseUrl,send:sendFreshness,activeClients:()=>activeClients},10);
+    } finally {freshnessDone=true;} })();
+    const results=await Promise.allSettled([...clients,freshness]);
+    const failed=results.find(r=>r.status==='rejected'); if(failed)throw failed.reason;
     load.completedAt = new Date().toISOString();
     load.elapsedIncludingDrainMs = performance.now() - start;
     load.cpuUsage = process.cpuUsage(load.cpuUsageAtStart);
@@ -422,7 +430,7 @@ try {
       ...metrics(successful.filter(sample => sample[2] === endpoint).map(sample => sample[5])),
       errors: load.errors.filter(error => error.endpoint === endpoint).length,
     }]));
-    load.successfulRequestsPerSecond = successful.length / (durationMs / 1000);
+    load.successfulRequestsPerSecond = successful.length / (load.elapsedIncludingDrainMs / 1000);
     load.status = load.errorRequests === 0 && load.global.count > 0 && load.global.p95Ms < 1000 &&
       Object.values(load.endpoints).every(endpoint => endpoint.count > 0 && endpoint.p95Ms < 1000) ? 'PASS' : 'FAIL';
     check();
@@ -431,7 +439,15 @@ try {
     assert.equal(load.errorRequests, 0, 'Legitimate read errors invalidate performance acceptance');
     assert.equal(load.status, 'PASS', 'NFR02 requires global and per-endpoint successful p95 strictly <1000ms');
   });
-  report.datasetAfterMeasurement = (await assertDataset()).counts;
+  report.datasetAfterMeasurement = await assertDataset();
+  await timed('health_separate',async()=>{
+    const health=report.health={model:'100 sequential reads after data load; worker remains active',rawSamples:[]};
+    for(let i=0;i<100;i++)health.rawSamples.push(await request('health'));
+    health.metrics=metrics(health.rawSamples.filter(r=>r.ok).map(r=>r.latencyMs));
+    health.errors=health.rawSamples.filter(r=>!r.ok);assert.equal(health.errors.length,0);
+  });
+  await timed('rpc_outage',()=>workerProbe.outage(baseUrl));
+  report.datasetAfterOutage = await assertDataset();
   const canonical = await rpc('eth_getBlockByNumber', [h.number, false]);
   assert.equal(canonical.hash, h.hash);
   report.status = 'PASS';
@@ -444,6 +460,7 @@ try {
   if (anvilOutput) report.anvilDiagnostics = redact(anvilOutput);
 } finally {
   const errors = [];
+  if (workerProbe) { try { await workerProbe.close(); } catch(error) { errors.push(`Worker close: ${redact(error.message)}`); } }
   if (api) {
     try {
       await new Promise((done, reject) => { api.close(error => error ? reject(error) : done()); api.closeAllConnections(); });

@@ -1,4 +1,6 @@
 # Keep checksum-based BE03 evidence byte-exact across Windows and WSL checkouts.
+scripts/ci.sh text eol=lf
+*.sol text eol=lf
 docs/evidence/be03-20261024/** -text whitespace=cr-at-eol
 docs/evidence/be03-review-20261024/** -text whitespace=cr-at-eol
 docs/evidence/be03-integration-20261024/** -text whitespace=cr-at-eol
@@ -13,3 +15,11 @@ docs/evidence/be03-packaging-20261024/*.txt -whitespace
 # Preserve BE04 evidence bytes and terminal trailing blank lines on every OS.
 docs/evidence/be04-20261024/** -text
 docs/evidence/be04-20261024/*.txt -whitespace
+
+# BE08 raw latency, patches and logs are checksum evidence.
+docs/evidence/be08-20261027/** -text
+docs/evidence/be08-20261027/**/*.log -whitespace
+docs/evidence/be08-20261027/**/*.patch -whitespace
+
+# The raw DOCX requirements excerpt preserves CRLF for checksum evidence.
+docs/evidence/be08-20261027/tv2-requirements.txt whitespace=cr-at-eol

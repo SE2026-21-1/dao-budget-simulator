@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-27",
+  "timezone": "Asia/Bangkok",
+  "cwd": "D:/dao-budget-simulator-be08",
+  "setup": [
+    {
+      "command": "git fetch origin --prune",
+      "exitCode": 0,
+      "notes": "Before creation, BE07=2adcbfa, TV4=213f9f7; later fetch TV4=8abccfb, frontend-only delta"
+    },
+    {
+      "command": "git worktree add -b feature/tv2-be08 D:/dao-budget-simulator-be08 origin/feature/tv2-be07",
+      "exitCode": 0
+    },
+    {
+      "command": "git submodule update --init --recursive",
+      "exitCode": 0
+    },
+    {
+      "command": "npm ci (Node24.15.0 in WSL)",
+      "exitCode": 0,
+      "notes": "30 packages installed, no dependency changes"
+    },
+    {
+      "command": "forge build",
+      "exitCode": 0
+    },
+    {
+      "command": "curl -fL --retry 2 PGDG PostgreSQL18.4 packages; dpkg-deb -x into private be08-tools/pg184",
+      "exitCode": 0,
+      "notes": "No system PostgreSQL upgrade; package URLs/hashes in provision.json"
+    },
+    {
+      "command": "forge fmt --check; forge build (after LF normalization in this worktree)",
+      "exitCode": 0,
+      "log": "forge-lf-rebuild.log"
+    }
+  ],
+  "wslEnvironment": {
+    "PATH_prefix": "/home/cuongdz/.local/share/be06-tools/node/bin:/home/cuongdz/.foundry/bin",
+    "LD_LIBRARY_PATH": "/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/x86_64-linux-gnu:/home/cuongdz/.local/share/be06-tools/postgres-root/usr/lib/x86_64-linux-gnu",
+    "GIT_DIR": "/mnt/d/dao-budget-simulator/.git/worktrees/dao-budget-simulator-be08",
+    "GIT_WORK_TREE": "/mnt/d/dao-budget-simulator-be08",
+    "notes": "GIT_* overrides are required only for this Windows-created worktree as accessed by WSL. Native Linux clones do not need them. Cached dependency libraries do not select an existing server; runtime enforces PG18.4."
+  },
+  "runs": [
+    {
+      "output": "run-1-before-fix",
+      "exitCode": 1,
+      "notes": "Setup blocked by git patch buffer ENOBUFS, no tests claimed"
+    },
+    {
+      "output": "run-2-before-fix",
+      "exitCode": 1,
+      "notes": "Freshness regression reproduced; later API case cascaded after shared fixture abort; shell CRLF blocked contracts"
+    },
+    {
+      "output": "run-3-after-fix",
+      "exitCode": 1,
+      "notes": "Backend/live/benchmark PASS; aggregate FAIL due Solidity CRLF format check"
+    },
+    {
+      "output": "run-4-final",
+      "exitCode": 0,
+      "notes": "Full native including final performance PASS. Legacy live scope label still present; corrected and rerun in run-5"
+    },
+    {
+      "output": "run-5-service-final",
+      "exitCode": 1,
+      "notes": "Scope corrected; BE01 SQL password mismatch in service mode; rest functional PASS. External cluster stopped."
+    },
+    {
+      "output": "run-6-service-final",
+      "exitCode": 0,
+      "notes": "Final functional and CI-service mode PASS, role password fixed; no benchmark dependencies changed."
+    }
+  ],
+  "formalCommandsAndExitCodes": "Each run's report.json commands array; service driver commands.json also records external cluster start/stop and suite exit",
+  "githubMutations": [],
+  "remoteBe08CI": "NOT_RUN: local-only instruction, no commit/push/dispatch",
+  "finalAuditCommand": {
+    "command": "node docs/evidence/be08-20261027/verify.mjs docs/evidence/be08-20261027/run-6-service-final docs/evidence/be08-20261027/run-4-final docs/evidence/be08-20261027/final-audit.json",
+    "exitCode": 0
+  }
+}

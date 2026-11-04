@@ -1,0 +1,61 @@
+name: BE08 backend acceptance and performance
+
+on:
+  push:
+    branches: [Dev, 'feature/tv2-be08']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: be08-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  be08:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18.4
+        env:
+          POSTGRES_USER: be08_admin
+          POSTGRES_PASSWORD: be08_ci_disposable
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U be08_admin -d postgres"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      BE08_TEST_ISOLATED: '1'
+      BE08_ADMIN_URL: postgresql://be08_admin:be08_ci_disposable@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+          cache: false
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: mkdir -p reports && forge build
+      - name: Current migrations, DB/crash/reorg/rebuild, contracts and 10-client benchmark
+        run: npm run test:be08:native -- --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: be08-${{ github.sha }}
+          path: reports/be08/
+          retention-days: 14

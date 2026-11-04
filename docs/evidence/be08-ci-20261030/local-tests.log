@@ -1,0 +1,13 @@
+✔ BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples (282.380224ms)
+✔ BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results (0.845607ms)
+✔ BE08 forwarded CI service validates client loopback while PostgreSQL reports a container address and internal port (0.791397ms)
+✔ BE08 rejects non-loopback or unexpected client ports even when server metadata looks local (1.46397ms)
+✔ BE08 owned native cluster retains exact directory and server binding checks (0.5139ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 540.37244

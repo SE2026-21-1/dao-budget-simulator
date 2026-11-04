@@ -1,0 +1,68 @@
+No files changed, compilation skipped
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+   ╭▸ contracts/BudgetGovernor.sol:57:20
+   │
+57 │                 || IERC6372(gov).clock() != block.timestamp
+   │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[unsafe-typecast]: typecast can truncate values
+   ╭▸ contracts/BudgetGovernor.sol:76:38
+   │
+76 │         if (payload.length != 100 || bytes4(payload) != ITreasury.disburse.selector) revert InvalidCalldata();
+   │                                      ━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'bytes4' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:165:13
+    │
+165 │         if (block.timestamp <= p.snapshot) return IGovernor.ProposalState.Pending;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:166:13
+    │
+166 │         if (block.timestamp <= p.deadline) return IGovernor.ProposalState.Active;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:209:18
+    │
+209 │         _advance(block.timestamp + bound(secondsSeed, 0, 600));
+    │                  ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:393:25
+    │
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                         ━━━━━━━━━━━━━━━  ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+

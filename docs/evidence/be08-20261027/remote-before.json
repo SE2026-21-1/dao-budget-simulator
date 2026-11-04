@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-27T14:05:12.920Z",
+  "be07": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+  "tv4": "213f9f7e8d88a65866861da1df8c95800cd1004e",
+  "pr27": {
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/27",
+    "number": 27,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "BE07: khôi phục reorg và theo dõi RPC/freshness cho indexer/API.\n\nTrước thay đổi, reorg làm sync dừng ở CHECKPOINT_HASH_MISMATCH; DB giữ nhánh cũ\nvà API vẫn trả 200/synced với hash orphan. Sau thay đổi, indexer lưu recovery\ntrước RPC search, invalidate revision/cursor, rollback về tổ tiên chung và replay\ncanonical với K=2. Chỉ BE04 đã đối chiếu lại cùng H/hash mới mở publication.\n\n- Dùng cửa sổ hash cấu hình được, giữ prefix headers và metadata deployment.\n  Rollback raw/model/checkpoint/publication theo deployment dưới advisory lock;\n  revision/checkpoint CAS chặn writer cũ. Vượt cửa sổ chuyển rebuild_required.\n- Worker polling kiểm tra cả idle; RPC retry có giới hạn, backoff/jitter/timeout\n  và abort. Freshness dựa thời điểm RPC verification trước DB lock, không dùng\n  last commit. API giữ enum/error code BE05, thêm recoveryStatus/lastRpcCheckAt/\n  publicationBlock; cursor orphan trả 409 và recovery data/health trả 503.\n- Áp dụng migration 005 sau 001–004. DB rebuild BE06 mới cũng áp dụng 004/005.\n  Audit còn sửa shorter-head cuối batch, lag JSON null và cursor padding alias.\n\nValidation: local Node24.15.0, PostgreSQL18.4, Foundry/Anvil1.8.5.\nEvidence nền:133 unit/65 PostgreSQL case, Anvil reorg và BE06 compare equal H67.\nSau audit chỉ chạy lại phần liên quan:37 unit,18 DB BE07,4 API cases,\ntypecheck/build và Anvil recovery/5 SIGKILL/BE06 compare equal. RPC503 >31 giây\nchuyển lagging rồi phục hồi; event đủ K sample177 ms. NFR03 là workload local,\nkhông khẳng định SLA dưới tải lớn. Lượt API lỗi trung gian và evidence TV4 kế\nthừa được phân biệt rõ, không đánh lại PASS.\n\nChạy nghiệm thu bằng toolchain trên:\n```bash\nnpm ci\ngit submodule update --init --recursive\nforge build\nBE07_PG_BIN=/usr/lib/postgresql/18/bin npm run test:be07:native\n```\n\nBase: **feature/tv2-be06**, phụ thuộc BE05/BE06 vì Dev1451779 chưa chứa đầy đủ\ncác dependency đó. Diff PR chỉ gồm BE07; không merge dependency trong PR này.\n\nEvidence: docs/evidence/be07-20261025/report.md và\ndocs/evidence/be07-packaging-20261025/report.md. Hướng dẫn: docs/be07.md.\n\n- [x] CI remote đúng head SHA `2adcbfac24fa34da9f76673a2404ef71dd3cb804`: **8/8 jobs success** cho cả [pull_request run #79](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40210870864) và [push run #78](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40210805049). Workflows đều completed/success, head_sha đã đối chiếu; gồm job BE07 real PostgreSQL/Anvil.\n- [ ] TV4 nghiệm thu độc lập/máy khác.\n\nRelated #18\n\nPublished head: `2adcbfac24fa34da9f76673a2404ef71dd3cb804`.\n\n[BE07 runbook](https://github.com/SE2026-21-1/dao-budget-simulator/blob/2adcbfac24fa34da9f76673a2404ef71dd3cb804/docs/be07.md) · [Audit/evidence](https://github.com/SE2026-21-1/dao-budget-simulator/blob/2adcbfac24fa34da9f76673a2404ef71dd3cb804/docs/evidence/be07-packaging-20261025/report.md)\n",
+    "title": "BE07: recover reorgs and handle RPC failures with API freshness",
+    "base": "feature/tv2-be06",
+    "base_sha": "c41a9ab97ad24d9b156eb03baa504dff43b165ec",
+    "head": "feature/tv2-be07",
+    "head_sha": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+    "head_repo_id": 1405108300,
+    "head_repo_full_name": "SE2026-21-1/dao-budget-simulator",
+    "merge_commit_sha": "1a21d73d4813a1c50dc72af05ade6cddb6898c9b",
+    "user": {
+      "login": "daongocuong",
+      "name": "daongocuong",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/151382109?v=4",
+      "id": 151382109
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "comments": [],
+    "created_at": "2026-10-25T16:16:11Z",
+    "updated_at": "2026-10-25T16:24:11Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 1,
+    "changed_files": 186,
+    "additions": 80420,
+    "deletions": 70,
+    "display_url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/27",
+    "display_title": "BE07: recover reorgs and handle RPC failures with API freshness"
+  },
+  "be07CI": {
+    "workflow_runs": [
+      {
+        "id": 40210870864,
+        "name": "TV4 CI",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 79,
+        "jobs_url": "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40210870864/jobs",
+        "logs_url": "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40210870864/logs",
+        "workflow_id": 390525997
+      }
+    ]
+  },
+  "tv4CI": {
+    "workflow_runs": [
+      {
+        "id": 40512468621,
+        "name": "TV4 CI",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 86,
+        "jobs_url": "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40512468621/jobs",
+        "logs_url": "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/runs/40512468621/logs",
+        "workflow_id": 390525997
+      }
+    ]
+  },
+  "localChangesRemoteCI": "NOT_RUN"
+}

@@ -1,0 +1,34 @@
+[stderr] /mnt/d/dao-budget-simulator-be08/node_modules/pg-protocol/dist/parser.js:306
+[stderr]         : new messages_1.DatabaseError(messageValue, LATEINIT_LENGTH, name);
+[stderr]           ^
+[stderr] 
+[stderr] error: password authentication failed for user "be01_test"
+[stderr]     at parseErrorMessage (/mnt/d/dao-budget-simulator-be08/node_modules/pg-protocol/dist/parser.js:306:11)
+[stderr]     at Parser.handlePacket (/mnt/d/dao-budget-simulator-be08/node_modules/pg-protocol/dist/parser.js:143:27)
+[stderr]     at Parser.parse (/mnt/d/dao-budget-simulator-be08/node_modules/pg-protocol/dist/parser.js:37:38)
+[stderr]     at Socket.<anonymous> (/mnt/d/dao-budget-simulator-be08/node_modules/pg-protocol/dist/index.js:12:42)
+[stderr]     at Socket.emit (node:events:509:28)
+[stderr]     at addChunk (node:internal/streams/readable:563:12)
+[stderr]     at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+[stderr]     at Readable.push (node:internal/streams/readable:394:5)
+[stderr]     at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+[stderr]   length: 105,
+[stderr]   severity: 'FATAL',
+[stderr]   code: '28P01',
+[stderr]   detail: undefined,
+[stderr]   hint: undefined,
+[stderr]   position: undefined,
+[stderr]   internalPosition: undefined,
+[stderr]   internalQuery: undefined,
+[stderr]   where: undefined,
+[stderr]   schema: undefined,
+[stderr]   table: undefined,
+[stderr]   column: undefined,
+[stderr]   dataType: undefined,
+[stderr]   constraint: undefined,
+[stderr]   file: 'auth.c',
+[stderr]   line: '317',
+[stderr]   routine: 'auth_failed'
+[stderr] }
+[stderr] 
+[stderr] Node.js v24.15.0

@@ -1,0 +1,9 @@
+warning: in the working copy of '.github/workflows/be08.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/be08.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/be08_measurement.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/be08_worker_probe.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/benchmark_api.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'scripts/check_be08_native.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/indexer/be08-measurement.test.mjs', LF will be replaced by CRLF the next time Git touches it
+/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/postgres: error while loading shared libraries: libnuma.so.1: cannot open shared object file: No such file or directory
+FAIL: native BE08 acceptance; evidence: /tmp/dao-be08-review-20261030/report.json

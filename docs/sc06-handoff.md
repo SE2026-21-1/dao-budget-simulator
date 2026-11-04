@@ -145,3 +145,81 @@ consumer implementation hoặc CI. Nhánh SC05 vẫn ở `8f6a47c`.
 Chưa chạy Node consumer/build/API/frontend checks: shell không có Node.js. ABI đã tương thích
 compiler và regression contract đạt; chưa xác nhận runtime consumer TV2/TV3 hoặc chạy ví dụ
 ethers mới trong Node. Đây là giới hạn cần consumer xác nhận, không phải nghiệm thu toàn SC06.
+
+## Giai đoạn 2 — kiểm chứng local ngày 04/11/2026
+
+Mục này ghi lịch sử đợt đầu; revision/bộ test cuối sau final review được ghi ở mục tiếp theo.
+
+Giai đoạn 1 đã commit `5df980d619ccd344683007e1f38f64e5deb31648`, không push.
+Đã bổ sung Node portable 24.15.0 trong /tmp (SHA256 chính thức khớp), cài dependency
+bằng `npm ci --ignore-scripts` theo lock. npm sandbox lỗi DNS EAI_AGAIN, chạy lại có
+quyền mạng thành công; Anvil sandbox lỗi listen EPERM, live run có quyền loopback đạt.
+Giới hạn thiếu Node ở mục giai đoạn 1 phía trên là lịch sử, không còn chặn run này.
+
+[Fixture canonical SC06 v1](../fixtures/chain/sc06-v1/README.md) gồm manifest, toàn bộ
+raw blocks/transactions/receipts, expected decode TV2, description/calldata/ID links và
+eth_call cùng H. Một campaign riêng không snapshot/revert: proposal chi 1.000 BUD và
+proposal khác creator hủy Pending. H=26; 27 headers, 24 receipts, 42 logs.
+TV2 decode 14 business events, giữ 16 unknown role/init topics; 12 GOV raw logs được
+compiler ABI kiểm nhưng không tự mở rộng registry TV2. Không có decode_error.
+
+| Lệnh | Kết quả thực tế |
+|---|---|
+| `node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-final-canonical` | Exit 0; toàn bộ RPC receipt/transaction/block/log và eth_call đối chiếu trực tiếp trước khi dừng owned Anvil; copy nguyên bytes chain.json vào fixtures/chain/sc06-v1 |
+| `node --import tsx scripts/check_sc06_chain.mjs` | Offline checks đạt; liveRpcVerified=false ở output CLI vì không kết nối RPC lúc kiểm offline |
+| `node --import tsx tests/sc06-chain.test.mjs` | 14 passed, 0 failed; 1 bản dương, 13 negative mutations |
+| `node --import tsx tests/indexer/decoder.test.ts` | 25 passed, 0 failed |
+| `node --import tsx tests/indexer/projection.test.ts` | 23 passed, 0 failed |
+| `npm run typecheck` / `npm run build` | Cả hai exit 0; consumer source không đổi |
+| `python3 scripts/check_sc06_abi.py` / `python3 tests/test_sc06_abi.py` | ABI/catalog đạt; 6 tests passed |
+
+Trong phát triển, negative rawLogData ban đầu phát hiện GOV log chưa được checker bắt;
+đã thêm compiler-ABI round-trip mọi raw log, chạy lại 14/14 và regenerate campaign cuối.
+Lần live đầu có lỗi so địa chỉ checksum/lowercase, chưa xuất fixture; đã sửa so theo
+address bytes và chạy lại. Không sửa receipt để làm test pass hoặc che các lần lỗi này.
+
+SC06 đã có bằng chứng local decode/encode/hash/canonical ledger; chưa đóng acceptance.
+TV2/TV3 cần xác nhận độc lập bộ fixture; TV4 review source/evidence, ghi commit fixture
+cuối và xử lý operation preflight SC05. Chưa chạy PostgreSQL/API/browser wallet/testnet;
+không lấy offline checker làm bằng chứng inclusion proof hay nghiệm thu deployment SC05.
+
+## Khắc phục final review — provenance cố định và projection fixture SC06
+
+Nguồn generator/checker/test được commit riêng tại
+`c4c5eb338b0a65d1e9050b0335b3e44329345f5d` **trước** khi tạo lại fixture.
+Source commit chứa scripts/sc06_provenance.mjs và mọi adapter/test giai đoạn 2;
+không dùng commit giai đoạn 1 để đại diện nguồn chưa tồn tại. Generator kiểm Git blobs
+và working tree trước khi khởi chạy Anvil. Fixture/docs được commit sau, không thuộc
+sourceHashes; source revision là ancestor của commit data, không có checksum vòng tròn.
+
+- Canonical run cuối: H=26/hash `0xcf056c1e86f136ba749ee384ee31ad237c0f9b237ae945099a08822a479a65da`,
+  27 headers/24 receipts/42 logs; liveRpcVerified=true trong file archive. Không evm_revert.
+- Checker dùng trực tiếp raw logs của fixtures/chain/sc06-v1/chain.json qua TV2
+  classify/buildModel/evaluate; assert 2 proposals, A=400/B=300 For, 1 operation Done,
+  1 khoản chi 1.000, balance 9.000; proposal thứ hai Canceled và không có operation.
+  Tất cả evaluate/state/quorum/read calls cùng H. Không sửa implementation TV2.
+- Provenance kiểm revision tồn tại và ancestor HEAD, hash nguồn tại commit và working tree,
+  compiler source/submodule/gitlink/ABI/artifact/runtime/constructor, chainId/address/block/version.
+  Audit phải cùng H/hash; replay role logs so với audit lẫn pinned hasRole/getRoleAdmin calls.
+- Offline xác minh repository và tính nhất quán archive; không chứng minh blockchain origin
+  độc lập. Live generator so RPC receipts/tx/headers/logs/code/calls và H/hash cuối khi chain
+  còn chạy. Snapshot calls không là state proof; TV4 vẫn phải review nguồn/evidence độc lập.
+
+Kết quả chạy lại thực tế (Node 24.15.0, Foundry 1.8.5):
+
+| Lệnh | Kết quả cuối |
+|---|---|
+| `node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-pinned-canonical` | Exit 0; live RPC và projection đạt; copy chain.json nguyên bytes vào fixture |
+| `node --import tsx tests/sc06-chain.test.mjs` | 28 passed/0 failed/0 skipped: integration trên SC06 + các mutation provenance/ABI/tx/log/ID/text/ledger |
+| `node --import tsx tests/indexer/decoder.test.ts` | 25 passed/0 failed |
+| `node --import tsx tests/indexer/projection.test.ts` | 23 passed/0 failed; regression bổ sung, không thay test SC06 |
+| `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261023 bash scripts/ci.sh` | Exit 0; fmt/build, 142 passed/0 failed/0 skipped, ABI SC01 đạt |
+| `npm run typecheck` / `npm run build` | Cả hai exit 0 |
+| `python3 scripts/check_sc06_abi.py` / `python3 tests/test_sc06_abi.py` | ABI/catalog đạt; 6 passed |
+
+Foundry fuzz 256 runs/test, hai invariant campaigns mỗi campaign 100×50=5.000 handler calls.
+Warning signature cache ngoài workspace read-only vẫn còn; không làm test fail.
+Provenance test cần spawn Git; sandbox chặn spawnSync git EPERM nên đã chạy lại với quyền
+đọc Git ngoài sandbox và đạt. Không bỏ kiểm tra provenance để vượt lỗi môi trường.
+Không push/tạo PR trong đợt này. SC05/consumer approval, shared Timelock ABI sau merge,
+TV4 operation preflight, testnet/UI/API/DB acceptance vẫn chưa được đóng.

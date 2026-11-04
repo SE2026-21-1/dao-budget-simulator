@@ -5,6 +5,14 @@ manifest, vận hành local/testnet và kiểm thử độc lập. Không tạo 
 Base: origin/Dev ff26697, chứa commit SC04 f57fcfd qua PR #13 và công việc TV4 qua PR #5.
 Căn cứ FR07–FR08, BR03–BR07, NFR01/NFR08, TC01/06/07/09/10/14 và INV01–INV03.
 
+## TV4 cập nhật audit — 04/11/2026
+
+Preflight hiện từ chối cả account không được duyệt đã từng nhận role rồi bị
+revoke trước H; chỉ so sánh holder set ở H không chứng minh lịch sử bootstrap
+hợp lệ. Negative control mới cấp rồi thu hồi SPENDER_ROLE cho account lạ trước
+preflight, buộc dừng trước renounce và funding. `npm run test:bootstrap`
+trên Node 24.15.0 và Anvil local: 15/15 passed; testnet/peer review chưa được kiểm chứng bởi lượt này.
+
 ## TV4 triển khai gate thực tế — 25/10/2026
 
 `scripts/governance_local.mjs` đã thêm `preRenounceRoleCheck` trước bất kỳ

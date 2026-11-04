@@ -404,6 +404,9 @@ async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
     for (const [name, amount] of [['A', 400n], ['B', 300n], ['C', 200n], ['D', 100n]])
       assert.equal(await call('GOV', 'balanceOf', [manifest.accounts[name]]), amount * UNIT, `${name}: bootstrap GOV allocation`);
   }
+  const operations = await auditTimelockOperations(rpc, manifest, {
+    interfaces, height: H, blockHash: block.hash, bootstrapThrough, receiptLogs: evidence.logs, headers: evidence.headers,
+  });
   const roleReports = {};
   const expectedRoles = {
     Treasury: { [ZeroHash]: [address('Timelock')], [SPENDER]: [address('Timelock')] },
@@ -439,6 +442,9 @@ async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
       assert.ok(holders.has(role), `${key}: unexpected role discovered in complete event history: ${role}`);
       assert.notEqual(event.name, 'RoleAdminChanged', `${key}: unexpected role admin change`);
       const account = lower(event.args.account);
+      assert.ok(expected[role].some(holder => lower(holder) === account)
+        || (role === ZeroHash && account === lower(manifest.accounts.deployer)),
+      `${key}: unauthorized historical role holder for ${role}: ${account}`);
       candidates.add(account);
       if (event.name === 'RoleGranted') holders.get(role).add(account);
       else holders.get(role).delete(account);
@@ -455,9 +461,6 @@ async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
     }
     roleReports[key] = { fromBlock: manifest.contracts[key].deploymentBlock, toBlock: String(BigInt(H)), eventCount: logs.length, roles: rows };
   }
-  const operations = await auditTimelockOperations(rpc, manifest, {
-    interfaces, height: H, blockHash: block.hash, bootstrapThrough, receiptLogs: evidence.logs, headers: evidence.headers,
-  });
   const finalBlock = await rpc('eth_getBlockByNumber', [H, false]);
   assert.equal(finalBlock.hash, block.hash, 'Validation block changed during role check');
   return { stage, height: String(BigInt(H)), blockHash: block.hash, timestamp: String(BigInt(block.timestamp)), chainId: '31337',

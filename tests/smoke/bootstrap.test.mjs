@@ -270,7 +270,13 @@ const scenarios = [
     inject: state => state.send('Timelock', 'revokeRole', [EXECUTOR, state.addresses.Governor]) },
   { name: 'extra holder discovered outside the demo account list', error: /holder set|holder/i,
     inject: state => state.send('Treasury', 'grantRole', [SPENDER, '0x000000000000000000000000000000000000beef']) },
-  { name: 'public zero-address executor', error: /holder set|executor/i,
+  { name: 'revoked unknown historical holder', error: /unauthorized historical role holder/i,
+    inject: async state => {
+      const outsider = '0x000000000000000000000000000000000000beef';
+      await state.send('Treasury', 'grantRole', [SPENDER, outsider]);
+      await state.send('Treasury', 'revokeRole', [SPENDER, outsider]);
+    } },
+  { name: 'public zero-address executor', error: /holder set|executor|unauthorized historical role holder/i,
     inject: state => state.send('Timelock', 'grantRole', [EXECUTOR, ZeroAddress]) },
   { name: 'wrong real constructor link', badConstructor: true, error: /constructor|contract link/i },
   { name: 'wrong deployed compiler code', badCode: true, error: /constructor|runtime|source/i },

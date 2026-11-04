@@ -12,6 +12,7 @@ afterEach(() => { vi.unstubAllEnvs(); vi.resetModules(); });
 
 describe("deployment mode", () => {
   it("ignores stale deployment settings while viewing fixtures", async () => {
+    vi.stubEnv("VITE_DATA_SOURCE", "fixture");
     vi.stubEnv("VITE_API_BASE_URL", "");
     vi.stubEnv("VITE_CHAIN_ID", "31337");
     vi.stubEnv("VITE_RPC_URL", "http://127.0.0.1:8545");
@@ -20,10 +21,27 @@ describe("deployment mode", () => {
 
     const config = await import("./config");
     expect(config.deployment).toBeNull();
+    expect(config.apiScope).toBeNull();
+    expect(config.configurationError).toBeNull();
+  });
+
+  it("uses explicit TV2 API with read-only scope", async () => {
+    vi.stubEnv("VITE_DATA_SOURCE", "");
+    vi.stubEnv("VITE_API_BASE_URL", "http://127.0.0.1:3000");
+    vi.stubEnv("VITE_CHAIN_ID", "31337");
+    vi.stubEnv("VITE_DEPLOYMENT_ID", "local-demo");
+    vi.stubEnv("VITE_RPC_URL", "");
+    for (const key of Object.keys(addresses)) vi.stubEnv(key, "");
+
+    const config = await import("./config");
+    expect(config.apiBaseUrl).toBe("http://127.0.0.1:3000");
+    expect(config.apiScope).toEqual({ chainId: 31337, deploymentId: "local-demo" });
+    expect(config.deployment).toBeNull();
     expect(config.configurationError).toBeNull();
   });
 
   it("uses a complete deployment when the API is enabled", async () => {
+    vi.stubEnv("VITE_DATA_SOURCE", "");
     vi.stubEnv("VITE_API_BASE_URL", "http://127.0.0.1:3000");
     vi.stubEnv("VITE_CHAIN_ID", "31337");
     vi.stubEnv("VITE_RPC_URL", "http://127.0.0.1:8545");

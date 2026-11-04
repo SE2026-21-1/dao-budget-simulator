@@ -5,7 +5,7 @@ import { useWallet, sendTokenTransaction } from "../chain/wallet";
 import { useTransaction } from "../chain/useTransaction";
 import { assertWritable, parseBUD, verifyDeployment } from "../chain/transactions";
 import { formatBUD, formatCompactBUD } from "../data/formatBUD";
-import { loadSummary, loadTransfers, type Summary, type Transfer } from "../data/api";
+import { loadTreasurySnapshot, type Summary, type Transfer } from "../data/api";
 import type { FixtureContext } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
 
@@ -24,8 +24,8 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
 
   useEffect(() => {
     const controller = new AbortController();
-    Promise.all([loadSummary(context, controller.signal), loadTransfers(context, controller.signal)]).then(
-      ([nextSummary, nextTransfers]) => { if (!controller.signal.aborted) setLoaded({ context, summary: nextSummary, transfers: nextTransfers }); },
+    loadTreasurySnapshot(context, controller.signal).then(
+      ({ summary, transfers }) => { if (!controller.signal.aborted) setLoaded({ context, summary, transfers }); },
       (cause: unknown) => { if (!controller.signal.aborted) setLoaded({ context, error: cause instanceof Error ? cause.message : "Không tải được Treasury." }); },
     );
     return () => controller.abort();

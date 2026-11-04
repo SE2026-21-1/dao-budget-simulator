@@ -5,6 +5,7 @@ import page3 from "../../../fixtures/api/proposals-page-3.json";
 
 vi.mock("../chain/config", () => ({
   apiBaseUrl: "http://127.0.0.1:3000",
+  apiScope: { chainId: 31337, deploymentId: "test-deployment" },
   configurationError: null,
   deployment: {
     chainId: 31337,

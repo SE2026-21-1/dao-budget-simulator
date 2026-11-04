@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import FixtureLoadState from "../components/FixtureLoadState";
 import { formatBUD } from "../data/formatBUD";
@@ -5,19 +6,34 @@ import { useProposalFixtures } from "../data/useProposalFixtures";
 import ProposalActions from "../components/ProposalActions";
 import { formatGOV } from "../chain/wallet";
 import { transactionUrl } from "../chain/config";
+import { apiBaseUrl } from "../chain/config";
+import { loadProposalSnapshot, type Vote, type Transfer } from "../data/api";
 
 const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).toLocaleString("vi-VN") : "—";
 
 function ProposalDetailPage() {
   const { id } = useParams();
   const { state, retry, simulateError, refreshing } = useProposalFixtures();
-  const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
+  const listProposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
+  const context = state.status === "success" ? state.collection.context : undefined;
+  const key = context && listProposal ? `${context.chainId}:${context.deploymentId}:${context.asOfBlock}:${context.asOfBlockHash}:${context.snapshotRevision}:${listProposal.proposalId}` : "";
+  const [verified, setVerified] = useState<{ key: string; data?: { proposal: typeof listProposal; votes: Vote[]; transfers: Transfer[] }; error?: string }>();
+
+  useEffect(() => {
+    if (!apiBaseUrl || !context || !listProposal) return;
+    const controller = new AbortController();
+    loadProposalSnapshot(listProposal, context, controller.signal).then(
+      (data) => { if (!controller.signal.aborted) setVerified({ key, data }); },
+      (cause: unknown) => { if (!controller.signal.aborted) setVerified({ key, error: cause instanceof Error ? cause.message : "Không đối chiếu được chi tiết proposal." }); },
+    );
+    return () => controller.abort();
+  }, [key, context, listProposal]);
 
   if (state.status !== "success") {
     return <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />;
   }
 
-  if (!proposal) {
+  if (!listProposal) {
     return (
       <div className="panel">
         <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
@@ -28,6 +44,12 @@ function ProposalDetailPage() {
       </div>
     );
   }
+
+  const current = verified?.key === key ? verified : undefined;
+  if (apiBaseUrl && !current?.data) {
+    return <div className="panel"><h1>Đối chiếu đề xuất</h1><p role="status">{current?.error ?? "Đang đối chiếu detail, phiếu và Transfer tại cùng snapshot…"}</p><button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button></div>;
+  }
+  const proposal = current?.data?.proposal ?? listProposal;
 
   return (
     <div>
@@ -56,6 +78,7 @@ function ProposalDetailPage() {
             <div><dt>Địa chỉ nhận</dt><dd>{proposal.recipient}</dd></div>
             <div><dt>Mô tả</dt><dd className="description-text">{proposal.body ?? proposal.description}</dd></div>
           </dl>
+          {current?.data && <p className="muted">Đã đối chiếu {current.data.votes.length} phiếu và {current.data.transfers.length} Transfer liên kết tại cùng snapshot.</p>}
         </section>
 
         <aside className="panel">

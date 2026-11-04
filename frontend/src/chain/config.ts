@@ -12,8 +12,10 @@ export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$
 export const deploymentId = import.meta.env.VITE_DEPLOYMENT_ID?.trim() ?? "";
 export const explorerUrl = import.meta.env.VITE_EXPLORER_URL?.trim().replace(/\/$/, "") ?? "";
 
-// Fixture data has no live deployment, even when a stale .env.local is present.
-export const deployment = apiBaseUrl && Number.isSafeInteger(chainId) && chainId > 0 && rpcUrl &&
+// The read-only API needs only its scope. Wallet transactions need the complete deployment.
+export const apiScope = apiBaseUrl && Number.isSafeInteger(chainId) && chainId > 0 && deploymentId
+  ? { chainId, deploymentId } : null;
+export const deployment = apiScope && rpcUrl &&
   [governor, treasury, govToken, budToken, timelock].every((address) => isAddress(address) && !/^0x0{40}$/i.test(address)) && deploymentId
   ? {
       chainId,
@@ -33,8 +35,8 @@ export const deployment = apiBaseUrl && Number.isSafeInteger(chainId) && chainId
     }
   : null;
 
-export const configurationError = apiBaseUrl && !deployment
-  ? "API đã bật nhưng thiếu cấu hình chain/RPC/deployment hoặc địa chỉ Governor, Timelock, Treasury, GOV, BUD hợp lệ. Kiểm tra .env.local rồi khởi động lại Vite."
+export const configurationError = apiBaseUrl && !apiScope
+  ? "Thiếu VITE_CHAIN_ID hoặc VITE_DEPLOYMENT_ID hợp lệ để đọc API TV2. Điền cấu hình deployment thật trong .env.local rồi khởi động lại Vite."
   : null;
 
 export function transactionUrl(hash: string): string | null {

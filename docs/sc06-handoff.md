@@ -223,3 +223,26 @@ Provenance test cần spawn Git; sandbox chặn spawnSync git EPERM nên đã ch
 đọc Git ngoài sandbox và đạt. Không bỏ kiểm tra provenance để vượt lỗi môi trường.
 Không push/tạo PR trong đợt này. SC05/consumer approval, shared Timelock ABI sau merge,
 TV4 operation preflight, testnet/UI/API/DB acceptance vẫn chưa được đóng.
+
+## Tích hợp vào Dev sau SC05/BE05 — 05/11/2026
+
+PR #33 đã merge vào Dev tại `2e1cce3`. Ghép PR #34 phát sinh conflict duy nhất ở
+`docs/contracts.md`: giữ trình tự preflight của SC05, bổ sung cảnh báo SC06 ABI/checker
+không nghiệm thu gate triển khai. Fixture của PR #34 ghim toàn bộ `indexer/` tại
+`c4c5eb3`, nên test dương fail với `working source differs: indexer/api/server.ts`
+do BE05 đã cập nhật file này trên Dev. Không bỏ kiểm tra provenance hoặc sửa hash/receipt
+bằng tay: commit nguồn tích hợp `5ba9371`, tạo Anvil mới bằng
+`node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-dev-5ba9371-canonical`,
+rồi chép nguyên `chain.json` đã xác minh RPC vào fixture. H=26/hash
+`0x5dbf98291a6cc51c5142405a06dcc5b456ba119211dc279227a440ca6efe0f4d`;
+27 headers, 24 receipts, 42 logs, `liveRpcVerified=true` khi tạo.
+
+Kiểm lại offline: `node --import tsx scripts/check_sc06_chain.mjs` đạt
+(`liveRpcVerified=false` vì không nối RPC sau khi dừng Anvil);
+`node --import tsx --test tests/sc06-chain.test.mjs` đạt 28/28;
+`python3 scripts/check_sc06_abi.py` đạt với shared Timelock đã có từ SC05,
+`python3 tests/test_sc06_abi.py` đạt 6/6, `python3 scripts/check.py` và
+`forge fmt --check` đạt; `npm run typecheck && npm run build` đạt.
+SC05 `forge test --match-path tests/integration/TimelockGovernance.t.sol -vv`
+đạt 38/38 trên mã ghép. ABI/fixture không thay thế review độc lập TV2/TV3,
+operation preflight TV4, hay nghiệm thu testnet.

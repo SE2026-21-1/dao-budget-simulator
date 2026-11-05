@@ -22,8 +22,9 @@ Một proposal nhận 400+300 For, queue qua caller không GOV và execute qua o
 không GOV đúng ETA; chi 1.000 BUD. Proposal thứ hai creator cancel khi Pending.
 operationId thứ hai chỉ là hash tính trước để kiểm Unset: không chứng minh có operation đã schedule.
 
-Kết quả đã chạy ngày 04/11/2026: H=26, 27 headers kể cả genesis, 24 receipts,
-42 logs; decoder TV2 nhận 14 decoded + 16 unknown topics (role/init); 12 log GOV
+Kết quả chạy lại trên Dev sau SC05 và BE05 ngày 05/11/2026: H=26/hash
+`0x5dbf98291a6cc51c5142405a06dcc5b456ba119211dc279227a440ca6efe0f4d`; 27 headers kể cả genesis,
+24 receipts, 42 logs; decoder TV2 nhận 14 decoded + 16 unknown topics (role/init); 12 log GOV
 không thuộc registry TV2 vẫn giữ raw và được full compiler ABI kiểm tra.
 Tất cả 42 raw logs phải round-trip ABI đúng. Không có decode_error.
 Treasury=9.000, recipient=1.000, funding=10.000 BUD; totalSupply=20.000 BUD.
@@ -32,8 +33,7 @@ Một Transfer chi và một BudgetDisbursed liên kết cùng tx chỉ tính l�
 ## Tái lập và kiểm
 
 Cần Node **24.15.0** theo `.nvmrc`, npm dependency theo lock, Foundry 1.8.5.
-Đợt này Node portable nằm trong `/tmp/node-v24.15.0-linux-x64`, tarball đã đối chiếu
-SHA256 với SHASUMS256.txt chính thức của nodejs.org; không đổi toolchain repo.
+Node 24.15.0 và Foundry 1.8.5 được dùng khi tạo lại fixture trên nhánh tích hợp từ Dev.
 Thiết lập PATH trỏ Node 24.15.0 đã cài trên máy, sau đó:
 
 ```bash
@@ -45,11 +45,11 @@ node --import tsx tests/sc06-chain.test.mjs
 node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-new-run
 ```
 
-Nguồn tạo fixture hiện tại: **`c4c5eb338b0a65d1e9050b0335b3e44329345f5d`**.
+Nguồn tạo fixture hiện tại: **`5ba9371f735982c5ca7148a3cf4af07068525029`** (Dev có SC05, BE05 và source SC06).
 Để tái lập từ revision chính xác mà không đổi branch đang làm việc:
 
 ```bash
-git worktree add --detach /tmp/sc06-source c4c5eb338b0a65d1e9050b0335b3e44329345f5d
+git worktree add --detach /tmp/sc06-source 5ba9371f735982c5ca7148a3cf4af07068525029
 cd /tmp/sc06-source
 git submodule update --init --recursive
 npm ci --ignore-scripts

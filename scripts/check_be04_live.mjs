@@ -475,7 +475,7 @@ try {
   );
   const balanceAfterTopUp = (await call('BUD', 'balanceOf', [address.Treasury]))[0];
   assert.equal(balanceAfterTopUp, 12000n * U);
-  await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs, underfundEta + 2n);
+  await tx('retry underfunded execute after funding', accounts.outsider, 'Governor', 'execute', underfundArgs);
   const paidAfterRetry = (await call('Treasury', 'paidRequests', [underfundRequest]))[0];
   assert.equal(paidAfterRetry, true);
   const final = await phase('funded retry succeeds', { ...queued, payment: 'Executed', 'underfunded-retry': 'Executed' });
@@ -820,6 +820,25 @@ try {
         'proposal state, proposalVotes/quorum, timelock, contract links and balanceOf reconciled at H/hash',
         'a BUD Transfer mined after H was returned by RPC but excluded from both target databases'],
     };
+  }
+  if (withApi && !withBe07) {
+    config.toBlock = 'latest';
+    const beforeStale = await phaseApiGet('/health');
+    assert.equal(beforeStale.status, 200);
+    assert.equal(beforeStale.body.context.sync.status, 'synced');
+    await pool.query("UPDATE checkpoints SET updated_at=clock_timestamp()-interval '31 seconds' WHERE deployment_id=$1", [d]);
+    const stale = await phaseApiGet('/health');
+    assert.equal(stale.status, 200);
+    assert.equal(stale.body.context.sync.status, 'lagging');
+    assert.ok(BigInt(stale.body.context.sync.lagSeconds) >= 31n);
+    // A BE05 checkpoint advances on committed blocks; an idle read is not an RPC heartbeat.
+    await rpc('anvil_mine', ['0x3', '0x1']);
+    await sync(config, transport, storage);
+    await project(config, transport, pool);
+    const fresh = await phaseApiGet('/health');
+    assert.equal(fresh.status, 200);
+    assert.equal(fresh.body.context.sync.status, 'synced');
+    report.freshness = { beforeStale: beforeStale.body.context.sync, stale: stale.body.context.sync, fresh: fresh.body.context.sync };
   }
 } catch (error) {
   report.status = 'FAIL';

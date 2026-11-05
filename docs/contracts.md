@@ -1,8 +1,10 @@
-# DAO Budget Simulator — chuẩn contract SC01
+# DAO Budget Simulator — giao diện contract SC06 (giai đoạn 1)
 
 Căn cứ: hai tài liệu yêu cầu phiên bản 1.0 ngày 11/10/2026 trong `docs/requirements/`.
-SC01 cung cấp nền tảng build và giao tiếp dự kiến; không chứng minh SC02–SC10 đã hoàn thành.
-Các chữ ký ngoài ITreasury và tên lỗi dưới đây là kế hoạch, chưa phải ABI triển khai.
+Giao diện dưới đây đối chiếu implementation và compiler ABI tại base Dev `0b43364`.
+SC06 giai đoạn 1 chuẩn hóa ABI/tài liệu, chưa cung cấp receipt/log hay consumer acceptance.
+Full function/event/error signatures (gồm inherited và indexed flags) nằm trong
+[catalog compiler](sc06-abi-reference.md); quy trình kiểm tra/bàn giao ở [SC06](sc06-handoff.md).
 
 ## Toolchain
 
@@ -38,14 +40,14 @@ Ready là tình trạng operation Queued, không phải proposal state mới.
 Execute revert không tạo state Failed. Kiểm tra biên snapshot/deadline/ETA theo contract.
 MVP không hỗ trợ proposal đổi role/tham số; muốn đổi cấu hình phải deploy lại.
 
-## Bảng hàm dự kiến
+## Hàm public/external dành cho consumer
 
 | Contract | Hàm/giao tiếp | Consumer |
 |---|---|---|
 | GOV | balanceOf, totalSupply, decimals, delegates, delegate, getVotes, getPastVotes, getPastTotalSupply, clock, CLOCK_MODE | TV3, TV2, test |
 | BUD | balanceOf, totalSupply, decimals, transfer, approve, allowance, transferFrom | TV2/TV3/TV4 |
 | Treasury | disburse(bytes32 requestId,address recipient,uint256 amount) | Timelock |
-| Treasury | budgetToken() → address; paidRequests(bytes32) → bool; hasRole(bytes32,address) → bool | dự kiến cho consumer/role test |
+| Treasury | budgetToken() → address; paidRequests(bytes32) → bool; hasRole(bytes32,address) → bool | consumer/role test |
 | Governor | propose, castVote, cancel, queue, execute, hashProposal, state, proposalSnapshot, proposalDeadline, proposalVotes, quorum, proposalEta, proposalProposer, hasVoted | TV2/TV3 |
 | Timelock | getMinDelay, getTimestamp, hashOperationBatch, isOperationReady, isOperationDone, hasRole | TV2/TV4 |
 
@@ -57,7 +59,7 @@ Nạp quỹ bằng BUD.transfer vào Treasury, không cần hàm deposit riêng.
 Không giữ chỗ ngân sách khi propose. Thiếu tiền tại execute revert toàn bộ, không tiêu thụ
 requestId, không đánh dấu Executed; nạp thêm rồi thử lại được.
 
-## Event và error dự kiến
+## Event và custom errors từ implementation
 
 ITreasury hiện có:
 
@@ -69,21 +71,17 @@ event BudgetDisbursed(bytes32 indexed requestId, address indexed recipient, uint
 ABI: nonpayable, không có return; event không anonymous, amount không indexed.
 BudgetDisbursed chỉ phát khi thanh toán thành công. BUD Transfer là nguồn tính dòng tiền;
 event Treasury liên kết requestId, không cộng cả hai thành hai lần chi.
-Governor dùng ProposalCreated, VoteCast, ProposalQueued, ProposalExecuted, ProposalCanceled.
+Governor dùng ProposalCreated, VoteCast, VoteCastWithParams, ProposalQueued, ProposalExecuted, ProposalCanceled.
 Timelock dùng CallScheduled, CallExecuted, Cancelled và CallSalt khi áp dụng.
 GOV dùng DelegateChanged, DelegateVotesChanged; token dùng Transfer/Approval.
 ABI sinh từ build là nguồn chính xác cho tên, kiểu, indexed và lỗi OpenZeppelin.
 
-Tên lỗi riêng sau đây là đề xuất cần TV2/TV3/TV4 review trước triển khai:
-
-| Phần | Lỗi đề xuất |
-|---|---|
-| Treasury | InvalidRecipient(address recipient), InvalidAmount(uint256 amount) |
-| Treasury | RequestAlreadyPaid(bytes32 requestId), InsufficientBudget(uint256 available,uint256 required) |
-| Governor | InvalidActionCount(uint256 count), InvalidTarget(address target), InvalidNativeValue(uint256 value), InvalidCalldata() |
-
-Ưu tiên lỗi sẵn có của OpenZeppelin cho AccessControl, ERC20 và Governor;
-không tự viết lại kiểm tra quyền/voting tiêu chuẩn. Không đưa lỗi dự kiến vào ABI interface hiện tại.
+Catalog [SC06 ABI reference](sc06-abi-reference.md) liệt kê đầy đủ errors của cả token,
+Treasury, Governor, Timelock và ITreasury, bao gồm inherited errors cùng kiểu tham số.
+Ví dụ lỗi Governor thực tế là `InvalidActionCount(uint256,uint256,uint256)` cho độ dài
+của targets/values/calldatas; không dùng chữ ký SC01 cũ một tham số.
+TV3 decode revert bằng ABI của contract/đường gọi, không dựa vào chuỗi thông báo RPC.
+ABI có hàm quản trị kế thừa không có nghĩa ví được gọi hoặc Governor cho phép đề xuất hàm đó.
 
 ## Role sau khởi tạo
 
@@ -112,7 +110,7 @@ Xem trình tự và giới hạn đầy đủ trong [SC05](sc05-timelock-roles.m
 **Bàn giao còn mở cho TV4:** `scripts/governance_local.mjs` hiện renounce trước role audit và
 chưa audit lịch sử operation. Helper preflight trong Foundry không thay thế gate của deployment
 script. TV4 cần bổ sung gate và negative controls, lưu bằng chứng local; TV1 review trước testnet.
-Test contract xanh chưa đồng nghĩa SC05 đã nghiệm thu deployment hoàn toàn.
+Test contract xanh và SC06 ABI/checker không đồng nghĩa SC05 đã nghiệm thu deployment hoàn toàn.
 Mọi ví có thể queue/execute qua Governor khi hợp lệ; ví thường không schedule/execute trực tiếp Timelock.
 Không có đường chi riêng của deployer hoặc hủy khẩn cấp sau Pending; chỉ creator hủy Pending.
 
@@ -131,8 +129,17 @@ Requirement không cấm bytes32(0); SC01 không tự thêm lệnh cấm. Hai pr
 nhưng Treasury chỉ thanh toán thành công một lần. requestId khác proposalId và operationId.
 
 proposalId = uint256(keccak256(abi.encode(targets, values, calldatas, descriptionHash))).
-operationId do Timelock hashOperationBatch với predecessor/salt do Governor tích hợp sử dụng;
-không tự giả định salt = descriptionHash. Đối chiếu module OZ 5.4.0 và receipt thật tại SC06.
+predecessor = bytes32(0).
+salt = bytes32(bytes20(address(governor))) XOR descriptionHash (địa chỉ padding bên phải đến 32 byte).
+operationId = keccak256(abi.encode(targets, values, calldatas, predecessor, salt)), đối chiếu
+Timelock.hashOperationBatch. Proposal luôn dùng batch dù chỉ một action; không dùng hashOperation single.
+requestId nằm trong calldata và có thể thuộc nhiều proposal; proposalId không chứa proposer.
+Cùng arrays/description thì cùng proposalId. operationId còn phụ thuộc Governor qua salt.
+
+Ví dụ encode và chính sách bytes/uint256 đầy đủ nằm ở [SC06 handoff](sc06-handoff.md).
+Sau execute, Timelock.getTimestamp(operationId) trả marker 1, không phải execution timestamp;
+lấy timestamp từ block receipt. Ready là điều kiện operation, proposal vẫn Queued.
+Không tạo state Failed khi execute revert; retry cùng arrays/hash sau khi nạp đủ quỹ.
 
 ## Fixture và bàn giao
 
@@ -157,4 +164,4 @@ hàm đọc, lỗi và decimals; TV4 review toolchain, constructor/role và trì
 - [ ] Bằng chứng từ clone sạch được ghi trong PR/CI khi bàn giao.
 
 SC01 sẵn sàng review sau kiểm tra local; chỉ đóng task khi các mục review/tái lập đã được xác nhận.
-SC02–SC10 chưa được triển khai ở đây.
+Checklist SC01 phía trên là lịch sử; trạng thái SC06 giai đoạn 1 và phần còn thiếu ghi tại docs/sc06-handoff.md.

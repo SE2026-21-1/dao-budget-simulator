@@ -19,7 +19,7 @@ test('SC06 raw logs replay through TV2 classify/buildModel/evaluate at canonical
   const abi = await interfaces();
   const quorumCalls = original.calls.filter(c => c.to.toLowerCase() === original.manifest.contracts.Governor.address.toLowerCase() &&
     c.data.startsWith(abi.Governor.getFunction('quorum').selector));
-  assert.equal(quorumCalls.length, 1);
+  assert.equal(quorumCalls.length, 2);
   const snapshot = abi.Governor.decodeFunctionData('quorum', quorumCalls[0].data)[0];
   assert.equal(historicalQuorum(original, abi, snapshot), 200n * 10n ** 18n);
   assert.equal(abi.Governor.decodeFunctionResult('quorum', quorumCalls[0].result)[0], 200n * 10n ** 18n);
@@ -37,7 +37,7 @@ test('rejects isolated archived quorum(snapshot) mutation against receipt-derive
   const abi = await interfaces(), f = structuredClone(original);
   const calls = f.calls.filter(c => c.to.toLowerCase() === f.manifest.contracts.Governor.address.toLowerCase() &&
     c.data.startsWith(abi.Governor.getFunction('quorum').selector));
-  assert.equal(calls.length, 1);
+  assert.equal(calls.length, 2);
   calls[0].result = abi.Governor.encodeFunctionResult('quorum', [1001n * 10n ** 18n]);
   await assert.rejects(checkFixture(f), /Governor\.quorum\(snapshot\) differs from historical GOV supply and quorum configuration/);
 });

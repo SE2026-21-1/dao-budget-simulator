@@ -106,34 +106,29 @@ và `stateSource: "contract"`; fixture vẫn dùng `synthetic`.
 
 | Trường đồng bộ | Ý nghĩa |
 |---|---|
-| `status` | `synced`, `lagging` hoặc `not_ready`; `lagging` nếu heartbeat quá 30 giây, raw chưa tới confirmed block, hoặc publication chưa tới raw checkpoint |
+| `status` | `synced`, `lagging` hoặc `not_ready`; BE05 (001–004) dùng tuổi checkpoint; BE07 (005) dùng `lastCheckedAt` từ xác minh RPC. Cả hai báo `lagging` nếu raw chưa tới confirmed block hoặc publication chưa tới raw checkpoint |
 | `headBlock` | Tip được BE03 ghi nhận ở lần sync gần nhất; không phải phép thăm dò RPC trực tiếp |
 | `confirmedBlock` | Block cao nhất đủ K xác nhận, quy ước `max(headBlock-K, 0)`; testnet demo K=2 |
 | `indexedBlock` | Checkpoint đã commit, không phải block đang xử lý dở |
 | `lagBlocks` | `max(confirmedBlock-indexedBlock, 0)`; không tính K block đang chờ xác nhận |
-| `lagSeconds` | Chuỗi số nguyên không âm: giá trị lớn nhất giữa tuổi heartbeat đã xác minh và chênh lệch timestamp của observed head với publication mới nhất. Nếu chưa giữ header của observed head, dùng raw checkpoint timestamp để đo projection delay và tuổi heartbeat làm tín hiệu freshness; null khi chưa có raw checkpoint. Fixture cũ vẫn có thể null |
+| `lagSeconds` | Với 001–004: chuỗi số giây lớn nhất giữa tuổi checkpoint (`updated_at`) và chênh timestamp observed head (hoặc raw H) với publication; null khi chưa có checkpoint. Với 005: tuổi của lần RPC xác minh canonical `lastCheckedAt` và publication lag; null nếu chưa xác minh. Không ép null thành zero |
 | `confirmations` | K cấu hình, chuỗi số nguyên |
-| `lastIndexedAt` | Heartbeat raw-sync đã xác minh canonical H thành công (`checkpoints.updated_at`), kể cả chu kỳ idle không có block mới; null nếu chưa từng có |
+| `lastIndexedAt` | Lần cập nhật raw checkpoint gần nhất; với BE07, `lastRpcCheckAt` riêng mới là lần xác minh canonical RPC. Null nếu chưa có checkpoint |
 
 Mốc H là mốc dữ liệu đang xem; sync mô tả pipeline/publication gần nhất, có thể
 mới hơn H. API không probe RPC và không biết RPC hiện tại còn truy cập được hay
-không. `lagSeconds` là **chỉ báo freshness**, không phải độ trễ event chính xác,
-không lấy tuổi wall-clock của một H lịch sử làm độ trễ pipeline. Timestamp delay
-có thể gồm thời gian chờ K xác nhận. Các chênh lệch âm do clock skew được chặn
-ở zero. Heartbeat hơn 30 giây hoặc timestamp delay hơn 30 giây luôn chuyển sync
-thành `lagging`, ngay cả khi `lagBlocks="0"`; snapshot/cursor cũ vẫn giữ nguyên
-số liệu tài chính tại H nhưng dùng trạng thái sync hiện tại.
-
-Frontend tự kiểm tra health mỗi 5 giây, cảnh báo tiếng Việt khi sync `lagging`
-hoặc `lagSeconds>30`, và bỏ cảnh báo khi heartbeat/publication phục hồi, không
-cần tải lại trang. Dùng CLI `--watch` với `toBlock="latest"` để đồng bộ rồi
-project tuần tự liên tục; `INDEXER_POLL_INTERVAL_MS` hoặc `--poll-interval-ms`
-đặt chu kỳ 100–60000 ms (mặc định 5000 ms).
-Health degraded là cảnh báo freshness, projection lag hoặc raw decode issue,
-không tự chứng minh RPC đang down. Publication `rebuild_required` vẫn trả 503,
-không che việc invalidation bằng dữ liệu snapshot cũ. Khi chưa có checkpoint,
-H/hash/timestamp, indexedBlock và các độ trễ không biết được là null; không giả
-mạo H bằng zero. Khi chưa có observed head, head/confirmedBlock cũng null.
+không. `lagSeconds` là chỉ báo freshness, không phải phép đo event delay tại H.
+Với 001–004, checkpoint cũ quá 30 giây hoặc timestamp delay quá 30 giây
+báo `lagging` dù `lagBlocks="0"`; kiểm tra synced sau **checkpoint thật** mới.
+Với 005, worker phải kiểm RPC canonical thành công rồi ghi `lastCheckedAt`;
+checkpoint mới không thay thế xác minh này. Chênh lệch âm do clock skew chặn ở
+zero. Health HTTP 200 `degraded` khi publication còn dùng được nhưng stale;
+recovery/replaying/rebuild_required đóng publication HTTP 503, cursor cũ 409.
+Frontend kiểm health mỗi 5 giây và tải lại trang đầu khi cursor 409;
+`--worker` với `toBlock:"latest"` là chế độ continuous sync→project/recovery.
+`--watch` chỉ là chế độ cũ (poll 100–60000 ms, mặc định 5000 ms), không thay BE07.
+Không checkpoint thì H/hash/timestamp/indexedBlock/lagSeconds chưa biết đều null;
+không giả mạo H bằng zero. Health degraded không tự chứng minh RPC đang down.
 
 List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cùng `cursor`:
 
@@ -434,8 +429,8 @@ Thiếu metadata đó trả `DATA_NOT_READY`, không dùng địa chỉ hoặc c
 
 Health trả 200 `ok`/`degraded` khi database và publication sẵn sàng, 503 khi
 database/publication chưa phục vụ được. Response tách tình trạng DB, raw
-indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head; lag
-theo giây chưa quan sát được là null. Health không gọi RPC.
+indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head;
+`lagSeconds` null khi chưa có checkpoint. Health không gọi RPC.
 
 
 ## 8. BE07 — recovery và freshness của API runtime
@@ -452,5 +447,6 @@ Recovering/replaying/rebuild_required chặn publication: health 503 với
 `data.recoveryStatus`, endpoint dữ liệu 503 DATA_NOT_READY, cursor cũ 409
 SNAPSHOT_INVALIDATED. Revision đổi ngay khi xác nhận mismatch, trước khi xóa
 suffix. Chỉ publication BE04 đã đối chiếu lại tại H/hash mới mở gate.
-Các giới hạn BE05 về lagSeconds=null/không ghi lần kiểm tra RPC trong các mục
-trước chỉ mô tả nền BE05; runtime có migration 005 dùng semantics BE07 này.
+Migration 005 sử dụng riêng metadata RPC đã xác minh: không lấy checkpoint
+`updated_at` hoặc chênh lệch timestamp của schema cũ thay `lastCheckedAt`.
+Khi chưa có RPC verification, `lagSeconds` vẫn null và `status=lagging`.

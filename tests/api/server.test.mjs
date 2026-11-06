@@ -327,6 +327,32 @@ test('verified heartbeat crosses the stale boundary and recovers without changin
   }
 });
 
+test('BE07 requires an RPC verification timestamp, not a fresh checkpoint', async () => {
+  const original = (await pool.query('SELECT indexer_state,updated_at FROM deployments JOIN checkpoints USING (deployment_id) WHERE deployment_id=$1',
+    [deploymentId])).rows[0];
+  try {
+    await pool.query("UPDATE checkpoints SET updated_at=clock_timestamp()-interval '31 seconds' WHERE deployment_id=$1", [deploymentId]);
+    await pool.query(`UPDATE deployments SET indexer_state=indexer_state || jsonb_build_object('lastCheckedAt',clock_timestamp())
+      WHERE deployment_id=$1`, [deploymentId]);
+    const verified = await get('/health');
+    assert.equal(verified.status, 200);
+    assert.equal(verified.body.context.sync.status, 'synced');
+    assert.ok(BigInt(verified.body.context.sync.lagSeconds) < 30n);
+    await pool.query(`UPDATE deployments SET indexer_state=indexer_state || '{"lastCheckedAt":null}'::jsonb WHERE deployment_id=$1`,
+      [deploymentId]);
+    await pool.query('UPDATE checkpoints SET updated_at=clock_timestamp() WHERE deployment_id=$1', [deploymentId]);
+    const unverified = await get('/health');
+    assert.equal(unverified.status, 200);
+    assert.equal(unverified.body.data.status, 'degraded');
+    assert.equal(unverified.body.context.sync.status, 'lagging');
+    assert.equal(unverified.body.context.sync.lagSeconds, null);
+    assert.equal(unverified.body.context.sync.lastRpcCheckAt, null);
+  } finally {
+    await pool.query('UPDATE deployments SET indexer_state=$2::jsonb WHERE deployment_id=$1', [deploymentId, JSON.stringify(original.indexer_state)]);
+    await pool.query('UPDATE checkpoints SET updated_at=$2 WHERE deployment_id=$1', [deploymentId, original.updated_at]);
+  }
+});
+
 test('numeric keyset pages are complete, filters bind cursors, and old H survives publication progress', async () => {
   const first = await get('/proposals', { limit: '20' });
   assert.equal(first.status, 200);
@@ -509,4 +535,69 @@ test('filter totals, snapshot errors, unavailable publication, rebuild health, a
   assert.equal(noPublication.body.error.code, 'DATA_NOT_READY');
   assert.equal((await get('/health')).status, 503);
   assert.equal(h.rows[0].block_number, '5');
+});
+
+test('BE05 on migrations 001–004 derives freshness from checkpoint and retained headers', async () => {
+  await pool.query('CREATE SCHEMA be05_legacy');
+  const legacy = new Pool({ connectionString: databaseUrl(), options: '-c search_path=be05_legacy', max: 3 });
+  let api;
+  try {
+    for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql'])
+      await legacy.query(await readFile(new URL(`../../database/migrations/${migration}`, import.meta.url), 'utf8'));
+    const governance = { proposalThreshold: '0', govSupply: '1000', quorumNumerator: '20', quorumDenominator: '100',
+      votingDelay: '60', votingPeriod: '300', minDelay: '120', clockMode: 'mode=timestamp' };
+    const { rows: [dep] } = await legacy.query(`INSERT INTO deployments(chain_id,deployment_name,deployment_block,abi_version,governance_config,confirmation_depth)
+      VALUES (31337,'be05-legacy',1,'be05-test-v1',$1::jsonb,0) RETURNING deployment_id,snapshot_revision`,
+    [JSON.stringify(governance)]);
+    const d = dep.deployment_id;
+    for (const [role, address, abi] of [
+      ['governor', governor, 'oz-5.4.0-governor'], ['timelock', timelock, 'oz-5.4.0-timelock'],
+      ['treasury', treasury, 'sc01-itreasury-v1'], ['budget_token', bud, 'oz-5.4.0-erc20'],
+      ['governance_token', gov, 'sc02-governance-token-v1'],
+    ]) await legacy.query(`INSERT INTO deployment_contracts(deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
+      VALUES ($1,31337,$2,$3,1,$4)`, [d, role, address, abi]);
+    for (let h = 1; h <= 3; h++) await legacy.query(`INSERT INTO indexed_blocks(deployment_id,block_number,block_hash,parent_hash,block_timestamp)
+      VALUES ($1,$2,$3,$4,$5)`, [d, h, hash(h), hash(h - 1), 1000 + h]);
+    api = createApiServer({ pool: legacy, cursorSecret: secret });
+    await new Promise((resolve, reject) => { api.once('error', reject); api.listen(0, '127.0.0.1', resolve); });
+    const endpoint = `http://127.0.0.1:${api.address().port}/api/health?chainId=31337&deploymentId=be05-legacy`;
+    const health = async () => {
+      const response = await fetch(endpoint);
+      return { status: response.status, body: await response.json() };
+    };
+    const empty = await health();
+    assert.equal(empty.status, 503);
+    assert.equal(empty.body.context.sync.indexedBlock, null);
+    assert.equal(empty.body.context.sync.lagSeconds, null);
+    await legacy.query(`INSERT INTO checkpoints(deployment_id,block_number,block_hash,observed_head_block,confirmation_depth,source_scope,sync_status)
+      VALUES ($1,3,$2,3,0,$3,'ready')`, [d, hash(3), hash(333)]);
+    await legacy.query(`INSERT INTO projection_checkpoints(deployment_id,block_number,block_hash,source_scope,snapshot_revision,ignored_ancillary_events)
+      VALUES ($1,3,$2,$3,$4,0)`, [d, hash(3), hash(333), dep.snapshot_revision]);
+    const fresh = await health();
+    assert.equal(fresh.status, 200, JSON.stringify(fresh.body));
+    assert.equal(fresh.body.context.sync.status, 'synced');
+    assert.equal(fresh.body.context.sync.lagSeconds, '0');
+    assert.equal(fresh.body.context.sync.lagBlocks, '0');
+    await legacy.query("UPDATE checkpoints SET updated_at=clock_timestamp()-interval '31 seconds' WHERE deployment_id=$1", [d]);
+    const stale = await health();
+    assert.equal(stale.status, 200);
+    assert.equal(stale.body.data.status, 'degraded');
+    assert.equal(stale.body.context.sync.status, 'lagging');
+    assert.equal(stale.body.context.sync.lagBlocks, '0');
+    assert.ok(BigInt(stale.body.context.sync.lagSeconds) >= 31n);
+    await legacy.query('UPDATE checkpoints SET updated_at=clock_timestamp() WHERE deployment_id=$1', [d]);
+    assert.equal((await health()).body.context.sync.status, 'synced');
+    await legacy.query(`INSERT INTO indexed_blocks(deployment_id,block_number,block_hash,parent_hash,block_timestamp)
+      VALUES ($1,4,$2,$3,1044)`, [d, hash(4), hash(3)]);
+    await legacy.query('UPDATE checkpoints SET observed_head_block=4 WHERE deployment_id=$1', [d]);
+    const chainDelay = await health();
+    assert.equal(chainDelay.body.context.sync.status, 'lagging');
+    assert.equal(chainDelay.body.context.sync.lagSeconds, '41');
+    assert.equal(chainDelay.body.context.sync.lagBlocks, '1');
+    await legacy.query('UPDATE checkpoints SET observed_head_block=3,updated_at=clock_timestamp() WHERE deployment_id=$1', [d]);
+    assert.equal((await health()).body.context.sync.status, 'synced');
+  } finally {
+    if (api?.listening) await new Promise((resolve) => api.close(resolve));
+    await legacy.end();
+  }
 });

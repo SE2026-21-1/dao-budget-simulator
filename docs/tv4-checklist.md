@@ -5,6 +5,35 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Đối chiếu 06/11/2026 — chưa phải release gate
+
+`Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),
+freshness (#38) và SC06 (#39). PR #21 `feature/tv4-operation=640389f` lúc
+fetch vẫn mở; worktree TV4 đã merge Dev và giải xung đột, chưa push tại lúc ghi.
+PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
+“chưa có” ở phần 22/10 và URL demo tháng 10/đầu tháng 11 dưới đây là lịch sử
+theo revision, không là tình trạng service hiện tại. Xem [evidence lượt mới](evidence/tv4-20261106-acceptance.md).
+
+| QA / issue | Trạng thái hiện tại | Gate còn mở / người phối hợp |
+|---|---|---|
+| QA01/QA02/QA03, #6/#14/#15/#43 | Dev SC06 canonical 28/28; PR #21 getter/Transfer oracle, fixture regenerate từ source `8245c9c`, full 31/31; deploy/roles local | TV1/TV2/TV3 review SC06/roles, người khác clone máy riêng |
+| QA04–QA06, #7/#16/#17 | Matrix TC01–14/INV01–04, seeded ghost oracle 100×50/5.000 calls/5 execute successes; oracle bounded, 0 cancel successes của log cuối không phủ hết chiến lược | TV1 review oracle/receipt/negative variants |
+| QA07/QA08, #18/#37/#36/#40/#41 | Dev native BE08+benchmark PASS 20.986 HTTP success, p95 212,461ms; 001–004/005 freshness PASS; CI đúng SHA. PR #21 native/UI H79 PASS; TV3 unit49 PASS/1 SKIP khi không cấu hình, **live cùng deployment PASS 1/1, 0 SKIP** sau RPC sync thật | TV2 peer review margin freshness/CI raw; TV3 ví extension, service truy cập được cho peer và E2E giao dịch ví cùng deployment |
+| QA09/QA10, #20/#42/#44 | Runbook và evidence đã ghi SHA/cluster; chưa chốt release; Project chưa có quyền sửa | Nhóm chốt testnet/signer an toàn, peer review, independent machine |
+
+**GitHub Project:** trang tổ chức công khai
+[Projects](https://github.com/orgs/SE2026-21-1/projects) hiển thị 0
+open/closed; API ẩn danh không thấy item riêng tư. Môi trường chỉ xác thực
+Git qua SSH, không có API token/phiên GitHub đăng nhập để tạo board, gắn repo,
+item, status hoặc comment. Đề xuất cập nhật khi có quyền (không gọi là đã sửa):
+
+| Issue | Priority đề xuất | Status đề xuất / dependency |
+|---|---|---|
+| #18, #37 | Cao | Review sau native BE08/freshness PASS Dev `87738d3`; cần TV2 peer và CI raw artifact có auth; không Done chỉ vì CI xanh |
+| #36, #40, #41 | Cao | Review FE↔API live local H79 PASS nhưng chưa ví extension và service peer dùng chung; #40 Blocked service/manifest còn sống sau runner, #41 cần giao dịch ví→worker→API→UI |
+| #42, #43 | Trung bình | Blocked máy khác (#42); #43 Review sau fixture regenerate/coupled mutation 31/31, cần TV1/TV2/TV3 peer |
+| #44 | Trung bình | Blocked bởi #18/#36/#40/#41/#20/#42 và release evidence |
+
 ## Kiểm tra revision mới — 02/11/2026
 
 Trên branch `personal/23001850-vt-064-bulk-import`, committed base của lượt TC12 `0e9828ed109acfa13d7b41d8059fc6afee14f0f9`; `feature/tv4-operation` remote `1bb1821`, `Dev` `3ed88c9` lúc kiểm tra. [Lượt E2E trước](evidence/tv4-20261102-0328eea.md), [TC12 chạy lại ở base `0e9828e`](evidence/tv4-20261102-0e9828e-tc12.md), [TC/INV theo revision](test-plan.md#đối-chiếu-theo-head-và-worktree--02112026). [GitHub CI 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41424374702) đúng **committed `0e9828e`**, không gồm flag `--tc12` được chạy thêm ở worktree; CI cho commit chứa runner phải đối chiếu riêng. PR #21 open, review `COMMENTED` trước head mới; PR #31 draft; issue #18/#19/#20 open. Báo cáo 30/10 ở dưới là lịch sử tại `b476be8`, không phải nghiệm thu lượt này.

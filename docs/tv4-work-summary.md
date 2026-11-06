@@ -8,6 +8,36 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Đối chiếu tích hợp 06/11/2026
+
+Dev `87738d3` đã nhận BE08 (#30), freshness (#38) và SC06 (#39).
+PR #21 `feature/tv4-operation=640389f` tại lúc fetch chưa merge; worktree TV4
+đã nhập Dev ở `c002fbefe45214737a23de482e3c85158d742bfe` để giải xung đột,
+chưa phải PR được merge/review. PR #31 VT-064 draft là phạm vi cá nhân, không
+nhập vào nghiệm thu. [Evidence lượt mới](evidence/tv4-20261106-acceptance.md)
+và hai raw archive gắn lệnh/SHA/cluster thật. URL demo và số benchmark ngày
+02–04/11 là lịch sử, không chứng minh service còn hoạt động ngày 06/11.
+
+Native BE08 mới trên Dev **PASS** PostgreSQL18.4/Anvil: 20.986 request/0 lỗi,
+p95 HTTP 212,461ms, freshness 20/20 p95 27.884,382ms, max 28.443,131ms;
+health503/cursor409, crash/replay và rebuild equal tại cùng H67/hash. API
+schema001–004 stale checkpoint và 005 verified RPC heartbeat có regression
+PASS. TV4 native trên PR #21 **PASS** BE01/BE02–06, UI 1366/390 H79/hash,
+payment Executed/low-quorum Defeated, recovery503/409; TV3 live suite ban đầu
+FAIL health lagging sau khi runner pause, sau sync RPC thật **PASS 1/1, 0 SKIP**.
+Không có ví extension ký thật hay testnet/peer/máy khác.
+
+Đã tái hiện lỗ hổng oracle SC06 trên Dev trước sửa: đồng thời đổi
+`manifest.config.quorumNumerator` và `roleAudit.config.quorumNumerator` từ
+`20` sang `21` vẫn được offline `checkFixture` chấp nhận. Trong PR #21 checker
+đối chiếu từng cấu hình với eth_call đã pin tại H/hash và seed với Transfer
+canonical. Fixture cũ pin source Dev đúng thiết kế nên không qua sau khi sửa;
+regenerate bằng Anvil thật từ committed source `8245c9c`, 24 receipt/42 log/
+27 block, full suite **31/31 PASS** với coupled quorum/seed bị từ chối đúng
+reason; không tắt provenance. Đây là lỗ hổng kiểm **bằng chứng**, không phải
+Governor on-chain thay quorum. TV1/TV2/TV3 review trước khi đóng #43.
+
+
 ## Đồng bộ vào feature/tv4-operation — 04/11/2026
 
 `feature/tv4-operation` đã nhập `origin/feature/tv1-sc05` (nhánh này bao gồm

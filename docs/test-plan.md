@@ -4,7 +4,26 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
-**Đối chiếu mới nhất của worktree local:** [ma trận ngày 02/11 bên dưới](#đối-chiếu-theo-head-và-worktree--02112026) và [evidence](evidence/tv4-20261102-0328eea.md). Kết quả 30/10 tại `b476be8` là lịch sử; không gán cho HEAD mới, và CI của HEAD không bao gồm các sửa đổi chưa commit. Chưa có nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension và testnet; giữ gate release mở.
+**Đối chiếu hiện hành:** [mục 06/11](#đối-chiếu-mới--06112026-dev-87738d3-pr-21-chưa-merge) và [evidence mới](evidence/tv4-20261106-acceptance.md). Ma trận ngày 02/11 và [evidence cũ](evidence/tv4-20261102-0328eea.md) là lịch sử của worktree/commit khác. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, peer review và testnet; giữ gate release mở.
+
+## Đối chiếu mới — 06/11/2026 (Dev `87738d3`, PR #21 chưa merge)
+
+BE08 đã merge vào Dev qua #30, BE05 freshness qua #38, SC06 qua #39.
+Bảng 02/11 phía dưới là **lịch sử** của nhánh VT-064; không suy ra thiếu
+BE07/BE08 hoặc wallet trên các nhánh bàn giao. Dev chưa có wallet/API consumer
+của PR #21; nhánh TV3 `681289b` có live suite mới nhưng chưa merge.
+[Evidence TV4 06/11](evidence/tv4-20261106-acceptance.md) ghi riêng lệnh
+thực chạy, source SHA, report và giới hạn. Tất cả kết quả phải đọc cùng reset
+R0/R1/R2 và cùng deployment/H/hash/revision; CI không thay giao dịch ví thật.
+
+| Tiêu chí | Nhánh và kết quả code/review | Điều kiện nghiệm thu còn lại |
+|---|---|---|
+| TC11–12 / NFR02–04 (#18) | Dev `87738d3`: native BE08 **PASS**, storage21/checkpoint16/projection10/API6/BE06 DB1/BE07 DB18, reorg/replay/gate503/cursor409/rebuild equal; 20.986 HTTP thành công/0 lỗi, p95 212,461ms tính lại từ [raw archive](evidence/tv4-20261106-be08-raw.tar.gz); freshness20/20, p95 27.884,382ms, max 28.443,131ms. CI 41973419072/41973418947 success đúng SHA, artifact13391310183 cần GitHub auth tải raw | Peer TV2 và review freshness margin 1,557s ở mẫu chậm nhất; không lấy số local gán cho CI |
+| Freshness (#37) | Dev native API6/6 gồm 001–004 no checkpoint lagSeconds:null, stale31s → lagging → cập nhật thật synced; 001–005 ưu tiên RPC `lastCheckedAt`, recent checkpoint không fake synced khi null; BE07 DB18/18 gồm SQL-lock heartbeat | Review TV2; không ép null thành 0 hoặc nới assertion |
+| SC06, roles, INV (#43) | Dev canonical fixture 28/28 PASS. PR #21 getter/Transfer oracle, regenerated canonical Anvil fixture từ source `8245c9c`, **31/31 PASS** (coupled quorum/seed từ chối đúng reason); invariant seed `0x20261021`, 100×50/5.000 calls/5 execute successes, 4/4 PASS | TV1/TV2/TV3 peer; oracle bounded, không suy ra mọi strategy hoặc extension/testnet |
+| FE/API (#36/#40/#41) | TV3 `681289b` unit49 PASS/1 live SKIP không cấu hình; build PASS. **Lượt live mới** bốn biến `BE05_LIVE_*` trên API/RPC H79 của native PR #21 PASS 1/1, 0 SKIP sau RPC sync thật; browser 1366/390, Executed/Defeated, health lagging→synced, Tab skip link, không overflow | Không có ví extension ký propose/vote/queue/execute/cancel, chưa có service/manifest luôn chạy cho peer; raw UI [archive](evidence/tv4-20261106-ui-raw.tar.gz) |
+| Testnet/release (#20/#42/#44) | CI và clone cùng máy chỉ là local proof | Chốt mạng/signer/gas, clone máy người khác, peer reviews và demo testnet thời gian thật |
+
 
 ## Đối chiếu theo HEAD và worktree — 02/11/2026
 

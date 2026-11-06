@@ -4,31 +4,21 @@ umask 077
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 ROOT="$(git -C "$SCRIPT_DIR/.." rev-parse --show-toplevel)"
-EXPECTED_REVISION="681289bb1f11db87bdfcb15c6b28d1d995229835"
-STATE_ROOT="${BE09_STATE_ROOT:-${XDG_STATE_HOME:-/home/cuongdz/.local/state}/dao-budget-be09}"
-NODE_DIR="/home/cuongdz/.local/share/be06-tools/node/bin"
-FOUNDRY_DIR="/home/cuongdz/.foundry/versions/foundry-rs/foundry/v1.8.5"
-PG_DIR="/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin"
-export PATH="$NODE_DIR:$FOUNDRY_DIR:$PG_DIR:$PATH"
-export LD_LIBRARY_PATH="/home/cuongdz/.local/share/be08-tools/pg184/usr/lib/x86_64-linux-gnu:/home/cuongdz/.local/share/be06-tools/postgres-root/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-NODE_BIN="$NODE_DIR/node"
-NPM_BIN="$NODE_DIR/npm"
-ANVIL_BIN="$FOUNDRY_DIR/anvil"
-FORGE_BIN="$FOUNDRY_DIR/forge"
-INITDB_BIN="$PG_DIR/initdb"
-PG_CTL_BIN="$PG_DIR/pg_ctl"
-CREATEDB_BIN="$PG_DIR/createdb"
-PSQL_BIN="$PG_DIR/psql"
+STATE_ROOT="${BE09_STATE_ROOT:-${XDG_STATE_HOME:-${HOME:-}/.local/state}/dao-budget-be09}"
 RUN_DIR=""
 UP_OK=0
 
 usage() {
   cat <<'USAGE'
-Usage: bash scripts/be09-local.sh <up|verify|status|down>
+Usage: bash scripts/be09-local.sh <preflight|up|verify|status|down>
 
 Optional:
   BE09_STATE_ROOT  External writable state directory
   BE09_RUN_DIR     Select a specific run for verify/status/down
+  BE09_NODE_DIR    Directory containing node and npm (otherwise PATH)
+  BE09_FOUNDRY_DIR Directory containing forge and anvil (otherwise PATH)
+  BE09_PG_DIR      Directory containing PostgreSQL binaries (otherwise PATH)
+  BE09_LD_LIBRARY_PATH  Additional dynamic-library directories
 
 Default URLs: RPC http://127.0.0.1:18545, API http://127.0.0.1:3300,
 frontend http://127.0.0.1:5173, PostgreSQL 127.0.0.1:55432.
@@ -37,7 +27,31 @@ USAGE
 fail() { printf 'BE09 ERROR: %s\n' "$*" >&2; return 1; }
 note() { printf '%s\n' "$*"; }
 
+configure_toolchain() {
+  local dir
+  for dir in "${BE09_PG_DIR:-}" "${BE09_FOUNDRY_DIR:-}" "${BE09_NODE_DIR:-}"; do
+    if [[ -n "$dir" ]]; then
+      [[ "$dir" = /* && -d "$dir" ]] || fail "Tool directory must be an existing absolute path: $dir"
+      PATH="$dir:$PATH"
+    fi
+  done
+  export PATH
+  if [[ -n "${BE09_LD_LIBRARY_PATH:-}" ]]; then
+    LD_LIBRARY_PATH="$BE09_LD_LIBRARY_PATH${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  fi
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
+  NODE_BIN="${BE09_NODE_DIR:+$BE09_NODE_DIR/node}"; NODE_BIN="${NODE_BIN:-$(command -v node || true)}"
+  NPM_BIN="${BE09_NODE_DIR:+$BE09_NODE_DIR/npm}"; NPM_BIN="${NPM_BIN:-$(command -v npm || true)}"
+  ANVIL_BIN="${BE09_FOUNDRY_DIR:+$BE09_FOUNDRY_DIR/anvil}"; ANVIL_BIN="${ANVIL_BIN:-$(command -v anvil || true)}"
+  FORGE_BIN="${BE09_FOUNDRY_DIR:+$BE09_FOUNDRY_DIR/forge}"; FORGE_BIN="${FORGE_BIN:-$(command -v forge || true)}"
+  INITDB_BIN="${BE09_PG_DIR:+$BE09_PG_DIR/initdb}"; INITDB_BIN="${INITDB_BIN:-$(command -v initdb || true)}"
+  PG_CTL_BIN="${BE09_PG_DIR:+$BE09_PG_DIR/pg_ctl}"; PG_CTL_BIN="${PG_CTL_BIN:-$(command -v pg_ctl || true)}"
+  CREATEDB_BIN="${BE09_PG_DIR:+$BE09_PG_DIR/createdb}"; CREATEDB_BIN="${CREATEDB_BIN:-$(command -v createdb || true)}"
+  PSQL_BIN="${BE09_PG_DIR:+$BE09_PG_DIR/psql}"; PSQL_BIN="${PSQL_BIN:-$(command -v psql || true)}"
+}
+
 ensure_external_state() {
+  [[ -n "${BE09_STATE_ROOT:-}${XDG_STATE_HOME:-}${HOME:-}" ]] || fail 'Set HOME, XDG_STATE_HOME or an absolute BE09_STATE_ROOT.'
   [[ "$STATE_ROOT" = /* ]] || fail 'BE09_STATE_ROOT must be absolute.'
   case "$STATE_ROOT/" in "$ROOT/"*) fail 'BE09 state directory must be outside the worktree.' ;; esac
 }
@@ -106,23 +120,19 @@ stop_owned_services() {
 check_source_and_toolchain() {
   local actual submodules line untracked
   actual="$(git -C "$ROOT" rev-parse HEAD)"
-  [[ "$actual" = "$EXPECTED_REVISION" ]] || fail "Expected revision $EXPECTED_REVISION, found $actual"
   git -C "$ROOT" diff --quiet || fail 'Tracked worktree has unstaged changes; refusing to build another source tree.'
   git -C "$ROOT" diff --cached --quiet || fail 'Git index has staged changes; refusing to build another source tree.'
   while IFS= read -r untracked; do
-    case "$untracked" in
-      docs/be09.md|docs/evidence/be09-20261106/*|scripts/be09-local.sh|scripts/be09-seed.mjs|scripts/be09-register.mjs|scripts/be09-verify.mjs|scripts/be09-diagnose.mjs|scripts/be09-live-test.mjs) ;;
-      '') ;;
-      *) fail "Unexpected untracked source/path would affect this run: $untracked" ;;
-    esac
+    [[ -z "$untracked" ]] || fail "Untracked file in checkout; move or commit it before running: $untracked"
   done < <(git -C "$ROOT" ls-files --others --exclude-standard)
   submodules="$(git -C "$ROOT" submodule status --recursive)"
   while IFS= read -r line; do
     if [[ "$line" = [-+U]* ]]; then fail 'A submodule is missing, modified, or conflicted.'; fi
   done <<< "$submodules"
-  local binary
-  for binary in "$NODE_BIN" "$NPM_BIN" "$ANVIL_BIN" "$FORGE_BIN" "$INITDB_BIN" "$PG_CTL_BIN" "$CREATEDB_BIN" "$PSQL_BIN"; do
-    [[ -x "$binary" ]] || fail "Expected tool binary is missing or not executable: $binary"
+  local spec name binary
+  for spec in "node:$NODE_BIN" "npm:$NPM_BIN" "anvil:$ANVIL_BIN" "forge:$FORGE_BIN" "initdb:$INITDB_BIN" "pg_ctl:$PG_CTL_BIN" "createdb:$CREATEDB_BIN" "psql:$PSQL_BIN"; do
+    name="${spec%%:*}"; binary="${spec#*:}"
+    [[ -n "$binary" && -x "$binary" ]] || fail "Missing executable $name; configure BE09_NODE_DIR, BE09_FOUNDRY_DIR, BE09_PG_DIR or PATH."
   done
   [[ "$("$NODE_BIN" --version)" = 'v24.15.0' ]] || fail 'Node must be v24.15.0 from the verified toolchain.'
   [[ "$("$NPM_BIN" --version)" = '11.12.1' ]] || fail 'npm must be 11.12.1 from the verified toolchain.'
@@ -130,9 +140,12 @@ check_source_and_toolchain() {
   anvil_version="$("$ANVIL_BIN" --version)"
   forge_version="$("$FORGE_BIN" --version)"
   postgres_version="$("$PG_CTL_BIN" --version)"
-  [[ "$anvil_version" == *'1.8.5'* ]] || fail 'Anvil must be 1.8.5 from the verified toolchain.'
-  [[ "$forge_version" == *'1.8.5'* ]] || fail 'Foundry must be 1.8.5 from the verified toolchain.'
-  [[ "$postgres_version" == *'18.4'* ]] || fail 'PostgreSQL must be 18.4 from the verified toolchain.'
+  [[ "$anvil_version" =~ (^|[^0-9.])1\.8\.5([^0-9.]|$) ]] || fail 'Anvil must be 1.8.5 from the verified toolchain.'
+  [[ "$forge_version" =~ (^|[^0-9.])1\.8\.5([^0-9.]|$) ]] || fail 'Foundry must be 1.8.5 from the verified toolchain.'
+  [[ "$postgres_version" =~ (^|[^0-9.])18\.4([^0-9.]|$) ]] || fail 'PostgreSQL must be 18.4 from the verified toolchain.'
+  for binary in "$INITDB_BIN" "$CREATEDB_BIN" "$PSQL_BIN"; do
+    [[ "$("$binary" --version)" =~ (^|[^0-9.])18\.4([^0-9.]|$) ]] || fail "PostgreSQL binary must be 18.4: $binary"
+  done
   note "Revision: $actual"
   note "Node: $("$NODE_BIN" --version); npm: $("$NPM_BIN" --version)"
   note "Anvil: $anvil_version"
@@ -175,7 +188,7 @@ start_service() {
   local label="$1" pidfile="$2" logfile="$3"
   shift 3
   [[ ! -e "$pidfile" ]] || fail "$label PID file already exists; refusing to overwrite: $pidfile"
-  ( cd "$ROOT"; nohup env -i PATH="$PATH" LD_LIBRARY_PATH="$LD_LIBRARY_PATH" HOME="${HOME:-/home/cuongdz}" "$@" > "$logfile" 2>&1 < /dev/null & echo $! > "$pidfile" )
+  ( cd "$ROOT"; nohup env -i PATH="$PATH" LD_LIBRARY_PATH="$LD_LIBRARY_PATH" HOME="${HOME:-}" "$@" > "$logfile" 2>&1 < /dev/null & echo $! > "$pidfile" )
   chmod 600 "$pidfile"
   note "$label started with PID $(cat "$pidfile"); log: $logfile"
 }
@@ -185,7 +198,7 @@ command_up() {
   check_source_and_toolchain
   check_ports_free
   mkdir -p -m 700 "$STATE_ROOT/runs"
-  local stamp random run_id pgdata socket_dir db_url rpc_url manifest seed_report deployment_name
+  local stamp random run_id pgdata socket_dir db_url rpc_url manifest seed_report deployment_name source_revision
   stamp="$(date -u +%Y%m%dT%H%M%SZ)"
   random="$(openssl rand -hex 6)"
   run_id="$stamp-$random"
@@ -197,6 +210,8 @@ command_up() {
   trap 'status=$?; if [[ "$UP_OK" != 1 ]]; then note "Setup did not complete; stopping only processes created for this run. Data/logs retained at $RUN_DIR"; stop_owned_services "$RUN_DIR" || true; fi; exit "$status"' EXIT
   note "BE09 run: $run_id"
   note "External run directory: $RUN_DIR"
+  source_revision="$(git -C "$ROOT" rev-parse HEAD)"
+  "$NODE_BIN" "$ROOT/scripts/be09-provenance.mjs" "$ROOT" "$RUN_DIR/reports/source-provenance.json" "$source_revision"
   note 'Installing clean dependencies from the root and frontend lockfiles with this run private npm cache.'
   if ! (cd "$ROOT" && "$NPM_BIN" ci --cache "$RUN_DIR/cache/npm" --no-audit --no-fund); then
     fail "root npm ci failed; see $RUN_DIR/logs/setup.log. No deployment was created."
@@ -280,7 +295,8 @@ command_up() {
   cat > "$RUN_DIR/reports/up-report.md" <<EOF
 # BE09 local services started
 
-- Revision: $EXPECTED_REVISION
+- Revision: $source_revision
+- Script checksums: $RUN_DIR/reports/source-provenance.json
 - Run ID: $run_id
 - Deployment name: $deployment_name
 - Real proposal ID: $proposal_id
@@ -309,6 +325,8 @@ EOF
 }
 
 command_status() {
+  [[ -n "$NODE_BIN" && -x "$NODE_BIN" ]] || fail 'Missing node; configure BE09_NODE_DIR or PATH.'
+  [[ -n "$PG_CTL_BIN" && -x "$PG_CTL_BIN" ]] || fail 'Missing pg_ctl; configure BE09_PG_DIR or PATH.'
   resolve_run_dir
   local runtime="$RUN_DIR/runtime.json" run_id deployment ok=1 label pidfile marker
   run_id="$(basename -- "$RUN_DIR")"
@@ -316,7 +334,9 @@ command_status() {
   if [[ -f "$runtime" ]]; then
     deployment="$("$NODE_BIN" --input-type=module -e 'import{readFileSync}from"node:fs";process.stdout.write(JSON.parse(readFileSync(process.argv[1],"utf8")).deploymentName)' "$runtime")"
     if [[ -f "$RUN_DIR/run-id" ]]; then run_id="$(cat "$RUN_DIR/run-id")"; fi
-    note "Revision: $EXPECTED_REVISION; deployment: $deployment"
+    local source_revision
+    source_revision="$("$NODE_BIN" --input-type=module -e 'import{readFileSync}from"node:fs";process.stdout.write(JSON.parse(readFileSync(process.argv[1],"utf8")).sourceCommit)' "$runtime")"
+    note "Revision: $source_revision; deployment: $deployment"
     note 'URLs: RPC http://127.0.0.1:18545 | API http://127.0.0.1:3300 | Frontend http://127.0.0.1:5173'
   else
     deployment=''
@@ -372,13 +392,16 @@ command_verify() {
   fi
 }
 command_down() {
+  [[ -n "$PG_CTL_BIN" && -x "$PG_CTL_BIN" ]] || fail 'Missing pg_ctl; configure BE09_PG_DIR or PATH.'
   resolve_run_dir
   stop_owned_services "$RUN_DIR"
   note "Stopped only processes owned by this run. Database, manifest and logs remain at $RUN_DIR."
 }
 
 ensure_external_state
+configure_toolchain
 case "${1:-}" in
+  preflight) [[ $# = 1 ]] || { usage; exit 2; }; check_source_and_toolchain ;;
   up) [[ $# = 1 ]] || { usage; exit 2; }; command_up ;;
   verify) [[ $# = 1 ]] || { usage; exit 2; }; command_verify ;;
   status) [[ $# = 1 ]] || { usage; exit 2; }; command_status ;;

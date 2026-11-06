@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 test('status passes all Node arguments and leaves run files and processes alone', async t => {
@@ -11,10 +11,12 @@ test('status passes all Node arguments and leaves run files and processes alone'
   t.after(() => rm(dir, { recursive: true, force: true }));
   const run = join(dir, 'run');
   await mkdir(join(run, 'pids'), { recursive: true });
-  const runtime = JSON.stringify({ deploymentName: 'test deployment with spaces' });
+  const runtime = JSON.stringify({ deploymentName: 'test deployment with spaces', sourceCommit: 'test-revision' });
   await writeFile(join(run, 'runtime.json'), runtime);
   await writeFile(join(run, 'run-id'), 'test-run\n');
   await writeFile(join(run, 'pids', 'anvil.pid'), `${process.pid}\n`);
+  await writeFile(join(dir, 'pg_ctl'), '#!/bin/sh\nexit 1\n');
+  await chmod(join(dir, 'pg_ctl'), 0o755);
   const shim = join(dir, 'mock-fetch.mjs');
   await writeFile(shim, `
     import assert from 'node:assert/strict';
@@ -38,7 +40,7 @@ test('status passes all Node arguments and leaves run files and processes alone'
       };
     }
   `);
-  const env = { ...process.env, BE09_STATE_ROOT: dir, BE09_RUN_DIR: run,
+  const env = { ...process.env, BE09_NODE_DIR: dirname(process.execPath), BE09_PG_DIR: dir, BE09_STATE_ROOT: dir, BE09_RUN_DIR: run,
     NODE_OPTIONS: `--import=${pathToFileURL(shim).href}` };
   delete env.NODE_TEST_CONTEXT;
   const result = spawnSync('bash', ['scripts/be09-local.sh', 'status'], {

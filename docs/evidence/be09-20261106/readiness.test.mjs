@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFile } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -57,7 +57,7 @@ test('diagnostic reports distinct metadata, source and header failures', () => {
 test('registration CLI persists first indexed block and all five role records', async t => {
   const dir = await mkdtemp(join(tmpdir(), 'be09-register-test-'));
   t.after(() => rm(dir, { recursive: true, force: true }));
-  const commit = '681289bb1f11db87bdfcb15c6b28d1d995229835';
+  const commit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   const fakeContracts = Object.fromEntries(Object.entries(manifest.contracts).map(([name, item], i) => [name, {
     ...item, address: `0x${String(i + 1).padStart(40, '0')}`, abiVersion: 'version-1',
   }]));

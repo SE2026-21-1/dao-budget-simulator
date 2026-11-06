@@ -32,7 +32,6 @@ async function main() {
   const commit = (await import('node:child_process')).execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   assert.equal(manifest.format, 'dao-budget-local-governance-v1');
   assert.equal(manifest.sourceCommit, commit);
-  assert.equal(commit, '681289bb1f11db87bdfcb15c6b28d1d995229835');
   assert.equal(manifest.chainId, '31337');
   assert.equal(manifest.confirmations, '2', 'Manifest confirmation policy must be K=2');
   assert.equal(seed.status, 'PASS', 'Only a successful real-chain governance seed may be registered');

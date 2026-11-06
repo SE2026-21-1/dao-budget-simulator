@@ -10,6 +10,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 import pg from 'pg';
 import { Interface, id, toQuantity } from 'ethers';
 import { classifyLiveTest, liveTestEnvironment } from './be09-live-test.mjs';
+import { sourceProvenance } from './be09-provenance.mjs';
 
 const root = resolve(new URL('..', import.meta.url).pathname);
 const params = process.argv.slice(2);
@@ -391,10 +392,7 @@ function addStageError(stage, error, env = {}) {
 async function worktreeEvidence() {
   const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   const status = execFileSync('git', ['status', '--short', '--untracked-files=all'], { cwd: root, encoding: 'utf8' }).trim().split('\n').filter(Boolean);
-  const files = ['scripts/be09-local.sh', 'scripts/be09-seed.mjs', 'scripts/be09-register.mjs',
-    'scripts/be09-diagnose.mjs', 'scripts/be09-verify.mjs', 'scripts/be09-live-test.mjs'];
-  const sha256 = {};
-  for (const file of files) sha256[file] = createHash('sha256').update(await readFile(resolve(root, file))).digest('hex');
+  const { sha256 } = await sourceProvenance(root, head);
   return { head, status, sha256, note: 'Hashes describe the current verification worktree, not a reconstruction of the earlier deployment worktree.' };
 }
 
@@ -417,7 +415,6 @@ async function main() {
     report.deploymentName = runtime.deploymentName;
     report.proposalId = runtime.proposalId;
     assert.equal(runtime.format, 'dao-budget-be09-runtime-v1');
-    assert.equal(runtime.sourceCommit, '681289bb1f11db87bdfcb15c6b28d1d995229835');
     assert.equal(report.worktree.head, runtime.sourceCommit, 'Current HEAD differs from the runtime source revision');
     assert.match(runtime.deploymentName, /^be09-local-[0-9]{8}T[0-9]{6}Z-[a-f0-9]{12}$/);
     assert.equal(runtime.proposalId, seed.proposalId);

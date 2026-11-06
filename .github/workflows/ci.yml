@@ -67,6 +67,11 @@ jobs:
         shell: bash
         run: |
           bash scripts/check_be04_database.sh --live --output reports/be04-live.json 2>&1 | tee reports/be04-live.log
+      - name: Reject SC06 archived receipt and isolated quorum mutations
+        shell: bash
+        run: |
+          node --import tsx scripts/check_sc06_chain.mjs 2>&1 | tee reports/sc06-chain.log
+          node --import tsx --test tests/sc06-chain.test.mjs 2>&1 | tee reports/sc06-mutations.log
       - name: Record scope of checks
         if: always()
         shell: bash

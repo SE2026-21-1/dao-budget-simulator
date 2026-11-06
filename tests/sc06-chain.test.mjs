@@ -61,5 +61,9 @@ const changes = {
 };
 for (const [name, mutate] of Object.entries(changes)) test(`reject changed fixture: ${name}`, async () => {
   const f = structuredClone(original); mutate(f);
-  await assert.rejects(checkFixture(f));
+  const reason = {
+    coupledConfigChange: /quorumNumerator: manifest differs from pinned chain call/,
+    coupledSeedChange: /treasurySeed differs from canonical funding logs/,
+  }[name];
+  await assert.rejects(checkFixture(f), reason);
 });

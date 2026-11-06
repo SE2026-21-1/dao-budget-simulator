@@ -1,0 +1,446 @@
+{
+  "capturedAt": "2026-11-06T11:13:58.951Z",
+  "purpose": "Supplementary live GET requests after original verify; not the original verify response bodies.",
+  "requestedPublication": {
+    "chainId": "31337",
+    "deploymentName": "be09-local-20261106T105820Z-3225088c3bdc",
+    "H": "24",
+    "hash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+    "revision": "ae00bfe8-550e-41a0-9013-292d618f3982"
+  },
+  "captures": [
+    {
+      "route": "/api/health",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "24",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "route": "/api/summary",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "treasury": {
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": {
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "symbol": "BUD",
+              "decimals": 18
+            },
+            "balance": "9000000000000000000000",
+            "totalIn": "10000000000000000000000",
+            "totalOut": "1000000000000000000000"
+          },
+          "proposalCounts": {
+            "total": 1,
+            "byState": {
+              "Pending": 0,
+              "Active": 0,
+              "Succeeded": 0,
+              "Defeated": 0,
+              "Queued": 0,
+              "Executed": 1,
+              "Canceled": 0
+            }
+          },
+          "governance": {
+            "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "govToken": {
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "symbol": "GOV",
+              "decimals": 18
+            },
+            "clockMode": "mode=timestamp",
+            "proposalThreshold": "50000000000000000000",
+            "votingDelay": "60",
+            "votingPeriod": "300",
+            "timelockDelay": "120",
+            "quorumNumerator": "20",
+            "quorumDenominator": "100",
+            "totalSupply": "1000000000000000000000"
+          },
+          "recentActivity": [
+            {
+              "type": "Transfer",
+              "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "1000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+              "direction": "out",
+              "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+              "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+              "blockNumber": "24",
+              "transactionHash": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "10000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x7315c598dd179be76739caaafa92067c3bb2977b782f38ab75d0ce2bd4ead289",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "19",
+              "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+              "transactionIndex": "0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "route": "/api/proposals",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Khoan chi mo phong cho nghiem thu QA02.",
+            "state": "Executed",
+            "title": "Demo chi 1000 BUD",
+            "votes": {
+              "for": "700000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "1000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x507e08a587e372cd48b3da2ba78a51bff48c4868d1bb9c5e61c289355a5bfea7",
+              "blockNumber": "20",
+              "transactionHash": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800000366",
+            "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "snapshot": "1800000066",
+            "calldatas": [
+              "0x6664ac9100617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+            ],
+            "operation": {
+              "eta": "1800000487",
+              "salt": "0x9cb751834bcaddeade0f278350390bb50b81502b893a4808f60662dd2d40d86e",
+              "status": "Done",
+              "queuedAt": "1800000367",
+              "operationId": "0x31be9fe6f55841a796309f57ecad7fba55e06bdad905268e47a5132121364550",
+              "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+            "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+            "description": "{\"version\":1,\"title\":\"Demo chi 1000 BUD\",\"body\":\"Khoan chi mo phong cho nghiem thu QA02.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": "0x71ea71871695f61d76a562c1469670058a60171877273e39f484fadce8254e65",
+              "created": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+              "canceled": null,
+              "executed": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7"
+            },
+            "descriptionHash": "0xbbb1f0f2a77c53eae638aac38d2418d66a519b56893a4808f60662dd2d40d86e"
+          }
+        ],
+        "pagination": {
+          "limit": 100,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "route": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Khoan chi mo phong cho nghiem thu QA02.",
+          "state": "Executed",
+          "title": "Demo chi 1000 BUD",
+          "votes": {
+            "for": "700000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "1000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x507e08a587e372cd48b3da2ba78a51bff48c4868d1bb9c5e61c289355a5bfea7",
+            "blockNumber": "20",
+            "transactionHash": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800000366",
+          "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "snapshot": "1800000066",
+          "calldatas": [
+            "0x6664ac9100617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+          ],
+          "operation": {
+            "eta": "1800000487",
+            "salt": "0x9cb751834bcaddeade0f278350390bb50b81502b893a4808f60662dd2d40d86e",
+            "status": "Done",
+            "queuedAt": "1800000367",
+            "operationId": "0x31be9fe6f55841a796309f57ecad7fba55e06bdad905268e47a5132121364550",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+          "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+          "description": "{\"version\":1,\"title\":\"Demo chi 1000 BUD\",\"body\":\"Khoan chi mo phong cho nghiem thu QA02.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x71ea71871695f61d76a562c1469670058a60171877273e39f484fadce8254e65",
+            "created": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+            "canceled": null,
+            "executed": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7"
+          },
+          "descriptionHash": "0xbbb1f0f2a77c53eae638aac38d2418d66a519b56893a4808f60662dd2d40d86e"
+        }
+      }
+    },
+    {
+      "route": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+            "reason": "",
+            "weight": "300000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0xfdde6f24f32fe98a4799e88a5a9755bf42d52233afc465196eaa628e3676ecff",
+            "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+            "blockNumber": "22",
+            "transactionHash": "0x86e66e7c03e6cf0c9f790a95e3cf41ee00b00c0c89941a27314b5c930a6a2a98",
+            "transactionIndex": "0"
+          },
+          {
+            "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x0862723cad2481213609b30d8213e33e4b9bbcf745b80a173299b2ef56f0641f",
+            "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+            "blockNumber": "21",
+            "transactionHash": "0xa76288f8328da8da223428803d2e1fc5cc2667266afaff3296a73e13b81c11ac",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 100,
+          "totalCount": 2,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "route": "/api/treasury/transfers",
+      "httpStatus": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "be09-local-20261106T105820Z-3225088c3bdc",
+          "asOfBlock": "24",
+          "asOfBlockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+          "asOfTimestamp": "1800000487",
+          "snapshotRevision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "26",
+            "confirmedBlock": "24",
+            "indexedBlock": "24",
+            "publicationBlock": "24",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-06T11:13:58.124Z",
+            "lastRpcCheckAt": "2026-11-06T11:13:58.125+00:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "1000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+            "direction": "out",
+            "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+            "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+            "blockNumber": "24",
+            "transactionHash": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7",
+            "transactionIndex": "0"
+          },
+          {
+            "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "10000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x7315c598dd179be76739caaafa92067c3bb2977b782f38ab75d0ce2bd4ead289",
+            "direction": "in",
+            "requestId": null,
+            "proposalId": null,
+            "blockNumber": "19",
+            "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 100,
+          "totalCount": 2,
+          "nextCursor": null
+        }
+      }
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { useProposalFixtures } from "../data/useProposalFixtures";
 import ProposalActions from "../components/ProposalActions";
 import { formatGOV } from "../chain/wallet";
 import { transactionUrl } from "../chain/config";
+import SnapshotInfo from "../components/SnapshotInfo";
 
 const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).toLocaleString("vi-VN") : "—";
 
@@ -23,6 +24,7 @@ function ProposalDetailPage() {
         <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
         <h1>Không tìm thấy đề xuất</h1>
         <p className="muted">Proposal ID này không tồn tại trong snapshot đang xem. Nếu vừa gửi giao dịch, hãy đợi indexer xuất bản dữ liệu mới.</p>
+        <SnapshotInfo context={state.collection.context} />
         <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
         <Link to="/proposals" className="button-primary">Quay lại danh sách</Link>
       </div>
@@ -37,10 +39,11 @@ function ProposalDetailPage() {
           <p className="page-heading__eyebrow">Đề xuất · Màn hình 03</p>
           <h1 className="proposal-id">Proposal #{proposal.proposalId.slice(0, 8)}…{proposal.proposalId.slice(-5)}</h1>
           <p className="proposal-full-id">ID đầy đủ: {proposal.proposalId}</p>
-          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị · {state.collection.context.dataKind === "chain" ? "API BE05" : "Fixture BE01"} tại block {state.collection.context.asOfBlock}.</p>
+          <p className="page-heading__description">Thông tin khoản chi và tiến trình quản trị.</p>
         </div>
       </div>
       <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+      <SnapshotInfo context={state.collection.context} />
       {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
 
       <div className="detail-grid">

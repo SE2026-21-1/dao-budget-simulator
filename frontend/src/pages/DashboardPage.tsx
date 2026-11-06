@@ -4,6 +4,7 @@ import { formatCompactBUD, formatBUD } from "../data/formatBUD";
 import { proposalStatuses, type Proposal } from "../data/proposals";
 import { useProposalFixtures } from "../data/useProposalFixtures";
 import TreasurySection from "../components/TreasurySection";
+import SnapshotInfo from "../components/SnapshotInfo";
 import { StatWalletIcon, StatAllocatedIcon, StatRemainingIcon, IconAnalytics } from "../components/EditorialIcons";
 
 const shortId = (id: string) => `${id.slice(0, 8)}…${id.slice(-5)}`;
@@ -102,6 +103,7 @@ export default function DashboardPage() {
     </div><Link to="/proposals/new" className="button-primary">Tạo đề xuất</Link></header>
     <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
     {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
+    {state.status === "success" && <SnapshotInfo context={state.collection.context} />}
     {state.status === "success" ? <>
       <DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} />
       <div id="treasury" className="mt-8"><TreasurySection context={state.collection.context} onConfirmed={retry} /></div>

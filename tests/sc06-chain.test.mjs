@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { checkFixture, interfaces, projectFixture, verifyPinnedConfig } from '../scripts/check_sc06_chain.mjs';
+import { checkFixture, historicalQuorum, interfaces, projectFixture, verifyPinnedConfig } from '../scripts/check_sc06_chain.mjs';
 
 const original = JSON.parse(await readFile(new URL('../fixtures/chain/sc06-v1/chain.json', import.meta.url)));
 test('canonical receipts decode with TV2 and link calldata/IDs, ledger and Pending cancel', async () => {
@@ -16,6 +16,13 @@ test('SC06 raw logs replay through TV2 classify/buildModel/evaluate at canonical
   assert.equal(p.forBaseUnits, '700000000000000000000'); assert.equal(p.operations, 1);
   assert.equal(p.disbursements, 1); assert.equal(p.totalOut, '1000000000000000000000');
   assert.equal(p.balance, '9000000000000000000000');
+  const abi = await interfaces();
+  const quorumCalls = original.calls.filter(c => c.to.toLowerCase() === original.manifest.contracts.Governor.address.toLowerCase() &&
+    c.data.startsWith(abi.Governor.getFunction('quorum').selector));
+  assert.equal(quorumCalls.length, 1);
+  const snapshot = abi.Governor.decodeFunctionData('quorum', quorumCalls[0].data)[0];
+  assert.equal(historicalQuorum(original, abi, snapshot), 200n * 10n ** 18n);
+  assert.equal(abi.Governor.decodeFunctionResult('quorum', quorumCalls[0].result)[0], 200n * 10n ** 18n);
 });
 test('pinned chain getters reject coupled manifest and audit changes', async () => {
   const abi = await interfaces();
@@ -25,6 +32,14 @@ test('pinned chain getters reject coupled manifest and audit changes', async () 
   f.roleAudit.config.quorumNumerator = '21';
   assert.deepEqual(f.manifest.config, f.roleAudit.config);
   assert.throws(() => verifyPinnedConfig(f, abi), /quorumNumerator: manifest differs from pinned chain call/);
+});
+test('rejects isolated archived quorum(snapshot) mutation against receipt-derived historical supply', async () => {
+  const abi = await interfaces(), f = structuredClone(original);
+  const calls = f.calls.filter(c => c.to.toLowerCase() === f.manifest.contracts.Governor.address.toLowerCase() &&
+    c.data.startsWith(abi.Governor.getFunction('quorum').selector));
+  assert.equal(calls.length, 1);
+  calls[0].result = abi.Governor.encodeFunctionResult('quorum', [1001n * 10n ** 18n]);
+  await assert.rejects(checkFixture(f), /Governor\.quorum\(snapshot\) differs from historical GOV supply and quorum configuration/);
 });
 const changes = {
   generationHash: f => { f.generation.sourceHashes['scripts/generate_sc06_chain.mjs'] = '0'.repeat(64); },

@@ -9,11 +9,11 @@ Anvil sau khi đối chiếu RPC; đây là archive offline, không phải đị
 | Field | Nội dung |
 |---|---|
 | manifest | Manifest TV4: chainId 31337, addresses, deployment blocks/receipts, source/compiler/dependency/ABI hashes, cấu hình, accounts công khai |
-| roleAudit | Checker TV4 cùng H/hash; không thay operation preflight trước renounce |
+| roleAudit | Checker TV4 tại H/hash sau bootstrap; `preRenounceRoleCheck` và `preFundingRoleCheck` trong manifest là hai gate riêng, không bị thay bởi audit cuối |
 | blocks | Toàn bộ header RPC từ genesis đến H, parent hashes, timestamps và transaction hashes |
 | receipts / transactions | Toàn bộ RPC receipts/transactions, gồm deployment/seed và campaign; raw topics/data/emitter/tx/log coordinates |
 | proposals | Chuỗi description nguyên bản, request/amount/calldata/hashes/salt/ID, transaction links; proposal thứ hai bị cancel |
-| calls | Raw eth_call input/output tại H: hashProposal, hashOperationBatch, state, timestamp, paidRequests, BUD decimals/supply/balances |
+| calls | Raw eth_call input/output tại H: hashProposal, hashOperationBatch, state, quorum(snapshot), timestamp, paidRequests, GOV/BUD supply và cấu hình Governor |
 | expectedDecoded | Kết quả từ decoder TV2 thật; unknown topics giữ rõ trạng thái, không đổi thành business event |
 | generation | Commit nguồn cố định, Node version, hash các script/decoder/projection/test tồn tại tại commit đó |
 | verification / balances | Kết quả live RPC và số dư base units, không cộng đôi dòng tiền |
@@ -22,12 +22,15 @@ Một proposal nhận 400+300 For, queue qua caller không GOV và execute qua o
 không GOV đúng ETA; chi 1.000 BUD. Proposal thứ hai creator cancel khi Pending.
 operationId thứ hai chỉ là hash tính trước để kiểm Unset: không chứng minh có operation đã schedule.
 
-Kết quả chạy lại trên Dev sau SC05 và BE05 ngày 05/11/2026: H=26/hash
-`0x5dbf98291a6cc51c5142405a06dcc5b456ba119211dc279227a440ca6efe0f4d`; 27 headers kể cả genesis,
+Archive hiện tại được tạo từ source ngày 06/11/2026 sau SC05 và BE05: H=26/hash
+`0x804c2a2eea72431a63579e24d2cb3f39a76939a02401020bf611beb6c0266476`; 27 headers kể cả genesis,
 24 receipts, 42 logs; decoder TV2 nhận 14 decoded + 16 unknown topics (role/init); 12 log GOV
 không thuộc registry TV2 vẫn giữ raw và được full compiler ABI kiểm tra.
 Tất cả 42 raw logs phải round-trip ABI đúng. Không có decode_error.
 Treasury=9.000, recipient=1.000, funding=10.000 BUD; totalSupply=20.000 BUD.
+GOV mint từ bốn Transfer constructor=400+300+200+100=1.000 GOV; quorum tại snapshot
+S của proposal thành công = 1.000 × 20/100 = **200 GOV**. Checker replay nguồn cung
+và các event QuorumNumeratorUpdated tới S, đối chiếu raw quorum(S) ở H.
 Một Transfer chi và một BudgetDisbursed liên kết cùng tx chỉ tính là một khoản chi.
 
 ## Tái lập và kiểm
@@ -40,16 +43,20 @@ Thiết lập PATH trỏ Node 24.15.0 đã cài trên máy, sau đó:
 npm ci --ignore-scripts
 forge build
 node --import tsx scripts/check_sc06_chain.mjs
-node --import tsx tests/sc06-chain.test.mjs
+node --import tsx --test tests/sc06-chain.test.mjs
+npm run test:bootstrap
 # Tạo run MỚI, thư mục output phải chưa tồn tại; giữ fixtures hiện có:
 node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-new-run
 ```
 
-Nguồn tạo fixture hiện tại: **`5ba9371f735982c5ca7148a3cf4af07068525029`** (Dev có SC05, BE05 và source SC06).
+Nguồn tạo **archive hiện tại**: `generation.sourceCommit` trong `chain.json`,
+**`8245c9cd218c30ee35339cf412e7ba2cd1a7e985`**. Sau khi thay source
+checker/test phải commit source trước, tạo archive mới từ commit đó và cập nhật SHA/H/hash
+ở README theo archive mới; không sửa checksum/receipt để ép archive cũ PASS.
 Để tái lập từ revision chính xác mà không đổi branch đang làm việc:
 
 ```bash
-git worktree add --detach /tmp/sc06-source 5ba9371f735982c5ca7148a3cf4af07068525029
+git worktree add --detach /tmp/sc06-source 8245c9cd218c30ee35339cf412e7ba2cd1a7e985
 cd /tmp/sc06-source
 git submodule update --init --recursive
 npm ci --ignore-scripts
@@ -64,7 +71,11 @@ không chỉ tải ZIP source. Checker yêu cầu source revision là ancestor H
 khớp blob ở revision đó lẫn working tree; không sửa source rồi dùng archive cũ để nhận PASS.
 
 Generator tái sử dụng TV4 deployGovernance/checkGovernanceRoles, waitForReceipt và
-smoke lifecycle nguyên bản. Chỉ sở hữu Anvil loopback mới, không nhận key/RPC ngoài.
+smoke lifecycle nguyên bản. Bootstrap chạy pre-renounce role/operation preflight khi
+deployer còn admin và Treasury chưa nhận BUD; nếu gate thất bại thì dừng trước renounce.
+Sau khi renounce Treasury/Timelock admin, final pre-funding audit phải đạt mới nạp BUD;
+`npm run test:bootstrap` kiểm các nhánh từ chối bằng Anvil riêng, không phải bằng chứng
+testnet. Generator chỉ sở hữu Anvil loopback mới, không nhận key/RPC ngoài.
 Generator từ chối output tồn tại. Cần quyền listen loopback; sandbox mặc định chặn
 EPERM nên live run được cấp quyền chạy ngoài sandbox. Không mở RPC ra Internet.
 
@@ -74,10 +85,14 @@ ABI/decode/ledger; không xác minh Merkle inclusion proof và không thay RPC �
 `liveRpcVerified: true` ghi lại kết quả lúc tạo, không có nghĩa RPC còn đang chạy.
 Source/ABI đổi phải regenerate run mới hoặc checkout đúng provenance, không sửa receipt bằng tay.
 
-Checker giờ đưa raw logs của **chính chain.json** qua TV2 classify/buildModel/evaluate;
+Checker đưa raw logs của **chính chain.json** qua TV2 classify/buildModel/evaluate;
 không dùng fixture BE03. Assert proposal/calldata/description, phiếu A=400/B=300,
 operationId/ETA/execution, một disbursement, ledger 10.000−1.000=9.000 và Canceled
-không có operation; evaluate tại timestamp H, đối chiếu state/quorum eth_call tại H.
+không có operation. Tại timestamp H, oracle tính quorum(S) độc lập từ GOV Transfer
+constructor và lịch sử QuorumNumeratorUpdated (đối chiếu pinned totalSupply và
+quorumNumerator tại H), rồi buộc raw Governor.quorum(S) khớp trước khi evaluate;
+không dùng raw quorum(S) tự xác nhận state. Snapshot S phải sau deployment và nhỏ hơn H;
+checkpoint supply tại thời điểm ≤ S không đòi block đúng timestamp S.
 
 Provenance checker đối chiếu sourceHashes với Git blobs và working tree, gồm source
 compiler trong submodule theo gitlink ở revision. Artifact/ABI hashes, compiler metadata,
@@ -85,19 +100,23 @@ deployment transaction/constructor và runtime (normalize immutables) được k
 replay từ canonical logs được so với audit và pinned hasRole/getRoleAdmin calls; audit phải
 cùng chainId/source revision/H/hash. Kết quả live còn đối chiếu runtime và mọi pinned call với RPC.
 
-Test cuối: **28/28 passed** (2 bản dương, 26 bản âm), gồm source hash 0/mất hash,
-revision không tồn tại/không chứa generator, manifest hash, audit H/hash/holder,
-ABI version/address/runtime, tx/log sai block, ngoài các mutation amount/description/
-Unicode/hash/salt/raw data/index/ledger ban đầu. Offline consistency không phải blockchain
-inclusion proof; role calls lưu trong archive được xác minh live lúc tạo, không có state proof.
+Bộ test SC06 định nghĩa **32 trường hợp** (3 kiểm dương, 29 kiểm âm), bao gồm mutation
+chỉ sửa raw quorum(S) thành 1.001 GOV và yêu cầu lỗi đúng nguyên nhân, source hash 0/mất
+hash, revision không tồn tại/không chứa generator, manifest hash, audit H/hash/holder,
+ABI version/address/runtime, tx/log sai block, amount/description/Unicode/hash/salt/raw
+data/index/ledger. Cần chạy lại sau khi regenerate archive; không lấy các con số
+PASS của lượt trước làm bằng chứng cho source mới. Offline consistency không phải
+blockchain inclusion proof; role calls lưu trong archive được xác minh live lúc tạo,
+không có state proof.
 
 ## Giới hạn bàn giao
 
 Không có private key/secret trong fixture. Không có database/API/UI wallet hay testnet acceptance.
 Ví dụ ethers/arrays được kiểm qua encoding và eth_call thực; chưa có xác nhận độc lập từ TV3.
-TV2 cần review ABI version/expected decode; nhãn awaiting-sc06 chưa đổi. TV4 cần review
-provenance và operation-preflight SC05: deployment helper hiện renounce trước role audit,
-chưa operation audit. Campaign sạch này không chứng minh deployment script đạt gate SC05.
+TV2 cần review ABI version/expected decode; nhãn awaiting-sc06 chưa đổi. TV4 cần
+review gate bootstrap độc lập trước renounce, final audit trước funding và operation
+preflight theo `scripts/governance_local.mjs`/`npm run test:bootstrap`; offline SC06
+không thay deployment gate đó. Campaign sạch không tự chứng minh testnet.
 Source commit đã cố định trước khi sinh data; commit fixture riêng sau source commit, không
 hash fixture trong generation.sourceHashes, tránh vòng tròn source/checksum/fixture.
 TV4 cần review source commit và commit fixture bàn giao; không đổi sourceCommit sang commit

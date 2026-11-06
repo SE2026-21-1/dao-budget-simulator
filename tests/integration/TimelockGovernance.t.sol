@@ -507,17 +507,24 @@ contract TimelockGovernanceTest is Test {
     }
 
     function testAgainstVotesDoNotSupplyQuorumForFailedProposal() public {
+        vm.prank(c);
+        gov.transfer(makeAddr("undelegatedChange"), 50 ether);
+        vm.warp(block.timestamp + 1);
         Payment memory p = _create(REQUEST, recipient, 1_000 ether, "Against excluded from quorum");
         vm.warp(governor.proposalSnapshot(p.id) + 1);
-        vm.prank(d);
-        assertEq(governor.castVote(p.id, 1), 100 ether);
         vm.prank(c);
-        assertEq(governor.castVote(p.id, 0), 200 ether);
+        assertEq(governor.castVote(p.id, 1), 150 ether);
+        vm.prank(d);
+        assertEq(governor.castVote(p.id, 0), 100 ether);
         (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes) = governor.proposalVotes(p.id);
-        assertEq(againstVotes, 200 ether);
-        assertEq(forVotes, 100 ether);
+        assertEq(againstVotes, 100 ether);
+        assertEq(forVotes, 150 ether);
         assertEq(abstainVotes, 0);
-        assertLt(forVotes + abstainVotes, governor.quorum(governor.proposalSnapshot(p.id)));
+        uint256 quorum = governor.quorum(governor.proposalSnapshot(p.id));
+        assertEq(quorum, 200 ether);
+        assertGt(forVotes, againstVotes); // For > Against is already satisfied.
+        assertGe(forVotes + againstVotes, quorum); // Incorrectly including Against would pass.
+        assertLt(forVotes + abstainVotes, quorum); // Only the quorum rule defeats the proposal.
         vm.warp(governor.proposalDeadline(p.id) + 1);
         _rejectQueue(p, IGovernor.ProposalState.Defeated);
     }

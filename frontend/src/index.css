@@ -1308,6 +1308,13 @@ a {
   color: var(--ink-muted);
 }
 
+.snapshot-info {
+  margin: 12px 0;
+  font-size: 12px;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
 .proposal-list {
   display: flex;
   flex-direction: column;

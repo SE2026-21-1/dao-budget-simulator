@@ -4,6 +4,7 @@ import FixtureLoadState from "../components/FixtureLoadState";
 import { formatCompactBUD, formatBUD } from "../data/formatBUD";
 import { proposalStatuses } from "../data/proposals";
 import { useProposalFixtures } from "../data/useProposalFixtures";
+import SnapshotInfo from "../components/SnapshotInfo";
 
 const PAGE_SIZE = 20;
 
@@ -51,8 +52,9 @@ function ProposalListPage() {
       </section>
 
       {state.status === "success" && <p className="result-count" aria-live="polite">
-        {filteredProposals.length} đề xuất · {state.collection.context.dataKind === "chain" ? "Dữ liệu API" : "Fixture TV2 BE01"} · Block {state.collection.context.asOfBlock}
+        {filteredProposals.length} đề xuất · {state.collection.context.dataKind === "chain" ? "Dữ liệu API" : "Fixture TV2 BE01"}
       </p>}
+      {state.status === "success" && <SnapshotInfo context={state.collection.context} />}
       {state.status !== "success" ? <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} /> : <>
       <div className="proposal-list">
         {currentProposals.map((proposal) => (

@@ -11,12 +11,13 @@ thành phần chưa được triển khai.
 ## Đối chiếu tích hợp 06/11/2026
 
 Dev `87738d3` đã nhận BE08 (#30), freshness (#38) và SC06 (#39).
-PR #21 `feature/tv4-operation=640389f` tại lúc fetch chưa merge; worktree TV4
-đã nhập Dev ở `c002fbefe45214737a23de482e3c85158d742bfe` để giải xung đột,
-chưa phải PR được merge/review. PR #31 VT-064 draft là phạm vi cá nhân, không
-nhập vào nghiệm thu. [Evidence lượt mới](evidence/tv4-20261106-acceptance.md)
-và hai raw archive gắn lệnh/SHA/cluster thật. URL demo và số benchmark ngày
-02–04/11 là lịch sử, không chứng minh service còn hoạt động ngày 06/11.
+PR #21 `feature/tv4-operation` đã merge Dev trong worktree riêng
+`c002fbefe45214737a23de482e3c85158d742bfe`, push head `1fec861514b35c7f28df4647aa2cc9aeb9e158c9`;
+[TV4 CI PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107991) và [BE08 CI PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107891) success ở head này; chưa peer review/merge, cần kiểm lại CI nếu push tiếp.
+PR #31 VT-064 draft là phạm vi cá nhân, không nhập vào nghiệm thu.
+[Evidence lượt mới](evidence/tv4-20261106-acceptance.md) và ba raw archive
+gắn lệnh/SHA/cluster thật. URL demo và số benchmark 02–04/11 là lịch sử,
+không chứng minh service còn hoạt động ngày 06/11.
 
 Native BE08 mới trên Dev **PASS** PostgreSQL18.4/Anvil: 20.986 request/0 lỗi,
 p95 HTTP 212,461ms, freshness 20/20 p95 27.884,382ms, max 28.443,131ms;
@@ -26,6 +27,14 @@ PASS. TV4 native trên PR #21 **PASS** BE01/BE02–06, UI 1366/390 H79/hash,
 payment Executed/low-quorum Defeated, recovery503/409; TV3 live suite ban đầu
 FAIL health lagging sau khi runner pause, sau sync RPC thật **PASS 1/1, 0 SKIP**.
 Không có ví extension ký thật hay testnet/peer/máy khác.
+
+Lượt native riêng tiếp theo trên PR #21 `1fec861` **PASS**:
+Chromium EIP-1193 tới account Anvil đã mở khóa gửi propose (18 chữ số lẻ),
+receipt status1 H82; `sync/project` thật tới H82/hash
+`0xada425d6f464265671bffb33a91d8c1ff96df296f7c3f7d6214737d7e830526e`;
+API200 và UI 1366/390 hiển thị đề xuất mới Pending, mô tả/amount/tx gốc.
+[Archive raw](evidence/tv4-20261106-wallet-raw.tar.gz). Không thay cho
+extension-wallet có người duyệt, workflow tất cả transition hay testnet.
 
 Đã tái hiện lỗ hổng oracle SC06 trên Dev trước sửa: đồng thời đổi
 `manifest.config.quorumNumerator` và `roleAudit.config.quorumNumerator` từ

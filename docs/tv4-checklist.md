@@ -8,9 +8,8 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 ## Đối chiếu 06/11/2026 — chưa phải release gate
 
 `Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),
-freshness (#38) và SC06 (#39). PR #21 `feature/tv4-operation=640389f` lúc
-fetch vẫn mở; worktree TV4 đã merge Dev và giải xung đột, chưa push tại lúc ghi.
-PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
+freshness (#38) và SC06 (#39). PR #21 đã push head `1fec861514b35c7f28df4647aa2cc9aeb9e158c9`
+lên `feature/tv4-operation`, còn mở; TV4 CI push/PR và BE08 CI trên head success, review vẫn cần người khác. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
 “chưa có” ở phần 22/10 và URL demo tháng 10/đầu tháng 11 dưới đây là lịch sử
 theo revision, không là tình trạng service hiện tại. Xem [evidence lượt mới](evidence/tv4-20261106-acceptance.md).
 
@@ -18,7 +17,7 @@ theo revision, không là tình trạng service hiện tại. Xem [evidence lư�
 |---|---|---|
 | QA01/QA02/QA03, #6/#14/#15/#43 | Dev SC06 canonical 28/28; PR #21 getter/Transfer oracle, fixture regenerate từ source `8245c9c`, full 31/31; deploy/roles local | TV1/TV2/TV3 review SC06/roles, người khác clone máy riêng |
 | QA04–QA06, #7/#16/#17 | Matrix TC01–14/INV01–04, seeded ghost oracle 100×50/5.000 calls/5 execute successes; oracle bounded, 0 cancel successes của log cuối không phủ hết chiến lược | TV1 review oracle/receipt/negative variants |
-| QA07/QA08, #18/#37/#36/#40/#41 | Dev native BE08+benchmark PASS 20.986 HTTP success, p95 212,461ms; 001–004/005 freshness PASS; CI đúng SHA. PR #21 native/UI H79 PASS; TV3 unit49 PASS/1 SKIP khi không cấu hình, **live cùng deployment PASS 1/1, 0 SKIP** sau RPC sync thật | TV2 peer review margin freshness/CI raw; TV3 ví extension, service truy cập được cho peer và E2E giao dịch ví cùng deployment |
+| QA07/QA08, #18/#37/#36/#40/#41 | Dev native BE08+benchmark PASS 20.986 HTTP success, p95 212,461ms; 001–004/005 freshness PASS; CI đúng SHA. PR #21 native/UI H79 PASS; TV3 unit49 PASS/1 SKIP khi không cấu hình, **live cùng deployment PASS 1/1, 0 SKIP** sau RPC sync thật. Lượt browser wallet EIP-1193 Anvil unlocked→receipt→worker→API→UI H82 PASS; [raw](evidence/tv4-20261106-wallet-raw.tar.gz) | TV2 peer review margin freshness/CI raw; TV3 ví extension và service cho peer, không tính Anvil unlocked account là extension approval |
 | QA09/QA10, #20/#42/#44 | Runbook và evidence đã ghi SHA/cluster; chưa chốt release; Project chưa có quyền sửa | Nhóm chốt testnet/signer an toàn, peer review, independent machine |
 
 **GitHub Project:** trang tổ chức công khai
@@ -30,7 +29,7 @@ item, status hoặc comment. Đề xuất cập nhật khi có quyền (không g
 | Issue | Priority đề xuất | Status đề xuất / dependency |
 |---|---|---|
 | #18, #37 | Cao | Review sau native BE08/freshness PASS Dev `87738d3`; cần TV2 peer và CI raw artifact có auth; không Done chỉ vì CI xanh |
-| #36, #40, #41 | Cao | Review FE↔API live local H79 PASS nhưng chưa ví extension và service peer dùng chung; #40 Blocked service/manifest còn sống sau runner, #41 cần giao dịch ví→worker→API→UI |
+| #36, #40, #41 | Cao | Review FE↔API local H79 và browser wallet adapter→receipt→worker→API→UI H82 PASS; chưa ví extension và service peer dùng chung; #40 Blocked service/manifest còn sống sau runner, #41 cần đầy đủ workflow extension wallet với peer |
 | #42, #43 | Trung bình | Blocked máy khác (#42); #43 Review sau fixture regenerate/coupled mutation 31/31, cần TV1/TV2/TV3 peer |
 | #44 | Trung bình | Blocked bởi #18/#36/#40/#41/#20/#42 và release evidence |
 

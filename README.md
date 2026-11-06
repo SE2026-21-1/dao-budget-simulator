@@ -9,8 +9,7 @@ React đọc API và gửi giao dịch trực tiếp tới contract qua ví.
 **Chọn đúng nhánh:** `Dev` (`87738d3`, 06/11/2026) đã chứa SC06, BE03–BE08,
 BE05 freshness fix và migrations 001–005, nhưng **chưa chứa wallet/frontend
 API của PR #21**. Nhánh `feature/tv4-operation` (PR #21) có wallet, UI và native
-TV4 acceptance; worktree TV4 đã nhập Dev để giải xung đột, PR vẫn cần review
-và CI đúng head sau push. `main` không phải nhánh tích hợp. PR #31 là VT-064
+TV4 acceptance; đã nhập Dev vào head, [TV4 CI trên PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107991) và [BE08 CI trên PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107891) success tại SHA `1fec861`, cần review và kiểm lại CI nếu push commit mới. `main` không phải nhánh tích hợp. PR #31 là VT-064
 cá nhân, không thuộc nghiệm thu chung; CI ở Dev không chứng nhận PR #21.
 
 Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL`; lỗi API
@@ -117,7 +116,7 @@ trên PR #21. Docker chỉ khi daemon có quyền; native không cần Docker.
 | Thành phần | Source/CI/chạy mới đã đối chiếu | Giới hạn trước release |
 |---|---|---|
 | BE03–08, freshness 001–004/005, SC06 | Dev [`87738d3`](https://github.com/SE2026-21-1/dao-budget-simulator/commit/87738d3f792c3a283a52b5c18c306809d6cfcfd4); [TV4 CI 41973419072](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973419072), [BE08 CI 41973418947](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973418947) success. **Chạy mới** `test:be08:native --benchmark` trên Dev: PostgreSQL 18.4/Anvil, 20.986 HTTP success/0 lỗi, p95 212,461 ms, 20/20 freshness (<30s); [raw/digest](docs/evidence/tv4-20261106-acceptance.md). Artifact CI [13391310183](https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/artifacts/13391310183) cần auth để tải raw | Chạy local không thay peer review, artifact CI chưa được đọc; xem [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) |
-| Wallet/UI↔API | [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) còn open; [nhánh TV3](https://github.com/SE2026-21-1/dao-budget-simulator/tree/feature/tv3-frontend) live suite **PASS 1/1, 0 SKIP** trên Anvil/PG/API H79 của native PR #21 sau sync RPC thật; Chromium 1366/390 [ảnh và log](docs/evidence/tv4-20261106-ui-raw.tar.gz) | #36/#40/#41 còn ví extension, service/manifest cho peer và luồng ví ký→worker→API→UI; endpoint tạm đã teardown |
+| Wallet/UI↔API | [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) còn open; [nhánh TV3](https://github.com/SE2026-21-1/dao-budget-simulator/tree/feature/tv3-frontend) live suite **PASS 1/1, 0 SKIP** trên Anvil/PG/API H79 native PR #21 sau sync RPC thật. Chromium 1366/390 đọc dữ liệu; **lượt local thứ hai** browser EIP-1193 adapter→Anvil receipt `0xb4fa5ad3…aba82b` H82→sync/project→API 200 H82/hash canonical→UI hiển thị amount BigInt và description chính xác; [raw/ảnh](docs/evidence/tv4-20261106-wallet-raw.tar.gz) | #36/#40/#41 vẫn chờ ví extension và service/manifest cho peer; EIP adapter Anvil unlock không phải xác nhận ký extension, endpoint tạm đã teardown |
 | SC/CI/testnet | Dev SC06 28/28; PR #21 sửa getter/Transfer oracle, regenerate fixture từ source commit `8245c9c`, canonical và mutations **31/31 PASS**; seeded ghost invariant 100×50, 5 execute success | TV1/TV2/TV3 peer; [#20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20) network/signer, [#42](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42) máy khác, [#44](https://github.com/SE2026-21-1/dao-budget-simulator/issues/44) demo |
 
 GitHub [Projects của nhóm](https://github.com/orgs/SE2026-21-1/projects)

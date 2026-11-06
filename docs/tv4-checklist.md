@@ -8,8 +8,8 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 ## Đối chiếu 06/11/2026 — chưa phải release gate
 
 `Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),
-freshness (#38) và SC06 (#39). PR #21 đã push head `1fec861514b35c7f28df4647aa2cc9aeb9e158c9`
-lên `feature/tv4-operation`, còn mở; TV4 CI push/PR và BE08 CI trên head success, review vẫn cần người khác. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
+freshness (#38) và SC06 (#39). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đang mở, source cuối đã kiểm `b172e3993db2dd6ca600cd7bbc4e3e80d550bfe9` trên `feature/tv4-operation`;
+[TV4 CI push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159800401) và [PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159806999) 9/9, [BE08 PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159807227) 1/1 success. Chưa có peer approval cho head này. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
 “chưa có” ở phần 22/10 và URL demo tháng 10/đầu tháng 11 dưới đây là lịch sử
 theo revision, không là tình trạng service hiện tại. Xem [evidence lượt mới](evidence/tv4-20261106-acceptance.md).
 
@@ -19,6 +19,27 @@ theo revision, không là tình trạng service hiện tại. Xem [evidence lư�
 | QA04–QA06, #7/#16/#17 | Matrix TC01–14/INV01–04, seeded ghost oracle 100×50/5.000 calls/5 execute successes; oracle bounded, 0 cancel successes của log cuối không phủ hết chiến lược | TV1 review oracle/receipt/negative variants |
 | QA07/QA08, #18/#37/#36/#40/#41 | Dev native BE08+benchmark PASS 20.986 HTTP success, p95 212,461ms; 001–004/005 freshness PASS; CI đúng SHA. PR #21 native/UI H79 PASS; TV3 unit49 PASS/1 SKIP khi không cấu hình, **live cùng deployment PASS 1/1, 0 SKIP** sau RPC sync thật. Lượt browser wallet EIP-1193 Anvil unlocked→receipt→worker→API→UI H82 PASS; [raw](evidence/tv4-20261106-wallet-raw.tar.gz) | TV2 peer review margin freshness/CI raw; TV3 ví extension và service cho peer, không tính Anvil unlocked account là extension approval |
 | QA09/QA10, #20/#42/#44 | Runbook và evidence đã ghi SHA/cluster; chưa chốt release; Project chưa có quyền sửa | Nhóm chốt testnet/signer an toàn, peer review, independent machine |
+
+### Handoff review cho PR #21 trước khi tích hợp Dev
+
+Base `Dev=87738d3`, head đã chạy CI `b172e39`; commit code SC06
+`0bee3a8`/regression `8245c9c`, chứng cứ local trong
+[bảng nghiệm thu](evidence/tv4-20261106-acceptance.md). PR hiện gồm nhiều
+commit và evidence lịch sử; đọc kết quả theo **SHA từng lượt**, không gán
+benchmark Dev cho CI head. Đây là checklist đăng trong repo để reviewer đối
+chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
+
+| Reviewer theo module | Mục cần xác nhận trên PR #21 | Nơi ghi kết luận |
+|---|---|---|
+| TV1 `@nvdungmim` | Kiểm SC06 pinned H/hash, các getter cấu hình, seed BUD Transfer và mutation hai nguồn cùng bị sửa; xem invariant ghost 100×50, execute thành công, giới hạn oracle. Không suy extension/testnet từ Anvil. | [#43](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43) và review PR #21; yêu cầu review cũ vẫn chờ |
+| TV2 `@daongocuong` | Đối chiếu #18/#37: checkpoint/crash/503/409/deep fork, rebuild compare cùng H/hash, schema 001–004 so với 001–005; tính lại p95 từ archive raw local và kiểm CI artifact khi có quyền. Review comment cũ không là approval cho head mới. | [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) và review PR #21 |
+| TV3 `@LangXiTrum2005` | Xác nhận FE↔API live với đủ bốn `BE05_LIVE_*`, UI H/hash/revision, BigInt, `lagging` và flow adapter Anvil; chạy lại với ví extension/peer service để nghiệm thu TC13, không tính EIP adapter là extension. | [#36](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36), [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41) và review PR #21 |
+
+Khi có phiên GitHub được xác thực: cập nhật body PR #21 vốn còn mô tả
+revision 23/10, yêu cầu/re-request reviewer theo module và dẫn checklist này
+trong các issue **đã mở**, không tạo issue trùng. Chưa tự approve/merge; #31
+draft cá nhân không thuộc diff nghiệm thu. Kết quả local/CI không thay peer
+review, ví extension, máy khác hoặc quyết định testnet.
 
 **GitHub Project:** trang tổ chức công khai
 [Projects](https://github.com/orgs/SE2026-21-1/projects) hiển thị 0

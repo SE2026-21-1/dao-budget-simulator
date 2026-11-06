@@ -4,6 +4,16 @@ import test from 'node:test';
 import { checkFixture, historicalQuorum, interfaces, projectFixture, verifyPinnedConfig } from '../scripts/check_sc06_chain.mjs';
 
 const original = JSON.parse(await readFile(new URL('../fixtures/chain/sc06-v1/chain.json', import.meta.url)));
+function executedQuorumCall(f, abi) {
+  const created = f.expectedDecoded.find(e => e.eventName === 'ProposalCreated' &&
+    e.payload.proposalId === f.proposals[0].proposalId);
+  assert.ok(created, 'missing executed proposal creation');
+  const snapshot = BigInt(created.payload.voteStart);
+  const data = abi.Governor.encodeFunctionData('quorum', [snapshot]);
+  const calls = f.calls.filter(c => c.to.toLowerCase() === f.manifest.contracts.Governor.address.toLowerCase() && c.data === data);
+  assert.equal(calls.length, 1, 'missing or duplicate executed proposal quorum call');
+  return { snapshot, call: calls[0] };
+}
 test('canonical receipts decode with TV2 and link calldata/IDs, ledger and Pending cancel', async () => {
   const result = await checkFixture(original);
   assert.equal(result.disbursements, 1);
@@ -17,12 +27,9 @@ test('SC06 raw logs replay through TV2 classify/buildModel/evaluate at canonical
   assert.equal(p.disbursements, 1); assert.equal(p.totalOut, '1000000000000000000000');
   assert.equal(p.balance, '9000000000000000000000');
   const abi = await interfaces();
-  const quorumCalls = original.calls.filter(c => c.to.toLowerCase() === original.manifest.contracts.Governor.address.toLowerCase() &&
-    c.data.startsWith(abi.Governor.getFunction('quorum').selector));
-  assert.equal(quorumCalls.length, 2);
-  const snapshot = abi.Governor.decodeFunctionData('quorum', quorumCalls[0].data)[0];
+  const { snapshot, call } = executedQuorumCall(original, abi);
   assert.equal(historicalQuorum(original, abi, snapshot), 200n * 10n ** 18n);
-  assert.equal(abi.Governor.decodeFunctionResult('quorum', quorumCalls[0].result)[0], 200n * 10n ** 18n);
+  assert.equal(abi.Governor.decodeFunctionResult('quorum', call.result)[0], 200n * 10n ** 18n);
 });
 test('pinned chain getters reject coupled manifest and audit changes', async () => {
   const abi = await interfaces();
@@ -35,10 +42,8 @@ test('pinned chain getters reject coupled manifest and audit changes', async () 
 });
 test('rejects isolated archived quorum(snapshot) mutation against receipt-derived historical supply', async () => {
   const abi = await interfaces(), f = structuredClone(original);
-  const calls = f.calls.filter(c => c.to.toLowerCase() === f.manifest.contracts.Governor.address.toLowerCase() &&
-    c.data.startsWith(abi.Governor.getFunction('quorum').selector));
-  assert.equal(calls.length, 2);
-  calls[0].result = abi.Governor.encodeFunctionResult('quorum', [1001n * 10n ** 18n]);
+  const { call } = executedQuorumCall(f, abi);
+  call.result = abi.Governor.encodeFunctionResult('quorum', [1001n * 10n ** 18n]);
   await assert.rejects(checkFixture(f), /Governor\.quorum\(snapshot\) differs from historical GOV supply and quorum configuration/);
 });
 const changes = {

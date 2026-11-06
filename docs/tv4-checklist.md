@@ -8,30 +8,29 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 ## Đối chiếu 06/11/2026 — chưa phải release gate
 
 `Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),
-freshness (#38) và SC06 (#39). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đang mở, source cuối đã kiểm `b172e3993db2dd6ca600cd7bbc4e3e80d550bfe9` trên `feature/tv4-operation`;
-[TV4 CI push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159800401) và [PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159806999) 9/9, [BE08 PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159807227) 1/1 success. Chưa có peer approval cho head này. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
+freshness (#38) và SC06 (#39). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đang mở vào Dev; SC06 oracle/fixture sinh từ `c9795605277bd0500275804b7873618f13220c13`, CI history fix `6f60ba5c8f7af6c1dff5f802230d932000a39cf2` trên `feature/tv4-operation`. [Lượt CI cũ tại `bc17d34`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248) FAIL contracts 1/9 do checkout nông; CI/BE08 cho head mới phải xác nhận riêng, không gán [CI 9/9 cũ](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159806999) cho fix. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
 “chưa có” ở phần 22/10 và URL demo tháng 10/đầu tháng 11 dưới đây là lịch sử
 theo revision, không là tình trạng service hiện tại. Xem [evidence lượt mới](evidence/tv4-20261106-acceptance.md).
 
 | QA / issue | Trạng thái hiện tại | Gate còn mở / người phối hợp |
 |---|---|---|
-| QA01/QA02/QA03, #6/#14/#15/#43 | Dev SC06 canonical 28/28; PR #21 getter/Transfer oracle, fixture regenerate từ source `8245c9c`, full 31/31; deploy/roles local | TV1/TV2/TV3 review SC06/roles, người khác clone máy riêng |
+| QA01/QA02/QA03, #6/#14/#15/#43 | Dev SC06 canonical 28/28; PR #21 oracle quorum lịch sử từ receipt, fixture regenerate từ source `c979560`, full 32/32; deploy/roles local | TV1/TV2/TV3 review SC06/roles, người khác clone máy riêng |
 | QA04–QA06, #7/#16/#17 | Matrix TC01–14/INV01–04, seeded ghost oracle 100×50/5.000 calls/5 execute successes; oracle bounded, 0 cancel successes của log cuối không phủ hết chiến lược | TV1 review oracle/receipt/negative variants |
 | QA07/QA08, #18/#37/#36/#40/#41 | Dev native BE08+benchmark PASS 20.986 HTTP success, p95 212,461ms; 001–004/005 freshness PASS; CI đúng SHA. PR #21 native/UI H79 PASS; TV3 unit49 PASS/1 SKIP khi không cấu hình, **live cùng deployment PASS 1/1, 0 SKIP** sau RPC sync thật. Lượt browser wallet EIP-1193 Anvil unlocked→receipt→worker→API→UI H82 PASS; [raw](evidence/tv4-20261106-wallet-raw.tar.gz) | TV2 peer review margin freshness/CI raw; TV3 ví extension và service cho peer, không tính Anvil unlocked account là extension approval |
 | QA09/QA10, #20/#42/#44 | Runbook và evidence đã ghi SHA/cluster; chưa chốt release; Project chưa có quyền sửa | Nhóm chốt testnet/signer an toàn, peer review, independent machine |
 
 ### Handoff review cho PR #21 trước khi tích hợp Dev
 
-Base `Dev=87738d3`, head đã chạy CI `b172e39`; commit code SC06
-`0bee3a8`/regression `8245c9c`, chứng cứ local trong
-[bảng nghiệm thu](evidence/tv4-20261106-acceptance.md). PR hiện gồm nhiều
+Base `Dev=87738d3`, SC06 code/regression `4b76a82`/`c979560`, fixture
+H26/24 receipt/42 logs và [evidence local 32/32](evidence/tv4-20261106-acceptance.md).
+CI mới cần chạy trên head chứa `fetch-depth: 0` sau [lượt đỏ](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248). PR hiện gồm nhiều
 commit và evidence lịch sử; đọc kết quả theo **SHA từng lượt**, không gán
 benchmark Dev cho CI head. Đây là checklist đăng trong repo để reviewer đối
 chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
 
 | Reviewer theo module | Mục cần xác nhận trên PR #21 | Nơi ghi kết luận |
 |---|---|---|
-| TV1 `@nvdungmim` | Kiểm SC06 pinned H/hash, các getter cấu hình, seed BUD Transfer và mutation hai nguồn cùng bị sửa; xem invariant ghost 100×50, execute thành công, giới hạn oracle. Không suy extension/testnet từ Anvil. | [#43](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43) và review PR #21; yêu cầu review cũ vẫn chờ |
+| TV1 `@nvdungmim` | Kiểm SC06 pinned H/hash, getter cấu hình, seed BUD Transfer, oracle quorum lịch sử và mutation **riêng** raw `quorum(snapshot)` 200→1.001 GOV bị từ chối; xem invariant ghost 100×50, execute thành công, giới hạn oracle. Không suy extension/testnet từ Anvil. | [#43](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43) và review PR #21; yêu cầu review cũ vẫn chờ |
 | TV2 `@daongocuong` | Đối chiếu #18/#37: checkpoint/crash/503/409/deep fork, rebuild compare cùng H/hash, schema 001–004 so với 001–005; tính lại p95 từ archive raw local và kiểm CI artifact khi có quyền. Review comment cũ không là approval cho head mới. | [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) và review PR #21 |
 | TV3 `@LangXiTrum2005` | Xác nhận FE↔API live với đủ bốn `BE05_LIVE_*`, UI H/hash/revision, BigInt, `lagging` và flow adapter Anvil; chạy lại với ví extension/peer service để nghiệm thu TC13, không tính EIP adapter là extension. | [#36](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36), [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41) và review PR #21 |
 
@@ -41,18 +40,22 @@ trong các issue **đã mở**, không tạo issue trùng. Chưa tự approve/me
 draft cá nhân không thuộc diff nghiệm thu. Kết quả local/CI không thay peer
 review, ví extension, máy khác hoặc quyết định testnet.
 
-**GitHub Project:** trang tổ chức công khai
-[Projects](https://github.com/orgs/SE2026-21-1/projects) hiển thị 0
-open/closed; API ẩn danh không thấy item riêng tư. Môi trường chỉ xác thực
-Git qua SSH, không có API token/phiên GitHub đăng nhập để tạo board, gắn repo,
-item, status hoặc comment. Đề xuất cập nhật khi có quyền (không gọi là đã sửa):
+**GitHub Projects:** [Project nhóm #1](https://github.com/orgs/SE2026-21-1/projects/1)
+và [TV4 #2](https://github.com/orgs/SE2026-21-1/projects/2) trả HTTP 404 trong
+phiên không đăng nhập; [repo Projects](https://github.com/SE2026-21-1/dao-budget-simulator/projects)
+hiển thị 0 mục công khai. Không thể đọc view/draft item, trạng thái hiện có
+hay giá trị Status thực tế. Môi trường chỉ xác thực Git qua SSH, không có
+API token/phiên GitHub đăng nhập để cập nhật Project, PR hoặc comment. Đề
+xuất đối chiếu item **đã có** khi có quyền, không tự tạo trùng hay ghi đã sửa:
 
 | Issue | Priority đề xuất | Status đề xuất / dependency |
 |---|---|---|
 | #18, #37 | Cao | Review sau native BE08/freshness PASS Dev `87738d3`; cần TV2 peer và CI raw artifact có auth; không Done chỉ vì CI xanh |
 | #36, #40, #41 | Cao | Review FE↔API local H79 và browser wallet adapter→receipt→worker→API→UI H82 PASS; chưa ví extension và service peer dùng chung; #40 Blocked service/manifest còn sống sau runner, #41 cần đầy đủ workflow extension wallet với peer |
-| #42, #43 | Trung bình | Blocked máy khác (#42); #43 Review sau fixture regenerate/coupled mutation 31/31, cần TV1/TV2/TV3 peer |
+| #42, #43 | Trung bình | Blocked máy khác (#42); #43 Review sau fixture regenerate/quorum mutation 32/32 tại `c979560`, cần TV1/TV2/TV3 peer trên head PR #21 |
 | #44 | Trung bình | Blocked bởi #18/#36/#40/#41/#20/#42 và release evidence |
+| #45, PR #21 | Cao | Ghi head PR #21 và link CI đúng lượt mới (push + PR + BE08), nguồn fixture `c979560`, kết luận review TV1/TV2/TV3; giữ trạng thái chờ review khi còn `REQUEST_CHANGES`, không Done từ CI. Giữ SHA cũ làm lịch sử |
+| PR #46, #9 | Trung bình | PR #46 head `22122bd` local clean runtime PASS nhưng TV3 peer/máy riêng chưa xác nhận; #9 hiển thị snapshot H/hash/revision trên PR #21, chờ TV3 nhận consumer và peer review |
 
 ## Kiểm tra revision mới — 02/11/2026
 

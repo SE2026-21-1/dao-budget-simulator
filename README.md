@@ -1,18 +1,116 @@
 # DAO Budget Simulator
 
-Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
-Treasury, BudgetGovernor, BE03 checkpoint/K-confirmations, BE04 projection,
-BE05 HTTP API, BE06 rebuild/compare và frontend TV3 `9f4d57a` có ví/giao dịch.
-Có deploy/seed/check-roles, invariant và nghiệm thu Anvil → PostgreSQL → API
-→ UI thật bằng EIP-1193 transport local. Fixture BE01 vẫn dùng được khi không
-bật API; API lỗi không bị thay bằng fixture.
-**Chưa chốt release:** TV4 đã kiểm thử phục hồi local trên Anvil/PostgreSQL/API/UI;
-BE07 bổ sung worker, migration 005 và cửa sổ reorg mặc định 128 block. Nếu không
-tìm được tổ tiên trong cửa sổ, API vẫn đóng và cần rebuild vào database mới.
-Testnet, ví extension thật, máy thành viên khác và peer approval vẫn còn thiếu.
-Xem [tổng kết TV4](docs/tv4-work-summary.md) và
-[bằng chứng phục hồi](docs/evidence/tv4-20261025-recovery.json).
+Mô phỏng ngân sách DAO trên local/testnet (không dùng tiền thật). GOV holders
+tạo đề xuất chi BUD, bỏ phiếu; Governor xếp lịch qua Timelock rồi Treasury mới
+giải ngân. Worker đọc sự kiện đã đủ K confirmation, lưu raw và checkpoint
+nguyên tử vào PostgreSQL, dựng projection tại H/hash; HTTP API chỉ đọc snapshot,
+React đọc API và gửi giao dịch trực tiếp tới contract qua ví.
+
+**Chọn đúng nhánh:** `Dev` (`87738d3`, 06/11/2026) đã chứa SC06, BE03–BE08,
+BE05 freshness fix và migrations 001–005, nhưng **chưa chứa wallet/frontend
+API của PR #21**. Nhánh `feature/tv4-operation` (PR #21) có wallet, UI và native
+TV4 acceptance, nhưng chưa được merge vào Dev; PR đang xung đột và cần review.
+`main` không phải nhánh tích hợp. PR #31 là VT-064 cá nhân, không thuộc
+nghiệm thu chung. CI ở Dev không chứng nhận code chưa merge của PR #21.
+
+Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL`; lỗi API
+thật không được fallback sang fixture. Recovery đóng publication và trả HTTP
+503, cursor cũ trả 409; quá `reorgWindow` yêu cầu rebuild sang database mới.
+Local Anvil/transport EIP-1193 không chứng minh ví extension hoặc testnet.
+Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
+[runbook BE07](docs/be07.md), [BE08 trên Dev](docs/be08.md) và
+[bàn giao TV4](docs/tv4-work-summary.md).
+
+## Thành viên và tài liệu
+
+| Thành viên | Phụ trách | Hướng dẫn |
+|---|---|---|
+| TV1 | Contract, roles, SC06 | [SC05](docs/sc05-timelock-roles.md), [contract](docs/contracts.md) |
+| TV2 | RPC/indexer, PostgreSQL, API, recovery, BE08 | [BE07](docs/be07.md), [BE08](docs/be08.md), [API](docs/api.md) |
+| TV3 | React, ví, giao dịch và consumer API | [Frontend](frontend/README.md) |
+| TV4 | Testing, deploy, CI, nghiệm thu | [Test plan](docs/test-plan.md), [checklist](docs/tv4-checklist.md) |
+
+## Quick start — một deployment local mới
+
+Node **24.15.0** (`.nvmrc`), npm lockfiles riêng, Foundry **1.8.5**,
+Solidity **0.8.37**/Osaka, OpenZeppelin **5.4.0**, PostgreSQL **18.4**.
+Các lệnh dưới dùng terminal riêng cho chain, worker, API, frontend; không kết
+nối một PostgreSQL đã phục vụ hay Anvil vừa bị reset với checkpoint cũ.
+`Dev` chạy được backend; để chạy wallet UI trước khi PR #21 merge phải checkout
+`feature/tv4-operation` **và đối chiếu lại với Dev**, không chuyển PR #31 vào.
+
+```bash
+git clone --branch feature/tv4-operation https://github.com/SE2026-21-1/dao-budget-simulator.git
+cd dao-budget-simulator
+git submodule update --init --recursive
+nvm install && nvm use
+npm ci && npm ci --prefix frontend
+forge build
+# Terminal chain: chỉ bind loopback, ví Anvil unlocked không được phơi ra mạng.
+anvil --host 127.0.0.1 --chain-id 31337 --hardfork osaka --silent
+# Terminal mới: bắt đầu bằng Anvil rỗng/unforked, output chưa tồn tại.
+node scripts/deploy_local.mjs --rpc http://127.0.0.1:8545 --output /tmp/dao-local-manifest.json
+node scripts/check_roles.mjs --rpc http://127.0.0.1:8545 --manifest /tmp/dao-local-manifest.json
+node scripts/export_local_handoff.mjs --rpc http://127.0.0.1:8545 \
+  --manifest /tmp/dao-local-manifest.json --output /tmp/dao-local-handoff
+```
+
+Tạo **database rỗng riêng** bằng PostgreSQL đang chạy; đặt `DATABASE_URL`
+trỏ đúng database đó và `RPC_URL=http://127.0.0.1:8545` trong shell của worker
+(CLI không tự nạp `.env`). Ví dụ URL **placeholder**:
+`postgresql://<user>:<password>@127.0.0.1:<port>/<new-database>`.
+Chạy migration đúng một lần theo thứ tự:
+
+```bash
+for migration in database/migrations/{001_initial,002_be03,003_be04,004_be05_api,005_be07}.sql; do
+  psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f "$migration" || exit 1
+done
+```
+
+Đăng ký `deployments` và năm `deployment_contracts` từ **manifest đã audit**;
+`deployment_name` là tên API, `deployment_id` là serial SQL cho config indexer.
+Xem [BE03 metadata](docs/be03.md#migrate-và-vận-hành) và
+[`scripts/check_be04_live.mjs`](scripts/check_be04_live.mjs) (đường INSERT thực).
+Không sao chép địa chỉ/block synthetic từ `indexer/config/example.json`.
+Đặt `indexer/config/local.json` từ example với chainId, `deploymentId` SQL,
+`fromBlock` không muộn hơn BUD deployment block, bốn role
+budget_token/treasury/timelock/governor từ manifest, `toBlock:"latest"`,
+`confirmations:2`, `reorgWindow:128`, `pollIntervalMs:1000`. GOV có metadata
+nhưng không là role log scanner BE02. Sau đó:
+
+```bash
+# Terminal worker (DATABASE_URL, RPC_URL đã export; config và metadata cùng chain).
+npm run indexer -- --config indexer/config/local.json --worker
+# Terminal API: giữ secret ổn định, không dùng trong VITE_* hoặc commit.
+export API_CURSOR_SECRET="$(openssl rand -hex 32)"
+export API_CORS_ORIGINS=http://127.0.0.1:5173
+npm run api
+# Terminal frontend: điền frontend/.env.local từ manifest và context.deploymentId
+# theo bảng frontend/README.md; VITE_API_BASE_URL=http://127.0.0.1:3000.
+npm run dev --prefix frontend -- --host 127.0.0.1 --port 5173 --strictPort
+curl 'http://127.0.0.1:3000/api/health?chainId=31337&deploymentId=<deployment_name>'
+```
+
+Không chạy frontend live trước khi API xuất bản `ready` tại H/hash; không
+nhầm receipt confirmed với snapshot đã publish (chờ K=2). Tắt theo thứ tự
+frontend → API → worker → Anvil bằng Ctrl-C/SIGTERM; restart worker/API sau
+khi xác minh **cùng chain/manifest/database**, không dùng lại DB sau Anvil reset.
+Demo ký propose/vote/queue/execute/cancel và deposit theo
+[frontend runbook](frontend/README.md); demo âm: sai mạng, từ chối ký, thiếu
+quỹ execute revert → nạp BUD → retry **cùng** operation. Không cộng BUD
+Transfer và BudgetDisbursed thành hai khoản chi.
+
+Health `lagging` sau hơn 30 giây thiếu canonical RPC check; publication
+`recovering`/`replaying` trả 503, cursor cũ 409 phải tải lại trang đầu. Fork quá
+`reorgWindow` chuyển `rebuild_required`: giữ database nguồn để chẩn đoán,
+[BE06 rebuild](docs/be06.md) ở **database mới/rỗng**, so cùng H/hash rồi mới
+đổi cấu hình API; không xóa DB đang phục vụ. Test theo module:
+`FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh`,
+`npm run test:be07:native` (đặt `BE07_PG_BIN`),
+`npm run test:be08:native -- --postgres-bin <pg18.4/bin> --output <new-dir> --benchmark`
+trên `Dev`, `npm run test:tv4:native -- --postgres-bin <pg18.4/bin> --output <new-dir>`
+trên PR #21, và `npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend`
+trên PR #21. Docker chỉ khi daemon có quyền; native không cần Docker.
 
 ## Trạng thái các task TV1
 
@@ -23,11 +121,11 @@ Xem [tổng kết TV4](docs/tv4-work-summary.md) và
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`, PR #13 đã merge; peer nghiệm thu SC05/deployment vẫn là đầu việc riêng |
 | SC05 — Timelock và quyền sau deploy | Đã tích hợp TV1 `21e53e1`; TV4 có pre-renounce/pre-funding gates, operation-history audit và14ca Anvil PASS; peer review/testnet còn mở |
-| SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
-| SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | UI → EIP-1193 local → Governor/Timelock/Treasury → indexer/API → UI đã chạy; chưa thay test ví extension/testnet |
-| SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
-| SC10 — Testnet và bàn giao | Chưa thực hiện |
+| SC06 — ABI và dữ liệu tích hợp | Đã merge vào Dev qua PR #39; receipt/manifest/provenance cần peer review tại #43 |
+| SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC06 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
+| SC08 — Tích hợp local | UI → EIP-1193 local → contract → indexer/API → UI trên nhánh PR #21; chưa có trên Dev, chưa thay ví extension/testnet |
+| SC09 — Review dữ liệu và tài liệu contract | Còn mở, xem #43 và tài liệu SC |
+| SC10 — Testnet và bàn giao | Chờ network/signer/gas được nhóm duyệt (#20), không dùng key thật trong repo |
 
 ## Môi trường Foundry — TV4 Operation
 
@@ -447,17 +545,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be01_database.
 ```
 
 Script tạo cụm mới trong thư mục tạm, tự dừng sau kiểm tra và giữ log để xem lại;
-không kết nối hoặc xóa database đang có. Cách chạy SQL trên hệ điều hành khác
-nằm trong tài liệu database. Schema và API vẫn chờ nhóm review.
+không kết nối hoặc xóa database đang có. Đây là ghi chú lịch sử BE01, **không**
+mô tả trạng thái schema/API hiện hành trên Dev; xem quick start và docs/api.md.
 
 ## BE02 — RPC log reader và decoder
 
 BE02 được tích hợp từ `4c568d6`; [PR #12](https://github.com/SE2026-21-1/dao-budget-simulator/pull/12)
-được mở để TV2/TV1 review bàn giao. CLI quét dải block hữu hạn, decode 12 event
-và ghi header/raw log trong transaction PostgreSQL. Chưa có projection,
-HTTP API, checkpoint, K confirmations, resume/reorg rollback hoặc rebuild.
-Suite BE02 dùng synthetic RPC; smoke SC03 bổ sung decode receipt Treasury/BUD
-local thật, không phải nghiệm thu SC06/full DAO hoặc chain→DB→API.
+là bàn giao lịch sử cho CLI quét dải block hữu hạn, decode event và lưu raw
+log/header. **Chỉ BE02 ban đầu** chưa có projection, HTTP API, checkpoint,
+K confirmations, reorg rollback hay rebuild; các chức năng đó đã được triển
+khai trong BE03–BE07 trên Dev. BE02 synthetic RPC và smoke SC03 vẫn không
+thay kiểm tra full DAO tại H/hash, API/UI hoặc wallet.
 
 Cần Node.js 24 và PostgreSQL (đã kiểm thử với 18.4):
 

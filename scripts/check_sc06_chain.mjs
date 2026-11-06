@@ -29,6 +29,30 @@ export function decodedEvents(f) {
   return result;
 }
 
+function pinnedCall(f, abi, name, method, args = []) {
+  const data = abi[name].encodeFunctionData(method, args);
+  const c = f.calls.find(c => c.to.toLowerCase() === f.manifest.contracts[name].address.toLowerCase() && c.data === data);
+  assert.ok(c, `missing pinned call ${name}.${method}`);
+  assert.equal(c.block, f.head.number);
+  return abi[name].decodeFunctionResult(method, c.result)[0];
+}
+
+export function verifyPinnedConfig(f, abi) {
+  // Manifest and audit can be edited together; the archived eth_call at H cannot.
+  for (const [field, contract, method] of [
+    ['proposalThreshold', 'Governor', 'proposalThreshold'],
+    ['quorumNumerator', 'Governor', 'quorumNumerator()'],
+    ['quorumDenominator', 'Governor', 'quorumDenominator'],
+    ['votingDelay', 'Governor', 'votingDelay'],
+    ['votingPeriod', 'Governor', 'votingPeriod'],
+    ['minDelay', 'Timelock', 'getMinDelay'],
+    ['clockMode', 'GOV', 'CLOCK_MODE'],
+    ['clockMode', 'Governor', 'CLOCK_MODE'],
+    ['govSupply', 'GOV', 'totalSupply'],
+    ['budSupply', 'BUD', 'totalSupply'],
+  ]) assert.equal(String(pinnedCall(f, abi, contract, method)), f.manifest.config[field], `${field}: manifest differs from pinned chain call`);
+}
+
 export async function checkFixture(f, rpc) {
   assert.equal(f.kind, 'sc06-canonical-local-receipts-v1');
   assert.equal(f.manifest.chainId, '31337');
@@ -96,13 +120,8 @@ export async function checkFixture(f, rpc) {
   const eventLogs = (name, event, receipt) => (receipt ? receipt.logs : logs)
     .filter(l => l.address.toLowerCase() === address(name).toLowerCase())
     .map(l => ({ raw: l, event: abi[name].parseLog(l) })).filter(e => e.event?.name === event);
-  const getCall = (name, method, args = []) => {
-    const data = abi[name].encodeFunctionData(method, args);
-    const c = f.calls.find(c => c.to.toLowerCase() === address(name).toLowerCase() && c.data === data);
-    assert.ok(c, `missing pinned call ${name}.${method}`);
-    assert.equal(c.block, f.head.number);
-    return abi[name].decodeFunctionResult(method, c.result)[0];
-  };
+  const getCall = (name, method, args = []) => pinnedCall(f, abi, name, method, args);
+  verifyPinnedConfig(f, abi);
   assert.equal(f.proposals.length, 2);
   for (const [index, p] of f.proposals.entries()) {
     assert.match(p.amount, /^(0|[1-9][0-9]*)$/);
@@ -199,6 +218,7 @@ export async function checkFixture(f, rpc) {
     if (event.args.from.toLowerCase() === treasury) outgoing += event.args.value;
   }
   assert.equal(incoming, 10000n * 10n ** 18n); assert.equal(outgoing, 1000n * 10n ** 18n);
+  assert.equal(incoming.toString(), f.manifest.config.treasurySeed, 'treasurySeed differs from canonical funding logs');
   const expected = { treasury: incoming - outgoing, recipient: outgoing, funding: 10000n * 10n ** 18n };
   for (const [key, account] of Object.entries({ treasury: address('Treasury'), recipient: f.manifest.accounts.recipient, funding: f.manifest.accounts.funding })) {
     assert.equal(getCall('BUD', 'balanceOf', [account]), expected[key]);

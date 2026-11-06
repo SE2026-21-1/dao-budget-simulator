@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { checkFixture, projectFixture } from '../scripts/check_sc06_chain.mjs';
+import { checkFixture, interfaces, projectFixture, verifyPinnedConfig } from '../scripts/check_sc06_chain.mjs';
 
 const original = JSON.parse(await readFile(new URL('../fixtures/chain/sc06-v1/chain.json', import.meta.url)));
 test('canonical receipts decode with TV2 and link calldata/IDs, ledger and Pending cancel', async () => {
@@ -17,6 +17,15 @@ test('SC06 raw logs replay through TV2 classify/buildModel/evaluate at canonical
   assert.equal(p.disbursements, 1); assert.equal(p.totalOut, '1000000000000000000000');
   assert.equal(p.balance, '9000000000000000000000');
 });
+test('pinned chain getters reject coupled manifest and audit changes', async () => {
+  const abi = await interfaces();
+  verifyPinnedConfig(original, abi);
+  const f = structuredClone(original);
+  f.manifest.config.quorumNumerator = '21';
+  f.roleAudit.config.quorumNumerator = '21';
+  assert.deepEqual(f.manifest.config, f.roleAudit.config);
+  assert.throws(() => verifyPinnedConfig(f, abi), /quorumNumerator: manifest differs from pinned chain call/);
+});
 const changes = {
   generationHash: f => { f.generation.sourceHashes['scripts/generate_sc06_chain.mjs'] = '0'.repeat(64); },
   missingGenerationHash: f => { delete f.generation.sourceHashes['scripts/generate_sc06_chain.mjs']; },
@@ -24,6 +33,8 @@ const changes = {
   wrongCommit: f => { f.generation.sourceCommit = f.blocks[0].hash.slice(2, 42); },
   phase1CommitNotContainingGenerator: f => { f.generation.sourceCommit = '5df980d619ccd344683007e1f38f64e5deb31648'; },
   manifestHash: f => { f.manifest.provenance.sourceHashes['contracts/BudgetGovernor.sol'] = '0'.repeat(64); },
+  coupledConfigChange: f => { f.manifest.config.quorumNumerator = '21'; f.roleAudit.config.quorumNumerator = '21'; },
+  coupledSeedChange: f => { f.manifest.config.treasurySeed = '1'; f.roleAudit.config.treasurySeed = '1'; },
   auditHead: f => { f.roleAudit.blockHash = '0x' + '0'.repeat(64); },
   abiVersion: f => { f.manifest.contracts.Governor.abiVersion = 'not-this-deployment'; },
   contractAddress: f => { f.manifest.contracts.Treasury.address = f.manifest.accounts.A; },

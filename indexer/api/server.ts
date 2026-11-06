@@ -86,12 +86,14 @@ function decodeCursor(raw: string, secret: string): Cursor {
   const expected = createHmac('sha256', secret).update(parts[0]!).digest();
   let actual: Buffer;
   try { actual = Buffer.from(parts[1]!, 'base64url'); } catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
-  if (actual.toString('base64url') !== parts[1] || Buffer.from(parts[0]!, 'base64url').toString('base64url') !== parts[0]
-      || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
+  if (actual.toString('base64url') !== parts[1] || actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
     throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   }
+  const payload = Buffer.from(parts[0]!, 'base64url');
+  if (payload.toString('base64url') !== parts[0])
+    throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   let value: unknown;
-  try { value = JSON.parse(Buffer.from(parts[0]!, 'base64url').toString('utf8')); }
+  try { value = JSON.parse(payload.toString('utf8')); }
   catch { throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.'); }
   if (!value || typeof value !== 'object') throw new ApiError(400, 'INVALID_CURSOR', 'Cursor không hợp lệ hoặc đã hết hạn.');
   const c = value as Partial<Cursor>;
@@ -257,18 +259,17 @@ function buildSync(raw: ScopeState['raw'], publication: ScopeState['publication'
 
 export function freshness(raw: Pick<NonNullable<ScopeState['raw']>, 'h' | 'head' | 'confirmations' | 'status' | 'updatedAt'> | null,
   publication: string | null, recovery: Json | null, now = Date.now()): Json {
-  const confirmed = recovery?.confirmed !== undefined ? BigInt(String(recovery.confirmed)) : raw ?
-    (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
+  const confirmed = recovery?.confirmed != null ? BigInt(String(recovery.confirmed)) : raw
+    ? (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
   const lag = confirmed === null || publication === null ? null : confirmed > BigInt(publication) ? confirmed - BigInt(publication) : 0n;
   const checked = recovery?.lastCheckedAt ? Date.parse(String(recovery.lastCheckedAt)) : NaN;
-  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince)) : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
+  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince))
+    : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
   const age = Number.isFinite(checked) ? Math.max(0, now - checked, now - since) : null;
   const blocked = !raw || publication === null || raw.status === 'rebuild_required' ||
     (!!recovery && recovery.phase !== 'ready');
-  // Raw ingestion can commit before the next heartbeat or projection. Its
-  // verified data must be published before the API advertises synced (TV4).
   const projectionBehind = !!raw && publication !== null && BigInt(raw.h) > BigInt(publication);
-  return { status: blocked ? 'not_ready' : lag === 0n && !projectionBehind && age !== null && age <= 30000 ? 'synced' : 'lagging',
+  return { status: blocked ? 'not_ready' : lag === 0n && !projectionBehind && age !== null && age <= 30_000 ? 'synced' : 'lagging',
     headBlock: recovery?.head ?? raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null,
     indexedBlock: raw?.h ?? null, publicationBlock: publication, lagBlocks: lag?.toString() ?? null,
     lagSeconds: age === null ? null : Math.floor(age / 1000).toString(), confirmations: raw ? String(raw.confirmations) : null,

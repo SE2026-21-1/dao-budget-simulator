@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "228077a6f18944fb7fc6852c65f217db8a368024",
+  "result": "passed",
+  "scope": "Local deployed contracts, final roles, real governance transactions and BE02 receipt decoding. Not testnet, frontend/API, confirmations, reorg or whole-system TC acceptance.",
+  "sourceHashes": {
+    "scripts/smoke_governance.mjs": "47e0e502bc4a3925fdc4f96bf6a9aab04faa7c1392c0d27a7a79aa85c22f5f74",
+    "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+    "scripts/governance_local.mjs": "c4ea2669072a610a177ab51ee4a9f07a431017bf094b92ea9107aee887065ed7",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/abi-registry.ts": "84b7982de1eecf2a9b0b97ba461d734582b704c6a9d7ef0969bd94046cda6922",
+    "indexer/reader.ts": "b3fb6a58e837f8e301921dafcdff2ea3517e41d0928e6d050834d3d1da7b0049",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51"
+  },
+  "receiptCount": 105,
+  "demo1000": {
+    "finalBalances": {
+      "Treasury": "9000000000000000000000",
+      "recipient": "1000000000000000000000",
+      "recipient2": "0",
+      "funding": "10000000000000000000000"
+    },
+    "receiptCount": 5
+  },
+  "canonicalFinalBlock": {
+    "number": "109",
+    "hash": "0xf8bdaf6289e4b6892ca22a6e4e45df51c220c5a89f0f27b69f42e9012bc20812",
+    "timestamp": "1800000492"
+  },
+  "fullEphemeralReportSha256": "433b8a11d8c8fbea915bf9b51325fd7e8ab1242bdd9203b1e5fcccb756998516",
+  "scopeLimit": "Exact committed clone on same machine; no copied build outputs/dependencies or source overlay, but global compiler cache exists. Not independent other-machine acceptance."
+}

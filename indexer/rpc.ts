@@ -1,3 +1,4 @@
+import { setTimeout as sleep } from 'node:timers/promises';
 import { IndexerError } from './errors.js';
 import { UINT256_MAX } from './config.js';
 
@@ -5,12 +6,26 @@ export interface RpcTransport {
   call(method: string, params: unknown[]): Promise<unknown>;
 }
 
+const RETRYABLE_READ_METHODS: Record<string, true> = {
+  eth_chainId: true, eth_blockNumber: true, eth_getBlockByNumber: true,
+  eth_getLogs: true, eth_getCode: true, eth_call: true,
+};
+
 export class RpcError extends IndexerError {
-  constructor(code: string, message: string, public readonly retryable: boolean) { super(code, message); }
+  constructor(code: string, message: string, public readonly retryable: boolean, public readonly retryAfterMs = 0) {
+    super(code, message, retryable);
+  }
 }
 export interface RpcOptions {
   maxAttempts?: number; baseDelayMs?: number; maxDelayMs?: number; signal?: AbortSignal;
-  random?: () => number;
+  random?: () => number; now?: () => number; sleep?: (delayMs: number) => Promise<void>;
+}
+
+function retryAfterMs(value: string | null, now: number, cap: number): number {
+  if (value === null) return 0;
+  const seconds = /^\d+$/.test(value.trim()) ? Number(value) : NaN;
+  const delay = Number.isNaN(seconds) ? Date.parse(value) - now : seconds * 1_000;
+  return Number.isNaN(delay) ? 0 : Math.min(cap, Math.max(0, delay));
 }
 export class HttpRpc implements RpcTransport {
   private id = 0;
@@ -30,18 +45,22 @@ export class HttpRpc implements RpcTransport {
     const attempts = this.options.maxAttempts ?? 4;
     for (let attempt = 0; ; attempt++) {
       if (this.options.signal?.aborted) throw new IndexerError('STOPPED', 'RPC stopped.');
-      try { return await this.request(id, method, params); }
-      catch (e) {
+      try { return await this.request(method, params, id); }
+      catch (error) {
         if (this.options.signal?.aborted) throw new IndexerError('STOPPED', 'RPC stopped.');
-        if (!(e instanceof RpcError) || !e.retryable || attempt + 1 >= attempts) throw e;
-        const cap = Math.min(this.options.maxDelayMs ?? 2000, (this.options.baseDelayMs ?? 250) * 2 ** attempt);
-        const delay = cap * (0.5 + 0.5 * (this.options.random ?? Math.random)());
-        try { await pause(delay, this.options.signal); }
-        catch { throw new IndexerError('STOPPED', 'RPC stopped during backoff.'); }
+        if (!(error instanceof RpcError) || !error.retryable) throw error;
+        if (!Object.hasOwn(RETRYABLE_READ_METHODS, method)) throw new RpcError(error.code, error.message, false);
+        if (attempt + 1 >= attempts) throw error;
+        const cap = Math.min(this.options.maxDelayMs ?? 2_000, (this.options.baseDelayMs ?? 250) * 2 ** attempt);
+        const delay = Math.max(error.retryAfterMs, cap * (0.5 + 0.5 * (this.options.random ?? Math.random)()));
+        try {
+          if (this.options.sleep) await this.options.sleep(delay);
+          else await pause(delay, this.options.signal);
+        } catch { throw new IndexerError('STOPPED', 'RPC stopped during backoff.'); }
       }
     }
   }
-  private async request(id: number, method: string, params: unknown[]): Promise<unknown> {
+  private async request(method: string, params: unknown[], id: number): Promise<unknown> {
     const signals = [AbortSignal.timeout(this.timeoutMs), ...(this.options.signal ? [this.options.signal] : [])];
     let response: Response;
     let body: Record<string, unknown>;
@@ -51,9 +70,10 @@ export class HttpRpc implements RpcTransport {
         body: JSON.stringify({ jsonrpc: '2.0', id, method, params }), signal: AbortSignal.any(signals),
       });
       if (!response.ok) {
-        await response.body?.cancel();
+        await response.body?.cancel().catch(() => undefined);
         const temporary = response.status === 408 || response.status === 429 || response.status >= 500;
-        throw new RpcError(temporary ? 'RPC_UNAVAILABLE' : 'RPC_HTTP_ERROR', `${method}: RPC HTTP status ${response.status}.`, temporary);
+        const delay = retryAfterMs(response.headers.get('retry-after'), this.options.now?.() ?? Date.now(), this.options.maxDelayMs ?? 2_000);
+        throw new RpcError('RPC_HTTP_ERROR', `${method}: RPC HTTP status ${response.status}.`, temporary, delay);
       }
       try { body = rpcObject(await response.json(), 'RPC response'); }
       catch {
@@ -77,8 +97,7 @@ export class HttpRpc implements RpcTransport {
 }
 
 export async function pause(ms: number, signal?: AbortSignal): Promise<void> {
-  const { setTimeout } = await import('node:timers/promises');
-  await setTimeout(ms, undefined, signal ? { signal } : {});
+  await sleep(ms, undefined, signal ? { signal } : {});
 }
 
 export function rpcObject(value: unknown, field: string): Record<string, unknown> {

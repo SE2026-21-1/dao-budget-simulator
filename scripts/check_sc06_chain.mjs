@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { AbiCoder, Interface, ZeroHash, id, keccak256, toBeHex } from 'ethers';
+import { AbiCoder, Interface, ZeroAddress, ZeroHash, id, keccak256, toBeHex } from 'ethers';
 import { decodeLog } from '../indexer/decoder.ts';
 import { classify, buildModel, evaluate } from '../indexer/projection/model.ts';
 import { checkProvenance } from './sc06_provenance.mjs';
@@ -27,6 +27,84 @@ export function decodedEvents(f) {
     result.push({ transactionHash: log.transactionHash, logIndex: log.logIndex, ...decode });
   }
   return result;
+}
+
+function pinnedCall(f, abi, name, method, args = []) {
+  const data = abi[name].encodeFunctionData(method, args);
+  const c = f.calls.find(c => c.to.toLowerCase() === f.manifest.contracts[name].address.toLowerCase() && c.data === data);
+  assert.ok(c, `missing pinned call ${name}.${method}`);
+  assert.equal(c.block, f.head.number);
+  return abi[name].decodeFunctionResult(method, c.result)[0];
+}
+
+// Reconstruct ERC20Votes.getPastTotalSupply(S) from canonical GOV mint/Transfer
+// receipts, and GovernorVotesQuorumFraction's numerator checkpoints from events.
+// Neither the archived quorum(S) response nor the mutable manifest supplies this oracle.
+export function historicalQuorum(f, abi, snapshot) {
+  const timestamps = new Map(f.blocks.map(b => [b.number, BigInt(b.timestamp)]));
+  const deployment = f.blocks.find(b => BigInt(b.number) === BigInt(f.manifest.contracts.Governor.deploymentBlock));
+  assert.ok(deployment, 'missing Governor deployment block');
+  assert.ok(snapshot >= BigInt(deployment.timestamp) && snapshot < BigInt(f.blocks.at(-1).timestamp),
+    'quorum snapshot must follow deployment and precede H');
+  for (let i = 1; i < f.blocks.length; i++)
+    assert.ok(BigInt(f.blocks[i].timestamp) >= BigInt(f.blocks[i - 1].timestamp), 'nonmonotonic token clock');
+  const gov = f.manifest.contracts.GOV, governor = f.manifest.contracts.Governor;
+  let supply = 0n, snapshotSupply = 0n, numerator = 0n, snapshotNumerator = 0n, updates = 0;
+  const mints = [];
+  for (const receipt of f.receipts) {
+    const time = timestamps.get(receipt.blockNumber);
+    assert.notEqual(time, undefined, 'receipt outside archived history');
+    for (const log of receipt.logs) {
+      if (log.address.toLowerCase() === gov.address.toLowerCase()) {
+        const event = abi.GOV.parseLog(log);
+        if (event.name !== 'Transfer') continue;
+        const from = event.args.from.toLowerCase(), to = event.args.to.toLowerCase(), amount = event.args.value;
+        if (from === ZeroAddress) {
+          assert.equal(receipt.transactionHash, gov.transactionHash, 'GOV mint outside constructor');
+          mints.push([to, amount]);
+          supply += amount;
+        }
+        assert.notEqual(to, ZeroAddress, 'unexpected GOV burn');
+      }
+      if (log.address.toLowerCase() === governor.address.toLowerCase()) {
+        const event = abi.Governor.parseLog(log);
+        if (event.name !== 'QuorumNumeratorUpdated') continue;
+        if (!updates) {
+          assert.equal(receipt.transactionHash, governor.transactionHash, 'quorum numerator not initialized in constructor');
+          assert.equal(event.args[1], 20n, 'unexpected constructor quorum fraction');
+        }
+        assert.equal(event.args[0], numerator, 'quorum numerator history mismatch');
+        numerator = event.args[1];
+        updates++;
+      }
+    }
+    if (time <= snapshot) { snapshotSupply = supply; snapshotNumerator = numerator; }
+  }
+  assert.deepEqual(mints, [['A', 400n], ['B', 300n], ['C', 200n], ['D', 100n]]
+    .map(([name, amount]) => [f.manifest.accounts[name].toLowerCase(), amount * 10n ** 18n]),
+  'GOV constructor mints differ from canonical allocation');
+  assert.ok(updates > 0, 'missing Governor quorum numerator initialization');
+  assert.equal(supply, pinnedCall(f, abi, 'GOV', 'totalSupply'), 'GOV receipt supply differs from pinned H');
+  assert.equal(numerator, pinnedCall(f, abi, 'Governor', 'quorumNumerator()'), 'quorum numerator history differs from pinned H');
+  const denominator = pinnedCall(f, abi, 'Governor', 'quorumDenominator');
+  assert.ok(denominator > 0n && snapshotNumerator <= denominator, 'invalid historical quorum fraction');
+  assert.ok(snapshotSupply > 0n, 'missing historical GOV supply at snapshot');
+  return snapshotSupply * snapshotNumerator / denominator;
+}
+export function verifyPinnedConfig(f, abi) {
+  // Manifest and audit can be edited together; the archived eth_call at H cannot.
+  for (const [field, contract, method] of [
+    ['proposalThreshold', 'Governor', 'proposalThreshold'],
+    ['quorumNumerator', 'Governor', 'quorumNumerator()'],
+    ['quorumDenominator', 'Governor', 'quorumDenominator'],
+    ['votingDelay', 'Governor', 'votingDelay'],
+    ['votingPeriod', 'Governor', 'votingPeriod'],
+    ['minDelay', 'Timelock', 'getMinDelay'],
+    ['clockMode', 'GOV', 'CLOCK_MODE'],
+    ['clockMode', 'Governor', 'CLOCK_MODE'],
+    ['govSupply', 'GOV', 'totalSupply'],
+    ['budSupply', 'BUD', 'totalSupply'],
+  ]) assert.equal(String(pinnedCall(f, abi, contract, method)), f.manifest.config[field], `${field}: manifest differs from pinned chain call`);
 }
 
 export async function checkFixture(f, rpc) {
@@ -96,13 +174,8 @@ export async function checkFixture(f, rpc) {
   const eventLogs = (name, event, receipt) => (receipt ? receipt.logs : logs)
     .filter(l => l.address.toLowerCase() === address(name).toLowerCase())
     .map(l => ({ raw: l, event: abi[name].parseLog(l) })).filter(e => e.event?.name === event);
-  const getCall = (name, method, args = []) => {
-    const data = abi[name].encodeFunctionData(method, args);
-    const c = f.calls.find(c => c.to.toLowerCase() === address(name).toLowerCase() && c.data === data);
-    assert.ok(c, `missing pinned call ${name}.${method}`);
-    assert.equal(c.block, f.head.number);
-    return abi[name].decodeFunctionResult(method, c.result)[0];
-  };
+  const getCall = (name, method, args = []) => pinnedCall(f, abi, name, method, args);
+  verifyPinnedConfig(f, abi);
   assert.equal(f.proposals.length, 2);
   for (const [index, p] of f.proposals.entries()) {
     assert.match(p.amount, /^(0|[1-9][0-9]*)$/);
@@ -199,6 +272,7 @@ export async function checkFixture(f, rpc) {
     if (event.args.from.toLowerCase() === treasury) outgoing += event.args.value;
   }
   assert.equal(incoming, 10000n * 10n ** 18n); assert.equal(outgoing, 1000n * 10n ** 18n);
+  assert.equal(incoming.toString(), f.manifest.config.treasurySeed, 'treasurySeed differs from canonical funding logs');
   const expected = { treasury: incoming - outgoing, recipient: outgoing, funding: 10000n * 10n ** 18n };
   for (const [key, account] of Object.entries({ treasury: address('Treasury'), recipient: f.manifest.accounts.recipient, funding: f.manifest.accounts.funding })) {
     assert.equal(getCall('BUD', 'balanceOf', [account]), expected[key]);
@@ -253,10 +327,10 @@ export async function projectFixture(f) {
     assert.deepEqual(p.calldatas, [expected.calldata]);
     let quorum = null;
     if (clock > BigInt(p.snapshot)) {
-      const data = abi.Governor.encodeFunctionData('quorum', [p.snapshot]);
-      const call = f.calls.find(c => c.to.toLowerCase() === address('Governor') && c.data === data);
-      assert.ok(call); assert.equal(call.block, f.head.number);
-      quorum = abi.Governor.decodeFunctionResult('quorum', call.result)[0];
+      const expectedQuorum = historicalQuorum(f, abi, BigInt(p.snapshot));
+      const archivedQuorum = pinnedCall(f, abi, 'Governor', 'quorum', [p.snapshot]);
+      assert.equal(archivedQuorum, expectedQuorum, 'Governor.quorum(snapshot) differs from historical GOV supply and quorum configuration');
+      quorum = expectedQuorum;
     }
     const evaluated = evaluate(p, clock, quorum);
     const stateCall = f.calls.find(c => c.to.toLowerCase() === address('Governor') && c.data === abi.Governor.encodeFunctionData('state', [p.id]));

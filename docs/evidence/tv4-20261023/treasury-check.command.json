@@ -1,0 +1,14 @@
+{
+  "label": "treasury-check",
+  "command": [
+    "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+    "--import",
+    "tsx",
+    "scripts/smoke_treasury.mjs",
+    "--output",
+    "docs/evidence/tv4-20261023/treasury-smoke.json"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 4.258,
+  "log": "treasury-check.txt"
+}

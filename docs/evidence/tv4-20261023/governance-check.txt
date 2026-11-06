@@ -1,0 +1,1 @@
+PASS: real local Governor -> Timelock -> Treasury, final roles, attacks/retry, live BE02 decoding. Evidence: /home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261023/governance-storage.json

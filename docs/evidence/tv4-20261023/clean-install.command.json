@@ -1,0 +1,17 @@
+{
+  "label": "clean-install",
+  "cwd": "/tmp/tv4-clean-228077a",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=node@24.15.0",
+    "--",
+    "sh",
+    "-c",
+    "npm ci && npm ci --prefix frontend"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 9.288,
+  "log": "clean-install.txt"
+}

@@ -1,0 +1,41 @@
+Script started on 2026-10-24 19:21:52+07:00 [COMMAND="npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend" <not executed on terminal>]
+
+> frontend@0.0.0 lint
+> oxlint
+
+src/chain/WalletProvider.tsx:64:26: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+
+> frontend@0.0.0 test
+> vitest run
+
+[?25l
+ RUN  v4.1.12 /home/ptdung/solidity-projects/dao-budget-simulator/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  19:21:54
+   Duration  1.35s (transform 274ms, setup 0ms, import 942ms, tests 77ms, environment 0ms)
+
+[?25h
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 540 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.52 kB │ gzip:   0.32 kB
+dist/assets/index-CRXlyOBF.css   29.56 kB │ gzip:   7.55 kB
+dist/assets/ccip-DX74JWkX.js      2.83 kB │ gzip:   1.30 kB
+dist/assets/index-CEM95MZa.js   599.00 kB │ gzip: 173.72 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.31s
+
+Script done on 2026-10-24 19:22:11+07:00 [COMMAND_EXIT_CODE="0"]

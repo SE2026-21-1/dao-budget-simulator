@@ -1,0 +1,108 @@
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+> dao-budget-simulator@0.0.0 test:be02
+> tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts
+
+✔ CLI help and invalid arguments have appropriate exit codes (4115.730449ms)
+✔ CLI reports unsupported ABI as an actionable config error (1389.875206ms)
+✔ CLI rejects wrong chain before attempting PostgreSQL and never prints secrets (1491.638257ms)
+✔ config preserves bigint, validates scope and permits a pinned latest request (31.326915ms)
+✔ reject invalid config: numericChainId (1.068839ms)
+✔ reject invalid config: zeroChain (0.451221ms)
+✔ reject invalid config: overflow (0.416282ms)
+✔ reject invalid config: fractionalBlock (5.737984ms)
+✔ reject invalid config: negativeBlock (0.479266ms)
+✔ reject invalid config: reversedRange (4.645799ms)
+✔ reject invalid config: zeroBatch (1.014086ms)
+✔ reject invalid config: unboundedBatch (2.831844ms)
+✔ reject invalid config: invalidRpc (1.018076ms)
+✔ reject invalid config: deploymentOverflow (0.533804ms)
+✔ reject invalid config: emptyContracts (0.368368ms)
+✔ reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI (42.525111ms)
+✔ synthetic vectors cover all eleven required event types and source indexed layouts (13.382536ms)
+✔ decodes governor.ProposalCreated with exact named ABI values (64.096728ms)
+✔ decodes governor.VoteCast with exact named ABI values (10.448791ms)
+✔ decodes governor.ProposalQueued with exact named ABI values (6.595511ms)
+✔ decodes governor.ProposalExecuted with exact named ABI values (5.3609ms)
+✔ decodes governor.ProposalCanceled with exact named ABI values (4.772167ms)
+✔ decodes timelock.CallScheduled with exact named ABI values (31.496593ms)
+✔ decodes timelock.CallExecuted with exact named ABI values (7.435644ms)
+✔ decodes timelock.Cancelled with exact named ABI values (4.181389ms)
+✔ decodes timelock.CallSalt with exact named ABI values (6.962917ms)
+✔ decodes treasury.BudgetDisbursed with exact named ABI values (5.991847ms)
+✔ decodes budget_token.Transfer with exact named ABI values (5.945132ms)
+✔ independent hand-assembled canonical Transfer vector decodes without fixture encoder (5.939834ms)
+✔ preserves uint256 above 2^53 including indexed integers and maximum proposal ID (22.835926ms)
+✔ dynamic description and reason preserve exact Unicode and whitespace (33.772487ms)
+✔ registry Treasury fragment matches handed-over shared JSON ABI exactly (4.912958ms)
+✔ ABI version is explicitly bound to contract role and cannot use object prototype keys (2.699656ms)
+✔ unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC (0.953593ms)
+✔ known events reject missing, additional and malformed indexed topics (4.056994ms)
+✔ known events reject truncated, odd, nonhex and trailing data (12.030912ms)
+✔ known events reject noncanonical uint8 and invalid dynamic offsets (10.370195ms)
+✔ NUL in valid Solidity description or reason is raw-only for JSONB storage (18.687203ms)
+✔ invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error (6.172268ms)
+✔ decoded, unknown and malformed logs retain every original RPC field (9.767244ms)
+✔ range boundaries work above Number.MAX_SAFE_INTEGER without gaps (12.998732ms)
+✔ scan includes every boundary/empty block and sorts tx/log indices; preserves raw input (122.660808ms)
+✔ different deployment blocks retain early contract logs and clamp each RPC filter (6.212116ms)
+✔ RPC cannot return a known contract log before its deployment block (3.580463ms)
+✔ RPC cannot substitute another configured contract in a filter response (4.396188ms)
+✔ duplicate transaction hashes in a header are contradictory (1.511406ms)
+✔ wrong chain stops before any storage write or block request (4.59098ms)
+✔ latest is pinned once for the finite scan (6.664925ms)
+✔ outside-deployment log is dropped before ABI or canonical-log validation (6.66284ms)
+✔ unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics (15.767409ms)
+✔ reject contradictory/invalid log: removed (5.484041ms)
+✔ reject contradictory/invalid log: pending (0.983111ms)
+✔ reject contradictory/invalid log: blockHash (4.375796ms)
+✔ reject contradictory/invalid log: block number (1.083473ms)
+✔ reject contradictory/invalid log: txHash (7.187286ms)
+✔ reject contradictory/invalid log: txIndex (5.368656ms)
+✔ reject contradictory/invalid log: invalid hex (1.209595ms)
+✔ reject contradictory/invalid log: unsafe index (1.025344ms)
+✔ detect colliding log positions and transaction order disagreement (11.580804ms)
+✔ reports previous committed batch separately when a later header chain disagrees (3.529501ms)
+✔ changing final header prevents write (1.911355ms)
+✔ HTTP JSON-RPC transport reads synthetic logs through scanner (408.061551ms)
+✔ RPC HTTP failures redact URL paths and body; prior batches remain explicit (44.585724ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 63
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9645.912359
+BE01 OK: 123 JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.
+Timeline OK: 105 timestamp-ordered blocks, 190 distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.
+Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.
+Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.
+
+> frontend@0.0.0 lint
+> oxlint
+
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 103 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.52 kB │ gzip:  0.32 kB
+dist/assets/index-D_DF_tUI.css             14.65 kB │ gzip:  4.15 kB
+dist/assets/proposals-page-3-oTrgN3mT.js    9.24 kB │ gzip:  2.64 kB
+dist/assets/proposals-page-1-DS6umrjY.js   30.64 kB │ gzip:  6.71 kB
+dist/assets/proposals-page-2-CkFvStZ0.js   34.96 kB │ gzip:  8.34 kB
+dist/assets/index-DWOFSplo.js             273.22 kB │ gzip: 86.28 kB
+
+✓ built in 1.22s

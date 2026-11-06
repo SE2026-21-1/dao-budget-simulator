@@ -1,0 +1,103 @@
+{
+  "scope": "Local Anvil/PostgreSQL/Chromium; EIP-1193 injected against unlocked Anvil account, not an extension wallet or testnet",
+  "sourceCommitAtRun": "9dc2ba90cad18d810931135a99d1ad5d94690380",
+  "sourceNote": "Three TV4 SC05 files had uncommitted changes during native and UI run; native report records sourceHashes, sourceCommitAtRun is not a clean revision.",
+  "runtime": {
+    "node": "v24.15.0",
+    "postgres": "postgres (PostgreSQL) 18.4",
+    "anvil": "anvil Version: 1.8.5"
+  },
+  "native": {
+    "status": "PASS",
+    "suites": {
+      "be01-sql": {
+        "status": "PASS"
+      },
+      "be02-storage": {
+        "status": "PASS",
+        "tests": 21,
+        "pass": 21,
+        "fail": 0
+      },
+      "be03-checkpoint-crash": {
+        "status": "PASS",
+        "tests": 18,
+        "pass": 18,
+        "fail": 0
+      },
+      "be04-projection": {
+        "status": "PASS",
+        "tests": 10,
+        "pass": 10,
+        "fail": 0
+      },
+      "be05-api": {
+        "status": "PASS",
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "be06-two-db": {
+        "status": "PASS",
+        "tests": 1,
+        "pass": 1,
+        "fail": 0
+      },
+      "governance-storage": {
+        "status": "PASS"
+      },
+      "live-api-be06": {
+        "status": "PASS"
+      }
+    },
+    "cleanup": {
+      "status": "PASS",
+      "clusterStopped": true,
+      "temporaryFilesRemoved": true,
+      "errors": []
+    },
+    "sourceHashes": {
+      "scripts/governance_local.mjs": "3348adf0a9780ffa676f99dcb6c72e7f2044dc28ef03349f3ea139f89515b168",
+      "scripts/check_tv4_native.mjs": "20bc5fed552aa7b6b78e7dbbc6301f2d58d8d5d444239a6c4c1e087a2a882b30"
+    }
+  },
+  "browserWrite": {
+    "txHash": "0x71088d33c04bc279034cf872d9943d7a88ec441418ad59b7554ecf5dc9b9e91f",
+    "receiptStatus": "0x1",
+    "transactionBlock": "22",
+    "proposalId": "9613294945346514260356288147766301953727749719338805876283829392492919402967",
+    "requestId": "0xfea1b8ba5c171e33882f87a47249ed820bd04b54f29aec45deec4ffcb1a098e6",
+    "amount": "1000000000000000000",
+    "state": "Pending",
+    "apiContext": {
+      "chainId": "31337",
+      "deploymentId": "tv4-local-20261104",
+      "asOfBlock": "22",
+      "asOfBlockHash": "0x52fb2c65242c2d88934b35c222d208a5d9e79086a4843c715a387e328b303200",
+      "asOfTimestamp": "1793774927",
+      "snapshotRevision": "84882d9d-83d6-4faa-a683-985a68d32466",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "24",
+        "confirmedBlock": "22",
+        "indexedBlock": "22",
+        "publicationBlock": "22",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-04T06:50:25.712Z",
+        "lastRpcCheckAt": "2026-11-04T13:50:25.714+07:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "apiCreatedTx": "0x71088d33c04bc279034cf872d9943d7a88ec441418ad59b7554ecf5dc9b9e91f",
+    "screenshot": "tv4-20261104-ui-proposal.png"
+  },
+  "nativeBrowser": {
+    "asOfBlock": "76",
+    "executed": "Executed",
+    "lowQuorum": "Defeated",
+    "evidencePath": "/tmp/dao-tv4-ui-20261104/browser-ui-finished.json"
+  }
+}

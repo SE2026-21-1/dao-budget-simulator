@@ -1,0 +1,341 @@
+Script started on 2026-10-24 18:58:21+07:00 [COMMAND="env FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh" <not executed on terminal>]
+forge Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+cast Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+anvil Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+[⠃] Compiling...[⠊] Compiling...[⠒] Compiling...[⠢] Compiling...
+No files changed, compilation skipped
+warning[block-timestamp]: usage of `block.timestamp` in a comparison may be manipulated by validators
+   ╭▸ contracts/BudgetGovernor.sol:57:20
+   │
+57 │                 || IERC6372(gov).clock() != block.timestamp
+   │                    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   │
+   ╰ help: https://getfoundry.sh/forge/linting/block-timestamp
+
+warning[unsafe-typecast]: typecast can truncate values
+   ╭▸ contracts/BudgetGovernor.sol:76:38
+   │
+76 │         if (payload.length != 100 || bytes4(payload) != ITreasury.disburse.selector) revert InvalidCalldata();
+   │                                      ━━━━━━━━━━━━━━━
+   │
+   ├ note: consider disabling this lint if you're certain the cast is safe
+   │       
+   │       // casting to 'bytes4' is safe because [explain why]
+   │       // forge-lint: disable-next-line(unsafe-typecast)
+   │       
+   │       
+   ╰ help: https://getfoundry.sh/forge/linting/unsafe-typecast
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:165:13
+    │
+165 │         if (block.timestamp <= p.snapshot) return IGovernor.ProposalState.Pending;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:166:13
+    │
+166 │         if (block.timestamp <= p.deadline) return IGovernor.ProposalState.Active;
+    │             ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:209:18
+    │
+209 │         _advance(block.timestamp + bound(secondsSeed, 0, 600));
+    │                  ━━━━━━━━━━━━━━━
+    ‡
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                                          ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+warning[environment-read-across-mutation]: `block.timestamp` may be reused across `vm.warp`
+    ╭▸ tests/invariant/GovernanceInvariant.t.sol:393:25
+    │
+393 │         if (timestamp > block.timestamp) vm.warp(timestamp);
+    │                         ━━━━━━━━━━━━━━━  ────────────────── `vm.warp` changes this environment here
+    │
+    ├ help: capture it with `vm.getBlockTimestamp()` instead
+    ╰ help: https://getfoundry.sh/forge/linting/environment-read-across-mutation
+
+[⠃] Compiling...[⠊] Compiling...[⠒] Compiling...[⠢] Compiling...
+No files changed, compilation skipped
+
+Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest
+[PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)
+[PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)
+[PASS] testCurrentTimepointLookupReverts() (gas: 20959)
+[PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)
+[PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)
+[PASS] testFutureTimepointLookupReverts() (gas: 20922)
+[PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13999, ~: 14241)
+[PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 215133, ~: 215114)
+[PASS] testMetadataAndInitialDistribution() (gas: 83285)
+[PASS] testNoPublicMint() (gas: 45653)
+[PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)
+[PASS] testPastVotesAndPastSupply() (gas: 146978)
+[PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)
+[PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)
+[PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 299.15ms (287.32ms CPU time)
+
+Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest
+[PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)
+[PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 54.81ms (54.54ms CPU time)
+
+Ran 6 tests for tests/attacks/GovernanceAttacks.t.sol:GovernanceAttacksTest
+[PASS] testCanceledProposalDoesNotConsumeRequestAndDistinctProposalCanPayIt() (gas: 8129816)
+[PASS] testConcurrentSnapshotsBudgetRaceRetryAndSharedRequestStayIndependent() (gas: 15851093)
+[PASS] testExecutionFailsAtEtaMinusOneAndSucceedsExactlyAtEta() (gas: 10618781)
+[PASS] testFinalRolesRejectOtherwiseValidOperationsIncludingFormerDeployer() (gas: 8409263)
+[PASS] testQueuedInsufficientFundsCannotCancelAndSameOperationRetries() (gas: 10940996)
+[PASS] testSnapshotUsesFinalCheckpointAtSAndRejectsRewritesAtSPlusOne() (gas: 9359500)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 367.59ms (353.20ms CPU time)
+
+Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest
+[PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)
+[PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)
+[PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)
+[PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)
+[PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)
+[PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)
+[PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)
+[PASS] testConstructorRejectsZeroAdmin() (gas: 6350)
+[PASS] testConstructorRejectsZeroToken() (gas: 6273)
+[PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)
+[PASS] testDuplicateRequestReverts() (gas: 139952)
+[PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)
+[PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)
+[PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)
+[PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)
+[PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 188020, ~: 187861)
+[PASS] testGrantAndRevokeSpendingRole() (gas: 237073)
+[PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)
+[PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)
+[PASS] testNativeValueRejected() (gas: 56431)
+[PASS] testOrdinaryWalletCannotPay() (gas: 60949)
+[PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)
+[PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)
+[PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)
+[PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)
+[PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)
+[PASS] testTreasuryRecipientReverts() (gas: 39549)
+[PASS] testZeroAmountReverts() (gas: 41310)
+[PASS] testZeroRecipientReverts() (gas: 38984)
+[PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 141.03ms (134.94ms CPU time)
+
+Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest
+[PASS] testApproveAndTransferFrom() (gas: 164697)
+[PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)
+[PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86436, ~: 86628)
+[PASS] testMetadataAndInitialSupply() (gas: 53852)
+[PASS] testNoPublicMint() (gas: 45672)
+[PASS] testTransferAboveBalanceReverts() (gas: 51581)
+[PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)
+[PASS] testTransferHasNoFee() (gas: 84330)
+[PASS] testZeroInitialHolderReverts() (gas: 4012)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 117.06ms (111.68ms CPU time)
+
+Ran 82 tests for tests/unit/BudgetGovernor.t.sol:BudgetGovernorTest
+[PASS] testAbstainAloneCannotWin() (gas: 270722)
+[PASS] testAllSensitiveCallsRejectOrdinaryWallet() (gas: 619536)
+[PASS] testBalanceTransferAfterSnapshotDoesNotChangeVoteWeight() (gas: 455801)
+[PASS] testBalanceWithoutDelegationCannotPropose() (gas: 187207)
+[PASS] testBelowThresholdCannotPropose() (gas: 269148)
+[PASS] testCannotQueueBeforeVotingCompletes() (gas: 293713)
+[PASS] testConstructorAndConfiguration() (gas: 130055)
+[PASS] testConstructorRejectsBlockNumberClock() (gas: 147809)
+[PASS] testCopiedProposalCannotReplaceFirstCreatorOrCancelRights() (gas: 480628)
+[PASS] testCorrectSelectorTruncatedTo35BytesRejected() (gas: 104004)
+[PASS] testCorrectSelectorTruncatedTo36BytesRejected() (gas: 104200)
+[PASS] testCorrectSelectorTruncatedTo4BytesRejected() (gas: 90500)
+[PASS] testCorrectSelectorTruncatedTo67BytesRejected() (gas: 112469)
+[PASS] testCorrectSelectorTruncatedTo68BytesRejected() (gas: 112553)
+[PASS] testCorrectSelectorTruncatedTo99BytesRejected() (gas: 117935)
+[PASS] testCreatorCanCancelAtSnapshotWhileStillPending() (gas: 222183)
+[PASS] testCreatorCancelsPendingAndBlocksAllActions() (gas: 335121)
+[PASS] testCreatorCannotCancelActive() (gas: 209480)
+[PASS] testCreatorCannotCancelDefeated() (gas: 255766)
+[PASS] testCreatorCannotCancelExecuted() (gas: 710818)
+[PASS] testCreatorCannotCancelQueued() (gas: 521186)
+[PASS] testCreatorCannotCancelSucceeded() (gas: 361699)
+[PASS] testDelegateAfterSnapshotDoesNotCreateVotes() (gas: 424914)
+[PASS] testDelegateChangeAfterSnapshotDoesNotChangeVoteWeight() (gas: 452479)
+[PASS] testDelegatingToAnotherWalletMovesVotesNotTokens() (gas: 437786)
+[PASS] testDelegationMustBePastForThreshold() (gas: 268354)
+[PASS] testDescriptionBytesAreNotReserialized() (gas: 63692)
+[PASS] testDirtyAddressPaddingRejected() (gas: 105786)
+[PASS] testDistinctProposalsSharingRequestPayOnlyOnce() (gas: 1173687)
+[PASS] testDuplicateVoteRejectedAcrossEntryPoints() (gas: 283476)
+[PASS] testExactlyThresholdCanPropose() (gas: 348529)
+[PASS] testExecuteChangedAmountRejected() (gas: 659889)
+[PASS] testExecuteChangedDescriptionHashRejected() (gas: 649970)
+[PASS] testExecuteChangedRecipientRejected() (gas: 659857)
+[PASS] testExecuteInsufficientBudgetRollsBackAndRetries() (gas: 981703)
+[PASS] testExecuteNonexistentProposalRejected() (gas: 172550)
+[PASS] testExecuteWithoutQueueRejected() (gas: 419301)
+[PASS] testExtendedSignedVoteSnapshotParamsAndReplay() (gas: 732656)
+[PASS] testFor400Against300SucceedsWithoutAutomaticPayment() (gas: 386310)
+[PASS] testForPlusAbstainReachesQuorum() (gas: 567575)
+[PASS] testFuzzConstructorRejectsZeroOrEOA(uint8,bool) (runs: 256, μ: 12953, ~: 12126)
+[PASS] testFuzzDirtyAddressPaddingWithValidSelector(uint8,uint8) (runs: 256, μ: 115638, ~: 115892)
+[PASS] testFuzzMalformedCalldataLengthRejected(uint8) (runs: 256, μ: 70674, ~: 70602)
+[PASS] testFuzzMismatchedArrayLengthsRejected(uint8,uint8) (runs: 256, μ: 77691, ~: 77882)
+[PASS] testFuzzValidPayloadWithTrailingBytesRejected(bytes) (runs: 256, μ: 124150, ~: 122571)
+[PASS] testGovernorSettingsProposalRejected() (gas: 84151)
+[PASS] testGrantRoleSelectorRejected() (gas: 87978)
+[PASS] testInsufficientQuorumDefeated() (gas: 350483)
+[PASS] testInvalidVoteTypeRejected() (gas: 213912)
+[PASS] testLossDespiteQuorumDefeated() (gas: 637681)
+[PASS] testMultipleActionsRejected() (gas: 227372)
+[PASS] testNativeValueRejected() (gas: 95588)
+[PASS] testOtherWalletCannotCancelPending() (gas: 186859)
+[PASS] testProposalCreatedPreservesRawIntegrationData() (gas: 180927)
+[PASS] testProposalDoesNotReserveBudgetOrRequireUnusedRequest() (gas: 294025)
+[PASS] testQueueChangedAmountRejected() (gas: 520039)
+[PASS] testQueueChangedDescriptionHashRejected() (gas: 510140)
+[PASS] testQueueChangedRecipientRejected() (gas: 520028)
+[PASS] testQueueNonexistentProposalRejected() (gas: 172515)
+[PASS] testRevokeRoleSelectorRejected() (gas: 87957)
+[PASS] testSC01FixtureHash() (gas: 11092)
+[PASS] testSettingsCannotBeChangedDirectlyByWallet() (gas: 32301)
+[PASS] testSignedVoteAfterDeadlineRejectedAndNonceUnchanged() (gas: 526827)
+[PASS] testSignedVoteBeforeActiveRollsBackNonceAndCanRetry() (gas: 569340)
+[PASS] testSignedVoteUsesSnapshotAndRejectsReplay() (gas: 718979)
+[PASS] testSuccessfulExecuteCannotReplay() (gas: 726441)
+[PASS] testTamperedSignedSupportRejectedWithoutConsumingNonce() (gas: 559409)
+[PASS] testTieDefeated() (gas: 454398)
+[PASS] testTimelockIdentityAloneCannotInvokeSensitiveCalls() (gas: 631883)
+[PASS] testTimelockTargetRejected() (gas: 80688)
+[PASS] testTokenTransferSelectorRejected() (gas: 90293)
+[PASS] testTrailingDataRejected() (gas: 80988)
+[PASS] testTreasuryRecipientRejected() (gas: 113310)
+[PASS] testValidProposalAndHash() (gas: 189784)
+[PASS] testVoteWithParamsCannotInjectWeightOrVoteTwice() (gas: 585505)
+[PASS] testVotingWindowBoundaries() (gas: 556662)
+[PASS] testWrongSelectorWithCorrectLengthRejected() (gas: 88041)
+[PASS] testWrongTargetRejectedOnDirectPropose() (gas: 80698)
+[PASS] testZeroAmountRejected() (gas: 105548)
+[PASS] testZeroRecipientRejected() (gas: 110764)
+[PASS] testZeroRequestAccepted() (gas: 159730)
+[PASS] testZeroVotingPowerWeightIsZero() (gas: 326441)
+Suite result: ok. 82 passed; 0 failed; 0 skipped; finished in 708.29ms (738.31ms CPU time)
+
+Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest
+[PASS]
+TreasuryAccountingInvariantTest invariants:
+[PASS] invariant_accountingMatchesSuccessfulPaymentOracle
+[PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs
+[PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay
+ TreasuryAccountingInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)
+
+╭---------------------------+--------------+-------+---------+----------╮
+| Contract                  | Selector     | Calls | Reverts | Discards |
++=======================================================================+
+| TreasuryAccountingHandler | changeRole   | 1254  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | fund         | 1291  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | pay          | 1234  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | payAvailable | 1221  | 0       | 0        |
+╰---------------------------+--------------+-------+---------+----------╯
+
+[PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 12.70s (12.69s CPU time)
+
+Ran 1 test for tests/invariant/GovernanceInvariant.t.sol:GovernanceInvariantTest
+[PASS]
+GovernanceInvariantTest invariants:
+[PASS] invariant_INV01_requestPaymentsAreUniqueAcrossProposalsAndRetries
+[PASS] invariant_INV02_everyPayoutHasValidGovernanceAndFinalRoles
+[PASS] invariant_INV03_treasuryAndRecipientsMatchCommittedLedger
+[PASS] invariant_INV04_snapshotWeightsAndTalliesRemainIndependentOfTokenChanges
+ GovernanceInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)
+
+╭-------------------------+-----------------+-------+---------+----------╮
+| Contract                | Selector        | Calls | Reverts | Discards |
++========================================================================+
+| GovernanceOracleHandler | advance         | 386   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | approveGov      | 371   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | cancel          | 340   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | delegateGov     | 332   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | execute         | 369   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | fund            | 355   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | lifecycle       | 344   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | propose         | 349   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | queue           | 343   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | tamper          | 374   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | transferFromGov | 392   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | transferGov     | 337   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | unauthorized    | 323   | 0       | 0        |
+|-------------------------+-----------------+-------+---------+----------|
+| GovernanceOracleHandler | vote            | 385   | 0       | 0        |
+╰-------------------------+-----------------+-------+---------+----------╯
+
+Logs:
+  sequence actions: 51
+  reachable lifecycle calls: 5
+  Governor execute successes: 5
+  unassisted execute successes: 0
+  execute reverts: 2
+  vote successes: 25
+  queue successes: 5
+  cancel successes: 1
+  unauthorized reverts: 1
+  approval successes: 3
+  transferFrom successes: 1
+  transferFrom reverts: 4
+  model state visits 0: 10
+  model state visits 1: 5
+  model state visits 2: 39
+  model state visits 3: 47
+  model state visits 4: 0
+  model state visits 5: 0
+  model state visits 6: 0
+  model state visits 7: 131
+  total BUD funded: 18900000000012191761194
+  total BUD paid: 5000000000000000000
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 91.66s (91.63s CPU time)
+
+Ran 8 test suites in 91.69s (106.06s CPU time): 147 tests passed, 0 failed, 0 skipped (147 total tests)
+SC01 OK: compiler ABI, calldata, descriptionHash and proposalId agree
+
+Script done on 2026-10-24 18:59:55+07:00 [COMMAND_EXIT_CODE="0"]

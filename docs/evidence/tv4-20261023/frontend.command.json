@@ -1,0 +1,16 @@
+{
+  "label": "frontend",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=node@24.15.0",
+    "--",
+    "sh",
+    "-c",
+    "npm run lint --prefix frontend && npm run build --prefix frontend"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 24.867,
+  "log": "frontend.txt"
+}

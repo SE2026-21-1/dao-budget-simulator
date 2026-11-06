@@ -78,6 +78,17 @@ for (const [against, yes, abstain, expected] of [
     assert.equal(evaluate(p, 1361n, 200n).state, expected);
   });
 }
+test('Against votes cannot fill quorum even when For beats Against', () => {
+  const s = new Scenario();
+  s.propose();
+  const p = build(s).proposals[0]!;
+  p.votes = [100n, 150n, 0n];
+  const quorum = 200n;
+  assert.ok(p.votes[1] > p.votes[0]);
+  assert.ok(p.votes[0] + p.votes[1] >= quorum);
+  assert.ok(p.votes[1] + p.votes[2] < quorum);
+  assert.equal(evaluate(p, 1361n, quorum).state, 'Defeated');
+});
 test('ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable', () => {
   const s = new Scenario();
   const p = s.propose();

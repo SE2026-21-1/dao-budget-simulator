@@ -1,0 +1,118 @@
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+> dao-budget-simulator@0.0.0 test:be02
+> tsx --test tests/indexer/config.test.ts tests/indexer/decoder.test.ts tests/indexer/reader.test.ts tests/indexer/cli.test.ts
+
+✔ CLI help and invalid arguments have appropriate exit codes (8029.191716ms)
+✔ CLI reports unsupported ABI as an actionable config error (2276.950758ms)
+✔ CLI rejects wrong chain before attempting PostgreSQL and never prints secrets (2392.032076ms)
+✔ config preserves bigint, validates scope and permits a pinned latest request (64.58629ms)
+✔ reject invalid config: numericChainId (1.066576ms)
+✔ reject invalid config: zeroChain (3.836591ms)
+✔ reject invalid config: overflow (0.529229ms)
+✔ reject invalid config: fractionalBlock (0.446166ms)
+✔ reject invalid config: negativeBlock (0.370507ms)
+✔ reject invalid config: reversedRange (4.361563ms)
+✔ reject invalid config: zeroBatch (2.309361ms)
+✔ reject invalid config: unboundedBatch (4.091814ms)
+✔ reject invalid config: invalidRpc (0.872099ms)
+✔ reject invalid config: deploymentOverflow (3.616108ms)
+✔ reject invalid config: emptyContracts (9.193965ms)
+✔ reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI (48.068158ms)
+✔ synthetic vectors cover all eleven required event types and source indexed layouts (98.911024ms)
+✔ decodes governor.ProposalCreated with exact named ABI values (430.761692ms)
+✔ decodes governor.VoteCast with exact named ABI values (11.343858ms)
+✔ decodes governor.ProposalQueued with exact named ABI values (12.946183ms)
+✔ decodes governor.ProposalExecuted with exact named ABI values (5.508139ms)
+✔ decodes governor.ProposalCanceled with exact named ABI values (29.352144ms)
+✔ decodes timelock.CallScheduled with exact named ABI values (27.487714ms)
+✔ decodes timelock.CallExecuted with exact named ABI values (12.453544ms)
+✔ decodes timelock.Cancelled with exact named ABI values (8.527978ms)
+✔ decodes timelock.CallSalt with exact named ABI values (25.769035ms)
+✔ decodes treasury.BudgetDisbursed with exact named ABI values (5.862014ms)
+✔ decodes budget_token.Transfer with exact named ABI values (8.11841ms)
+✔ independent hand-assembled canonical Transfer vector decodes without fixture encoder (10.242988ms)
+✔ preserves uint256 above 2^53 including indexed integers and maximum proposal ID (27.955223ms)
+✔ dynamic description and reason preserve exact Unicode and whitespace (38.099166ms)
+✔ registry Treasury fragment matches handed-over shared JSON ABI exactly (47.562222ms)
+✔ ABI version is explicitly bound to contract role and cannot use object prototype keys (72.134008ms)
+✔ unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC (7.481606ms)
+✔ known events reject missing, additional and malformed indexed topics (49.677956ms)
+✔ known events reject truncated, odd, nonhex and trailing data (162.383703ms)
+✔ known events reject noncanonical uint8 and invalid dynamic offsets (78.472186ms)
+✔ NUL in valid Solidity description or reason is raw-only for JSONB storage (57.196543ms)
+✔ invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error (68.046478ms)
+✔ decoded, unknown and malformed logs retain every original RPC field (95.651424ms)
+✔ range boundaries work above Number.MAX_SAFE_INTEGER without gaps (14.480384ms)
+✔ scan includes every boundary/empty block and sorts tx/log indices; preserves raw input (175.486819ms)
+✔ different deployment blocks retain early contract logs and clamp each RPC filter (46.667832ms)
+✔ RPC cannot return a known contract log before its deployment block (17.867364ms)
+✔ RPC cannot substitute another configured contract in a filter response (4.689985ms)
+✔ duplicate transaction hashes in a header are contradictory (1.601378ms)
+✔ wrong chain stops before any storage write or block request (16.950144ms)
+✔ latest is pinned once for the finite scan (19.085007ms)
+✔ outside-deployment log is dropped before ABI or canonical-log validation (13.362942ms)
+✔ unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics (26.355521ms)
+✔ reject contradictory/invalid log: removed (5.479543ms)
+✔ reject contradictory/invalid log: pending (8.856574ms)
+✔ reject contradictory/invalid log: blockHash (7.59115ms)
+✔ reject contradictory/invalid log: block number (42.767463ms)
+✔ reject contradictory/invalid log: txHash (8.440415ms)
+✔ reject contradictory/invalid log: txIndex (2.223577ms)
+✔ reject contradictory/invalid log: invalid hex (3.483515ms)
+✔ reject contradictory/invalid log: unsafe index (3.997177ms)
+✔ detect colliding log positions and transaction order disagreement (5.990684ms)
+✔ reports previous committed batch separately when a later header chain disagrees (7.617183ms)
+✔ changing final header prevents write (4.535169ms)
+✔ HTTP JSON-RPC transport reads synthetic logs through scanner (1038.627541ms)
+✔ RPC HTTP failures redact URL paths and body; prior batches remain explicit (130.148224ms)
+ℹ tests 63
+ℹ suites 0
+ℹ pass 63
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19675.691617
+BE01 OK: 123 JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.
+Timeline OK: 105 timestamp-ordered blocks, 190 distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.
+Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.
+Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.
+▶ PostgreSQL storage (real isolated PostgreSQL)
+  ✔ writes complete headers including empty block, exact uint256, original JSON and scoped raw columns (147.265914ms)
+  ✔ identical and concurrent retries do not duplicate events or blocks (175.417406ms)
+  ✔ detects changed block hash, parent hash and timestamp with the same block key (249.138251ms)
+  ✔ detects raw/decode content conflicts rather than suppressing the chain dedup key (711.089346ms)
+  ✔ same chain dedup key cannot be silently copied to another deployment (95.023443ms)
+  ✔ unknown topics and decoder errors retain raw data and NULL decode columns (116.367653ms)
+  ✔ missing deployment or chain mismatch fails before inserting any data (40.038982ms)
+  ✔ numeric metadata with an explicit zero scale still matches its exact integer configuration (75.989733ms)
+  ✔ detects disconnected stored neighbors on either boundary across separate runs (124.598276ms)
+  ✔ detects conflicting canonical coordinates even when the transaction dedup key differs (143.704897ms)
+  ✔ detects inverse transaction/log ordering against logs saved by a previous run (129.221081ms)
+  ✔ rejects a stored transaction appearing in a different connected block with a new log index (59.460456ms)
+  ✔ every requested contract role/address/deploymentBlock/ABI must match existing metadata (154.317698ms)
+  ✔ later event conflict rolls back newly inserted headers and earlier events, preserving prior batch (102.091982ms)
+  ✔ database errors roll back inserted headers and raw events (58.769027ms)
+  ✔ rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches (134.015496ms)
+  ✔ BE01 foreign keys reject a log linked to another deployment contract or block hash (154.236778ms)
+  ✔ does not advance checkpoints or create projections or overwrite deployment metadata (118.535675ms)
+  ✔ actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates (7601.674926ms)
+  ✔ actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields (2869.46876ms)
+  ✔ actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back (7282.655963ms)
+✔ PostgreSQL storage (real isolated PostgreSQL) (21338.522835ms)
+ℹ tests 21
+ℹ suites 1
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 25168.514151

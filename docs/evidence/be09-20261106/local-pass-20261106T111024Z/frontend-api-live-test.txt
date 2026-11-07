@@ -1,0 +1,16 @@
+
+> frontend@0.0.0 test
+> vitest run src/data/api.live.test.ts --reporter=default --reporter=json --outputFile.json=/home/cuongdz/.local/state/dao-budget-be09/runs/20261106T105820Z-262c5151e980/reports/verify-20261106T111024Z-bd857665/frontend-api-live-test.vitest.json
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/home/cuongdz/projects/dao-budget-be09/frontend[39m
+
+ [32m✓[39m src/data/api.live.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 364[2mms[22m[39m
+     [33m[2m✓[22m[39m reads all six real endpoints at one H/hash/revision without duplicate or missing rows [33m 363[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 11:10:24
+[2m   Duration [22m 500ms[2m (transform 101ms, setup 0ms, import 38ms, tests 364ms, environment 0ms)[22m
+
+JSON report written to /home/cuongdz/.local/state/dao-budget-be09/runs/20261106T105820Z-262c5151e980/reports/verify-20261106T111024Z-bd857665/frontend-api-live-test.vitest.json

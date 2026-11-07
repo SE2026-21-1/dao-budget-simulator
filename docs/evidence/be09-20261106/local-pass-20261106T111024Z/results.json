@@ -1,0 +1,148 @@
+{
+  "format": "dao-budget-be09-verification-v1",
+  "status": "PASS",
+  "startedAt": "2026-11-06T11:10:24.415Z",
+  "scope": "This report covers only the local WSL run created by scripts/be09-local.sh. It does not attest CI, testnet, browser/wallet E2E, or separate TV3/TV4 review.",
+  "sourceCommit": "681289bb1f11db87bdfcb15c6b28d1d995229835",
+  "worktree": {
+    "head": "681289bb1f11db87bdfcb15c6b28d1d995229835",
+    "status": [
+      "?? docs/evidence/be09-20261106/dependency-setup.md",
+      "?? docs/evidence/be09-20261106/deployment-failure.json",
+      "?? docs/evidence/be09-20261106/frontend-live-fixed-APqXBX/frontend-api-live-test.vitest.json",
+      "?? docs/evidence/be09-20261106/frontend-live-fixed-APqXBX/result.json",
+      "?? docs/evidence/be09-20261106/frontend-live-fixed-XKrgJa/frontend-api-live-test.vitest.json",
+      "?? docs/evidence/be09-20261106/frontend-live-fixed-XKrgJa/result.json",
+      "?? docs/evidence/be09-20261106/governance-seed.test.mjs",
+      "?? docs/evidence/be09-20261106/live-test-classification.test.mjs",
+      "?? docs/evidence/be09-20261106/local-status.test.mjs",
+      "?? docs/evidence/be09-20261106/readiness-20261106T103724Z.json",
+      "?? docs/evidence/be09-20261106/readiness.test.mjs",
+      "?? docs/evidence/be09-20261106/report.md",
+      "?? docs/evidence/be09-20261106/toolchain.env.sh",
+      "?? scripts/be09-diagnose.mjs",
+      "?? scripts/be09-live-test.mjs",
+      "?? scripts/be09-local.sh",
+      "?? scripts/be09-register.mjs",
+      "?? scripts/be09-seed.mjs",
+      "?? scripts/be09-verify.mjs"
+    ],
+    "sha256": {
+      "scripts/be09-local.sh": "31e6eb3c9c4c0f0a063ff4d51397249444ca4e21012d857f674d7e2c89d59df8",
+      "scripts/be09-seed.mjs": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+      "scripts/be09-register.mjs": "529a6e7dac1fa70cf27583908c6ca2ed600a984c405cd027ca663811fc158b93",
+      "scripts/be09-diagnose.mjs": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+      "scripts/be09-verify.mjs": "acf1d6b7ee8aec3cf33d99c8a754ac403875b3474eb8106667aa971a3a66ba92",
+      "scripts/be09-live-test.mjs": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8"
+    },
+    "note": "Hashes describe the current verification worktree, not a reconstruction of the earlier deployment worktree."
+  },
+  "chainId": "31337",
+  "deploymentName": "be09-local-20261106T105820Z-3225088c3bdc",
+  "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+  "context": {
+    "chainId": "31337",
+    "deploymentName": "be09-local-20261106T105820Z-3225088c3bdc",
+    "H": "24",
+    "hash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+    "revision": "ae00bfe8-550e-41a0-9013-292d618f3982"
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/health",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/summary",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/treasury/transfers",
+      "method": "GET",
+      "httpStatus": 200
+    }
+  ],
+  "contractComparison": {
+    "H": "24",
+    "hash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+    "revision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+    "proposalState": "Executed",
+    "votes": [
+      "0",
+      "700000000000000000000",
+      "0"
+    ],
+    "paidRequest": true,
+    "treasuryBalance": "9000000000000000000000",
+    "apiAndChainVoteRows": 2,
+    "apiAndChainTransfers": 2,
+    "totalIn": "10000000000000000000000",
+    "totalOut": "1000000000000000000000",
+    "result": "PASS"
+  },
+  "workerRestart": {
+    "oldPid": 9134,
+    "newPid": 10458,
+    "databaseDigestUnchanged": true,
+    "publication": {
+      "block_number": "24",
+      "block_hash": "0x9a23133c9f90387329db7483c90055843e24bbbce8af15248ff0ded44204fa6a",
+      "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+      "snapshot_revision": "ae00bfe8-550e-41a0-9013-292d618f3982",
+      "ignored_ancillary_events": 16
+    }
+  },
+  "cors": {
+    "preflightHttpStatus": 204,
+    "allowOrigin": "http://127.0.0.1:5173",
+    "expectedOrigin": "http://127.0.0.1:5173"
+  },
+  "liveTest": {
+    "command": "npm run test --prefix frontend -- src/data/api.live.test.ts --reporter=default --reporter=json --outputFile.json=/home/cuongdz/.local/state/dao-budget-be09/runs/20261106T105820Z-262c5151e980/reports/verify-20261106T111024Z-bd857665/frontend-api-live-test.vitest.json",
+    "status": "PASS",
+    "executed": true,
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "log": "/home/cuongdz/.local/state/dao-budget-be09/runs/20261106T105820Z-262c5151e980/reports/verify-20261106T111024Z-bd857665/frontend-api-live-test.log",
+    "vitestJson": "/home/cuongdz/.local/state/dao-budget-be09/runs/20261106T105820Z-262c5151e980/reports/verify-20261106T111024Z-bd857665/frontend-api-live-test.vitest.json",
+    "variables": [
+      "BE05_LIVE_API_URL",
+      "BE05_LIVE_CHAIN_ID",
+      "BE05_LIVE_DEPLOYMENT_ID",
+      "BE05_LIVE_RPC_URL"
+    ],
+    "runtimeInputs": {
+      "apiUrl": "http://127.0.0.1:3300",
+      "chainId": "31337",
+      "deploymentName": "be09-local-20261106T105820Z-3225088c3bdc",
+      "rpcUrl": "http://127.0.0.1:18545"
+    },
+    "deploymentIdIsReal": true
+  },
+  "stageErrors": [],
+  "error": null,
+  "finishedAt": "2026-11-06T11:10:26.150Z"
+}

@@ -2,6 +2,55 @@
 
 **Source phân biệt:** Dev `87738d3f792c3a283a52b5c18c306809d6cfcfd4`, PR #21 trước đồng bộ `640389fd9f83e76b7eaeb8853fd18a1fb276a2f1`, PR #31 VT-064 `9dc2ba90cad18d810931135a99d1ad5d94690380` (không nhập). Worktree cá nhân có thay đổi chưa commit được giữ nguyên; TV4 tạo worktree riêng để chạy Dev và chỉnh PR #21. Main `ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4` không phải base tích hợp.
 
+## Đối chiếu lại head PR #21 — 08/11/2026
+
+PR #21 trước commit tài liệu này: head `36756d5277ceae9e8a4ca898339868ba6c0871f9` →
+base Dev `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. CI **đúng head**
+[push 42246292210](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246292210)
+và [PR 42246301276](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301276)
+đều 9/9 job success; [BE08 PR 42246301219](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301219)
+success. Lượt FAIL ở `bc17d34` mục dưới vẫn là lịch sử, không phải kết quả head hiện tại.
+CI status không thay raw artifact hoặc approval.
+
+Đối chiếu yêu cầu [TV1 REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129):
+
+| Yêu cầu | Source/commit và kết quả kiểm độc lập tại head |
+|---|---|
+| Oracle độc lập, quorum(S)=200 GOV | `scripts/check_sc06_chain.mjs::historicalQuorum` (`4b76a82`) replay GOV mint Transfer và QuorumNumeratorUpdated đến S, đối chiếu getter nguồn cung/numerator tại H; `projectFixture` so archived quorum(S) trước evaluate. `tests/sc06-chain.test.mjs` xác nhận 200 GOV. |
+| Mutation riêng 200→1.001 GOV, đúng lỗi và nhiều proposal | `tests/sc06-chain.test.mjs::executedQuorumCall` (`6c9b73f`, `c979560`) chọn theo ProposalCreated/voteStart của proposal Executed, không chọn nhầm proposal Canceled; `assert.rejects` đòi lỗi `Governor.quorum(snapshot) differs from historical GOV supply and quorum configuration`. Local Node 24.15.0: 32/32 PASS, full offline checker 24 receipt/42 log/H26 PASS. Không ghi nhận đây là live RPC mới (`liveRpcVerified:false`). |
+| Against không cấp quorum | `tests/integration/TimelockGovernance.t.sol::testAgainstVotesDoNotSupplyQuorumForFailedProposal` (`4b76a82`): For150 > Against100, tổng250 ≥ quorum200 nhưng For+Abstain150 <200; Defeated. Chạy riêng 1/1 PASS. |
+| README/provenance/bootstrap/CI history | `fixtures/chain/sc06-v1/README.md` (`bc17d34`) ghi source `c979560`, luồng pre-renounce→renounce→pre-funding, 32 ca; `.github/workflows/ci.yml` (`6f60ba5`) `fetch-depth: 0`. Forge fmt, root typecheck/build PASS. TV1 cần review lại trên SHA mới, TV2/TV3 xác nhận ABI/consumer; không tự gỡ Request changes. |
+
+Tại cùng worktree PR head (Node 24.15.0/Forge 1.8.5), `npm run
+test:bootstrap` **15/15 PASS** trên Anvil riêng; `FOUNDRY_PROFILE=ci
+FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path
+tests/invariant/GovernanceInvariant.t.sol -vv` **4/4 PASS**, 100 runs × 50
+calls, seed cố định, 0 framework reverts. Ghost oracle kiểm paid requests,
+quyền/path, ledger và snapshot; log **chuỗi cuối** ghi 5 Governor execute
+successes/2 execute reverts/0 cancel successes/0 transferFrom successes, không
+được cộng chuỗi cuối thành tổng toàn campaign hay suy bao phủ mọi strategy.
+`npm run lint --prefix frontend` exit 0 với **8 warning** ở wallet; frontend
+14/14 tests và build PASS (bundle 607,29 kB, warning >500 kB). Đây là
+fixture/unit ở head PR, **không** phải FE↔API live mới hoặc ví extension.
+
+Đọc lại archive **local Dev** `tv4-20261106-be08-raw.tar.gz`: SHA-256
+`3406b240b6d637134ce0b1153cabaf84fceab307adb62127fb7f40057dfda7dd`,
+`tested-source.json` gắn Dev `87738d3`, `sourceUnchangedThroughRun:true`, patch
+SHA-256 rỗng `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+Tự tính từ 20.986 `load.rawSamples`: 0 HTTP errors, p95 nearest-rank
+**212,460931 ms**; mỗi endpoint lần lượt list 7.000/227,103169 ms,
+summary 3.499/117,424224 ms, detail 3.498/171,183035 ms,
+votes 3.496/230,638486 ms, transfers 3.493/219,007609 ms. `elapsedIncludingDrainMs`
+= **254.634,531 ms** vì worker tiếp tục trong lúc đo freshness; không gọi 20.986
+request là tải cố định 60 giây. Riêng các request bắt đầu trước 60.000 ms có
+4.967 mẫu, p95 **220,937631 ms**; mẫu chéo ranh giới vẫn được tính theo lúc bắt đầu.
+Freshness 20/20, p95 27.884,381988 ms và max 28.443,131451 ms; margin
+~1,557 giây so với 30 giây, chưa bảo đảm máy khác. ZIP artifact **CI**
+`13391310183` chưa đọc được (401); không gán thống kê local cho CI. #18/#37
+còn chờ TV2 xác nhận từng gate và artifact CI, #40/#42 chờ service sống và máy
+thành viên khác. RPC/API/UI ở `:8545/:3000/:5173/:5174` đều không kết nối khi
+kiểm lại; archive H24/H79/H82 không phải endpoint đang chạy.
+
 ## Sau review PR #21 — quorum, UI và BE09 (nguồn mới ngày 06/11)
 
 - TV1 [REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129) tại `a9db100`: checker cũ chấp nhận mutation *riêng* `quorum(snapshot)` 200→1.001 GOV. Source fix `4b76a82`, regression sửa đích snapshot tại `c9795605277bd0500275804b7873618f13220c13`: oracle replay GOV constructor Transfer và lịch sử QuorumNumeratorUpdated tại S, đối chiếu supply/numerator H, rồi mới so raw quorum(S); không dùng chính raw quorum làm expected. Test Against 100/For 150/Abstain 0 với quorum 200 chứng minh For>Against nhưng chỉ Against làm tổng tới quorum; contract từ chối queue. Fixture tạo lại từ source **`c979560`** bằng Anvil mới: H26/hash `0xb36562d70d1229faa1e3ab713e12cc594727b3ab30c0c062f26c0c6192d9e20e`, 24 receipt/42 log, live RPC verified khi tạo, [chain.json](../../fixtures/chain/sc06-v1/chain.json) SHA256 `324491f6345cef24e1d10d51e2490a5718d86b287b866ef478141d0c39c58b8d`. Checker offline PASS, **32/32** SC06 mutation cases PASS/0 fail/0 skip; contract 187/187, bootstrap15/15, backend projection24/24, frontend14/14, lint exit0 (8 warning)/build PASS trên worktree source và archive mới. CI trên revision công bố cần kiểm lại; cũ không xác nhận fix. Chờ TV1 review lại và TV2/TV3 kiểm ABI/consumer.

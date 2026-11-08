@@ -5,12 +5,10 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Đối chiếu 06/11/2026 — chưa phải release gate
+## Đối chiếu 08/11/2026 — chưa phải release gate
 
 `Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),
-freshness (#38) và SC06 (#39). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đang mở vào Dev; SC06 oracle/fixture sinh từ `c9795605277bd0500275804b7873618f13220c13`, CI history fix `6f60ba5c8f7af6c1dff5f802230d932000a39cf2` trên `feature/tv4-operation`. [Lượt CI cũ tại `bc17d34`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248) FAIL contracts 1/9 do checkout nông; CI/BE08 cho head mới phải xác nhận riêng, không gán [CI 9/9 cũ](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42159806999) cho fix. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Những nhãn
-“chưa có” ở phần 22/10 và URL demo tháng 10/đầu tháng 11 dưới đây là lịch sử
-theo revision, không là tình trạng service hiện tại. Xem [evidence lượt mới](evidence/tv4-20261106-acceptance.md).
+freshness (#38) và SC06 (#39). [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) đang mở vào Dev, head **trước commit tài liệu này** `36756d5277ceae9e8a4ca898339868ba6c0871f9`; source fixture SC06 `c9795605277bd0500275804b7873618f13220c13`, CI history fix `6f60ba5c8f7af6c1dff5f802230d932000a39cf2`. [Push CI 42246292210](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246292210) và [PR CI 42246301276](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301276) tại `36756d5` **9/9 success**; [BE08 PR CI 42246301219](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301219) success. [Lượt đỏ `bc17d34`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248) là lịch sử checkout nông, không phải kết quả mới. TV1 vẫn REQUEST_CHANGES tại `a9db100`; phải review lại head hiện tại. PR #31 là VT-064 draft cá nhân, **không nhập** vào acceptance chung. Các URL demo cũ dưới đây không phải service hiện sống. [Mapping và raw local](evidence/tv4-20261106-acceptance.md).
 
 | QA / issue | Trạng thái hiện tại | Gate còn mở / người phối hợp |
 |---|---|---|
@@ -23,7 +21,8 @@ theo revision, không là tình trạng service hiện tại. Xem [evidence lư�
 
 Base `Dev=87738d3`, SC06 code/regression `4b76a82`/`c979560`, fixture
 H26/24 receipt/42 logs và [evidence local 32/32](evidence/tv4-20261106-acceptance.md).
-CI mới cần chạy trên head chứa `fetch-depth: 0` sau [lượt đỏ](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248). PR hiện gồm nhiều
+CI head mới đã đạt; TV1 cần kiểm lại mutation và các yêu cầu trên
+`36756d5`, TV2/TV3 xác nhận ABI/consumer, chưa tự approve/merge. PR gồm nhiều
 commit và evidence lịch sử; đọc kết quả theo **SHA từng lượt**, không gán
 benchmark Dev cho CI head. Đây là checklist đăng trong repo để reviewer đối
 chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
@@ -41,12 +40,12 @@ draft cá nhân không thuộc diff nghiệm thu. Kết quả local/CI không th
 review, ví extension, máy khác hoặc quyết định testnet.
 
 **GitHub Projects:** [Project nhóm #1](https://github.com/orgs/SE2026-21-1/projects/1)
-và [TV4 #2](https://github.com/orgs/SE2026-21-1/projects/2) trả HTTP 404 trong
-phiên không đăng nhập; [repo Projects](https://github.com/SE2026-21-1/dao-budget-simulator/projects)
-hiển thị 0 mục công khai. Không thể đọc view/draft item, trạng thái hiện có
-hay giá trị Status thực tế. Môi trường chỉ xác thực Git qua SSH, không có
-API token/phiên GitHub đăng nhập để cập nhật Project, PR hoặc comment. Đề
-xuất đối chiếu item **đã có** khi có quyền, không tự tạo trùng hay ghi đã sửa:
+và [TV4 #2](https://github.com/orgs/SE2026-21-1/projects/2) đều trả HTTP 504
+trên web; REST Projects legacy trả 404, GraphQL GET trả 403 khi chưa xác thực.
+Không thể đọc item/Status/Priority thực tế; không suy Projects không tồn tại.
+Phiên trình duyệt GitHub chưa đăng nhập, REST hết quota và SSH chỉ xác thực Git,
+không cấp quyền cập nhật Project/PR/comment. Đề xuất đối chiếu item **đã có**
+khi có quyền, không tự tạo trùng hay ghi đã sửa:
 
 | Issue | Priority đề xuất | Status đề xuất / dependency |
 |---|---|---|
@@ -55,7 +54,7 @@ xuất đối chiếu item **đã có** khi có quyền, không tự tạo trùn
 | #42, #43 | Trung bình | Blocked máy khác (#42); #43 Review sau fixture regenerate/quorum mutation 32/32 tại `c979560`, cần TV1/TV2/TV3 peer trên head PR #21 |
 | #44 | Trung bình | Blocked bởi #18/#36/#40/#41/#20/#42 và release evidence |
 | #45, PR #21 | Cao | Ghi head PR #21 và link CI đúng lượt mới (push + PR + BE08), nguồn fixture `c979560`, kết luận review TV1/TV2/TV3; giữ trạng thái chờ review khi còn `REQUEST_CHANGES`, không Done từ CI. Giữ SHA cũ làm lịch sử |
-| PR #46, #9 | Trung bình | PR #46 head `22122bd` local clean runtime PASS nhưng TV3 peer/máy riêng chưa xác nhận; #9 hiển thị snapshot H/hash/revision trên PR #21, chờ TV3 nhận consumer và peer review |
+| PR #46, #9 | Trung bình | PR #46 đã merge vào `feature/tv3-frontend` ngày 07/11, **không vào Dev**; #9 hiển thị snapshot H/hash/revision trên PR #21, chờ TV3 nhận consumer và peer review |
 
 ## Kiểm tra revision mới — 02/11/2026
 

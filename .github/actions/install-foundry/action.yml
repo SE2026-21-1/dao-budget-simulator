@@ -1,0 +1,39 @@
+name: Install pinned Foundry
+# Retry the same verified release when GitHub release/attestation downloads return 5xx.
+# The final attempt must succeed; never bypass foundryup's attestation check.
+description: Install Foundry 1.8.5 with bounded retries
+runs:
+  using: composite
+  steps:
+    - id: first
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.first.outcome == 'failure'
+      shell: bash
+      run: sleep 20
+    - id: second
+      if: steps.first.outcome == 'failure'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.second.outcome == 'failure'
+      shell: bash
+      run: sleep 60
+    - if: steps.second.outcome == 'failure'
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - name: Verify installed versions
+      shell: bash
+      run: |
+        for tool in forge cast anvil; do
+          version="$($tool --version)"
+          echo "$version"
+          [[ "$version" == "$tool Version: 1.8.5"* ]] || exit 1
+        done

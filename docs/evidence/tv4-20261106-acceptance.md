@@ -12,6 +12,18 @@ và [PR 42246301276](https://github.com/SE2026-21-1/dao-budget-simulator/actions
 success. Lượt FAIL ở `bc17d34` mục dưới vẫn là lịch sử, không phải kết quả head hiện tại.
 CI status không thay raw artifact hoặc approval.
 
+Lượt **CI mới trên `c5f84f8` đã FAIL trước khi chạy test phụ thuộc
+Foundry**: [push 42466361404](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466361404)
+5/9 job success, [PR 42466365790](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466365790)
+5/9 job success, [BE08 42466365828](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466365828)
+FAIL. Annotations của cả năm job Foundry nêu HTTP 504 khi tải
+`foundryup_linux_amd64`, release attestation hoặc Foundry 1.8.5 attestation;
+không phải test quorum/backend thất bại. `.github/actions/install-foundry/action.yml`
+thử lại **cùng action/version, không tắt attestation**, chờ 20 giây rồi 60 giây;
+lần thử cuối phải thành công và xác nhận version forge/cast/anvil mới chạy suite.
+Nếu GitHub download vẫn lỗi, CI tiếp tục FAIL. Cần kiểm workflow trên SHA chứa
+sửa đổi này; kết quả `36756d5` không thay CI của commit mới.
+
 Đối chiếu yêu cầu [TV1 REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129):
 
 | Yêu cầu | Source/commit và kết quả kiểm độc lập tại head |

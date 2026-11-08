@@ -33,10 +33,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install pinned Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.8.5
-          cache: false
+        uses: ./.github/actions/install-foundry
       - name: Set up Node.js for live receipt verification
         uses: actions/setup-node@v7.1.0
         with:
@@ -263,10 +260,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck && npm run build
       - run: npm run test:api:db
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.8.5
-          cache: false
+      - uses: ./.github/actions/install-foundry
       - run: forge build
       - run: forge test --match-path tests/unit/OperationAbiCompatibility.t.sol
       - name: Run fresh Anvil, PostgreSQL and HTTP API integration
@@ -319,10 +313,7 @@ jobs:
           node-version: '24.15.0'
           cache: npm
       - run: npm ci
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.8.5
-          cache: false
+      - uses: ./.github/actions/install-foundry
       - name: Build and test BE06
         run: |
           mkdir -p reports
@@ -384,10 +375,7 @@ jobs:
           node-version: '24.15.0'
           cache: npm
       - run: npm ci
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.8.5
-          cache: false
+      - uses: ./.github/actions/install-foundry
       - run: forge build
       - name: Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare
         run: node scripts/check_be07_local.mjs

@@ -18,11 +18,17 @@ Foundry**: [push 42466361404](https://github.com/SE2026-21-1/dao-budget-simulato
 5/9 job success, [BE08 42466365828](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466365828)
 FAIL. Annotations của cả năm job Foundry nêu HTTP 504 khi tải
 `foundryup_linux_amd64`, release attestation hoặc Foundry 1.8.5 attestation;
-không phải test quorum/backend thất bại. `.github/actions/install-foundry/action.yml`
-thử lại **cùng action/version, không tắt attestation**, chờ 20 giây rồi 60 giây;
-lần thử cuối phải thành công và xác nhận version forge/cast/anvil mới chạy suite.
-Nếu GitHub download vẫn lỗi, CI tiếp tục FAIL. Cần kiểm workflow trên SHA chứa
-sửa đổi này; kết quả `36756d5` không thay CI của commit mới.
+không phải test quorum/backend thất bại. Thử lại cùng action/version trên
+`8ac09dac` ([push 42467642705](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42467642705))
+vẫn **FAIL**: cả ba lượt mỗi job nhận HTTP 504 từ `foundryup_linux_amd64`;
+5/9 job không phụ thuộc Foundry PASS, 4/9 fail trước test. Retry giữ lại cho
+lỗi thoáng qua; khi cả ba lần đều lỗi, `.github/actions/install-foundry/action.yml`
+chỉ lấy OCI image Foundry v1.8.5 theo digest immutable
+`sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043`
+và bắt buộc `gh attestation verify` signer workflow chính thức trước khi
+copy forge/cast/anvil. Cả fallback và kiểm version fail-closed; không tắt
+attestation, không bỏ qua suite. CI của commit chứa fallback phải được kiểm
+riêng; success cũ `36756d5` không thay CI của commit mới.
 
 Đối chiếu yêu cầu [TV1 REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129):
 

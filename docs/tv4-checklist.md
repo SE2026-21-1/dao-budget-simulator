@@ -5,6 +5,17 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**Audit CI/test 08/11/2026:** head trước sửa `d9ea994`; [push CI
+42468103856](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468103856)
+và [PR CI 42468107848](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107848)
+9/9 success, nhưng hai bước BE03 pipe qua `tee` thiếu `pipefail`: nhãn xanh
+có thể che test thất bại. Đã sửa workflow, provenance staged-only của runner
+BE07/BE08, và buộc BE08 chứng minh transfer mới được publish sau outage.
+[Chi tiết fail-before, native PASS 13/13 và raw H1200](evidence/tv4-20261106-acceptance.md#audit-ci-và-tính-đúng-của-test--08112026);
+[archive raw mới](evidence/tv4-20261108-ci-test-raw.tar.gz).
+CI commit sửa phải kiểm riêng; TV2 đối chiếu raw mới, TV1/TV3 giữ review theo
+module, không tự đóng issue, merge hay coi ví extension đã được test.
+
 ## Đối chiếu 08/11/2026 — chưa phải release gate
 
 `Dev=87738d3f792c3a283a52b5c18c306809d6cfcfd4` đã merge BE08 (#30),

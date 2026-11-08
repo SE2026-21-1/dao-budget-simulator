@@ -446,7 +446,7 @@ try {
     health.metrics=metrics(health.rawSamples.filter(r=>r.ok).map(r=>r.latencyMs));
     health.errors=health.rawSamples.filter(r=>!r.ok);assert.equal(health.errors.length,0);
   });
-  await timed('rpc_outage',()=>workerProbe.outage(baseUrl));
+  await timed('rpc_outage',()=>workerProbe.outage(baseUrl, sendFreshness));
   report.datasetAfterOutage = await assertDataset();
   const canonical = await rpc('eth_getBlockByNumber', [h.number, false]);
   assert.equal(canonical.hash, h.hash);

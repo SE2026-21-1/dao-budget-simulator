@@ -30,6 +30,89 @@ copy forge/cast/anvil. Cả fallback và kiểm version fail-closed; không tắ
 attestation, không bỏ qua suite. CI của commit chứa fallback phải được kiểm
 riêng; success cũ `36756d5` không thay CI của commit mới.
 
+## Audit CI và tính đúng của test — 08/11/2026
+
+Head trước sửa `d9ea994084ab3838bf0451f7681381ad372bcb43`:
+[push CI 42468103856](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468103856)
+và [PR CI 42468107848](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107848)
+9/9 success; [BE08 CI 42468107949](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107949)
+1/1 success. Những lượt 504 cũ do tải Foundry, không phải assertion test; fallback
+OCI có attestation đã cho suite chạy lại. Tuy nhiên hai bước BE03 trong
+`.github/workflows/ci.yml` pipe test qua `tee` dưới shell mặc định
+`bash -e` **không có pipefail**: tái hiện `false | tee /dev/null` trả **0**
+với shell mặc định, trả **1** với `bash --noprofile --norc -eo pipefail`.
+Do đó nhãn xanh BE03 cũ không tự chứng minh hai test BE03 thành công.
+Đặt `shell: bash` ở **cả hai** bước để GitHub Actions bật `-eo pipefail`;
+không bỏ test hay nới assertion. Parse YAML hai workflow: cả **20 bước `tee`**
+trong CI chính nay đều dùng shell này; BE08 riêng không pipe `tee` và runner
+từ chối TAP fail/skipped/todo. BE03 DB chạy lại cluster cô lập **18/18 PASS**.
+
+Hai runner tạo `source.patch` bằng `git diff` (index→working tree), nên khi
+stage một sửa đổi rồi không sửa tiếp, patch có thể rỗng dù source chạy đã đổi.
+Runner BE07 còn bỏ sót file staged-only trong `tested-source.json.files`.
+Repo thử tạm: commit `file.txt=before`, sửa `after` rồi `git add`; cách cũ
+trả patch rỗng và danh sách `--modified` rỗng, `git diff HEAD --binary`
+có `after` và `git diff HEAD --name-only` có `file.txt`. Sửa hai runner lấy
+patch từ HEAD; BE07 gom cả tracked staged/unstaged và untracked để hash.
+Smoke thực thi đúng đoạn capture từ hai runner trong repo tạm staged-only:
+BE07 hash `after` và patch chứa `+after`; BE08 patch cũng chứa `+after`.
+Smoke thêm staged `staged`, worktree `after-stage` và file mới `untracked`:
+BE07 hash nội dung cuối của cả hai; patch của BE07/BE08 chứa `+after-stage`
+và `+untracked`, không lẫn nội dung trung gian `+staged`.
+Không sửa dữ liệu thô trong archive Dev cũ: patch SHA rỗng của archive đó
+vẫn hợp lệ vì Dev lúc chạy sạch.
+
+BE08 outage trước đây chỉ kiểm health chuyển `lagging → synced`: heartbeat
+không chứng minh worker **publish tiếp** sau phục hồi. Bổ sung một transfer BUD
+mới **sau** khi RPC trở lại, mine K=2 và đợi tx xuất hiện trên API cùng H/hash
+projection SQL; đối chiếu ledger sau outage. Mẫu recovery riêng không trộn
+vào 10 idle + 10 load của NFR03; `recoveryMs` mới tính đến publication.
+Kết quả archive cũ 525,824ms chỉ đo tới health `synced`, không phải
+post-outage publication.
+Raw archive Dev cũ ghi benchmark PASS/outage PASS nhưng chỉ có 10 idle +
+10 load sample, `datasetAfterOutage.counts.transfers=21` (1 seed + 20 mẫu);
+không có tx/hash chứng minh publication **sau** outage.
+
+Chạy lại Node 24.15.0 tại worktree PR riêng: `npm run test:be03`
+**25/25 PASS, 0 skip**; `npm run test:be08` **10/10 PASS, 0 skip**;
+`npm run test:bootstrap` trên Anvil riêng **15/15 PASS, 0 skip**.
+SC06 fixture **32/32 PASS**, Foundry CI seed `0x20261021` **187/187 PASS**,
+frontend unit **14/14 PASS**; lint frontend exit 0 nhưng **8 warning**,
+build PASS có cảnh báo bundle 607,29 kB. Regression quorum chọn đúng snapshot
+Executed khi archive có thêm proposal, ép **riêng** archived quorum
+200→1.001 GOV và đòi đúng lỗi historical quorum; Against test For150 >
+Against100 nhưng For+Abstain150 < quorum200. Invariant `afterInvariant`
+đòi execute thành công trong mỗi run; bộ đếm log cuối không là tổng 100 runs.
+FE live, browser extension và CI raw ZIP vẫn là gate riêng, không suy từ
+14 frontend tests/nhãn 9/9 CI. CI commit chứa các sửa trên phải đối chiếu
+riêng sau push.
+
+**Native smoke đúng thay đổi** (local, không phải CI): Node24.15.0,
+PostgreSQL18.4/Forge1.8.5/Anvil1.8.5, cluster và chain riêng;
+`npm run test:be08:native -- --postgres-bin
+/tmp/dao-tv4-ci-audit-pg/node_modules/@embedded-postgres/linux-x64/native/bin
+--output /tmp/dao-tv4-ci-audit-native-20261108 --benchmark` → **PASS 13/13
+suite, không skip**, cleanup stopped/removed, `sourceUnchangedThroughRun:true`.
+BE02 DB21, BE03 DB18, BE04 DB10, BE05 DB7, BE06 DB1, BE07 DB18, unit183,
+Foundry187; BE01 SQL, typecheck, build, BE07 live và benchmark PASS. Source
+`baseCommit=d9ea994084ab3838bf0451f7681381ad372bcb43` + patch SHA-256
+`0bbd9c5c509e9f69c7ddcf38558f7dbfa53e4499f42b3506d45d6371ff523e4f`
+(đối chiếu lại `source.patch`). Raw benchmark: **18.841/18.841 HTTP
+success/0 error**, p95 nearest-rank **192,007679ms** từ raw; riêng 5.760
+request bắt đầu trong 60 giây đầu p95 **181,827614ms**; load tổng
+208,110466 giây đến khi freshness hoàn thành. NFR03 giữ **10 idle +
+10 load** (p95 load 27.376,1774ms, max như vậy), không tính mẫu recovery.
+RPC trả503 **31.251,019ms**; sau mở lại `synced`, transfer **mới**
+`0x06c240abe4bedc76ea2eb7950c45d27b795f42f0aceed6b8bd1193b0dde0859b`
+tại **H1200**/hash
+`0xbbe0d0c5b36955293ee62f70a9fba667e3a2de0a684ba995e1ad5610f90cb0f7`
+hiện trên API và projection SQL; recovery publication 12.441,545ms.
+Ledger chuyển từ 21 sang **22 transfer** (seed1 + 20 normal + 1 recovery).
+[Raw local 08/11](tv4-20261108-ci-test-raw.tar.gz) SHA-256
+`0a28eab726dc0cf4679188b5b4c4e8d12f216dd0d806f4a6ee16bbf90f868f41`
+gồm report, tested-source, source.patch, live và raw benchmark. **Không**
+gán các số local này cho artifact GitHub CI hoặc máy/testnet khác.
+
 Đối chiếu yêu cầu [TV1 REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129):
 
 | Yêu cầu | Source/commit và kết quả kiểm độc lập tại head |

@@ -214,10 +214,12 @@ jobs:
       - run: npm ci
       - run: npm run typecheck && npm run build
       - name: Check confirmation and resume boundaries
+        shell: bash
         run: |
           mkdir -p reports
           npm run test:be03 2>&1 | tee reports/be03-unit.log
       - name: Check PostgreSQL commit, kill and restart boundaries
+        shell: bash
         run: node --import tsx --test tests/indexer/checkpoint-storage.test.ts 2>&1 | tee reports/be03-postgres.log
       - uses: actions/upload-artifact@v7.0.2
         if: always()

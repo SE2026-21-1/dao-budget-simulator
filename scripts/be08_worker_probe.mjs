@@ -126,7 +126,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     for (let i = 0; i < count; i++) { await sample(options); await sleep(150 + (i * 173) % 850); }
     state[options.phase] = metrics(state.samples.filter(s => s.phase === options.phase && s.status === 'PASS').map(s => s.elapsedMs));
   }
-  async function outage(base) {
+  async function outage(base, send) {
     const result = state.outage = { status: 'RUNNING', excludedFromNormalRpc: true, httpAttempts: attempts };
     await waitFor(async () => (await get(base, '/health')).context.sync.status === 'synced');
     state.normalWorkerErrors = state.workerEvents.filter(e => e.type === 'worker_error');
@@ -148,8 +148,12 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
       result.recoveredHealth = await get(base, '/health');
       return result.recoveredHealth.context.sync.status === 'synced';
     });
+    // A fresh confirmed transfer must publish after RPC returns; a synced heartbeat alone is insufficient.
+    await sample({ phase: 'recovery', base, send });
+    result.publishedTransactionHash = state.samples.at(-1).transactionHash;
+    result.publication = state.samples.at(-1).publication;
     result.recoveryMs = performance.now() - restored; result.status = 'PASS';
-    state.normal = metrics(state.samples.filter(s => s.status === 'PASS').map(s => s.elapsedMs));
+    state.normal = metrics(state.samples.filter(s => (s.phase === 'idle' || s.phase === 'load') && s.status === 'PASS').map(s => s.elapsedMs));
     state.status = state.errors.length === 0 && state.idle.count >= 10 && state.load.count >= 10 ? 'PASS' : 'FAIL';
     assert.equal(state.status, 'PASS');
   }

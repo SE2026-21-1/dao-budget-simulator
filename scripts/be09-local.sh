@@ -105,8 +105,8 @@ stop_owned_services() {
   local run="$1" run_id
   run_id="$(basename -- "$run")"
   if [[ -f "$run/run-id" ]]; then run_id="$(cat "$run/run-id")"; fi
-  stop_pidfile 'Vite' "$run/pids/frontend.pid" "$ROOT/frontend/node_modules/vite/bin/vite.js"
-  stop_pidfile 'API' "$run/pids/api.pid" "$ROOT/indexer/api/main.ts"
+  stop_pidfile 'Vite' "$run/pids/frontend.pid" "--env-file=$run/frontend.env"
+  stop_pidfile 'API' "$run/pids/api.pid" "--env-file=$run/runtime.env"
   stop_pidfile 'Indexer worker' "$run/pids/worker.pid" "$run/indexer-config.json"
   stop_pidfile 'Anvil' "$run/pids/anvil.pid" "be09-anvil-$run_id"
   if [[ -d "$run/postgres/data" && -f "$run/postgres/data/PG_VERSION" ]]; then
@@ -341,8 +341,8 @@ command_serve() {
     for spec in \
       "$RUN_DIR/pids/anvil.pid|be09-anvil-$(cat "$RUN_DIR/run-id")" \
       "$RUN_DIR/pids/worker.pid|$RUN_DIR/indexer-config.json" \
-      "$RUN_DIR/pids/api.pid|$ROOT/indexer/api/main.ts" \
-      "$RUN_DIR/pids/frontend.pid|$ROOT/frontend/node_modules/vite/bin/vite.js"; do
+      "$RUN_DIR/pids/api.pid|--env-file=$RUN_DIR/runtime.env" \
+      "$RUN_DIR/pids/frontend.pid|--env-file=$RUN_DIR/frontend.env"; do
       IFS='|' read -r pidfile marker <<< "$spec"
       if [[ ! -f "$pidfile" ]] || ! pid_is_owned "$(cat "$pidfile")" "$marker"; then
         # verify intentionally restarts the worker; give it a bounded restart grace.
@@ -382,8 +382,8 @@ command_status() {
   for spec in \
     "Anvil|$RUN_DIR/pids/anvil.pid|be09-anvil-$run_id" \
     "Indexer worker|$RUN_DIR/pids/worker.pid|$RUN_DIR/indexer-config.json" \
-    "HTTP API|$RUN_DIR/pids/api.pid|$ROOT/indexer/api/main.ts" \
-    "Frontend Vite|$RUN_DIR/pids/frontend.pid|$ROOT/frontend/node_modules/vite/bin/vite.js"; do
+    "HTTP API|$RUN_DIR/pids/api.pid|--env-file=$RUN_DIR/runtime.env" \
+    "Frontend Vite|$RUN_DIR/pids/frontend.pid|--env-file=$RUN_DIR/frontend.env"; do
     IFS='|' read -r label pidfile marker <<< "$spec"
     if [[ -f "$pidfile" ]] && pid_is_owned "$(cat "$pidfile")" "$marker"; then
       note "$label: LIVE (PID $(cat "$pidfile"))"

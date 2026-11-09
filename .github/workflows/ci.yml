@@ -55,6 +55,10 @@ jobs:
         shell: bash
         run: |
           node --test tests/smoke/interruption.test.mjs 2>&1 | tee reports/smoke-interruption.log
+      - name: Keep BE09 retained runs from stopping another run's services
+        shell: bash
+        run: |
+          node --test tests/be09-ownership.test.mjs 2>&1 | tee reports/be09-ownership.log
       - name: Exercise Treasury transactions and BE02 live receipt decoding
         shell: bash
         run: |

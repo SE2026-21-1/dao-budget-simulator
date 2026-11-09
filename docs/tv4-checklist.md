@@ -66,7 +66,6 @@ khi có quyền, không tự tạo trùng hay ghi đã sửa:
 | #44 | Trung bình | Blocked bởi #18/#36/#40/#41/#20/#42 và release evidence |
 | #45, PR #21 | Cao | Ghi head PR #21 và link CI đúng lượt mới (push + PR + BE08), nguồn fixture `c979560`, kết luận review TV1/TV2/TV3; giữ trạng thái chờ review khi còn `REQUEST_CHANGES`, không Done từ CI. Giữ SHA cũ làm lịch sử |
 | PR #46, #9 | Trung bình | PR #46 đã merge vào `feature/tv3-frontend` ngày 07/11, **không vào Dev**; #9 hiển thị snapshot H/hash/revision trên PR #21, chờ TV3 nhận consumer và peer review |
-
 ## Kiểm tra revision mới — 02/11/2026
 
 Trên branch `personal/23001850-vt-064-bulk-import`, committed base của lượt TC12 `0e9828ed109acfa13d7b41d8059fc6afee14f0f9`; `feature/tv4-operation` remote `1bb1821`, `Dev` `3ed88c9` lúc kiểm tra. [Lượt E2E trước](evidence/tv4-20261102-0328eea.md), [TC12 chạy lại ở base `0e9828e`](evidence/tv4-20261102-0e9828e-tc12.md), [TC/INV theo revision](test-plan.md#đối-chiếu-theo-head-và-worktree--02112026). [GitHub CI 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41424374702) đúng **committed `0e9828e`**, không gồm flag `--tc12` được chạy thêm ở worktree; CI cho commit chứa runner phải đối chiếu riêng. PR #21 open, review `COMMENTED` trước head mới; PR #31 draft; issue #18/#19/#20 open. Báo cáo 30/10 ở dưới là lịch sử tại `b476be8`, không phải nghiệm thu lượt này.

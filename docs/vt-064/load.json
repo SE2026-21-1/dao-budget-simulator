@@ -1,0 +1,16 @@
+{
+  "tasks": 80,
+  "completed": 80,
+  "errors": 0,
+  "p95Ms": 167.68469699999997,
+  "maxMs": 167.98073899999997,
+  "targetMs": 2500,
+  "meetsTarget": true,
+  "method": "80 concurrent in-process importer tasks; one real file persisted and read back per task",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "limits": "Local filesystem and Node task scheduling only; no HTTP, PostgreSQL, RPC, wallet or 80 external users."
+}

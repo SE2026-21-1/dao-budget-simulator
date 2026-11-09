@@ -8,17 +8,17 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Hợp nhất nhánh 23001850 vào TV4 — 09/11/2026
+## Tách bài cá nhân khỏi nhánh tích hợp — 09/11/2026
 
-`feature/tv4-operation` nhận lịch sử `personal/23001850-vt-064-bulk-import`
-và `personal/23001850-vt-064-submission` (bao gồm `reviewed`). Giữ
-regression TC12/runner và bài VT-064 đã review; khi conflict, giữ oracle
-quorum mới của TV4, chọn PDF submission và giữ cả hai lượt mutation dưới
-dạng evidence. Commit mutant `7bc4ac6` không là tổ tiên của nhánh hợp nhất;
-patch tái hiện được lưu trong `docs/vt-064/`. PR #21 cần CI và peer review lại
-ở head hợp nhất; các số đo cũ không đại diện head mới.
-Thay đổi chưa commit trên worktree nhánh cá nhân (SC05, AD-064, evidence)
-được giữ nguyên, **không** tự coi là phần đã hợp nhất.
+Lịch sử merge `b67611e`/`c947553` từng đưa VT-064 offline draft import
+và PDF cá nhân vào `feature/tv4-operation`. Bản sửa sau đó bỏ riêng
+`indexer/import/`, test, script, tài liệu và npm commands của VT-064 khỏi
+diff PR #21; lịch sử và bài cá nhân trên PR #31 không bị viết lại hoặc xóa.
+Regression TC12 và BE03/SC06 thuộc nghiệm thu nhóm vẫn được giữ. Việc
+tách là cần thiết vì SC06 provenance pin source `c979560` không chứa
+hai file import mới: checker trên head `7518337` thất bại ở danh sách file,
+không phải mutation quorum. CI và peer review cần chạy trên head sau tách.
+Worktree cá nhân chưa commit (SC05, AD-064, evidence) không bị sửa.
 
 ## Đối chiếu tích hợp 06/11/2026
 

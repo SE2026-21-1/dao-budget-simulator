@@ -8,12 +8,11 @@ React đọc API và gửi giao dịch trực tiếp tới contract qua ví.
 
 **Nhánh tích hợp:** `feature/tv4-operation`
 ([PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21))
-chứa wallet/UI, nghiệm thu TV4 và VT-064 offline draft import từ các nhánh
-`personal/23001850-*`; [hướng dẫn import](docs/vt-064/README.md).
-Bản PDF/bằng chứng VT-064 thuộc bài cá nhân, không chứng minh nghiệm thu hệ thống.
-`Dev` (`87738d3`, 06/11/2026) đã có SC06, BE03–BE08 và freshness nhưng chưa có
-UI/API consumer của PR #21. CI lịch sử ở `1fec861` không kiểm chứng revision hợp
-nhất này; cần CI và peer review trên head mới. `main` không phải nhánh tích hợp.
+chứa wallet/UI và nghiệm thu TV4. VT-064 là bài cá nhân theo PR #31,
+không thuộc diff tích hợp; import bản nháp offline không chứng minh
+wallet/chain/API. `Dev` (`87738d3`, 06/11/2026) đã có SC06, BE03–BE08
+và freshness nhưng chưa có UI/API consumer của PR #21. CI và peer review
+phải đối chiếu đúng head mới; `main` không phải nhánh tích hợp.
 
 Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL`; lỗi API
 thật không được fallback sang fixture. Recovery đóng publication và trả HTTP

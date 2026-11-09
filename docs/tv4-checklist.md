@@ -5,11 +5,22 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-**09/11/2026:** các nhánh `personal/23001850-*` đã nhập vào
-`feature/tv4-operation` để cùng review ở PR #21. VT-064 vẫn là bài cá nhân,
-không dùng import offline làm bằng chứng wallet/chain/API. Hai đoạn 08/11
-bên dưới phản ánh trạng thái cũ (khi PR #31 còn tách nhánh); cần CI mới cho
-head hợp nhất, không kế thừa kết quả của `36756d5`.
+**Đối chiếu TV4 ngày 09/11/2026:** [bảng issue/PR, nguồn SHA,
+local-vs-CI, dependency và action](evidence/tv4-20261109-status.md).
+TV4 chấp nhận **backend trên Dev `87738d3`** cho TC11/TC12, NFR02–04
+và hồi quy freshness #18/#37: local BE08 độc lập 20.986 request
+(p95 212,460931 ms), TV2 đọc raw CI 31.248 request (p95 27,947925 ms)
+ở cùng source nhưng hai chain H/hash riêng. QA01 #47 đã có code `ac40c35`
+trên PR #21; Node 24.15.0 chạy 100/25/5 BE02/03/06, 10 BE08, typecheck/build
+PASS. PR #21 head `7518337` **CI đỏ SC06**: việc nhập VT-064 cá nhân
+thêm file không thuộc provenance archive. TV4 tách file cá nhân khỏi diff
+nhánh tích hợp và chạy lại checker/mutation 32/32; CI đúng commit sửa
+cần đối chiếu sau push. Không sửa oracle để che lỗi, không nhập PR #31/PDF
+cá nhân vào PR #21. Issue chưa được đóng nếu thiếu quyền GitHub ghi.
+WSL của TV3 đã có preflight PASS; chờ kiểm lại `serve` của PR #48 trên máy nhận.
+Extension wallet, testnet và peer review vẫn là gate độc lập.
+
+### Lịch sử kiểm tra 08/11/2026 (không phải trạng thái CI mới)
 
 **Audit CI/test 08/11/2026:** head trước sửa `d9ea994`; [push CI
 42468103856](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468103856)
@@ -50,28 +61,16 @@ chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
 | TV2 `@daongocuong` | Đối chiếu #18/#37: checkpoint/crash/503/409/deep fork, rebuild compare cùng H/hash, schema 001–004 so với 001–005; tính lại p95 từ archive raw local và kiểm CI artifact khi có quyền. Review comment cũ không là approval cho head mới. | [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) và review PR #21 |
 | TV3 `@LangXiTrum2005` | Xác nhận FE↔API live với đủ bốn `BE05_LIVE_*`, UI H/hash/revision, BigInt, `lagging` và flow adapter Anvil; chạy lại với ví extension/peer service để nghiệm thu TC13, không tính EIP adapter là extension. | [#36](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36), [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41) và review PR #21 |
 
-### Handoff Project TV4 sau hợp nhất — 09/11/2026
+### Handoff hai Projects #1/#2 — 09/11/2026
 
-Không thể đọc view [Project TV4 #2](https://github.com/orgs/SE2026-21-1/projects/2/views/1)
-(web/browser HTTP 504, GraphQL chưa xác thực HTTP 403). Bảng này là **đề xuất
-đối chiếu**, không phải Status/Priority đã đọc hay đã sửa trên Project. Dựa trên
-issue/PR công khai và source `feature/tv4-operation` tại `c68aae6`; kiểm lại
-head/CI và item hiện có trước khi sửa hai board, không tạo item trùng.
-
-| Item | Đã xác minh | Việc còn lại / trạng thái đề xuất |
-|---|---|---|
-| #47, #6 | Commit `ac40c35` đổi BE02/03/06 sang `node --import tsx --test`; Node 24.15.0: 100/100, 25/25, 5/5; BE08 10/10, typecheck/build PASS. Nằm trên PR #21 | Review rồi cập nhật issue #47; không ghi lỗi IPC còn mở ở mã mới, không coi CI cũ là bằng chứng commit mới |
-| #45, PR #21 | Head `c68aae6`, PR #21 mở vào Dev; PR #31 đã được GitHub ghi `merged` sau khi nhập các nhánh `23001850` và xóa ba nhánh remote. Review TV1 `CHANGES_REQUESTED` ở head cũ `a9db100`, fix SC06 nằm trên PR #21 | Đối chiếu CI đúng head, cập nhật item/evidence ở cả hai Project, mời TV1/TV2/TV3 review **head mới**; chưa Done/approve |
-| #18, #37 | Dev `87738d3` có BE08/freshness và artifact TV2 đối chiếu ở #18; TV4 đã chạy native độc lập theo [evidence 06/11](evidence/tv4-20261106-acceptance.md) | Review TC11/12 và freshness theo cùng revision/source; không gán benchmark local cho CI hoặc coi issue đã nghiệm thu cuối |
-| #36, #41, #19 | FE↔API live local PASS 1/1 và Anvil EIP-1193 adapter → receipt → worker → API → UI H82; `SnapshotInfo` hiển thị H/hash/revision/sync trên Dashboard/List/Detail | Review TV3 và chạy **ví extension** ký đủ vòng, trường hợp sai mạng/từ chối/retry; chưa đánh Done từ adapter/fixture |
-| #40 | Có runbook/handoff local đã lưu; service tạm từ các lượt nghiệm thu đã dừng | Blocked: TV2 cần service/manifest mới còn sống TV3 truy cập được, TV3 xác nhận từ máy mình |
-| #42, #20 | Clone và native QA đã chạy cùng máy; chưa có testnet signer/RPC được nhóm duyệt | Blocked: thành viên khác dựng clone sạch và nhóm chốt mạng/signer/gas; không tự deploy testnet |
-| #43 | SC06 chain getter/seed/quorum mutation đã sửa trên PR #21, regressions ghi ở [evidence](evidence/tv4-20261106-acceptance.md) | Review TV1/TV2/TV3 trên head mới; không tự thay peer approval |
-| #44 | Báo cáo/demo nhóm phụ thuộc #18/#19/#20/#40–#43 | Blocked release: nhóm trưởng và từng module đối chiếu cùng revision/manifest, không tạo deadline hoặc approval giả |
-
-Khi có GitHub Project session được xác thực: đối chiếu Status/Priority thực của
-từng item rồi cập nhật board/issue/PR theo bằng chứng trên; giữ SHA cũ là lịch
-sử. SSH chỉ cho push Git, không cấp quyền chỉnh Project hoặc viết comment.
+Danh sách issue/PR, revision, evidence, dependency và action cho #6,
+#14–20, #36/#37, #40–45/#47 cùng PR #21/#48 được đối chiếu ở
+[bảng 09/11](evidence/tv4-20261109-status.md). Trên phiên chưa xác thực,
+hai URL Project trả 404; không suy ra board/item không tồn tại, không có
+Status/Priority đã đọc hay đã sửa. SSH chỉ cho push Git, không cho ghi
+issue/PR/Projects. Người có quyền Project phải xem item hiện có trước khi
+cập nhật revision/evidence, tránh duplicate; #18/#37 đủ bằng chứng backend
+trên Dev nhưng không biến #41/#40 thành Done. #45 theo dõi đồng bộ hai board.
 
 ## Kiểm tra revision mới — 02/11/2026
 

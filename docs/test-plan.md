@@ -4,7 +4,7 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
-**Đối chiếu hiện hành:** [mục 06/11](#đối-chiếu-mới--06112026-dev-87738d3-pr-21-chưa-merge) và [evidence mới](evidence/tv4-20261106-acceptance.md). Ma trận ngày 02/11 và [evidence cũ](evidence/tv4-20261102-0328eea.md) là lịch sử của worktree/commit khác. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, peer review và testnet; giữ gate release mở.
+**Đối chiếu hiện hành 09/11:** [bảng TV4 theo issue/SHA](evidence/tv4-20261109-status.md) chấp nhận backend TC11/TC12/NFR02–04 và hồi quy freshness #37 **trên Dev `87738d3`**, sau lượt local TV4 và đối chiếu raw CI riêng của TV2; hai số p95/H/hash không được gộp. Bảng 06/11 phía dưới giữ nguyên trạng thái lịch sử lúc TV4 chưa tải artifact CI; TV2 đã kiểm raw ngày 09/11. PR #21 head `7518337` từng CI đỏ SC06 vì VT-064 cá nhân được nhập sai phạm vi; bản tách nội dung cá nhân phải chờ CI đúng SHA và peer. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, máy khác, peer review hoặc testnet; giữ gate release mở.
 
 ## Đối chiếu mới — 06/11/2026 (Dev `87738d3`, PR #21 chưa merge)
 

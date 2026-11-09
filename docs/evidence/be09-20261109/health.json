@@ -1,0 +1,44 @@
+{
+  "url": "http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=be09-local-20261109T154035Z-ab72342b0b29",
+  "httpStatus": 200,
+  "body": {
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "be09-local-20261109T154035Z-ab72342b0b29",
+      "asOfBlock": "24",
+      "asOfBlockHash": "0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+      "asOfTimestamp": "1800000487",
+      "snapshotRevision": "7aa6c3ea-83b5-4b58-8fb2-a8b2f058a0e8",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "26",
+        "confirmedBlock": "24",
+        "indexedBlock": "24",
+        "publicationBlock": "24",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-09T15:41:56.318Z",
+        "lastRpcCheckAt": "2026-11-09T15:41:56.319+00:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "data": {
+      "status": "degraded",
+      "database": "up",
+      "indexer": "synced",
+      "publication": "ready",
+      "recoveryStatus": "ready",
+      "projectionStatus": "current",
+      "publicationBlock": "24",
+      "projectionLagBlocks": "0",
+      "rawDecodeComplete": false,
+      "rawDecodeIssues": {
+        "unknownTopics": 16,
+        "decodeErrors": 0
+      },
+      "ignoredAncillaryEvents": 16
+    }
+  }
+}

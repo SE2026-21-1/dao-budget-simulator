@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "774197cea6ce376d94a7fb706f56cdc54e6db3d3",
+  "chainId": "31337",
+  "deploymentName": "be09-local-20261109T154035Z-ab72342b0b29",
+  "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+  "runId": "20261109T154035Z-31218ca0e76f",
+  "urls": {
+    "rpc": "http://127.0.0.1:18545",
+    "api": "http://127.0.0.1:3300",
+    "frontend": "http://127.0.0.1:5173"
+  },
+  "capturedAt": "2026-11-09T15:41:42.159819+00:00",
+  "access": "Source machine loopback only; TV3 must create/verify a new run on their own WSL. Not a cross-machine endpoint."
+}

@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "774197cea6ce376d94a7fb706f56cdc54e6db3d3",
+  "sha256": {
+    "scripts/be09-local.sh": "243e284791c4fadd9b96b1c3768709fd987ba087cc0721df4fe9bc32ce21847d",
+    "scripts/be09-seed.mjs": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+    "scripts/be09-register.mjs": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+    "scripts/be09-diagnose.mjs": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+    "scripts/be09-verify.mjs": "e5adcdc65ff7b72a3bd068d25edea01b60db25666b0f29a81e3234ce66e78207",
+    "scripts/be09-live-test.mjs": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+    "scripts/be09-provenance.mjs": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be"
+  }
+}

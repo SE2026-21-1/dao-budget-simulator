@@ -1,0 +1,86 @@
+{
+  "url": "http://127.0.0.1:3300/api/proposals?chainId=31337&deploymentId=be09-local-20261109T154035Z-ab72342b0b29&asOfBlock=24&asOfBlockHash=0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+  "httpStatus": 200,
+  "body": {
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "be09-local-20261109T154035Z-ab72342b0b29",
+      "asOfBlock": "24",
+      "asOfBlockHash": "0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+      "asOfTimestamp": "1800000487",
+      "snapshotRevision": "7aa6c3ea-83b5-4b58-8fb2-a8b2f058a0e8",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "26",
+        "confirmedBlock": "24",
+        "indexedBlock": "24",
+        "publicationBlock": "24",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-09T15:41:56.318Z",
+        "lastRpcCheckAt": "2026-11-09T15:41:56.319+00:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "data": [
+      {
+        "body": "Khoan chi mo phong cho nghiem thu QA02.",
+        "state": "Executed",
+        "title": "Demo chi 1000 BUD",
+        "votes": {
+          "for": "700000000000000000000",
+          "quorum": "200000000000000000000",
+          "abstain": "0",
+          "against": "0"
+        },
+        "amount": "1000000000000000000000",
+        "values": [
+          "0"
+        ],
+        "created": {
+          "logIndex": "0",
+          "blockHash": "0x0ba71a4e934dd4b91ede005553ab107d766bc5eab1f10e514b66f3ec12c997d5",
+          "blockNumber": "20",
+          "transactionHash": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+          "transactionIndex": "0"
+        },
+        "targets": [
+          "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+        ],
+        "deadline": "1800000366",
+        "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "snapshot": "1800000066",
+        "calldatas": [
+          "0x6664ac9100617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+        ],
+        "operation": {
+          "eta": "1800000487",
+          "salt": "0x9cb751834bcaddeade0f278350390bb50b81502b893a4808f60662dd2d40d86e",
+          "status": "Done",
+          "queuedAt": "1800000367",
+          "operationId": "0x31be9fe6f55841a796309f57ecad7fba55e06bdad905268e47a5132121364550",
+          "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+        "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+        "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+        "description": "{\"version\":1,\"title\":\"Demo chi 1000 BUD\",\"body\":\"Khoan chi mo phong cho nghiem thu QA02.\"}",
+        "stateSource": "contract",
+        "transactions": {
+          "queued": "0x71ea71871695f61d76a562c1469670058a60171877273e39f484fadce8254e65",
+          "created": "0x48b1bb464ea41c723d00bc5656c3749358377a4db09b7115ab81fed797d64dc4",
+          "canceled": null,
+          "executed": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7"
+        },
+        "descriptionHash": "0xbbb1f0f2a77c53eae638aac38d2418d66a519b56893a4808f60662dd2d40d86e"
+      }
+    ],
+    "pagination": {
+      "limit": 20,
+      "totalCount": 1,
+      "nextCursor": null
+    }
+  }
+}

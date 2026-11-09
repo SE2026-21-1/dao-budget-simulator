@@ -8,13 +8,26 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Hợp nhất nhánh 23001850 vào TV4 — 09/11/2026
+
+`feature/tv4-operation` nhận lịch sử `personal/23001850-vt-064-bulk-import`
+và `personal/23001850-vt-064-submission` (bao gồm `reviewed`). Giữ
+regression TC12/runner và bài VT-064 đã review; khi conflict, giữ oracle
+quorum mới của TV4, chọn PDF submission và giữ cả hai lượt mutation dưới
+dạng evidence. Commit mutant `7bc4ac6` không là tổ tiên của nhánh hợp nhất;
+patch tái hiện được lưu trong `docs/vt-064/`. PR #21 cần CI và peer review lại
+ở head hợp nhất; các số đo cũ không đại diện head mới.
+Thay đổi chưa commit trên worktree nhánh cá nhân (SC05, AD-064, evidence)
+được giữ nguyên, **không** tự coi là phần đã hợp nhất.
+
 ## Đối chiếu tích hợp 06/11/2026
 
 Dev `87738d3` đã nhận BE08 (#30), freshness (#38) và SC06 (#39).
 PR #21 `feature/tv4-operation` đã merge Dev trong worktree riêng
 `c002fbefe45214737a23de482e3c85158d742bfe`, push head `1fec861514b35c7f28df4647aa2cc9aeb9e158c9`;
 [TV4 CI PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107991) và [BE08 CI PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107891) success ở head này; chưa peer review/merge, cần kiểm lại CI nếu push tiếp.
-PR #31 VT-064 draft là phạm vi cá nhân, không nhập vào nghiệm thu.
+Ở mốc 06/11 PR #31 VT-064 draft vẫn là phạm vi cá nhân và chưa nhập vào PR #21;
+xem cập nhật hợp nhất ngày 09/11 phía trên để biết trạng thái mới.
 [Evidence lượt mới](evidence/tv4-20261106-acceptance.md) và ba raw archive
 gắn lệnh/SHA/cluster thật. URL demo và số benchmark 02–04/11 là lịch sử,
 không chứng minh service còn hoạt động ngày 06/11.

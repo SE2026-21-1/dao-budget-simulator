@@ -6,11 +6,14 @@ giải ngân. Worker đọc sự kiện đã đủ K confirmation, lưu raw và 
 nguyên tử vào PostgreSQL, dựng projection tại H/hash; HTTP API chỉ đọc snapshot,
 React đọc API và gửi giao dịch trực tiếp tới contract qua ví.
 
-**Chọn đúng nhánh:** `Dev` (`87738d3`, 06/11/2026) đã chứa SC06, BE03–BE08,
-BE05 freshness fix và migrations 001–005, nhưng **chưa chứa wallet/frontend
-API của PR #21**. Nhánh `feature/tv4-operation` (PR #21) có wallet, UI và native
-TV4 acceptance; đã nhập Dev vào head, [TV4 CI trên PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107991) và [BE08 CI trên PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107891) success tại SHA `1fec861`, cần review và kiểm lại CI nếu push commit mới. `main` không phải nhánh tích hợp. PR #31 là VT-064
-cá nhân, không thuộc nghiệm thu chung; CI ở Dev không chứng nhận PR #21.
+**Nhánh tích hợp:** `feature/tv4-operation`
+([PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21))
+chứa wallet/UI, nghiệm thu TV4 và VT-064 offline draft import từ các nhánh
+`personal/23001850-*`; [hướng dẫn import](docs/vt-064/README.md).
+Bản PDF/bằng chứng VT-064 thuộc bài cá nhân, không chứng minh nghiệm thu hệ thống.
+`Dev` (`87738d3`, 06/11/2026) đã có SC06, BE03–BE08 và freshness nhưng chưa có
+UI/API consumer của PR #21. CI lịch sử ở `1fec861` không kiểm chứng revision hợp
+nhất này; cần CI và peer review trên head mới. `main` không phải nhánh tích hợp.
 
 Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL`; lỗi API
 thật không được fallback sang fixture. Recovery đóng publication và trả HTTP
@@ -35,8 +38,8 @@ Node **24.15.0** (`.nvmrc`), npm lockfiles riêng, Foundry **1.8.5**,
 Solidity **0.8.37**/Osaka, OpenZeppelin **5.4.0**, PostgreSQL **18.4**.
 Các lệnh dưới dùng terminal riêng cho chain, worker, API, frontend; không kết
 nối một PostgreSQL đã phục vụ hay Anvil vừa bị reset với checkpoint cũ.
-`Dev` chạy được backend; để chạy wallet UI trước khi PR #21 merge phải checkout
-`feature/tv4-operation` **và đối chiếu lại với Dev**, không chuyển PR #31 vào.
+`Dev` chạy được backend; để chạy UI hoặc offline draft import trước khi PR #21
+merge phải checkout `feature/tv4-operation` và đối chiếu lại với Dev.
 
 ```bash
 git clone --branch feature/tv4-operation https://github.com/SE2026-21-1/dao-budget-simulator.git

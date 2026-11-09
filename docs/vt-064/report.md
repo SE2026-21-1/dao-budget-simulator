@@ -4,7 +4,11 @@
 
 Dự án: DAO Budget Simulator. Repository: https://github.com/SE2026-21-1/dao-budget-simulator
 
-Baseline chức năng: `1bb182144d516c13d6bb32fc30d2778af71a8169`. Bản có sẵn được kiểm lại: `cdc8740c5b1123d612962ffad467657bd4f8444b`. Nhánh bàn giao: https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt-064-submission
+Baseline chức năng: `1bb182144d516c13d6bb32fc30d2778af71a8169`. Bản có sẵn được kiểm lại: `cdc8740c5b1123d612962ffad467657bd4f8444b`. [Bản submission lịch sử tại commit `148f8e9`](https://github.com/SE2026-21-1/dao-budget-simulator/tree/148f8e9b59e3413df9523fabfda9c041d6b12d5e).
+
+Ghi chú sau bàn giao: các phát biểu “chưa merge” ở báo cáo/PDF mô tả thời điểm
+viết bài cá nhân. Mã và evidence đã được hợp nhất vào `feature/tv4-operation`
+để review qua PR #21; chưa merge PR #21 vào Dev và chưa có peer approval.
 
 Cam kết: “Tôi chịu trách nhiệm về toàn bộ code, test và nội dung bài làm; tôi đã khai báo việc sử dụng AI.” Đây là bản dự thảo có AI hỗ trợ, người nộp cần tự kiểm tra code, reflection và cam kết trước khi nộp Classroom. Chưa merge hoặc có review của nhóm.
 

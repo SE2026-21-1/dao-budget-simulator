@@ -1,11 +1,16 @@
 # VT-064 - individual bulk import of offline BUD drafts
 
-Phan Thanh Dũng, 23001850, SE2026-T16. No merge before group review.
-Feature baseline: `1bb182144d516c13d6bb32fc30d2778af71a8169`.
-Submission branch: `personal/23001850-vt-064-submission`.
+Phan Thanh Dũng, 23001850, SE2026-T16. Bài VT-064 là evidence cá nhân; peer
+review vẫn cần trước khi tích hợp PR #21 vào Dev. Lịch sử nhánh riêng và baseline:
+`personal/23001850-vt-064-submission`, `1bb182144d516c13d6bb32fc30d2778af71a8169`.
 Production feature commits: `b61cec8`, `69ca712`; extra property/plan commit
 `aca614da8c4842eadecd87434ddc98f9f41813ec`; runner patch
 `969acb370f1a10ebd1f75728afa6d91b035a453d`.
+
+Các nhánh cá nhân `bulk-import`, `reviewed`, `submission` đã được nhập vào
+`feature/tv4-operation`; không nhập commit mutant `7bc4ac6`. Các log
+`verification/` và PDF phản ánh lượt chạy trước khi hợp nhất, không phải CI
+hoặc peer approval của revision tích hợp.
 
 ## Run (from repository root)
 

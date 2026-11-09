@@ -5,6 +5,12 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**09/11/2026:** các nhánh `personal/23001850-*` đã nhập vào
+`feature/tv4-operation` để cùng review ở PR #21. VT-064 vẫn là bài cá nhân,
+không dùng import offline làm bằng chứng wallet/chain/API. Hai đoạn 08/11
+bên dưới phản ánh trạng thái cũ (khi PR #31 còn tách nhánh); cần CI mới cho
+head hợp nhất, không kế thừa kết quả của `36756d5`.
+
 **Audit CI/test 08/11/2026:** head trước sửa `d9ea994`; [push CI
 42468103856](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468103856)
 và [PR CI 42468107848](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107848)

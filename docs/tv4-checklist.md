@@ -14,9 +14,10 @@ và hồi quy freshness #18/#37: local BE08 độc lập 20.986 request
 trên PR #21; Node 24.15.0 chạy 100/25/5 BE02/03/06, 10 BE08, typecheck/build
 PASS. PR #21 head `7518337` **CI đỏ SC06**: việc nhập VT-064 cá nhân
 thêm file không thuộc provenance archive. TV4 tách file cá nhân khỏi diff
-nhánh tích hợp và chạy lại checker/mutation 32/32; CI đúng commit sửa
-cần đối chiếu sau push. Không sửa oracle để che lỗi, không nhập PR #31/PDF
-cá nhân vào PR #21. Issue chưa được đóng nếu thiếu quyền GitHub ghi.
+nhánh tích hợp tại `a46c65314bf6564b202781727957ab8a2b8422ef0`;
+offline checker và mutation 32/32 PASS, CI [push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42652398131)/[PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42652411288) cần xem kết quả cuối đúng SHA.
+Không sửa oracle để che lỗi, không nhập PR #31/PDF cá nhân vào PR #21.
+Issue chưa được đóng nếu thiếu quyền GitHub ghi.
 WSL của TV3 đã có preflight PASS; chờ kiểm lại `serve` của PR #48 trên máy nhận.
 Extension wallet, testnet và peer review vẫn là gate độc lập.
 

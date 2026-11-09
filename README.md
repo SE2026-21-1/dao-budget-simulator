@@ -111,6 +111,10 @@ trên `Dev`, `npm run test:tv4:native -- --postgres-bin <pg18.4/bin> --output <n
 trên PR #21, và `npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend`
 trên PR #21. Docker chỉ khi daemon có quyền; native không cần Docker.
 
+Các lệnh `test:be02`, `test:be03`, `test:be06` dùng Node `--import tsx --test`
+như các suite BE04/BE07/BE08; không cần Unix IPC server của CLI `tsx --test`
+(theo [#47](https://github.com/SE2026-21-1/dao-budget-simulator/issues/47)).
+
 ## Evidence và gate tại thời điểm đối chiếu
 
 | Thành phần | Source/CI/chạy mới đã đối chiếu | Giới hạn trước release |

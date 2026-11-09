@@ -66,12 +66,16 @@ chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
 
 Danh sách issue/PR, revision, evidence, dependency và action cho #6,
 #14–20, #36/#37, #40–45/#47 cùng PR #21/#48 được đối chiếu ở
-[bảng 09/11](evidence/tv4-20261109-status.md). Trên phiên chưa xác thực,
-hai URL Project trả 404; không suy ra board/item không tồn tại, không có
-Status/Priority đã đọc hay đã sửa. SSH chỉ cho push Git, không cho ghi
-issue/PR/Projects. Người có quyền Project phải xem item hiện có trước khi
-cập nhật revision/evidence, tránh duplicate; #18/#37 đủ bằng chứng backend
-trên Dev nhưng không biến #41/#40 thành Done. #45 theo dõi đồng bộ hai board.
+[bảng 09/11](evidence/tv4-20261109-status.md). Trên phiên công cụ chưa xác thực,
+hai URL Project trả 404; **ảnh Project #2 do người dùng cung cấp sau đó**
+cho thấy PR #21 đang `Done` dù còn open/review, evidence head `640389f`
+đã cũ; #36 vẫn ghi FE live chưa chạy dù local 1 PASS/0 SKIP. [Bảng đối
+chiếu field cần sửa](evidence/tv4-20261109-status.md#ảnh-project-2-do-người-dùng-cung-cấp-sau-khi-push)
+không phải cập nhật live. Project #1 và hàng thứ 19 của ảnh chưa xác minh.
+Git SSH chỉ cho push Git, không cho ghi issue/PR/Projects; relay Chrome
+chưa kết nối extension. Người có quyền Project xem item hiện có trước khi
+sửa revision/evidence/status, tránh duplicate; #18/#37 đủ bằng chứng
+backend trên Dev nhưng không biến #41/#40 thành Done. #45 theo dõi hai board.
 
 ## Kiểm tra revision mới — 02/11/2026
 

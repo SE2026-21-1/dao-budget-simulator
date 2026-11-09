@@ -1,0 +1,2 @@
+['node', '-e', "console.log(/^[1-9][0-9]*$/.test('1\\n'), /^[a-z0-9][a-z0-9_-]{0,63}$/.test('a\\n'))"]
+false false

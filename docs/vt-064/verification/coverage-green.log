@@ -1,0 +1,32 @@
+$ node --import tsx --experimental-test-coverage --test-coverage-include=indexer/import/*.ts --test tests/indexer/import.test.ts
+✔ property: invalid insertion and order preserve the exact valid draft set (481.953604ms)
+✔ property: canonical fields reject generated line terminator suffixes (3.215365ms)
+✔ mixed import retains both valid neighbors and exact values (7.272529ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (3.564361ms)
+✔ seeded generated batches persist exactly their valid records (473.020899ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (29.795903ms)
+✔ persistence failure cannot be returned as success (2.289391ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (5.893172ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (1134.024976ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2605.801192
+ℹ start of coverage report
+ℹ ------------------------------------------------------------
+ℹ file        | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------
+ℹ indexer     |        |          |         | 
+ℹ  import     |        |          |         | 
+ℹ   cli.ts    |  90.91 |    75.00 |  100.00 | 8-10
+ℹ   drafts.ts | 100.00 |   100.00 |   90.91 | 
+ℹ ------------------------------------------------------------
+ℹ all files   |  97.71 |    96.36 |   92.31 | 
+ℹ ------------------------------------------------------------
+ℹ end of coverage report
+
+exit=0

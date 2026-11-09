@@ -1,0 +1,25 @@
+$ npm run test:vt064
+
+> dao-budget-simulator@0.0.0 test:vt064
+> node --import tsx --test tests/indexer/import.test.ts
+
+✔ property: invalid insertion and order preserve the exact valid draft set (494.624089ms)
+✔ property: canonical fields reject generated line terminator suffixes (5.099708ms)
+✔ mixed import retains both valid neighbors and exact values (7.61099ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (19.067424ms)
+✔ seeded generated batches persist exactly their valid records (668.961069ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (16.497818ms)
+✔ persistence failure cannot be returned as success (3.129606ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (4.083996ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (900.019641ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2418.821498
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+exit=0

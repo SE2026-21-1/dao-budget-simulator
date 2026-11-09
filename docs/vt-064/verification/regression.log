@@ -1,0 +1,31 @@
+$ npm run test:be07
+
+> dao-budget-simulator@0.0.0 test:be07
+> node --import tsx --test tests/indexer/be07.test.ts
+
+✔ RPC retries 429, then recovers (real HTTP) (145.203947ms)
+✔ RPC retries 500, then recovers (real HTTP) (23.244978ms)
+✔ RPC retries 503, then recovers (real HTTP) (26.945551ms)
+✔ RPC retries network, then recovers (real HTTP) (20.205042ms)
+✔ RPC retries timeout, then recovers (real HTTP) (2016.720516ms)
+✔ RPC retries -32005, then recovers (real HTTP) (9.963186ms)
+✔ RPC permanent -32601 is attempted once (5.826895ms)
+✔ RPC permanent -32602 is attempted once (4.38978ms)
+✔ RPC permanent -32000 is attempted once (3.961795ms)
+✔ RPC permanent 401 is attempted once (5.466108ms)
+✔ RPC permanent 403 is attempted once (4.765638ms)
+✔ RPC retries are bounded, exponential, jittered and interruptible (101.858214ms)
+✔ freshness changes after 30 seconds with zero new events; recovery gates are explicit (0.784385ms)
+✔ recovery config validates bounded window and polling interval (7.415409ms)
+✔ invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response (39.050811ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3175.05489
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+exit=0

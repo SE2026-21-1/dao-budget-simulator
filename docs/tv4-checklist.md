@@ -5,21 +5,21 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-**Đối chiếu TV4 ngày 09/11/2026:** [bảng issue/PR, nguồn SHA,
-local-vs-CI, dependency và action](evidence/tv4-20261109-status.md).
-TV4 chấp nhận **backend trên Dev `87738d3`** cho TC11/TC12, NFR02–04
-và hồi quy freshness #18/#37: local BE08 độc lập 20.986 request
-(p95 212,460931 ms), TV2 đọc raw CI 31.248 request (p95 27,947925 ms)
-ở cùng source nhưng hai chain H/hash riêng. QA01 #47 đã có code `ac40c35`
-trên PR #21; Node 24.15.0 chạy 100/25/5 BE02/03/06, 10 BE08, typecheck/build
-PASS. PR #21 head `7518337` **CI đỏ SC06**: việc nhập VT-064 cá nhân
-thêm file không thuộc provenance archive. TV4 tách file cá nhân khỏi diff
-nhánh tích hợp tại `a46c65314bf6564b202781727957ab8a2b8422ef0`;
-offline checker và mutation 32/32 PASS, CI [push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42652398131)/[PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42652411288) cần xem kết quả cuối đúng SHA.
-Không sửa oracle để che lỗi, không nhập PR #31/PDF cá nhân vào PR #21.
-Issue chưa được đóng nếu thiếu quyền GitHub ghi.
-WSL của TV3 đã có preflight PASS; chờ kiểm lại `serve` của PR #48 trên máy nhận.
-Extension wallet, testnet và peer review vẫn là gate độc lập.
+**Thực hiện TV4 ngày 10/11/2026:** [kết quả, raw evidence và giới hạn](evidence/tv4-20261109-status.md#cập-nhật-thực-hiện--10112026).
+Source code `9ad0aeaffd8c2a6135c05a2151148e792c84022c` giữ worktree cá nhân,
+không nhập VT-064 vào nhánh nhóm. Native BE08 mới PASS 183 unit/76 DB-API/
+187 Foundry, frontend24/24 và build/lint, SC06 regenerate từ source đã commit
+rồi checker/mutation32/32 PASS. BE02/03/06 public npm commands100/25/5 PASS
+dưới seccomp AF_UNIX=EPERM với TCP loopback được phép.
+
+Đã truy cập live hai Project và xử lý Module thiếu của #45/#47; #47 được thêm
+bằng issue hiện hữu vào board TV4. #37 đã nghiệm thu/đóng riêng hồi quy freshness
+Dev `87738d3` sau khi TV4 tự đọc ZIP/raw CI và kiểm262source hashes. #18
+**vẫn mở** vì audit mới phát hiện race projector-reorg/RPC-loss; fix/regression
+cần peer review và tích hợp PR #21, không suy toàn bộ backend an toàn từ CI cũ.
+PR #48 đúng `e8e443c` đã có TV4 COMMENT review/ownership1/1 và Linux serve/
+verify/liveFE1/0; TV3 còn retest WSL. Không tự approve PR #21 của mình,
+merge PR hoặc đánh Đạt ví extension/testnet/máy khác/release.
 
 ### Lịch sử kiểm tra 08/11/2026 (không phải trạng thái CI mới)
 
@@ -62,7 +62,7 @@ chiếu, **chưa phải review request/comment GitHub mới hoặc approval**.
 | TV2 `@daongocuong` | Đối chiếu #18/#37: checkpoint/crash/503/409/deep fork, rebuild compare cùng H/hash, schema 001–004 so với 001–005; tính lại p95 từ archive raw local và kiểm CI artifact khi có quyền. Review comment cũ không là approval cho head mới. | [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) và review PR #21 |
 | TV3 `@LangXiTrum2005` | Xác nhận FE↔API live với đủ bốn `BE05_LIVE_*`, UI H/hash/revision, BigInt, `lagging` và flow adapter Anvil; chạy lại với ví extension/peer service để nghiệm thu TC13, không tính EIP adapter là extension. | [#36](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36), [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41) và review PR #21 |
 
-### Handoff hai Projects #1/#2 — 09/11/2026
+### Handoff hai Projects #1/#2 — lịch sử 09/11/2026
 
 Danh sách issue/PR, revision, evidence, dependency và action cho #6,
 #14–20, #36/#37, #40–45/#47 cùng PR #21/#48 được đối chiếu ở

@@ -22,8 +22,8 @@ Một proposal nhận 400+300 For, queue qua caller không GOV và execute qua o
 không GOV đúng ETA; chi 1.000 BUD. Proposal thứ hai creator cancel khi Pending.
 operationId thứ hai chỉ là hash tính trước để kiểm Unset: không chứng minh có operation đã schedule.
 
-Archive hiện tại được tạo từ source ngày 06/11/2026 sau SC05 và BE05: H=26/hash
-`0xb36562d70d1229faa1e3ab713e12cc594727b3ab30c0c062f26c0c6192d9e20e`; 27 headers kể cả genesis,
+Archive hiện tại được tạo từ source ngày 10/11/2026 sau sửa recovery/API TV4: H=26/hash
+`0x166146af450c2d638a0914f63d71ab96f19cbca2eea77d35f98467a406c13afd`; 27 headers kể cả genesis,
 24 receipts, 42 logs; decoder TV2 nhận 14 decoded + 16 unknown topics (role/init); 12 log GOV
 không thuộc registry TV2 vẫn giữ raw và được full compiler ABI kiểm tra.
 Tất cả 42 raw logs phải round-trip ABI đúng. Không có decode_error.
@@ -50,12 +50,12 @@ node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-new-run
 ```
 
 Nguồn tạo **archive hiện tại**: `generation.sourceCommit` trong `chain.json`,
-**`c9795605277bd0500275804b7873618f13220c13`**. Source phải commit trước
+**`9ad0aeaffd8c2a6135c05a2151148e792c84022c`**. Source phải commit trước
 khi tạo archive mới; không sửa checksum/receipt để ép archive cũ PASS.
 Để tái lập từ revision chính xác mà không đổi branch đang làm việc:
 
 ```bash
-git worktree add --detach /tmp/sc06-source c9795605277bd0500275804b7873618f13220c13
+git worktree add --detach /tmp/sc06-source 9ad0aeaffd8c2a6135c05a2151148e792c84022c
 cd /tmp/sc06-source
 git submodule update --init --recursive
 npm ci --ignore-scripts

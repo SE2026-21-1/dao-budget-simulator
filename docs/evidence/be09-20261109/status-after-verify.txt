@@ -1,0 +1,9 @@
+BE09 run directory: /workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f
+Revision: 774197cea6ce376d94a7fb706f56cdc54e6db3d3; deployment: be09-local-20261109T154035Z-ab72342b0b29
+URLs: RPC http://127.0.0.1:18545 | API http://127.0.0.1:3300 | Frontend http://127.0.0.1:5173
+Anvil: LIVE (PID 3596)
+Indexer worker: LIVE (PID 3975)
+HTTP API: LIVE (PID 3694)
+Frontend Vite: LIVE (PID 3726)
+PostgreSQL cluster: LIVE (PID 3572; log /workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/logs/postgres.log)
+RPC chain=31337; API HTTP=200 publication=ready; frontend HTTP=200

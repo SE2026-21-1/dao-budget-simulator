@@ -23,7 +23,7 @@ function getOption(name) {
 class BlockedError extends Error { constructor(message) { super(message); this.name = 'BlockedError'; } }
 const report = {
   format: 'dao-budget-be09-verification-v1', status: 'BLOCKED', startedAt: new Date().toISOString(),
-  scope: 'This report covers only the local WSL run created by scripts/be09-local.sh. It does not attest CI, testnet, browser/wallet E2E, or separate TV3/TV4 review.',
+  scope: 'This report covers only the local run created by scripts/be09-local.sh. It does not attest CI, testnet, browser/wallet E2E, WSL receiving-machine operation, or separate TV3/TV4 review.',
   sourceCommit: null, worktree: null, chainId: null, deploymentName: null, proposalId: null, context: null,
   endpoints: [], contractComparison: null, workerRestart: null, cors: null, liveTest: null, stageErrors: [], error: null,
 };

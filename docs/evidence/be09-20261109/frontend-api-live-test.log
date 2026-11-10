@@ -1,0 +1,16 @@
+
+> frontend@0.0.0 test
+> vitest run src/data/api.live.test.ts --reporter=default --reporter=json --outputFile.json=/workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/reports/verify-20261109T154111Z-dce84a44/frontend-api-live-test.vitest.json
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/workspace/work/be09/frontend[39m
+
+ [32m✓[39m src/data/api.live.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 643[2mms[22m[39m
+     [33m[2m✓[22m[39m reads all six real endpoints at one H/hash/revision without duplicate or missing rows [33m 641[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 15:41:12
+[2m   Duration [22m 825ms[2m (transform 163ms, setup 0ms, import 44ms, tests 643ms, environment 0ms)[22m
+
+JSON report written to /workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/reports/verify-20261109T154111Z-dce84a44/frontend-api-live-test.vitest.json

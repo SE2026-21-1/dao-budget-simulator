@@ -10,7 +10,7 @@ UP_OK=0
 
 usage() {
   cat <<'USAGE'
-Usage: bash scripts/be09-local.sh <preflight|up|verify|status|down>
+Usage: bash scripts/be09-local.sh <preflight|up|serve|verify|status|down>
 
 Optional:
   BE09_STATE_ROOT  External writable state directory
@@ -105,8 +105,8 @@ stop_owned_services() {
   local run="$1" run_id
   run_id="$(basename -- "$run")"
   if [[ -f "$run/run-id" ]]; then run_id="$(cat "$run/run-id")"; fi
-  stop_pidfile 'Vite' "$run/pids/frontend.pid" "$ROOT/frontend/node_modules/vite/bin/vite.js"
-  stop_pidfile 'API' "$run/pids/api.pid" "$ROOT/indexer/api/main.ts"
+  stop_pidfile 'Vite' "$run/pids/frontend.pid" "--env-file=$run/frontend.env"
+  stop_pidfile 'API' "$run/pids/api.pid" "--env-file=$run/runtime.env"
   stop_pidfile 'Indexer worker' "$run/pids/worker.pid" "$run/indexer-config.json"
   stop_pidfile 'Anvil' "$run/pids/anvil.pid" "be09-anvil-$run_id"
   if [[ -d "$run/postgres/data" && -f "$run/postgres/data/PG_VERSION" ]]; then
@@ -324,6 +324,42 @@ EOF
   trap - EXIT
 }
 
+# Keep the caller (including a Windows wsl.exe invocation) alive for the demo.
+# nohup alone cannot keep the WSL VM alive after its last foreground session exits.
+command_serve() {
+  command_up
+  export BE09_RUN_DIR="$RUN_DIR"
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  trap 'status=$?; trap - EXIT INT TERM; stop_owned_services "$RUN_DIR" || true; exit "$status"' EXIT
+  note "Foreground session active for $RUN_DIR. Keep this terminal open."
+  note 'Use a second terminal for status/verify. Ctrl+C stops this run and preserves data/logs.'
+  while true; do
+    sleep 5 &
+    wait "$!" || true
+    local spec pidfile marker
+    for spec in \
+      "$RUN_DIR/pids/anvil.pid|be09-anvil-$(cat "$RUN_DIR/run-id")" \
+      "$RUN_DIR/pids/worker.pid|$RUN_DIR/indexer-config.json" \
+      "$RUN_DIR/pids/api.pid|--env-file=$RUN_DIR/runtime.env" \
+      "$RUN_DIR/pids/frontend.pid|--env-file=$RUN_DIR/frontend.env"; do
+      IFS='|' read -r pidfile marker <<< "$spec"
+      if [[ ! -f "$pidfile" ]] || ! pid_is_owned "$(cat "$pidfile")" "$marker"; then
+        # verify intentionally restarts the worker; give it a bounded restart grace.
+        if [[ "$pidfile" = "$RUN_DIR/pids/worker.pid" ]]; then
+          sleep 5
+          [[ -f "$pidfile" ]] && pid_is_owned "$(cat "$pidfile")" "$marker" && continue
+        fi
+        fail "Service stopped: $pidfile. Inspect $RUN_DIR/logs before starting a new run."
+        return 1
+      fi
+    done
+    "$PG_CTL_BIN" -D "$RUN_DIR/postgres/data" status >/dev/null 2>&1 || {
+      fail "PostgreSQL stopped. Inspect $RUN_DIR/logs/postgres.log"; return 1;
+    }
+  done
+}
+
 command_status() {
   [[ -n "$NODE_BIN" && -x "$NODE_BIN" ]] || fail 'Missing node; configure BE09_NODE_DIR or PATH.'
   [[ -n "$PG_CTL_BIN" && -x "$PG_CTL_BIN" ]] || fail 'Missing pg_ctl; configure BE09_PG_DIR or PATH.'
@@ -346,8 +382,8 @@ command_status() {
   for spec in \
     "Anvil|$RUN_DIR/pids/anvil.pid|be09-anvil-$run_id" \
     "Indexer worker|$RUN_DIR/pids/worker.pid|$RUN_DIR/indexer-config.json" \
-    "HTTP API|$RUN_DIR/pids/api.pid|$ROOT/indexer/api/main.ts" \
-    "Frontend Vite|$RUN_DIR/pids/frontend.pid|$ROOT/frontend/node_modules/vite/bin/vite.js"; do
+    "HTTP API|$RUN_DIR/pids/api.pid|--env-file=$RUN_DIR/runtime.env" \
+    "Frontend Vite|$RUN_DIR/pids/frontend.pid|--env-file=$RUN_DIR/frontend.env"; do
     IFS='|' read -r label pidfile marker <<< "$spec"
     if [[ -f "$pidfile" ]] && pid_is_owned "$(cat "$pidfile")" "$marker"; then
       note "$label: LIVE (PID $(cat "$pidfile"))"
@@ -403,6 +439,7 @@ configure_toolchain
 case "${1:-}" in
   preflight) [[ $# = 1 ]] || { usage; exit 2; }; check_source_and_toolchain ;;
   up) [[ $# = 1 ]] || { usage; exit 2; }; command_up ;;
+  serve) [[ $# = 1 ]] || { usage; exit 2; }; command_serve ;;
   verify) [[ $# = 1 ]] || { usage; exit 2; }; command_verify ;;
   status) [[ $# = 1 ]] || { usage; exit 2; }; command_status ;;
   down) [[ $# = 1 ]] || { usage; exit 2; }; command_down ;;

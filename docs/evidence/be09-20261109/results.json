@@ -1,0 +1,129 @@
+{
+  "format": "dao-budget-be09-verification-v1",
+  "status": "PASS",
+  "startedAt": "2026-11-09T15:41:11.919Z",
+  "scope": "This report covers only the local WSL run created by scripts/be09-local.sh. It does not attest CI, testnet, browser/wallet E2E, or separate TV3/TV4 review.",
+  "sourceCommit": "774197cea6ce376d94a7fb706f56cdc54e6db3d3",
+  "worktree": {
+    "head": "774197cea6ce376d94a7fb706f56cdc54e6db3d3",
+    "status": [],
+    "sha256": {
+      "scripts/be09-local.sh": "243e284791c4fadd9b96b1c3768709fd987ba087cc0721df4fe9bc32ce21847d",
+      "scripts/be09-seed.mjs": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+      "scripts/be09-register.mjs": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+      "scripts/be09-diagnose.mjs": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+      "scripts/be09-verify.mjs": "e5adcdc65ff7b72a3bd068d25edea01b60db25666b0f29a81e3234ce66e78207",
+      "scripts/be09-live-test.mjs": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+      "scripts/be09-provenance.mjs": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be"
+    },
+    "note": "Hashes describe the current verification worktree, not a reconstruction of the earlier deployment worktree."
+  },
+  "chainId": "31337",
+  "deploymentName": "be09-local-20261109T154035Z-ab72342b0b29",
+  "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+  "context": {
+    "chainId": "31337",
+    "deploymentName": "be09-local-20261109T154035Z-ab72342b0b29",
+    "H": "24",
+    "hash": "0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+    "revision": "7aa6c3ea-83b5-4b58-8fb2-a8b2f058a0e8"
+  },
+  "endpoints": [
+    {
+      "endpoint": "/api/health",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/summary",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+      "method": "GET",
+      "httpStatus": 200
+    },
+    {
+      "endpoint": "/api/treasury/transfers",
+      "method": "GET",
+      "httpStatus": 200
+    }
+  ],
+  "contractComparison": {
+    "H": "24",
+    "hash": "0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+    "revision": "7aa6c3ea-83b5-4b58-8fb2-a8b2f058a0e8",
+    "proposalState": "Executed",
+    "votes": [
+      "0",
+      "700000000000000000000",
+      "0"
+    ],
+    "paidRequest": true,
+    "treasuryBalance": "9000000000000000000000",
+    "apiAndChainVoteRows": 2,
+    "apiAndChainTransfers": 2,
+    "totalIn": "10000000000000000000000",
+    "totalOut": "1000000000000000000000",
+    "result": "PASS"
+  },
+  "workerRestart": {
+    "oldPid": 3690,
+    "newPid": 3975,
+    "databaseDigestUnchanged": true,
+    "publication": {
+      "block_number": "24",
+      "block_hash": "0x0dfe9b8a51047f8c5fbf98bd414a0ba49c50dca5c278c81408afa6aae47172db",
+      "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+      "snapshot_revision": "7aa6c3ea-83b5-4b58-8fb2-a8b2f058a0e8",
+      "ignored_ancillary_events": 16
+    }
+  },
+  "cors": {
+    "preflightHttpStatus": 204,
+    "allowOrigin": "http://127.0.0.1:5173",
+    "expectedOrigin": "http://127.0.0.1:5173"
+  },
+  "liveTest": {
+    "command": "npm run test --prefix frontend -- src/data/api.live.test.ts --reporter=default --reporter=json --outputFile.json=/workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/reports/verify-20261109T154111Z-dce84a44/frontend-api-live-test.vitest.json",
+    "status": "PASS",
+    "executed": true,
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "exitCode": 0,
+    "log": "/workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/reports/verify-20261109T154111Z-dce84a44/frontend-api-live-test.log",
+    "vitestJson": "/workspace/work/be09-state/runs/20261109T154035Z-31218ca0e76f/reports/verify-20261109T154111Z-dce84a44/frontend-api-live-test.vitest.json",
+    "variables": [
+      "BE05_LIVE_API_URL",
+      "BE05_LIVE_CHAIN_ID",
+      "BE05_LIVE_DEPLOYMENT_ID",
+      "BE05_LIVE_RPC_URL"
+    ],
+    "runtimeInputs": {
+      "apiUrl": "http://127.0.0.1:3300",
+      "chainId": "31337",
+      "deploymentName": "be09-local-20261109T154035Z-ab72342b0b29",
+      "rpcUrl": "http://127.0.0.1:18545"
+    },
+    "deploymentIdIsReal": true
+  },
+  "stageErrors": [],
+  "error": null,
+  "finishedAt": "2026-11-09T15:41:14.108Z"
+}

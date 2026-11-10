@@ -94,7 +94,7 @@ function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asO
 }
 
 export default function DashboardPage() {
-  const { state, retry, simulateError, refreshing } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing, refreshError } = useProposalFixtures();
   return <div className="editorial-page-view">
     <header className="editorial-page-header"><div className="editorial-page-header__left">
       <p className="editorial-greeting">Chào mừng trở lại,</p>
@@ -103,6 +103,7 @@ export default function DashboardPage() {
     </div><Link to="/proposals/new" className="button-primary">Tạo đề xuất</Link></header>
     <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
     {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
+    {refreshError && <p className="wallet-error" role="alert">Không tải được snapshot mới: {refreshError} Dữ liệu đang hiển thị vẫn thuộc snapshot cũ; bấm Tải dữ liệu mới nhất để thử lại.</p>}
     {state.status === "success" && <SnapshotInfo context={state.collection.context} />}
     {state.status === "success" ? <>
       <DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} />

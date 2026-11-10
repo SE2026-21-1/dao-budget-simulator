@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { type Address } from "viem";
 import { deployment } from "../chain/config";
-import { useWallet, pastVotingPower, publicClient, formatGOV } from "../chain/wallet";
+import { useWallet, pastVotingPower, publicClient, formatGOV, walletSession } from "../chain/wallet";
 import { assertWritable, currentProposalState, governorAbi, originalActions, sendGovernor } from "../chain/transactions";
 import { useTransaction } from "../chain/useTransaction";
 import type { FixtureContext, Proposal } from "../data/proposals";
@@ -34,6 +34,7 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
   const act = async (kind: "vote" | "cancel" | "queue" | "execute") => {
     await transaction.run(async () => {
       assertWritable(wallet.account, wallet.chainId, context);
+      const session = walletSession(wallet.account!);
       const args = originalActions(proposal, deployment!.treasury);
       const expected = { vote: 1, cancel: 0, queue: 4, execute: 5 }[kind];
       if (await currentProposalState(proposal.proposalId) !== expected) throw new Error("Trạng thái on-chain đã thay đổi. Tải dữ liệu mới nhất trước khi thao tác.");
@@ -42,14 +43,14 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
         if (voted) throw new Error("Ví này đã bỏ phiếu cho proposal.");
         if (await pastVotingPower(wallet.account!, proposal.snapshot) === 0n) throw new Error("Ví không có voting power tại snapshot.");
         if (!["0", "1", "2"].includes(support)) throw new Error("Lựa chọn phiếu không hợp lệ.");
-        return sendGovernor(wallet.account!, "castVote", [BigInt(proposal.proposalId), Number(support)]);
+        return sendGovernor(session, "castVote", [BigInt(proposal.proposalId), Number(support)]);
       }
       if (kind === "cancel" && proposal.proposer.toLowerCase() !== wallet.account!.toLowerCase()) throw new Error("Chỉ creator được hủy proposal Pending.");
       if (kind === "execute") {
         const block = await publicClient!.getBlock();
         if (!proposal.operation?.eta || block.timestamp < BigInt(proposal.operation.eta)) throw new Error("Chưa tới ETA để execute.");
       }
-      return sendGovernor(wallet.account!, kind, args);
+      return sendGovernor(session, kind, args);
     }, onConfirmed);
   };
 

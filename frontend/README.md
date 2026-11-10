@@ -88,14 +88,15 @@ Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không d
 - Client tải hết các trang proposal bằng cursor BE05 và giữ cùng H/hash/revision. Summary và Transfer dùng chính context đó; mỗi lượt tải mới bỏ context/cursor cũ. Mã lỗi đọc từ envelope `error.code`/`error.message`, không từ trường `message` ở root.
 - Dashboard, danh sách và chi tiết (kể cả không tìm thấy ID) hiện nguồn, H, hash và revision của **snapshot đang hiển thị**; với API, hiện cả trạng thái sync tại lúc tải. Health ở header thăm dò riêng mỗi 5 giây nên có thể mới hơn snapshot: phải bấm **Tải dữ liệu mới nhất** để lấy H/hash/revision mới, không suy trạng thái health là dữ liệu đã xuất bản.
 - Health gọi `/api/health` mỗi5s chỉ với chain/deployment, không ghim H. Hiển thị `ok`/`degraded`/`unavailable`, DB/indexer/publication và cảnh báo decode/projection. Heartbeat quá30s hoặc publication bị trễ hiện cảnh báo dữ liệu cũ; tự bỏ cảnh báo khi phục hồi. HTTP503 health vẫn có thể chứa envelope `data` hợp lệ. `lagSeconds` là chỉ báo freshness, không phải phép đo chính xác event delay; fixture cũ có thể null.
-- Wallet phát hiện EIP-6963 và `window.ethereum` EIP-1193 (ví dụ MetaMask), cho chọn provider khi có nhiều tiện ích và tìm lại ví khởi tạo muộn. Chưa kết nối vẫn đọc được API. Đọc GOV balance/delegate/current votes, hỗ trợ self-delegate và account/chain change; sai chain chặn giao dịch.
+- Wallet phát hiện EIP-6963 và `window.ethereum` EIP-1193 (ví dụ MetaMask), cho chọn provider khi có nhiều tiện ích và tìm lại ví khởi tạo muộn. Chưa kết nối vẫn đọc được API. Đọc GOV balance/delegate/current votes, hỗ trợ self-delegate và account/chain change; sai chain chặn giao dịch. Response kết nối đến muộn không được ghi đè account/chain event mới hơn.
 - Trước thao tác quản trị, frontend đối chiếu chain RPC, bytecode và quan hệ Governor → Treasury/GOV/Timelock, Treasury → BUD. Summary phải khớp cả năm địa chỉ cấu hình.
+- Mỗi thao tác giữ session ví/account/chain ngay trước các bước kiểm tra bất đồng bộ. Nếu đổi provider/account/chain hoặc ẩn tài khoản trước lúc gửi, thao tác cũ báo lỗi, không chuyển yêu cầu ký sang ví vừa chọn. Giao dịch đã gửi tới ví/chain không thể thu hồi bằng cách đổi session.
 - Propose kiểm tra voting power tại `Governor.clock()-1` so với proposal threshold thật. Vote kiểm tra Active, `hasVoted` và voting power tại snapshot. Chỉ proposer hủy Pending; ai cũng có thể queue Succeeded và execute Queued/Ready qua Governor. Không gọi Timelock trực tiếp.
 - `requestId` sinh một lần bằng CSPRNG và giữ qua retry; amount được parse từ chuỗi thành BigInt 18 decimals, từ chối > uint256, exponent hoặc >18 decimals. Title/body giữ nguyên khoảng trắng/Unicode; description được serialize một lần lúc propose. Queue/execute/cancel dùng nguyên actions/hash đã lưu, đối chiếu calldata disburse và proposal ID; không parse/stringify lại description.
 - Nạp quỹ là BUD `transfer(Treasury, amount)`, không có endpoint POST hoặc hàm deposit giả. Pending/Active/Queued không giữ chỗ ngân sách; insufficient Treasury khi execute vẫn có thể revert.
 - UI đợi receipt thành công, giữ dữ liệu form khi ký bị từ chối/lỗi, chặn gửi lặp khi giao dịch đang chờ. Sau receipt, thao tác quản trị/nạp quỹ tải lại snapshot mới nhất đã **xuất bản**. Nếu indexer chưa bắt kịp, bấm **Tải dữ liệu mới nhất** sau khi ingest/project; không tự ghi đè state/số dư dự đoán. Nút này cũng phục hồi snapshot/cursor đã hết TTL hoặc invalidated bằng lượt đọc mới, không dùng cursor cũ.
 - Receipt replacement chỉ thành công khi repricing cùng action; cancellation/thay action báo lỗi. Hash/Proposal ID lấy từ receipt thực đã mine, không tìm lại hash cũ. Khi account đổi giữa delegation và receipt, callback cũ không được ghi đè balance/delegate/votes của account mới.
-- Content có transaction owner được giữ mounted trong snapshot refresh thành công, có nhãn H cũ/đang tải; không xóa receipt chỉ vì publication chưa bắt kịp. API transport lỗi có thông báo tiếng Việt, giữ error thay vì fallback fixture.
+- Content có transaction owner được giữ mounted khi refresh snapshot, kể cả refresh bị lỗi: giữ snapshot cũ có nhãn cảnh báo và receipt/hash; thử lại bằng **Tải dữ liệu mới nhất**. Receipt nạp quỹ vẫn hiển thị khi summary/transfer của H mới đang tải hoặc lỗi. Lỗi tải lần đầu vẫn là màn hình lỗi; không fallback fixture hoặc suy đoán số dư.
 
 ### Kết nối ví trong trình duyệt
 
@@ -141,6 +142,8 @@ await page.goto(frontendUrl);
 
 Selectors: `#proposal-title`, `#proposal-body`, `#proposal-recipient`, `#proposal-amount`, `#vote-support`, `#deposit-amount`. Các nút: **Self-delegate**, **Tạo đề xuất** (submit trong form), **Bỏ phiếu**, **Hủy đề xuất**, **Queue**, **Execute**, **Nạp quỹ**, **Tải dữ liệu mới nhất**. Ví nạp BUD lấy `manifest.accounts.funding`; GOV voting power thuộc A/B/C/D theo manifest.
 
+Smoke các lỗi lifecycle cần API/deployment thật như phần trên và provider có event `accountsChanged`/`chainChanged` (hai provider để thử đổi ví). Trong lúc trì hoãn RPC kiểm tra deployment, đổi account/provider/mạng rồi tiếp tục RPC: phải báo session đã đổi và không có `eth_sendTransaction` từ thao tác cũ. Trì hoãn response kết nối rồi phát account/chain event mới hơn: UI phải giữ event mới. Sau một deposit/cancel có receipt thật, ngắt API trước refresh: receipt/hash và snapshot H cũ phải còn, có cảnh báo lỗi; bật API và tải lại để phục hồi. Chặn riêng summary/transfer của H mới để kiểm receipt vẫn hiện trong lúc tải và sau lỗi. Chế độ fixture chỉ kiểm route/layout và giao dịch bị khóa, không chứng minh các ca session/receipt này.
+
 ## Các lệnh kiểm tra để người tích hợp chạy
 
 ```sh
@@ -150,7 +153,7 @@ npm --prefix frontend run build
 npm --prefix frontend run lint
 ```
 
-Behavior tests kiểm tra calldata/hash SC01, nguyên văn Unicode/description, uint256/precision, payload gốc và định dạng tiền; không kiểm tra wiring bằng mock-echo hoặc repin bản sao fixture. Build có TypeScript typecheck. Các lệnh này và browser real-chain phải được chạy sau khi tích hợp hoàn tất; tài liệu này không tự khẳng định chúng đã pass. Fixture/unit/build không thay thế bằng chứng ví–API–chain, negative case hoặc deployment testnet thật.
+Behavior tests kiểm tra calldata/hash SC01, nguyên văn Unicode/description, uint256/precision, payload gốc và định dạng tiền. Các regression React DOM dùng `happy-dom` kiểm account/chain event đến sau, đổi provider/account khi chờ RPC, abort request superseded, giữ snapshot/receipt khi refresh lỗi và phục hồi; chỉ mock biên ví/RPC/API, không thay bằng mock-echo hoặc repin bản sao fixture. Build có TypeScript typecheck. Chạy các lệnh trên sau khi tích hợp; tài liệu này không tự khẳng định đã pass. Fixture/unit/build không thay thế bằng chứng ví–API–chain hoặc deployment testnet thật.
 
 ## Kết quả nghiệm thu TV4 ngày 24/10/2026
 

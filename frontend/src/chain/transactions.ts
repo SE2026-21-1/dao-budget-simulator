@@ -3,7 +3,8 @@ import governorAbiJson from "../abi/BudgetGovernor.json";
 import treasuryAbiJson from "../abi/Treasury.json";
 import type { Proposal, FixtureContext } from "../data/proposals";
 import { deployment } from "./config";
-import { publicClient, walletClient } from "./wallet";
+import { publicClient } from "./wallet";
+import type { WalletSession } from "./wallet";
 
 export const governorAbi = governorAbiJson as Abi;
 export const treasuryAbi = treasuryAbiJson as Abi;
@@ -29,11 +30,11 @@ export function assertWritable(account: Address | null, chainId: number | null, 
   }
 }
 
-export async function sendGovernor(account: Address, functionName: string, args: readonly unknown[]): Promise<Hash> {
+export async function sendGovernor(session: WalletSession, functionName: string, args: readonly unknown[]): Promise<Hash> {
   await verifyDeployment();
   if (!deployment) throw new Error("Thiếu cấu hình deployment.");
   const data = encodeFunctionData({ abi: governorAbi, functionName, args });
-  return walletClient().sendTransaction({ account, to: deployment.governor, data });
+  return session.send(deployment.governor, data);
 }
 
 export async function verifyDeployment(): Promise<void> {

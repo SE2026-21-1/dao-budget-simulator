@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { isAddress } from "viem";
 import { deployment } from "../chain/config";
-import { useWallet, sendTokenTransaction } from "../chain/wallet";
+import { useWallet, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { useTransaction } from "../chain/useTransaction";
 import { assertWritable, parseBUD, verifyDeployment } from "../chain/transactions";
 import { formatBUD, formatCompactBUD } from "../data/formatBUD";
@@ -39,8 +39,9 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
       const parsed = parseBUD(amount);
       const treasuryAddress = deployment.treasury;
       await transaction.run(async () => {
+        const session = walletSession(wallet.account!);
         await verifyDeployment();
-        return sendTokenTransaction("transfer", [treasuryAddress, parsed], wallet.account!);
+        return sendTokenTransaction(session, "transfer", [treasuryAddress, parsed]);
       }, onConfirmed);
     } catch (cause) { setDepositError(cause instanceof Error ? cause.message : "Không gửi được BUD."); }
   };
@@ -55,7 +56,7 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
       <div className="treasury-deposit">
         <h3>Nạp BUD vào quỹ</h3><p>Ví gửi BUD trực tiếp tới Treasury. Sau receipt, giao diện tải snapshot mới nhất đã xuất bản; nếu indexer chưa bắt kịp, bấm Tải dữ liệu mới nhất sau khi index.</p>
         <div className="action-row"><label className="field-label" htmlFor="deposit-amount">Số BUD</label><input id="deposit-amount" className="field-control" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="100" /><button type="button" className="button-primary" disabled={transaction.busy || context.dataKind !== "chain" || !deployment || !wallet.account || wallet.chainId !== deployment.chainId} onClick={() => void deposit()}>Nạp quỹ</button></div>
-        {depositError && <p className="wallet-error" role="alert">{depositError}</p>}<TransactionStatus {...transaction} />
+        {depositError && <p className="wallet-error" role="alert">{depositError}</p>}
       </div>
       <div className="treasury-history"><h3>Lịch sử dòng tiền</h3>
         {transfers.length === 0 ? <p>Chưa có Transfer BUD.</p> : <>
@@ -64,5 +65,6 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
         </>}
       </div>
     </>}
+    <TransactionStatus {...transaction} />
   </section>;
 }

@@ -27,11 +27,23 @@ export interface ProjectionReport {
   rawDecodeIssues: number;
 }
 
+class ProjectionReorgError extends IndexerError {
+  constructor(readonly checkpoint: Checkpoint) {
+    super('PROJECTION_REORG', 'Projection H is no longer canonical; publication must be invalidated.');
+  }
+}
+
 /** Replays the verified raw prefix and atomically publishes one reconciled H/hash. */
 export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
   try { return await projectTransaction(config, rpc, pool); }
   catch (error) {
     // The failed publication transaction has released its lock/connection first.
+    if (error instanceof ProjectionReorgError) {
+      // A verified mismatch is already evidence of a fork. Persist the gate
+      // before another RPC request can fail and leave known-orphan data serving.
+      await new PostgresStorage(pool).recoverCheckpoint(config, rpc, error.checkpoint);
+      throw new IndexerError('REORG_RETRY', 'Reorg detected during projection; recovery persisted.');
+    }
     const state = (await pool.query("SELECT to_jsonb(d)->'indexer_state' AS s FROM deployments d WHERE deployment_id=$1", [config.deploymentId])).rows[0]?.s;
     if (state && state.phase !== 'rebuild_required' && quantity(await rpc.call('eth_chainId', []), 'chainId') === config.chainId) {
       const storage = new PostgresStorage(pool);
@@ -210,6 +222,8 @@ async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool
         throw barrierError;
       }
     }
+    if (!legacy && cp && error instanceof IndexerError && error.code === 'PROJECTION_REORG')
+      throw new ProjectionReorgError(cp);
     if (error instanceof IndexerError) throw error;
     if (error instanceof Error && error.name === 'StorageError') throw error;
     throw new IndexerError(

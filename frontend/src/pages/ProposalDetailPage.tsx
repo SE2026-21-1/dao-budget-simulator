@@ -11,7 +11,7 @@ const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).t
 
 function ProposalDetailPage() {
   const { id } = useParams();
-  const { state, retry, simulateError, refreshing } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing, refreshError } = useProposalFixtures();
   const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
 
   if (state.status !== "success") {
@@ -26,6 +26,7 @@ function ProposalDetailPage() {
         <p className="muted">Proposal ID này không tồn tại trong snapshot đang xem. Nếu vừa gửi giao dịch, hãy đợi indexer xuất bản dữ liệu mới.</p>
         <SnapshotInfo context={state.collection.context} />
         <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+        {refreshError && <p className="wallet-error" role="alert">{refreshError}</p>}
         <Link to="/proposals" className="button-primary">Quay lại danh sách</Link>
       </div>
     );
@@ -45,6 +46,7 @@ function ProposalDetailPage() {
       <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
       <SnapshotInfo context={state.collection.context} />
       {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
+      {refreshError && <p className="wallet-error" role="alert">Không tải được snapshot mới: {refreshError} Dữ liệu đang hiển thị vẫn thuộc snapshot cũ; bấm Tải dữ liệu mới nhất để thử lại.</p>}
 
       <div className="detail-grid">
         <section className="panel">

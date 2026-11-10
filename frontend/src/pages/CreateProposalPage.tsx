@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router";
 import { type Address } from "viem";
 import { deployment } from "../chain/config";
-import { useWallet } from "../chain/wallet";
+import { useWallet, walletSession } from "../chain/wallet";
 import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
 import { useTransaction } from "../chain/useTransaction";
 import TransactionStatus from "../components/TransactionStatus";
@@ -44,8 +44,9 @@ function CreateProposalPage() {
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
       await transaction.run(
         async () => {
+          const session = walletSession(wallet.account!);
           await assertCanPropose(wallet.account!);
-          return sendGovernor(wallet.account!, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
+          return sendGovernor(session, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
         },
         (receipt) => {
           setSubmittedId(proposalIdFromReceipt(receipt.logs));

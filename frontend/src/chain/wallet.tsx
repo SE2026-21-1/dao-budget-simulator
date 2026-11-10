@@ -1,10 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash } from "viem";
+import { createPublicClient, createWalletClient, custom, encodeFunctionData, formatUnits, http, isAddress, parseAbi, type Address, type Hash, type Hex } from "viem";
 import { deployment } from "./config";
 import { discoverWallets, parseWalletChain, switchWalletNetwork, walletErrorMessage, type InjectedProvider, type WalletOption } from "./walletProviders";
 
-// Transactions must use the same provider that the user selected in FE02.
-let activeWalletProvider: InjectedProvider | null = null;
+// A client is bound to the selected wallet session, not whichever provider is active later.
+let activeWalletSession: { provider: InjectedProvider; account: Address | null; chainId: number | null } | null = null;
 
 const tokenAbi = parseAbi([
   "function balanceOf(address account) view returns (uint256)",
@@ -18,7 +18,7 @@ const tokenAbi = parseAbi([
 export const publicClient = deployment ? createPublicClient({ chain: deployment.chain, transport: http(deployment.rpcUrl) }) : null;
 export { tokenAbi };
 
-type WalletState = {
+export type WalletState = {
   account: Address | null;
   chainId: number | null;
   busy: boolean;
@@ -48,14 +48,21 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [votingPower, setVotingPower] = useState<bigint | null>(null);
   const readGeneration = useRef(0);
   const activeSelection = useRef({ account, chainId });
-  useLayoutEffect(() => { activeSelection.current = { account, chainId }; }, [account, chainId]);
+  const accountEvents = useRef(0);
+  const chainEvents = useRef(0);
   const sessionGeneration = useRef(0);
   const [wallets, setWallets] = useState<WalletOption[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const discovery = useRef<ReturnType<typeof discoverWallets> | null>(null);
   const selectedWallet = wallets.find((wallet) => wallet.id === selectedId) ?? wallets[0];
   const provider = selectedWallet?.provider;
-  const invalidateSession = useCallback(() => { sessionGeneration.current++; }, []);
+  useLayoutEffect(() => {
+    activeSelection.current = { account, chainId };
+    const session = provider ? { provider, account, chainId } : null;
+    activeWalletSession = session;
+    return () => { if (activeWalletSession === session) activeWalletSession = null; };
+  }, [provider, account, chainId]);
+  const invalidateSession = useCallback(() => { sessionGeneration.current++; activeWalletSession = null; }, []);
 
   useEffect(() => {
     const listener = discoverWallets(setWallets);
@@ -70,22 +77,37 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!provider) return;
-    activeWalletProvider = provider;
+    activeWalletSession = null;
     let mounted = true;
     let accountEvent = false;
     let chainEvent = false;
     const generation = ++sessionGeneration.current;
     const accountsChanged = (...args: unknown[]) => {
       accountEvent = true;
+      accountEvents.current++;
       const next = Array.isArray(args[0]) && typeof args[0][0] === "string" && isAddress(args[0][0]) ? args[0][0] as Address : null;
-      if (mounted) { setAccount(next); clearReads(); }
+      if (mounted) {
+        if (next !== activeSelection.current.account) activeWalletSession = { provider, ...activeSelection.current, account: next };
+        activeSelection.current = { ...activeSelection.current, account: next };
+        setAccount(next); clearReads();
+      }
     };
     const chainChanged = (...args: unknown[]) => {
       chainEvent = true;
-      if (mounted) { setChainId(parseWalletChain(args[0])); clearReads(); }
+      chainEvents.current++;
+      if (mounted) {
+        const next = parseWalletChain(args[0]);
+        if (next !== activeSelection.current.chainId) activeWalletSession = { provider, ...activeSelection.current, chainId: next };
+        activeSelection.current = { ...activeSelection.current, chainId: next };
+        setChainId(next); clearReads();
+      }
     };
     const disconnected = () => {
-      if (mounted) { sessionGeneration.current++; setAccount(null); setChainId(null); clearReads(); }
+      if (mounted) {
+        invalidateSession();
+        activeSelection.current = { account: null, chainId: null };
+        setAccount(null); setChainId(null); clearReads();
+      }
     };
     // Never prompt on mount. Only restore accounts already authorized in this wallet.
     Promise.all([provider.request({ method: "eth_accounts" }), provider.request({ method: "eth_chainId" })])
@@ -103,7 +125,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       provider.removeListener?.("accountsChanged", accountsChanged);
       provider.removeListener?.("chainChanged", chainChanged);
       provider.removeListener?.("disconnect", disconnected);
-      if (activeWalletProvider === provider) activeWalletProvider = null;
+      activeWalletSession = null;
     };
   }, [provider, clearReads, invalidateSession]);
 
@@ -130,6 +152,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (!provider) { setError("Trang chưa nhận được ví. Hãy mở web trong trình duyệt đã cài và bật tiện ích ví EVM, rồi bấm Tìm lại ví."); return; }
     if (busy) return;
     const generation = ++sessionGeneration.current;
+    const accountVersion = accountEvents.current;
+    const chainVersion = chainEvents.current;
     setBusy(true); setError(null);
     try {
       const accounts = await provider.request({ method: "eth_requestAccounts" });
@@ -138,28 +162,36 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       const nextChain = parseWalletChain(await provider.request({ method: "eth_chainId" }));
       if (generation !== sessionGeneration.current) return;
       clearReads();
-      activeWalletProvider = provider;
-      setAccount(address);
-      setChainId(nextChain);
+      // Wallet events are newer than the responses to these outstanding requests.
+      if (accountVersion === accountEvents.current) setAccount(address);
+      if (chainVersion === chainEvents.current) setChainId(nextChain);
     } catch (cause) { if (generation === sessionGeneration.current) setError(walletErrorMessage(cause, "Không kết nối được ví.")); }
     finally { setBusy(false); }
   };
 
-  const disconnect = () => { sessionGeneration.current++; setAccount(null); clearReads(); };
+  const disconnect = () => {
+    invalidateSession();
+    activeSelection.current = { ...activeSelection.current, account: null };
+    setAccount(null); clearReads();
+  };
   const selectWallet = (id: string) => {
     if (busy || !wallets.some((wallet) => wallet.id === id) || id === selectedWallet?.id) return;
-    sessionGeneration.current++;
+    invalidateSession();
+    activeSelection.current = { account: null, chainId: null };
     setAccount(null); setChainId(null); clearReads(); setSelectedId(id);
   };
   const discover = () => { setError(null); discovery.current?.scan(); };
   const switchNetwork = async () => {
     if (!provider || !deployment || busy) return;
+    const generation = ++sessionGeneration.current;
+    const chainVersion = chainEvents.current;
     setBusy(true); setError(null);
     try {
       await switchWalletNetwork(provider, { chainId: deployment.chainId, name: deployment.chain.name, rpcUrl: deployment.rpcUrl });
+      if (generation !== sessionGeneration.current) return;
       clearReads();
-      setChainId(deployment.chainId);
-    } catch (cause) { setError(walletErrorMessage(cause, "Không chuyển được mạng. Kiểm tra RPC và xác nhận trong tiện ích ví.")); }
+      if (chainVersion === chainEvents.current) setChainId(deployment.chainId);
+    } catch (cause) { if (generation === sessionGeneration.current) setError(walletErrorMessage(cause, "Không chuyển được mạng. Kiểm tra RPC và xác nhận trong tiện ích ví.")); }
     finally { setBusy(false); }
   };
 
@@ -172,9 +204,29 @@ export function useWallet() {
   return context;
 }
 
-export function walletClient() {
-  if (!activeWalletProvider || !deployment) throw new Error("Thiếu ví hoặc cấu hình deployment.");
-  return createWalletClient({ chain: deployment.chain, transport: custom(activeWalletProvider) });
+export interface WalletSession {
+  send: (to: Address, data: Hex) => Promise<Hash>;
+}
+
+export function walletSession(account: Address): WalletSession {
+  const session = activeWalletSession;
+  const assertSession = () => {
+    if (!deployment || !session || activeWalletSession !== session ||
+        session.account?.toLowerCase() !== account.toLowerCase() || session.chainId !== deployment.chainId) {
+      throw new Error("Ví, tài khoản hoặc mạng đã thay đổi. Hãy thử lại từ tài khoản hiện tại.");
+    }
+  };
+  assertSession();
+  const client = createWalletClient({
+    chain: deployment!.chain,
+    transport: custom({
+      request: (args) => {
+        assertSession();
+        return session!.provider.request(args);
+      },
+    }),
+  });
+  return { send: (to, data) => client.sendTransaction({ account, to, data }) };
 }
 
 export function formatGOV(value: bigint | null): string {
@@ -186,7 +238,7 @@ export async function pastVotingPower(account: Address, snapshot: string): Promi
   return publicClient.readContract({ address: deployment.govToken, abi: tokenAbi, functionName: "getPastVotes", args: [account, BigInt(snapshot)] });
 }
 
-export async function sendTokenTransaction(functionName: "delegate" | "transfer", args: readonly [Address] | readonly [Address, bigint], account: Address): Promise<Hash> {
+export async function sendTokenTransaction(session: WalletSession, functionName: "delegate" | "transfer", args: readonly [Address] | readonly [Address, bigint]): Promise<Hash> {
   if (!deployment || !publicClient) throw new Error("Thiếu cấu hình deployment.");
   const target = functionName === "delegate" ? deployment.govToken : deployment.budToken;
   const code = await publicClient.getBytecode({ address: target });
@@ -194,5 +246,5 @@ export async function sendTokenTransaction(functionName: "delegate" | "transfer"
     throw new Error("RPC hoặc token không khớp deployment đã cấu hình.");
   }
   const data = encodeFunctionData({ abi: tokenAbi, functionName, args });
-  return walletClient().sendTransaction({ account, to: target, data });
+  return session.send(target, data);
 }

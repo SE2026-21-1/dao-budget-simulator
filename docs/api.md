@@ -191,7 +191,7 @@ Ví dụ: `/api/proposals?chainId=31337&deploymentId=synthetic-local-v1&limit=20
 
 | Query thêm | Quy tắc |
 |---|---|
-| `state` | Tùy chọn, đúng một trong Pending/Active/Succeeded/Defeated/Queued/Executed/Canceled; phân biệt hoa thường |
+| `state` | Tùy chọn, đúng một trong Pending/Active/Succeeded/Defeated/Queued/Executed/Canceled; phân biệt hoa thường. `state=` rỗng trả 400 `INVALID_ARGUMENT`, không bỏ qua bộ lọc |
 | `proposalId` | Tùy chọn, tìm chính xác ID canonical decimal uint256; không tìm một phần chuỗi |
 | `limit`, `cursor` | Phân trang như mục 2 |
 

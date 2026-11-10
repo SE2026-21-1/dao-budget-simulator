@@ -12,7 +12,7 @@ function ProposalListPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
   const [page, setPage] = useState(1);
-  const { state, retry, simulateError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing, refreshError } = useProposalFixtures();
 
   const filteredProposals = state.status === "success" ? state.collection.proposals.filter((proposal) =>
     (search.trim() === "" || proposal.proposalId === search.trim()) &&
@@ -50,6 +50,10 @@ function ProposalListPage() {
           </div>
         </div>
       </section>
+
+      <button type="button" className="button-secondary" onClick={retry}>Tải dữ liệu mới nhất</button>
+      {refreshing && <p role="status">Đang tải snapshot mới nhất; số liệu hiện tại vẫn ở block đã ghi.</p>}
+      {refreshError && <p className="wallet-error" role="alert">Không tải được snapshot mới: {refreshError} Dữ liệu đang hiển thị vẫn thuộc snapshot cũ; bấm Tải dữ liệu mới nhất để thử lại.</p>}
 
       {state.status === "success" && <p className="result-count" aria-live="polite">
         {filteredProposals.length} đề xuất · {state.collection.context.dataKind === "chain" ? "Dữ liệu API" : "Fixture TV2 BE01"}

@@ -568,7 +568,7 @@ async function getSnapshot(pool: Pool, scope: Scope, query: Map<string, string>,
 function filtersFor(endpoint: string, q: Map<string, string>): Json {
   if (endpoint === '/api/proposals') {
     const state = q.get('state') ?? null;
-    if (state && !STATES.has(state)) throw new ApiError(400, 'INVALID_ARGUMENT', 'state không được hỗ trợ.', { field: 'state' });
+    if (state !== null && !STATES.has(state)) throw new ApiError(400, 'INVALID_ARGUMENT', 'state không được hỗ trợ.', { field: 'state' });
     const proposalId = q.has('proposalId') ? canonicalUint(q.get('proposalId'), 'proposalId') : null;
     return { state, proposalId };
   }

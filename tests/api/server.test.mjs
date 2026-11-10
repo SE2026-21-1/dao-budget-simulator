@@ -252,6 +252,7 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
   assert.deepEqual(emptyList.body.data, []);
   assert.equal(emptyList.body.pagination.totalCount, 0);
   assert.equal((await get('/proposals?state=Failed')).body.error.code, 'INVALID_ARGUMENT');
+  assert.equal((await get('/proposals?state=')).body.error.code, 'INVALID_ARGUMENT');
   assert.equal((await get('/summary?chainId=31337&chainId=31337&deploymentId=be05-http-integration')).status, 400);
   assert.equal((await get('/summary', { unsupported: '1' })).status, 400);
   await pool.query("UPDATE deployment_contracts SET abi_version='unverified' WHERE deployment_id=$1 AND contract_role='governance_token'", [deploymentId]);

@@ -5,6 +5,25 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**Tiếp nhận TV3 máy nhận11/11 — trạng thái hiện hành:** [#40 WSL](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124),
+[#36 Windows live](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841),
+[#42 clean clone/rebuild equal](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378)
+đã có peer evidence trên4cba99a: cùng deployment/H24/hash/revision, worker restart
+giữdigest, FE live1/0, DB rebuild mới equal0mismatch. Không còn “chưa có log máy nhận”.
+Full vẫn **PARTIAL/In review**: #40Ctrl-C/shutdown; #36Vite deploymentID mới và browser/
+SnapshotInfo/keyboard; #42redacted raw/compare + APIrestart/checkpoint. TV3 cung cấp
+output, TV2 hỗ trợlifecycle/backend, TV4 đối chiếu/chốt. Các checksum TV3 báo chưa
+được TV4 kiểm bytes; [provenance/limits](evidence/tv4-20261111-receiving-handoff.json).
+
+**Consumer cutover mới:** cd4d8fd ghép committedTV3 preflight/outcome/emitter+ID
+với guard snapshot661e22b, giữ session/account/network/receipt. Frontend65/65,
+lint8warnings/buildPASS;96593b3 sửa overflow ID receipt390px, build lạiPASS.
+Browser Execute/Propose dùng receipt Anvil thật + HTTP API transport fixture;
+409/503 giữhash/khóaaction, reloadcanonical cập nhậtstate; không là worker/extension/
+WSL/testnet. [Evidence mới](evidence/tv4-20261111-tv3-integration.json).
+TV3 review/retest delta và ghép SwissFintech; không thay dirtycheckout của TV3.
+Dev87738d3 không đổi; PR21 chưa merge, không tự approve/đóng #18/#47.
+
 **P1 TV3 đã sửa trên candidate11/11:** [reviewCOMMENT](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680)
 đã nhận, không còn chờ TV3 gửi review lần đầu. Source661e22b thu hồi quyền ký
 snapshot khi409/503, giữreceipt/hash, chặn async send cũ sau canonical reload.
@@ -32,10 +51,9 @@ Node24.15.0 PASS. TC10 runner mới4/4: hashed/zero × hai execution orders,
 real receipts9success/1revert mỗi branch, reset block0/deploy riêng; không
 gộp bốn branch thành canonical chain. Workflow chạy/upload runner mới.
 Full QA05/#7 vẫn PARTIAL: API/UI và per-vector reset còn nêu trong matrix.
-TV1/TV2 review ff484fb giữ phạm vi cũ; chỉ delta tests/runner/CI cần review,
-không yêu cầu chạy lại contract/SC06/BE không đổi. TV3 review còn pending.
-Dev87738d3 chưa tích hợp #18/#47; PR48 đã merge frontend4cba99a nhưng
-receiving WSL/extension/máy khác/testnet/release vẫn chưa có evidence mới.
+TV1/TV2 review ff484fb giữ phạm vi cũ; TV3 COMMENT review đã nhận trên105f2ba,
+cần retest consumer delta mới, không yêu cầu gửi lại review ban đầu.
+Receiving4cba99a đã có handoff nêu trên; extension/testnet/release vẫn chưa đủ.
 Đã đọc live cả hai Projects qua browser đăng nhập; các đoạn 404 bên dưới
 là giới hạn của phiên/công cụ cũ, không phải giới hạn truy cập hiện tại.
 

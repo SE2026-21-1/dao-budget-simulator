@@ -4,6 +4,44 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+## Handoff máy nhận và tích hợp consumer TV3 — 11/11/2026
+
+TV4 tiếp nhận ba comment mới của TV3 trên **`4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`**,
+không còn ghi “chưa có log máy nhận”. [Bản ghi có provenance/giới hạn](evidence/tv4-20261111-receiving-handoff.json).
+Đây là **peer-reported evidence**; TV3 giữ raw riêng, TV4 chưa tải/đối chiếu bytes của ba checksum.
+Không gán kết quả nhánh TV3 cho PR21 hoặc Dev.
+
+| Requirement → TC | Test/evidence → SHA | Kết luận hiện hành và owner còn lại |
+|---|---|---|
+| NFR05, TC11/12 → #40 | [WSL receiving preflight/serve/status/verify/status](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124); reopened terminal,5/5 LIVE, worker restart/digest stable;4cba99a | **PASS phạm vi TV3 báo cáo**, full **PARTIAL/In review**. TV3 ghi Ctrl-C/shutdown/exit và owned PID/ports sau dừng; TV2 hỗ trợ lifecycle, TV4 kiểm raw trước chốt. |
+| FR12/16, TC11/13 → #36 | [Windows FE↔WSL API](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841);4GET200/RPC31337/CORS204/api.live1PASS0SKIP;4cba99a | **PASS transport/live-test**, full **PARTIAL**. TV3 sửa process-scoped deployment ID, khởi động Vite mới và ghi Browser/SnapshotInfo/keyboard; chưa có UI hoặc extension PASS mới. [Lệnh an toàn](../frontend/README.md#windows-nhận-run-be09--sửa-deployment-id-mà-không-ghi-envlocal). |
+| NFR05/FR14, TC12 → #42 | [Clean clone/new-empty-DB rebuild/export/export/compare](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378);4exit0/equal0mismatch;4cba99a | **PASS phạm vi peer báo cáo**, full **PARTIAL/In review**. TV3 cung cấp redacted manifest/verify/compare/logs, API restart/checkpoint; TV2/TV4 đối chiếu raw/cùng H/hash. Không rebuild vào DB phục vụ. |
+
+Cả ba cùng deployment **`be09-local-20261111T071940Z-0210c9c44501`**, chain31337,
+H24/hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`,
+revision `440c6ec1-f436-4f48-958f-07f68a80a99e`. Khi publication tiến, dùng context
+canonical mới; không ép UI về H24. TV4 không có SSH host hay endpoint máy nhận
+truy cập được trong phiên; không tự sửa `.env.local`, dừng Vite hay teardown run của TV3.
+
+**Phần TV4 làm độc lập:** source integration **`cd4d8fd6372c1af0bd5d8b67bee5e42a33ac89a6`**
+ghép preflight/outcome và emitter/expected-proposal-ID từ committed TV3 với
+snapshot/session guard661e22b; không thay config.ts, ABI/contracts/backend hoặc
+Swiss Fintech staged/unstaged. Frontend **65/65 PASS**, lint8warnings/build PASS.
+Source **`96593b3a5af4eff77e6d4291169f219fb641bf6c`** sửa thêm overflow ID sau receipt:
+browser390 đo635px trước sửa →390px sau sửa bằng class `proposal-full-id` hiện có;
+build lại PASS. [Evidence/raw mới](evidence/tv4-20261111-tv3-integration.json).
+
+Lượt browser mới trên Anvil do TV4 sở hữu: Execute receipt thật H25, trạng thái/
+Timelock/paid tại receipt khớp; API **transport fixture**409→503 giữ receipt/nút khóa,
+canonicalH25/rev2 hiệnExecuted. Propose1weiBUD có receipt thật H26 và ID đúng payload
+đã hash; không coi fixture API đã index proposal mới. Không là PostgreSQL/worker,
+extension, WSL nhận hoặc testnet acceptance. TV3 review/retest delta + ghép
+Swiss Fintech còn cần; #9/#19/#41/#43 không tự đóng. Review TV1/TV2 scope không đổi
+giữ nguyên; Dev87738d3 chưa chứa source mới, #18/#47 không được chốt bằng candidate CI.
+
+Các mục tiếp theo lưu lịch sử các lượt trước trong cùng ngày, có SHA/phạm vi
+riêng; mục handoff ở trên là trạng thái hiện hành khi hai mô tả khác nhau.
+
 ## P1 TV3 — khóa ký từ snapshot bị invalidated/recovery — 11/11/2026
 
 Đã nhận [review COMMENT của TV3](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680) trên105f2ba; **không còn trạng thái “TV3 chưa gửi review”**. Finding P1 thuộc candidate PR21 được TV4 sửa tại source **`661e22bb633d8fa57cc0ec626b3b154c20771594`**. [Evidence/giới hạn](evidence/tv4-20261111-snapshot-guard.json), [raw](evidence/tv4-20261111-snapshot-guard-raw.tar.gz); các nhận định peer pending bên dưới là lịch sử trước review này.
@@ -47,7 +85,7 @@ Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. P
 
 | Requirement | TC/INV → test | Evidence / SHA | Kết luận / dependency |
 |---|---|---|---|
-| FR01/04/11/12, NFR06 | TC01/12/13; frontend chain/data tests, SnapshotInfo trên Dashboard/List/Detail | source9ad0aea/ff484fb FE24; adapter H82/browser390/1366 [06/11](evidence/tv4-20261106-acceptance.md) | **PARTIAL** adapter/consumer; **BLOCKED** extension/full keyboard/errors #19/#41. TV3 chưa bàn giao mapping/review mới. |
+| FR01/04/11/12, NFR06 | TC01/12/13; frontend chain/data tests, SnapshotInfo trên Dashboard/List/Detail | source96593b3 consumer integration/browser + peer4cba99a Windows live; xem mục hiện hành trên | **PARTIAL**; TV3 đã review105f2ba, còn retest delta/integrated visual/keyboard/extension, không chờ review lần đầu. |
 | FR02/05/06, BR01/02 | TC02–05, INV04; Governor82/token/attack21 | b7a74ce raw Foundry202; peer ff484fb | Contract assertions **PASS**; full **PARTIAL** reset/UI variants. |
 | FR03, BR03/04 | TC01/08/10, INV01/02; payload/threshold/request-orders | b7a74ce4TC10; ff484fb105receipts/SC06 | **PARTIAL** form/title/body/request generation/per-vector E2E, không thiếu validator on-chain. |
 | FR07/08, BR07 | TC01/06/07/10, INV01/02; integration40/attack21/runner | b7a74ce202tests và4receipt rows | Exact boundary/role/request cases **PASS**; full **PARTIAL** API/UI/reset. |
@@ -56,14 +94,14 @@ Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. P
 | FR13, NFR01 | TC01/09–12, INV01–04; decoder/storage/projection/SC06 | [TV2 mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362), ff484fb; b7a74ce mới chỉ contract receipts | **PARTIAL** full pipeline; review backend đã nhận, không lấy counts làm full acceptance. |
 | FR14/15/16, NFR03/04 | TC11/12; recovery DB/API cursor, BE06 same-H rebuild/freshness | Dev87738d3 proof cũ; fix9ad0aea/ff484fb native+TV2review | Candidate **PASS**, toàn requirement **PARTIAL**: #18 còn tích hợp/CI và503/409/orphan-replay/rebuild cùngH/hash tại revision tích hợp. Chưa có revision đó. |
 | NFR02 | Q-PERF native BE08 100proposals/1000votes/10clients/60s | ff484fb [10/11](evidence/tv4-20261110-project2.json); Dev benchmark riêng | **PASS local** dataset/lượt cũ; không đo mới hoặc testnet SLA. |
-| NFR05 | Q-CLONE/restart/checkpoint/rebuild | [#42 TV2](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6768544495) | **BLOCKED** máy thành viên khác; local worktree/submodule reference không là clean network clone. |
-| NFR07 | Q-CI/202contracts/SC01/safety negatives | b7a74ce local PASS; base97ec39e CI9/9+1/1 không cấp cho source mới | **PARTIAL**: theo CI đúng push mới, TV3 review/tích hợp; không mở lại QA06 bounded đã chốt. |
-| NFR08 | TC06/14/Q-CONFIG/final-role audit từng row | b7a74ce4/4; SC06ff484fb; không scan secret mới | **PARTIAL local**, **BLOCKED testnet** network/chainId/RPC/Osaka/funded signer nhóm/TV1 #20. |
+| NFR05 | Q-CLONE/restart/checkpoint/rebuild | TV3 receiving4cba99a [#42](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378), #40worker restart/digest | **PARTIAL**: clean other-machine clone + new-DB equal được peer báo cáo; raw review/API restart/checkpoint và shutdown còn thiếu. |
+| NFR07 | Q-CI/202contracts/SC01/safety negatives | Unit65 trêncd4d8fd, mobile fix96593b3; CI phải đọc đúng docs/source HEAD của PR21 | **PARTIAL**: local proof không cấp CI cho commit mới; TV3 review/tích hợp còn mở, không mở lại QA06 bounded. |
+| NFR08 | TC06/14/Q-CONFIG/final-role audit từng row | b7a74ce4/4; SC06ff484fb; Sepolia config/preflight105f2ba | **PARTIAL local**, **BLOCKED testnet** funded signer/secure signing, reviewed remote deploy/check-roles, manifests và real-time receipts #20; network/RPC đã được TV4 chọn. |
 | INV01–04 bounded | GovernanceInvariant, seed0x20261021/100×50 | ff484fb peer [#17](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6766961290); b7a74ce regression PASS | **PASS bounded đã chốt**, không mở rộng arbitrary strategies/signatures/ERC1271/API/UI/reorg. |
 
-PR48 đã merge vào frontend `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`, không vào Dev/PR21. Chưa có receiving WSL log mới: #40 TV3 chạy foreground `serve`, terminal2 `status→verify→status`, restart worker và shutdown/exit logs; TV2 hỗ trợ. #36 theo revision/môi trường nhận; #19/#41 extension; #42 clone/restart/rebuild DB mới cùngH/hash; #20 testnet; #44 nhóm trưởng ghép báo cáo/demo cùng revision. Giữ **BLOCKED** đúng phạm vi, không nhắc request trùng hay yêu cầu TV1/TV2 review lại phần đã xác nhận.
+PR48 đã merge vào frontend4cba99a, không vào Dev/PR21. Receiving WSL/Windows/rebuild đã có peer report mới ở mục hiện hành trên; #40/#36/#42 giữ PARTIAL theo các output còn thiếu, không nói chưa có bất kỳ bằng chứng máy nhận nào. #19/#41 extension; #20 signer/path deploy/receipts testnet; #44 nhóm trưởng ghép báo cáo/demo cùng revision. Không gửi request trùng hay yêu cầu TV1/TV2 review lại scope đã xác nhận.
 
-## Đối chiếu hiện hành — 11/11/2026
+## Lịch sử đối chiếu trước handoff — 11/11/2026
 
 Candidate PR #21: `ff484fbe95519cf2079e3dabda43e456a2c55fe6`, source fixes `9ad0aeaffd8c2a6135c05a2151148e792c84022c`; Dev vẫn là `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. [Evidence source-bound](evidence/tv4-20261110-project2.json) giữ kết quả local/CI riêng; candidate CI không chứng minh đã tích hợp vào Dev. Các bảng từ 09/11 trở về trước bên dưới là lịch sử, không phải danh sách blocker hiện hành.
 

@@ -2,6 +2,26 @@
 
 React/TypeScript/Vite + viem, tích hợp wallet, form, Governor và Treasury của TV3 với API đọc BE05. Xem hợp đồng API tại [docs/api.md](../docs/api.md) và triển khai tại [docs/be06.md](../docs/be06.md).
 
+## Snapshot bị invalidated hoặc API đang recovery
+
+Khi refresh trả HTTP409/503, dữ liệu H/hash/revision cũ và receipt/hash giao dịch
+vẫn được giữ để đối chiếu, nhưng Vote/Cancel/Queue/Execute và nạp Treasury bị khóa.
+Retry chưa hoàn tất hoặc retry tiếp tục lỗi không mở khóa. Chỉ một lượt tải
+snapshot canonical thành công mới tạo quyền thao tác mới; quyền cũ đã thu hồi
+không sống lại, kể cả RPC preflight của thao tác trước đó trả lời muộn.
+`sync.status=not_ready` cũng không cho ký. API lỗi thật không fallback fixture.
+
+`useProposalFixtures` cung cấp `snapshotSignal` cho `ProposalActions`/`TreasurySection`;
+bind signal vào `walletSession(account, snapshotSignal)` để kiểm lại ngay tại
+provider dispatch, không chỉ disable nút. Create proposal dùng signal của summary
+read; thay context Treasury cũng hủy session còn chờ RPC. Self-delegate độc lập
+snapshot vẫn giữ session guard provider/account/network.
+
+Khi TV3 tích hợp, giữ `verifyGovernanceOutcome`, receipt/proposal-ID verification,
+EIP-1193/EIP-6963/discovery và giao diện Swiss Fintech; không thay toàn call sites
+bằng bản TV4 rồi làm mất bước xác minh outcome. `config.ts`/mode fixture-live không
+được sửa trong bản fix này. [Evidence47tests và browser](../docs/evidence/tv4-20261111-snapshot-guard.json).
+
 ## Chạy fixture
 
 Cần Node.js 24 và npm. Trên máy mới, chạy trong PowerShell hoặc terminal:

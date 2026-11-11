@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-11",
+  "sourceCommit": "661e22bb633d8fa57cc0ec626b3b154c20771594",
+  "baseCommit": "105f2ba4bebc2e6b761027eb01792c521875ec07",
+  "issue": "PR21 TV3 P1 snapshot invalidation/recovery",
+  "reviewUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680",
+  "decision": "Preserve historical snapshot and receipt/hash; revoke snapshot-bound wallet sessions on API409/503 until successful canonical load. Keep fixture default and never fall back on live API errors.",
+  "implementation": {
+    "lease": "AbortSignal per successful proposal publication;409/503 revokes synchronously, retry/generic failure cannot revive, replacement publication revokes previous lease and creates new live one",
+    "surfaces": [
+      "Vote/Cancel/Queue/Execute",
+      "Treasury deposit",
+      "Create proposal summary-read session"
+    ],
+    "dispatch": "assertWritable and walletSession reject aborted snapshots; walletSession rechecks before viem dispatch and every provider transport request after async checks",
+    "identity": "Proposal eligibility readKey includes H/hash/revision;context.sync.not_ready blocks writes",
+    "retention": "Same ProposalActions/Treasury component and useTransaction retain receipt/hash while refresh fails",
+    "unchanged": [
+      "contracts/ABI/backend/fixtures/dependencies",
+      "config.ts fixture/live selection",
+      "TV3 dirty/Swiss Fintech working tree"
+    ]
+  },
+  "verification": [
+    {
+      "command": "npm run test --prefix frontend",
+      "runtime": "Node24.15.0",
+      "result": "PASS",
+      "tests": 47,
+      "failed": 0,
+      "skipped": 0,
+      "source": "661e22bb633d8fa57cc0ec626b3b154c20771594"
+    },
+    {
+      "command": "npm run lint --prefix frontend",
+      "result": "PASS",
+      "warnings": 8,
+      "note": "Existing Fast Refresh/set-state-in-effect warnings; no suppression"
+    },
+    {
+      "command": "npm run build --prefix frontend",
+      "result": "PASS",
+      "note": "TypeScript and Vite; existing >500kB chunk warning remains"
+    },
+    {
+      "command": "Chromium actual UI smoke at1366/390 with controlled HTTP API error fixture and owned Anvil EIP1193 adapter",
+      "result": "PASS",
+      "receipt": "0xc234105250f3ac5f214ab468e2d8aa4183c11aba6878889ab36c46b15fbaa4d2",
+      "checks": {
+        "oldSnapshotRetained": true,
+        "receiptHashRetained": true,
+        "blocked409": true,
+        "blocked503": true,
+        "noExtraSend": true,
+        "canonicalStateReevaluated": true,
+        "noOverflow1366": true,
+        "noOverflow390": true
+      },
+      "scope": "Chromium real UI + controlled HTTP API transport fixture + actual owned Anvil governance transaction via EIP1193 unlocked adapter. NOT PostgreSQL/worker publication, extension wallet or testnet acceptance."
+    }
+  ],
+  "initialRuns": {
+    "test": "45passed/2failed in delayed stale-action scenario; raw retained. Added synchronous session check before viem dispatch; deleted incidental error-label assertion, retained no-send and valid-new-action assertions. Final47/47PASS.",
+    "lint": "Initial9warnings included new test render-side global assignment; observer moved to useEffect, final8existingwarnings.",
+    "browserHarness": "First setup read receipt before mining and failed; added bounded receipt wait and unique request, retried setup. Failed attempt not accepted. Clicking the disabled Execute control was rejected by browser (expected), no extra wallet send.",
+    "evidenceProbe": "Eval kernel could not resolve ethers through createRequire; used pinned Node24 from repository to read actual receipt/balances. No chain assertion fabricated."
+  },
+  "rawArchive": {
+    "path": "tv4-20261111-snapshot-guard-raw.tar.gz",
+    "sha256": "8ca454333e0169904371df2ff2c118b77bfa87a6110184043667bc66e64e20d3",
+    "contents": "Initial/final test/lint/build logs, browser.json with raw receipt+setup,desktop409.webp,mobile503.png,transport-fixture.mjs"
+  },
+  "browser": {
+    "old": {
+      "block": "25",
+      "hash": "0x6ba045ce97660185650dcba214472e48b2106b3b0b1a7548d68cda9b9e021b63",
+      "revision": "1"
+    },
+    "replacement": {
+      "block": "26",
+      "hash": "0x13f96e191f3a63af553963b91526b3bc941f50d33b64c3746f0cd6549224880e",
+      "revision": "2"
+    },
+    "transactionHash": "0xc234105250f3ac5f214ab468e2d8aa4183c11aba6878889ab36c46b15fbaa4d2",
+    "receiptStatus": "0x1",
+    "balancesAtReceipt": {
+      "treasury": "9000000000000000000000",
+      "recipient": "1000000000000000000000"
+    },
+    "sendCount": 1
+  },
+  "integrationHandoff": {
+    "TV3": "Review only snapshot/session delta on new HEAD; preserve verifyGovernanceOutcome and receipt/proposal-ID verification, EIP1193/EIP6963/provider discovery and Swiss Fintech. Supply snapshotSignal to ProposalActions/Treasury and bind to walletSession at signing. No duplicate formal review request.",
+    "TV2": "Existing backend review unchanged;409/503 remain fail-closed no fixture fallback. Receiving/worker/rebuild evidence remains separate.",
+    "release": "PR21 remains open; TV3 integrated browser/keyboard/live/extension/receiving acceptance, authorized Dev integration and testnet prerequisites remain."
+  },
+  "resources": "Owned Vite/API fixture/Anvil stopped; disposable harness removed after raw archive; no serving DB or real testnet used.",
+  "notAccepted": [
+    "TV3 Swiss Fintech merged source",
+    "Production PostgreSQL/worker publication E2E",
+    "Extension wallet",
+    "Receiving WSL/independent machine",
+    "Testnet",
+    "Full issue9/19/41 acceptance"
+  ]
+}

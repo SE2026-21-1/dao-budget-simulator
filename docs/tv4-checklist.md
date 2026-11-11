@@ -5,6 +5,15 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**P1 TV3 đã sửa trên candidate11/11:** [reviewCOMMENT](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680)
+đã nhận, không còn chờ TV3 gửi review lần đầu. Source661e22b thu hồi quyền ký
+snapshot khi409/503, giữreceipt/hash, chặn async send cũ sau canonical reload.
+Frontend47/47/lint/buildPASS; browser1366/390 với Anvilreceipt thật + HTTP
+transport fixturePASS, không là worker/API/extension acceptance.
+[Evidence/source/raw/limits](evidence/tv4-20261111-snapshot-guard.json).
+TV3 retest delta/ghép SwissFintech, giữverifyGovernanceOutcome; config.ts không
+đổi. #9/#19/#41/#43 vẫn cần integrated consumer/visual/keyboard/live/receiver.
+
 **Handoff TV1/testnet mới 11/11:** [#7 contract mapping +15tests độc lập PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495),
 [#8 contract/ABI handoff PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/8#issuecomment-6787396657)
 trên d8f8743 đã nhận; không còn chờ review TV1 cho delta này.

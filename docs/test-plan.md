@@ -4,6 +4,16 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+## P1 TV3 — khóa ký từ snapshot bị invalidated/recovery — 11/11/2026
+
+Đã nhận [review COMMENT của TV3](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680) trên105f2ba; **không còn trạng thái “TV3 chưa gửi review”**. Finding P1 thuộc candidate PR21 được TV4 sửa tại source **`661e22bb633d8fa57cc0ec626b3b154c20771594`**. [Evidence/giới hạn](evidence/tv4-20261111-snapshot-guard.json), [raw](evidence/tv4-20261111-snapshot-guard-raw.tar.gz); các nhận định peer pending bên dưới là lịch sử trước review này.
+
+FR12/FR16, TC11/TC13: snapshot hợp lệ →409/503 thu hồi AbortSignal của quyền ký nhưng giữ H/hash/revision/receipt; retry/generic error không mở lại quyền cũ; canonical success tạo lease mới và đọc lại eligibility theo H/hash/revision. `assertWritable` và wallet provider dispatch kiểm signal sau async RPC, không chỉ disable UI. Create/Treasury summary-context read cũng ràng buộc session; `not_ready` khóa ký.
+
+**PASS phạm vi hồi quy mới:** frontend47/47, lint/build PASS (8warnings và bundle warning giữ nguyên). Chromium1366/390: Execute thật trên Anvil nhận receipt `0xc234105250f3ac5f214ab468e2d8aa4183c11aba6878889ab36c46b15fbaa4d2`, BUD Treasury9.000/recipient1.000; HTTP transport fixture sau receipt trả409→503, giữ snapshotH25/rev1 và hash, nútExecute khóa/không thêmsend; reloadH26/hashmới/rev2 hiệnExecuted/bỏExecute, receipt vẫn còn, không overflow. API ở lượt browser là **controlled transport fixture**, không PostgreSQL/worker publication; adapter Anvil không là extension wallet.
+
+**PARTIAL/BLOCKED giữ lại:** TV3 review/retest delta trên HEAD mới và tổ hợp Swiss Fintech + guard, giữ `verifyGovernanceOutcome`/receipt/proposal-ID verification và EIP-1193/EIP-6963; fixture/live config không đổi, không sửa staged/unstaged của TV3. #9/#19/#41 không đóng từ47tests hoặc browser fixture; còn integrated390/1366/keyboard/live/extension/receiver, authorized Dev integration và testnet. Không yêu cầu TV1/TV2 làm lại scope không đổi; TV2 giữ API409/503 contract/recovery gate.
+
 ## Tiếp nhận TV1 và chốt phương án testnet — 11/11/2026
 
 [TV1 mapping mới](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495) tại `d8f8743`: contract mapping COMPLETE, tự chạy15/15 tests mới; đối chiếu archive/checksum/bốn TC10 rows. Full202 là lượt TV4, không ghi thành full-suite run mới của TV1. [TV1 SC02](https://github.com/SE2026-21-1/dao-budget-simulator/issues/8#issuecomment-6787396657) xác nhận contract/ABI/handoff PASS; read/delegate consumer còn TV3. Không còn chờ TV1 re-review các phần này; full #7/#16 vẫn PARTIAL, bounded #17 giữ Done.

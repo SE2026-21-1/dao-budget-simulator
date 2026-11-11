@@ -13,6 +13,8 @@ import {BudgetGovernor} from "../../contracts/BudgetGovernor.sol";
 /// budget, then retry a still-ready operation before another proposal tries its
 /// request. Unlike isolated input rows, all token/role/payment history persists.
 contract GovernanceAttacksTest is GovernanceOracleChecks {
+    // Every boundary/actor and terminal-action entry point gets its own setUp.
+    // Helpers share mechanics, never a snapshot or cancellation from another test.
     GovernanceOracleHandler internal handler;
 
     function setUp() public {
@@ -171,6 +173,210 @@ contract GovernanceAttacksTest is GovernanceOracleChecks {
         assertTrue(handler.timelock().isOperationDone(replacement.operation));
         assertFalse(handler.timelock().isOperation(canceled.operation));
         assertEq(uint256(handler.governor().state(canceled.id)), uint256(IGovernor.ProposalState.Canceled));
+        _assertOracle();
+    }
+
+    function testCreatorCancelsAtSnapshotMinusOne() public {
+        _cancellationAtBoundary(0, true);
+    }
+
+    function testCreatorCancelsExactlyAtSnapshot() public {
+        _cancellationAtBoundary(1, true);
+    }
+
+    function testCreatorCannotCancelAtSnapshotPlusOne() public {
+        _cancellationAtBoundary(2, true);
+    }
+
+    function testCreatorCannotCancelExactlyAtDeadline() public {
+        _cancellationAtBoundary(3, true);
+    }
+
+    function testCreatorCannotCancelAtDeadlinePlusOne() public {
+        _cancellationAtBoundary(4, true);
+    }
+
+    function testCreatorCannotCancelExactlyAtEta() public {
+        _cancellationAtBoundary(5, true);
+    }
+
+    function testNoncreatorCannotCancelAtSnapshotMinusOne() public {
+        _cancellationAtBoundary(0, false);
+    }
+
+    function testNoncreatorCannotCancelExactlyAtSnapshot() public {
+        _cancellationAtBoundary(1, false);
+    }
+
+    function testNoncreatorCannotCancelAtSnapshotPlusOne() public {
+        _cancellationAtBoundary(2, false);
+    }
+
+    function testNoncreatorCannotCancelExactlyAtDeadline() public {
+        _cancellationAtBoundary(3, false);
+    }
+
+    function testNoncreatorCannotCancelAtDeadlinePlusOne() public {
+        _cancellationAtBoundary(4, false);
+    }
+
+    function testNoncreatorCannotCancelExactlyAtEta() public {
+        _cancellationAtBoundary(5, false);
+    }
+
+    function testCanceledProposalRejectsVoteWithExactStateAndNoMutation() public {
+        _canceledTerminalAction(0);
+    }
+
+    function testCanceledProposalRejectsQueueWithExactStateAndNoMutation() public {
+        _canceledTerminalAction(1);
+    }
+
+    function testCanceledProposalRejectsExecuteWithExactStateAndNoMutation() public {
+        _canceledTerminalAction(2);
+    }
+
+    function _newCancellationProposal() internal returns (GovernanceOracleHandler.Proposal memory p) {
+        // The handler's first action proves a funded execution under FINAL roles.
+        // The proposal under test uses a different unpaid request and recipient.
+        handler.advance(0);
+        uint256 createdAt = block.timestamp;
+        handler.propose(0, 1, 1, 1_000 ether);
+        p = handler.proposal(1);
+        assertEq(handler.governor().proposalSnapshot(p.id), createdAt + 60);
+        assertEq(handler.governor().proposalDeadline(p.id), createdAt + 360);
+        _assertCancellationUnpaid(p, IGovernor.ProposalState.Pending);
+    }
+
+    function _cancellationAtBoundary(uint256 boundary, bool creator) internal {
+        GovernanceOracleHandler.Proposal memory p = _newCancellationProposal();
+        IGovernor.ProposalState expected = IGovernor.ProposalState.Pending;
+        if (boundary < 2) {
+            handler.advance(p.snapshot - (boundary == 0 ? 1 : 0) - block.timestamp);
+            assertEq(block.timestamp, p.snapshot - (boundary == 0 ? 1 : 0));
+        } else {
+            handler.advance(p.snapshot + 1 - block.timestamp);
+            handler.vote(1, 0, 1);
+            handler.vote(1, 1, 1);
+            expected = IGovernor.ProposalState.Active;
+            if (boundary == 2) {
+                assertEq(block.timestamp, p.snapshot + 1);
+            } else if (boundary == 3) {
+                handler.advance(p.deadline - block.timestamp);
+                assertEq(block.timestamp, p.deadline);
+            } else {
+                handler.advance(p.deadline + 1 - block.timestamp);
+                assertEq(block.timestamp, p.deadline + 1);
+                expected = IGovernor.ProposalState.Succeeded;
+                if (boundary == 5) {
+                    handler.queue(1);
+                    p = handler.proposal(1);
+                    handler.advance(p.eta - block.timestamp);
+                    assertEq(block.timestamp, p.eta);
+                    assertTrue(handler.timelock().isOperationReady(p.operation));
+                    expected = IGovernor.ProposalState.Queued;
+                }
+            }
+        }
+        p = handler.proposal(1);
+        _assertCancellationUnpaid(p, expected);
+        if (creator && boundary < 2) {
+            handler.cancel(1, 0);
+        } else {
+            (address[] memory targets, uint256[] memory values, bytes[] memory data) = _action(p);
+            BudgetGovernor governor = handler.governor();
+            address caller = handler.actor(creator ? p.proposerIndex : 1);
+            vm.recordLogs();
+            vm.expectRevert(abi.encodeWithSelector(IGovernor.GovernorUnableToCancel.selector, p.id, caller));
+            vm.prank(caller);
+            governor.cancel(targets, values, data, p.descriptionHash);
+            assertEq(vm.getRecordedLogs().length, 0, "denied cancellation emitted logs");
+            _assertCancellationUnpaid(p, expected);
+            if (boundary < 2) {
+                // The denial is caller-specific: the actual creator can cancel
+                // the SAME proposal at the SAME still-Pending timestamp.
+                handler.cancel(1, 0);
+            } else {
+                // A failed late cancellation must leave the SAME proposal and
+                // its votes/operation executable without granting any role.
+                if (boundary < 4) handler.advance(p.deadline + 1 - block.timestamp);
+                if (boundary < 5) handler.queue(1);
+                p = handler.proposal(1);
+                handler.advance(p.eta - block.timestamp);
+                handler.execute(1);
+                assertEq(uint256(governor.state(p.id)), uint256(IGovernor.ProposalState.Executed));
+                assertEq(governor.proposalEta(p.id), p.eta);
+                assertTrue(handler.timelock().isOperationDone(p.operation));
+                assertTrue(handler.treasury().paidRequests(handler.requestId(p.request)));
+                assertEq(handler.paymentsByRequest(p.request), 1);
+                assertEq(handler.bud().balanceOf(address(handler.treasury())), 8_999 ether);
+                assertEq(handler.bud().balanceOf(handler.recipient(p.recipientIndex)), p.amount);
+                _assertOracle();
+                return;
+            }
+        }
+        assertTrue(handler.proposal(1).canceled);
+        _assertCancellationUnpaid(p, IGovernor.ProposalState.Canceled);
+    }
+
+    function _canceledTerminalAction(uint256 action) internal {
+        GovernanceOracleHandler.Proposal memory p = _newCancellationProposal();
+        handler.advance(p.snapshot - block.timestamp);
+        handler.cancel(1, 0);
+        assertTrue(handler.proposal(1).canceled);
+        _assertCancellationUnpaid(p, IGovernor.ProposalState.Canceled);
+        uint256 timestamp = action == 0 ? p.snapshot + 1 : p.deadline + 1;
+        if (action == 2) timestamp += handler.timelock().getMinDelay();
+        handler.advance(timestamp - block.timestamp);
+        assertEq(block.timestamp, timestamp);
+        (address[] memory targets, uint256[] memory values, bytes[] memory data) = _action(p);
+        BudgetGovernor governor = handler.governor();
+        bytes32 allowed = action == 0
+            ? bytes32(uint256(1) << uint8(IGovernor.ProposalState.Active))
+            : bytes32(uint256(1) << uint8(IGovernor.ProposalState.Succeeded));
+        if (action == 2) allowed |= bytes32(uint256(1) << uint8(IGovernor.ProposalState.Queued));
+        address caller = handler.actor(action == 0 ? 0 : 4);
+        vm.recordLogs();
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IGovernor.GovernorUnexpectedProposalState.selector, p.id, IGovernor.ProposalState.Canceled, allowed
+            )
+        );
+        vm.prank(caller);
+        if (action == 0) governor.castVote(p.id, 1);
+        else if (action == 1) governor.queue(targets, values, data, p.descriptionHash);
+        else governor.execute(targets, values, data, p.descriptionHash);
+        assertEq(vm.getRecordedLogs().length, 0, "terminal action emitted logs");
+        _assertCancellationUnpaid(p, IGovernor.ProposalState.Canceled);
+    }
+
+    function _assertCancellationUnpaid(GovernanceOracleHandler.Proposal memory p, IGovernor.ProposalState expected)
+        internal
+        view
+    {
+        BudgetGovernor governor = handler.governor();
+        TimelockController timelock = handler.timelock();
+        assertEq(uint256(governor.state(p.id)), uint256(expected));
+        assertEq(governor.proposalSnapshot(p.id), p.snapshot);
+        assertEq(governor.proposalDeadline(p.id), p.deadline);
+        assertEq(governor.proposalProposer(p.id), handler.actor(p.proposerIndex));
+        assertEq(governor.proposalEta(p.id), p.eta);
+        assertEq(timelock.getTimestamp(p.operation), p.eta);
+        assertEq(timelock.isOperation(p.operation), p.eta != 0);
+        assertEq(timelock.isOperationPending(p.operation), p.eta != 0);
+        assertEq(timelock.isOperationReady(p.operation), p.eta != 0 && block.timestamp >= p.eta);
+        assertFalse(timelock.isOperationDone(p.operation));
+        assertFalse(handler.treasury().paidRequests(handler.requestId(p.request)));
+        assertEq(handler.paymentsByRequest(p.request), 0);
+        assertEq(handler.bud().balanceOf(address(handler.treasury())), 9_999 ether);
+        assertEq(handler.bud().balanceOf(handler.recipient(p.recipientIndex)), 0);
+        (uint256 againstVotes, uint256 forVotes, uint256 abstainVotes) = governor.proposalVotes(p.id);
+        assertEq(againstVotes, p.tallies[0]);
+        assertEq(forVotes, p.tallies[1]);
+        assertEq(abstainVotes, p.tallies[2]);
+        for (uint256 i; i < handler.ACTOR_COUNT(); ++i) {
+            assertEq(governor.hasVoted(p.id, handler.actor(i)), (p.votedMask & (1 << i)) != 0);
+        }
         _assertOracle();
     }
 

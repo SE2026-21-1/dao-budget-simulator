@@ -82,7 +82,7 @@ function CreateProposalPage() {
       {validation && (title || body || recipient || amount) && <p className="wallet-error" role="status">{validation}</p>}
       <div className="proposal-review"><h3>Kiểm tra trước khi ký</h3><p>Người nhận: <code>{recipient || "—"}</code></p><p>Số tiền: {amount || "—"} BUD</p><p>Request ID: <code>{requestId}</code></p><p>Native value: 0 ETH</p></div>
       {formError && <p className="wallet-error" role="alert">{formError}</p>}
-      {submittedId && <p role="status">Proposal ID: <Link to={`/proposals/${submittedId}`}>{submittedId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
+      {submittedId && <p className="proposal-full-id" role="status">Proposal ID: <Link to={`/proposals/${submittedId}`}>{submittedId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
       <TransactionStatus {...transaction} />
       <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || submittedId !== null}>Tạo đề xuất</button>
     </form>

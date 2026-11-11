@@ -20,7 +20,9 @@ export function parseBUD(amount: string): bigint {
 }
 export type TransactionPhase = "idle" | "signing" | "submitted" | "confirming" | "success" | "reverted" | "error";
 
-export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext) {
+export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext, snapshotSignal?: AbortSignal) {
+  snapshotSignal?.throwIfAborted();
+  if (context?.sync?.status === "not_ready") throw new Error("API chưa sẵn sàng. Tải dữ liệu canonical mới trước khi thao tác.");
   if (!deployment || !publicClient) throw new Error("Chưa cấu hình deployment thật trong .env.");
   if (!account) throw new Error("Hãy kết nối ví trước.");
   if (chainId !== deployment.chainId) throw new Error("Ví đang ở sai mạng.");

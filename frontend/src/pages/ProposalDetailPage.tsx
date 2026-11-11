@@ -11,7 +11,7 @@ const timestamp = (raw?: string) => raw ? new Date(Number(BigInt(raw)) * 1000).t
 
 function ProposalDetailPage() {
   const { id } = useParams();
-  const { state, retry, simulateError, refreshing, refreshError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing, refreshError, snapshotSignal } = useProposalFixtures();
   const proposal = state.status === "success" ? state.collection.proposals.find((item) => item.proposalId === id) : undefined;
 
   if (state.status !== "success") {
@@ -76,7 +76,7 @@ function ProposalDetailPage() {
             const url = transactionUrl(hash!);
             return <p key={kind}>{kind}: {url ? <a href={url} target="_blank" rel="noreferrer">{hash}</a> : <code>{hash}</code>}</p>;
           })}</div>}
-          <ProposalActions key={proposal.proposalId} proposal={proposal} context={state.collection.context} onConfirmed={retry} />
+          <ProposalActions key={proposal.proposalId} proposal={proposal} context={state.collection.context} snapshotSignal={snapshotSignal!} onConfirmed={retry} />
         </aside>
       </div>
     </div>

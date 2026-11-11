@@ -124,6 +124,58 @@ describe("wallet session lifecycle", () => {
     expect(second.request.mock.calls.some(([args]) => args.method === "eth_sendTransaction")).toBe(false);
   });
 
+  it("blocks governor signing when its snapshot is invalidated during deployment RPC checks", async () => {
+    const provider = injected([accountA]);
+    await mount(provider);
+    const snapshot = new AbortController();
+    const bytecode = deferred<Hex>();
+    state.rpc.getBytecode.mockReturnValueOnce(bytecode.promise);
+    const pending = sendGovernor(walletSession(accountA, snapshot.signal), "castVote", [1n, 1]).catch((error: unknown) => error);
+    snapshot.abort();
+    bytecode.resolve("0x6000");
+    expect(await pending).toBeInstanceOf(Error);
+    expect(provider.request.mock.calls.some(([args]) => args.method === "eth_sendTransaction")).toBe(false);
+  });
+
+  it("rechecks snapshot validity after an awaited wallet provider check before sending", async () => {
+    const provider = injected([accountA]);
+    await mount(provider);
+    const chainRequested = deferred<void>();
+    const chain = deferred<Hex>();
+    provider.request.mockImplementation(async ({ method }) => {
+      if (method === "eth_chainId") {
+        chainRequested.resolve();
+        return chain.promise;
+      }
+      if (method === "eth_accounts") return [accountA];
+      if (method === "eth_sendTransaction") return hash;
+      throw new Error(`Unexpected wallet request: ${method}`);
+    });
+    const snapshot = new AbortController();
+    const pending = sendGovernor(walletSession(accountA, snapshot.signal), "castVote", [1n, 1]).catch((error: unknown) => error);
+    await chainRequested.promise;
+    snapshot.abort();
+    chain.resolve("0x7a69");
+    expect(await pending).toBeInstanceOf(Error);
+    expect(provider.request.mock.calls.some(([args]) => args.method === "eth_sendTransaction")).toBe(false);
+  });
+
+  it("sends the governor action when its provided snapshot signal remains live", async () => {
+    const provider = injected([accountA]);
+    await mount(provider);
+    const snapshot = new AbortController();
+    const bytecode = deferred<Hex>();
+    state.rpc.getBytecode.mockReturnValueOnce(bytecode.promise);
+    const pending = sendGovernor(walletSession(accountA, snapshot.signal), "castVote", [1n, 1]);
+    bytecode.resolve("0x6000");
+    expect(await pending).toBe(hash);
+    expect(snapshot.signal.aborted).toBe(false);
+    const sends = provider.request.mock.calls.filter(([args]) => args.method === "eth_sendTransaction");
+    expect(sends).toHaveLength(1);
+    const sent = sends[0][0] as unknown as { params: [{ from: string; to: string; data: string }] };
+    expect(sent.params[0]).toMatchObject({ from: accountA, to: state.deployment.governor, data: expect.stringMatching(/^0x[0-9a-f]+$/) });
+  });
+
   it("invalidates token signing immediately on an account event, before React commits", async () => {
     const provider = injected([accountA]);
     await mount(provider);

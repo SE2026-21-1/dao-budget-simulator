@@ -94,7 +94,7 @@ function DashboardContent({ proposals, asOfBlock }: { proposals: Proposal[]; asO
 }
 
 export default function DashboardPage() {
-  const { state, retry, simulateError, refreshing, refreshError } = useProposalFixtures();
+  const { state, retry, simulateError, refreshing, refreshError, snapshotSignal } = useProposalFixtures();
   return <div className="editorial-page-view">
     <header className="editorial-page-header"><div className="editorial-page-header__left">
       <p className="editorial-greeting">Chào mừng trở lại,</p>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
     {state.status === "success" && <SnapshotInfo context={state.collection.context} />}
     {state.status === "success" ? <>
       <DashboardContent proposals={state.collection.proposals} asOfBlock={state.collection.context.asOfBlock} />
-      <div id="treasury" className="mt-8"><TreasurySection context={state.collection.context} onConfirmed={retry} /></div>
+      <div id="treasury" className="mt-8"><TreasurySection context={state.collection.context} snapshotSignal={snapshotSignal!} onConfirmed={retry} /></div>
     </> : <FixtureLoadState status={state.status} message={state.status === "error" ? state.message : undefined} retry={retry} simulateError={simulateError} />}
   </div>;
 }

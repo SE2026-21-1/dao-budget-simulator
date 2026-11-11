@@ -208,9 +208,10 @@ export interface WalletSession {
   send: (to: Address, data: Hex) => Promise<Hash>;
 }
 
-export function walletSession(account: Address): WalletSession {
+export function walletSession(account: Address, snapshotSignal?: AbortSignal): WalletSession {
   const session = activeWalletSession;
   const assertSession = () => {
+    snapshotSignal?.throwIfAborted();
     if (!deployment || !session || activeWalletSession !== session ||
         session.account?.toLowerCase() !== account.toLowerCase() || session.chainId !== deployment.chainId) {
       throw new Error("Ví, tài khoản hoặc mạng đã thay đổi. Hãy thử lại từ tài khoản hiện tại.");
@@ -226,7 +227,10 @@ export function walletSession(account: Address): WalletSession {
       },
     }),
   });
-  return { send: (to, data) => client.sendTransaction({ account, to, data }) };
+  return { send: (to, data) => {
+    assertSession();
+    return client.sendTransaction({ account, to, data });
+  } };
 }
 
 export function formatGOV(value: bigint | null): string {

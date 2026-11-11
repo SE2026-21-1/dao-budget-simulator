@@ -9,10 +9,10 @@ import { loadSummary, loadTransfers, type Summary, type Transfer } from "../data
 import type { FixtureContext } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
 
-export default function TreasurySection({ context, onConfirmed }: { context: FixtureContext; onConfirmed: () => void }) {
+export default function TreasurySection({ context, snapshotSignal, onConfirmed }: { context: FixtureContext; snapshotSignal: AbortSignal; onConfirmed: () => void }) {
   const wallet = useWallet();
   const transaction = useTransaction();
-  const [loaded, setLoaded] = useState<{ context: FixtureContext; summary?: Summary; transfers?: Transfer[]; error?: string }>();
+  const [loaded, setLoaded] = useState<{ context: FixtureContext; summary?: Summary; transfers?: Transfer[]; signal?: AbortSignal; error?: string }>();
   const [amount, setAmount] = useState("");
   const [pageState, setPageState] = useState({ context, page: 0 });
   const [depositError, setDepositError] = useState<string | null>(null);
@@ -25,7 +25,7 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
   useEffect(() => {
     const controller = new AbortController();
     Promise.all([loadSummary(context, controller.signal), loadTransfers(context, controller.signal)]).then(
-      ([nextSummary, nextTransfers]) => { if (!controller.signal.aborted) setLoaded({ context, summary: nextSummary, transfers: nextTransfers }); },
+      ([nextSummary, nextTransfers]) => { if (!controller.signal.aborted) setLoaded({ context, summary: nextSummary, transfers: nextTransfers, signal: controller.signal }); },
       (cause: unknown) => { if (!controller.signal.aborted) setLoaded({ context, error: cause instanceof Error ? cause.message : "Không tải được Treasury." }); },
     );
     return () => controller.abort();
@@ -34,12 +34,12 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
   const deposit = async () => {
     setDepositError(null);
     try {
-      assertWritable(wallet.account, wallet.chainId, context);
+      assertWritable(wallet.account, wallet.chainId, context, snapshotSignal);
       if (!deployment || !summary || !isAddress(summary.treasury.address) || summary.treasury.address.toLowerCase() !== deployment.treasury.toLowerCase()) throw new Error("Treasury API không khớp deployment.");
       const parsed = parseBUD(amount);
       const treasuryAddress = deployment.treasury;
       await transaction.run(async () => {
-        const session = walletSession(wallet.account!);
+        const session = walletSession(wallet.account!, AbortSignal.any([snapshotSignal, loaded!.signal!]));
         await verifyDeployment();
         return sendTokenTransaction(session, "transfer", [treasuryAddress, parsed]);
       }, onConfirmed);
@@ -50,12 +50,13 @@ export default function TreasurySection({ context, onConfirmed }: { context: Fix
     <div className="panel__header"><div><p className="section-kicker">NGÂN QUỸ</p><h2>Treasury BUD</h2><p>Dữ liệu tại block {context.asOfBlock}. Chỉ Transfer BUD được tính vào dòng tiền.</p></div></div>
     {error && <><p className="wallet-error" role="alert">{error}</p><button type="button" className="button-secondary" onClick={onConfirmed}>Tải dữ liệu mới nhất</button></>}
     {!summary && !error && <p role="status">Đang tải dữ liệu Treasury…</p>}
+    {(snapshotSignal.aborted || context.sync?.status === "not_ready") && <p className="wallet-error" role="alert">Snapshot không còn dùng để ký giao dịch hoặc API chưa sẵn sàng. Receipt/hash vẫn được giữ; tải snapshot canonical mới để nạp quỹ.</p>}
     {summary && <>
       {context.sync?.status === "lagging" && <p className="notice">Indexer đang đồng bộ chậm; số liệu có thể cũ.</p>}
       <div className="treasury-stats"><div><span>Số dư</span><strong title={formatBUD(summary.treasury.balance)}>{formatCompactBUD(summary.treasury.balance)}</strong></div><div><span>Tổng vào</span><strong title={formatBUD(summary.treasury.totalIn)}>{formatCompactBUD(summary.treasury.totalIn)}</strong></div><div><span>Tổng ra</span><strong title={formatBUD(summary.treasury.totalOut)}>{formatCompactBUD(summary.treasury.totalOut)}</strong></div></div>
       <div className="treasury-deposit">
         <h3>Nạp BUD vào quỹ</h3><p>Ví gửi BUD trực tiếp tới Treasury. Sau receipt, giao diện tải snapshot mới nhất đã xuất bản; nếu indexer chưa bắt kịp, bấm Tải dữ liệu mới nhất sau khi index.</p>
-        <div className="action-row"><label className="field-label" htmlFor="deposit-amount">Số BUD</label><input id="deposit-amount" className="field-control" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="100" /><button type="button" className="button-primary" disabled={transaction.busy || context.dataKind !== "chain" || !deployment || !wallet.account || wallet.chainId !== deployment.chainId} onClick={() => void deposit()}>Nạp quỹ</button></div>
+        <div className="action-row"><label className="field-label" htmlFor="deposit-amount">Số BUD</label><input id="deposit-amount" className="field-control" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="100" /><button type="button" className="button-primary" disabled={snapshotSignal.aborted || context.sync?.status === "not_ready" || transaction.busy || context.dataKind !== "chain" || !deployment || !wallet.account || wallet.chainId !== deployment.chainId} onClick={() => void deposit()}>Nạp quỹ</button></div>
         {depositError && <p className="wallet-error" role="alert">{depositError}</p>}
       </div>
       <div className="treasury-history"><h3>Lịch sử dòng tiền</h3>

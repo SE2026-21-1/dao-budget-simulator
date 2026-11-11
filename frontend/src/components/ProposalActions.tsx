@@ -7,13 +7,13 @@ import { useTransaction } from "../chain/useTransaction";
 import type { FixtureContext, Proposal } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
 
-export default function ProposalActions({ proposal, context, onConfirmed }: { proposal: Proposal; context: FixtureContext; onConfirmed: () => void }) {
+export default function ProposalActions({ proposal, context, snapshotSignal, onConfirmed }: { proposal: Proposal; context: FixtureContext; snapshotSignal: AbortSignal; onConfirmed: () => void }) {
   const wallet = useWallet();
   const transaction = useTransaction();
   const [support, setSupport] = useState("1");
   const [eligibility, setEligibility] = useState<{ key: string; voted: boolean | null; power: bigint | null; error: string | null }>();
-  const writable = Boolean(context.dataKind === "chain" && deployment && context.chainId === String(deployment.chainId) && context.deploymentId === deployment.deploymentId && wallet.account && wallet.chainId === deployment.chainId);
-  const readKey = `${wallet.account}:${wallet.chainId}:${proposal.proposalId}:${proposal.snapshot}:${context.asOfBlock}:${transaction.phase === "success" ? transaction.hash : ""}:${writable}`;
+  const writable = Boolean(!snapshotSignal.aborted && context.sync?.status !== "not_ready" && context.dataKind === "chain" && deployment && context.chainId === String(deployment.chainId) && context.deploymentId === deployment.deploymentId && wallet.account && wallet.chainId === deployment.chainId);
+  const readKey = `${wallet.account}:${wallet.chainId}:${proposal.proposalId}:${proposal.snapshot}:${context.asOfBlock}:${context.asOfBlockHash}:${context.snapshotRevision}:${transaction.phase === "success" ? transaction.hash : ""}:${writable}`;
   const hasVoted = eligibility?.key === readKey ? eligibility.voted : null;
   const snapshotPower = eligibility?.key === readKey ? eligibility.power : null;
   const readError = eligibility?.key === readKey ? eligibility.error : null;
@@ -33,8 +33,8 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
 
   const act = async (kind: "vote" | "cancel" | "queue" | "execute") => {
     await transaction.run(async () => {
-      assertWritable(wallet.account, wallet.chainId, context);
-      const session = walletSession(wallet.account!);
+      assertWritable(wallet.account, wallet.chainId, context, snapshotSignal);
+      const session = walletSession(wallet.account!, snapshotSignal);
       const args = originalActions(proposal, deployment!.treasury);
       const expected = { vote: 1, cancel: 0, queue: 4, execute: 5 }[kind];
       if (await currentProposalState(proposal.proposalId) !== expected) throw new Error("Trạng thái on-chain đã thay đổi. Tải dữ liệu mới nhất trước khi thao tác.");
@@ -58,6 +58,7 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
     <h3>Thao tác quản trị</h3>
     <p className="muted">Quyền biểu quyết của ví tại snapshot: {formatGOV(snapshotPower)}{hasVoted === true ? " · Đã bỏ phiếu" : ""}</p>
     {readError && <p className="wallet-error" role="alert">{readError}</p>}
+    {(snapshotSignal.aborted || context.sync?.status === "not_ready") && <p className="wallet-error" role="alert">Snapshot không còn dùng để ký giao dịch hoặc API chưa sẵn sàng. Receipt/hash vẫn được giữ; tải snapshot canonical mới để thao tác tiếp.</p>}
     {!writable && <p className="notice">Cần dữ liệu chain, deployment thật và ví đúng mạng để thao tác. Fixture không thể gửi giao dịch.</p>}
     {proposal.state === "Active" && <div className="action-row">
       <label className="field-label" htmlFor="vote-support">Lựa chọn phiếu</label>

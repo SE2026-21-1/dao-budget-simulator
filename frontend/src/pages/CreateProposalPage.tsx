@@ -11,7 +11,7 @@ import { loadSummary, type Summary } from "../data/api";
 function CreateProposalPage() {
   const wallet = useWallet();
   const transaction = useTransaction();
-  const [loadedSummary, setLoadedSummary] = useState<{ attempt: number; summary?: Summary; error?: string }>();
+  const [loadedSummary, setLoadedSummary] = useState<{ attempt: number; summary?: Summary; signal?: AbortSignal; error?: string }>();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [recipient, setRecipient] = useState("");
@@ -27,24 +27,24 @@ function CreateProposalPage() {
     let mounted = true;
     const controller = new AbortController();
     loadSummary(undefined, controller.signal).then(
-      (value) => { if (mounted) setLoadedSummary({ attempt: loadAttempt, summary: value }); },
+      (value) => { if (mounted) setLoadedSummary({ attempt: loadAttempt, summary: value, signal: controller.signal }); },
       (cause: unknown) => { if (mounted) setLoadedSummary({ attempt: loadAttempt, error: cause instanceof Error ? cause.message : "Không tải được summary." }); },
     );
     return () => { mounted = false; controller.abort(); };
   }, [loadAttempt]);
 
   const validation = validateProposalForm(title, body, recipient, amount, deployment?.treasury);
-  const ready = Boolean(summary?.context.dataKind === "chain" && deployment && wallet.account && wallet.chainId === deployment.chainId);
+  const ready = Boolean(summary?.context.dataKind === "chain" && summary.context.sync?.status !== "not_ready" && !loadedSummary?.signal?.aborted && deployment && wallet.account && wallet.chainId === deployment.chainId);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault(); setFormError(null); setSubmittedId(null);
     try {
-      assertWritable(wallet.account, wallet.chainId, summary?.context);
+      assertWritable(wallet.account, wallet.chainId, summary?.context, loadedSummary?.signal);
       if (validation) throw new Error(validation);
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
       await transaction.run(
         async () => {
-          const session = walletSession(wallet.account!);
+          const session = walletSession(wallet.account!, loadedSummary?.signal);
           await assertCanPropose(wallet.account!);
           return sendGovernor(session, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
         },

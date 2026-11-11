@@ -8,6 +8,38 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## QA05 và bàn giao báo cáo — 11/11/2026
+
+Phan Thanh Dũng, MSV23001850, TV4, `dung0611`: giữ nguyên checkout cá nhân
+đang dirty, thực hiện worktree riêng từ97ec39e. Source
+`b7a74ce4f5a7336a992b39310fb9d569831176d3` thêm15 attack acceptance
+tests cho creator/noncreator × S−1/S/S+1/D/D+1/ETA và terminal canceled
+vote/queue/execute; exact errors, balances/paid/operation/tallies không đổi
+và same-proposal positive control. Không sửa production module hoặc ABI.
+
+Runner mới `node scripts/check_qa05_request_orders.mjs --output <new-report.json>`
+(Node24.15.0/Foundry1.8.5, `forge build` trước, thư mục cha tồn tại):
+TC10 hashed/zero × hai thứ tự trả tiền, mỗi row Anvil block0/deploy mới,
+quỹ10.000BUD. P1 trước còn9.000/R1=1.000/R2=0; P2 trước còn8.000/R1=0/R2=2.000.
+Loser đủ tiền vẫn receipt0 `RequestAlreadyPaid(requestId)`, log0,
+Queued/Ready/ETA không đổi. Winner có đúng một BUD Transfer/BudgetDisbursed.
+Bốn branch lưu H29/hash/manifest riêng, không là một campaign canonical.
+
+Kiểm chứng mới: `scripts/ci.sh`202/202, attack21/21, integration40/40,
+Governor82/82; fmt/build/SC01 PASS và warnings giữ nguyên. Typecheck/build
+PASS đúng Node24.15.0 sau lượt đầu dùng PATH Node22; runner4/4 PASS,
+40governance receipts=36success+4revert tách theo branch.
+[Evidence/commands/giới hạn](evidence/tv4-20261111-qa05-variants.json),
+[raw](evidence/tv4-20261111-qa05-variants-raw.tar.gz), [matrix](test-plan.md).
+CI mới phải kiểm theo push HEAD; candidate không là Dev integration.
+
+#44 nhận phần testing/report ở revision này; không chốt tag/video/demo/release.
+Dev87738d3, PR21 vẫn chờ TV3 wallet/consumer; TV1/TV2 review cũ được giữ.
+PR48 merge frontend4cba99a không thay receiving WSL #40/#36; chưa có log mới.
+TV3 giữ extension#19/#41; TV2 hỗ trợ receiver restart/rebuild DB mới#42;
+nhóm/TV1 giữ network/RPC/Osaka/funded signer#20. Không yêu cầu review lại
+phần SC/SC06/backend không thay đổi hoặc mở lại bounded invariant#17.
+
 ## Tách bài cá nhân khỏi nhánh tích hợp — 09/11/2026
 
 Lịch sử merge `b67611e`/`c947553` từng đưa VT-064 offline draft import

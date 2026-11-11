@@ -4,6 +4,45 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+## Bổ sung nghiệm thu QA05 — 11/11/2026, sau handoff peer
+
+Source mới **`b7a74ce4f5a7336a992b39310fb9d569831176d3`**, base `97ec39e`; chỉ thêm tests/runner TV4, không sửa contract/backend/frontend/ABI. [Evidence mới](evidence/tv4-20261111-qa05-variants.json), [raw](evidence/tv4-20261111-qa05-variants-raw.tar.gz). `scripts/ci.sh` **202/202 PASS**, attack **21/21** gồm **15 ca mới**; typecheck/build chạy lại đúng Node24.15.0 PASS. Bốn ca TC10 có **receipt Anvil thật**; Foundry chỉ là execution/log assertions, không phải transaction receipts. Workflow bổ sung runner TC10/upload report; CI phải đọc đúng HEAD mới, không mượn CI của base.
+
+### Biến thể QA05: đã có, bổ sung, thực sự còn thiếu
+
+| TC / requirement | Test → evidence → source SHA | Kết luận và phần còn thiếu |
+|---|---|---|
+| TC05 / FR02/05/06, BR01/02, INV04 | `testSnapshotUsesFinalCheckpointAtSAndRejectsRewritesAtSPlusOne`, concurrent snapshots, Governor unit; peer105 receipts ở ff484fb | **PARTIAL** full acceptance. Không viết lại test snapshot đã có. Còn F0 độc lập late-delegate D0 và từng transfer/delegate/approved-transferFrom; receipt/API/UI từng vector. |
+| TC06 / FR07–09, BR04/07, INV02 | `testFinalRolesRejectOtherwiseValidOperationsIncludingFormerDeployer`, integration role graph; peer105 ff484fb | Contract-level peer **PASS** giữ nguyên. **PARTIAL** ma trận: actor × schedule/scheduleBatch delay0/120 × Ready execute/executeBatch cần reset/raw receipt/API/UI; không dùng operation hỏng thay denial quyền. |
+| TC07 / FR07/08/12, BR03/05/07, INV01/02 | `testExecutionFailsAtEtaMinusOneAndSucceedsExactlyAtEta`, integration replay/description; ba `testCanceledProposalRejects*WithExactStateAndNoMutation` mới, b7a74ce | **PASS** contract rows cụ thể; full **PARTIAL**. Còn wrong-description queue/execute reset riêng và receipt/API/UI E−1/E/replay; canceled không phải Failed. |
+| TC08 / FR03, BR03/04/06, INV02 | Governor82, invalid payload receipts peer105 ff484fb | **PARTIAL**; không thêm duplicate whitelist/threshold unit. Còn per-vector reset/raw receipt, UI title/body/Unicode và threshold49/50/checkpoint theo §3; không suy contract validate text length. |
+| TC10 / FR03/08/09/13, BR03/05, INV01 | Hai execution-order integration tests đã có; runner mới `scripts/check_qa05_request_orders.mjs`, hashed/zero × P1/P2 trước, b7a74ce | **PASS receipt-level 4/4**: từng row deploy từ block0/quỹ10.000; P1/P2 khác proposal/operation IDs; loser `RequestAlreadyPaid(requestId)` dù đủ tiền, receipt0/log0, giữ Queued/Ready/ETA và balances. Winner receipt1 đúng một Transfer/BudgetDisbursed. **PARTIAL** full TC10: API linkage/ledger/UI bốn rows chưa chạy. |
+| TC14 / FR10, BR06, INV02 | `testCreator*`/`testNoncreator*`:2actor×6mốc S−1/S/S+1/D/D+1/ETA; ba terminal canceled-action tests, b7a74ce | **PASS contract15/15 mới**: mỗi entrypoint `setUp` riêng; exact error/caller/bitmap, denial log0, không đổi balances/paid/ETA/operation/tallies/voter flags. Same-proposal creator-cancel hoặc execute là positive control. Full **PARTIAL**: receipt/API canceled history/UI; reset riêng Queued-Waiting/Defeated/Executed và former-deployer × boundary. |
+
+Runner TC10 seed10.000BUD, reset về block0 sau từng row. Handler Foundry có control payment1BUD trước proposal đang kiểm: baseline **9.999**, sau payment1.000 là **8.999 BUD**; không giả là F0 untouched10.000. Bốn TC10 branches có manifest/deployment/H/hash riêng (đều H29, hash khác), **không gộp thành một canonical ledger** hoặc gán API revision chưa tồn tại.
+
+### Requirement → TC/INV → test → evidence → SHA → kết luận hiện hành
+
+Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. PASS chỉ phạm vi ghi rõ; PARTIAL chưa đủ toàn requirement; BLOCKED thiếu môi trường/handoff. [Evidence10/11](evidence/tv4-20261110-project2.json) và [peer11/11](evidence/tv4-20261111-peer-acceptance.json) giữ SHA nguồn cũ, không tính là lượt chạy mới.
+
+| Requirement | TC/INV → test | Evidence / SHA | Kết luận / dependency |
+|---|---|---|---|
+| FR01/04/11/12, NFR06 | TC01/12/13; frontend chain/data tests, SnapshotInfo trên Dashboard/List/Detail | source9ad0aea/ff484fb FE24; adapter H82/browser390/1366 [06/11](evidence/tv4-20261106-acceptance.md) | **PARTIAL** adapter/consumer; **BLOCKED** extension/full keyboard/errors #19/#41. TV3 chưa bàn giao mapping/review mới. |
+| FR02/05/06, BR01/02 | TC02–05, INV04; Governor82/token/attack21 | b7a74ce raw Foundry202; peer ff484fb | Contract assertions **PASS**; full **PARTIAL** reset/UI variants. |
+| FR03, BR03/04 | TC01/08/10, INV01/02; payload/threshold/request-orders | b7a74ce4TC10; ff484fb105receipts/SC06 | **PARTIAL** form/title/body/request generation/per-vector E2E, không thiếu validator on-chain. |
+| FR07/08, BR07 | TC01/06/07/10, INV01/02; integration40/attack21/runner | b7a74ce202tests và4receipt rows | Exact boundary/role/request cases **PASS**; full **PARTIAL** API/UI/reset. |
+| FR09, BR05 | TC09/10/12, INV03; insufficient-funds retry/Transfer ledger | b7a74ce4TC10; ff484fb native/peer105 | **PARTIAL** toàn requirement; không cộng Transfer+BudgetDisbursed; API/UI rows mới chưa chạy. |
+| FR10, BR06 | TC14/13; 15 cancellation/terminal tests mới, Governor state tests | b7a74ce contracts; ff484fb peer | **PARTIAL**: contract rows PASS; thiếu receipt/API/UI history và reset còn nêu trên. |
+| FR13, NFR01 | TC01/09–12, INV01–04; decoder/storage/projection/SC06 | [TV2 mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362), ff484fb; b7a74ce mới chỉ contract receipts | **PARTIAL** full pipeline; review backend đã nhận, không lấy counts làm full acceptance. |
+| FR14/15/16, NFR03/04 | TC11/12; recovery DB/API cursor, BE06 same-H rebuild/freshness | Dev87738d3 proof cũ; fix9ad0aea/ff484fb native+TV2review | Candidate **PASS**, toàn requirement **PARTIAL**: #18 còn tích hợp/CI và503/409/orphan-replay/rebuild cùngH/hash tại revision tích hợp. Chưa có revision đó. |
+| NFR02 | Q-PERF native BE08 100proposals/1000votes/10clients/60s | ff484fb [10/11](evidence/tv4-20261110-project2.json); Dev benchmark riêng | **PASS local** dataset/lượt cũ; không đo mới hoặc testnet SLA. |
+| NFR05 | Q-CLONE/restart/checkpoint/rebuild | [#42 TV2](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6768544495) | **BLOCKED** máy thành viên khác; local worktree/submodule reference không là clean network clone. |
+| NFR07 | Q-CI/202contracts/SC01/safety negatives | b7a74ce local PASS; base97ec39e CI9/9+1/1 không cấp cho source mới | **PARTIAL**: theo CI đúng push mới, TV3 review/tích hợp; không mở lại QA06 bounded đã chốt. |
+| NFR08 | TC06/14/Q-CONFIG/final-role audit từng row | b7a74ce4/4; SC06ff484fb; không scan secret mới | **PARTIAL local**, **BLOCKED testnet** network/chainId/RPC/Osaka/funded signer nhóm/TV1 #20. |
+| INV01–04 bounded | GovernanceInvariant, seed0x20261021/100×50 | ff484fb peer [#17](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6766961290); b7a74ce regression PASS | **PASS bounded đã chốt**, không mở rộng arbitrary strategies/signatures/ERC1271/API/UI/reorg. |
+
+PR48 đã merge vào frontend `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`, không vào Dev/PR21. Chưa có receiving WSL log mới: #40 TV3 chạy foreground `serve`, terminal2 `status→verify→status`, restart worker và shutdown/exit logs; TV2 hỗ trợ. #36 theo revision/môi trường nhận; #19/#41 extension; #42 clone/restart/rebuild DB mới cùngH/hash; #20 testnet; #44 nhóm trưởng ghép báo cáo/demo cùng revision. Giữ **BLOCKED** đúng phạm vi, không nhắc request trùng hay yêu cầu TV1/TV2 review lại phần đã xác nhận.
+
 ## Đối chiếu hiện hành — 11/11/2026
 
 Candidate PR #21: `ff484fbe95519cf2079e3dabda43e456a2c55fe6`, source fixes `9ad0aeaffd8c2a6135c05a2151148e792c84022c`; Dev vẫn là `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. [Evidence source-bound](evidence/tv4-20261110-project2.json) giữ kết quả local/CI riêng; candidate CI không chứng minh đã tích hợp vào Dev. Các bảng từ 09/11 trở về trước bên dưới là lịch sử, không phải danh sách blocker hiện hành.
@@ -337,9 +376,9 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 | Q-CI — NFR07; NFR01; module owners + TV4 | Build/format/typecheck/tests đúng module, safety negatives, governance invariant≥100×50 có successful execute, peer review và không lỗi bypass/double-pay mở. | E-TV4-CI-21 đã chạy contracts/Treasury invariant+smoke, BE01 và BE02 thật. Frontend chưa tích hợp; governance/INV02/INV04 và peer approval còn thiếu: **CHƯA NGHIỆM THU NFR07**. |
 | Q-CONFIG — NFR08; BR04/BR06/BR07; TV1 ABI/constructor, TV4 deployment | Kiểm `.env.example` khớp cấu hình thật, không secret/khóa ví/RPC secret trong tracked files/history/evidence/log. Quét bằng công cụ/lệnh ghi rõ, review env và URL đã che, không đưa giá trị secret vào report. Xác minh manifest §2, check-roles holder+zero+deployer và minDelay/token links; cố ý manifest/config sai trong fixture riêng phải exit nonzero. Testnet xác nhận EVM/compiler tương thích, địa chỉ/code/chainId/deploymentBlock thật; demo ít nhất một Executed và một Defeated, chờ timestamp thật, có txHash/explorer/receipt và số dư. | R0 cho malformed config, local/testnet manifest tách nhau; `docs/evidence/deployment/` **dự kiến**; **CHƯA NGHIỆM THU** manifest/roles/deploy governance/testnet/secrets scan chứng minh đầy đủ. SC02 smoke chỉ token local. |
 
-## 6. Traceability đầy đủ FR/BR/NFR → TC/INV → evidence
+## 6. Traceability lịch sử FR/BR/NFR → TC/INV → evidence
 
-Các mã E chỉ là nguồn cục bộ ở §1. Mọi acceptance dưới đây **chưa đạt toàn bộ**; lý do/evidence còn thiếu nằm tại TC/Q tương ứng, không được chuyển PASS vì có tên bài test.
+Bảng dưới giữ lịch sử giai đoạn đầu (nhãn “chưa Governor/API” không còn là trạng thái code). Dùng bảng requirement/source/kết luận đầu tài liệu cho nghiệm thu hiện hành; setup/tiêu chí §2–5 vẫn áp dụng, không giảm assertion.
 
 | Requirement | Coverage có tiêu chí thực thi | Evidence hiện tại / còn thiếu |
 |---|---|---|

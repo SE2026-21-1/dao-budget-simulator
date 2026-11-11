@@ -5,6 +5,22 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**QA05 bổ sung 11/11/2026:** source `b7a74ce4f5a7336a992b39310fb9d569831176d3`,
+[ma trận hiện hành](test-plan.md#bổ-sung-nghiệm-thu-qa05--11112026-sau-handoff-peer),
+[evidence mới](evidence/tv4-20261111-qa05-variants.json) và
+[raw](evidence/tv4-20261111-qa05-variants-raw.tar.gz). Foundry202/202,
+attack21/21 (15 ca cancellation/terminal mới, reset riêng), typecheck/build
+Node24.15.0 PASS. TC10 runner mới4/4: hashed/zero × hai execution orders,
+real receipts9success/1revert mỗi branch, reset block0/deploy riêng; không
+gộp bốn branch thành canonical chain. Workflow chạy/upload runner mới.
+Full QA05/#7 vẫn PARTIAL: API/UI và per-vector reset còn nêu trong matrix.
+TV1/TV2 review ff484fb giữ phạm vi cũ; chỉ delta tests/runner/CI cần review,
+không yêu cầu chạy lại contract/SC06/BE không đổi. TV3 review còn pending.
+Dev87738d3 chưa tích hợp #18/#47; PR48 đã merge frontend4cba99a nhưng
+receiving WSL/extension/máy khác/testnet/release vẫn chưa có evidence mới.
+Đã đọc live cả hai Projects qua browser đăng nhập; các đoạn 404 bên dưới
+là giới hạn của phiên/công cụ cũ, không phải giới hạn truy cập hiện tại.
+
 **Thực hiện TV4 ngày 10/11/2026:** [kết quả, raw evidence và giới hạn](evidence/tv4-20261109-status.md#cập-nhật-thực-hiện--10112026).
 Source code `9ad0aeaffd8c2a6135c05a2151148e792c84022c` giữ worktree cá nhân,
 không nhập VT-064 vào nhánh nhóm. Native BE08 mới PASS 183 unit/76 DB-API/

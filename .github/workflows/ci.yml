@@ -61,6 +61,10 @@ jobs:
         shell: bash
         run: |
           bash scripts/check_governance_database.sh --output reports/sc04-local-smoke.json 2>&1 | tee reports/sc04-smoke.log
+      - name: Verify TC10 independent hashed and zero request execution orders
+        shell: bash
+        run: |
+          node scripts/check_qa05_request_orders.mjs --output reports/qa05-request-orders.json 2>&1 | tee reports/qa05-request-orders.log
       - name: Reconcile BE04 projections with live governance at confirmed H
         shell: bash
         run: |

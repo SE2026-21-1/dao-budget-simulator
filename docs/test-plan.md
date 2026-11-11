@@ -4,7 +4,22 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
-**Đối chiếu hiện hành 09/11:** [bảng TV4 theo issue/SHA](evidence/tv4-20261109-status.md) chấp nhận backend TC11/TC12/NFR02–04 và hồi quy freshness #37 **trên Dev `87738d3`**, sau lượt local TV4 và đối chiếu raw CI riêng của TV2; hai số p95/H/hash không được gộp. Bảng 06/11 phía dưới giữ nguyên trạng thái lịch sử lúc TV4 chưa tải artifact CI; TV2 đã kiểm raw ngày 09/11. PR #21 head `7518337` từng CI đỏ SC06 vì VT-064 cá nhân được nhập sai phạm vi; bản tách nội dung cá nhân phải chờ CI đúng SHA và peer. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, máy khác, peer review hoặc testnet; giữ gate release mở.
+## Đối chiếu hiện hành — 11/11/2026
+
+Candidate PR #21: `ff484fbe95519cf2079e3dabda43e456a2c55fe6`, source fixes `9ad0aeaffd8c2a6135c05a2151148e792c84022c`; Dev vẫn là `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. [Evidence source-bound](evidence/tv4-20261110-project2.json) giữ kết quả local/CI riêng; candidate CI không chứng minh đã tích hợp vào Dev. Các bảng từ 09/11 trở về trước bên dưới là lịch sử, không phải danh sách blocker hiện hành.
+
+| Phạm vi | Kết luận peer đã nhận trên `ff484fb` | Phần TV4 còn phải nghiệm thu |
+|---|---|---|
+| QA05 / #16 | [TV1 contract-level PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/16#issuecomment-6766948722): attack 6/6, integration 40/40, Governor 82/82; peer đã kiểm trace/negative controls và archive 105 receipts, không phải lượt chạy mới của TV4 | Full TC05–08/TC10/TC14 vẫn PARTIAL: actor × state × boundary × reset/order và raw receipt/API/UI từng biến thể. Không còn chờ peer contract-level |
+| QA06 / #17 | [TV1 bounded INV01–INV04 PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6766961290); issue đã chốt Done bounded | Không mở lại bounded acceptance; signatures/ERC1271, arbitrary strategies/configurations/recipients, reorg/API/UI ngoài phạm vi này |
+| SC06 / #43 | [TV1 APPROVED SC/SC06](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5839457863); [TV2 provenance/consumer backend đã kiểm độc lập](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43#issuecomment-6768507329): 32 source hashes, 12 event fragments, ancestry/coordinates và raw BUD ledger | Còn TV3 consumer và nghiệm thu tích hợp; không còn chờ TV1 re-review hoặc TV2 event/fixture provenance |
+| Backend / #18 | [TV2 recovery/API/ABI review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5837339166), [xác nhận gate tích hợp](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6768538381); không phải approval toàn PR | Revision tích hợp chứa fix, CI chính revision đó, recovery gate trước RPC, health/data503, cursor409, replay bỏ orphan và rebuild equal cùng H/hash. WSL/ví/testnet không chặn riêng backend |
+| Mapping / #7 và portability / #47 | [TV2 FR13–16/NFR02–04 mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362); [review ba npm commands](https://github.com/SE2026-21-1/dao-budget-simulator/issues/47#issuecomment-6768513592), không đổi assertion/skip/dependency | Mapping không đồng nghĩa mọi TC PASS; #47 giữ mở đến khi hoàn tất gate tích hợp PR #21 |
+| FE, môi trường và release | Fixture/adapter/Linux nguồn đã có evidence theo SHA gốc | TV3 review wallet/consumer; #40 receiving foreground lifecycle; #19/#41 extension full workflow; #20 network/RPC/Osaka/funded signer; #42 clone/restart/rebuild máy nhận; #44 tổng hợp release. Không suy các gate này đạt từ local/CI |
+
+### Lịch sử đối chiếu 09/11/2026
+
+**Đối chiếu lịch sử 09/11:** [bảng TV4 theo issue/SHA](evidence/tv4-20261109-status.md) chấp nhận backend TC11/TC12/NFR02–04 và hồi quy freshness #37 **trên Dev `87738d3`**, sau lượt local TV4 và đối chiếu raw CI riêng của TV2; hai số p95/H/hash không được gộp. Bảng 06/11 phía dưới giữ nguyên trạng thái lịch sử lúc TV4 chưa tải artifact CI; TV2 đã kiểm raw ngày 09/11. PR #21 head `7518337` từng CI đỏ SC06 vì VT-064 cá nhân được nhập sai phạm vi; bản tách nội dung cá nhân phải chờ CI đúng SHA và peer. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, máy khác, peer review hoặc testnet; giữ gate release mở.
 
 ## Đối chiếu mới — 06/11/2026 (Dev `87738d3`, PR #21 chưa merge)
 

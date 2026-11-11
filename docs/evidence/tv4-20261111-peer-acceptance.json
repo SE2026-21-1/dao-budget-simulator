@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-11",
+  "testedRevision": "ff484fbe95519cf2079e3dabda43e456a2c55fe6",
+  "sourceFixRevision": "9ad0aeaffd8c2a6135c05a2151148e792c84022c",
+  "observedDevRevision": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+  "scope": "Independent TV4 local verification after TV1/TV2 peer handoffs; documentation/evidence publication only. Personal dirty checkout preserved. Not independent-machine, extension wallet, native PostgreSQL or testnet acceptance.",
+  "toolchain": {"node": "24.15.0", "foundry": "1.8.5", "solc": "0.8.37"},
+  "verification": [
+    {"command": "forge build", "exitCode": 0, "result": "PASS", "warnings": "OpenZeppelin future keyword and existing Foundry lint warnings remain"},
+    {"command": "npm run test:be03", "exitCode": 0, "passed": 25, "failed": 0, "skipped": 0, "scope": "syncer unit/process suite, no database or seccomp restriction applied in this run"},
+    {"command": "node --import tsx --test tests/sc06-chain.test.mjs", "exitCode": 0, "passed": 32, "failed": 0, "skipped": 0, "scope": "Canonical source/archive/ABI/projection checks plus mutations, including isolated historical quorum mutation"},
+    {"command": "node --import tsx scripts/smoke_governance.mjs --output reports/peer-governance.json", "exitCode": 0, "result": "PASS", "scope": "Fresh owned loopback Anvil; real final-role Governor to Timelock to Treasury, attacks/retry and live BE02 decoding", "canonicalReceipts": 105, "successfulReceipts": 49, "revertedReceipts": 56, "separateResetDemoReceipts": 5}
+  ],
+  "independentRawReceiptChecks": {
+    "uniqueCanonicalTransactionHashes": 105,
+    "logBlockAndTransactionCoordinates": "PASS",
+    "revertedReceiptLogs": 0,
+    "budTransferInWei": "13000000000000000000000",
+    "budTransferOutWei": "13000000000000000000000",
+    "treasuryBalanceWei": "0",
+    "method": "Sum raw BUD Transfer topics/data for Treasury, excluding self-transfers; compare net with final balance. BudgetDisbursed not added to spending. Reset demo not added to canonical ledger."
+  },
+  "head": {"number": "109", "hash": "0x3ebfb408811935a2c50fefe08755abca225f2941e0c8c89a5ed6b3460e96210e", "timestamp": "1800000495"},
+  "rawArchive": {"path": "tv4-20261111-governance-raw.tar.gz", "sha256": "89075e6e317f32d867eddc4991c0aca85d45afcc92998e4ecd52760012c62f9c"},
+  "setupFailuresResolved": [
+    "Network submodule initialization timed out; retried using existing local Git repositories at exact pinned commits. Not a clean network clone or another-machine proof.",
+    "Source provenance probe ran before submodule initialization completed and failed; full SC06 suite passed after pinned submodules and build were ready.",
+    "First governance smoke could not publish evidence because reports parent directory did not exist. Created parent and reran successfully; failed attempt not counted as acceptance."
+  ],
+  "peerReviews": {
+    "tv1Attack": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/16#issuecomment-6766948722",
+    "tv1Sc06": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5839457863",
+    "tv2Provenance": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/43#issuecomment-6768507329",
+    "tv2Mapping": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362",
+    "tv2Portability": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/47#issuecomment-6768513592",
+    "tv2IntegrationGate": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6768538381"
+  },
+  "remaining": [
+    "Full QA05 actor/state/boundary/reset/order receipt/API/UI variants remain PARTIAL despite contract-level PASS",
+    "TV3 wallet/consumer review and SC06 frontend consumer acceptance",
+    "Authorized integration and CI/acceptance of actual integrated revision; candidate proof does not imply Dev integration",
+    "Receiving foreground lifecycle, extension-wallet full workflow, independent receiving-machine run/restart/rebuild, testnet prerequisites and release"
+  ],
+  "notRun": ["PostgreSQL/API/rebuild/reorg native suites: no PostgreSQL binary found in current environment", "new benchmark", "frontend browser or extension acceptance", "testnet"],
+  "releaseAccepted": false
+}

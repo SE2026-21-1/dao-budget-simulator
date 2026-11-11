@@ -12,6 +12,7 @@ import { ApiError } from "../data/api";
 import type * as Api from "../data/api";
 import type { Proposal, ProposalCollection, ProposalStatus } from "../data/proposals";
 import { governorAbi, treasuryAbi } from "../chain/transactions";
+import { operationForActions } from "../chain/governanceActions";
 import { WalletProvider } from "../chain/wallet";
 import type { InjectedProvider } from "../chain/walletProviders";
 import { deferred } from "../test/deferred";
@@ -28,6 +29,7 @@ const state = vi.hoisted(() => ({
   },
   rpc: { readContract: vi.fn(), getBytecode: vi.fn(), getChainId: vi.fn(), getBlock: vi.fn(), waitForTransactionReceipt: vi.fn() },
   request: vi.fn(), loadProposals: vi.fn(),
+  confirmationMatches: true,
   proposalState: 1,
   pendingState: undefined as Promise<bigint> | undefined,
 }));
@@ -63,6 +65,41 @@ const invalidations = [
   { status: 409, code: "SNAPSHOT_INVALIDATED" },
   { status: 503, code: "DATA_NOT_READY" },
 ] as const;
+
+function receiptLog(address: Address, signature: string, data: Hex, indexed: Hex[] = []) {
+  return { address, data, topics: [keccak256(toHex(signature)), ...indexed] };
+}
+function confirmedReceipt() {
+  const governor = state.deployment.governor as Address;
+  const treasury = state.deployment.treasury as Address;
+  const timelock = state.deployment.timelock as Address;
+  const operation = operationForActions([[treasury], [0n], [calldata], descriptionHash], governor);
+  let logs: ReturnType<typeof receiptLog>[];
+  if (state.proposalState === 1) {
+    logs = [receiptLog(governor, "VoteCast(address,uint256,uint8,uint256,string)",
+      encodeAbiParameters(parseAbiParameters("uint256,uint8,uint256,string"), [BigInt(proposalId), 1, 2n * 10n ** 18n, ""]),
+      [toHex(BigInt(account), { size: 32 })])];
+  } else if (state.proposalState === 0) {
+    logs = [receiptLog(governor, "ProposalCanceled(uint256)", encodeAbiParameters(parseAbiParameters("uint256"), [BigInt(proposalId)]))];
+  } else if (state.proposalState === 4) {
+    logs = [
+      receiptLog(governor, "ProposalQueued(uint256,uint256)", encodeAbiParameters(parseAbiParameters("uint256,uint256"), [BigInt(proposalId), 150n])),
+      receiptLog(timelock, "CallScheduled(bytes32,uint256,address,uint256,bytes,bytes32,uint256)",
+        encodeAbiParameters(parseAbiParameters("address,uint256,bytes,bytes32,uint256"), [treasury, 0n, calldata, toHex(0n, { size: 32 }), 120n]),
+        [operation.id, toHex(0n, { size: 32 })]),
+      receiptLog(timelock, "CallSalt(bytes32,bytes32)", encodeAbiParameters(parseAbiParameters("bytes32"), [operation.salt]), [operation.id]),
+    ];
+  } else {
+    logs = [
+      receiptLog(governor, "ProposalExecuted(uint256)", encodeAbiParameters(parseAbiParameters("uint256"), [BigInt(proposalId)])),
+      receiptLog(timelock, "CallExecuted(bytes32,uint256,address,uint256,bytes)",
+        encodeAbiParameters(parseAbiParameters("address,uint256,bytes"), [treasury, 0n, calldata]), [operation.id, toHex(0n, { size: 32 })]),
+      receiptLog(treasury, "BudgetDisbursed(bytes32,address,uint256)",
+        encodeAbiParameters(parseAbiParameters("uint256"), [10n ** 18n]), [requestId, toHex(BigInt(recipient), { size: 32 })]),
+    ];
+  }
+  return { transactionHash: hash, status: "success" as const, to: governor, blockNumber: 1002n, logs };
+}
 
 function collection(proposalState: ProposalStatus, canonical = false): ProposalCollection {
   const proposal: Proposal = {
@@ -115,19 +152,27 @@ beforeEach(() => {
   root = createRoot(container);
   state.pendingState = undefined;
   state.proposalState = 1;
+  state.confirmationMatches = true;
   state.loadProposals.mockReset();
   state.rpc.getBytecode.mockReset().mockResolvedValue("0x6000");
   state.rpc.getChainId.mockReset().mockResolvedValue(31337);
   state.rpc.getBlock.mockReset().mockResolvedValue({ timestamp: 200n });
-  state.rpc.waitForTransactionReceipt.mockReset().mockResolvedValue({ transactionHash: hash, status: "success", logs: [] });
-  state.rpc.readContract.mockReset().mockImplementation(async ({ functionName }) => {
+  state.rpc.waitForTransactionReceipt.mockReset().mockImplementation(async () => confirmedReceipt());
+  state.rpc.readContract.mockReset().mockImplementation(async ({ functionName, blockNumber }) => {
+    if (blockNumber !== undefined) expect(blockNumber).toBe(1002n);
     const addresses: Record<string, string> = {
       treasury: state.deployment.treasury, token: state.deployment.govToken,
       timelock: state.deployment.timelock, budgetToken: state.deployment.budToken, delegates: account,
     };
     if (functionName in addresses) return addresses[functionName];
-    if (functionName === "hasVoted") return false;
-    if (functionName === "state") return state.pendingState ?? BigInt(state.proposalState);
+    if (functionName === "hasVoted") return blockNumber !== undefined;
+    if (functionName === "state") return blockNumber === undefined
+      ? state.pendingState ?? BigInt(state.proposalState)
+      : state.confirmationMatches ? BigInt(({ 1: 1, 0: 2, 4: 5, 5: 7 } as Record<number, number>)[state.proposalState]) : 3n;
+    if (functionName === "hasRole") return true;
+    if (functionName === "getOperationState") return blockNumber === undefined ? state.proposalState === 5 ? 2n : 0n : state.proposalState === 5 ? 3n : 1n;
+    if (functionName === "getTimestamp" || functionName === "proposalEta") return 150n;
+    if (functionName === "paidRequests") return blockNumber !== undefined && state.proposalState === 5;
     if (["balanceOf", "getVotes", "getPastVotes"].includes(functionName)) return 2n * 10n ** 18n;
     throw new Error(`Unexpected RPC read: ${functionName}`);
   });
@@ -211,7 +256,7 @@ describe.each(invalidations)("proposal detail $status $code recovery", ({ status
     const old = collection("Active");
     const canonical = collection("Succeeded", true);
     await mount(old);
-    const receipt = deferred<{ transactionHash: Hex; status: "success"; logs: [] }>();
+    const receipt = deferred<ReturnType<typeof confirmedReceipt>>();
     state.rpc.waitForTransactionReceipt.mockReturnValueOnce(receipt.promise);
     await click("Bỏ phiếu");
     expect(sends()).toHaveLength(1);
@@ -230,7 +275,7 @@ describe.each(invalidations)("proposal detail $status $code recovery", ({ status
     // Receipt confirmation triggers a real onConfirmed refresh. A generic failure
     // after the invalidation must not clear that receipt or restore write access.
     state.loadProposals.mockRejectedValueOnce(new Error("Indexer still unavailable"));
-    await act(async () => { receipt.resolve({ transactionHash: hash, status: "success", logs: [] }); });
+    await act(async () => { receipt.resolve(confirmedReceipt()); });
     expect(container.textContent).toContain("Indexer still unavailable");
     expect(container.querySelector(".transaction-status")).toBe(statusNode);
     expect(statusNode.textContent).toContain("Giao dịch đã được xác nhận.");
@@ -285,5 +330,29 @@ describe.each(invalidations)("proposal detail $status $code recovery", ({ status
     await click("Bỏ phiếu");
     expect(sends()).toHaveLength(1);
     expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
+  });
+});
+
+describe("receipt confirmation is not merely status=success", () => {
+  it.each(["missing event", "wrong emitter", "wrong receipt-block state"] as const)("retains hash and rejects %s before displaying success", async (failure) => {
+    const snapshot = collection("Active");
+    await mount(snapshot);
+    const receipt = confirmedReceipt();
+    if (failure === "missing event") receipt.logs = [];
+    if (failure === "wrong emitter") receipt.logs = receipt.logs.map((log) => ({ ...log, address: recipient }));
+    if (failure === "wrong receipt-block state") state.confirmationMatches = false;
+    state.rpc.waitForTransactionReceipt.mockResolvedValueOnce(receipt);
+    state.loadProposals.mockResolvedValue(snapshot);
+    await click("Bỏ phiếu");
+    expect(sends()).toHaveLength(1);
+    const status = container.querySelector(".transaction-status")!;
+    expect(status.textContent).toContain(hash);
+    expect(status.textContent).not.toContain("Giao dịch đã được xác nhận.");
+    expect(status.textContent).toMatch(failure === "wrong receipt-block state" ? /Governor chưa ghi nhận phiếu/ : /Receipt thiếu VoteCast/);
+    state.confirmationMatches = true;
+    await click("Bỏ phiếu");
+    expect(sends()).toHaveLength(2);
+    expect(status.textContent).toContain("Giao dịch đã được xác nhận.");
+    expect(status.textContent).toContain(hash);
   });
 });

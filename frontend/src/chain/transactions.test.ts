@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { decodeFunctionData, keccak256, toHex } from "viem";
-import { buildProposal, originalActions, parseBUD, treasuryAbi, UINT256_MAX, validateProposalForm } from "./transactions";
+import { decodeFunctionData, keccak256, toHex, type Address, type Hex } from "viem";
+import { buildProposal, originalActions, parseBUD, proposalIdFromReceipt, treasuryAbi, UINT256_MAX, validateProposalForm } from "./transactions";
 import { formatBUD } from "../data/formatBUD";
 import sc01 from "../../../fixtures/sc01/disbursement-v1.json";
+import sc06 from "./sc06-v1.vectors.json";
 import type { Proposal } from "../data/proposals";
 
 const treasury = "0x1111111111111111111111111111111111111111";
@@ -56,5 +57,20 @@ describe("fixture display", () => {
 
   it("formats a uint256 amount without floating point loss", () => {
     expect(formatBUD("1000000000000000001")).toBe("1,000000000000000001 BUD");
+  });
+});
+
+describe("created proposal receipt binding", () => {
+  it("requires the configured Governor and exact submitted payload ID, skipping unrelated logs", () => {
+    const logs = sc06.proposals[0].receipts.create.logs.map((log) => ({
+      address: log.address as Address, data: log.data as Hex, topics: log.topics as Hex[],
+    }));
+    const id = sc06.proposals[0].proposalId;
+    const governor = sc06.governor as Address;
+    expect(proposalIdFromReceipt(logs, governor, id)).toBe(id);
+    const foreign = logs.map((log) => ({ ...log, address: recipient as Address }));
+    expect(proposalIdFromReceipt(foreign, governor, id)).toBeNull();
+    expect(proposalIdFromReceipt(logs, governor, sc06.proposals[1].proposalId)).toBeNull();
+    expect(proposalIdFromReceipt([...foreign, ...logs], governor, id)).toBe(id);
   });
 });

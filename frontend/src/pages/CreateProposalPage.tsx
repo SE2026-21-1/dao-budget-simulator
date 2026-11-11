@@ -1,9 +1,9 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router";
-import { type Address } from "viem";
+import { keccak256, toHex, type Address } from "viem";
 import { deployment } from "../chain/config";
 import { useWallet, walletSession } from "../chain/wallet";
-import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
+import { assertCanPropose, assertWritable, buildProposal, newRequestId, proposalIdForActions, proposalIdFromReceipt, sendGovernor, validateProposalForm } from "../chain/transactions";
 import { useTransaction } from "../chain/useTransaction";
 import TransactionStatus from "../components/TransactionStatus";
 import { loadSummary, type Summary } from "../data/api";
@@ -42,6 +42,7 @@ function CreateProposalPage() {
       assertWritable(wallet.account, wallet.chainId, summary?.context, loadedSummary?.signal);
       if (validation) throw new Error(validation);
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
+      const expectedId = proposalIdForActions(payload.targets, payload.values, payload.calldatas, keccak256(toHex(payload.description)));
       await transaction.run(
         async () => {
           const session = walletSession(wallet.account!, loadedSummary?.signal);
@@ -49,8 +50,14 @@ function CreateProposalPage() {
           return sendGovernor(session, "propose", [payload.targets, payload.values, payload.calldatas, payload.description]);
         },
         (receipt) => {
-          setSubmittedId(proposalIdFromReceipt(receipt.logs));
+          setSubmittedId(receipt.to?.toLowerCase() === deployment!.governor.toLowerCase()
+            ? proposalIdFromReceipt(receipt.logs, deployment!.governor, expectedId) : null);
           setLoadAttempt((value) => value + 1);
+        },
+        (receipt) => {
+          if (receipt.to?.toLowerCase() !== deployment!.governor.toLowerCase() ||
+              proposalIdFromReceipt(receipt.logs, deployment!.governor, expectedId) === null)
+            throw new Error("Receipt không xác nhận ProposalCreated đúng Governor và payload đã gửi.");
         },
       );
     } catch (cause) { setFormError(cause instanceof Error ? cause.message : "Không thể tạo đề xuất."); }

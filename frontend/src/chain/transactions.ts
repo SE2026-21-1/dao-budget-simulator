@@ -74,12 +74,6 @@ export async function waitForReceipt(hash: Hash): Promise<TransactionReceipt> {
   return receipt;
 }
 
-export async function currentProposalState(proposalId: string): Promise<number> {
-  if (!publicClient || !deployment) throw new Error("Thiếu RPC để kiểm tra trạng thái proposal.");
-  const state = await publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "state", args: [BigInt(proposalId)] });
-  return Number(state);
-}
-
 export async function assertCanPropose(account: Address): Promise<void> {
   if (!publicClient || !deployment) throw new Error("Thiếu cấu hình deployment.");
   const [clock, threshold] = await Promise.all([
@@ -91,10 +85,17 @@ export async function assertCanPropose(account: Address): Promise<void> {
   if (BigInt(String(votes)) < BigInt(String(threshold))) throw new Error("Chưa đủ voting power đã delegate tại checkpoint quá khứ để tạo proposal.");
 }
 
+export function proposalIdForActions(targets: readonly Address[], values: readonly bigint[], calldatas: readonly Hex[], descriptionHash: Hex): string {
+  return BigInt(keccak256(encodeAbiParameters(
+    parseAbiParameters("address[], uint256[], bytes[], bytes32"),
+    [targets, values, calldatas, descriptionHash],
+  ))).toString();
+}
+
 export function originalActions(proposal: Proposal, treasury: Address): [Address[], bigint[], Hex[], Hex] {
   if (proposal.targets?.length !== 1 || proposal.values?.length !== 1 || proposal.calldatas?.length !== 1 ||
       !isAddress(proposal.targets[0]) || proposal.targets[0].toLowerCase() !== treasury.toLowerCase() ||
-      proposal.values[0] !== "0" || !/^0x(?:[0-9a-f]{2})+$/i.test(proposal.calldatas[0]) ||
+      proposal.values[0] !== "0" || !/^0x[0-9a-f]{200}$/i.test(proposal.calldatas[0]) ||
       proposal.descriptionHash !== keccak256(toHex(proposal.description))) {
     throw new Error("Payload proposal không khớp Treasury/description gốc. Không thể gửi giao dịch.");
   }
@@ -105,10 +106,7 @@ export function originalActions(proposal: Proposal, treasury: Address): [Address
       throw new Error("Payload disburse không khớp proposal.");
     }
   } catch { throw new Error("Payload disburse không khớp proposal."); }
-  const id = BigInt(keccak256(encodeAbiParameters(
-    parseAbiParameters("address[], uint256[], bytes[], bytes32"),
-    [[proposal.targets[0]], [0n], [proposal.calldatas[0] as Hex], proposal.descriptionHash as Hex],
-  ))).toString();
+  const id = proposalIdForActions([proposal.targets[0]], [0n], [proposal.calldatas[0] as Hex], proposal.descriptionHash as Hex);
   if (id !== proposal.proposalId) throw new Error("Proposal ID không khớp payload gốc.");
   return [[proposal.targets[0]], [0n], [proposal.calldatas[0] as Hex], proposal.descriptionHash as Hex];
 }
@@ -139,12 +137,13 @@ export function newRequestId(): Hex {
   return toHex(bytes);
 }
 
-export function proposalIdFromReceipt(logs: readonly { data: Hex; topics: readonly Hex[] }[]): string | null {
+export function proposalIdFromReceipt(logs: readonly { address: Address; data: Hex; topics: readonly Hex[] }[], governor: Address, expectedId: string): string | null {
   for (const log of logs) {
+    if (log.address.toLowerCase() !== governor.toLowerCase()) continue;
     try {
       const event = decodeEventLog({ abi: governorAbi, data: log.data, topics: log.topics as [Hex, ...Hex[]] });
       if (event.eventName === "ProposalCreated" && event.args && typeof event.args === "object" && "proposalId" in event.args) {
-        return String(event.args.proposalId);
+        if (String(event.args.proposalId) === expectedId) return expectedId;
       }
     } catch { /* Unrelated contract log. */ }
   }

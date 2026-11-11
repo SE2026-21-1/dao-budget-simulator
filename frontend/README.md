@@ -17,10 +17,15 @@ provider dispatch, không chỉ disable nút. Create proposal dùng signal của
 read; thay context Treasury cũng hủy session còn chờ RPC. Self-delegate độc lập
 snapshot vẫn giữ session guard provider/account/network.
 
-Khi TV3 tích hợp, giữ `verifyGovernanceOutcome`, receipt/proposal-ID verification,
-EIP-1193/EIP-6963/discovery và giao diện Swiss Fintech; không thay toàn call sites
-bằng bản TV4 rồi làm mất bước xác minh outcome. `config.ts`/mode fixture-live không
-được sửa trong bản fix này. [Evidence47tests và browser](../docs/evidence/tv4-20261111-snapshot-guard.json).
+Candidate PR21 đã ghép `preflightGovernanceAction`/`verifyGovernanceOutcome` từ
+TV3 `4cba99a` với snapshot/session guard của TV4. Vote/Cancel/Queue/Execute
+chỉ báo success sau khi receipt đúng emitter/payload và trạng thái tại block
+receipt khớp; propose yêu cầu đúng Governor và proposal ID đã hash trước ký.
+Lỗi xác minh vẫn giữ hash và refresh snapshot, không đổi thành success.
+Đã chạy65/65 tests, lint/build PASS; đây không phải extension/WSL acceptance.
+Khi TV3 ghép Swiss Fintech, giữ cả hai lớp kiểm chứng này và EIP-1193/EIP-6963.
+`config.ts`/mode fixture-live không đổi; không chạm staged/unstaged của TV3.
+Proof P1 trước tích hợp vẫn ở [evidence47tests/browser](../docs/evidence/tv4-20261111-snapshot-guard.json).
 
 ## Chạy fixture
 
@@ -102,6 +107,30 @@ NODE
 ```
 
 Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. API được bật nhưng thiếu địa chỉ/chain/RPC hợp lệ sẽ báo lỗi cấu hình, **không âm thầm quay về fixture**. API bị lỗi cũng không thay bằng JSON mẫu.
+
+### Windows nhận run BE09 — sửa deployment ID mà không ghi `.env.local`
+
+[#36 TV3 ngày11/11](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841)
+đã xác nhận API/RPC và năm địa chỉ khớp manifest, nhưng Vite Windows vẫn dùng
+deployment ID cũ. Sau khi **chính owner dừng Vite cũ**, mở PowerShell tại repo:
+
+```powershell
+# Chỉ đúng run đã bàn giao trong comment #36; run mới phải lấy runtime.deploymentName mới.
+$env:VITE_DEPLOYMENT_ID = 'be09-local-20261111T071940Z-0210c9c44501'
+npm run dev --prefix frontend -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+Biến chỉ áp dụng cho shell/tiến trình con; không sửa file môi trường. Các biến
+API/RPC/chain/five addresses phải giữ đúng manifest đã kiểm. Vite đọc env khi
+khởi động: reload trình duyệt không sửa ID của server cũ. `--strictPort` phải
+thất bại nếu port còn bị chiếm; không kill tiến trình không thuộc mình. Nếu dùng
+port khác, cần TV2 cấu hình origin CORS chính xác trước, không wildcard.
+
+Sau khi mở lại UI, đối chiếu deployment/chain và SnapshotInfo H24/hash
+`0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`/
+revision `440c6ec1-f436-4f48-958f-07f68a80a99e` **nếu run chưa có publication mới**;
+nếu đã tiến, lấy context canonical mới từ API thay vì ép H24. Chưa có kết quả
+browser mới cho bước này; FE live1/0 của TV3 không thay visual/keyboard/extension.
 
 ## Snapshot, health và giao dịch
 

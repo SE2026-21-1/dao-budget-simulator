@@ -5,6 +5,15 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**Handoff TV1/testnet mới 11/11:** [#7 contract mapping +15tests độc lập PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495),
+[#8 contract/ABI handoff PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/8#issuecomment-6787396657)
+trên d8f8743 đã nhận; không còn chờ review TV1 cho delta này.
+TV4 chọn Sepolia11155111/RPC publicnode/K2, read-only identity và CLZ probe PASS,
+**chưa gửi transaction**. [Config/raw/gates](evidence/tv4-20261111-testnet-preflight.json).
+#20 vẫn BLOCKED vì signer funded/secure signing, path deploy/check-roles remote
+được review, manifest/receipts thời gian thật và máy nhận chưa có.
+Không dùng local PASS để chốt testnet PASS; không gỡ guard Anvil31337.
+
 **QA05 bổ sung 11/11/2026:** source `b7a74ce4f5a7336a992b39310fb9d569831176d3`,
 [ma trận hiện hành](test-plan.md#bổ-sung-nghiệm-thu-qa05--11112026-sau-handoff-peer),
 [evidence mới](evidence/tv4-20261111-qa05-variants.json) và

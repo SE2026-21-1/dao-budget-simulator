@@ -18,7 +18,7 @@ import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { startWorkerProbe } from './be08_worker_probe.mjs';
-import { measureJson, metrics } from './be08_measurement.mjs';
+import { measureJson, metrics, finalizeLoad } from './be08_measurement.mjs';
 import { verifyPostgresConnection } from './be08_postgres_identity.mjs';
 import { createApiServer } from '../indexer/api/server.ts';
 import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
@@ -130,7 +130,7 @@ try {
     report.runtime[name] = JSON.parse(await readFile(new URL(`../node_modules/${name}/package.json`, import.meta.url), 'utf8')).version;
   for (const path of ['scripts/benchmark_api.mjs', 'scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs',
     'scripts/be08_diagnostics.mjs',
-    'scripts/be08_worker_probe.mjs','scripts/be08_rpc_outage.mjs','scripts/be08_measurement.mjs','scripts/be08_postgres_identity.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
+    'scripts/be08_worker_probe.mjs','scripts/be08_rpc_outage.mjs','scripts/be08_measurement.mjs','scripts/be08_postgres_identity.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'indexer/projection/chain.ts', 'package-lock.json',
     ...['001_initial', '002_be03', '003_be04', '004_be05_api', '005_be07'].map(name => `database/migrations/${name}.sql`)])
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
   await timed('migrations', async () => {
@@ -415,25 +415,13 @@ try {
       await workerProbe.samples({phase:'load',base:baseUrl,send:sendFreshness,activeClients:()=>activeClients},10);
     } finally {freshnessDone=true;} })();
     const results=await Promise.allSettled([...clients,freshness]);
-    const failed=results.find(r=>r.status==='rejected'); if(failed)throw failed.reason;
+    const failed=results.find(r=>r.status==='rejected');
     load.completedAt = new Date().toISOString();
     load.elapsedIncludingDrainMs = performance.now() - start;
     load.cpuUsage = process.cpuUsage(load.cpuUsageAtStart);
     load.resourceUsageAtEnd = process.resourceUsage();
-    load.httpStatuses = {};
-    for (const sample of load.rawSamples) load.httpStatuses[sample[6] ?? 'transport_error'] = (load.httpStatuses[sample[6] ?? 'transport_error'] ?? 0) + 1;
-    const successful = load.rawSamples.filter(sample => sample[7]);
-    load.successfulRequests = successful.length;
-    load.errorRequests = load.errors.length;
-    load.global = metrics(successful.map(sample => sample[5]));
-    load.allResponsesIncludingErrors = metrics(load.rawSamples.map(sample => sample[5]));
-    load.endpoints = Object.fromEntries([...new Set(cycle)].map(endpoint => [endpoint, {
-      ...metrics(successful.filter(sample => sample[2] === endpoint).map(sample => sample[5])),
-      errors: load.errors.filter(error => error.endpoint === endpoint).length,
-    }]));
-    load.successfulRequestsPerSecond = successful.length / (load.elapsedIncludingDrainMs / 1000);
-    load.status = load.errorRequests === 0 && load.global.count > 0 && load.global.p95Ms < 1000 &&
-      Object.values(load.endpoints).every(endpoint => endpoint.count > 0 && endpoint.p95Ms < 1000) ? 'PASS' : 'FAIL';
+    finalizeLoad(load, cycle, !!failed);
+    if (failed) throw failed.reason;
     check();
     assert.ok(load.elapsedIncludingDrainMs >= durationMs, 'Must run the full 60s');
     assert.ok(load.workers.every(worker => worker.requests > 0 && worker.finishedOffsetMs >= durationMs), 'All ten workers must run throughout measurement');

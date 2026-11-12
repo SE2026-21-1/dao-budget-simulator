@@ -79,11 +79,25 @@ export async function reconcile(
   const treasuryBalance = (await call(token, tokenAbi, 'balanceOf', [treasury]))[0] as bigint;
   requireProjection(treasuryBalance === model.balance,
     `BUD balanceOf(H) ${treasuryBalance} differs from Transfer ledger ${model.balance}.`);
-  const evaluated = new Map<string, Evaluated>();
-  for (const p of model.proposals) {
+  // The answer is fixed by (canonical H hash, snapshot), not by proposal ID.
+  // Keep this cache local to one reconciliation: never reuse it across H/reorgs.
+  const quorums = new Map<string, Promise<bigint>>();
+  async function quorumAt(snapshot: string): Promise<bigint> {
+    let value = quorums.get(snapshot);
+    if (!value) {
+      value = call(governor, governorAbi, 'quorum', [snapshot]).then(result => result[0] as bigint);
+      quorums.set(snapshot, value);
+    }
+    return value;
+  }
+  const values: Evaluated[] = [];
+  let next = 0, failed = false;
+  let failure: unknown;
+  async function checkProposal(index: number): Promise<void> {
+    const p = model.proposals[index]!;
     const quorum =
       timestamp > BigInt(p.snapshot)
-        ? ((await call(governor, governorAbi, 'quorum', [p.snapshot]))[0] as bigint)
+        ? await quorumAt(p.snapshot)
         : null;
     const value = evaluate(p, timestamp, quorum);
     const votes = await call(governor, governorAbi, 'proposalVotes', [p.id]);
@@ -100,7 +114,18 @@ export async function reconcile(
       requireProjection(actual === expected,
         `${p.id}: Timelock getTimestamp(H) ${actual} differs from projected operation timestamp ${expected}.`);
     }
-    evaluated.set(p.id, value);
+    values[index] = value;
   }
-  return evaluated;
+  // Independent historical reads may overlap, but do not flood the provider.
+  // Drain every in-flight check before returning/throwing so the caller cannot
+  // roll back/release its publication lock while reconciliation is still active.
+  await Promise.all(Array.from({ length: Math.min(4, model.proposals.length) }, async () => {
+    while (!failed && next < model.proposals.length) {
+      const index = next++;
+      try { await checkProposal(index); }
+      catch (error) { if (!failed) { failed = true; failure = error; } }
+    }
+  }));
+  if (failed) throw failure;
+  return new Map(model.proposals.map((p, i) => [p.id, values[i]!]));
 }

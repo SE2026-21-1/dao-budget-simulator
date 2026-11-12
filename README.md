@@ -123,15 +123,23 @@ như các suite BE04/BE07/BE08; không cần Unix IPC server của CLI `tsx --te
 |---|---|---|
 | BE03–08, freshness 001–004/005, SC06 | Dev [`87738d3`](https://github.com/SE2026-21-1/dao-budget-simulator/commit/87738d3f792c3a283a52b5c18c306809d6cfcfd4); [TV4 CI 41973419072](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973419072), [BE08 CI 41973418947](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973418947) success. **Chạy mới** `test:be08:native --benchmark` trên Dev: PostgreSQL 18.4/Anvil, 20.986 HTTP success/0 lỗi, p95 212,461 ms, 20/20 freshness (<30s); [raw/digest](docs/evidence/tv4-20261106-acceptance.md). Artifact CI [13391310183](https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/artifacts/13391310183) cần auth để tải raw | Chạy local không thay peer review, artifact CI chưa được đọc; xem [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37) |
 | Wallet/UI↔API | [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) còn open; [nhánh TV3](https://github.com/SE2026-21-1/dao-budget-simulator/tree/feature/tv3-frontend) live suite **PASS 1/1, 0 SKIP** trên Anvil/PG/API H79 native PR #21 sau sync RPC thật. Chromium 1366/390 đọc dữ liệu; **lượt local thứ hai** browser EIP-1193 adapter→Anvil receipt `0xb4fa5ad3…aba82b` H82→sync/project→API 200 H82/hash canonical→UI hiển thị amount BigInt và description chính xác; [raw/ảnh](docs/evidence/tv4-20261106-wallet-raw.tar.gz) | #36/#40/#41 vẫn chờ ví extension và service/manifest cho peer; EIP adapter Anvil unlock không phải xác nhận ký extension, endpoint tạm đã teardown |
-| SC/CI/testnet | Dev SC06 28/28; PR #21 sửa getter/Transfer oracle, regenerate fixture từ source commit `8245c9c`, canonical và mutations **31/31 PASS**; seeded ghost invariant 100×50, 5 execute success | TV1/TV2/TV3 peer; [#20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20) network/signer, [#42](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42) máy khác, [#44](https://github.com/SE2026-21-1/dao-budget-simulator/issues/44) demo |
+| SC/CI/testnet | Candidate `105f2ba` (source kiểm chứng `d8f8743`): SC06 canonical/mutation **32/32** theo source `9ad0aea`; TV4 QA05 local **202/202 Foundry, 21/21 attack** tại `b7a74ce`; [evidence peer](docs/evidence/tv4-20261111-peer-acceptance.json), [delta QA05](docs/evidence/tv4-20261111-qa05-variants.json). [CI source d8f8743 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42958494472) success, khác với số đo local. | SC07 technical PASS; SC05 local audit/roles PASS. Full QA05 PARTIAL; testnet #20, extension wallet, máy nhận #42 và release #44 vẫn chưa nghiệm thu. |
 
 GitHub [Projects của nhóm](https://github.com/orgs/SE2026-21-1/projects)
 hiển thị 0 project công khai khi chưa đăng nhập; chưa thể xác nhận hoặc sửa
 board riêng tư bằng SSH Git. Danh sách status/priority/dependency **đề xuất**
 trong [checklist](docs/tv4-checklist.md), không nhận là đã cập nhật Project.
-Mỗi kết quả chạy mới và log thực tế thuộc
-[evidence 06/11](docs/evidence/tv4-20261106-acceptance.md); số đo cũ không
-được chép sang lần chạy mới.
+Bảng backend/UI phía trên giữ evidence 06/11 theo SHA/môi trường gốc. Kết quả SC hiện hành
+đối chiếu thêm [peer 11/11](docs/evidence/tv4-20261111-peer-acceptance.json) và
+[QA05 delta 11/11](docs/evidence/tv4-20261111-qa05-variants.json); không chuyển số đo giữa các lượt chạy.
+
+TV4 đã chọn **Ethereum Sepolia, chainId 11155111, K=2**, RPC PublicNode theo
+[preflight read-only 11/11](docs/evidence/tv4-20261111-testnet-preflight.json).
+Probe chain identity/CLZ là kiểm tra hạn chế, **0 transaction broadcast**, chưa dùng signer;
+không chứng minh compiled contracts đã deploy hoặc gas/roles/ABI hoạt động trên testnet.
+Deployment vẫn **BLOCKED** đến khi có signer funded an toàn, đường remote deploy/check-roles
+được review, revision được chấp nhận và manifest/receipts Executed/Defeated thời gian thật.
+Không bỏ guard Anvil31337 của script local.
 
 ## Trạng thái các task TV1
 
@@ -141,12 +149,12 @@ Mỗi kết quả chạy mới và log thực tế thuộc
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã tích hợp `f57fcfd`, PR #13 đã merge; peer nghiệm thu SC05/deployment vẫn là đầu việc riêng |
-| SC05 — Timelock và quyền sau deploy | Đã tích hợp TV1 `21e53e1`; TV4 có pre-renounce/pre-funding gates, operation-history audit và14ca Anvil PASS; peer review/testnet còn mở |
-| SC06 — ABI và dữ liệu tích hợp | Đã merge vào Dev qua PR #39; receipt/manifest/provenance cần peer review tại #43 |
-| SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC06 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
+| SC05 — Timelock và quyền sau deploy | Local audit/roles PASS tại `ff484fb`, có pre-renounce/pre-funding và operation-history audit; TV1 kiểm 15 bootstrap tests. Testnet BLOCKED (#20), không suy từ local |
+| SC06 — ABI và dữ liệu tích hợp | Đã merge nền tảng qua PR #39; candidate source `9ad0aea` canonical/mutation 32/32, peer TV1/TV2 đã có; TV3 consumer/tích hợp còn riêng (#43) |
+| SC07 — Hoàn thiện unit test và test biên | **Technical PASS / contract-level completed** tại `d8f8743`: 138 unit functions, 40 integration; [mapping SC07](docs/sc07-test-coverage.md). Full QA05/E2E riêng; bàn giao tài liệu chờ TV4 review |
 | SC08 — Tích hợp local | UI → EIP-1193 local → contract → indexer/API → UI trên nhánh PR #21; chưa có trên Dev, chưa thay ví extension/testnet |
-| SC09 — Review dữ liệu và tài liệu contract | Còn mở, xem #43 và tài liệu SC |
-| SC10 — Testnet và bàn giao | Chờ network/signer/gas được nhóm duyệt (#20), không dùng key thật trong repo |
+| SC09 — Review dữ liệu và tài liệu contract | [Contract docs](docs/contracts.md) và [phần báo cáo nhóm #44](docs/sc09-smart-contracts-report.md) đã cập nhật cho candidate `d8f8743`; chờ TV4 review tài liệu tích hợp, không chốt release |
+| SC10 — Testnet và bàn giao | TV4 chọn Sepolia/11155111/K=2; probe read-only không là deploy. BLOCKED #20: signer funded an toàn, remote deploy/check-roles được review và manifest/receipts thật |
 
 ## Môi trường Foundry — TV4 Operation
 

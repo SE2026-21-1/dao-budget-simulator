@@ -1,0 +1,161 @@
+{
+  "date": "2026-11-12",
+  "reviewer": "Phan Thanh Dũng / 23001850 / SE2026-T16",
+  "source": {
+    "baseDev": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+    "pr21Head": "a7e0a7fbce0a2541d315e4d6b2bbb910b1d2d0fd",
+    "pr49Head": "422023ac3d08b6a22809fc5693ee0b69974ce87c",
+    "rehearsal": "f20f8f04e4083f161d5e6a8141e8d5aa06308aa2",
+    "tv3PublishedBaseline": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+    "tv3SwissFintechCombinedSha": null,
+    "testnetDeployedSha": null
+  },
+  "decision": "NOT_READY_FOR_MERGE",
+  "productionSourceEdits": false,
+  "commands": [
+    {
+      "command": "npm run typecheck && npm run build",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run test:be02 && npm run test:be03 && npm run test:be04 && npm run test:be06 && npm run test:be07",
+      "result": "PASS",
+      "pass": [
+        100,
+        25,
+        28,
+        5,
+        15
+      ],
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": "npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend",
+      "result": "PASS",
+      "pass": 65,
+      "warnings": "8 lint diagnostics; Vite646.89kB bundle warning"
+    },
+    {
+      "command": "FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh",
+      "result": "PASS",
+      "pass": 202,
+      "skip": 0,
+      "scope": "100x50 bounded invariants; compiler/lint warnings retained"
+    },
+    {
+      "command": "node --test tests/sc06-chain.test.mjs",
+      "result": "FAIL_COMMAND",
+      "reason": "Missing --import tsx, ERR_MODULE_NOT_FOUND .js from TS; not product regression"
+    },
+    {
+      "command": "node --import tsx --test tests/sc06-chain.test.mjs",
+      "result": "PASS",
+      "pass": 32,
+      "skip": 0
+    },
+    {
+      "command": "npm run test:bootstrap && node --test tests/smoke/interruption.test.mjs && node scripts/check_qa05_request_orders.mjs --output /tmp/tv4-20261112/qa05-request-orders.json",
+      "result": "PASS",
+      "pass": [
+        15,
+        8
+      ],
+      "tc10IndependentRows": 4
+    },
+    {
+      "command": "npm run test:tv4:native -- --postgres-bin /tmp/dao-tv4-pg-20261112/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/tv4-native-20261112 --benchmark",
+      "result": "FAIL_ENVIRONMENT",
+      "reason": "libicui18n.so.60 missing before DB startup; no DB suite ran"
+    },
+    {
+      "command": "LD_LIBRARY_PATH=/tmp/dao-tv4-icu60/usr/lib/x86_64-linux-gnu npm run test:tv4:native -- --postgres-bin /tmp/dao-tv4-pg-20261112/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/tv4-native-20261112-icu --benchmark",
+      "result": "FAIL",
+      "dbPass": 57,
+      "sqlConstraints": "PASS",
+      "liveGovernanceRecoveryRebuild": "PASS",
+      "benchmark": "FAIL: freshness load sample5 timeout30s; NFR02/03 campaign not accepted",
+      "cleanup": "PASS"
+    },
+    {
+      "command": "Managed Chromium fixture browser: dashboard/list/detail/create at390/1366; skip-link keyboard",
+      "result": "PASS",
+      "scope": "No liveAPI/wallet/receiver/testnet; corrected initial detail selector that had selected create route"
+    },
+    {
+      "command": "curl read-only Sepolia chainId/latest header/CLZ eth_call",
+      "result": "PASS_LIMITED",
+      "chainId": 11155111,
+      "height": 12117470,
+      "broadcastTransactions": 0
+    },
+    {
+      "command": "LD_LIBRARY_PATH=/tmp/dao-tv4-icu60/usr/lib/x86_64-linux-gnu BE07_PG_BIN=/tmp/dao-tv4-pg-20261112/node_modules/@embedded-postgres/linux-x64/native/bin BE07_EVIDENCE_DIR=/tmp/tv4-be07-20261112 npm run test:be07:native",
+      "result": "PASS",
+      "counts": {
+        "unit": {
+          "tests": 173,
+          "pass": 173,
+          "fail": 0,
+          "skipped": 0
+        },
+        "be02-db": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "skipped": 0
+        },
+        "be03-db": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "skipped": 0
+        },
+        "be04-db": {
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "skipped": 0
+        },
+        "api-db": {
+          "tests": 7,
+          "pass": 7,
+          "fail": 0,
+          "skipped": 0
+        },
+        "be06-db": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        "be07-db": {
+          "tests": 19,
+          "pass": 19,
+          "fail": 0,
+          "skipped": 0
+        }
+      },
+      "scope": "Dedicated fresh cluster, actual BE07 DB+live suite; independent of failed benchmark"
+    }
+  ],
+  "github": {
+    "review49": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/49#pullrequestreview-5870963265",
+    "pr21Comment": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#issuecomment-6818174486",
+    "failure18": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6818151100",
+    "testnet20": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6818101258",
+    "projects": [
+      "https://github.com/orgs/SE2026-21-1/projects/1",
+      "https://github.com/orgs/SE2026-21-1/projects/2"
+    ],
+    "tv3Issue36": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/36"
+  },
+  "safety": {
+    "dirtyWorktreePreserved": true,
+    "mergedDev": false,
+    "autoMergeEnabled": false,
+    "selfApproved": false,
+    "testnetTransactions": 0,
+    "browserAccessRestoredByUser": true
+  }
+}

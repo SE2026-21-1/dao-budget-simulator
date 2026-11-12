@@ -22,9 +22,9 @@ npm ci --prefix frontend
 npm run dev --prefix frontend -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-Không đặt `VITE_API_BASE_URL` thì ứng dụng dùng fixture trong `fixtures/api/`, cho phép xem bốn màn hình nhưng khóa giao dịch. Để dùng dữ liệu thật, cấu hình `frontend/.env.local` theo [frontend/.env.example](../frontend/.env.example) từ manifest deployment; chạy PostgreSQL, indexer/projection và API theo [README](../README.md). Sau khi thay cấu hình, khởi động lại Vite. Các biến `VITE_*` công khai trong browser, chỉ chứa URL, chain ID và địa chỉ công khai.
+Ứng dụng mặc định gọi API TV2 tại `http://127.0.0.1:3000`. Để đọc dữ liệu thật, cấu hình `frontend/.env.local` theo [frontend/.env.example](../frontend/.env.example) với `VITE_CHAIN_ID` và `VITE_DEPLOYMENT_ID` từ deployment; chạy PostgreSQL, indexer/projection và API theo [README](../README.md). Chỉ đặt `VITE_DATA_SOURCE=fixture` khi muốn xem dữ liệu offline và khóa giao dịch. Sau khi thay cấu hình, khởi động lại Vite. Các biến `VITE_*` công khai trong browser, chỉ chứa URL, chain ID và địa chỉ công khai.
 
-Khi dùng API, `VITE_DEPLOYMENT_ID`, chain ID và năm địa chỉ Governor/Timelock/Treasury/GOV/BUD phải khớp deployment được API trả. API lỗi sẽ hiện lỗi; giao diện không chuyển ngầm về fixture. Chưa kết nối ví vẫn xem được dữ liệu công khai. Ví sai mạng bị chặn gửi giao dịch.
+Khi dùng API, `VITE_DEPLOYMENT_ID` và chain ID phải khớp deployment được API trả. Để gửi giao dịch, cần thêm RPC và năm địa chỉ Governor/Timelock/Treasury/GOV/BUD từ cùng deployment. API lỗi sẽ hiện lỗi; giao diện không chuyển ngầm về fixture. Chưa kết nối ví vẫn xem được dữ liệu công khai. Ví sai mạng bị chặn gửi giao dịch.
 
 ## Luồng demo local
 

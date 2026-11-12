@@ -2,7 +2,7 @@
 
 React/TypeScript/Vite + viem, tích hợp wallet, form, Governor và Treasury của TV3 với API đọc BE05. Xem [bàn giao giao diện TV3](../docs/ui.md), hợp đồng API tại [docs/api.md](../docs/api.md) và triển khai tại [docs/be06.md](../docs/be06.md).
 
-## Chạy fixture
+## Chạy frontend với API TV2
 
 Cần Node.js 24 và npm. Trên máy mới, chạy trong PowerShell hoặc terminal:
 
@@ -15,7 +15,9 @@ npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --strictPort
 
 Nếu đã clone repo thì chạy hai lệnh `npm` ở trên từ repository root. Mở `http://127.0.0.1:5173` trong Chrome/Edge trên **cùng máy** đang chạy Vite. Mỗi thành viên tự cài, thiết lập và mở khóa tiện ích ví EVM trong đúng profile trình duyệt đó; trên web bấm **Tìm lại ví** rồi **Kết nối ví**. Không chia sẻ seed phrase/private key và không commit `.env.local`.
 
-Chế độ fixture không cần RPC, backend, ví hoặc `.env.local`. Có thể kết nối ví để xem địa chỉ, nhưng mọi giao dịch với fixture đều bị khóa. Kể cả khi còn `.env.local` từ lần demo trước, fixture không yêu cầu chuyển mạng hoặc đọc token từ deployment cũ. Muốn thử GOV, self-delegate, propose/vote/queue/execute hoặc nạp BUD, làm theo phần cấu hình BE05 và deployment thật bên dưới.
+Frontend mặc định gọi API TV2 tại `http://127.0.0.1:3000`. Điền `VITE_CHAIN_ID` và `VITE_DEPLOYMENT_ID` từ deployment thật vào `.env.local`, rồi chạy PostgreSQL, indexer/projection và API. Đọc dữ liệu không cần kết nối ví hay cấu hình RPC. Muốn thử GOV, self-delegate, propose/vote/queue/execute hoặc nạp BUD, làm theo phần cấu hình BE05 và deployment thật bên dưới.
+
+Để xem fixture offline, đặt `VITE_DATA_SOURCE=fixture` trong `.env.local` rồi khởi động lại Vite. Chế độ này khóa mọi giao dịch và bỏ qua cấu hình deployment cũ.
 
 | Đường dẫn | Nội dung |
 | --- | --- |
@@ -38,7 +40,7 @@ Sao chép `.env.example` thành `.env.local` và điền từ manifest thật, h
 
 | Biến | Giá trị |
 | --- | --- |
-| `VITE_API_BASE_URL` | Origin/base trước `/api`, ví dụ `http://127.0.0.1:3000`; code thêm `/api` |
+| `VITE_API_BASE_URL` | Origin/base trước `/api`; mặc định `http://127.0.0.1:3000`, code thêm `/api` |
 | `VITE_DEPLOYMENT_ID` | Chính xác `deployments.deployment_name` mà API trả trong `context.deploymentId`, **không phải** khóa nội bộ `deployment_id` |
 | `VITE_CHAIN_ID` | `manifest.chainId`, số nguyên dương an toàn cho wallet |
 | `VITE_CHAIN_NAME` | Tên hiển thị mạng |
@@ -81,7 +83,7 @@ process.exit(result.status ?? 1);
 NODE
 ```
 
-Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. API được bật nhưng thiếu địa chỉ/chain/RPC hợp lệ sẽ báo lỗi cấu hình, **không âm thầm quay về fixture**. API bị lỗi cũng không thay bằng JSON mẫu.
+Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. Thiếu chain ID hoặc deployment ID sẽ báo lỗi cấu hình; thiếu RPC/địa chỉ contract chỉ khóa giao dịch ví. API bị lỗi cũng không thay bằng JSON mẫu.
 
 ## Snapshot, health và giao dịch
 

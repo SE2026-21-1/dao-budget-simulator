@@ -3,7 +3,8 @@ import governorAbiJson from "../abi/BudgetGovernor.json";
 import treasuryAbiJson from "../abi/Treasury.json";
 import type { Proposal, FixtureContext } from "../data/proposals";
 import { deployment } from "./config";
-import { publicClient, walletClient } from "./wallet";
+import { publicClient } from "./wallet";
+import type { WalletSession } from "./wallet";
 
 export const governorAbi = governorAbiJson as Abi;
 export const treasuryAbi = treasuryAbiJson as Abi;
@@ -19,7 +20,9 @@ export function parseBUD(amount: string): bigint {
 }
 export type TransactionPhase = "idle" | "signing" | "submitted" | "confirming" | "success" | "reverted" | "error";
 
-export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext) {
+export function assertWritable(account: Address | null, chainId: number | null, context?: FixtureContext, snapshotSignal?: AbortSignal) {
+  snapshotSignal?.throwIfAborted();
+  if (context?.sync?.status === "not_ready") throw new Error("API chưa sẵn sàng. Tải dữ liệu canonical mới trước khi thao tác.");
   if (!deployment || !publicClient) throw new Error("Chưa cấu hình deployment thật trong .env.");
   if (!account) throw new Error("Hãy kết nối ví trước.");
   if (chainId !== deployment.chainId) throw new Error("Ví đang ở sai mạng.");
@@ -29,11 +32,11 @@ export function assertWritable(account: Address | null, chainId: number | null, 
   }
 }
 
-export async function sendGovernor(account: Address, functionName: string, args: readonly unknown[]): Promise<Hash> {
+export async function sendGovernor(session: WalletSession, functionName: string, args: readonly unknown[]): Promise<Hash> {
   await verifyDeployment();
   if (!deployment) throw new Error("Thiếu cấu hình deployment.");
   const data = encodeFunctionData({ abi: governorAbi, functionName, args });
-  return (await walletClient(account)).sendTransaction({ account, to: deployment.governor, data });
+  return session.send(deployment.governor, data);
 }
 
 export async function verifyDeployment(): Promise<void> {
@@ -69,12 +72,6 @@ export async function waitForReceipt(hash: Hash, client = publicClient): Promise
   if (changedAction) throw new Error("Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
   if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
   return receipt;
-}
-
-export async function currentProposalState(proposalId: string): Promise<number> {
-  if (!publicClient || !deployment) throw new Error("Thiếu RPC để kiểm tra trạng thái proposal.");
-  const state = await publicClient.readContract({ address: deployment.governor, abi: governorAbi, functionName: "state", args: [BigInt(proposalId)] });
-  return Number(state);
 }
 
 export async function assertCanPropose(account: Address): Promise<void> {

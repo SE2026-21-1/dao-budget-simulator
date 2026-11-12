@@ -1,4 +1,4 @@
-import { useWallet, formatGOV, sendTokenTransaction } from "../chain/wallet";
+import { useWallet, formatGOV, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { deployment } from "../chain/config";
 import { useTransaction } from "../chain/useTransaction";
 import TransactionStatus from "./TransactionStatus";
@@ -20,7 +20,7 @@ export default function WalletPanel() {
         <p className="wallet-meta">Voting power: {formatGOV(wallet.votingPower)}</p>
         <p className="wallet-meta">Delegate: {wallet.delegatee ? `${wallet.delegatee.slice(0, 7)}…${wallet.delegatee.slice(-5)}` : "—"}</p>
         <button type="button" className="button-secondary" disabled={transaction.busy || wallet.delegatee?.toLowerCase() === wallet.account.toLowerCase()}
-          onClick={() => void transaction.run(() => sendTokenTransaction("delegate", [wallet.account!], wallet.account!), wallet.refresh)}>
+          onClick={() => void transaction.run(() => sendTokenTransaction(walletSession(wallet.account!), "delegate", [wallet.account!]), wallet.refresh)}>
           Self-delegate
         </button>
       </>}

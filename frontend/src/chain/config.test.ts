@@ -25,9 +25,9 @@ describe("deployment mode", () => {
     expect(config.configurationError).toBeNull();
   });
 
-  it("uses explicit TV2 API with read-only scope", async () => {
+  it("uses TV2 API by default with read-only scope", async () => {
     vi.stubEnv("VITE_DATA_SOURCE", "");
-    vi.stubEnv("VITE_API_BASE_URL", "http://127.0.0.1:3000");
+    vi.stubEnv("VITE_API_BASE_URL", "");
     vi.stubEnv("VITE_CHAIN_ID", "31337");
     vi.stubEnv("VITE_DEPLOYMENT_ID", "local-demo");
     vi.stubEnv("VITE_RPC_URL", "");

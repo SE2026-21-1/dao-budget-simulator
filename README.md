@@ -351,8 +351,9 @@ checkpoint/resume, K-confirmations, reorg hoặc UI/API E2E.
 
 ## Frontend tích hợp — TV3 và nghiệm thu TV4
 
-Cần Node **24.15.0**. Không đặt `VITE_API_BASE_URL` thì frontend đọc trực tiếp
-fixture canonical `fixtures/api/`, khóa mọi giao dịch; không giữ bản sao JSON.
+Cần Node **24.15.0**. Frontend mặc định gọi API TV2 tại `http://127.0.0.1:3000`;
+cần đặt `VITE_CHAIN_ID` và `VITE_DEPLOYMENT_ID` từ deployment thật để đọc dữ liệu.
+Chỉ dùng fixture khi đặt `VITE_DATA_SOURCE=fixture`; chế độ này khóa giao dịch.
 Đặt API/deployment từ manifest thật để dùng BE05 và ví theo
 [runbook frontend](frontend/README.md#kết-nối-be05-và-deployment-thật).
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { parseAbi, type Address } from "viem";
 import { deployment } from "../chain/config";
-import { useWallet, pastVotingPower, publicClient, formatGOV } from "../chain/wallet";
+import { useWallet, pastVotingPower, publicClient, formatGOV, walletSession } from "../chain/wallet";
 import { assertWritable, governorAbi, sendGovernor, treasuryAbi } from "../chain/transactions";
 import { preflightGovernanceAction, verifyGovernanceOutcome, type GovernanceAction, type GovernanceReads } from "../chain/governanceActions";
 import { useTransaction } from "../chain/useTransaction";
@@ -26,13 +26,13 @@ const reads: GovernanceReads = {
   paid: async (id, blockNumber) => Boolean(await publicClient!.readContract({ address: deployment!.treasury, abi: treasuryAbi, functionName: "paidRequests", args: [id], blockNumber })),
 };
 
-export default function ProposalActions({ proposal, context, onConfirmed }: { proposal: Proposal; context: FixtureContext; onConfirmed: () => void }) {
+export default function ProposalActions({ proposal, context, snapshotSignal, onConfirmed }: { proposal: Proposal; context: FixtureContext; snapshotSignal: AbortSignal; onConfirmed: () => void }) {
   const wallet = useWallet();
   const transaction = useTransaction();
   const [support, setSupport] = useState("1");
   const [eligibility, setEligibility] = useState<{ key: string; voted: boolean | null; power: bigint | null; error: string | null }>();
-  const writable = Boolean(context.dataKind === "chain" && deployment && context.chainId === String(deployment.chainId) && context.deploymentId === deployment.deploymentId && wallet.account && wallet.chainId === deployment.chainId);
-  const readKey = `${wallet.account}:${wallet.chainId}:${proposal.proposalId}:${proposal.snapshot}:${context.asOfBlock}:${transaction.phase === "success" ? transaction.hash : ""}:${writable}`;
+  const writable = Boolean(!snapshotSignal.aborted && context.sync?.status !== "not_ready" && context.dataKind === "chain" && deployment && context.chainId === String(deployment.chainId) && context.deploymentId === deployment.deploymentId && wallet.account && wallet.chainId === deployment.chainId);
+  const readKey = `${wallet.account}:${wallet.chainId}:${proposal.proposalId}:${proposal.snapshot}:${context.asOfBlock}:${context.asOfBlockHash}:${context.snapshotRevision}:${transaction.phase === "success" ? transaction.hash : ""}:${writable}`;
   const hasVoted = eligibility?.key === readKey ? eligibility.voted : null;
   const snapshotPower = eligibility?.key === readKey ? eligibility.power : null;
   const readError = eligibility?.key === readKey ? eligibility.error : null;
@@ -51,17 +51,21 @@ export default function ProposalActions({ proposal, context, onConfirmed }: { pr
   }, [writable, wallet.account, proposal.proposalId, proposal.snapshot, readKey]);
 
   const act = async (kind: GovernanceAction) => {
+    const account = wallet.account!;
+    const selectedSupport = support;
     await transaction.run(async () => {
-      assertWritable(wallet.account, wallet.chainId, context);
-      const action = await preflightGovernanceAction(kind, proposal, wallet.account!, support, deployment!, reads);
-      return sendGovernor(wallet.account!, action.functionName, action.args);
-    }, onConfirmed, (receipt) => verifyGovernanceOutcome(kind, proposal, wallet.account!, support, deployment!, reads, receipt));
+      assertWritable(wallet.account, wallet.chainId, context, snapshotSignal);
+      const session = walletSession(wallet.account!, snapshotSignal);
+      const action = await preflightGovernanceAction(kind, proposal, account, selectedSupport, deployment!, reads);
+      return sendGovernor(session, action.functionName, action.args);
+    }, onConfirmed, (receipt) => verifyGovernanceOutcome(kind, proposal, account, selectedSupport, deployment!, reads, receipt));
   };
 
   return <div className="proposal-actions">
     <h3>Thao tác quản trị</h3>
     <p className="muted">Quyền biểu quyết của ví tại snapshot: {formatGOV(snapshotPower)}{hasVoted === true ? " · Đã bỏ phiếu" : ""}</p>
     {readError && <p className="wallet-error" role="alert">{readError}</p>}
+    {(snapshotSignal.aborted || context.sync?.status === "not_ready") && <p className="wallet-error" role="alert">Snapshot không còn dùng để ký giao dịch hoặc API chưa sẵn sàng. Receipt/hash vẫn được giữ; tải snapshot canonical mới để thao tác tiếp.</p>}
     {!writable && <p className="notice">Cần dữ liệu chain, deployment thật và ví đúng mạng để thao tác. Fixture không thể gửi giao dịch.</p>}
     {proposal.state === "Active" && <div className="action-row">
       <label className="field-label" htmlFor="vote-support">Lựa chọn phiếu</label>

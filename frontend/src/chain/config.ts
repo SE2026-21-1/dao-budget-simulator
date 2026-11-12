@@ -8,7 +8,8 @@ const govToken = import.meta.env.VITE_GOV_TOKEN_ADDRESS?.trim() ?? "";
 const budToken = import.meta.env.VITE_BUD_TOKEN_ADDRESS?.trim() ?? "";
 const timelock = import.meta.env.VITE_TIMELOCK_ADDRESS?.trim() ?? "";
 
-export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$/, "") ?? "";
+export const fixtureMode = import.meta.env.VITE_DATA_SOURCE?.trim() === "fixture";
+export const apiBaseUrl = fixtureMode ? "" : (import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$/, "") || "http://127.0.0.1:3000");
 export const deploymentId = import.meta.env.VITE_DEPLOYMENT_ID?.trim() ?? "";
 export const explorerUrl = import.meta.env.VITE_EXPLORER_URL?.trim().replace(/\/$/, "") ?? "";
 

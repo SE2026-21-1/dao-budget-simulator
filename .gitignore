@@ -35,6 +35,7 @@ replay_pid*
 
 # Node/TypeScript generated files
 /node_modules
+/.local-tv3/
 /dist/
 /coverage/
 /indexer/config/local*.json

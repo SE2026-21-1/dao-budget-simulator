@@ -6,6 +6,7 @@ import { createServer } from 'node:net';
 import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import pg from 'pg';
 assert.equal(process.argv.length,4,'Usage: node scripts/check_qa05_request_api_native.mjs --output <new-directory>');
 assert.equal(process.argv[2],'--output');
 const output=resolve(process.argv[3]);
@@ -23,11 +24,15 @@ try {
   const start=execFileSync(join(bin,'pg_ctl'),['-D',join(dir,'data'),'-l',join(dir,'postgres.log'),'-o',`-h 127.0.0.1 -p ${port} -k ${dir}`,'start'],{encoding:'utf8'});started=true;
   await record('pg-start.txt',start);
   const urls=[];
-  for(let i=0;i<4;i++) {
-    const name=`tv4_tc10_case_${i}`;
-    execFileSync(join(bin,'createdb'),['-h','127.0.0.1','-p',String(port),'-U','tc10_test',name]);
-    urls.push(`postgresql://tc10_test@127.0.0.1:${port}/${name}`);
-  }
+  const admin=new pg.Client({connectionString:`postgresql://tc10_test@127.0.0.1:${port}/postgres`});
+  await admin.connect();
+  try {
+    for(let i=0;i<4;i++) {
+      const name=`tv4_tc10_case_${i}`;
+      await admin.query(`CREATE DATABASE ${name}`);
+      urls.push(`postgresql://tc10_test@127.0.0.1:${port}/${name}`);
+    }
+  } finally { await admin.end(); }
   const args=['--import','tsx','scripts/check_qa05_request_orders.mjs','--output',join(output,'report.json'),'--api'];
   await record('command.json',JSON.stringify({command:[process.execPath,...args],sourceCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cluster:dir,node:process.version,postgres:execFileSync(join(bin,'postgres'),['--version'],{encoding:'utf8'}).trim(),environment:{TV4_TC10_ISOLATED:'1',TV4_TC10_DATABASE_URLS:urls}},null,2)+'\n');
   const env={...process.env,TV4_TC10_ISOLATED:'1',TV4_TC10_DATABASE_URLS:JSON.stringify(urls)};

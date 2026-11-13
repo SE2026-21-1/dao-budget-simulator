@@ -14,10 +14,11 @@ wallet/chain/API. `Dev` (`87738d3`, 06/11/2026) đã có SC06, BE03–BE08
 và freshness nhưng chưa có UI/API consumer của PR #21. CI và peer review
 phải đối chiếu đúng head mới; `main` không phải nhánh tích hợp.
 
-Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL`; lỗi API
-thật không được fallback sang fixture. Recovery đóng publication và trả HTTP
-503, cursor cũ trả 409; quá `reorgWindow` yêu cầu rebuild sang database mới.
-Local Anvil/transport EIP-1193 không chứng minh ví extension hoặc testnet.
+Fixture `fixtures/api/` chỉ đọc khi không đặt `VITE_API_BASE_URL` hoặc chọn
+`VITE_DATA_SOURCE=fixture`; lỗi API thật không được fallback sang fixture.
+Recovery đóng publication và trả HTTP 503, cursor cũ trả 409; quá `reorgWindow`
+yêu cầu rebuild sang database mới. Local Anvil/transport EIP-1193 không chứng minh
+ví extension hoặc testnet.
 Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
 [runbook BE07](docs/be07.md), [BE08 trên Dev](docs/be08.md) và
 [bàn giao TV4](docs/tv4-work-summary.md).
@@ -30,6 +31,14 @@ Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
 | TV2 | RPC/indexer, PostgreSQL, API, recovery, BE08 | [BE07](docs/be07.md), [BE08](docs/be08.md), [API](docs/api.md) |
 | TV3 | React, ví, giao dịch và consumer API | [Frontend](frontend/README.md) |
 | TV4 | Testing, deploy, CI, nghiệm thu | [Test plan](docs/test-plan.md), [checklist](docs/tv4-checklist.md) |
+
+Cập nhật tích hợp TV4 13/11: tiếp nhận chọn lọc Swiss UI/consumer TV3 `15b62b5`,
+giữ WalletSession và snapshot signing leases; xem [quyết định API/fixture](frontend/README.md).
+SC06 hiện dùng [fixture v2 mới, source-bound](fixtures/chain/sc06-v2/README.md);
+v1 và các kết quả lịch sử giữ nguyên attribution.
+[Đường Sepolia riêng](docs/sepolia-deployment.md) chuẩn bị estimate/sign/audit K=2,
+không gỡ guard local Anvil; chưa có signer được cấp phép hoặc testnet PASS.
+Chỉ cập nhật Project nhóm #1 đang mở; Project TV4 #2 đã đóng.
 
 ## Quick start — một deployment local mới
 

@@ -129,6 +129,7 @@ try {
   for (const name of ['tsx', 'typescript', 'pg', 'ethers'])
     report.runtime[name] = JSON.parse(await readFile(new URL(`../node_modules/${name}/package.json`, import.meta.url), 'utf8')).version;
   for (const path of ['scripts/benchmark_api.mjs', 'scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs',
+    'scripts/be08_diagnostics.mjs',
     'scripts/be08_worker_probe.mjs','scripts/be08_rpc_outage.mjs','scripts/be08_measurement.mjs','scripts/be08_postgres_identity.mjs','indexer/worker.ts','indexer/cli.ts','indexer/recovery.ts','indexer/rpc.ts','indexer/storage.ts','indexer/api/server.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'package-lock.json',
     ...['001_initial', '002_be03', '003_be04', '004_be05_api', '005_be07'].map(name => `database/migrations/${name}.sql`)])
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');

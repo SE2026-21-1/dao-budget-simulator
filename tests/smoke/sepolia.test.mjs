@@ -184,7 +184,9 @@ for (const scenario of ['unknownHistoricalHolder', 'omittedRoleLogs', 'missingEx
           if (scenario === 'missingExecutor') await send(addresses.timelock,
             treasury.encodeFunctionData('revokeRole', [id('EXECUTOR_ROLE'), addresses.governor]));
           if (scenario === 'wrongRuntime') {
-            await state.rpc('anvil_setCode', [addresses.treasury, '0x60006000f3']);
+            const runtime = await state.rpc('eth_getCode', [addresses.treasury, 'latest']);
+            const changed = `${runtime.slice(0, -2)}${runtime.endsWith('00') ? '01' : '00'}`;
+            await state.rpc('anvil_setCode', [addresses.treasury, changed]);
             await state.rpc('anvil_mine', ['0x3', '0x1']);
           }
           if (scenario === 'nonceRace') await send(state.accounts.outsider, '0x');

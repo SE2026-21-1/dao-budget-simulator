@@ -69,7 +69,13 @@ try {
   child.on('error', error => { report.forkOutput += error.message; });
   child.stdout.on('data', data => { report.forkOutput += data; });
   child.stderr.on('data', data => { report.forkOutput += data; });
-  const forkRpc = createRpc(`http://127.0.0.1:${port}`);
+  const forkTransport = createRpc(`http://127.0.0.1:${port}`);
+  // Anvil may request unavailable genesis *state* while serving a genesis header.
+  // Fetch that immutable header directly from the same verified public upstream;
+  // every execution/state request still goes to the real pinned local fork.
+  report.forkGenesisHeaderSource = 'verified public upstream header, not fork archive state';
+  const forkRpc = (method, params = []) => method === 'eth_getBlockByNumber' && params[0] === '0x0'
+    ? remote(method, params) : forkTransport(method, params);
   const deadline = Date.now() + 60000;
   while (true) {
     assert.equal(child.exitCode, null, `Fork exited: ${report.forkOutput}`);

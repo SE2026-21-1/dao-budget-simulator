@@ -104,6 +104,10 @@ are recorded, never replaced with fictional remote success. It then starts a
 caller-owned Anvil fork at that exact block/hash, verifies fork identity, impersonates
 only on that disposable fork, sets synthetic gas balances there, and runs the entire
 five-contract deployment, grants, role audits, renounces, delegations and funding.
+The immutable genesis header is fetched directly from the verified public upstream,
+not through Anvil's archive-state loader (PublicNode can serve the genesis header
+while pruning genesis state). All execution/state requests still use the actual
+pinned fork; fork metadata and its H/hash must match the public upstream.
 Each of the 17 transactions has its own current-state estimate and actual receipt.
 Two fork blocks with explicit one-second intervals are mined **after the transaction receipt is mined**, never on Sepolia;
 this avoids racing automining and accidentally producing only one descendant. Fork

@@ -10,8 +10,11 @@ The TV2 bounded reconciliation change and the separate Sepolia audit-helper expo
 changed source bytes locked by SC06 provenance. The old fixture therefore correctly
 failed current-working-source validation; it was not rehashed or relabelled. Immutable
 `../sc06-v1/chain.json` remains historical evidence and the frontend's static historical
-calldata vectors retain their original attribution. Current checker/test defaults use v2.
-Verify historical v1 with its recorded source checkout, not a later working tree.
+calldata vectors retain their original attribution. This v2 run is now archived:
+its worktree had only top-level dependencies initialized, giving different automatic
+remappings/compiler metadata from canonical recursive CI. Current checker/test
+defaults use v3. No v2 JSON/hash/receipt is rewritten; inspect v1/v2 at their recorded
+source/build context, not a later working tree.
 
 This new run: 24 receipts, 42 logs, 27 headers; 14 decoded business logs, 16 ancillary
 unknown topics retained. Canonical H26/hash, two proposals (Executed/Canceled), two votes,

@@ -94,6 +94,10 @@ async function requireEmptyAnvil(rpc, accounts) {
 
 export async function loadProject(root) {
   assert.ok(isAbsolute(root), 'root must be an absolute repository path');
+  const submodules = execFileSync('git', ['-c', 'color.ui=false', 'submodule', 'status', '--recursive'],
+    { cwd: root, encoding: 'utf8' }).trimEnd().split('\n');
+  assert.ok(submodules.length > 0 && submodules.every(line => line.startsWith(' ')),
+    'Run git submodule update --init --recursive: every dependency must match its pinned revision before loading compiler artifacts');
   const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   const artifacts = {};
   const sourceHashes = {};

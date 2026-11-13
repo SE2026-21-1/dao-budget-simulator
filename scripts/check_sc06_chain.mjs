@@ -358,5 +358,5 @@ export async function projectFixture(f) {
     operations: 1, disbursements: 1, totalOut: model.totalOut.toString(), balance: model.balance.toString(), states, ancillary };
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  console.log(await checkFixture(JSON.parse(await readFile(process.argv[2] ?? 'fixtures/chain/sc06-v2/chain.json'))));
+  console.log(await checkFixture(JSON.parse(await readFile(process.argv[2] ?? 'fixtures/chain/sc06-v3/chain.json'))));
 }

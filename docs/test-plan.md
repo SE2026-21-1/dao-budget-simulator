@@ -40,23 +40,27 @@ PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
   409/503 được giữ trong raw. Fault injection giữ hash, khóa Cancel Pending,
   canonical refresh đánh giá lại quyền. Adapter Anvil không là extension,
   không thay mọi keyboard/error/reset variant hoặc receiver/testnet acceptance.
-- **TC10:** bốn NEW branches hashed/zero×P1/P2 trước tại `764ba4e` đều
-  chain→shared sync/project→HTTP API PASS cùng H29/hash/revision riêng,
-  exact winner payout một lần, loser Queued/Ready/ETA, rejected raw logs0.
-  Xem [raw/API evidence](evidence/tv4-20261113-tc10-api.json); không cộng các
-  deployment thành một ledger, không nhận CLI-worker/UI proof từ lượt này.
-- **Full QA05 #16 còn PARTIAL:** per-vector independent receipt/API/UI của
-  TC05/06/08, TC07 tampered-description/reset/UI và các actor/state/history UI
-  còn lại của TC14 chưa được thay bằng unit counts. TC14 15 contract tests và
-  bốn TC10 chain branches trước đã có, không yêu cầu peer làm lại. #17 giữ
-  bounded Done; không có regression mới hoặc claim arbitrary-strategy coverage.
+- **TC10:** lượt API `764ba4e` giữ attribution lịch sử. Lượt NEW `03b8696`
+  bổ sung bốn independent hashed/zero×both-winner receipt/API/UI branches:
+  hai detail+Treasury mỗi branch cùng H/hash/revision, exact winner payout,
+  loserQueued/Ready, bấm Execute thật bị preflight paid-request chặn trước ví.
+  Không có wallet send hay BUD mutation sau UI denial. Shared sync/project,
+  không nhận CLI-worker hoặc extension proof từ các lượt này.
+- **QA05 reachable:** `3d539f1` chạy184cases/958scenario receipts/422live UI
+  checkpoints/13text vectors PASS; TC05/06/07/08/14 per-vector reset/receipt/
+  API/UI gaps nêu ngày11/11 đã được bổ sung. [Source/raw/failures/limits](evidence/tv4-20261113-qa05-live.md).
+  Full #7/#16 vẫn PARTIAL:10genuine Ready(single) preconditions không thể có
+  khi Governor chỉ scheduleBatch và là proposer duy nhất; chờ TV1 chấp nhận
+  N/A hoặc chỉ ra setup production-reachable hợp lệ. Không impersonate/grant
+  role để lấy PASS; role-first single-Unset denial không thay Ready proof.
+  Không yêu cầu peer chạy lại scope cũ. #17 bounded Done giữ nguyên.
 - **Receiver #36/#40/#42:** tiếp nhận scope TV3 đã báo, chỉ còn redacted raw
   compare/normalized exports/manifest/verify, API restart/checkpoint và
   shutdown/owned PID/ports để TV4 tự đối chiếu. Không yêu cầu repeat smoke/rebuild
   đã đủ evidence; archived H24 không chứng minh endpoint máy nhận còn sống.
 - **Testnet #20:** [đường Sepolia riêng](sepolia-deployment.md), 11155111/
-  PublicNode/K2, giữ local Anvil31337 guard; 28 bootstrap/Sepolia tests PASS
-  tại `7a0a94f`. Chưa signer owner/public map/gas/permission, chưa TV1 review
+  PublicNode/K2, giữ local Anvil31337 guard; canonical28bootstrap/Sepolia tests
+  và actual17tx state-fork PASS tại `7fb2958`. Chưa signer owner/public map/gas/permission, chưa TV1 review
   delta remote hoặc Executed+Defeated receipts chờ thời gian thật: BLOCKED.
   Không yêu cầu làm lại TV1 local SC/SC06 hoặc TV2 recovery review cũ.
 

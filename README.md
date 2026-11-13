@@ -40,6 +40,11 @@ v1/v2 và các kết quả lịch sử giữ nguyên attribution. Loader chặn 
 [Đường Sepolia riêng](docs/sepolia-deployment.md) chuẩn bị estimate/sign/audit K=2,
 không gỡ guard local Anvil; chưa có signer được cấp phép hoặc testnet PASS.
 Chỉ cập nhật Project nhóm #1 đang mở; Project TV4 #2 đã đóng.
+[QA05 live mới](docs/evidence/tv4-20261113-qa05-live.md):184 independent cases/
+422 browser checkpoints tại `3d539f1`, rồi bốn TC10 winner/loser/Treasury/preflight
+UI branches tại `03b8696`; không gán kết quả cho SHA khác. Ten Ready(single)
+preconditions không reachable trong batch-only role graph, chờ TV1 xác nhận N/A;
+receiver/extension/testnet gates vẫn riêng. [Tổng evidence](docs/evidence/tv4-20261113-acceptance.md).
 
 ## Quick start — một deployment local mới
 
@@ -135,10 +140,10 @@ như các suite BE04/BE07/BE08; không cần Unix IPC server của CLI `tsx --te
 | Wallet/UI↔API | [PR #21](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21) còn open; [nhánh TV3](https://github.com/SE2026-21-1/dao-budget-simulator/tree/feature/tv3-frontend) live suite **PASS 1/1, 0 SKIP** trên Anvil/PG/API H79 native PR #21 sau sync RPC thật. Chromium 1366/390 đọc dữ liệu; **lượt local thứ hai** browser EIP-1193 adapter→Anvil receipt `0xb4fa5ad3…aba82b` H82→sync/project→API 200 H82/hash canonical→UI hiển thị amount BigInt và description chính xác; [raw/ảnh](docs/evidence/tv4-20261106-wallet-raw.tar.gz) | #36/#40/#41 vẫn chờ ví extension và service/manifest cho peer; EIP adapter Anvil unlock không phải xác nhận ký extension, endpoint tạm đã teardown |
 | SC/CI/testnet | Candidate `105f2ba` (source kiểm chứng `d8f8743`): SC06 canonical/mutation **32/32** theo source `9ad0aea`; TV4 QA05 local **202/202 Foundry, 21/21 attack** tại `b7a74ce`; [evidence peer](docs/evidence/tv4-20261111-peer-acceptance.json), [delta QA05](docs/evidence/tv4-20261111-qa05-variants.json). [CI source d8f8743 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42958494472) success, khác với số đo local. | SC07 technical PASS; SC05 local audit/roles PASS. Full QA05 PARTIAL; testnet #20, extension wallet, máy nhận #42 và release #44 vẫn chưa nghiệm thu. |
 
-GitHub [Projects của nhóm](https://github.com/orgs/SE2026-21-1/projects)
-hiển thị 0 project công khai khi chưa đăng nhập; chưa thể xác nhận hoặc sửa
-board riêng tư bằng SSH Git. Danh sách status/priority/dependency **đề xuất**
-trong [checklist](docs/tv4-checklist.md), không nhận là đã cập nhật Project.
+Mốc chưa đăng nhập trước đây chỉ thấy0 public Projects, nên checklist từng ghi
+status đề xuất. Ngày13/11 đã xác minh `dung0611` có quyền và cập nhật
+[Project nhóm#1](https://github.com/orgs/SE2026-21-1/projects/1) đang mở;
+ProjectTV4#2 đã đóng và không bị sửa. Không dùng SSH Git làm bằng chứng quyền Projects.
 Bảng backend/UI phía trên giữ evidence 06/11 theo SHA/môi trường gốc. Kết quả SC hiện hành
 đối chiếu thêm [peer 11/11](docs/evidence/tv4-20261111-peer-acceptance.json) và
 [QA05 delta 11/11](docs/evidence/tv4-20261111-qa05-variants.json); không chuyển số đo giữa các lượt chạy.

@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-11-13T10:44:03.273Z",
+  "run": "20261113T103730Z-f702695e6057",
+  "source": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+  "deployment": "be09-local-20261113T103730Z-18fa22dfa21a",
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "be09-local-20261113T103730Z-18fa22dfa21a",
+    "asOfBlock": "24",
+    "asOfBlockHash": "0xf36044aa2fabdc84883d9fa472662aa7ba09f08b1b0065e0a3b83829fd03e9e8",
+    "asOfTimestamp": "1800000486",
+    "snapshotRevision": "a718a4ca-0451-4db9-adc1-366d150aae10",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "26",
+      "confirmedBlock": "24",
+      "indexedBlock": "24",
+      "publicationBlock": "24",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-11-13T10:44:02.755Z",
+      "lastRpcCheckAt": "2026-11-13T10:44:02.757+00:00",
+      "recoveryStatus": "ready"
+    }
+  },
+  "health": {
+    "status": "degraded",
+    "database": "up",
+    "indexer": "synced",
+    "publication": "ready",
+    "recoveryStatus": "ready",
+    "projectionStatus": "current",
+    "publicationBlock": "24",
+    "projectionLagBlocks": "0",
+    "rawDecodeComplete": false,
+    "rawDecodeIssues": {
+      "unknownTopics": 16,
+      "decodeErrors": 0
+    },
+    "ignoredAncillaryEvents": 16
+  },
+  "endpoints": [
+    {
+      "path": "/api/health",
+      "http": 200
+    },
+    {
+      "path": "/api/summary",
+      "http": 200
+    },
+    {
+      "path": "/api/proposals",
+      "http": 200
+    },
+    {
+      "path": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+      "http": 200
+    },
+    {
+      "path": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+      "http": 200
+    },
+    {
+      "path": "/api/treasury/transfers",
+      "http": 200
+    }
+  ],
+  "chainId": "31337",
+  "canonicalHash": "0xf36044aa2fabdc84883d9fa472662aa7ba09f08b1b0065e0a3b83829fd03e9e8",
+  "contractCode": {
+    "GOV": true,
+    "BUD": true,
+    "Treasury": true,
+    "Timelock": true,
+    "Governor": true
+  },
+  "contractChecks": {
+    "state": "7",
+    "votes": [
+      "0",
+      "700000000000000000000",
+      "0"
+    ],
+    "paid": true,
+    "treasuryBalance": "9000000000000000000000"
+  },
+  "frontendManifestMatch": true,
+  "cors": {
+    "status": 204,
+    "origin": "http://127.0.0.1:5173"
+  }
+}

@@ -94,6 +94,18 @@ Queued/Ready/ETA. The report retains raw responses, receipts, manifest and sourc
 hashes. Browser/UI, extension wallet and full QA05 acceptance remain outside
 this mode; only an actual successful campaign report establishes API PASS.
 
+Observed NEW run 13/11/2026 at source
+`764ba4e4eb518fd803ea28d4bbb779f06cb7eba6`: **4/4 API PASS**, exit0,
+after the parent performance campaign completed. [Manifest/raw linkage](evidence/tv4-20261113-tc10-api.json)
+and [full raw archive](evidence/tv4-20261113-tc10-api-raw.tar.gz)
+retain separate H29/hash/revision for all four deployments. Each database has
+2 proposals, 4 votes, 1 disbursement, 0 raw events for the rejected transaction;
+one outgoing API Transfer links only the winner. Treasury ends 9.000/8.000 BUD
+according to execution order. Both detail/vote endpoints and treasury/summary
+share that branch's publication context. Earlier receipt-only history remains
+unchanged. This closes the four NEW rows' API gap only: UI and full QA05 are
+still **PARTIAL**, and shared sync/project is not CLI-worker evidence.
+
 ### Requirement → TC/INV → test → evidence → SHA → kết luận hiện hành
 
 Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. PASS chỉ phạm vi ghi rõ; PARTIAL chưa đủ toàn requirement; BLOCKED thiếu môi trường/handoff. [Evidence10/11](evidence/tv4-20261110-project2.json) và [peer11/11](evidence/tv4-20261111-peer-acceptance.json) giữ SHA nguồn cũ, không tính là lượt chạy mới.

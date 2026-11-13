@@ -1,0 +1,1493 @@
+{
+  "date": "2026-11-13",
+  "sourceCommit": "764ba4e4eb518fd803ea28d4bbb779f06cb7eba6",
+  "baseCommit": "b7ff654",
+  "status": "PASS",
+  "scope": "NEW TC10 four independent empty-chain deployments and fresh PostgreSQL databases; raw receipts -> shared sync/project -> actual HTTP API at H/hash/revision. No CLI-worker, UI, extension wallet, testnet or full QA05 acceptance.",
+  "command": "PATH=/home/ptdung/.nvm/versions/node/v24.15.0/bin:/home/ptdung/.foundry/bin:/usr/bin:/bin LD_LIBRARY_PATH=/tmp/tv4-icu60-20261113/usr/lib/x86_64-linux-gnu TV4_TC10_PG_BIN=/tmp/tv4-pg18-20261113/node_modules/@embedded-postgres/linux-x64/native/bin node scripts/check_qa05_request_api_native.mjs --output /tmp/tv4-tc10-api-20261113-run3",
+  "exit": 0,
+  "stdout": "TC10 four independent request/order receipt variants PASS\n",
+  "stderr": "",
+  "rawArchive": "tv4-20261113-tc10-api-raw.tar.gz",
+  "rawSha256": "3343ceeaba9620087ecdbe0cbf3716612418e483e88f1ffa23b6f7a133ea0d82",
+  "historicalEvidence": "tv4-20261111-qa05-variants.json preserved unchanged; already sufficient receipt-level proof, not retroactively assigned API context",
+  "attempts": [
+    {
+      "run": 1,
+      "source": "97760ea",
+      "exit": 1,
+      "error": "embedded PG distribution has no createdb executable; owned cluster stopped; fixed driver to use actual pg CREATE DATABASE"
+    },
+    {
+      "run": 2,
+      "source": "764ba4e4eb518fd803ea28d4bbb779f06cb7eba6",
+      "exit": 1,
+      "error": "new worktree lacked pinned OpenZeppelin submodule checkout; provisioned read-only source links to release checkout"
+    },
+    {
+      "run": 3,
+      "source": "764ba4e4eb518fd803ea28d4bbb779f06cb7eba6",
+      "exit": 0
+    }
+  ],
+  "prerequisites": "node_modules, out and pinned lib submodule files linked read-only from b7ff654 release worktree; parent performance-complete permission received before execution",
+  "cases": [
+    {
+      "requestKind": "hashed",
+      "winner": 1,
+      "head": {
+        "number": "29",
+        "hash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+        "timestamp": "1800000491"
+      },
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "tc10-hashed-p1",
+        "asOfBlock": "29",
+        "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+        "asOfTimestamp": "1800000491",
+        "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "31",
+          "confirmedBlock": "29",
+          "indexedBlock": "29",
+          "publicationBlock": "29",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+          "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "counts": {
+        "proposals": 2,
+        "votes": 4,
+        "disbursements": 1,
+        "rejected_raw_events": 0
+      },
+      "balances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "outgoing": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tc10-hashed-p1",
+          "asOfBlock": "29",
+          "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+          "asOfTimestamp": "1800000491",
+          "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "31",
+            "confirmedBlock": "29",
+            "indexedBlock": "29",
+            "publicationBlock": "29",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+            "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "1000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0xae3698c44c82e0ada5ee7a5bbc0c2ee5aba5a905b72ed38cad433f453e02ab5b",
+            "direction": "out",
+            "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+            "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+            "blockNumber": "28",
+            "transactionHash": "0x64fa8eca6397cf5e32a1948dae4e4ff8dfd2afa38252ef2a1341b49ccee9273f",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      },
+      "details": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+              "asOfTimestamp": "1800000491",
+              "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Executed",
+              "title": "TC10 independent P1",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "1000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x5a84edb9707a5b0eb65ccd74704d68eb8e7ac0f978dac4dcffc00adf2fac5283",
+                "blockNumber": "20",
+                "transactionHash": "0xc88c446308faec8091766a24a9f639ba3d18d8f80463793aeac0452da3ba0e49",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000369",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000069",
+              "calldatas": [
+                "0x6664ac91c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa5800000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+              ],
+              "operation": {
+                "eta": "1800000490",
+                "salt": "0x4cd1c7f9a6a6bf6c3acbdaf679aa573958f3893863e139004b8b814eda87acb4",
+                "status": "Done",
+                "queuedAt": "1800000370",
+                "operationId": "0x42402bc2578357f7964157a7b5fa70550d74e8c43a2cb2407baf3665405f5c0f",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+              "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P1\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0x5785db7b2269edb4cef2abd0d4d990cedbaeba245823b327185d3c0001327b0e",
+                "created": "0xc88c446308faec8091766a24a9f639ba3d18d8f80463793aeac0452da3ba0e49",
+                "canceled": null,
+                "executed": "0x64fa8eca6397cf5e32a1948dae4e4ff8dfd2afa38252ef2a1341b49ccee9273f"
+              },
+              "descriptionHash": "0x6bd766884a10316c02fc57b6a4b7445a3923424563e139004b8b814eda87acb4"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+              "asOfTimestamp": "1800000491",
+              "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Queued",
+              "title": "TC10 independent P2",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "2000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x4f0e85f46efbd870302e15499df7c825551acdea0031ba8fec43c8cd7b7669dc",
+                "blockNumber": "21",
+                "transactionHash": "0xbaea904838a06326c3e95ed6e575258b0c24bfb01eb557320b20d81cae716167",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000369",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000069",
+              "calldatas": [
+                "0x6664ac91c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58000000000000000000000000a0ee7a142d267c1f36714e4a8f75612f20a7972000000000000000000000000000000000000000000000006c6b935b8bbd400000"
+              ],
+              "operation": {
+                "eta": "1800000490",
+                "salt": "0x39493a19f958258e2ec2f3c0c36e69196886ef3564ace3f3a67102a8ab067108",
+                "status": "Ready",
+                "queuedAt": "1800000370",
+                "operationId": "0xfec911af65b4074ba53ea458c67e7c817413e66aed721d49e394191beefa1430",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+              "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+              "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P2\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xc561c7927d0538279c14b22d7bb869a35293aa99894b7f750ea3713c0a6f5123",
+                "created": "0xbaea904838a06326c3e95ed6e575258b0c24bfb01eb557320b20d81cae716167",
+                "canceled": null,
+                "executed": null
+              },
+              "descriptionHash": "0x1e4f9b6815eeab8e16f57e801e737a7a0956244864ace3f3a67102a8ab067108"
+            }
+          }
+        }
+      ],
+      "votes": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+              "asOfTimestamp": "1800000491",
+              "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0xdb120a9c75752d72349428c853f3eb967ed4bcd5e48d541a50df538980a75e54",
+                "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+                "blockNumber": "23",
+                "transactionHash": "0x361ab08e1b9ca89bf09c690936be65d8717c26bf20f94f03c71c10077e36b1c4",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0xdcab9ad1fc4d167d605a3fd2f9d32a16b245cc9b6ff645cf09a978bd5b3e6ca3",
+                "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+                "blockNumber": "22",
+                "transactionHash": "0xb9cbe51053493cebe1696fbc131d088a620462be379daaf7ffe598bd8a3f472f",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0xe01c9ade9f17e3d821105fde35d2e0095cc19ffdffd2b869638ef70230b07cda",
+              "asOfTimestamp": "1800000491",
+              "snapshotRevision": "8baa2c90-d677-4c80-aedc-02ae60938efc",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:47.410Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:47.413+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0xb7c55d6fb3b5ace3cc5000365e7859fb75d878c9d8db3c102ca3ae99f0a19cc9",
+                "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+                "blockNumber": "25",
+                "transactionHash": "0x99f4af2df86e9fe13f6e789ab0053dd776d20d2713dcaddcacd9203b0a828a06",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x0ee323a1d7d0263f12bdc391bfeecdef3a87376664176d95f91ac7398000645f",
+                "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+                "blockNumber": "24",
+                "transactionHash": "0xf741e48de1964e2d4d7672ded384eb531a3354fbf0eaae97c15aef3ac3ee2920",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "requestKind": "hashed",
+      "winner": 2,
+      "head": {
+        "number": "29",
+        "hash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+        "timestamp": "1800000504"
+      },
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "tc10-hashed-p2",
+        "asOfBlock": "29",
+        "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+        "asOfTimestamp": "1800000504",
+        "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "31",
+          "confirmedBlock": "29",
+          "indexedBlock": "29",
+          "publicationBlock": "29",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+          "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "counts": {
+        "proposals": 2,
+        "votes": 4,
+        "disbursements": 1,
+        "rejected_raw_events": 0
+      },
+      "balances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "outgoing": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tc10-hashed-p2",
+          "asOfBlock": "29",
+          "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+          "asOfTimestamp": "1800000504",
+          "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "31",
+            "confirmedBlock": "29",
+            "indexedBlock": "29",
+            "publicationBlock": "29",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+            "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "2000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0xd0787db325eef515368af9a1c10560b403ceff82364aaceea5ff00fdabb79269",
+            "direction": "out",
+            "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+            "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+            "blockNumber": "28",
+            "transactionHash": "0xc90dc0623bf342c60eb0340dffa398a5214073549c1d84d55b30a4e37f26bc3b",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      },
+      "details": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+              "asOfTimestamp": "1800000504",
+              "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Queued",
+              "title": "TC10 independent P1",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "1000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x552972c9b7b0ed051b957ec46ace5498943b261a897179e2850e4ad0a1077aba",
+                "blockNumber": "20",
+                "transactionHash": "0xc88c446308faec8091766a24a9f639ba3d18d8f80463793aeac0452da3ba0e49",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000382",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000082",
+              "calldatas": [
+                "0x6664ac91c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa5800000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+              ],
+              "operation": {
+                "eta": "1800000503",
+                "salt": "0x4cd1c7f9a6a6bf6c3acbdaf679aa573958f3893863e139004b8b814eda87acb4",
+                "status": "Ready",
+                "queuedAt": "1800000383",
+                "operationId": "0x42402bc2578357f7964157a7b5fa70550d74e8c43a2cb2407baf3665405f5c0f",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+              "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P1\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0x5785db7b2269edb4cef2abd0d4d990cedbaeba245823b327185d3c0001327b0e",
+                "created": "0xc88c446308faec8091766a24a9f639ba3d18d8f80463793aeac0452da3ba0e49",
+                "canceled": null,
+                "executed": null
+              },
+              "descriptionHash": "0x6bd766884a10316c02fc57b6a4b7445a3923424563e139004b8b814eda87acb4"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+              "asOfTimestamp": "1800000504",
+              "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Executed",
+              "title": "TC10 independent P2",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "2000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x3f177a108825995e0c23b7c185aaaefb850988332bcbc199fed555cdcd3d924d",
+                "blockNumber": "21",
+                "transactionHash": "0xbaea904838a06326c3e95ed6e575258b0c24bfb01eb557320b20d81cae716167",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000382",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000082",
+              "calldatas": [
+                "0x6664ac91c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58000000000000000000000000a0ee7a142d267c1f36714e4a8f75612f20a7972000000000000000000000000000000000000000000000006c6b935b8bbd400000"
+              ],
+              "operation": {
+                "eta": "1800000503",
+                "salt": "0x39493a19f958258e2ec2f3c0c36e69196886ef3564ace3f3a67102a8ab067108",
+                "status": "Done",
+                "queuedAt": "1800000383",
+                "operationId": "0xfec911af65b4074ba53ea458c67e7c817413e66aed721d49e394191beefa1430",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+              "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+              "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P2\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xc561c7927d0538279c14b22d7bb869a35293aa99894b7f750ea3713c0a6f5123",
+                "created": "0xbaea904838a06326c3e95ed6e575258b0c24bfb01eb557320b20d81cae716167",
+                "canceled": null,
+                "executed": "0xc90dc0623bf342c60eb0340dffa398a5214073549c1d84d55b30a4e37f26bc3b"
+              },
+              "descriptionHash": "0x1e4f9b6815eeab8e16f57e801e737a7a0956244864ace3f3a67102a8ab067108"
+            }
+          }
+        }
+      ],
+      "votes": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+              "asOfTimestamp": "1800000504",
+              "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x8268dc9c6dc44ccf1ffa11da1bae2a2493698cd0919cd78c8e5864c78c4f1383",
+                "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+                "blockNumber": "23",
+                "transactionHash": "0x361ab08e1b9ca89bf09c690936be65d8717c26bf20f94f03c71c10077e36b1c4",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x9ab5d00a9e21c390f568c04abd13cd1bfc46b13ebedb8dc8d321c1f6dbbc4aae",
+                "proposalId": "99603905351914287904115452463357488718118412618690176394369735532135798947785",
+                "blockNumber": "22",
+                "transactionHash": "0xb9cbe51053493cebe1696fbc131d088a620462be379daaf7ffe598bd8a3f472f",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-hashed-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x54870d79e9d2a9b4a6dcccaa8280b2566dd162727bbfd55b0d2aac8ace6e95e9",
+              "asOfTimestamp": "1800000504",
+              "snapshotRevision": "f7f77df9-c2f5-4baf-ab20-790c07aeb540",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:03:58.855Z",
+                "lastRpcCheckAt": "2026-11-13T12:03:58.856+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x9a1ae7ecb3314e33d016419f51e9091096ff39e7653ce5d147d3caed823cd19f",
+                "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+                "blockNumber": "25",
+                "transactionHash": "0x99f4af2df86e9fe13f6e789ab0053dd776d20d2713dcaddcacd9203b0a828a06",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0xce3cea7f5ef1cb631dfac3352815ac9b38fdba53c1f641e0b7acd77be9a8bef1",
+                "proposalId": "103272044689338008236653072459415590842549731900057413260505310611492892059292",
+                "blockNumber": "24",
+                "transactionHash": "0xf741e48de1964e2d4d7672ded384eb531a3354fbf0eaae97c15aef3ac3ee2920",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "requestKind": "zero",
+      "winner": 1,
+      "head": {
+        "number": "29",
+        "hash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+        "timestamp": "1800000511"
+      },
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "tc10-zero-p1",
+        "asOfBlock": "29",
+        "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+        "asOfTimestamp": "1800000511",
+        "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "31",
+          "confirmedBlock": "29",
+          "indexedBlock": "29",
+          "publicationBlock": "29",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+          "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "counts": {
+        "proposals": 2,
+        "votes": 4,
+        "disbursements": 1,
+        "rejected_raw_events": 0
+      },
+      "balances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "outgoing": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tc10-zero-p1",
+          "asOfBlock": "29",
+          "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+          "asOfTimestamp": "1800000511",
+          "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "31",
+            "confirmedBlock": "29",
+            "indexedBlock": "29",
+            "publicationBlock": "29",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+            "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "1000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0xb88a1c9b0df2d2b4fa438355bd4fc7976842d6c3df0ecbcf3bcb0c1a167334cf",
+            "direction": "out",
+            "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+            "blockNumber": "28",
+            "transactionHash": "0x3b44a96bc09ddfa78b9f493bf834970dea59b35be1237f1e6a3cf1c75532b4e5",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      },
+      "details": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+              "asOfTimestamp": "1800000511",
+              "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Executed",
+              "title": "TC10 independent P1",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "1000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0xf42a72c1ba90784b90e935175b0ecc5407dee2d81de85a078c1d0cbd1b967cbc",
+                "blockNumber": "20",
+                "transactionHash": "0xa4a53d134b32f11a6d6b0415c89f8c5d3aa2751ce886e9c6ad4338aee973882d",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000388",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000088",
+              "calldatas": [
+                "0x6664ac91000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+              ],
+              "operation": {
+                "eta": "1800000510",
+                "salt": "0x4cd1c7f9a6a6bf6c3acbdaf679aa573958f3893863e139004b8b814eda87acb4",
+                "status": "Done",
+                "queuedAt": "1800000390",
+                "operationId": "0xc4e15829d1e7b1218c670c8fef6b8337be0a2759ab56bb7ca4a7fbc90dd7018f",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P1\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xb09aefc88a424827498068ba814ab8574defe97fafd85241412fdd9528529099",
+                "created": "0xa4a53d134b32f11a6d6b0415c89f8c5d3aa2751ce886e9c6ad4338aee973882d",
+                "canceled": null,
+                "executed": "0x3b44a96bc09ddfa78b9f493bf834970dea59b35be1237f1e6a3cf1c75532b4e5"
+              },
+              "descriptionHash": "0x6bd766884a10316c02fc57b6a4b7445a3923424563e139004b8b814eda87acb4"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+              "asOfTimestamp": "1800000511",
+              "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Queued",
+              "title": "TC10 independent P2",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "2000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x2a250d207705ed9e4e3e9b060d3d6989cd171495b37b1ac8cfae06c8f0af2410",
+                "blockNumber": "21",
+                "transactionHash": "0xc2d705801ae43f6b902efbea9e454b63690cc4a1147538f0c654e317bbfe6480",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000389",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000089",
+              "calldatas": [
+                "0x6664ac910000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0ee7a142d267c1f36714e4a8f75612f20a7972000000000000000000000000000000000000000000000006c6b935b8bbd400000"
+              ],
+              "operation": {
+                "eta": "1800000510",
+                "salt": "0x39493a19f958258e2ec2f3c0c36e69196886ef3564ace3f3a67102a8ab067108",
+                "status": "Ready",
+                "queuedAt": "1800000390",
+                "operationId": "0x46326fcbb52d388443fc679f3dccd8ef4c4987b4de87369c05094220973d32ec",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+              "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P2\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xc6e18dfd40d08c7852e668f68081005571be8afbeb4757d2cd55a9a03ed0cfbf",
+                "created": "0xc2d705801ae43f6b902efbea9e454b63690cc4a1147538f0c654e317bbfe6480",
+                "canceled": null,
+                "executed": null
+              },
+              "descriptionHash": "0x1e4f9b6815eeab8e16f57e801e737a7a0956244864ace3f3a67102a8ab067108"
+            }
+          }
+        }
+      ],
+      "votes": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+              "asOfTimestamp": "1800000511",
+              "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x4b143b5f5798401d07f4e0a228fe11231d674e463a80af8506e5117b98e69f98",
+                "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+                "blockNumber": "23",
+                "transactionHash": "0x82873ff014cf4593846aa74757d513fb7197852428b20f6e16a07b17b7751d65",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x019664ba35cb277d66c8d3add3947258e8642da969a4c85449218cf79c18389b",
+                "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+                "blockNumber": "22",
+                "transactionHash": "0x3984d2ec75b81504da0276ee2f8da5d9d31340819e10b33026c5c356176dc13d",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p1",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x0db2570ceff544f684cbac0c187d7de5ab99c397914d62f97252cd440dfaf063",
+              "asOfTimestamp": "1800000511",
+              "snapshotRevision": "3d516d91-7757-4da1-b531-1df005090351",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:06.346Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:06.347+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x301fe115f7b0a9d9f7a8983dd0dc294836242c1288c943eecabe743297da0a2a",
+                "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+                "blockNumber": "25",
+                "transactionHash": "0xcc57ba6551c300f9dd5fb0a676cf75db4a847749d7e1de098ee9d31dc5876fd3",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x223fe938309e87205cd601abccb9656689c87a7cbb60bf7a5234aec0904dedc9",
+                "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+                "blockNumber": "24",
+                "transactionHash": "0xedba532e648ebaf06bb6ff403c1f18fab65740cbc5233746f97d33abfb9fc257",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "requestKind": "zero",
+      "winner": 2,
+      "head": {
+        "number": "29",
+        "hash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+        "timestamp": "1800000518"
+      },
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "tc10-zero-p2",
+        "asOfBlock": "29",
+        "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+        "asOfTimestamp": "1800000518",
+        "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+        "dataKind": "chain",
+        "sync": {
+          "status": "synced",
+          "headBlock": "31",
+          "confirmedBlock": "29",
+          "indexedBlock": "29",
+          "publicationBlock": "29",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+          "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+          "recoveryStatus": "ready"
+        }
+      },
+      "counts": {
+        "proposals": 2,
+        "votes": 4,
+        "disbursements": 1,
+        "rejected_raw_events": 0
+      },
+      "balances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "outgoing": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tc10-zero-p2",
+          "asOfBlock": "29",
+          "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+          "asOfTimestamp": "1800000518",
+          "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "31",
+            "confirmedBlock": "29",
+            "indexedBlock": "29",
+            "publicationBlock": "29",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+            "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "2000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x2cd614dd22c7acb89da28b6f8298e8bd0ef85857876f8dbfe72c86cc058fdb70",
+            "direction": "out",
+            "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+            "blockNumber": "28",
+            "transactionHash": "0x68a96286e8214348d8ea8d05747e745b601f899a4fe7329b5077b11ca31c5318",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      },
+      "details": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+              "asOfTimestamp": "1800000518",
+              "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Queued",
+              "title": "TC10 independent P1",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "1000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x6c984e9568ff5ea9a5c50ab31293a32e0c7aca23b6ef2fee608b33d8a961f154",
+                "blockNumber": "20",
+                "transactionHash": "0xa4a53d134b32f11a6d6b0415c89f8c5d3aa2751ce886e9c6ad4338aee973882d",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000396",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000096",
+              "calldatas": [
+                "0x6664ac91000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d995500000000000000000000000000000000000000000000003635c9adc5dea00000"
+              ],
+              "operation": {
+                "eta": "1800000517",
+                "salt": "0x4cd1c7f9a6a6bf6c3acbdaf679aa573958f3893863e139004b8b814eda87acb4",
+                "status": "Ready",
+                "queuedAt": "1800000397",
+                "operationId": "0xc4e15829d1e7b1218c670c8fef6b8337be0a2759ab56bb7ca4a7fbc90dd7018f",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P1\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xb09aefc88a424827498068ba814ab8574defe97fafd85241412fdd9528529099",
+                "created": "0xa4a53d134b32f11a6d6b0415c89f8c5d3aa2751ce886e9c6ad4338aee973882d",
+                "canceled": null,
+                "executed": null
+              },
+              "descriptionHash": "0x6bd766884a10316c02fc57b6a4b7445a3923424563e139004b8b814eda87acb4"
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+              "asOfTimestamp": "1800000518",
+              "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": {
+              "body": "Distinct proposal, shared request, no budget reservation.",
+              "state": "Executed",
+              "title": "TC10 independent P2",
+              "votes": {
+                "for": "700000000000000000000",
+                "quorum": "200000000000000000000",
+                "abstain": "0",
+                "against": "0"
+              },
+              "amount": "2000000000000000000000",
+              "values": [
+                "0"
+              ],
+              "created": {
+                "logIndex": "0",
+                "blockHash": "0x4001b1efb001e814d2d697688feaadd67dc10c03edc849df3cd54381ef201aec",
+                "blockNumber": "21",
+                "transactionHash": "0xc2d705801ae43f6b902efbea9e454b63690cc4a1147538f0c654e317bbfe6480",
+                "transactionIndex": "0"
+              },
+              "targets": [
+                "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+              ],
+              "deadline": "1800000396",
+              "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "snapshot": "1800000096",
+              "calldatas": [
+                "0x6664ac910000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0ee7a142d267c1f36714e4a8f75612f20a7972000000000000000000000000000000000000000000000006c6b935b8bbd400000"
+              ],
+              "operation": {
+                "eta": "1800000517",
+                "salt": "0x39493a19f958258e2ec2f3c0c36e69196886ef3564ace3f3a67102a8ab067108",
+                "status": "Done",
+                "queuedAt": "1800000397",
+                "operationId": "0x46326fcbb52d388443fc679f3dccd8ef4c4987b4de87369c05094220973d32ec",
+                "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+              "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+              "description": "{\"version\":1,\"title\":\"TC10 independent P2\",\"body\":\"Distinct proposal, shared request, no budget reservation.\"}",
+              "stateSource": "contract",
+              "transactions": {
+                "queued": "0xc6e18dfd40d08c7852e668f68081005571be8afbeb4757d2cd55a9a03ed0cfbf",
+                "created": "0xc2d705801ae43f6b902efbea9e454b63690cc4a1147538f0c654e317bbfe6480",
+                "canceled": null,
+                "executed": "0x68a96286e8214348d8ea8d05747e745b601f899a4fe7329b5077b11ca31c5318"
+              },
+              "descriptionHash": "0x1e4f9b6815eeab8e16f57e801e737a7a0956244864ace3f3a67102a8ab067108"
+            }
+          }
+        }
+      ],
+      "votes": [
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+              "asOfTimestamp": "1800000518",
+              "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x7d2e3741d714d8f1cd800c547363b0e5aa3abd1fe6f16332f036fe3665063c20",
+                "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+                "blockNumber": "23",
+                "transactionHash": "0x82873ff014cf4593846aa74757d513fb7197852428b20f6e16a07b17b7751d65",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x5c3c541a089a3bbbde84c09a31882508e85fc5bf6c5fbc7c11b1c81c013c5d9d",
+                "proposalId": "8230482124174799385025458908365930630335920996858569490079309596881521641486",
+                "blockNumber": "22",
+                "transactionHash": "0x3984d2ec75b81504da0276ee2f8da5d9d31340819e10b33026c5c356176dc13d",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        },
+        {
+          "status": 200,
+          "body": {
+            "context": {
+              "chainId": "31337",
+              "deploymentId": "tc10-zero-p2",
+              "asOfBlock": "29",
+              "asOfBlockHash": "0x3666caa74972eeb1a4a6246a42560999a0244f05f911cbb25685fc454a258904",
+              "asOfTimestamp": "1800000518",
+              "snapshotRevision": "86d7f972-8237-4e94-be7d-4f290d3e9a90",
+              "dataKind": "chain",
+              "sync": {
+                "status": "synced",
+                "headBlock": "31",
+                "confirmedBlock": "29",
+                "indexedBlock": "29",
+                "publicationBlock": "29",
+                "lagBlocks": "0",
+                "lagSeconds": "0",
+                "confirmations": "2",
+                "lastIndexedAt": "2026-11-13T05:04:13.416Z",
+                "lastRpcCheckAt": "2026-11-13T12:04:13.417+07:00",
+                "recoveryStatus": "ready"
+              }
+            },
+            "data": [
+              {
+                "voter": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                "reason": "",
+                "weight": "300000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0xa202779f236225c5b6bb62281dcc575fb459c8743c5bf5fbad27e84f1a545acd",
+                "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+                "blockNumber": "25",
+                "transactionHash": "0xcc57ba6551c300f9dd5fb0a676cf75db4a847749d7e1de098ee9d31dc5876fd3",
+                "transactionIndex": "0"
+              },
+              {
+                "voter": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                "reason": "",
+                "weight": "400000000000000000000",
+                "support": 1,
+                "logIndex": "0",
+                "blockHash": "0x266145a276358eb18ac622401771ef1a630bc6a4ad3a918b46c84d4f3bfd16c0",
+                "proposalId": "43650268971150147086196945103763026488836989539065647507238048243679357730709",
+                "blockNumber": "24",
+                "transactionHash": "0xedba532e648ebaf06bb6ff403c1f18fab65740cbc5233746f97d33abfb9fc257",
+                "transactionIndex": "0"
+              }
+            ],
+            "pagination": {
+              "limit": 20,
+              "totalCount": 2,
+              "nextCursor": null
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "remaining": "UI/browser NOT RUN; no CLI worker proof (actual shared sync/project); full QA05 remains PARTIAL. No historical evidence rewritten or testnet claim."
+}

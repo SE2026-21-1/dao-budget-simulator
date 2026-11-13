@@ -49,6 +49,10 @@ jobs:
         shell: bash
         run: |
           npm run test:bootstrap 2>&1 | tee reports/bootstrap-gates.log
+      - name: Exercise isolated Sepolia signing and audit guards without public broadcast
+        shell: bash
+        run: |
+          node --test tests/smoke/sepolia.test.mjs 2>&1 | tee reports/sepolia-guards.log
       - name: Verify smoke interruption cleans owned processes and temporary files
         shell: bash
         run: |

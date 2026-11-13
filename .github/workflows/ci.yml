@@ -52,7 +52,7 @@ jobs:
       - name: Exercise isolated Sepolia signing and audit guards without public broadcast
         shell: bash
         run: |
-          node --test tests/smoke/sepolia.test.mjs 2>&1 | tee reports/sepolia-guards.log
+          node --test tests/smoke/sepolia.test.mjs tests/smoke/dependency-provenance.test.mjs 2>&1 | tee reports/sepolia-guards.log
       - name: Verify smoke interruption cleans owned processes and temporary files
         shell: bash
         run: |

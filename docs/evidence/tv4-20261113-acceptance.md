@@ -11,9 +11,10 @@ Người chạy: Phan Thanh Dũng (`dung0611`). Không merge, self-approve, auto
 | Frontend + SC06 mới | `da2237fed63eee89341881b076a9551022e31e8f` | 102 frontend PASS/0 skip với API live và SC06 live; lint8warnings/exit0, typecheck/build exit0; SC06 32/32 PASS |
 | Browser Swiss UI → receipt → worker → API → UI | `2b9100bca7ebd3d64cceba8316b3f14f15957d28` | Runtime đã ghép TV3; Executed/Defeated/Canceled, H/hash/revision, guards và layout local. Các diff đang chuẩn bị khi chạy chỉ ở SC06 fixture/test/doc, không đổi frontend runtime |
 | Bốn nhánh TC10 có API, lượt NEW | `764ba4e4eb518fd803ea28d4bbb779f06cb7eba6` | 4/4 PASS/exit0; source công bố tại `test/tv4-tc10-api-20261113`; không phải worker/browser proof |
-| Sepolia tests + preflight mới cuối | `7a0a94fbae0bf9682259f785643d4b30260f5850` | 28/28 bootstrap/Sepolia PASS; actual remote GOV estimate + pinned-state fork17transactions PASS; 0 remote broadcasts |
+| Sepolia tests + preflight trước canonical correction | `7a0a94fbae0bf9682259f785643d4b30260f5850` | 28/28 bootstrap/Sepolia PASS; actual remote GOV estimate + pinned-state fork17transactions PASS; 0 remote broadcasts |
+| Canonical recursive SC06/Sepolia correction | `7fb2958dc34e3d0974c891a6b4fc8c2d6ad19e42` | Newv3 actual Anvil;32SC06+28bootstrap/Sepolia+2frontend live PASS; actual canonical fork17tx PASS/0broadcast; isolated dependency regression1PASS |
 
-SHA commit chứa báo cáo/raw không được gọi là source của mọi lượt trên. Sau full native chỉ có delta fork/testnet/test harness/CI/evidence; không gán số cũ cho head cuối. Exact-head GitHub CI và review được ghi tại PR21 sau push. TV2 fix gốc `8b72aa9` được tiếp nhận với attribution tác giả; TV3 published `15b62b5` được port chọn lọc tại `c31f797`, không merge toàn nhánh hoặc ghi đè frontend.
+SHA commit chứa báo cáo/raw không được gọi là source của mọi lượt trên. Sau full native có delta fork/testnet, deployment dependency-provenance guard, canonical SC06 fixture, test harness/CI/evidence; không gán số cũ cho head cuối. Exact-head GitHub CI và review được ghi tại PR21 sau push. TV2 fix gốc `8b72aa9` được tiếp nhận với attribution tác giả; TV3 published `15b62b5` được port chọn lọc tại `c31f797`, không merge toàn nhánh hoặc ghi đè frontend.
 
 Toolchain thực chạy: Linux x64, Node24.15.0, Foundry/Anvil1.8.5, Solidity0.8.37/Osaka, PostgreSQL18.4; root/frontend lockfiles và submodules pinned. Package PG cần ICU60, được extract riêng trong `/tmp`, không đổi hệ thống hoặc fake symlink ABI. Các command/exit code/runtime/source/binary hashes đầy đủ ở raw.
 
@@ -54,7 +55,7 @@ Shutdown: owned RPC37281/API43421/Vite5173 đóng, bốn owned PIDs không còn,
 
 ## 4. SC06, full stdout và TC10
 
-New SC0632/32 và [full stdout](tv4-20261113-sc06.log) thuộc `da2237f`; [Foundry202 full stdout](tv4-20261113-foundry.log) thuộc `b7ff654`. Chúng là lượt mới, không phục dựng stdout bị cắt/mất của S trong PR50 và không nhận lượt TV1 thành TV4. Historical v1/source/checksum giữ nguyên; current default dùng [SC06v2](../../fixtures/chain/sc06-v2/README.md) được sinh trên Anvil thật, verify raw RPC trước shutdown. Lượt tích hợp đầu bị strict source binding chặn4tests là lỗi cần regenerate tương ứng source mới, không rehash fixture cũ để né gate.
+New SC0632/32 và [full stdout](tv4-20261113-sc06.log) thuộc `da2237f`; [Foundry202 full stdout](tv4-20261113-foundry.log) thuộc `b7ff654`. Chúng là lượt mới, không phục dựng stdout bị cắt/mất của S trong PR50 và không nhận lượt TV1 thành TV4. Historical v1/v2/source/checksum giữ nguyên; [SC06v2](../../fixtures/chain/sc06-v2/README.md) được sinh thật nhưng archive build chỉ init top-level dependencies. Current default chuyển sang [SC06v3 canonical recursive](../../fixtures/chain/sc06-v3/README.md); xem correction §8 và raw mới riêng, không rehash fixture cũ để né gate.
 
 [TC10 new four-branch API evidence](tv4-20261113-tc10-api.json), raw SHA256 **`3343ceeaba9620087ecdbe0cbf3716612418e483e88f1ffa23b6f7a133ea0d82`**: hashed/zero request×P1/P2 thắng trước, mỗi empty chain+new DB riêng H29/hash/revision riêng. Mỗi nhánh2proposals/4votes/1disbursement/rejected raw events0, exact winner payment/recipient/amount/tx/request/ID; loser vẫnQueued/Ready/ETA dù đủ tiền. Hai preparation failures (thiếu createdb binary; chưa checkout submodule ở worktree mới) giữ riêng; driver sửa dùng pg client và provision pinned sources. Không yêu cầu chạy lại bốn raw branches lịch sử chỉ để review; đây là lượt mới để bổ sung API. Shared sync/project không phải CLI worker; UI từng nhánh chưa chạy.
 
@@ -99,3 +100,39 @@ node scripts/preflight_sepolia.mjs --accounts - --output /tmp/tv4-sepolia-curren
 ```
 
 Baseline driver/owned UI bootstrap are archived as operator scripts, not a new production service. All actual test exit codes are in raw; initial helper/environment errors remain disclosed. Local results do not establish another-machine, extension-wallet, testnet, release or universal latency acceptance.
+
+## 8. CI correction — canonical recursive dependency metadata
+
+Exact-head CI `cacc7f6` không được gọi là PASS toàn bộ:
+[TV4 run43374815767](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/43374815767)
+fail SC06 strict compiler-artifact hash, trong khi BE08 và các job backend/frontend
+đã pass. Root cause xác minh: worktree sinh v2 chỉ init top-level submodules,
+CI dùng recursive. Hai auto-remappings erc4626-tests/halmos-cheatcodes làm đổi
+Solidity IPFS metadata và raw artifact/initcode/runtime hashes. Sau init đúng
+recursive và build, cả năm artifact SHA khớp canonical v1/CI; executable creation
+prefix trước CBOR byte-for-byte bằng v2. Không đổi compiler/config/Solidity hoặc
+bỏ assertion/normalize-away artifact hash.
+
+Source `7fb2958` thêm fail-fast guard trong loader trước artifact/deploy:
+mọi recursive submodule phải initialized và đúng pinned revision. Actual
+top-only checkout bị chặn trong one-off check. Sinh v3 từ actual Anvil mới
+với canonical recursive dependencies; 32/32 SC06, 28/28 bootstrap/Sepolia
+và 2/2 frontend canonical-SC06 live tests PASS. V1/v2 JSON/receipts/SHA,
+raw cũ và failed CI log giữ nguyên. Các lượt local trước ở §1–5 vẫn đúng
+declared build context, không relabel thành canonical run; final-head CI mới
+phải được xác nhận sau push. Correction raw/source/commands và canonical
+preflight được công bố riêng, không thay archive `f9e49e…a55142`.
+
+[Correction JSON](tv4-20261113-canonical.json),
+[full canonical SC06 stdout](tv4-20261113-canonical-sc06.log),
+[canonical bootstrap/Sepolia stdout](tv4-20261113-canonical-sepolia.log) và
+[correction raw](tv4-20261113-canonical-raw.tar.gz), SHA256
+**`2755d2449bc4365ca3d04c6682a909c21b2dab74b57c034f63064d0d426939f2`**.
+Dependency regression dùng isolated real Git repositories, kiểm cả nested chưa
+init và sai pinned revision trước artifact access; local1PASS, exact test bytes
+ở raw (test chưa commit tại lúc local run, final CI chạy committed test).
+Canonical PublicNode preflight source7fb2958 PASS tại H12124083/hash
+`0x1a44d74863c11ca6c30ba9fb911924bda13cfd0d686971aec3c995d755e56317`:
+GOV estimate **11865474gas**, fork17receipts/roles/gates PASS,
+totalGasUsed9371009, owned exit0, **0 Sepolia broadcasts**. Chênh12gas so với
+lượt metadata cũ giữ đúng attribution; vẫn không dùng fork total làm budget remote.

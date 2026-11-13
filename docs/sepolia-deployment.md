@@ -218,3 +218,14 @@ more than that whole fork total. Keep per-transaction remote estimation mandator
 Earlier mining/timestamp/injection/cleanup preparation failures are retained separately.
 **Zero Sepolia broadcast; signer owner, approved map/gas/revision, TV1 delta review
 and real-time Executed/Defeated receipts remain required.**
+
+Canonical recursive rebuild/preflight at `7fb2958` supersedes the *build context*
+for new deployments, not the attribution of that earlier run. All five canonical
+artifact hashes match v1/CI; v2 creation-code prefixes before CBOR are identical.
+The loader now fails before artifact access for incomplete or unpinned recursive
+dependencies. [Correction](evidence/tv4-20261113-canonical.json):32SC06,28bootstrap/
+Sepolia and2frontend canonical-SC06 live PASS; dependency boundary regression1PASS.
+Actual canonical GOV estimate11865474gas at H12124083/hash
+`0x1a44d74863c11ca6c30ba9fb911924bda13cfd0d686971aec3c995d755e56317`;
+state-fork17transactions/roles/gates PASS, totalGasUsed9371009, owned Anvil exit0.
+Still zero remote broadcasts and no signer-owner/deployment/testnet acceptance.

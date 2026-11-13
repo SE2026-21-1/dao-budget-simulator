@@ -34,8 +34,9 @@ Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
 
 Cập nhật tích hợp TV4 13/11: tiếp nhận chọn lọc Swiss UI/consumer TV3 `15b62b5`,
 giữ WalletSession và snapshot signing leases; xem [quyết định API/fixture](frontend/README.md).
-SC06 hiện dùng [fixture v2 mới, source-bound](fixtures/chain/sc06-v2/README.md);
-v1 và các kết quả lịch sử giữ nguyên attribution.
+SC06 hiện dùng [fixture v3 canonical recursive, source-bound](fixtures/chain/sc06-v3/README.md);
+v1/v2 và các kết quả lịch sử giữ nguyên attribution. Loader chặn dependency chưa
+`git submodule update --init --recursive` hoặc lệch pinned revision trước deploy.
 [Đường Sepolia riêng](docs/sepolia-deployment.md) chuẩn bị estimate/sign/audit K=2,
 không gỡ guard local Anvil; chưa có signer được cấp phép hoặc testnet PASS.
 Chỉ cập nhật Project nhóm #1 đang mở; Project TV4 #2 đã đóng.

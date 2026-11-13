@@ -26,6 +26,12 @@ PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
   exit0. Blank API vẫn fixture read-only, explicit `VITE_DATA_SOURCE=fixture`
   cũng khóa giao dịch; lỗi API thật không fallback. SC06 v2 được sinh thật
   tại `da2237f`, 32/32 mutations PASS; v1/SHA/checksum lịch sử không bị sửa.
+  Current default là v3 canonical recursive tại `7fb2958`:32SC06+28bootstrap/
+  Sepolia+2FE canonical-SC06 live PASS; dependency regression1PASS. CI cacc7f6
+  bắt artifact mismatch do v2 chỉ init top-level submodules; đã thêm fail-fast
+  recursive-pin guard và sinh v3 thật, không rehash v1/v2 hoặc bỏ oracle.
+  [Correction/raw/source](evidence/tv4-20261113-canonical.json); final-head CI
+  phải xét riêng sau correction.
 - **TC01/13 và local TC03/14 smoke:** browser runtime `2b9100b` thực hiện
   propose→A/B For700→queue→execute1000BUD, receipt→CLI worker→API→UI cùng
   deployment; ExecutedH43, DefeatedH49, CanceledH55, Treasury9000BUD.

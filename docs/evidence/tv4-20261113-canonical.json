@@ -1,0 +1,146 @@
+{
+  "sourceCommit": "7fb2958dc34e3d0974c891a6b4fc8c2d6ad19e42",
+  "previousFailedHead": "cacc7f61ae9c96f0d7c089032371400781a3d581",
+  "failedCi": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/43374815767",
+  "cause": "Top-level-only initialization omitted nested erc4626/halmos automatic remappings, changing compiler metadata/artifact hashes. Canonical recursive build matches v1/CI exactly; executable creation prefixes equal v2.",
+  "solution": "Require all recursive submodules initialized and pinned before artifact load; regenerate new v3 on actual owned Anvil, preserve v1/v2; no compiler/config/assertion relaxation.",
+  "tests": {
+    "sc06": 32,
+    "bootstrapSepolia": 28,
+    "frontendCanonicalSc06Live": 2,
+    "dependencyRegression": 1,
+    "fail": 0,
+    "skip": 0,
+    "newRegressionSource": "uncommitted new test at time of local run, exact testSHA/command in raw; final CI exercises committed test"
+  },
+  "fixture": {
+    "path": "fixtures/chain/sc06-v3/chain.json",
+    "head": {
+      "number": "0x1a",
+      "hash": "0xee7e0167d5ad29864a606fbc608b79192833ede9f97906318c8357a0f5347a29"
+    },
+    "verification": {
+      "receipts": 24,
+      "logs": 42,
+      "blocks": 27,
+      "decoded": 14,
+      "unknownTopics": 16,
+      "disbursements": 1,
+      "outgoingBaseUnits": "1000000000000000000000",
+      "projection": {
+        "asOfBlock": "26",
+        "blockHash": "0xee7e0167d5ad29864a606fbc608b79192833ede9f97906318c8357a0f5347a29",
+        "proposals": 2,
+        "votes": 2,
+        "forBaseUnits": "700000000000000000000",
+        "operations": 1,
+        "disbursements": 1,
+        "totalOut": "1000000000000000000000",
+        "balance": "9000000000000000000000",
+        "states": [
+          "Executed",
+          "Canceled"
+        ],
+        "ancillary": 16
+      },
+      "liveRpcVerified": true
+    }
+  },
+  "artifactProof": {
+    "GOV": {
+      "canonicalArtifactSha256": "0939fa6b4718d9a65ebd4bfbce7ef24e351e8f34ad4061647e1d54916ba9db87",
+      "historicalV1ArtifactSha256": "0939fa6b4718d9a65ebd4bfbce7ef24e351e8f34ad4061647e1d54916ba9db87",
+      "v2ArtifactSha256": "044e0fbdf228152a4b2b67ef7c558d5d08b7c16c712f229c3ac4c8039c232c88",
+      "creationBytesBeforeCborEqual": true,
+      "canonicalRemappings": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ]
+    },
+    "BUD": {
+      "canonicalArtifactSha256": "3206a32cb3b9c45bd34a3bb6d07f99adf0324bfaee38209f2a7d065382b8a06f",
+      "historicalV1ArtifactSha256": "3206a32cb3b9c45bd34a3bb6d07f99adf0324bfaee38209f2a7d065382b8a06f",
+      "v2ArtifactSha256": "b864737f1967d3886910b9e031df7e60af5b0acfa4ea934d171255b6fe3f061c",
+      "creationBytesBeforeCborEqual": true,
+      "canonicalRemappings": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ]
+    },
+    "Treasury": {
+      "canonicalArtifactSha256": "5db02f7586c88f478906e9f28b8d9f18c398b7d16ba2419d6525c03a3ee05685",
+      "historicalV1ArtifactSha256": "5db02f7586c88f478906e9f28b8d9f18c398b7d16ba2419d6525c03a3ee05685",
+      "v2ArtifactSha256": "c92c0a2a9f67ca202f906e17fb07fb1c8250181581b2cd4b57e372eab911d195",
+      "creationBytesBeforeCborEqual": true,
+      "canonicalRemappings": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ]
+    },
+    "Timelock": {
+      "canonicalArtifactSha256": "7ab1952cfff5622abde02b0df708828a576835edbe8bd7f8e9f8eeb6b7b488c5",
+      "historicalV1ArtifactSha256": "7ab1952cfff5622abde02b0df708828a576835edbe8bd7f8e9f8eeb6b7b488c5",
+      "v2ArtifactSha256": "7317b07ec87fce784726b14195e1f480804a0e603b0b87ea894fc14cf73ade38",
+      "creationBytesBeforeCborEqual": true,
+      "canonicalRemappings": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ]
+    },
+    "Governor": {
+      "canonicalArtifactSha256": "4f736ebeb43a104c6d8d041aafeb2dfaf4497b7965aa7bcd9d04298229e0a4be",
+      "historicalV1ArtifactSha256": "4f736ebeb43a104c6d8d041aafeb2dfaf4497b7965aa7bcd9d04298229e0a4be",
+      "v2ArtifactSha256": "d2c66ba1665c349d7846dc68fa5d1bda82766302afd452b2c763e58322ae26e5",
+      "creationBytesBeforeCborEqual": true,
+      "canonicalRemappings": [
+        "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ]
+    }
+  },
+  "preflight": {
+    "sourceCommit": "7fb2958dc34e3d0974c891a6b4fc8c2d6ad19e42",
+    "status": "DISPOSABLE_FORK_PREPARATION_PASS_NOT_TESTNET",
+    "broadcastTransactions": 0,
+    "anchor": {
+      "height": "12124083",
+      "hash": "0x1a44d74863c11ca6c30ba9fb911924bda13cfd0d686971aec3c995d755e56317",
+      "timestamp": "1794550104"
+    },
+    "remoteGovCreationGas": 11865474,
+    "forkTransactions": 17,
+    "forkReceipts": 17,
+    "forkGas": {
+      "approvedMaxFeePerGas": "1000000000000",
+      "approvedMaxTotalCost": "1000000000000000000000",
+      "conservativeCommittedCost": "11256738100559771",
+      "totalGasUsed": "9371009"
+    },
+    "forkExit": {
+      "code": 0,
+      "signal": null
+    }
+  },
+  "rawArchive": "tv4-20261113-canonical-raw.tar.gz",
+  "rawSha256": "2755d2449bc4365ca3d04c6682a909c21b2dab74b57c034f63064d0d426939f2",
+  "historicalRawUnchanged": {
+    "main": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
+    "tc10": "3343ceeaba9620087ecdbe0cbf3716612418e483e88f1ffa23b6f7a133ea0d82",
+    "failedCampaign": "4e4735edde53d471374620c4cce66b4c50c0ee41a6696b1ebf9d929091292f70"
+  }
+}

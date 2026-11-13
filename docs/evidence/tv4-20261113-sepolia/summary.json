@@ -137,5 +137,11 @@
     "Six encrypted local signers and native gas permission/budget",
     "TV1 incremental remote-path review and accepted exact deployment revision",
     "Real-time Sepolia Executed and Defeated receipts; extension and receiver gates remain separate"
-  ]
+  ],
+  "canonicalCorrection": {
+    "summary": "../tv4-20261113-canonical.json",
+    "sourceCommit": "7fb2958dc34e3d0974c891a6b4fc8c2d6ad19e42",
+    "remoteGovCreationGas": 11865474,
+    "zeroBroadcast": true
+  }
 }

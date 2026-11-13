@@ -96,7 +96,8 @@
       "pass": 28,
       "fail": 4,
       "reason": "Strict historical working-source binding correctly rejected changed chain.ts; regenerated v2 rather than rehashing v1"
-    }
+    },
+    "currentDefault": "v3, canonical recursive; original v2 run remains historical"
   },
   "browser": {
     "sourceCommit": "2b9100bca7ebd3d64cceba8316b3f14f15957d28",
@@ -374,5 +375,6 @@
   "rawArchive": "tv4-20261113-raw.tar.gz",
   "rawSha256": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
   "runtimeAttribution": "Full local runtime b7ff654; later changes are testnet-only fork/harness fixes, test-only TC10 extension, CI and evidence. Exact final-head GitHub CI is recorded separately; no historical result is relabelled.",
-  "provenance": "tv4-20261113-provenance.json"
+  "provenance": "tv4-20261113-provenance.json",
+  "canonicalCorrection": "tv4-20261113-canonical.json"
 }

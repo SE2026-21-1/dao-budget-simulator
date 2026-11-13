@@ -1,0 +1,195 @@
+{
+  "source": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+  "operator": "TV2",
+  "host": "CuONGTUF WSL",
+  "sourceRun": "20261113T094548Z-dd60c70023dc",
+  "scope": "Isolated PostgreSQL and API/worker; source RPC shared read-only",
+  "deployment": "be09-local-20261113T094548Z-4183ba6b2e33",
+  "startedAt": "2026-11-13T10:00:25.918Z",
+  "before": {
+    "pid": 10543,
+    "checks": [
+      {
+        "block_number": "24",
+        "block_hash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+        "observed_head_block": "26",
+        "confirmation_depth": 2,
+        "sync_status": "ready"
+      }
+    ],
+    "pub": [
+      {
+        "block_number": "24",
+        "block_hash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+        "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+        "snapshot_revision": "a2f3e84d-cf99-4ab4-8fe9-9e21d8d03885",
+        "ignored_ancillary_events": 16
+      }
+    ],
+    "digest": {
+      "indexed_blocks": {
+        "count": 23,
+        "sha256": "f3efdf932c0692b4db6cbf0bcb1a81d8daec1395a9d76ddcc4437ee43c623188"
+      },
+      "raw_events": {
+        "count": 28,
+        "sha256": "498419c9cc30d48aca69e3e7c2381e16e815abe417877c1a222a43c05a10e961"
+      },
+      "proposals": {
+        "count": 1,
+        "sha256": "19694179993a1ca2370a584b54117ae8b853a38e153342ce5e5f0f2e3b21b99b"
+      },
+      "votes": {
+        "count": 2,
+        "sha256": "05c8028181207ba124865fc64c5557629ae857e4be9f6dc7a2ea3d341daff3d6"
+      },
+      "operations": {
+        "count": 1,
+        "sha256": "412c99cb1cd381409a6c8f8896d65671e636731d7789cf2783732fc349834998"
+      },
+      "transfers": {
+        "count": 2,
+        "sha256": "afbd3be3619884be3f54b01db46def1b11b32384efe529a12f2cb8e3ee44d2c0"
+      },
+      "disbursements": {
+        "count": 1,
+        "sha256": "39d82d1ecc812f62d0aae4127b3f061b6765ae9a9c174ca58a8350bce5dfc4e5"
+      },
+      "proposal_states": {
+        "count": 1,
+        "sha256": "1ec8cf6486e73dc968ab49f6c6f43ee35bc7f1ae0ae1b2a8c7dba475e583b0f3"
+      }
+    },
+    "context": {
+      "asOfBlock": "24",
+      "asOfBlockHash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+      "snapshotRevision": "a2f3e84d-cf99-4ab4-8fe9-9e21d8d03885"
+    },
+    "health": {
+      "status": "degraded",
+      "database": "up",
+      "indexer": "synced",
+      "publication": "ready",
+      "recoveryStatus": "ready",
+      "projectionStatus": "current",
+      "publicationBlock": "24",
+      "projectionLagBlocks": "0",
+      "rawDecodeComplete": false,
+      "rawDecodeIssues": {
+        "unknownTopics": 16,
+        "decodeErrors": 0
+      },
+      "ignoredAncillaryEvents": 16
+    }
+  },
+  "stop": {
+    "code": 0,
+    "signal": null
+  },
+  "interruptionMs": 447,
+  "after": {
+    "pid": 10557,
+    "checks": [
+      {
+        "block_number": "24",
+        "block_hash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+        "observed_head_block": "26",
+        "confirmation_depth": 2,
+        "sync_status": "ready"
+      }
+    ],
+    "pub": [
+      {
+        "block_number": "24",
+        "block_hash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+        "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+        "snapshot_revision": "a2f3e84d-cf99-4ab4-8fe9-9e21d8d03885",
+        "ignored_ancillary_events": 16
+      }
+    ],
+    "digest": {
+      "indexed_blocks": {
+        "count": 23,
+        "sha256": "f3efdf932c0692b4db6cbf0bcb1a81d8daec1395a9d76ddcc4437ee43c623188"
+      },
+      "raw_events": {
+        "count": 28,
+        "sha256": "498419c9cc30d48aca69e3e7c2381e16e815abe417877c1a222a43c05a10e961"
+      },
+      "proposals": {
+        "count": 1,
+        "sha256": "19694179993a1ca2370a584b54117ae8b853a38e153342ce5e5f0f2e3b21b99b"
+      },
+      "votes": {
+        "count": 2,
+        "sha256": "05c8028181207ba124865fc64c5557629ae857e4be9f6dc7a2ea3d341daff3d6"
+      },
+      "operations": {
+        "count": 1,
+        "sha256": "412c99cb1cd381409a6c8f8896d65671e636731d7789cf2783732fc349834998"
+      },
+      "transfers": {
+        "count": 2,
+        "sha256": "afbd3be3619884be3f54b01db46def1b11b32384efe529a12f2cb8e3ee44d2c0"
+      },
+      "disbursements": {
+        "count": 1,
+        "sha256": "39d82d1ecc812f62d0aae4127b3f061b6765ae9a9c174ca58a8350bce5dfc4e5"
+      },
+      "proposal_states": {
+        "count": 1,
+        "sha256": "1ec8cf6486e73dc968ab49f6c6f43ee35bc7f1ae0ae1b2a8c7dba475e583b0f3"
+      }
+    },
+    "context": {
+      "asOfBlock": "24",
+      "asOfBlockHash": "0x8774fe7394d048264aa5c65a74608f694a95cd19390956b89850d2e9178d8f79",
+      "snapshotRevision": "a2f3e84d-cf99-4ab4-8fe9-9e21d8d03885"
+    },
+    "health": {
+      "status": "degraded",
+      "database": "up",
+      "indexer": "synced",
+      "publication": "ready",
+      "recoveryStatus": "ready",
+      "projectionStatus": "current",
+      "publicationBlock": "24",
+      "projectionLagBlocks": "0",
+      "rawDecodeComplete": false,
+      "rawDecodeIssues": {
+        "unknownTopics": 16,
+        "decodeErrors": 0
+      },
+      "ignoredAncillaryEvents": 16
+    }
+  },
+  "endpoints": [
+    {
+      "path": "/api/health",
+      "status": 200
+    },
+    {
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "path": "/api/proposals",
+      "status": 200
+    },
+    {
+      "path": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+      "status": 200
+    },
+    {
+      "path": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+      "status": 200
+    },
+    {
+      "path": "/api/treasury/transfers",
+      "status": 200
+    }
+  ],
+  "workerPid": 10515,
+  "status": "PASS",
+  "finishedAt": "2026-11-13T10:00:30.334Z"
+}

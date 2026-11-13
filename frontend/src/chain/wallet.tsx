@@ -87,9 +87,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       accountEvents.current++;
       const next = Array.isArray(args[0]) && typeof args[0][0] === "string" && isAddress(args[0][0]) ? args[0][0] as Address : null;
       if (mounted) {
-        if (next !== activeSelection.current.account) activeWalletSession = { provider, ...activeSelection.current, account: next };
+        if (next !== activeSelection.current.account) {
+          activeWalletSession = { provider, ...activeSelection.current, account: next };
+          clearReads();
+        }
         activeSelection.current = { ...activeSelection.current, account: next };
-        setAccount(next); clearReads();
+        setAccount(next);
       }
     };
     const chainChanged = (...args: unknown[]) => {
@@ -97,9 +100,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       chainEvents.current++;
       if (mounted) {
         const next = parseWalletChain(args[0]);
-        if (next !== activeSelection.current.chainId) activeWalletSession = { provider, ...activeSelection.current, chainId: next };
+        if (next !== activeSelection.current.chainId) {
+          activeWalletSession = { provider, ...activeSelection.current, chainId: next };
+          clearReads();
+        }
         activeSelection.current = { ...activeSelection.current, chainId: next };
-        setChainId(next); clearReads();
+        setChainId(next);
       }
     };
     const disconnected = () => {

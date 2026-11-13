@@ -95,14 +95,17 @@ export async function createVariantHarness({ root, output, adminUrl, report }) {
         const call = async (contract, method, args = []) => abi[contract].decodeFunctionResult(method, await rpc('eth_call', [{ to: address[contract], data: abi[contract].encodeFunctionData(method, args) }, 'latest']));
         const one = async (...args) => (await call(...args))[0];
         const tx = async ({ label: name, contract = 'Governor', from, method, args = [], at, expectError }) => {
-          if (at !== undefined) await rpc('evm_setNextBlockTimestamp', [toQuantity(at)]);
+          // All local scenario clocks are explicit: wall time spent observing
+          // API/UI must not silently move a denial or its positive control.
+          const timestamp = at ?? BigInt((await rpc('eth_getBlockByNumber', ['latest', false])).timestamp);
+          await rpc('evm_setNextBlockTimestamp', [toQuantity(timestamp)]);
           const hash = await rpc('eth_sendTransaction', [{ from, to: address[contract], data: abi[contract].encodeFunctionData(method, args), gas: toQuantity(12_000_000) }]);
           let receipt; for (let n = 0; n < 100; n++) { receipt = await rpc('eth_getTransactionReceipt', [hash]); if (receipt) break; await pause(50); }
           assert.ok(receipt, `${name}: receipt missing`);
           const block = await rpc('eth_getBlockByHash', [receipt.blockHash, false]);
           const record = { ...receipt, label: name, contract, method, from, args, timestamp: BigInt(block.timestamp) }; row.receipts.push(record);
           assert.equal(receipt.status, expectError ? '0x0' : '0x1', `${label}/${name}`);
-          if (at !== undefined) assert.equal(BigInt(block.timestamp), BigInt(at), `${name}: timestamp`);
+          assert.equal(BigInt(block.timestamp), BigInt(timestamp), `${name}: timestamp`);
           if (expectError) {
             assert.deepEqual(receipt.logs, []);
             const trace = await rpc('debug_traceTransaction', [hash, { disableStorage: true, disableStack: true, enableMemory: false }]);

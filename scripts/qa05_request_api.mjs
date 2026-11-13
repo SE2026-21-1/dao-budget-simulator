@@ -83,9 +83,16 @@ export async function checkRequestApi({ row, rpcUrl, rpc, root }) {
     assert.equal(payout.proposalId,String(row.proposals[row.winner-1].id));
     assert.equal(payout.requestId,row.requestId);
     assert.equal(payout.transactionHash,row.receipts.find(r=>r.label.startsWith('Winner')).transactionHash);
+    const loserTx=row.receipts.find(receipt=>receipt.error?.name==='RequestAlreadyPaid').transactionHash;
+    const counts=(await pool.query(`SELECT
+      (SELECT count(*)::int FROM proposals WHERE deployment_id=$1) AS proposals,
+      (SELECT count(*)::int FROM votes WHERE deployment_id=$1) AS votes,
+      (SELECT count(*)::int FROM disbursements WHERE deployment_id=$1) AS disbursements,
+      (SELECT count(*)::int FROM raw_events WHERE deployment_id=$1 AND transaction_hash=$2) AS rejected_raw_events`,[d,loserTx])).rows[0];
+    assert.deepEqual(counts,{proposals:2,votes:4,disbursements:1,rejected_raw_events:0});
     assert.equal(payout.to,row.expectedPayout.recipient.toLowerCase());
     assert.equal(payout.amount,row.expectedPayout.amount);
-    return { status:'PASS', scope:'NEW transactions; actual shared sync/project ingestion and loopback HTTP API, not CLI-worker or browser proof', identity, raw, projection, responses };
+    return { status:'PASS', scope:'NEW transactions; actual shared sync/project ingestion and loopback HTTP API, not CLI-worker or browser proof', identity, counts, raw, projection, responses };
   } finally {
     if (api) await new Promise(done=>api.close(done));
     await pool.end();

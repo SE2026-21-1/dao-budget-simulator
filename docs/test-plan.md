@@ -79,6 +79,21 @@ Source mới **`b7a74ce4f5a7336a992b39310fb9d569831176d3`**, base `97ec39e`; ch�
 
 Runner TC10 seed10.000BUD, reset về block0 sau từng row. Handler Foundry có control payment1BUD trước proposal đang kiểm: baseline **9.999**, sau payment1.000 là **8.999 BUD**; không giả là F0 untouched10.000. Bốn TC10 branches có manifest/deployment/H/hash riêng (đều H29, hash khác), **không gộp thành một canonical ledger** hoặc gán API revision chưa tồn tại.
 
+TC10 API optional campaign (new transactions, not a rewrite/rerun requirement for
+the accepted historical receipt evidence):
+`TV4_TC10_PG_BIN=<PostgreSQL18-bin> node scripts/check_qa05_request_api_native.mjs --output <new-directory>`.
+Use Node24 with dependencies and built contracts available. The driver owns a
+fresh loopback cluster and four empty databases, never the serving DB. Direct
+`node --import tsx scripts/check_qa05_request_orders.mjs --output <new.json> --api`
+requires `TV4_TC10_ISOLATED=1` and `TV4_TC10_DATABASE_URLS` JSON containing four
+distinct owned empty loopback databases named `tv4_tc10_*`. No schema is dropped.
+The API path uses real shared `sync`/`project` ingestion and an actual loopback
+HTTP server, **not CLI-worker proof**. Detail/votes/outgoing transfers/summary
+must retain each branch's H/hash/revision, unique winner linkage and losing
+Queued/Ready/ETA. The report retains raw responses, receipts, manifest and source
+hashes. Browser/UI, extension wallet and full QA05 acceptance remain outside
+this mode; only an actual successful campaign report establishes API PASS.
+
 ### Requirement → TC/INV → test → evidence → SHA → kết luận hiện hành
 
 Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. PASS chỉ phạm vi ghi rõ; PARTIAL chưa đủ toàn requirement; BLOCKED thiếu môi trường/handoff. [Evidence10/11](evidence/tv4-20261110-project2.json) và [peer11/11](evidence/tv4-20261111-peer-acceptance.json) giữ SHA nguồn cũ, không tính là lượt chạy mới.

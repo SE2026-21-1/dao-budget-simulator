@@ -11,7 +11,8 @@ import { Interface, ZeroHash, id, toQuantity } from 'ethers';
 import { deployGovernance, checkGovernanceRoles } from './governance_local.mjs';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 
-assert.equal(process.argv.length, 4, 'Usage: node scripts/check_qa05_request_orders.mjs --output <new-report.json>');
+const withApi = process.argv[4] === '--api';
+assert.ok(process.argv.length === 4 || (process.argv.length === 5 && withApi), 'Usage: node --import tsx scripts/check_qa05_request_orders.mjs --output <new-report.json> [--api]');
 assert.equal(process.argv[2], '--output');
 const output = resolve(process.argv[3]);
 try { await stat(output); throw new Error('Output already exists; never overwrite evidence'); }
@@ -21,12 +22,12 @@ const life = createSmokeLifecycle();
 const U = 10n ** 18n;
 const pause = ms => new Promise(done => setTimeout(done, ms));
 const report = {
-  scope: 'TC10 real Anvil receipts, independent empty-chain resets for hashed/zero requestId and both execution orders. Not API/UI, PostgreSQL, extension wallet, testnet or full QA05 acceptance.',
+  scope: withApi ? 'NEW TC10 four independent empty-chain deployments and fresh PostgreSQL databases; raw receipts -> shared sync/project -> actual HTTP API at H/hash/revision. No CLI-worker, UI, extension wallet, testnet or full QA05 acceptance.' : 'TC10 real Anvil receipts, independent empty-chain resets for hashed/zero requestId and both execution orders. Not API/UI, PostgreSQL, extension wallet, testnet or full QA05 acceptance.',
   sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
   sourceHashes: {}, node: process.version, cases: [],
 };
 try {
-  for (const path of ['scripts/check_qa05_request_orders.mjs', 'scripts/governance_local.mjs', 'scripts/governance_operations.mjs', 'scripts/smoke_lifecycle.mjs', 'contracts/BudgetGovernor.sol', 'contracts/Treasury.sol']) {
+  for (const path of ['scripts/check_qa05_request_orders.mjs', 'scripts/governance_local.mjs', 'scripts/governance_operations.mjs', 'scripts/smoke_lifecycle.mjs', 'contracts/BudgetGovernor.sol', 'contracts/Treasury.sol', ...(withApi ? ['scripts/qa05_request_api.mjs', 'scripts/check_qa05_request_api_native.mjs', 'indexer/config.ts', 'indexer/syncer.ts', 'indexer/projection/projector.ts', 'indexer/api/server.ts'] : [])]) {
     const bytes = await readFile(resolve(root, path));
     // Bind executed files to committed source, never describe a dirty overlay as the SHA.
     assert.deepEqual(bytes, execFileSync('git', ['show', `${report.sourceCommit}:${path}`], { cwd: root }));
@@ -153,8 +154,13 @@ try {
     row.head = { number: BigInt(head.number).toString(), hash: head.hash, timestamp: BigInt(head.timestamp).toString() };
     row.expectedBalances = expected;
     row.actualBalances = await balances();
+    if (withApi) {
+      row.expectedPayout = { recipient: recipients[winner], amount: String(amounts[winner]) };
+      const { checkRequestApi } = await import('./qa05_request_api.mjs');
+      row.api = await checkRequestApi({ row, rpcUrl: `http://127.0.0.1:${port}`, rpc, root });
+    }
     row.result = 'PASS';
-    row.apiUi = 'NOT RUN: no published API snapshot/revision or UI claimed for this chain branch';
+    row.apiUi = withApi ? 'API PASS in NEW run; shared sync/project, not CLI worker; UI NOT RUN' : 'NOT RUN: no published API snapshot/revision or UI claimed for this chain branch';
     report.cases.push(row);
     assert.equal(await rpc('evm_revert', [reset]), true);
     assert.equal(await rpc('eth_blockNumber'), '0x0');

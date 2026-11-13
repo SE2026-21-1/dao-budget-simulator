@@ -9,12 +9,12 @@ import { auditTimelockOperations } from './governance_operations.mjs';
 
 // This is the agreed local project configuration, not an input supplied by a manifest.
 const UNIT = 10n ** 18n;
-const CONFIG = Object.freeze({
+export const CONFIG = Object.freeze({
   proposalThreshold: String(50n * UNIT), quorumNumerator: '20', quorumDenominator: '100',
   votingDelay: '60', votingPeriod: '300', minDelay: '120', clockMode: 'mode=timestamp',
   govSupply: String(1000n * UNIT), budSupply: String(20000n * UNIT), treasurySeed: String(10000n * UNIT),
 });
-const SPECS = Object.freeze({
+export const SPECS = Object.freeze({
   GOV: { source: 'contracts/GovernanceToken.sol', name: 'GovernanceToken', abiVersion: 'sc02-governance-token-v1' },
   BUD: { source: 'contracts/BudgetToken.sol', name: 'BudgetToken', abiVersion: 'oz-5.4.0-erc20' },
   Treasury: { source: 'contracts/Treasury.sol', name: 'Treasury', abiVersion: 'sc01-itreasury-v1' },
@@ -63,7 +63,7 @@ export function requireLoopbackRpc(url) {
     'Deployment RPC must not contain credentials, path, query or fragment');
 }
 
-function validateAccounts(accounts) {
+export function validateAccounts(accounts) {
   assert.deepEqual(Object.keys(accounts).sort(), [...ACCOUNT_NAMES].sort(), 'Unexpected/missing account mapping');
   for (const name of ACCOUNT_NAMES) {
     assert.notEqual(lower(accounts[name]), lower(ZeroAddress), `${name}: zero account`);
@@ -92,7 +92,7 @@ async function requireEmptyAnvil(rpc, accounts) {
   return { clientVersion: await rpc('web3_clientVersion'), instanceId: metadata.instanceId, genesisHash: genesis.hash };
 }
 
-async function loadProject(root) {
+export async function loadProject(root) {
   assert.ok(isAbsolute(root), 'root must be an absolute repository path');
   const sourceCommit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   const artifacts = {};
@@ -151,7 +151,7 @@ async function loadProject(root) {
   return { artifacts, provenance: { sourceCommit, sourceHashes, artifacts: artifactProvenance } };
 }
 
-function constructorArgs(key, manifest) {
+export function constructorArgs(key, manifest) {
   const address = (name) => manifest.contracts[name].address;
   const a = manifest.accounts;
   switch (key) {
@@ -311,20 +311,23 @@ export async function checkGovernanceRoles(rpc, manifest, { root, stage = 'final
   }
 }
 
-async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
+export async function auditGovernanceRoles(rpc, manifest, { root, stage, context, policy }) {
   assert.ok(['bootstrap', 'final'].includes(stage), 'Unknown role audit stage');
-  assert.equal(manifest.format, 'dao-budget-local-governance-v1', 'Unsupported deployment manifest');
-  assert.equal(manifest.chainId, '31337', 'Manifest must describe local chain 31337');
-  assert.equal(BigInt(await rpc('eth_chainId')), 31337n, 'Wrong RPC chain');
+  // Policy is supplied only by a separate trusted network wrapper, never manifest/CLI input.
+  const network = policy ?? { format: 'dao-budget-local-governance-v1', chainId: '31337',
+    genesisHash: manifest.localChain?.genesisHash };
+  assert.equal(manifest.format, network.format, 'Unsupported deployment manifest');
+  assert.equal(manifest.chainId, network.chainId, 'Manifest describes the wrong chain');
+  assert.equal(BigInt(await rpc('eth_chainId')), BigInt(network.chainId), 'Wrong RPC chain');
   const genesis = await rpc('eth_getBlockByNumber', ['0x0', false]);
-  assert.equal(genesis.hash, manifest.localChain.genesisHash, 'Manifest belongs to a different local genesis');
+  assert.equal(genesis.hash, network.genesisHash, 'Manifest belongs to a different genesis');
   validateAccounts(manifest.accounts);
   assert.deepEqual(manifest.config, CONFIG, 'Manifest weakens or changes the locked project configuration');
   const { artifacts, provenance } = await loadProject(root);
   assert.equal(manifest.sourceCommit, provenance.sourceCommit, 'Manifest source commit is not current HEAD');
   assert.deepEqual(manifest.provenance, provenance, 'Manifest provenance differs from current project/compiler/artifacts');
   assert.deepEqual(Object.keys(manifest.contracts).sort(), Object.keys(SPECS).sort(), 'Unexpected/missing contracts');
-  const height = await rpc('eth_blockNumber');
+  const height = policy?.auditHeight ?? await rpc('eth_blockNumber');
   const block = await rpc('eth_getBlockByNumber', [height, false]);
   assert.ok(block?.hash, 'Missing validation block');
   const H = toQuantity(BigInt(height));
@@ -463,7 +466,7 @@ async function auditGovernanceRoles(rpc, manifest, { root, stage, context }) {
   }
   const finalBlock = await rpc('eth_getBlockByNumber', [H, false]);
   assert.equal(finalBlock.hash, block.hash, 'Validation block changed during role check');
-  return { stage, height: String(BigInt(H)), blockHash: block.hash, timestamp: String(BigInt(block.timestamp)), chainId: '31337',
+  return { stage, height: String(BigInt(H)), blockHash: block.hash, timestamp: String(BigInt(block.timestamp)), chainId: network.chainId,
     sourceCommit: provenance.sourceCommit, config: { ...CONFIG }, identities, roles: roleReports, operations,
     canonicalEvidence: { fromBlock: evidence.fromBlock, blocks: evidence.blocks, receipts: evidence.receipts } };
 }

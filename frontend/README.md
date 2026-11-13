@@ -17,23 +17,28 @@ provider dispatch, không chỉ disable nút. Create proposal dùng signal của
 read; thay context Treasury cũng hủy session còn chờ RPC. Self-delegate độc lập
 snapshot vẫn giữ session guard provider/account/network.
 
-Candidate PR21 đã ghép `preflightGovernanceAction`/`verifyGovernanceOutcome` từ
-TV3 `4cba99a` với snapshot/session guard của TV4. Vote/Cancel/Queue/Execute
-chỉ báo success sau khi receipt đúng emitter/payload và trạng thái tại block
-receipt khớp; propose yêu cầu đúng Governor và proposal ID đã hash trước ký.
-Lỗi xác minh vẫn giữ hash và refresh snapshot, không đổi thành success.
-Đã chạy65/65 tests, lint/build PASS; đây không phải extension/WSL acceptance.
-Khi TV3 ghép Swiss Fintech, giữ cả hai lớp kiểm chứng này và EIP-1193/EIP-6963.
-`config.ts`/mode fixture-live không đổi; không chạm staged/unstaged của TV3.
-Proof P1 trước tích hợp vẫn ở [evidence47tests/browser](../docs/evidence/tv4-20261111-snapshot-guard.json).
+TV4 tích hợp chọn lọc frontend TV3 `15b62b5b1a5402ca2bdb24aad2d7312b6299440c`
+trên PR21 `4296c87`: Swiss Fintech/Inter tự host, Treasury/Governance, form review,
+timeline, và đối chiếu detail/votes/Transfer tại cùng H/hash/revision. Giữ nguyên
+WalletSession/provider/account/chain guard và kiểm chứng emitter/payload/proposal ID/
+outcome tại block receipt. Transaction owner không bị remount trong lúc canonical
+detail refresh, kể cả lỗi API; snapshot cũ luôn có nhãn, không là fixture fallback.
+
+**Quyết định cấu hình:** không nhận default API localhost mới của TV3. Giữ hợp
+đồng PR21: `VITE_API_BASE_URL` trống → fixture read-only, URL được đặt rõ → API.
+`VITE_DATA_SOURCE=fixture` cho phép bỏ qua URL/deployment cũ một cách chủ động.
+API chỉ cần chain/deployment để đọc; RPC và năm địa chỉ contract hợp lệ mới cho ký.
+Các kết quả ở SHA lịch sử bên dưới không nghiệm thu cây tích hợp mới; browser,
+receiving-host, extension-wallet và testnet vẫn cần bằng chứng riêng.
 
 ## Chạy fixture
 
 Cần Node.js 24 và npm. Trên máy mới, chạy trong PowerShell hoặc terminal:
 
 ```sh
-git clone --branch feature/tv3-frontend https://github.com/SE2026-21-1/dao-budget-simulator.git
+git clone https://github.com/SE2026-21-1/dao-budget-simulator.git
 cd dao-budget-simulator
+# Checkout the reviewed integration commit supplied with this handoff first.
 npm --prefix frontend ci
 npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
@@ -45,9 +50,11 @@ Chế độ fixture không cần RPC, backend, ví hoặc `.env.local`. Có th�
 | Đường dẫn | Nội dung |
 | --- | --- |
 | `/` | Dashboard, số dư BUD, tổng vào/ra và lịch sử Treasury |
-| `/proposals` | Danh sách, lọc state, tìm đúng ID thập phân, phân trang 20 mục |
+| `/proposals` | Danh sách, lọc state, tìm ID/nội dung/người tạo/người nhận, phân trang 20 mục |
 | `/proposals/:id` | Description, snapshot/deadline/ETA, phiếu/quorum, receipt và thao tác quản trị |
 | `/proposals/new` | Form khoản chi và xem lại trước khi ký |
+| `/treasury` | Snapshot Treasury, đối chiếu tổng vào/ra và Transfer, nạp BUD |
+| `/governance` | Kết nối ví, GOV balance/delegate/votes và thông tin deployment |
 
 Nguồn fixture duy nhất là **`../fixtures/api/`**; không duy trì JSON bản sao dưới `src/`. Ba trang proposal có 20/20/5 mục tổng hợp. Không gửi giao dịch quản trị/nạp quỹ từ context synthetic. Banner phân biệt fixture/API; địa chỉ fixture không là giá trị mặc định của cấu hình wallet.
 
@@ -63,6 +70,7 @@ Sao chép `.env.example` thành `.env.local` và điền từ manifest thật, h
 
 | Biến | Giá trị |
 | --- | --- |
+| `VITE_DATA_SOURCE` | Tùy chọn `fixture` để ép demo read-only, kể cả URL/deployment cũ còn tồn tại |
 | `VITE_API_BASE_URL` | Origin/base trước `/api`, ví dụ `http://127.0.0.1:3000`; code thêm `/api` |
 | `VITE_DEPLOYMENT_ID` | Chính xác `deployments.deployment_name` mà API trả trong `context.deploymentId`, **không phải** khóa nội bộ `deployment_id` |
 | `VITE_CHAIN_ID` | `manifest.chainId`, số nguyên dương an toàn cho wallet |
@@ -89,6 +97,7 @@ import { spawnSync } from 'node:child_process';
 const m = JSON.parse(readFileSync(process.env.MANIFEST, 'utf8'));
 const env = {
   ...process.env,
+  VITE_DATA_SOURCE: '',
   VITE_API_BASE_URL: process.env.API_BASE_URL,
   VITE_DEPLOYMENT_ID: process.env.DEPLOYMENT_NAME,
   VITE_RPC_URL: process.env.RPC_URL,
@@ -106,17 +115,18 @@ process.exit(result.status ?? 1);
 NODE
 ```
 
-Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. API được bật nhưng thiếu địa chỉ/chain/RPC hợp lệ sẽ báo lỗi cấu hình, **không âm thầm quay về fixture**. API bị lỗi cũng không thay bằng JSON mẫu.
+Thay đường dẫn/URL/deployment name bằng bàn giao hiện tại; không dùng địa chỉ tổng hợp. Khởi động lại Vite sau khi đổi cấu hình. URL API được đặt nhưng thiếu chain/deployment hợp lệ sẽ báo lỗi cấu hình, **không âm thầm quay về fixture**. Có scope API hợp lệ nhưng thiếu RPC/năm địa chỉ thì chỉ đọc, mọi thao tác ký bị khóa. API bị lỗi cũng không thay bằng JSON mẫu.
 
 ### Windows nhận run BE09 — sửa deployment ID mà không ghi `.env.local`
 
-[#36 TV3 ngày11/11](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841)
-đã xác nhận API/RPC và năm địa chỉ khớp manifest, nhưng Vite Windows vẫn dùng
-deployment ID cũ. Sau khi **chính owner dừng Vite cũ**, mở PowerShell tại repo:
+Deployment archived ngày11/11 trong #36/#40 không phải service đang hoạt động.
+Lấy deployment name và API/RPC/năm địa chỉ từ public manifest/runtime của run hiện
+tại. Sau khi **chính owner dừng Vite cũ**, mở PowerShell tại repo và đặt
+`$deploymentName` bằng tên run thực đã đối chiếu với `context.deploymentId`:
 
 ```powershell
-# Chỉ đúng run đã bàn giao trong comment #36; run mới phải lấy runtime.deploymentName mới.
-$env:VITE_DEPLOYMENT_ID = 'be09-local-20261111T071940Z-0210c9c44501'
+$env:VITE_DATA_SOURCE = ''
+$env:VITE_DEPLOYMENT_ID = $deploymentName
 npm run dev --prefix frontend -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
@@ -126,11 +136,10 @@ khởi động: reload trình duyệt không sửa ID của server cũ. `--stric
 thất bại nếu port còn bị chiếm; không kill tiến trình không thuộc mình. Nếu dùng
 port khác, cần TV2 cấu hình origin CORS chính xác trước, không wildcard.
 
-Sau khi mở lại UI, đối chiếu deployment/chain và SnapshotInfo H24/hash
-`0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`/
-revision `440c6ec1-f436-4f48-958f-07f68a80a99e` **nếu run chưa có publication mới**;
-nếu đã tiến, lấy context canonical mới từ API thay vì ép H24. Chưa có kết quả
-browser mới cho bước này; FE live1/0 của TV3 không thay visual/keyboard/extension.
+Sau khi mở lại UI, đối chiếu chain/deployment và SnapshotInfo H/hash/revision với
+context canonical API hiện hành, không ép H/hash/revision của run archived.
+Thu thập browser tại390/1366, keyboard, Console/Network; FE live không thay
+visual/extension acceptance.
 
 ## Snapshot, health và giao dịch
 
@@ -189,9 +198,20 @@ await page.goto(frontendUrl);
 
 Đổi account bằng context/page mới hoặc provider có event `accountsChanged`; không gọi production app API giả. Tất cả `eth_sendTransaction`, `eth_call`, receipt và chain ID vẫn đến Anvil thật. Chỉ dùng account unlocked trên chain local do người kiểm chứng sở hữu; không mở RPC unlocked ra mạng công cộng.
 
-Selectors: `#proposal-title`, `#proposal-body`, `#proposal-recipient`, `#proposal-amount`, `#vote-support`, `#deposit-amount`. Các nút: **Self-delegate**, **Tạo đề xuất** (submit trong form), **Bỏ phiếu**, **Hủy đề xuất**, **Queue**, **Execute**, **Nạp quỹ**, **Tải dữ liệu mới nhất**. Ví nạp BUD lấy `manifest.accounts.funding`; GOV voting power thuộc A/B/C/D theo manifest.
+Selectors: `#proposal-title`, `#proposal-body`, `#proposal-recipient`, `#proposal-amount`, `#vote-support`, `#deposit-amount`. Form: bấm **Tiếp tục: xem lại**, kiểm nội dung rồi **Ký và tạo đề xuất**. Các nút còn lại: **Self-delegate**, **Bỏ phiếu**, **Hủy đề xuất**, **Queue**, **Execute**, **Nạp quỹ**, **Tải dữ liệu mới nhất**. Ví nạp BUD lấy `manifest.accounts.funding`; GOV voting power thuộc A/B/C/D theo manifest.
 
 Smoke các lỗi lifecycle cần API/deployment thật như phần trên và provider có event `accountsChanged`/`chainChanged` (hai provider để thử đổi ví). Trong lúc trì hoãn RPC kiểm tra deployment, đổi account/provider/mạng rồi tiếp tục RPC: phải báo session đã đổi và không có `eth_sendTransaction` từ thao tác cũ. Trì hoãn response kết nối rồi phát account/chain event mới hơn: UI phải giữ event mới. Sau một deposit/cancel có receipt thật, ngắt API trước refresh: receipt/hash và snapshot H cũ phải còn, có cảnh báo lỗi; bật API và tải lại để phục hồi. Chặn riêng summary/transfer của H mới để kiểm receipt vẫn hiện trong lúc tải và sau lỗi. Chế độ fixture chỉ kiểm route/layout và giao dịch bị khóa, không chứng minh các ca session/receipt này.
+
+Browser bàn giao cây tích hợp: kiểm cả sáu route ở390/1366, không tràn ngang,
+skip-link vào main và form review phải reset khi sửa input. Trên cùng deployment
+thật, kiểm SnapshotInfo và các tổng phiếu/Transfer; sau receipt trì hoãn detail/
+votes/transfers của snapshot mới: hash/receipt và snapshot cũ vẫn hiện, không ký
+trong khi lease cũ đã bị thu hồi. Trả409/503 từ collection **hoặc pinned child**:
+action/nạp quỹ phải khóa ngay cả RPC preflight đang chờ; retry lỗi không mở khóa,
+chỉ canonical load đầy đủ mới mở lại. Lỗi child phải có cảnh báo. Thử điều hướng
+sang proposal khác khi detail cũ còn giữ: không được hiển thị/ký proposal trước.
+Header wallet ở fixture/read-only API không được báo sai mạng khi chưa có chain
+deployment để so sánh.
 
 ## Các lệnh kiểm tra để người tích hợp chạy
 
@@ -203,6 +223,16 @@ npm --prefix frontend run lint
 ```
 
 Behavior tests kiểm tra calldata/hash SC01, nguyên văn Unicode/description, uint256/precision, payload gốc và định dạng tiền. Các regression React DOM dùng `happy-dom` kiểm account/chain event đến sau, đổi provider/account khi chờ RPC, abort request superseded, giữ snapshot/receipt khi refresh lỗi và phục hồi; chỉ mock biên ví/RPC/API, không thay bằng mock-echo hoặc repin bản sao fixture. Build có TypeScript typecheck. Chạy các lệnh trên sau khi tích hợp; tài liệu này không tự khẳng định đã pass. Fixture/unit/build không thay thế bằng chứng ví–API–chain hoặc deployment testnet thật.
+
+Live API: trong **tiến trình test riêng**, đặt đủ `BE05_LIVE_API_URL`,
+`BE05_LIVE_CHAIN_ID`, `BE05_LIVE_DEPLOYMENT_ID`, `BE05_LIVE_RPC_URL` từ cùng run
+đang phục vụ, rồi chạy
+`npm --prefix frontend test -- --run src/data/api.live.test.ts`.
+Thiếu biến thì SKIP, không là PASS. Test SC06 mới dùng `SC06_LIVE_RUN` trỏ đến
+`chain.json` của `scripts/generate_sc06_chain.mjs` vừa chạy ở **cùng HEAD**,
+không dùng artifact cũ làm live proof:
+`npm --prefix frontend test -- --run src/chain/sc06.live.test.ts`.
+Suite thường không cung cấp các biến live này và phải báo các ca đó SKIP.
 
 ## Kết quả nghiệm thu TV4 ngày 24/10/2026
 

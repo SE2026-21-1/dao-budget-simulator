@@ -62,10 +62,10 @@ export async function verifyDeployment(): Promise<void> {
   }
 }
 
-export async function waitForReceipt(hash: Hash): Promise<TransactionReceipt> {
-  if (!publicClient) throw new Error("Thiếu RPC để kiểm tra giao dịch.");
+export async function waitForReceipt(hash: Hash, client = publicClient): Promise<TransactionReceipt> {
+  if (!client) throw new Error("Thiếu RPC để kiểm tra giao dịch.");
   let changedAction = false;
-  const receipt = await publicClient.waitForTransactionReceipt({
+  const receipt = await client.waitForTransactionReceipt({
     hash,
     onReplaced: ({ reason }) => { if (reason !== "repriced") changedAction = true; },
   });

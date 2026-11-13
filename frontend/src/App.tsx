@@ -1,4 +1,4 @@
-import { BrowserRouter, NavLink, Route, Routes } from "react-router";
+import { BrowserRouter, Link, NavLink, Route, Routes } from "react-router";
 import DashboardPage from "./pages/DashboardPage";
 import ProposalListPage from "./pages/ProposalListPage";
 import ProposalDetailPage from "./pages/ProposalDetailPage";
@@ -7,12 +7,16 @@ import WalletPanel from "./components/WalletPanel";
 import { useWallet } from "./chain/wallet";
 import { apiBaseUrl, configurationError, deployment } from "./chain/config";
 import ApiHealth from "./components/ApiHealth";
-import { LogoPrism, IconHome, IconDocument, IconTreasury } from "./components/EditorialIcons";
+import { LogoPrism, IconHome, IconDocument, IconTreasury, IconGovernance } from "./components/EditorialIcons";
+import TreasuryPage from "./pages/TreasuryPage";
+import GovernancePage from "./pages/GovernancePage";
 
 const navigation = [
   { to: "/", label: "Tổng quan", icon: IconHome, end: true },
   { to: "/proposals", label: "Đề xuất", icon: IconDocument, end: true },
   { to: "/proposals/new", label: "Tạo đề xuất", icon: IconTreasury, end: true },
+  { to: "/treasury", label: "Treasury", icon: IconTreasury, end: true },
+  { to: "/governance", label: "Governance", icon: IconGovernance, end: true },
 ];
 
 function AppContent() {
@@ -35,9 +39,11 @@ function AppContent() {
           ))}
         </nav>
         <div className="editorial-topbar__right">
-          <span className="connection-status"><span aria-hidden="true" />
-            {wallet.account ? `${wallet.account.slice(0, 6)}…${wallet.account.slice(-4)}` : "Chưa kết nối ví"}
+          <span className={`connection-status ${wallet.account ? deployment && wallet.chainId !== deployment.chainId ? "connection-status--wrong" : "connection-status--connected" : ""}`}><span aria-hidden="true" />
+            {wallet.account ? deployment && wallet.chainId !== deployment.chainId ? "Sai mạng" : "Đã kết nối" : "Chưa kết nối"}
           </span>
+          {wallet.account ? <Link className="header-wallet" to="/governance" title={`Xem ví ${wallet.account}`}>{wallet.account.slice(0, 6)}…{wallet.account.slice(-4)}</Link> :
+            <button className="header-wallet" type="button" onClick={() => void (wallet.wallets.length ? wallet.connect() : wallet.discover())} disabled={wallet.busy}>{wallet.busy ? "Đang chờ ví…" : "Kết nối ví"}</button>}
         </div>
       </header>
       <div className="editorial-app-body">
@@ -46,7 +52,7 @@ function AppContent() {
             <div className="dao-selector-card">
               <div className="dao-selector__avatar" aria-hidden="true"><span className="dao-selector__avatar-inner" /></div>
               <div className="dao-selector__info"><strong>DAO Budget Simulator</strong>
-                <small>{deployment ? deployment.chain.name : "Dữ liệu mô phỏng"}</small></div>
+                <small>{deployment ? deployment.chain.name : apiBaseUrl ? "API · Chỉ đọc" : "Dữ liệu mô phỏng"}</small></div>
             </div>
           </div>
           <nav className="editorial-nav" aria-label="Điều hướng sidebar">
@@ -56,7 +62,7 @@ function AppContent() {
               }><Icon className="w-5 h-5 editorial-nav__icon" /><span>{label}</span></NavLink>
             ))}
           </nav>
-          <div className="editorial-sidebar__wallet-section"><WalletPanel /></div>
+          <div className="editorial-sidebar__wallet-section" id="wallet-panel"><WalletPanel /></div>
           <div className="editorial-sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__mark" aria-hidden="true">DAO</span><strong>Minh bạch từng đề xuất.</strong><p>Khám phá ngân sách và cùng cộng đồng đưa ra quyết định.</p></div></div>
         </aside>
         <main className="editorial-main-content" id="main-content" tabIndex={-1}>
@@ -64,7 +70,7 @@ function AppContent() {
             <span className="demo-banner__dot" aria-hidden="true" />
             <strong>{apiBaseUrl ? "Dữ liệu API" : "Dữ liệu mô phỏng"}</strong>
             <span>{apiBaseUrl
-              ? configurationError ?? "Đang đọc API BE05 theo deployment đã cấu hình; không dùng fixture khi API lỗi."
+              ? configurationError ?? (deployment ? "Đang đọc API TV2 theo deployment đã cấu hình." : "Đang đọc API TV2; cấu hình RPC và địa chỉ contract để bật giao dịch ví.")
               : "Đang xem fixture BE01; giao dịch với dữ liệu này bị khóa."}</span>
           </div>
           <ApiHealth />
@@ -72,6 +78,8 @@ function AppContent() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/proposals" element={<ProposalListPage />} />
             <Route path="/proposals/new" element={<CreateProposalPage />} />
+            <Route path="/treasury" element={<TreasuryPage />} />
+            <Route path="/governance" element={<GovernancePage />} />
             <Route path="/proposals/:id" element={<ProposalDetailPage />} />
             <Route path="*" element={<div className="panel"><h1>Không tìm thấy trang</h1><p>Đường dẫn này không tồn tại.</p><NavLink to="/">Về tổng quan</NavLink></div>} />
           </Routes>

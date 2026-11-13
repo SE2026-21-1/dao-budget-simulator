@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import { type ProposalCollection } from "./proposals";
 import { ApiError, loadProposals } from "./api";
@@ -47,6 +47,12 @@ export function useProposalFixtures() {
     return () => { active = false; controller.abort(); };
   }, [simulateError, attempt]);
 
+  const invalidateSnapshot = useCallback((error: unknown) => {
+    if (!(error instanceof ApiError) || (error.status !== 409 && error.status !== 503)) return;
+    writes.current?.abort(new Error("Snapshot không còn hợp lệ hoặc API chưa sẵn sàng. Tải dữ liệu canonical mới trước khi thao tác."));
+    setLoaded((previous) => previous?.state.status === "success"
+      ? { ...previous, refreshError: error.message } : previous);
+  }, []);
   const retry = () => setAttempt((value) => value + 1);
-  return { state, retry, simulateError, refreshing, refreshError, snapshotSignal: sameSource ? loaded.snapshotSignal : undefined };
+  return { state, retry, simulateError, refreshing, refreshError, invalidateSnapshot, snapshotSignal: sameSource ? loaded.snapshotSignal : undefined };
 }

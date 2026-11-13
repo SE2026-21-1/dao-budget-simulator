@@ -2,11 +2,10 @@
 export function LogoPrism({ className = "w-7 h-7" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Faceted triangular origami mark as in 01-editorial-light.png */}
-      <polygon points="18,3 32,28 18,22" fill="#E28743" />
-      <polygon points="18,3 4,28 18,22" fill="#F4B251" />
-      <polygon points="4,28 18,33 18,22" fill="#1C2E2A" />
-      <polygon points="32,28 18,33 18,22" fill="#0E7759" />
+      <polygon points="18,3 32,28 18,22" fill="#087F5B" />
+      <polygon points="18,3 4,28 18,22" fill="#59A786" />
+      <polygon points="4,28 18,33 18,22" fill="#075E46" />
+      <polygon points="32,28 18,33 18,22" fill="#172B3A" />
     </svg>
   );
 }

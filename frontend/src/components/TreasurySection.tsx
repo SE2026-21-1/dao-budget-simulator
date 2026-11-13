@@ -1,15 +1,32 @@
 import { useEffect, useState } from "react";
 import { isAddress } from "viem";
-import { deployment } from "../chain/config";
+import { deployment, transactionUrl } from "../chain/config";
 import { useWallet, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { useTransaction } from "../chain/useTransaction";
 import { assertWritable, parseBUD, verifyDeployment } from "../chain/transactions";
 import { formatBUD, formatCompactBUD } from "../data/formatBUD";
-import { loadSummary, loadTransfers, type Summary, type Transfer } from "../data/api";
+import { loadTreasurySnapshot, type Summary, type Transfer } from "../data/api";
 import type { FixtureContext } from "../data/proposals";
 import TransactionStatus from "./TransactionStatus";
 
-export default function TreasurySection({ context, snapshotSignal, onConfirmed }: { context: FixtureContext; snapshotSignal: AbortSignal; onConfirmed: () => void }) {
+function balancePath(balance: string, transfers: Transfer[]) {
+  const ordered = [...transfers].sort((a, b) => BigInt(a.blockNumber) === BigInt(b.blockNumber)
+    ? Number(BigInt(b.logIndex) - BigInt(a.logIndex)) : BigInt(a.blockNumber) > BigInt(b.blockNumber) ? -1 : 1);
+  let value = BigInt(balance);
+  const history = [value];
+  for (const transfer of ordered) {
+    if (transfer.direction === "in") value -= BigInt(transfer.amount);
+    if (transfer.direction === "out") value += BigInt(transfer.amount);
+    history.push(value);
+  }
+  history.reverse();
+  const low = history.reduce((a, b) => a < b ? a : b);
+  const high = history.reduce((a, b) => a > b ? a : b);
+  const span = high - low || 1n;
+  return history.map((amount, index) => `${(index * 100 / Math.max(1, history.length - 1)).toFixed(2)},${(84 - Number((amount - low) * 68n / span)).toFixed(2)}`).join(" ");
+}
+
+export default function TreasurySection({ context, snapshotSignal, onConfirmed, onSnapshotError }: { context: FixtureContext; snapshotSignal: AbortSignal; onConfirmed: () => void; onSnapshotError: (error: unknown) => void }) {
   const wallet = useWallet();
   const transaction = useTransaction();
   const [loaded, setLoaded] = useState<{ context: FixtureContext; summary?: Summary; transfers?: Transfer[]; signal?: AbortSignal; error?: string }>();
@@ -24,12 +41,12 @@ export default function TreasurySection({ context, snapshotSignal, onConfirmed }
 
   useEffect(() => {
     const controller = new AbortController();
-    Promise.all([loadSummary(context, controller.signal), loadTransfers(context, controller.signal)]).then(
-      ([nextSummary, nextTransfers]) => { if (!controller.signal.aborted) setLoaded({ context, summary: nextSummary, transfers: nextTransfers, signal: controller.signal }); },
-      (cause: unknown) => { if (!controller.signal.aborted) setLoaded({ context, error: cause instanceof Error ? cause.message : "Không tải được Treasury." }); },
+    loadTreasurySnapshot(context, controller.signal).then(
+      ({ summary, transfers }) => { if (!controller.signal.aborted) setLoaded({ context, summary, transfers, signal: controller.signal }); },
+      (cause: unknown) => { if (!controller.signal.aborted) { onSnapshotError(cause); setLoaded({ context, error: cause instanceof Error ? cause.message : "Không tải được Treasury." }); } },
     );
     return () => controller.abort();
-  }, [context]);
+  }, [context, onSnapshotError]);
 
   const deposit = async () => {
     setDepositError(null);
@@ -54,6 +71,7 @@ export default function TreasurySection({ context, snapshotSignal, onConfirmed }
     {summary && <>
       {context.sync?.status === "lagging" && <p className="notice">Indexer đang đồng bộ chậm; số liệu có thể cũ.</p>}
       <div className="treasury-stats"><div><span>Số dư</span><strong title={formatBUD(summary.treasury.balance)}>{formatCompactBUD(summary.treasury.balance)}</strong></div><div><span>Tổng vào</span><strong title={formatBUD(summary.treasury.totalIn)}>{formatCompactBUD(summary.treasury.totalIn)}</strong></div><div><span>Tổng ra</span><strong title={formatBUD(summary.treasury.totalOut)}>{formatCompactBUD(summary.treasury.totalOut)}</strong></div></div>
+      {transfers.length > 0 && <div className="treasury-trend"><div><h3>Biến động ngân sách</h3><p>Số dư dựng lại từ {transfers.length} Transfer BUD, kết thúc tại block {context.asOfBlock}.</p></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label={`Biến động số dư Treasury, hiện tại ${formatBUD(summary.treasury.balance)}`}><line x1="0" y1="84" x2="100" y2="84" stroke="#dce6de" strokeWidth=".6" /><line x1="0" y1="50" x2="100" y2="50" stroke="#e6ece8" strokeWidth=".6" /><polyline fill="none" stroke="#087f5b" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" points={balancePath(summary.treasury.balance, transfers)} /></svg></div>}
       <div className="treasury-deposit">
         <h3>Nạp BUD vào quỹ</h3><p>Ví gửi BUD trực tiếp tới Treasury. Sau receipt, giao diện tải snapshot mới nhất đã xuất bản; nếu indexer chưa bắt kịp, bấm Tải dữ liệu mới nhất sau khi index.</p>
         <div className="action-row"><label className="field-label" htmlFor="deposit-amount">Số BUD</label><input id="deposit-amount" className="field-control" inputMode="decimal" value={amount} onChange={(event) => setAmount(event.target.value)} placeholder="100" /><button type="button" className="button-primary" disabled={snapshotSignal.aborted || context.sync?.status === "not_ready" || transaction.busy || context.dataKind !== "chain" || !deployment || !wallet.account || wallet.chainId !== deployment.chainId} onClick={() => void deposit()}>Nạp quỹ</button></div>
@@ -61,7 +79,7 @@ export default function TreasurySection({ context, snapshotSignal, onConfirmed }
       </div>
       <div className="treasury-history"><h3>Lịch sử dòng tiền</h3>
         {transfers.length === 0 ? <p>Chưa có Transfer BUD.</p> : <>
-          <div className="treasury-history__list">{transfers.slice(page * 10, page * 10 + 10).map((transfer) => <div key={`${transfer.blockNumber}-${transfer.logIndex}`}><span>{transfer.direction === "in" ? "Nạp" : transfer.direction === "out" ? "Chi" : "Chuyển nội bộ"}</span><strong>{formatBUD(transfer.amount)}</strong><small>Block {transfer.blockNumber} · {transfer.transactionHash.slice(0, 10)}…</small></div>)}</div>
+          <div className="treasury-history__list">{transfers.slice(page * 10, page * 10 + 10).map((transfer) => <div key={`${transfer.blockNumber}-${transfer.logIndex}`}><span>{transfer.direction === "in" ? "Nạp" : transfer.direction === "out" ? "Chi" : "Chuyển nội bộ"}</span><strong>{formatBUD(transfer.amount)}</strong><small>Block {transfer.blockNumber} · {transactionUrl(transfer.transactionHash) ? <a href={transactionUrl(transfer.transactionHash)!} target="_blank" rel="noreferrer" title={transfer.transactionHash}>{transfer.transactionHash.slice(0, 10)}…</a> : <code title={transfer.transactionHash}>{transfer.transactionHash.slice(0, 10)}…</code>}</small></div>)}</div>
           <nav className="pagination" aria-label="Phân trang lịch sử"><button type="button" disabled={page === 0} onClick={() => setPage(page - 1)}>Trước</button><span aria-live="polite">{page + 1} / {Math.ceil(transfers.length / 10)}</span><button type="button" disabled={(page + 1) * 10 >= transfers.length} onClick={() => setPage(page + 1)}>Sau</button></nav>
         </>}
       </div>

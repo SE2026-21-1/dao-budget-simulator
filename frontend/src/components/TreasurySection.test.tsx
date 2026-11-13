@@ -45,6 +45,10 @@ vi.mock("../chain/transactions", async (original) => ({
 vi.mock("../data/api", async (original) => ({
   ...await original<typeof Api>(),
   loadSummary: state.loadSummary, loadTransfers: state.loadTransfers, loadProposals: state.loadProposals,
+  loadTreasurySnapshot: async (context: FixtureContext, signal: AbortSignal) => {
+    const [summary, transfers] = await Promise.all([state.loadSummary(context, signal), state.loadTransfers(context, signal)]);
+    return { summary, transfers };
+  },
 }));
 
 let root: Root;
@@ -169,12 +173,13 @@ describe("Treasury receipt lifecycle", () => {
 
   it("shows the receipt while Treasury loads a newer context and after that read fails", async () => {
     const onConfirmed = vi.fn();
+    const onSnapshotError = vi.fn();
     const snapshotSignal = new AbortController().signal;
-    await act(async () => { root.render(<TreasurySection context={context} snapshotSignal={snapshotSignal} onConfirmed={onConfirmed} />); });
+    await act(async () => { root.render(<TreasurySection context={context} snapshotSignal={snapshotSignal} onConfirmed={onConfirmed} onSnapshotError={onSnapshotError} />); });
     await deposit();
     const pending = deferred<Summary>();
     state.loadSummary.mockReturnValueOnce(pending.promise);
-    await act(async () => { root.render(<TreasurySection context={{ ...context, asOfBlock: "11" }} snapshotSignal={snapshotSignal} onConfirmed={onConfirmed} />); });
+    await act(async () => { root.render(<TreasurySection context={{ ...context, asOfBlock: "11" }} snapshotSignal={snapshotSignal} onConfirmed={onConfirmed} onSnapshotError={onSnapshotError} />); });
     expect(container.textContent).toContain("Đang tải dữ liệu Treasury");
     expect(container.textContent).toContain(state.hash);
     await act(async () => { pending.reject(new Error("Snapshot invalidated")); });
@@ -182,6 +187,7 @@ describe("Treasury receipt lifecycle", () => {
     expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
     expect(container.textContent).toContain(state.hash);
     expect(onConfirmed).toHaveBeenCalledTimes(1);
+    expect(onSnapshotError).toHaveBeenCalledWith(expect.objectContaining({ message: "Snapshot invalidated" }));
   });
 
   it.each(["snapshot lease", "Treasury context"])("never sends a deposit invalidated by %s during token RPC prerequisites", async (invalidation) => {
@@ -201,7 +207,8 @@ describe("Treasury receipt lifecycle", () => {
     removeAnnouncements = () => window.removeEventListener("eip6963:requestProvider", announce);
     const controller = new AbortController();
     const onConfirmed = vi.fn();
-    await act(async () => { root.render(<WalletProvider><TreasurySection context={context} snapshotSignal={controller.signal} onConfirmed={onConfirmed} /></WalletProvider>); });
+    const onSnapshotError = vi.fn();
+    await act(async () => { root.render(<WalletProvider><TreasurySection context={context} snapshotSignal={controller.signal} onConfirmed={onConfirmed} onSnapshotError={onSnapshotError} /></WalletProvider>); });
     const bytecode = deferred<Hex>();
     state.rpc.getBytecode.mockReturnValueOnce(bytecode.promise);
     await deposit();
@@ -209,7 +216,7 @@ describe("Treasury receipt lifecycle", () => {
     expect(request.mock.calls.some(([args]) => args.method === "eth_sendTransaction")).toBe(false);
     await act(async () => {
       if (invalidation === "snapshot lease") controller.abort();
-      else root.render(<WalletProvider><TreasurySection context={{ ...context, snapshotRevision: "2", asOfBlock: "11", asOfBlockHash: `0x${"02".repeat(32)}` }} snapshotSignal={controller.signal} onConfirmed={onConfirmed} /></WalletProvider>);
+      else root.render(<WalletProvider><TreasurySection context={{ ...context, snapshotRevision: "2", asOfBlock: "11", asOfBlockHash: `0x${"02".repeat(32)}` }} snapshotSignal={controller.signal} onConfirmed={onConfirmed} onSnapshotError={onSnapshotError} /></WalletProvider>);
     });
     await act(async () => { bytecode.resolve("0x6000"); });
     expect(request.mock.calls.some(([args]) => args.method === "eth_sendTransaction")).toBe(false);

@@ -103,6 +103,19 @@ describe("SC06 governance action preflight", () => {
 });
 
 describe("SC06 raw receipts and on-chain confirmation", () => {
+  it("matches archived final-height eth_call results for Governor, Treasury and Timelock", () => {
+    for (const [index, vector] of sc06.proposals.entries()) {
+      const calls = vector.finalCalls;
+      expect(calls.state.to.toLowerCase()).toBe(sc06.governor.toLowerCase());
+      expect(calls.paid.to.toLowerCase()).toBe(sc06.treasury.toLowerCase());
+      expect(calls.operationTimestamp.to.toLowerCase()).toBe(sc06.timelock.toLowerCase());
+      expect(new Set(Object.values(calls).map((call) => BigInt(call.block).toString()))).toEqual(new Set(["26"]));
+      expect(BigInt(calls.state.result)).toBe(index === 0 ? 7n : 2n);
+      expect(BigInt(calls.paid.result)).toBe(index === 0 ? 1n : 0n);
+      expect(BigInt(calls.operationTimestamp.result)).toBe(index === 0 ? 1n : 0n);
+    }
+  });
+
   it("matches the archived Timelock operationId", () => {
     const p = proposal(0);
     expect(operationForActions(originalActions(p, addresses.treasury), addresses.governor).id).toBe(sc06.proposals[0].operationId);

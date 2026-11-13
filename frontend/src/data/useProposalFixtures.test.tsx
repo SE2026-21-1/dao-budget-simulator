@@ -17,14 +17,15 @@ vi.mock("../chain/config", () => ({ apiBaseUrl: "http://api.local" }));
 let root: Root;
 let container: HTMLDivElement;
 let snapshotSignal: AbortSignal | undefined;
+let revokeFromChild: (error: unknown) => void;
 const collection = (block: string, revision = "1"): ProposalCollection => ({
   context: { chainId: "31337", deploymentId: "lifecycle", dataKind: "chain", asOfBlock: block, asOfBlockHash: `0x${block.padStart(64, "0")}`, snapshotRevision: revision },
   proposals: [], totalCount: 0, pageSizes: [0],
 });
 
 function Probe() {
-  const { state, retry, refreshing, refreshError, snapshotSignal: signal } = useProposalFixtures();
-  useEffect(() => { snapshotSignal = signal; }, [signal]);
+  const { state, retry, refreshing, refreshError, invalidateSnapshot, snapshotSignal: signal } = useProposalFixtures();
+  useEffect(() => { snapshotSignal = signal; revokeFromChild = invalidateSnapshot; }, [signal, invalidateSnapshot]);
   return <><output>{state.status === "success" ? `block:${state.collection.context.asOfBlock}` : state.status === "error" ? state.message : "loading"}</output>
     {state.status === "success" && <span data-testid="snapshot">{state.collection.context.asOfBlockHash}:{state.collection.context.snapshotRevision}</span>}
     <span data-testid="writable">{signal ? signal.aborted ? "blocked" : "live" : "missing"}</span>
@@ -46,6 +47,18 @@ afterEach(async () => {
 });
 
 describe("published snapshot refresh", () => {
+  it.each([[409, "SNAPSHOT_INVALIDATED"], [503, "DATA_NOT_READY"]] as const)("revokes a lease when a pinned child API returns %s", async (status, code) => {
+    api.loadProposals.mockResolvedValueOnce(collection("10", "7")).mockResolvedValueOnce(collection("11", "8"));
+    await act(async () => { root.render(<MemoryRouter><Probe /></MemoryRouter>); });
+    const old = snapshotSignal;
+    await act(async () => { revokeFromChild(new ApiError(status, code, "Pinned child invalidated")); });
+    expect(old?.aborted).toBe(true);
+    expect(container.querySelector("output")!.textContent).toBe("block:10");
+    await refresh();
+    expect(snapshotSignal).not.toBe(old);
+    expect(snapshotSignal?.aborted).toBe(false);
+    expect(container.querySelector("output")!.textContent).toBe("block:11");
+  });
   it("retains the last snapshot on refresh failure and recovers with a fresh request", async () => {
     api.loadProposals.mockResolvedValueOnce(collection("10")).mockRejectedValueOnce(new Error("API unavailable"));
     await act(async () => { root.render(<MemoryRouter><Probe /></MemoryRouter>); });

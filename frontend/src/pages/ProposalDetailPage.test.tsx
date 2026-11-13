@@ -2,7 +2,7 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import type { Root } from "react-dom/client";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { Link, MemoryRouter, Route, Routes } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { decodeFunctionData, encodeAbiParameters, encodeFunctionData, keccak256, parseAbiParameters, toHex } from "viem";
 import type { Address, Hex } from "viem";
@@ -28,7 +28,7 @@ const state = vi.hoisted(() => ({
     chain: { id: 31337, name: "Local", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: ["http://127.0.0.1:8545"] } } },
   },
   rpc: { readContract: vi.fn(), getBytecode: vi.fn(), getChainId: vi.fn(), getBlock: vi.fn(), waitForTransactionReceipt: vi.fn() },
-  request: vi.fn(), loadProposals: vi.fn(),
+  request: vi.fn(), loadProposals: vi.fn(), loadProposalSnapshot: vi.fn(),
   confirmationMatches: true,
   proposalState: 1,
   pendingState: undefined as Promise<bigint> | undefined,
@@ -38,7 +38,7 @@ vi.mock("../chain/config", () => ({
   transactionUrl: (hash: string) => `https://explorer.local/tx/${hash}`,
 }));
 vi.mock("viem", async (original) => ({ ...await original<typeof Viem>(), createPublicClient: () => state.rpc }));
-vi.mock("../data/api", async (original) => ({ ...await original<typeof Api>(), loadProposals: state.loadProposals }));
+vi.mock("../data/api", async (original) => ({ ...await original<typeof Api>(), loadProposals: state.loadProposals, loadProposalSnapshot: state.loadProposalSnapshot }));
 
 const account = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as Address;
 const recipient = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" as Address;
@@ -141,6 +141,7 @@ async function mount(initial: ProposalCollection) {
   state.loadProposals.mockResolvedValueOnce(initial);
   await act(async () => {
     root.render(<WalletProvider><MemoryRouter initialEntries={[`/proposals/${proposalId}`]}>
+      <Link to="/proposals/2">Other proposal</Link>
       <Routes><Route path="/proposals/:id" element={<ProposalDetailPage />} /></Routes>
     </MemoryRouter></WalletProvider>);
   });
@@ -154,6 +155,7 @@ beforeEach(() => {
   state.proposalState = 1;
   state.confirmationMatches = true;
   state.loadProposals.mockReset();
+  state.loadProposalSnapshot.mockReset().mockImplementation(async (proposal: Proposal) => ({ proposal, votes: [], transfers: [] }));
   state.rpc.getBytecode.mockReset().mockResolvedValue("0x6000");
   state.rpc.getChainId.mockReset().mockResolvedValue(31337);
   state.rpc.getBlock.mockReset().mockResolvedValue({ timestamp: 200n });
@@ -330,6 +332,86 @@ describe.each(invalidations)("proposal detail $status $code recovery", ({ status
     await click("Bỏ phiếu");
     expect(sends()).toHaveLength(1);
     expect(container.textContent).toContain("Giao dịch đã được xác nhận.");
+  });
+});
+
+describe("canonical detail verification lifecycle", () => {
+  it.each(invalidations)("retains receipt and revokes signing after pinned child $status, including same-context retries", async ({ status, code }) => {
+    const old = collection("Active");
+    const canonical = collection("Succeeded", true);
+    await mount(old);
+    state.loadProposals.mockResolvedValue(old);
+    await click("Bỏ phiếu");
+    const receiptNode = container.querySelector(".transaction-status")!;
+    expect(receiptNode.textContent).toContain(hash);
+
+    state.loadProposals.mockResolvedValue(canonical);
+    state.loadProposalSnapshot.mockRejectedValueOnce(new ApiError(status, code, "Pinned detail unavailable"));
+    await refresh();
+    expectSnapshot(old);
+    expect(container.textContent).toContain("Pinned detail unavailable");
+    expect(button("Bỏ phiếu").disabled).toBe(true);
+    expect(container.querySelector(".transaction-status")).toBe(receiptNode);
+
+    const child = deferred<{ proposal: Proposal; votes: []; transfers: [] }>();
+    state.loadProposalSnapshot.mockReturnValueOnce(child.promise);
+    await refresh();
+    expectSnapshot(old);
+    expect(button("Bỏ phiếu").disabled).toBe(true);
+    expect(container.querySelector(".transaction-status")).toBe(receiptNode);
+    expect(receiptNode.textContent).toContain(hash);
+    await act(async () => { child.resolve({ proposal: canonical.proposals[0], votes: [], transfers: [] }); });
+    expectSnapshot(canonical);
+    expect(button("Queue").disabled).toBe(false);
+    expect(container.textContent).not.toContain("Pinned detail unavailable");
+    expect(container.querySelector(".transaction-status")).toBe(receiptNode);
+    expect(receiptNode.textContent).toContain(hash);
+    expect(sends()).toHaveLength(1);
+  });
+
+  it("does not reuse an earlier detail verification for a new lease at the same H/hash/revision", async () => {
+    const old = collection("Active");
+    await mount(old);
+    state.loadProposals.mockResolvedValue(old);
+    state.loadProposalSnapshot.mockRejectedValueOnce(new ApiError(409, "SNAPSHOT_INVALIDATED", "Pinned detail invalidated"));
+    await refresh();
+    expect(button("Bỏ phiếu").disabled).toBe(true);
+    const child = deferred<{ proposal: Proposal; votes: []; transfers: [] }>();
+    state.loadProposalSnapshot.mockReturnValueOnce(child.promise);
+    await refresh();
+    expect(button("Bỏ phiếu").disabled).toBe(true);
+    await click("Bỏ phiếu");
+    expect(sends()).toHaveLength(0);
+    await act(async () => { child.resolve({ proposal: old.proposals[0], votes: [], transfers: [] }); });
+    expect(button("Bỏ phiếu").disabled).toBe(false);
+  });
+
+  it("shows initial detail API errors with snapshot identity and no fixture fallback", async () => {
+    state.loadProposalSnapshot.mockRejectedValueOnce(new ApiError(503, "DATA_NOT_READY", "Initial detail unavailable"));
+    const old = collection("Active");
+    await mount(old);
+    expectSnapshot(old);
+    expect(container.textContent).toContain("Initial detail unavailable");
+    expect(container.textContent).not.toContain("Canonical governance payment");
+    expect(container.querySelector(".proposal-actions")).toBeNull();
+    expect(sends()).toHaveLength(0);
+  });
+
+  it("never displays or signs retained data belonging to another proposal route", async () => {
+    const old = collection("Active");
+    const other = { ...old.proposals[0], proposalId: "2", title: "Other proposal content" };
+    await mount({ ...old, proposals: [...old.proposals, other], totalCount: 2, pageSizes: [2] });
+    expect(container.textContent).toContain("Canonical governance payment");
+    const child = deferred<{ proposal: Proposal; votes: []; transfers: [] }>();
+    state.loadProposalSnapshot.mockReturnValueOnce(child.promise);
+    await act(async () => { container.querySelector<HTMLAnchorElement>('a[href="/proposals/2"]')!.click(); });
+    expect(container.textContent).not.toContain("Canonical governance payment");
+    expect(container.querySelector(".proposal-actions")).toBeNull();
+    await act(async () => { child.reject(new ApiError(503, "DATA_NOT_READY", "Other detail unavailable")); });
+    expect(container.textContent).toContain("Other detail unavailable");
+    expect(container.textContent).not.toContain("Canonical governance payment");
+    expect(container.querySelector(".proposal-actions")).toBeNull();
+    expect(sends()).toHaveLength(0);
   });
 });
 

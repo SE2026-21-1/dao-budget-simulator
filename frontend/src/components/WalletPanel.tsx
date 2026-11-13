@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useWallet, formatGOV, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { deployment } from "../chain/config";
 import { useTransaction } from "../chain/useTransaction";
@@ -6,10 +7,11 @@ import TransactionStatus from "./TransactionStatus";
 export default function WalletPanel() {
   const wallet = useWallet();
   const transaction = useTransaction();
+  const providerId = useId();
   const correctNetwork = Boolean(wallet.account && deployment && wallet.chainId === deployment.chainId);
   return <div className="wallet-panel">
     <p className="sidebar__label">VÍ & QUYỀN BIỂU QUYẾT</p>
-    {wallet.wallets.length > 1 && <div className="wallet-picker"><label className="field-label" htmlFor="wallet-provider">Chọn ví</label><select id="wallet-provider" className="field-control" value={wallet.selectedWalletId ?? ""} onChange={(event) => wallet.selectWallet(event.target.value)} disabled={wallet.busy}>{wallet.wallets.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}</select></div>}
+    {wallet.wallets.length > 1 && <div className="wallet-picker"><label className="field-label" htmlFor={providerId}>Chọn ví</label><select id={providerId} className="field-control" value={wallet.selectedWalletId ?? ""} onChange={(event) => wallet.selectWallet(event.target.value)} disabled={wallet.busy}>{wallet.wallets.map(({ id, name }) => <option key={id} value={id}>{name}</option>)}</select></div>}
     {wallet.wallets.length === 1 && <p className="wallet-meta">Ví: {wallet.wallets[0].name}</p>}
     {wallet.wallets.length === 0 ? <div className="wallet-help" role="status"><strong>Chưa phát hiện ví</strong><p>Mở web trong Chrome, Edge hoặc trình duyệt đã cài và bật tiện ích ví EVM.</p><p>Nếu đang xem bằng trình duyệt tích hợp, hãy mở cùng địa chỉ web trong trình duyệt có ví.</p><button type="button" className="button-secondary" onClick={wallet.discover}>Tìm lại ví</button></div> : !wallet.account ? <button type="button" className="button-secondary" onClick={() => void wallet.connect()} disabled={wallet.busy}>{wallet.busy ? "Đang chờ ví…" : "Kết nối ví"}</button> : <>
       <p className="wallet-address" title={wallet.account}>{wallet.account.slice(0, 7)}…{wallet.account.slice(-5)}</p>

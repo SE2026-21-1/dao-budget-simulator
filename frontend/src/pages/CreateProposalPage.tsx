@@ -19,6 +19,7 @@ function CreateProposalPage() {
   const [requestId] = useState(newRequestId);
   const [submittedId, setSubmittedId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [reviewing, setReviewing] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const summary = loadedSummary?.attempt === loadAttempt ? loadedSummary.summary ?? null : null;
   const loadError = loadedSummary?.attempt === loadAttempt ? loadedSummary.error ?? null : null;
@@ -39,6 +40,7 @@ function CreateProposalPage() {
   const submit = async (event: FormEvent) => {
     event.preventDefault(); setFormError(null); setSubmittedId(null);
     try {
+      if (!reviewing) throw new Error("Hãy xem lại nội dung trước khi ký.");
       assertWritable(wallet.account, wallet.chainId, summary?.context, loadedSummary?.signal);
       if (validation) throw new Error(validation);
       const payload = buildProposal(title, body, recipient as Address, amount, requestId, deployment!.treasury);
@@ -72,19 +74,20 @@ function CreateProposalPage() {
       <button type="button" className="button-secondary" onClick={() => setLoadAttempt((value) => value + 1)}>Tải dữ liệu mới nhất</button>
       {!ready && <p className="notice">Có thể chuẩn bị nội dung tại đây. Để gửi proposal, cần API dữ liệu chain, deployment thật và ví ở đúng mạng.</p>}
       <label className="field-label" htmlFor="proposal-title">Tiêu đề · 5–120 ký tự</label>
-      <input id="proposal-title" className="field-control" value={title} onChange={(event) => setTitle(event.target.value)} required />
+      <input id="proposal-title" className="field-control" value={title} onChange={(event) => { setTitle(event.target.value); setReviewing(false); }} required />
       <label className="field-label" htmlFor="proposal-body">Mô tả · 20–2.000 ký tự</label>
-      <textarea id="proposal-body" className="field-control" value={body} onChange={(event) => setBody(event.target.value)} required rows={6} />
+      <textarea id="proposal-body" className="field-control" value={body} onChange={(event) => { setBody(event.target.value); setReviewing(false); }} required rows={6} />
       <label className="field-label" htmlFor="proposal-recipient">Địa chỉ nhận</label>
-      <input id="proposal-recipient" className="field-control" value={recipient} onChange={(event) => setRecipient(event.target.value)} autoComplete="off" spellCheck={false} required />
+      <input id="proposal-recipient" className="field-control" value={recipient} onChange={(event) => { setRecipient(event.target.value); setReviewing(false); }} autoComplete="off" spellCheck={false} required />
       <label className="field-label" htmlFor="proposal-amount">Số tiền BUD</label>
-      <input id="proposal-amount" className="field-control" value={amount} onChange={(event) => setAmount(event.target.value)} inputMode="decimal" placeholder="1000.5" required />
+      <input id="proposal-amount" className="field-control" value={amount} onChange={(event) => { setAmount(event.target.value); setReviewing(false); }} inputMode="decimal" placeholder="1000.5" required />
       {validation && (title || body || recipient || amount) && <p className="wallet-error" role="status">{validation}</p>}
-      <div className="proposal-review"><h3>Kiểm tra trước khi ký</h3><p>Người nhận: <code>{recipient || "—"}</code></p><p>Số tiền: {amount || "—"} BUD</p><p>Request ID: <code>{requestId}</code></p><p>Native value: 0 ETH</p></div>
+      {!reviewing ? <button type="button" className="button-secondary" disabled={Boolean(validation) || !title || !body || !recipient || !amount} onClick={() => setReviewing(true)}>Tiếp tục: xem lại</button> :
+        <div className="proposal-review" role="region" aria-label="Xem lại đề xuất"><h3>Kiểm tra trước khi ký</h3><p>Tiêu đề: <strong>{title}</strong></p><p>Mô tả: {body}</p><p>Người nhận: <code>{recipient}</code></p><p>Số tiền: {amount} BUD</p><p>Request ID: <code>{requestId}</code></p><p>Native value: 0 ETH</p><p>Phí gas được ví hiển thị trước khi bạn xác nhận chữ ký.</p><button type="button" className="button-secondary" onClick={() => setReviewing(false)}>Chỉnh sửa</button></div>}
       {formError && <p className="wallet-error" role="alert">{formError}</p>}
       {submittedId && <p className="proposal-full-id" role="status">Proposal ID: <Link to={`/proposals/${submittedId}`}>{submittedId}</Link>. API có thể cần thời gian để index giao dịch.</p>}
       <TransactionStatus {...transaction} />
-      <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || submittedId !== null}>Tạo đề xuất</button>
+      {reviewing && <button className="button-primary" type="submit" disabled={!ready || Boolean(validation) || transaction.busy || submittedId !== null}>Ký và tạo đề xuất</button>}
     </form>
   </div>;
 }

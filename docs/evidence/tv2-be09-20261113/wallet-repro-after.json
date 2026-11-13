@@ -1,0 +1,53 @@
+{
+  "onRpcFailure": {
+    "text": "VÍ & QUYỀN BIỂU QUYẾT\n\nVí: MetaMask\n\n0xcb873…CdcDc\n\nChain: 31337 ✓\n\nSố dư: —\n\nVoting power: —\n\nDelegate: —\n\nSelf-delegate\nẨn tài khoản\n\nKhông đọc được thông tin GOV từ RPC. Thử lại sau.",
+    "calls": [
+      "eth_accounts",
+      "eth_chainId"
+    ]
+  },
+  "browser": "Windows Chrome headless, synthetic read-only EIP-1193 provider",
+  "before": {
+    "text": "VÍ & QUYỀN BIỂU QUYẾT\n\nVí: MetaMask\n\n0xcb873…CdcDc\n\nChain: 31337 ✓\n\nSố dư: 0 GOV\n\nVoting power: 0 GOV\n\nDelegate: 0x00000…00000\n\nSelf-delegate\nẨn tài khoản",
+    "calls": [
+      "eth_accounts",
+      "eth_chainId"
+    ]
+  },
+  "afterDuplicateAccountsChanged": {
+    "text": "VÍ & QUYỀN BIỂU QUYẾT\n\nVí: MetaMask\n\n0xcb873…CdcDc\n\nChain: 31337 ✓\n\nSố dư: 0 GOV\n\nVoting power: 0 GOV\n\nDelegate: 0x00000…00000\n\nSelf-delegate\nẨn tài khoản",
+    "calls": [
+      "eth_accounts",
+      "eth_chainId"
+    ]
+  },
+  "events": [
+    {
+      "type": "rpc-request",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "type": "rpc-request",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "type": "rpc-request",
+      "methods": [
+        "eth_call"
+      ]
+    },
+    {
+      "type": "rpc-request"
+    },
+    {
+      "type": "rpc-request"
+    },
+    {
+      "type": "rpc-request"
+    }
+  ]
+}

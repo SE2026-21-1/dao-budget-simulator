@@ -91,6 +91,18 @@ afterEach(async () => {
 });
 
 describe("wallet session lifecycle", () => {
+  it("keeps GOV reads after repeated unchanged account and chain events", async () => {
+    const provider = injected([accountA]);
+    state.rpc.readContract.mockImplementation(async ({ functionName }) => functionName === "delegates" ? accountA : 0n);
+    await mount(provider);
+    expect(wallet.balance).toBe(0n);
+    expect(wallet.votingPower).toBe(0n);
+    expect(wallet.delegatee).toBe(accountA);
+    await act(async () => { provider.emit("accountsChanged", [accountA]); provider.emit("chainChanged", "0x7a69"); });
+    expect(wallet.balance).toBe(0n);
+    expect(wallet.votingPower).toBe(0n);
+    expect(wallet.delegatee).toBe(accountA);
+  });
   it("does not overwrite newer account or chain events with a delayed connect response", async () => {
     const provider = injected([]);
     await mount(provider);

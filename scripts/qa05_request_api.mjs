@@ -67,6 +67,8 @@ export async function checkRequestApi({ row, rpcUrl, rpc, root }) {
       const detail = await get(`P${i+1}detail`,`/proposals/${proposal.id}`);
       const votes = await get(`P${i+1}votes`,`/proposals/${proposal.id}/votes`);
       assert.equal(votes.data.length,2);
+      assert.deepEqual(votes.data.map(vote=>vote.weight).sort(),[String(300n*10n**18n),String(400n*10n**18n)].sort());
+      assert.ok(votes.data.every(vote=>vote.support===1));
       assert.equal(detail.data.votes.for,String(700n*10n**18n));
       assert.equal(detail.data.requestId,row.requestId);
       assert.equal(detail.data.state,i===row.winner-1?'Executed':'Queued');

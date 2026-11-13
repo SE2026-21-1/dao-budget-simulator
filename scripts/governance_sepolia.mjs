@@ -57,7 +57,7 @@ export async function waitConfirmed(rpc, transactionHash, { timeoutMs = 300000, 
 async function project(root) {
   const loaded = await loadProject(root);
   const hashes = {};
-  for (const name of ['governance_sepolia.mjs', 'deploy_sepolia.mjs', 'check_roles_sepolia.mjs', 'preflight_sepolia.mjs', 'sepolia_cli.mjs']) {
+  for (const name of ['governance_sepolia.mjs', 'deploy_sepolia.mjs', 'check_roles_sepolia.mjs', 'preflight_sepolia.mjs', 'sepolia_cli.mjs', 'smoke_lifecycle.mjs']) {
     hashes[`scripts/${name}`] = sha(await readFile(new URL(name, import.meta.url)));
   }
   return { ...loaded, testnetScripts: hashes };
@@ -158,7 +158,7 @@ export async function deploySepolia(rpc, { root, roleMap, transmit, persist, max
     expectedNonces.set(lower(from), toQuantity(BigInt(nonce) + 1n));
     record.status = 'SUBMITTED';
     await persist(manifest);
-    const receipt = await waitConfirmed(rpc, transactionHash, fork ? { pollMs: 20 } : {});
+    const receipt = await waitConfirmed(rpc, transactionHash, fork ? { pollMs: 20, timeoutMs: 30000 } : {});
     record.status = 'CONFIRMED_K2';
     manifest.receipts.push({ ...receipt, label });
     await persist(manifest);

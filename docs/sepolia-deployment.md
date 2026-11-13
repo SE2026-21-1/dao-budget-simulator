@@ -105,8 +105,11 @@ caller-owned Anvil fork at that exact block/hash, verifies fork identity, impers
 only on that disposable fork, sets synthetic gas balances there, and runs the entire
 five-contract deployment, grants, role audits, renounces, delegations and funding.
 Each of the 17 transactions has its own current-state estimate and actual receipt.
-Two fork blocks are mined per transaction, **never on Sepolia**. Anvil is terminated
-on success or failure. Full fork journal is retained beside the report.
+Two fork blocks are mined **after the transaction receipt is mined**, never on Sepolia;
+this avoids racing automining and accidentally producing only one descendant. Fork
+receipt/K2 waits are bounded at 30 seconds. The shared owned-process lifecycle records
+child closure at spawn, handles already signal-exited children, and escalates bounded
+SIGTERM to SIGKILL when needed. Failure reports and the full fork journal are retained.
 
 These are real pinned Sepolia **state-fork** estimates but Anvil **Osaka** execution;
 they are not a complete proof of the remote chain's later fork/gas rules. A successful
@@ -140,7 +143,7 @@ The manifest binds exact HEAD, Solidity compiler/settings/locked OZ revision, so
 hashes, artifacts, complete compiler ABI semantics/hashes, initcode and constructor
 transaction, runtime identity (compiler immutable-reference normalization plus actual
 linked getters), deployment receipts/blocks and contract ABI versions. Testnet script
-hashes include the durable-journal helper. All observations are pinned by H/hash;
+hashes include the durable-journal and owned-process lifecycle helpers. All observations are pinned by H/hash;
 canonical receipt replay for **every transaction in every scanned block** cross-checks
 role and Timelock operation `eth_getLogs`, so omissions, history outages, unknown or
 temporarily granted/revoked holders, public executor, changed admins, stale/canceled/

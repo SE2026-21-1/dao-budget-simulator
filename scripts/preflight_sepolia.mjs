@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
@@ -8,6 +8,8 @@ import { ContractFactory, getAddress, toQuantity } from 'ethers';
 import { createRpc, loadProject } from './governance_local.mjs';
 import { SEPOLIA, confirmedHeight, deploySepolia, requireSepolia, validateRoleMap } from './governance_sepolia.mjs';
 import { journal, options } from './sepolia_cli.mjs';
+import { waitForReceipt } from './receipt.mjs';
+import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const args = options(process.argv.slice(2), ['--accounts', '--output']);
@@ -20,6 +22,7 @@ const report = { format: 'dao-budget-sepolia-preflight-v1', status: 'IN_PROGRESS
     'Fork uses pinned Sepolia state with Anvil Osaka execution, not proof of future remote gas accounting.',
     'No real-time Executed/Defeated, extension wallet, backend or UI acceptance.' ] };
 let child;
+const lifecycle = createSmokeLifecycle();
 try {
   const remoteTransport = createRpc(SEPOLIA.rpc);
   const remote = async (method, params = []) => {
@@ -61,7 +64,8 @@ try {
     '--fork-url', SEPOLIA.rpc, '--fork-block-number', report.anchor.height, '--hardfork', 'osaka', '--silent'];
   report.forkCommand = ['anvil', ...forkArgs];
   report.forkOutput = '';
-  child = spawn('anvil', forkArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
+  child = lifecycle.spawn('anvil', forkArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
+  child.once('close', (code, signal) => { report.forkExit = { code, signal }; });
   child.on('error', error => { report.forkOutput += error.message; });
   child.stdout.on('data', data => { report.forkOutput += data; });
   child.stderr.on('data', data => { report.forkOutput += data; });
@@ -69,6 +73,8 @@ try {
   const deadline = Date.now() + 60000;
   while (true) {
     assert.equal(child.exitCode, null, `Fork exited: ${report.forkOutput}`);
+    assert.equal(child.signalCode, null, `Fork signaled: ${report.forkOutput}`);
+    lifecycle.throwIfInterrupted();
     assert.ok(Date.now() < deadline, 'Fork startup timeout');
     try { if (await forkRpc('eth_chainId') === toQuantity(BigInt(SEPOLIA.chainId))) break; } catch { /* bounded startup */ }
     await pause(100);
@@ -89,6 +95,7 @@ try {
     transmit: async transaction => {
       const { chainId, gasLimit, type, ...request } = transaction;
       const hash = await forkRpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
+      await waitForReceipt(forkRpc, hash, { timeoutMs: 30000 });
       await forkRpc('anvil_mine', ['0x2']);
       return hash;
     } });
@@ -100,12 +107,15 @@ try {
   report.error = { message: error.message, audit: error.audit ?? null };
   process.exitCode = 1;
 } finally {
-  if (child && child.exitCode === null) {
-    const exited = new Promise(resolve => child.once('exit', (code, signal) => { report.forkExit = { code, signal }; resolve(); }));
-    child.kill('SIGTERM');
-    await exited;
+  try { await lifecycle.cleanup(); }
+  catch (error) {
+    report.status = 'PREPARATION_BLOCKED_OR_FAILED_NOT_TESTNET';
+    report.cleanupError = error.message;
+    process.exitCode = 1;
+  } finally {
+    lifecycle.dispose();
+    await persist(report);
   }
-  await persist(report);
 }
 console.log(JSON.stringify({ status: report.status, output: args['--output'], anchor: report.anchor,
   remoteGovCreationGas: report.remoteGovCreationGas, error: report.error }, null, 2));

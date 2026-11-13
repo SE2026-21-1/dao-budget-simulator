@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { mkdtemp, open, readFile, rm, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -11,6 +11,8 @@ import { createRpc, deployGovernance, requireLoopbackRpc } from '../../scripts/g
 import { SEPOLIA, confirmedHeight, deploySepolia, gasLimit, keystoreSigners, requireSepolia,
   validateRoleMap, waitConfirmed } from '../../scripts/governance_sepolia.mjs';
 import { journal, options } from '../../scripts/sepolia_cli.mjs';
+import { waitForReceipt } from '../../scripts/receipt.mjs';
+import { createSmokeLifecycle } from '../../scripts/smoke_lifecycle.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const source = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
@@ -20,25 +22,22 @@ const roleMap = accounts => ({ format: 'dao-budget-sepolia-accounts-v1', chainId
 const synthetic = Object.fromEntries(names.map((name, index) => [name, `0x${(index + 1).toString(16).padStart(40, '0')}`]));
 
 async function withChain(t, run) {
+  const lifecycle = createSmokeLifecycle();
+  t.after(async () => { try { await lifecycle.cleanup(); } finally { lifecycle.dispose(); } });
   const server = createServer();
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const port = server.address().port;
   await new Promise(resolve => server.close(resolve));
   let output = '';
-  const child = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', SEPOLIA.chainId,
+  const child = lifecycle.spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', SEPOLIA.chainId,
     '--hardfork', 'osaka', '--timestamp', '1800000000', '--silent'], { stdio: ['ignore', 'pipe', 'pipe'] });
   child.on('error', error => { output += error.message; });
   for (const stream of [child.stdout, child.stderr]) stream.on('data', data => { output += data; });
-  t.after(async () => {
-    if (child.exitCode !== null) return;
-    const exited = new Promise(resolve => child.once('exit', resolve));
-    child.kill('SIGTERM');
-    await exited;
-  });
   const transport = createRpc(`http://127.0.0.1:${port}`);
   const deadline = Date.now() + 10000;
   while (true) {
     assert.equal(child.exitCode, null, output);
+    assert.equal(child.signalCode, null, output);
     assert.ok(Date.now() < deadline, output);
     try { await transport('eth_chainId'); break; } catch { await new Promise(resolve => setTimeout(resolve, 25)); }
   }
@@ -56,6 +55,7 @@ async function withChain(t, run) {
     const { chainId, gasLimit, type, ...request } = transaction;
     const hash = await rpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
     state.records.push({ transaction, hash });
+    await waitForReceipt(rpc, hash, { timeoutMs: 10000 });
     await rpc('anvil_mine', ['0x2']);
     return hash;
   };
@@ -107,6 +107,23 @@ test('journal refuses overwrite and CLI rejects unknown or duplicate flags', asy
   await assert.rejects(journal(path), /EEXIST/);
   assert.throws(() => options(['--rpc', 'remote'], ['--manifest']));
   assert.throws(() => options(['--a', '1', '--a', '2'], ['--a', '--b']));
+});
+
+test('already signal-exited owned child cleanup completes and retains failure evidence', { timeout: 10000 }, async t => {
+  const lifecycle = createSmokeLifecycle();
+  t.after(async () => { try { await lifecycle.cleanup(); } finally { lifecycle.dispose(); } });
+  const dir = await mkdtemp(join(tmpdir(), 'sepolia-signal-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const persist = await journal(join(dir, 'failure.json'));
+  const child = lifecycle.spawn(process.execPath, ['-e', 'process.kill(process.pid, \"SIGTERM\")'],
+    { stdio: ['ignore', 'ignore', 'ignore'] });
+  await new Promise(resolve => child.once('close', resolve));
+  assert.equal(child.exitCode, null);
+  assert.equal(child.signalCode, 'SIGTERM');
+  await lifecycle.cleanup();
+  await persist({ status: 'PREPARATION_BLOCKED_OR_FAILED_NOT_TESTNET',
+    forkExit: { code: child.exitCode, signal: child.signalCode } });
+  assert.equal(JSON.parse(await readFile(join(dir, 'failure.json'), 'utf8')).forkExit.signal, 'SIGTERM');
 });
 
 test('real encrypted JSON keystore signs approved sender and rejects mismatches', async t => {

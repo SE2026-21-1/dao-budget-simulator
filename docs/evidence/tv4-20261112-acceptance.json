@@ -1,6 +1,7 @@
 {
   "date": "2026-11-12",
   "reviewer": "Phan Thanh Dũng / 23001850 / SE2026-T16",
+  "campaignAsOf": "2026-11-12, before PR49 merged at 08:29:34Z and before TV3 published 15b62b5; source/commands/decision below remain historical",
   "source": {
     "baseDev": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
     "pr21Head": "a7e0a7fbce0a2541d315e4d6b2bbb910b1d2d0fd",
@@ -11,6 +12,76 @@
     "testnetDeployedSha": null
   },
   "decision": "NOT_READY_FOR_MERGE",
+  "decisionScope": "Historical runtime campaign, not a dependency blocking PR50 docs/evidence-only integration",
+  "logRetentionLimits": {
+    "foundry": "TV4 reported 202 PASS on rehearsal S; archive contracts-and-loader-error.log:302 is truncated after 300 of 497 lines, so full summary/invariant stdout cannot be verified from this archive",
+    "sc06": "TV4 reported 32 PASS with --import tsx on S; structured record only, full successful stdout absent",
+    "policy": "Do not reconstruct missing stdout, alter raw archive/checksum, or attribute TV1/CI/new-tree results to the historical TV4 run. Any new full logs must carry their own exact SHA/tree, environment, command and exit code.",
+    "tv1IndependentReview": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/50#pullrequestreview-5872922626"
+  },
+  "documentationReview20261113": {
+    "runtimeExecuted": false,
+    "githubMutations": false,
+    "pr50ReviewedHead": "6f83cfaae6d666a710cc2c03252319811eaa7cad",
+    "reviewState": "TV1 COMMENT, 2026-11-12T10:35:43Z; no approval implied",
+    "inlineReviewComments": 0,
+    "reviewThreads": 0,
+    "pr49": {
+      "mergedAt": "2026-11-12T08:29:34Z",
+      "base": "feature/tv4-operation",
+      "mergeSha": "4296c874370bf2ac2cba167bb6e0047833e409b9",
+      "tree": "337344a848d305ec309e556225380b0cfe0e5433",
+      "treeMatchesRehearsal": "TV1 independently reviewed; not a merge into Dev"
+    },
+    "tv3PublishedSha": "15b62b5b1a5402ca2bdb24aad2d7312b6299440c",
+    "tv3PublicationEvidence": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6820545364",
+    "docsReadiness": "PR50 may integrate as an honest historical FAIL report independently of PR21; peer review of changed docs HEAD and current checks/protection still required, no self-approval/merge",
+    "projects": [
+      { "number": 1, "closed": false, "recommendedAction": "Parent updates current scope/evidence if appropriate" },
+      { "number": 2, "closed": true, "recommendedAction": "Leave closed; no field mutation or reopening requested" }
+    ],
+    "receiver": {
+      "source": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+      "deployment": "be09-local-20261111T071940Z-0210c9c44501",
+      "chainId": 31337,
+      "height": 24,
+      "blockHash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd",
+      "snapshotRevision": "440c6ec1-f436-4f48-958f-07f68a80a99e",
+      "acceptedAttribution": "TV3 peer-reported receiving WSL/Windows evidence, not TV4 rerun or PR21/Dev acceptance",
+      "accepted": [
+        "preflight/serve/status/verify/status and reopened-terminal status; five LIVE services; six GET200/CORS204; FE live1PASS/0SKIP",
+        "controlled worker restart preserved database digest",
+        "new empty isolated target DB, readonly API reference; rebuild/export reference/export target/compare all exit0, equal/0mismatch at same H/hash"
+      ],
+      "peerReportedSha256NotByteVerified": {
+        "manifest": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b",
+        "verifyResults": "2ec33550c9acc4f8b017c614acef83375f13ef7508a29449e750c39784cb1900",
+        "compare": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2"
+      },
+      "missingArtifacts": [
+        "Public redacted manifest/verify report/source+toolchain+commands/exit codes",
+        "Raw compare and normalized reference/target exports for same-H/hash/content review",
+        "API restart/checkpoint/context before-after if absent from existing raw; worker restart alone does not prove API restart",
+        "Foreground signal/exit and post-shutdown owned PID/ports/status with retained data/logs",
+        "Current reachable receiver manifest/API/RPC and ownership coordination, then Chrome390/1366/SnapshotInfo/keyboard/Console-Network on intended published source"
+      ],
+      "latestServiceObservation": "TV3 2026-11-12: Windows Vite5173 HTTP200, API3300/RPC18545 refused, WSL E_ACCESSDENIED; archived run is not a live endpoint",
+      "evidence": [
+        "https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841",
+        "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124",
+        "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378",
+        "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6792261314"
+      ],
+      "rerunPolicy": "Review sufficient existing artifacts first; do not demand repeated transport/smoke/rebuild, reset serving DB or terminate unrelated services"
+    },
+    "coverageDisposition": {
+      "issue7": "PARTIAL: contract/backend mapping accepted, TV3 15b62b5 source/test handoff received; full FR/BR/NFR to TC/INV/UI evidence mapping and browser states remain",
+      "issue16": "PARTIAL: TC05/06/08 independent per-vector reset/receipt/API/UI, TC07 tampered-description reset/UI, TC14 remaining state resets/canceled receipt+API history/UI; TC10 four receipt branches and TC14 fifteen contract tests already exist, only missing API/UI/publication linkage must not be relabeled as missing chain coverage",
+      "issue17": "Keep Done for bounded INV01-04; no new regression evidence, no unbounded/signatures/ERC1271/liveness claim",
+      "issue18": "Historical local NFR02/03 campaign FAIL and raw remain unchanged",
+      "issue20": "Testnet BLOCKED, 0 broadcast; no deployed source SHA or acceptance inferred"
+    }
+  },
   "productionSourceEdits": false,
   "commands": [
     {

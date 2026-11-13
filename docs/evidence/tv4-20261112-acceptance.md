@@ -2,9 +2,9 @@
 
 Phan Thanh Dũng — MSV 23001850 — SE2026-T16.
 
-**Kết luận: CHƯA SẴN SÀNG MERGE/RELEASE.** Bản ghép local không xung đột và các kiểm tra chức năng dưới đây đạt; campaign NFR02/03 thất bại tại freshness dưới tải. TV3 chưa công bố commit của cây Swiss Fintech ghép mới; browser máy nhận/extension và testnet chưa nghiệm thu. Không merge, auto-merge, self-approve hoặc đóng các issue chưa hoàn thành.
+**Kết luận campaign 12/11/2026: runtime CHƯA SẴN SÀNG MERGE/RELEASE.** Bản ghép local không xung đột và các kiểm tra chức năng dưới đây đạt; campaign NFR02/03 thất bại tại freshness dưới tải. Tại thời điểm campaign (trước PR49 merge và TV3 publish), TV3 chưa công bố commit của cây Swiss Fintech ghép mới; browser máy nhận/extension và testnet chưa nghiệm thu. Đây là kết luận lịch sử, không phải gate tích hợp **PR50 docs/evidence-only**. Cập nhật có ngày và phạm vi riêng tại §5/§7; không merge, auto-merge, self-approve hoặc đóng các issue chưa hoàn thành.
 
-## 1. Nguồn đã kiểm và an toàn worktree
+## 1. Nguồn đã kiểm và an toàn worktree — snapshot campaign 12/11, trước PR49 merge/TV3 publish
 
 | Danh tính | SHA / trạng thái |
 |---|---|
@@ -17,13 +17,13 @@ Phan Thanh Dũng — MSV 23001850 — SE2026-T16.
 | `Dev` cuối sau merge | **Chưa có merge**; remote vẫn `87738d3…` khi đối chiếu cuối |
 | Source đang chạy trên testnet | **UNKNOWN**, không có manifest triển khai |
 
-Đã fetch origin, kiểm PR/reviews/comments/checks/dependencies và hai Projects qua phiên GitHub `dung0611`. Đối chiếu remote lần cuối vẫn đúng bốn SHA công bố trên. PR21 tác giả chính là tài khoản đăng nhập: không tự approve. API công khai sau đó hết quota; không diễn giải 401/403 là branch protection không tồn tại.
+Trong campaign, đã fetch origin, kiểm PR/reviews/comments/checks/dependencies và hai Projects qua phiên GitHub `dung0611`. Đối chiếu remote lần cuối của campaign vẫn đúng bốn SHA công bố trên; không mô tả đó là HEAD hiện hành sau campaign. PR21 tác giả chính là tài khoản đăng nhập: không tự approve. API công khai sau đó hết quota; không diễn giải 401/403 là branch protection không tồn tại.
 
 Worktree gốc có **33 modified + 7 untracked**, không staged. Giữ nguyên toàn bộ, không checkout/reset/clean/force-push. Hai worktree riêng: `/tmp/dao-tv4-20261112` cho ghép/kiểm và `/tmp/dao-tv4-report-20261112` cho nhánh báo cáo `docs/tv4-acceptance-20261112` từ Dev. Không nhập VT-064/importer/PDF cá nhân; PR31 không thuộc campaign này.
 
 Đã đọc hướng dẫn repo được nạp, README, phân công TV4/TV1, requirements, workflow, deploy-local/role gates và testnet preflight. Không có CONTRIBUTING ở root cây Dev; CONTRIBUTING trong submodule không phải quy trình đóng góp của dự án. Requirement hiện hành NFR02 là **100 proposal/1.000 vote, 10 client, 60 giây, p95 <1 giây**, không phải 80 user/2,5 giây. Bulk import ngoài diff PR21/49 nên không nhận nghiệm thu importer.
 
-## 2. Review thực tế và khoảng trống nghiệm thu
+## 2. Review thực tế và khoảng trống nghiệm thu — as-of campaign
 
 ### PR49 — không phát hiện blocker trong documentation scope
 
@@ -53,8 +53,8 @@ Không có production-source fix được tạo trong lượt này; không nới
 | `npm run typecheck && npm run build` | Node24.15 / S | PASS | `unit-frontend.log`, `be07/typecheck.txt`, `be07/build.txt` |
 | `test:be02`, `test:be03`, `test:be04`, `test:be06`, `test:be07` | Node24.15 / S | 100+25+28+5+15 = **173 PASS**,0fail/skip | `unit-frontend.log`, `be07/unit.txt` |
 | Frontend lint/test/build | Chromium build / S | **65 PASS**; lint exit0 với8warnings; build PASS, bundle646,89kB warning | `unit-frontend.log` |
-| `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh` | Foundry1.8.5 / S | **202 PASS**,0fail/skip; bounded100×50, compiler/lint warnings giữ nguyên; ABI/fixture checkPASS | `contracts-and-loader-error.log` |
-| `node --import tsx --test tests/sc06-chain.test.mjs` | Node24.15 / S | **32 PASS**, canonical+negative mutations | Structured command record; source tests pinned at S |
+| `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh` | Foundry1.8.5 / S | TV4 ghi **202 PASS**,0fail/skip; bounded100×50, compiler/lint warnings giữ nguyên; ABI/fixture checkPASS | `contracts-and-loader-error.log` **bị cắt stdout**, không đủ tự kiểm toàn bộ summary/invariant; xem giới hạn dưới bảng |
+| `node --import tsx --test tests/sc06-chain.test.mjs` | Node24.15 / S | TV4 ghi **32 PASS**, canonical+negative mutations | Chỉ structured command record; **không có stdout đầy đủ** của lượt đúng loader trong archive |
 | `npm run test:bootstrap`; interruption suite; request-order runner | Fresh owned Anvil / S | **15+8 PASS**, TC10 **4/4** deployments/order variants | `bootstrap-interruption-tc10.log`, `qa05-request-orders.json` |
 | Native SQL/storage/checkpoint/projection/API/BE06 | PG18.4 / S | SQL constraintsPASS; **57 DB/API PASS**,0skip | `native/report.json`, `native/logs/` |
 | Dedicated `npm run test:be07:native` | PG18.4 mới riêng / S | All10commands exit0; **19 BE07 DB PASS**,0skip; 57DB và173unit chạy lạiPASS; live recoveryPASS | `be07/commands.json`, `be07/be07-db.txt`, `be07/be07-live.json`, `be07/tested-source.json` (empty patch) |
@@ -64,6 +64,8 @@ Không có production-source fix được tạo trong lượt này; không nới
 | Sepolia identity/opcode probe | PublicNode11155111, không deployment | Limited PASS,0broadcast; testnet acceptance BLOCKED | `testnet-probe.json` |
 
 Không cộng các lượt unit/DB lặp lại thành test cases mới. Native tổng FAIL vì benchmark, dù các suite độc lập PASS. 57DB +19BE07 =76 distinct DB cases trong campaign; không gọi skip là acceptance.
+
+**Giới hạn lưu trữ đã được TV1 chỉ ra:** `contracts-and-loader-error.log:302` kết thúc bằng `[Showing lines 1-300 of 497…]`; không có phần tổng kết/invariant đầy đủ. SC06 đúng loader chỉ còn record, không có full stdout để khôi phục từ archive này. Giữ hai con số trên là **kết quả TV4 ghi cho S**, không gọi là raw-log verification hoàn chỉnh. Không dựng lại phần bị mất, không thay archive/checksum hoặc lấy lượt TV1/CI/new-tree làm stdout lịch sử. [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/50#pullrequestreview-5872922626) báo lượt độc lập tại `4296c87` (cùng tree S) 202 Foundry/32 SC06 PASS, nhưng logs `/tmp/dao-pr50-review-logs/` chưa upload; attribution vẫn là TV1. Một lượt mới chỉ bổ sung evidence riêng khi công bố **exact source SHA/tree, lệnh, môi trường, stdout/stderr đầy đủ và exit code**; không tự nhận đã chạy trên revision mới từ các số cũ.
 
 ### Lỗi môi trường/lệnh giữ trong evidence
 
@@ -96,23 +98,16 @@ Thiếu: signer owner + public account/role map, secure signing và gas test đ�
 
 Giao dịch **local** mới trong native/live.json, không có explorer: execute1.000BUD `0x9da24dc65c761483556969f1084d8e0f9f3a5782d2b84e4162be7394e60b9759`; retry sau nạp `0xb0ccc657a55d7862744c8b982d5b28102582af70d9c9cc7c0a95ccf3fc2276c5`, được API/SQL đối chiếu tạiH67/hash `0xb41227e63125e21db9d061f42539759f8b714ce58a10e6cf23d4ea6965618ac0`. Raw giữ receipt/status và hash của từng campaign, không trộn với testnet hoặc receiverH24.
 
-## 5. GitHub, merge order và quyền chốt
+## 5. GitHub và readiness tài liệu — cập nhật 13/11/2026
 
-- [PR49 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/49#pullrequestreview-5870963265): COMMENT, scope documentation không blocker.
-- [PR21 cập nhật nghiệm thu](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#issuecomment-6818174486): đúng head/base/rehearsal, PASS/FAIL/gates riêng; không tự approve.
-- [#18 failure](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6818151100), [#20 testnet](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6818101258), [#36 TV3](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36): đã bổ sung evidence/đầu ra còn thiếu; giữ mở.
-- [Project nhóm#1](https://github.com/orgs/SE2026-21-1/projects/1) và [Project TV4#2](https://github.com/orgs/SE2026-21-1/projects/2): cập nhật fields `Bằng chứng / SHA`, `Phụ thuộc / cần xác nhận` cho#21/#18/#36/#20; giữ Inreview/PARTIAL hoặc Blocked đúng scope. Không đổi Done từ CI xanh.
-- Candidate CI đã quan sát: PR21 head a7e0a7f có19/19 successful checks (9PR+9push+1BE08); PR49 head422023a có10/10. UI PR21 hiển thị1/1 approval và1 unresolved comment. Approval TV1 cũ chỉSC/SC06 tạiff484fb; TV2/TV3 COMMENT không là approval toàn head mới. Không giải quyết thread thay reviewer hoặc dùng admin bypass.
+- [PR49](https://github.com/SE2026-21-1/dao-budget-simulator/pull/49) **đã merge ngày 12/11 lúc 08:29:34Z** vào `feature/tv4-operation`, merge SHA **`4296c874370bf2ac2cba167bb6e0047833e409b9`**; không phải vào Dev. Bước này hoàn tất, **không yêu cầu merge PR49 lại**. Tree `337344a848d305ec309e556225380b0cfe0e5433` trùng rehearsal S theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/50#pullrequestreview-5872922626); S vẫn là danh tính rehearsal lịch sử, không phải commit đã merge Dev.
+- TV3 đã publish **`15b62b5b1a5402ca2bdb24aad2d7312b6299440c`**, xem [handoff #40](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6820545364) và [mapping #7](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6820895530). Không còn blocker “chưa publish source”. Không đổi `4cba99a`/null trong snapshot campaign thành SHA mới rồi gán lại kết quả 65/88 hoặc receiver H24. Publish/CI9/9 không tự chứng minh integrated consumer/browser/extension PASS.
+- PR21 runtime vẫn phải được xét riêng theo exact intended integration SHA, delta/review/CI, campaign #18 và gates browser/receiver/testnet; Dev snapshot vẫn `87738d3`. Không dùng CI docs của PR50 để chốt runtime, không đẩy source qua PR docs.
+- **PR50 có thể tiếp nhận như bản ghi docs/evidence của campaign FAIL, độc lập thứ tự merge PR21.** [TV1 COMMENT ngày 12/11 lúc 10:35:43Z](https://github.com/SE2026-21-1/dao-budget-simulator/pull/50#pullrequestreview-5872922626) đã review HEAD `6f83cfaae6d666a710cc2c03252319811eaa7cad`; không có contract blocker mới và đề nghị cải thiện as-of/log. REST inline review comments và GraphQL reviewThreads đều rỗng khi đọc 13/11; không có unresolved inline request cần tự resolve. COMMENT không phải approval. Các sửa docs sau review cần peer đối chiếu đúng HEAD mới và checks/protection hiện hành; không self-approve/merge/auto-merge. Runtime NFR03 FAIL không chặn việc lưu báo cáo FAIL trung thực này.
+- [#18 failure](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6818151100) và [#20 testnet](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6818101258) giữ mở đúng phạm vi; CI xanh không xóa failed local run hoặc biến 0 broadcast thành testnet PASS.
+- Đã đọc trực tiếp GitHub GraphQL ngày 13/11: [Project nhóm #1](https://github.com/orgs/SE2026-21-1/projects/1) **open** (`closed=false`); [Project TV4 #2](https://github.com/orgs/SE2026-21-1/projects/2) **closed** (`closed=true`). Chỉ đề nghị parent cập nhật Project #1; không tự sửa hoặc yêu cầu reopen Project #2. Các câu “đã cập nhật hai Projects” trong campaign là lịch sử, không là chỉ dẫn cập nhật project đóng hôm nay.
 
-**Thứ tự đề xuất, chưa được phép thực hiện:**
-
-1. PR49 `422023ac3d08b6a22809fc5693ee0b69974ce87c` → `feature/tv4-operation`.
-2. Fetch lại PR21 (head sẽ đổi sau bước1), đối chiếu delta/CI/review và failure NFR; chỉ khi người dùng chốt revision mới mới mergePR21 → Dev.
-3. PR báo cáo `docs/tv4-acceptance-20261112` → Dev; docs-only, không mang source/merge thử vào Dev bằng đường khác.
-
-Lượt ghép thử local làm Dev→PR21→PR49 để dựng cây cuối; đây không thay thứ tự PR trên GitHub. Cây cuối không xung đột. Merge commit cuối Dev vẫn chưa tồn tại; không dùng S hoặc CI head cũ để khẳng định Dev sau merge đã đạt.
-
-Trước merge cần người dùng chốt **PR49/head422023a + PR21/head đã fetch lại + baseDev + PR báo cáo/head của nó**. Hiện đề nghị **chưa chốt mergePR21** vì failure campaign và source TV3 còn thiếu. Không bật auto-merge. Sau approval mới fetch/checkhead/base/checks/review/conflict, retest affected delta, merge theo phương thức repo cho phép và nghiệm thu đúng SHA Dev sau merge; testnet chỉ kiểm khi thực có deployment mới.
+Campaign đã quan sát CI PR21 head `a7e0a7f` 19/19 checks và PR49 `422023a` 10/10; đó không phải checks cho HEAD mới sau integration. Approval TV1 cũ chỉ SC/SC06 tại `ff484fb`; không mở rộng thành approval mọi source/frontend mới. Không giải quyết thread thay reviewer hoặc dùng admin bypass.
 
 ## 6. Bộ bằng chứng
 
@@ -121,3 +116,25 @@ Trước merge cần người dùng chốt **PR49/head422023a + PR21/head đã f
 - Raw có native reports/logs/receipts/rebuild, failed benchmark + diagnosis, dedicatedBE07 source/commands/output, Foundry/backend/frontend/process logs, screenshots/UI proof và read-only testnet response. Không có `.env`, runtime.env, private key/seed/token. Không đưa credentials vào comment/report.
 
 Bản báo cáo này là evidence của S và các nguồn đã ghi; commit docs chứa báo cáo không được gọi là commit runtime đã kiểm hoặc bản triển khai testnet.
+
+## 7. Review receiver và coverage — 13/11/2026, không chạy lại runtime
+
+### #36 / #40 / #42: tiếp nhận phần đã đủ, chỉ yêu cầu artifact còn thiếu
+
+Đã đọc toàn bộ comment snapshots và fetch lại comments #36/#40/#42. Published TV3 tree `15b62b5` không chứa bundle receiver ngày 11/11; các comment nói raw/log còn được giữ riêng. Do chưa có bytes/public attachment đọc được, các checksum dưới đây **là peer-reported**, không được trình bày thành TV4 đã tự verify.
+
+| Gate | Evidence đã tiếp nhận, không yêu cầu rerun | Artifact / hành động còn thiếu để chốt |
+|---|---|---|
+| [#40 receiver WSL](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124) | TV3 clean clone `4cba99a`, Ubuntu WSL26.04.1, Node24.15/npm11.12.1/Anvil1.8.5/PG18.4; preflight→serve→status→verify→status và reopened-terminal status PASS, 5/5 LIVE, 6GET200/CORS204, FE live1PASS/0SKIP, worker restart giữ DB digest. Public-manifest SHA256 khai báo `72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b`; verify-results `2ec33550c9acc4f8b017c614acef83375f13ef7508a29449e750c39784cb1900`. | Cung cấp bytes public manifest/verify report đã redact để kiểm checksum/identity, cùng foreground Ctrl-C/signal+exit, status/owned PID/ports sau shutdown và data/log còn. Không ép SIGINT130 thành0; chỉ `down` đúng run nếu owned service còn. Không stop run đang dùng hoặc kill cổng/process người khác. [TV4 tiếp nhận](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6792255555). |
+| [#42 independent rebuild](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378) | TV3 tạo targetDB mới/rỗng, API DB reference readonly; rebuild/exportref/exporttarget/compare **4exit0, equal/0mismatch**, cùng canonical H24/hash trên máy nhận. BE06unit5PASS. Không còn đòi “clone/rebuild máy khác lần đầu”. | Gửi raw compare report (SHA256 khai báo `34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2`), normalized reference+target exports, rebuild/command+exit/provenance/public manifest để kiểm same-H/hash và nội dung, không chỉ digest/count. Bổ sung API restart log/checkpoint/context trước–sau **nếu chưa có trong raw**; worker restart/digest không tự chứng minh API restart. Review artifacts trước, không đòi rerun rebuild đã đủ. [TV4 tiếp nhận](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6792261314). |
+| [#36 receiver consumer](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841) | Windows 4GET200/RPC31337/CORS204, 5addresses khớp và `api.live.test.ts`1PASS/0SKIP tại `4cba99a` được tiếp nhận. [TV3 combined tests](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6795801683)88PASS/1SKIP là pre-publication evidence, không phải browser live. | Sau [read-only update 12/11](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6820545364), API3300/RPC18545 refused và WSL `E_ACCESSDENIED`; không coi archived deployment còn sống. TV2/TV3 phối hợp owner startup, live run/manifest/API/RPC hiện hành và CORS/origin phù hợp Vite5173 đang có, không kill process đó. TV3 lấy Chrome390/1366, SnapshotInfo chain/deployment/H/hash/revision, keyboard, loading/error/reset và Console/Network trên đúng published/intended source. Extension/full workflow #19/#41 vẫn riêng. |
+
+Identity receiver lịch sử được ba issue đối chiếu thống nhất: deployment **`be09-local-20261111T071940Z-0210c9c44501`**, chain31337, **H24**, hash **`0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`**, revision **`440c6ec1-f436-4f48-958f-07f68a80a99e`**. Khi run mới phục vụ, ghi context hiện hành thay vì ép về H24. Nhận raw qua public/redacted artifact; không yêu cầu env-file, DB credential, cursor secret hoặc private key.
+
+### #7 / #16 / #17: không đồng nhất source mapping với full acceptance
+
+- [TV1 #7](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495): **contract mapping COMPLETE**, delta cancellation15/15 và TC10 archive đã peer review; [TV2 backend mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362) FR13–16/NFR02–04 đã tiếp nhận. [TV3 #7 ngày12/11](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6820895530) đã nộp source/test handoff16areas tại `15b62b5`; không còn ghi “TV3 chưa nộp consumer review”, nhưng full FR/BR/NFR→TC/INV→UI/evidence/SHA vẫn PARTIAL. Cần hoàn thành mapping đó và browser states, không yêu cầu peer redo phần contract/backend đã đạt. Quyết định default no-API ở #9 (explicit fixture/live hay shared-fixture fallback) cần owner đối chiếu requirement và implementation; báo cáo docs này không tự thay hợp đồng cấu hình.
+- [Full QA05 #16](https://github.com/SE2026-21-1/dao-budget-simulator/issues/16#issuecomment-6786949400) giữ **PARTIAL**: TC05 transfer/delegate/transferFrom, TC06 direct-call/role vectors và TC08 payload/49–50 threshold cần per-vector independent reset/receipt/API/UI; TC07 tampered-description reset và UI/state display; TC14 canceled-history receipt/API/UI cùng actor×state/boundary resets còn lại. TC1415contract tests đã có, không ghi thiếu lại. TC10 hashed/zero×P1/P2 trước **4 raw receipt rows đã có**; chỉ còn per-branch API linkage/publication revision/UI, không đòi chạy lại bốn chain branches hoặc gộp thành ledger chung.
+- [#17 QA06 đã Done](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6767010585) trong phạm vi bounded INV01–04, không có evidence regression mới để reopen. TV1 review `ff484fb`: 4properties cùng một campaign100×50=5.000calls, không nhân bốn. Bounds5EOAvoters/4passive recipients/16requests/max24proposals/fixed roles-config; last-sequence5execute successes không là aggregate100runs hoặc random-only liveness. Signatures/ERC1271/roleepochs/arbitrary strategies/API/UI/testnet là ngoài phạm vi Done đó, không biến thành blocker hồi tố.
+
+**Đề nghị cập nhật GitHub (parent thực hiện, chưa mutation trong lượt review này):** PR50 body bỏ “TV3 uncommitted”, bỏ thứ tự xin merge PR49 lại và tách docs readiness khỏi PR21; phản hồi TV1 bằng giới hạn stdout/as-of nêu trên. #36/#40/#42 giữ PARTIAL/In review theo accepted evidence và artifacts còn thiếu, ghi coordination blocker hiện tại thay “chưa có WSL/raw receiver test”. #7/#16 giữ PARTIAL với danh sách cụ thể; #17 giữ Done. Project#1 phản ánh cùng phạm vi/SHA; Project#2 giữ closed. #18 local FAIL/raw và #20 testnet BLOCKED không đổi, không suy release-ready từ các updates này.

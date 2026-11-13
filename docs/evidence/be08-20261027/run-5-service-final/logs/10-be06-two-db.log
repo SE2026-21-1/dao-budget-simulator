@@ -1,0 +1,16 @@
+[stdout] TAP version 13
+[stdout] # Subtest: BE06 rebuilds a fresh DB exactly at H, exports/compares read-only, and rejects unsafe scopes
+[stdout] ok 1 - BE06 rebuilds a fresh DB exactly at H, exports/compares read-only, and rejects unsafe scopes
+[stdout]   ---
+[stdout]   duration_ms: 237.537109
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] 1..1
+[stdout] # tests 1
+[stdout] # suites 0
+[stdout] # pass 1
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 3127.387099

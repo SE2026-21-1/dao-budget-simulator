@@ -1,0 +1,12 @@
+{
+  "label": "pg-status-after-stop",
+  "command": [
+    "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+    "status",
+    "-D",
+    "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+  ],
+  "exitCode": 3,
+  "signal": null,
+  "log": "pg-status-after-stop.txt"
+}

@@ -1,0 +1,118 @@
+[stdout] TAP version 13
+[stdout] # Subtest: same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated
+[stdout] ok 1 - same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated
+[stdout]   ---
+[stdout]   duration_ms: 195.057938
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: deep reorg outside window requires BE06; does not destroy diagnosis data or metadata
+[stdout] ok 2 - deep reorg outside window requires BE06; does not destroy diagnosis data or metadata
+[stdout]   ---
+[stdout]   duration_ms: 40.603623
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: recovery crash boundary recoveryMarked resumes with a fresh storage instance
+[stdout] ok 3 - recovery crash boundary recoveryMarked resumes with a fresh storage instance
+[stdout]   ---
+[stdout]   duration_ms: 38.676321
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance
+[stdout] ok 4 - recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance
+[stdout]   ---
+[stdout]   duration_ms: 42.287297
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: recovery crash boundary afterRollbackCommit resumes with a fresh storage instance
+[stdout] ok 5 - recovery crash boundary afterRollbackCommit resumes with a fresh storage instance
+[stdout]   ---
+[stdout]   duration_ms: 27.018639
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes
+[stdout] ok 6 - RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes
+[stdout]   ---
+[stdout]   duration_ms: 34.769741
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data
+[stdout] ok 7 - recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data
+[stdout]   ---
+[stdout]   duration_ms: 29.744704
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: a fork between committed catch-up batches persists recovery and replays on the next invocation
+[stdout] ok 8 - a fork between committed catch-up batches persists recovery and replays on the next invocation
+[stdout]   ---
+[stdout]   duration_ms: 30.364681
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart
+[stdout] ok 9 - SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart
+[stdout]   ---
+[stdout]   duration_ms: 3620.422609
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart
+[stdout] ok 10 - SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart
+[stdout]   ---
+[stdout]   duration_ms: 3516.42995
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart
+[stdout] ok 11 - SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart
+[stdout]   ---
+[stdout]   duration_ms: 4110.910759
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: worker exits on wrong chain and rebuild_required instead of retrying forever
+[stdout] ok 12 - worker exits on wrong chain and rebuild_required instead of retrying forever
+[stdout]   ---
+[stdout]   duration_ms: 73.938118
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data
+[stdout] ok 13 - shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data
+[stdout]   ---
+[stdout]   duration_ms: 34.458613
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: wrong RPC chain during recovery never rolls back data
+[stdout] ok 14 - wrong RPC chain during recovery never rolls back data
+[stdout]   ---
+[stdout]   duration_ms: 20.07223
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: confirmed mismatch closes recovery gate even when the next chain RPC fails
+[stdout] ok 15 - confirmed mismatch closes recovery gate even when the next chain RPC fails
+[stdout]   ---
+[stdout]   duration_ms: 16.576293
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: heartbeat keeps RPC observation time when waiting for the chain writer lock
+[stdout] ok 16 - heartbeat keeps RPC observation time when waiting for the chain writer lock
+[stdout]   ---
+[stdout]   duration_ms: 117.252397
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: lag observation starts after a JSON null heartbeat and survives subsequent observations
+[stdout] ok 17 - lag observation starts after a JSON null heartbeat and survives subsequent observations
+[stdout]   ---
+[stdout]   duration_ms: 20.025953
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: shorter fork immediately after a committed batch persists recovery before worker retry
+[stdout] ok 18 - shorter fork immediately after a committed batch persists recovery before worker retry
+[stdout]   ---
+[stdout]   duration_ms: 36.823221
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] 1..18
+[stdout] # tests 18
+[stdout] # suites 0
+[stdout] # pass 18
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 15591.007451

@@ -1,0 +1,24 @@
+[
+  {
+    "label": "typecheck",
+    "command": "npm",
+    "args": [
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:09:20.486Z",
+    "end": "2026-10-25T15:09:24.490Z"
+  },
+  {
+    "label": "build",
+    "command": "npm",
+    "args": [
+      "run",
+      "build"
+    ],
+    "exitCode": 0,
+    "start": "2026-10-25T15:09:24.498Z",
+    "end": "2026-10-25T15:09:28.260Z"
+  }
+]

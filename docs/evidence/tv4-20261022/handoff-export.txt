@@ -1,0 +1,2 @@
+Audited local manifest, five compiler ABIs and four BE02 contract descriptors: /home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261022/local-handoff
+Chain 31337 at H=19; keep the caller-owned Anvil running for consumers.

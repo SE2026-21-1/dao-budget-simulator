@@ -1,0 +1,6 @@
+{
+  "classification": "Harness pipe handling, before deployment",
+  "reason": "Windows postgres inherited pg_ctl stdout/stderr pipes; pg_ctl exited but Node close waited for server handles. Runner now awaits exit and destroys those pipe readers for pg-start only.",
+  "ownedCluster": "C:/Users/Cuongdz/AppData/Local/Temp/dao-be03-live-UJmEnN/data",
+  "cleanup": "Stopped explicitly via powershell pg_ctl stop -w -t 30 -m fast; exit 0, server stopped; postmaster.pid absent. No Anvil/transactions in this attempt."
+}

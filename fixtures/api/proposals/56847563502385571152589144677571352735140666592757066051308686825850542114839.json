@@ -1,0 +1,65 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v2",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": {
+    "proposalId": "56847563502385571152589144677571352735140666592757066051308686825850542114839",
+    "requestId": "0x354e13d75932d584d58370dcfb259f877493b196ed256930458c5cf2286d08ff",
+    "proposer": "0x9999999999999999999999999999999999999999",
+    "recipient": "0x000000000000000000000000000000000000007d",
+    "amount": "45125000000000000000",
+    "description": "{\"version\":1,\"title\":\"Budget proposal 26\",\"body\":\"Synthetic request 26 funds a DAO activity for frontend development.\"}",
+    "descriptionHash": "0xe87fa7edb6761b06fa5df014f45153ab92777a8ff7526c842eb8d7700602777d",
+    "title": "Budget proposal 26",
+    "body": "Synthetic request 26 funds a DAO activity for frontend development.",
+    "targets": [
+      "0x1111111111111111111111111111111111111111"
+    ],
+    "values": [
+      "0"
+    ],
+    "calldatas": [
+      "0x6664ac91354e13d75932d584d58370dcfb259f877493b196ed256930458c5cf2286d08ff000000000000000000000000000000000000000000000000000000000000007d000000000000000000000000000000000000000000000002723c346ae1808000"
+    ],
+    "snapshot": "1792298975",
+    "deadline": "1792299275",
+    "state": "Defeated",
+    "stateSource": "synthetic",
+    "votes": {
+      "against": "300000000000000000000",
+      "for": "100000000000000000000",
+      "abstain": "0",
+      "quorum": "200000000000000000000"
+    },
+    "operation": null,
+    "created": {
+      "transactionHash": "0x1eaa0fcfb593f9c07ee6658bb49410adb5e6927d43ca7f2b983a6184bc4b0327",
+      "transactionIndex": "250",
+      "blockNumber": "8926",
+      "blockHash": "0x2c05dbb8e621ececba034f19a962a7484816d14b1ace684714f5b10799270064",
+      "logIndex": "0"
+    },
+    "transactions": {
+      "created": "0x1eaa0fcfb593f9c07ee6658bb49410adb5e6927d43ca7f2b983a6184bc4b0327",
+      "queued": null,
+      "executed": null,
+      "canceled": null
+    }
+  }
+}

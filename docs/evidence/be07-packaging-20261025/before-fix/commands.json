@@ -1,0 +1,15 @@
+[
+  {
+    "label": "be07-db",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/be07-db.test.mjs"
+    ],
+    "start": "2026-10-25T16:05:07.254Z",
+    "end": "2026-10-25T16:05:10.025Z",
+    "exitCode": 1
+  }
+]

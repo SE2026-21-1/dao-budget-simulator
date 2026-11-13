@@ -1,0 +1,42 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v2",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": [
+    {
+      "token": "0x6666666666666666666666666666666666666666",
+      "from": "0x7777777777777777777777777777777777777777",
+      "to": "0x1111111111111111111111111111111111111111",
+      "amount": "10000000000000000000000",
+      "direction": "in",
+      "proposalId": null,
+      "requestId": null,
+      "transactionHash": "0x6470f367285612476c3546cc1acb4898aaf13df44ef173af0d0b5689ca79a6cc",
+      "transactionIndex": "1000",
+      "blockNumber": "8896",
+      "blockHash": "0x67afc14e87c2c0f10a310091eb3cc6f72f996cef8f04592c62af64827fd8bc94",
+      "logIndex": "0"
+    }
+  ],
+  "pagination": {
+    "limit": 20,
+    "totalCount": 21,
+    "nextCursor": null
+  }
+}

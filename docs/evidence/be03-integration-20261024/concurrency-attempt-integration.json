@@ -1,0 +1,1332 @@
+{
+  "startedAt": "2026-10-24T03:43:10.560Z",
+  "status": "FAIL",
+  "classification": "Fresh real Anvil receipts -> BE03 real RPC -> isolated real PostgreSQL; no BE04",
+  "commands": [
+    {
+      "label": "backend-build",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.build.json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "backend-build.txt"
+    },
+    {
+      "label": "backend-typecheck",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "backend-typecheck.txt"
+    },
+    {
+      "label": "be03-unit-decoder",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/indexer/syncer.test.ts",
+        "tests/indexer/decoder.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "be03-unit-decoder.txt"
+    },
+    {
+      "label": "pg-initdb",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\initdb.exe",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data",
+        "-U",
+        "be03_test",
+        "--auth=trust",
+        "--encoding=UTF8",
+        "--locale=C"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-initdb.txt"
+    },
+    {
+      "label": "pg-start",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "start",
+        "-w",
+        "-t",
+        "30",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data",
+        "-l",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\postgres.log",
+        "-o",
+        "-h 127.0.0.1 -p 54495"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-start.txt"
+    },
+    {
+      "label": "be03-postgres-regression",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "--import",
+        "tsx",
+        "--test",
+        "tests/indexer/checkpoint-storage.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "log": "be03-postgres-regression.txt"
+    },
+    {
+      "label": "pg-stop",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "stop",
+        "-w",
+        "-t",
+        "30",
+        "-m",
+        "fast",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "log": "pg-stop.txt"
+    },
+    {
+      "label": "pg-status-after-stop",
+      "command": [
+        "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+        "status",
+        "-D",
+        "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data"
+      ],
+      "exitCode": 3,
+      "signal": null,
+      "log": "pg-status-after-stop.txt"
+    }
+  ],
+  "stages": [],
+  "receipts": [],
+  "assertions": [],
+  "cleanup": {
+    "postgres": {
+      "stopped": true,
+      "retainedCluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data"
+    }
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "C:\\Program Files\\nodejs\\node.exe",
+    "platform": "win32",
+    "anvil": {
+      "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\package\\bin\\anvil.exe",
+      "sha256": "5c2217d266135a6fbe5faaccccb1e9eb2ddc1d06f8aabeef5fdb16d9846e4880",
+      "output": "anvil Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+    },
+    "cast": {
+      "executable": "D:\\dao-budget-simulator\\dist\\be03-tools\\cast-1.7.1\\package\\bin\\cast.exe",
+      "sha256": "b2541a63789931fc4c170e2502c16c3be259f2da4daba1a8d05ea5cfa7729baa",
+      "output": "cast Version: 1.7.1\nCommit SHA: 4072e48705af9d93e3c0f6e29e93b5e9a40caed8\nBuild Timestamp: 2026-05-08T07:54:39.315067700Z (1778226879)\nBuild Profile: dist"
+    },
+    "postgres": {
+      "executable": "C:\\Program Files\\PostgreSQL\\18\\bin\\postgres.exe",
+      "sha256": "ed1fa062cea44b0d200d2e10099ebc85faff7ef27df75a2e813ffd56d8a60868",
+      "output": "postgres (PostgreSQL) 18.4"
+    },
+    "sourceCommit": "1a4c262f387fa7480020da17dde5d608a5193eaf"
+  },
+  "sourceHashes": {
+    "contracts/BudgetGovernor.sol": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+    "contracts/BudgetToken.sol": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+    "contracts/GovernanceToken.sol": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+    "contracts/Treasury.sol": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+    "contracts/interfaces/ITreasury.sol": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+    "indexer/abi-registry.ts": "77f9a9ebe8f28e89eda4b40c3eebf57ed5d948cdbced19984fca22ab92fee08e",
+    "indexer/cli.ts": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+    "indexer/config.ts": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/errors.ts": "61fae126552748bc8c5890904b2cfea0ba8dc9522d333a0e85c2471730650f75",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+    "indexer/syncer.ts": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+    "indexer/types.ts": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+    "indexer/config/example.json": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+    "indexer/config/example.metadata.sql": "2c46e30630a3758e6a8bbbf891a5f2961d114a12c496745bf23c915e2a3f5b1b",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "scripts/check.py": "f3e9e689557820042b5f493051c30da463cb98926401ae8caa337c294f7de472",
+    "scripts/check_be01.mjs": "4f27a50582d56885b43d1d59a41837b86c5cd962fd71d9d0f466a863fa2a8edc",
+    "scripts/check_be01_database.ps1": "f9eacefa22880ac65ff9ab923c1a355a5de5cd8adbb11a2004ce852ca933da29",
+    "scripts/check_be01_database.sh": "21246c61e97d0764281eaedbfebf1c4b5fe7db33f65d52665cc4563d03d3514d",
+    "scripts/check_be02_database.ps1": "3e7cdc81f173ec24fe276f6c92811a072aa1a3f758746c3a2ecb65a4daab7063",
+    "scripts/check_be02_database.sh": "01d54741eb8077ff0388a01520bb71666181219763c44910b05d5c8edd1357f5",
+    "scripts/check_be03_database.ps1": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+    "scripts/check_governance_database.sh": "6e51002653259c60f4b36efe5f428536fb3a53ad0f4b0e7964d47134a68e65e7",
+    "scripts/check_roles.mjs": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+    "scripts/ci.sh": "b341dc868ee52a1072a694c4a36a59fa110ba50b00b5b0b0a114ec0eb3453982",
+    "scripts/deploy_local.mjs": "ce40fb5f4b14ce22e100a694e72c0ddb2217f36920b62d7edec94abb9898c0db",
+    "scripts/export_local_handoff.mjs": "1186ac1c951a37982ddf92379ff69d7a6d953b45f1af97b55231624d22646495",
+    "scripts/generate_be01_fixtures.mjs": "ca0f7167f1782afe311439a2ef72eac7e6645cdc56e475acde8a9d769a81fce7",
+    "scripts/governance_local.mjs": "27524cac530930dc94b5fd6a5f06d733f25bd14c8021748668ab22941dc2031d",
+    "scripts/governance_storage.mjs": "3814c36c386f43790b4a6c8523e53047db14e38d5a5f32944a9a8ba465da7bab",
+    "scripts/smoke_governance.mjs": "803e567459a58e62410b4d763e8bdd4bf3ee33fffe253212af584d7800b72417",
+    "scripts/smoke_treasury.mjs": "6c841910f75ba491a4e098309225877c89fffe037159eddf58888a167e5f3e9f"
+  },
+  "artifacts": {
+    "cacheSourceCount": 83,
+    "artifactCount": 98,
+    "checkedPhysicalMetadataSources": 83,
+    "crlfNormalizedSources": [
+      "contracts/BudgetGovernor.sol",
+      "contracts/BudgetToken.sol",
+      "contracts/GovernanceToken.sol",
+      "contracts/Treasury.sol",
+      "contracts/interfaces/ITreasury.sol",
+      "lib/forge-std/src/Base.sol",
+      "lib/forge-std/src/StdAssertions.sol",
+      "lib/forge-std/src/StdChains.sol",
+      "lib/forge-std/src/StdCheats.sol",
+      "lib/forge-std/src/StdConstants.sol",
+      "lib/forge-std/src/StdError.sol",
+      "lib/forge-std/src/StdInvariant.sol",
+      "lib/forge-std/src/StdJson.sol",
+      "lib/forge-std/src/StdMath.sol",
+      "lib/forge-std/src/StdStorage.sol",
+      "lib/forge-std/src/StdStyle.sol",
+      "lib/forge-std/src/StdToml.sol",
+      "lib/forge-std/src/StdUtils.sol",
+      "lib/forge-std/src/Test.sol",
+      "lib/forge-std/src/Vm.sol",
+      "lib/forge-std/src/console.sol",
+      "lib/forge-std/src/console2.sol",
+      "lib/forge-std/src/interfaces/IMulticall3.sol",
+      "lib/forge-std/src/safeconsole.sol",
+      "lib/openzeppelin-contracts/contracts/access/AccessControl.sol",
+      "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol",
+      "lib/openzeppelin-contracts/contracts/governance/Governor.sol",
+      "lib/openzeppelin-contracts/contracts/governance/IGovernor.sol",
+      "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol",
+      "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingSimple.sol",
+      "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSettings.sol",
+      "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol",
+      "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol",
+      "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+      "lib/openzeppelin-contracts/contracts/governance/utils/IVotes.sol",
+      "lib/openzeppelin-contracts/contracts/governance/utils/Votes.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC1363.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC5267.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC5805.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC6372.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/IERC7913.sol",
+      "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+      "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Errors.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Nonces.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+      "lib/openzeppelin-contracts/contracts/utils/ShortStrings.sol",
+      "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
+      "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+      "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol",
+      "lib/openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol",
+      "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol",
+      "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol",
+      "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+      "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+      "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+      "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol",
+      "lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol",
+      "lib/openzeppelin-contracts/contracts/utils/types/Time.sol",
+      "tests/attacks/GovernanceAttacks.t.sol",
+      "tests/invariant/GovernanceInvariant.t.sol",
+      "tests/invariant/TreasuryAccounting.t.sol",
+      "tests/unit/BudgetGovernor.t.sol",
+      "tests/unit/BudgetToken.t.sol",
+      "tests/unit/GovernanceToken.t.sol",
+      "tests/unit/OperationAbiCompatibility.t.sol",
+      "tests/unit/Treasury.t.sol"
+    ],
+    "preprocessedTests": {
+      "tests/invariant/GovernanceInvariant.t.sol": {
+        "sourceSha256": "d3a1c77a10594742dcae12c1ba3d143aae6ec91fa4752656fbb6de870bd9ef22",
+        "lfKeccak256": "0x00ad4e272699612aec48d5a4ef724502f2198fc75f97b80079e5686f819951af",
+        "compilerKeccak256": "0x08bbba3abd9672d50c171ea8c5122e5c7d94d5599681f8bd6f6d4a53c717cf11",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      },
+      "tests/invariant/TreasuryAccounting.t.sol": {
+        "sourceSha256": "3935249427b6990ddeb6d9ef117645fa5a9d1b807a26c56d481d21fb3cf86f04",
+        "lfKeccak256": "0xd8bf5efda2c2463b33e6d04f7a45bfb860f56983459b7d816bb6f37e84e5758f",
+        "compilerKeccak256": "0x787d046b7efefe53f77b3a43457bb6be70acd9cd0fb0e16dc89b6b67b56ab71b",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      },
+      "tests/unit/BudgetGovernor.t.sol": {
+        "sourceSha256": "1a2527ce1df724fa0c855e4ac3276abe8d89c19099671989d312d2e55bc3462b",
+        "lfKeccak256": "0xa0928a82371f11224587ff228ff95d50b506c76da466043c4c7cd6ee1e93cffe",
+        "compilerKeccak256": "0x26ef07404d9a7b56f3bc02df5704e7841b482b36408e02af39e844c76d8204c2",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      },
+      "tests/unit/BudgetToken.t.sol": {
+        "sourceSha256": "4a8fd76ca0a660232ec6e7978ff200d0ec2d14cce75f2c0545c20a4dd084db6b",
+        "lfKeccak256": "0xde4dc40c0aae19ab82303916d8464b4cd2c4d0488d448f285560d36024907df7",
+        "compilerKeccak256": "0x9045f5e7cedb9416d0b55f77ef6304ab5bd27c6f1d15d4ac34ab606f76aa1614",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      },
+      "tests/unit/GovernanceToken.t.sol": {
+        "sourceSha256": "ce75f069af275fedc0062232b4d7040f367d49bf5a39e18f88d2ea52822a604f",
+        "lfKeccak256": "0x60b345211957e1ddddda934f50c473ca67ea354a45e43e084c939202480ef679",
+        "compilerKeccak256": "0xa7420961f53b788cbd39af1c76900590e1af684835ea357a570b6e852e00bc5e",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      },
+      "tests/unit/Treasury.t.sol": {
+        "sourceSha256": "f10ff50110cd647f8123367704dcb7f7e3e86235c37fb83cbe95f34f5aca3f6e",
+        "lfKeccak256": "0x3bc68f33a1f59ead61b8c6eb757c2eb8b41338c78729fec7131b8e464f815d65",
+        "compilerKeccak256": "0x9ae68870dc538f4d7ba7cf92b158b741dda24bbf9fbac708fed2840f8262b836",
+        "provenance": "Foundry dynamic_test_linking preprocessor; WSL force rebuild reproduces all artifact bytes"
+      }
+    },
+    "generatedSources": [
+      "foundry-pp/DeployHelper42.sol",
+      "foundry-pp/DeployHelper49.sol",
+      "foundry-pp/DeployHelper52.sol",
+      "foundry-pp/DeployHelper55.sol"
+    ],
+    "generatedSourceProvenance": "WSL forge build --force; see forge-rebuild.txt and rebuild-comparison.json",
+    "outputs": [
+      {
+        "source": "contracts/BudgetGovernor.sol",
+        "name": "BudgetGovernor",
+        "profile": "default",
+        "path": "out/BudgetGovernor.sol/BudgetGovernor.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a807977bd7675304207b9709dac7ccfa8f1f0c874095ea6293346bc17306bd41",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "contracts/BudgetToken.sol",
+        "name": "BudgetToken",
+        "profile": "default",
+        "path": "out/BudgetToken.sol/BudgetToken.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "c3f9c62659f23cec4b41102c6b3b0a094727b325de350e7bdf9307efd73894cf",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "contracts/GovernanceToken.sol",
+        "name": "GovernanceToken",
+        "profile": "default",
+        "path": "out/GovernanceToken.sol/GovernanceToken.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "d69fde36e10c6f4983b4126a376f2439493e6388d5559c088af96ed15114ddc0",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "contracts/Treasury.sol",
+        "name": "Treasury",
+        "profile": "default",
+        "path": "out/Treasury.sol/Treasury.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "1aed616ddfa158d0781a5adcf04ad9cf9bcd9fe02e18cda2d184408dead4fdbb",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "contracts/interfaces/ITreasury.sol",
+        "name": "ITreasury",
+        "profile": "default",
+        "path": "out/ITreasury.sol/ITreasury.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "067d5a3322ccd2f59cee341d3f33df663c929b2f47f7fce13465a2af86522e28",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Base.sol",
+        "name": "CommonBase",
+        "profile": "default",
+        "path": "out/Base.sol/CommonBase.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "b34bc381c3f75e89610aca6a68fe4a91be78f71378047c26773a050a62b85517",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Base.sol",
+        "name": "ScriptBase",
+        "profile": "default",
+        "path": "out/Base.sol/ScriptBase.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "adcabc199e9e60b32bc5cd95b29ec2f716ad80fcccd4795e7699ca38cf9d0864",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Base.sol",
+        "name": "TestBase",
+        "profile": "default",
+        "path": "out/Base.sol/TestBase.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "cf4c6486cca116a07918fea7716a8a3f7babe0183b4b8e74e0a33a3fd68d5c29",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdAssertions.sol",
+        "name": "StdAssertions",
+        "profile": "default",
+        "path": "out/StdAssertions.sol/StdAssertions.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "0b777bda0a8cbd0ec9a9e1f041c618aec4c786fe1d45b114fdc323f26c1fb221",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdChains.sol",
+        "name": "StdChains",
+        "profile": "default",
+        "path": "out/StdChains.sol/StdChains.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "4a9ffc78771aab3a0bc65d5905c217552be015357c35252d3d64426874c552ca",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdCheats.sol",
+        "name": "StdCheats",
+        "profile": "default",
+        "path": "out/StdCheats.sol/StdCheats.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "3cb604e539cfa23aebbe72dc05dbe312457f7d2e455460194bed64bd443a6413",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdCheats.sol",
+        "name": "StdCheatsSafe",
+        "profile": "default",
+        "path": "out/StdCheats.sol/StdCheatsSafe.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "839e5d06020f324c253b45deed3cf3af93c720e732e219776ef8cce84f640b41",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdConstants.sol",
+        "name": "StdConstants",
+        "profile": "default",
+        "path": "out/StdConstants.sol/StdConstants.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "34a2c01a0181eb893e868e54bdc5564625e59ca9cc18fdc035d9714cc22b4fd1",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdError.sol",
+        "name": "stdError",
+        "profile": "default",
+        "path": "out/StdError.sol/stdError.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "ad106ff6b5e5a0f0b3573279d823e065ed3fb74aff5b8f18b87f3e0f07c74c7b",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdInvariant.sol",
+        "name": "StdInvariant",
+        "profile": "default",
+        "path": "out/StdInvariant.sol/StdInvariant.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "c9e6ff1babef03d69b0462919e48c21af70a0408bb1857351651f612830ce737",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdJson.sol",
+        "name": "stdJson",
+        "profile": "default",
+        "path": "out/StdJson.sol/stdJson.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "8c1cdaed21b1711faaf2c7e9ab88402e58f8b3d91a69a166bec4fcb79d4d396a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdMath.sol",
+        "name": "stdMath",
+        "profile": "default",
+        "path": "out/StdMath.sol/stdMath.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "10e4e8e1a06a21571cc5c059ecaf4e29f4572ed4f9be65454196c680f2482abc",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdStorage.sol",
+        "name": "stdStorage",
+        "profile": "default",
+        "path": "out/StdStorage.sol/stdStorage.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "1b8070b5d232be2eeeec74ab32f88f82ce2e1b0a4d13374292671b5179638ce5",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdStorage.sol",
+        "name": "stdStorageSafe",
+        "profile": "default",
+        "path": "out/StdStorage.sol/stdStorageSafe.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "1d14b64890b046fc116cd0d463dfe27208dd6d366808b649911beb1170a615cb",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdStyle.sol",
+        "name": "StdStyle",
+        "profile": "default",
+        "path": "out/StdStyle.sol/StdStyle.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "69a20c94bc1344765d80f7cb751c2e716b355bd2810e79a5188cfdff386ddc6a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdToml.sol",
+        "name": "stdToml",
+        "profile": "default",
+        "path": "out/StdToml.sol/stdToml.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "fb59c91b4e95e9c7ae33ab87d1a4d3741ec003823d4f436034b915567c281fca",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/StdUtils.sol",
+        "name": "StdUtils",
+        "profile": "default",
+        "path": "out/StdUtils.sol/StdUtils.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "3b453054a12b4aa77643c0eb634f19130c078bc0aef30f3377f7c98233b0be1f",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Test.sol",
+        "name": "Test",
+        "profile": "default",
+        "path": "out/Test.sol/Test.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "94be2ae783bf7d72a0128a47caa3516d9c0ea73077aa4414b3eed092cb4fd1f1",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Vm.sol",
+        "name": "Vm",
+        "profile": "default",
+        "path": "out/Vm.sol/Vm.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "157a7438ccc0c765ad4bdacd52e39fb3bac0377051015bfbb1386a22f1033981",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/Vm.sol",
+        "name": "VmSafe",
+        "profile": "default",
+        "path": "out/Vm.sol/VmSafe.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "9c5daa0e87fd762fca5542f51c5b8127d1b7e3fef38070c2287ec4bd3b310334",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/console.sol",
+        "name": "console",
+        "profile": "default",
+        "path": "out/console.sol/console.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "580c8910f046cafcf547e14a707c790e3d82ba523533db128cd40f1e21b6fe51",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/interfaces/IMulticall3.sol",
+        "name": "IMulticall3",
+        "profile": "default",
+        "path": "out/IMulticall3.sol/IMulticall3.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "685d73f103234e89184b3bfa8f8ca66144e7c1430c52654a9b22bebebf0fc55b",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/forge-std/src/safeconsole.sol",
+        "name": "safeconsole",
+        "profile": "default",
+        "path": "out/safeconsole.sol/safeconsole.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "e3560c35ab0fbe6104c017c275d90fa5b5e9a26cc48615272450e2f2e213558d",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/access/AccessControl.sol",
+        "name": "AccessControl",
+        "profile": "default",
+        "path": "out/AccessControl.sol/AccessControl.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "96ed3826d751241b07d82d3e1a2a2835e0caad9ea385ec302d996be39309bae9",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol",
+        "name": "IAccessControl",
+        "profile": "default",
+        "path": "out/IAccessControl.sol/IAccessControl.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "e69983b86d2e5f8667a6fa79f90321a947753b1d9d8e83fb661cbf63fb3e3c86",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/Governor.sol",
+        "name": "Governor",
+        "profile": "default",
+        "path": "out/Governor.sol/Governor.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "be642ac9a0783037d18f31c2807a8d31fccbbf289988e065192b22d469bd666d",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/IGovernor.sol",
+        "name": "IGovernor",
+        "profile": "default",
+        "path": "out/IGovernor.sol/IGovernor.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "29e56ee6ff8f4b51640ebe4972f49bfe0858525613a375ce5dbb406e20316c38",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol",
+        "name": "TimelockController",
+        "profile": "default",
+        "path": "out/TimelockController.sol/TimelockController.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f070ea85a3f1dcb85ad1934462bd56bb1885d84f32e4add3d6f501609cc7e457",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingSimple.sol",
+        "name": "GovernorCountingSimple",
+        "profile": "default",
+        "path": "out/GovernorCountingSimple.sol/GovernorCountingSimple.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "8fcdb2cc5396701b13ba27871b037062b0ca34d399c4bf8bbe7b69fe4b296fa4",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSettings.sol",
+        "name": "GovernorSettings",
+        "profile": "default",
+        "path": "out/GovernorSettings.sol/GovernorSettings.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "0d41141c78c9b41b8618bb344d0b3c81d7e28bbe1b0a6278cb5c1f9512d69eef",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol",
+        "name": "GovernorTimelockControl",
+        "profile": "default",
+        "path": "out/GovernorTimelockControl.sol/GovernorTimelockControl.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "b77ae31b351194bf3aa319e7e5e81fda104e0a93b6429b92fb557012b5884b09",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol",
+        "name": "GovernorVotes",
+        "profile": "default",
+        "path": "out/GovernorVotes.sol/GovernorVotes.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "b30a2b039333ec5ef9e21ccd8cfc5ea55f828cd20f4c2d02fcce5700dd9aba92",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+        "name": "GovernorVotesQuorumFraction",
+        "profile": "default",
+        "path": "out/GovernorVotesQuorumFraction.sol/GovernorVotesQuorumFraction.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "92e5831580ef474198d51e409727960582bfd710dd3407df429cd36d0cc61b75",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/utils/IVotes.sol",
+        "name": "IVotes",
+        "profile": "default",
+        "path": "out/IVotes.sol/IVotes.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "b8d6164716cd9a41b8d25d5ff6bbf2ee37a5ea7818cfbc8d8c10d3b7ed794efc",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/governance/utils/Votes.sol",
+        "name": "Votes",
+        "profile": "default",
+        "path": "out/Votes.sol/Votes.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "3559087473852aae44ec184c61d3a6bb8736824db0dc0852499971509b2e41ab",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol",
+        "name": "IERC1271",
+        "profile": "default",
+        "path": "out/IERC1271.sol/IERC1271.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "901056337382e53addb24eb1212c3c3bdaeaaf3d7607a2783fa285e64433d43f",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC1363.sol",
+        "name": "IERC1363",
+        "profile": "default",
+        "path": "out/IERC1363.sol/IERC1363.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "24805d4f2f02c5a23f6c355a477c36b367bb18c7662bb8336b3f56ba2abb2643",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC5267.sol",
+        "name": "IERC5267",
+        "profile": "default",
+        "path": "out/IERC5267.sol/IERC5267.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "fa2fc31834e809991bc637cab8e9a00ff08893fefc6132f77c0937f4b3b61da0",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC5805.sol",
+        "name": "IERC5805",
+        "profile": "default",
+        "path": "out/IERC5805.sol/IERC5805.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "6ae5ef4bd22adfd7d3365420a0cd914a62e5ce31cc3e2b04ad142d18f7c2cf56",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC6372.sol",
+        "name": "IERC6372",
+        "profile": "default",
+        "path": "out/IERC6372.sol/IERC6372.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "6c8fcdc39d616f107b57a80f829772418d9af48a0fd9ac8c1b886f6238fdaaf0",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/IERC7913.sol",
+        "name": "IERC7913SignatureVerifier",
+        "profile": "default",
+        "path": "out/IERC7913.sol/IERC7913SignatureVerifier.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "adc6f8a55a8540ea4e9dccf7a0a5df948601e91e6cb36d7e194f8d5a1d4c0ed7",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+        "name": "IERC1155Errors",
+        "profile": "default",
+        "path": "out/draft-IERC6093.sol/IERC1155Errors.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "9ab070a275cf5bb4131c92be81425522ebc1f241765c34b6dd6a82d72c3e6f7b",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+        "name": "IERC20Errors",
+        "profile": "default",
+        "path": "out/draft-IERC6093.sol/IERC20Errors.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "275d2c078692ad973386046cf44bb1fa535d9aa9f9069e9b7f41b5ffab8b094a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+        "name": "IERC721Errors",
+        "profile": "default",
+        "path": "out/draft-IERC6093.sol/IERC721Errors.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "feebd22c64bb983fb192f97561315afe0d2307eeeabaca4be58695bf4c21a925",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "name": "IERC1155Receiver",
+        "profile": "default",
+        "path": "out/IERC1155Receiver.sol/IERC1155Receiver.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "4ed84c4fa221d60c710af5ab4089aa52e7a4aad487356697d75f70899059bf5c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+        "name": "ERC1155Holder",
+        "profile": "default",
+        "path": "out/ERC1155Holder.sol/ERC1155Holder.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "4d9c8a0925a7d9c9432aab61cd1d649d61ea176afa35fe4b99d710f80d9bf2f0",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+        "name": "ERC20",
+        "profile": "default",
+        "path": "out/ERC20.sol/ERC20.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "d8fde0bc1c2fe824edfc0e6f0446c263ec0b9faa90ad281f1b37c8c528227e2a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+        "name": "IERC20",
+        "profile": "default",
+        "path": "out/IERC20.sol/IERC20.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "fbd245281ffaa790de074b564fb17d135153fd4ecf4d958b9276bc3d477276f1",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol",
+        "name": "ERC20Votes",
+        "profile": "default",
+        "path": "out/ERC20Votes.sol/ERC20Votes.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "5ad0eee4c58c30341bf3b71bd32748c07f2f3dceeed105f452962d427465fbaf",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+        "name": "IERC20Metadata",
+        "profile": "default",
+        "path": "out/IERC20Metadata.sol/IERC20Metadata.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "b10f1d0c1fc2e31f8ef8980e3494196c94da15607d8ee268f261f413420c065a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+        "name": "SafeERC20",
+        "profile": "default",
+        "path": "out/SafeERC20.sol/SafeERC20.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a1b763f2e4e806cb771e89fbbf2771d9b7e4a5a5cb362d16d933ee0c23e20739",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+        "name": "IERC721Receiver",
+        "profile": "default",
+        "path": "out/IERC721Receiver.sol/IERC721Receiver.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f89e7c4cc4d8cfd48b8839dbdbf7e619b8e116d91567e20a344012a188baf5ec",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol",
+        "name": "ERC721Holder",
+        "profile": "default",
+        "path": "out/ERC721Holder.sol/ERC721Holder.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "8fdc178d54f5f0cf6d026d88d1d02ba33de96bfd4a4d2a96dd17330407a55498",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+        "name": "Address",
+        "profile": "default",
+        "path": "out/Address.sol/Address.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "fb274d1af9f818e3c418d00d58d6d105f85c2d0fba622aaaf663f0e69f8ae60c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
+        "name": "Bytes",
+        "profile": "default",
+        "path": "out/Bytes.sol/Bytes.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "6aa6984f7d299f4e272b59dabc38c2835560f12ff6113c4b5d0cb4be79bdc37e",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "name": "Context",
+        "profile": "default",
+        "path": "out/Context.sol/Context.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "518a0ed869dbce0ba02db0a35683987d75eae27ab2e7788b93c425df7210c3ca",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Errors.sol",
+        "name": "Errors",
+        "profile": "default",
+        "path": "out/Errors.sol/Errors.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "28a578ec7152879611e1ce08a1523c9aad70a1fc5493516e7fa627ad53b80836",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Nonces.sol",
+        "name": "Nonces",
+        "profile": "default",
+        "path": "out/Nonces.sol/Nonces.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f74427e0cfbca87edcc4bb376964e3a79d03a8e648e88f94cfb0baaf2448953a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+        "name": "Panic",
+        "profile": "default",
+        "path": "out/Panic.sol/Panic.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a2e20c92ddb2ebb4f23c3f3e71e48a3a556af02513ac8bcd67d01c9736ce4eaf",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/ShortStrings.sol",
+        "name": "ShortStrings",
+        "profile": "default",
+        "path": "out/ShortStrings.sol/ShortStrings.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "46aac84b660cd34c419dcbd6aa70393fd6f6fa96af535d280aff4053443bd4db",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
+        "name": "StorageSlot",
+        "profile": "default",
+        "path": "out/StorageSlot.sol/StorageSlot.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "c61fc44b3ad49cb2ac6b9528ade69b39e48619144b7c2223dbdccc069a0d545d",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+        "name": "Strings",
+        "profile": "default",
+        "path": "out/Strings.sol/Strings.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "bdbd13faa9bd398fcc415f11190b57c1319397e637958d168712ee11c74bce2c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol",
+        "name": "ECDSA",
+        "profile": "default",
+        "path": "out/ECDSA.sol/ECDSA.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "da08c1761cd6966e6531719f5a0566f446c13c4605b7fba3d6a2bae19635796e",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol",
+        "name": "EIP712",
+        "profile": "default",
+        "path": "out/EIP712.sol/EIP712.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "9b259d527631e82343bf245e5d3351e157f58a89bc61b4596cfea6d44478f51e",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol",
+        "name": "MessageHashUtils",
+        "profile": "default",
+        "path": "out/MessageHashUtils.sol/MessageHashUtils.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "8bbd68693461f127a89fa5be6963330a8b3b4fc70c162623b533d08168c58620",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol",
+        "name": "SignatureChecker",
+        "profile": "default",
+        "path": "out/SignatureChecker.sol/SignatureChecker.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f3f4cf1e3a4a1c0f926e75a524e7d00234a8870ae5a5964d82d28d6ec7f969c3",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+        "name": "ERC165",
+        "profile": "default",
+        "path": "out/ERC165.sol/ERC165.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "e60305b092f8e67985d6bdc1d5e5308524b5d109f4385545f8fadf24d209d22e",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "name": "IERC165",
+        "profile": "default",
+        "path": "out/IERC165.sol/IERC165.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f4291fb4e5b4c88cb07dbdeefafcb02d9f09c1353e01fd67bc9f75b5d646521c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+        "name": "Math",
+        "profile": "default",
+        "path": "out/Math.sol/Math.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "8bde3a533b8c08e6258c9059039f012047c98e987da3a77a077329ff68713fe7",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+        "name": "SafeCast",
+        "profile": "default",
+        "path": "out/SafeCast.sol/SafeCast.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a51d8bafb3bec144ea33897f7ba8b86879fbd0a585aab8157b4baa9049abee87",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+        "name": "SignedMath",
+        "profile": "default",
+        "path": "out/SignedMath.sol/SignedMath.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "d9c2a6cd331bf954c95600d94d17a6f8410872d91d5333ba4594b24b6ea192a6",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol",
+        "name": "Checkpoints",
+        "profile": "default",
+        "path": "out/Checkpoints.sol/Checkpoints.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "e10b2d93e370cf82942179590eba0521295d9383427dc8ea4f655be93735f9fa",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol",
+        "name": "DoubleEndedQueue",
+        "profile": "default",
+        "path": "out/DoubleEndedQueue.sol/DoubleEndedQueue.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "16c322341988d2b69b4460ff14ae6733592a5145aaff3420c64d5700464f790c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "lib/openzeppelin-contracts/contracts/utils/types/Time.sol",
+        "name": "Time",
+        "profile": "default",
+        "path": "out/Time.sol/Time.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "846b382d9073b3844951b80acd2e35469dcf63de196803a83784dcddc97d0c2a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/attacks/GovernanceAttacks.t.sol",
+        "name": "GovernanceAttacksTest",
+        "profile": "default",
+        "path": "out/GovernanceAttacks.t.sol/GovernanceAttacksTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f7f35bd2f6e4cd939632b0398d7e85f43c77ce953b7063c34b81eab7963a753c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/GovernanceInvariant.t.sol",
+        "name": "GovernanceInvariantTest",
+        "profile": "default",
+        "path": "out/GovernanceInvariant.t.sol/GovernanceInvariantTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f05d10bd207660ee2af164c76a9dcb6e670af374e798780d8320cb13782657f0",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/GovernanceInvariant.t.sol",
+        "name": "GovernanceOracleChecks",
+        "profile": "default",
+        "path": "out/GovernanceInvariant.t.sol/GovernanceOracleChecks.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "3d43b336d998a3f97960a1053fe86fd76d3b8dd754b741e8290399c9d0407890",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/GovernanceInvariant.t.sol",
+        "name": "GovernanceOracleHandler",
+        "profile": "default",
+        "path": "out/GovernanceInvariant.t.sol/GovernanceOracleHandler.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "196ff30d3de02167bda937a64753f1c9923f46c30bbbd489ec6af01cf163d1f9",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/GovernanceInvariant.t.sol",
+        "name": "VmContractHelper79",
+        "profile": "default",
+        "path": "out/GovernanceInvariant.t.sol/VmContractHelper79.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "d20757e7677b6b55cd3296921d2f40fadd8c6e638f2d56047eb55da443f12c32",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/TreasuryAccounting.t.sol",
+        "name": "TreasuryAccountingHandler",
+        "profile": "default",
+        "path": "out/TreasuryAccounting.t.sol/TreasuryAccountingHandler.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "bbd94a0929bd0f90d75038b493bf614789fa6e081b90426c7bb92aa78dc7326a",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/TreasuryAccounting.t.sol",
+        "name": "TreasuryAccountingInvariantTest",
+        "profile": "default",
+        "path": "out/TreasuryAccounting.t.sol/TreasuryAccountingInvariantTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "fc2e9a3013dfb1edc653ade5ff88f793847eb991c91d346ae29143c1e3553340",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/invariant/TreasuryAccounting.t.sol",
+        "name": "VmContractHelper83",
+        "profile": "default",
+        "path": "out/TreasuryAccounting.t.sol/VmContractHelper83.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "68cd1f47106f82c855ce456765b07c2721c3a0a8d1f2335f581d6fb86399072c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/BudgetGovernor.t.sol",
+        "name": "BudgetGovernorTest",
+        "profile": "default",
+        "path": "out/BudgetGovernor.t.sol/BudgetGovernorTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "93c2bf87aeab8980986b148dceabf2fd32b1b8a6bf5ad2d0b201adc38cc49f87",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/BudgetGovernor.t.sol",
+        "name": "VmContractHelper86",
+        "profile": "default",
+        "path": "out/BudgetGovernor.t.sol/VmContractHelper86.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "53ac93c109b6be2377b513bec00eeff6cb3e6b68b8b229e22e98c02b99b18871",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/BudgetGovernor.t.sol",
+        "name": "WrongClockToken",
+        "profile": "default",
+        "path": "out/BudgetGovernor.t.sol/WrongClockToken.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "e31a711c336e491eae3872495d34f15c53167775bda8a6a12914786bcce2d720",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/BudgetToken.t.sol",
+        "name": "BudgetTokenTest",
+        "profile": "default",
+        "path": "out/BudgetToken.t.sol/BudgetTokenTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a53b6d8edb687339fdc17b630ebc609ad761dabce340873aee10b9fc0340ce2b",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/BudgetToken.t.sol",
+        "name": "VmContractHelper87",
+        "profile": "default",
+        "path": "out/BudgetToken.t.sol/VmContractHelper87.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "f253a85fce2828025f90d32db8d99aa7906b6d3ac8a3bf0f3f588b7e9525e495",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/GovernanceToken.t.sol",
+        "name": "GovernanceTokenTest",
+        "profile": "default",
+        "path": "out/GovernanceToken.t.sol/GovernanceTokenTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "3586a109a127ac226a55ef961cc1c614d9859a5038bc926d4c12ad34aa4383d1",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/GovernanceToken.t.sol",
+        "name": "VmContractHelper88",
+        "profile": "default",
+        "path": "out/GovernanceToken.t.sol/VmContractHelper88.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "caf0d8ae3471fa0d9f8dbb93b5f977e3e93b04b6becb8c9ac2f3b2c19196a099",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/OperationAbiCompatibility.t.sol",
+        "name": "OperationAbiCompatibilityTest",
+        "profile": "default",
+        "path": "out/OperationAbiCompatibility.t.sol/OperationAbiCompatibilityTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "c5303d2037c4d905c0644f2564623fad21893e3aadb8a9ae3359c3d849b7bb0b",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/Treasury.t.sol",
+        "name": "CallbackBudgetToken",
+        "profile": "default",
+        "path": "out/Treasury.t.sol/CallbackBudgetToken.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "a00566cc32a9e16a717d3bc094250b731f1f1ebfcc05e3800f0279f230e80f22",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/Treasury.t.sol",
+        "name": "TreasuryTest",
+        "profile": "default",
+        "path": "out/Treasury.t.sol/TreasuryTest.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "c099b640f289716f619f0e8dba90ff4a0341af51a993eca64cd95d88e36b08fe",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      },
+      {
+        "source": "tests/unit/Treasury.t.sol",
+        "name": "VmContractHelper91",
+        "profile": "default",
+        "path": "out/Treasury.t.sol/VmContractHelper91.json",
+        "buildId": "637b29cc4c4f6f35",
+        "sha256": "bbf5b9680e5ffacce0b01b210dda3283ef9a99471aaa5411060cb59ffc133d7c",
+        "compiler": "0.8.37+commit.f401782d",
+        "evm": "osaka"
+      }
+    ]
+  },
+  "postgres": {
+    "root": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl",
+    "cluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data",
+    "address": "127.0.0.1",
+    "port": 54495,
+    "user": "be03_test",
+    "database": "be03_live",
+    "separateRegressionDatabase": "be03_test",
+    "auth": "trust; owned temporary loopback test cluster only",
+    "identity": [
+      {
+        "current_database": "be03_live",
+        "current_user": "be03_test",
+        "address": "127.0.0.1",
+        "port": 54495,
+        "version": "PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35227, 64-bit"
+      }
+    ]
+  },
+  "error": {
+    "message": "be03-postgres-regression: exit 1; ",
+    "stack": "AssertionError [ERR_ASSERTION]: be03-postgres-regression: exit 1; \n    at run (file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:47:10)\n    at async file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:134:3"
+  },
+  "finishedAt": "2026-10-24T03:43:21.751Z"
+}

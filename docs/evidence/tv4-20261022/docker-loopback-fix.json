@@ -1,0 +1,1028 @@
+{
+  "recordedAt": "2026-10-22T05:11:14.016031+00:00",
+  "failedCommit": "33c5297b51565e82c2ba7aa309a19cd3fe0bf2c6",
+  "failure": {
+    "runId": 39725731638,
+    "jobId": 119649060315,
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39725731638/job/119649060315",
+    "step": "Exercise final roles, live governance ingestion, restart and raw replay",
+    "message": "Actual PostgreSQL server must be loopback",
+    "priorSteps": "Build/format/Foundry tests and Treasury smoke succeeded.",
+    "otherJobs": {
+      "be01": "success",
+      "be02": "success",
+      "frontend": "success"
+    },
+    "stdout": "foundry-33c5297-failure.txt"
+  },
+  "rootCause": "PostgreSQL inet_server_addr describes the server-side endpoint after Docker port forwarding, not the client numeric-loopback published port. The guard checked the wrong side of the connection.",
+  "fix": "Assert the actual pg TCP socket peer is numeric loopback, retaining URL/ownership/empty-schema/isolation guards; retain server-side address only for database identity and topology evidence.",
+  "localSmoke": {
+    "command": "node --import tsx scripts/smoke_governance.mjs --output <evidence.json> --database",
+    "exit": 0,
+    "node": "v24.15.0",
+    "postgres": [
+      "18.4",
+      "18.4"
+    ],
+    "topology": [
+      {
+        "clientAddress": "127.0.0.1",
+        "serverAddress": "127.0.0.2",
+        "serverPort": 55474
+      },
+      {
+        "clientAddress": "127.0.0.1",
+        "serverAddress": "127.0.0.2",
+        "serverPort": 55474
+      }
+    ],
+    "scope": "Real native PostgreSQL on 127.0.0.2 through owned 127.0.0.1 TCP forwarder; real Anvil governance and scanner/CLI/storage. Does not claim this local run used Docker.",
+    "stdout": "forwarded-postgres-smoke.txt",
+    "finalBlock": {
+      "number": "109",
+      "hash": "0x6cd95cee9b02ababba5fd5afd426a277d8a248ca992a6a5ac0a4cf7db8495456",
+      "timestamp": "1800000492"
+    },
+    "storage": {
+      "scope": "Actual HttpRpc -> BE02 scanner -> PostgresStorage -> SQL, CLI process restart and second fresh database raw replay at canonical H. No FR15 full projection/state reconstruction, TC11 checkpoints/resume/reorg, production API or frontend E2E acceptance.",
+      "isolation": "Explicit --database and TV4_SMOKE_ISOLATED=1; two owned empty numeric-loopback databases; no existing schema/data dropped; caller DATABASE_URL/RPC_URL ignored.",
+      "versions": {
+        "node": "v24.15.0",
+        "postgres": [
+          "18.4",
+          "18.4"
+        ],
+        "pg": "8.23.1",
+        "tsx": "4.23.15"
+      },
+      "databaseConnections": [
+        {
+          "clientAddress": "127.0.0.1",
+          "serverAddress": "127.0.0.2",
+          "serverPort": 55474
+        },
+        {
+          "clientAddress": "127.0.0.1",
+          "serverAddress": "127.0.0.2",
+          "serverPort": 55474
+        }
+      ],
+      "sourceHashes": {
+        "scripts/governance_storage.mjs": "dae18f77927a307e3deee37c20b4cafacd414540fe990ea1f706a75c381b5f49",
+        "scripts/smoke_governance.mjs": "97b6fd07fa1b458179e2dc5ff057aad0884b92bd3c0af892f7f4aae3008c7c8f",
+        "indexer/config.ts": "3005cd643994dfce74ad1ec227f83ac0519e9871b8410f418c6a138125b34ec4",
+        "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+        "indexer/reader.ts": "b3fb6a58e837f8e301921dafcdff2ea3517e41d0928e6d050834d3d1da7b0049",
+        "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+        "indexer/storage.ts": "33d1757e21a2dd7e488889bbd613285e07a87acceeaab139e81b142ea6075862",
+        "indexer/cli.ts": "1aad7935cf8166f91287c850e44712eebc5a90895f785c68f5822eded20bf5fb",
+        "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+        "indexer/abi-registry.ts": "84b7982de1eecf2a9b0b97ba461d734582b704c6a9d7ef0969bd94046cda6922",
+        "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+        "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d"
+      },
+      "fromBlock": "2",
+      "toBlock": "109",
+      "blockHash": "0x6cd95cee9b02ababba5fd5afd426a277d8a248ca992a6a5ac0a4cf7db8495456",
+      "semanticDigest": {
+        "algorithm": "sha256",
+        "canonicalization": "Sorted SQL numeric chain order, recursively sorted JSON object keys. Excludes generated IDs, deployment IDs and wall-clock timestamps.",
+        "queryHashes": {
+          "headers": "1c23c114588c2feb9d1fb13368719594054c9b860902c1cbb3fe0601484fb3e3",
+          "events": "4334817e84e7938bc5cd0fd296fdb02bfa894fddadec0f6ae61022c581883c29",
+          "totals": "606978cc51487f4ba1825cdd082983a9d2142a5b3d37c36e6261f6327de66457",
+          "balances": "0882999ad44c78f9188ade697166393084779a630a9632840b0618ab4e58cb64"
+        },
+        "canonical": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306",
+        "rebuild": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306"
+      },
+      "phases": [
+        {
+          "phase": "real_migration_and_manifest_metadata",
+          "state": "passed",
+          "deploymentIds": [
+            "1",
+            "1"
+          ],
+          "metadataRoles": [
+            "budget_token",
+            "treasury",
+            "timelock",
+            "governor"
+          ]
+        },
+        {
+          "phase": "scanner_first_finite_half",
+          "state": "passed",
+          "report": {
+            "status": "completed_with_decode_issues",
+            "chainId": "31337",
+            "deploymentId": "1",
+            "fromBlock": "2",
+            "toBlock": "55",
+            "committedBatches": [
+              {
+                "fromBlock": "2",
+                "toBlock": "21",
+                "insertedBlocks": 20,
+                "insertedEvents": 18,
+                "duplicateEvents": 0,
+                "decoded": 2,
+                "unknownTopics": 16,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": [
+                  {
+                    "blockNumber": "3",
+                    "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "3",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "4",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "6",
+                    "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "7",
+                    "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "8",
+                    "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "9",
+                    "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "10",
+                    "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "11",
+                    "transactionHash": "0xeaee7638ee683b063482d5c820fd95c52d84274ec915260f864d853a6b54976e",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "12",
+                    "transactionHash": "0x00393cedec1f3456db99368d809f47ec9ba7dcabd9f2bee1eadd6fe6373a4da6",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  }
+                ]
+              },
+              {
+                "fromBlock": "22",
+                "toBlock": "41",
+                "insertedBlocks": 20,
+                "insertedEvents": 0,
+                "duplicateEvents": 0,
+                "decoded": 0,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "42",
+                "toBlock": "55",
+                "insertedBlocks": 14,
+                "insertedEvents": 7,
+                "duplicateEvents": 0,
+                "decoded": 7,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              }
+            ]
+          },
+          "digest": "c7dd4f480c75627405cff09c389d6b43062d5e0b88496fdde401a5bff2e7b12c"
+        },
+        {
+          "phase": "forced_mid_batch_sql_failure_rollback",
+          "state": "passed",
+          "failureCode": "STORAGE_DATABASE_ERROR",
+          "failedAtBlock": "57",
+          "committedPriorBatches": 3,
+          "priorDigest": "c7dd4f480c75627405cff09c389d6b43062d5e0b88496fdde401a5bff2e7b12c",
+          "scope": "Real PostgreSQL trigger raises on second header INSERT; failed batch rolls back, prior finite batches unchanged."
+        },
+        {
+          "phase": "cli_remaining_fixed_range",
+          "state": "passed",
+          "exitCode": 0,
+          "report": {
+            "type": "scan_result",
+            "status": "completed",
+            "chainId": "31337",
+            "deploymentId": "1",
+            "fromBlock": "56",
+            "toBlock": "109",
+            "committedBatches": [
+              {
+                "fromBlock": "56",
+                "toBlock": "75",
+                "insertedBlocks": 20,
+                "insertedEvents": 13,
+                "duplicateEvents": 0,
+                "decoded": 13,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "76",
+                "toBlock": "95",
+                "insertedBlocks": 20,
+                "insertedEvents": 14,
+                "duplicateEvents": 0,
+                "decoded": 14,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "96",
+                "toBlock": "109",
+                "insertedBlocks": 14,
+                "insertedEvents": 9,
+                "duplicateEvents": 0,
+                "decoded": 9,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              }
+            ]
+          },
+          "scope": "Explicit finite range across process boundary, not checkpoint discovery/resume."
+        },
+        {
+          "phase": "sql_exact_headers_and_raw_payloads",
+          "state": "passed",
+          "digest": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306"
+        },
+        {
+          "phase": "sql_same_h_ledger",
+          "state": "passed"
+        },
+        {
+          "phase": "known_unknown_topic_full_abi_provenance",
+          "state": "passed",
+          "digest": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306"
+        },
+        {
+          "phase": "scanner_full_rerun_idempotent",
+          "state": "passed",
+          "report": {
+            "status": "completed_with_decode_issues",
+            "chainId": "31337",
+            "deploymentId": "1",
+            "fromBlock": "2",
+            "toBlock": "109",
+            "committedBatches": [
+              {
+                "fromBlock": "2",
+                "toBlock": "21",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 18,
+                "decoded": 2,
+                "unknownTopics": 16,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": [
+                  {
+                    "blockNumber": "3",
+                    "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "3",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "4",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "6",
+                    "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "7",
+                    "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "8",
+                    "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "9",
+                    "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "10",
+                    "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "11",
+                    "transactionHash": "0xeaee7638ee683b063482d5c820fd95c52d84274ec915260f864d853a6b54976e",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "12",
+                    "transactionHash": "0x00393cedec1f3456db99368d809f47ec9ba7dcabd9f2bee1eadd6fe6373a4da6",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  }
+                ]
+              },
+              {
+                "fromBlock": "22",
+                "toBlock": "41",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 0,
+                "decoded": 0,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "42",
+                "toBlock": "61",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 11,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "62",
+                "toBlock": "81",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 11,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "82",
+                "toBlock": "101",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 12,
+                "decoded": 12,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "102",
+                "toBlock": "109",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 9,
+                "decoded": 9,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              }
+            ]
+          },
+          "digest": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306"
+        },
+        {
+          "phase": "cli_new_process_full_rerun_idempotent",
+          "state": "passed",
+          "exitCode": 2,
+          "report": {
+            "type": "scan_result",
+            "status": "completed_with_decode_issues",
+            "chainId": "31337",
+            "deploymentId": "1",
+            "fromBlock": "2",
+            "toBlock": "109",
+            "committedBatches": [
+              {
+                "fromBlock": "2",
+                "toBlock": "21",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 18,
+                "decoded": 2,
+                "unknownTopics": 16,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": [
+                  {
+                    "blockNumber": "3",
+                    "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "3",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "4",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "6",
+                    "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "7",
+                    "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "8",
+                    "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "9",
+                    "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "10",
+                    "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "11",
+                    "transactionHash": "0xeaee7638ee683b063482d5c820fd95c52d84274ec915260f864d853a6b54976e",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "12",
+                    "transactionHash": "0x00393cedec1f3456db99368d809f47ec9ba7dcabd9f2bee1eadd6fe6373a4da6",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  }
+                ]
+              },
+              {
+                "fromBlock": "22",
+                "toBlock": "41",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 0,
+                "decoded": 0,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "42",
+                "toBlock": "61",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 11,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "62",
+                "toBlock": "81",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 11,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "82",
+                "toBlock": "101",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 12,
+                "decoded": 12,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "102",
+                "toBlock": "109",
+                "insertedBlocks": 0,
+                "insertedEvents": 0,
+                "duplicateEvents": 9,
+                "decoded": 9,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              }
+            ]
+          },
+          "digest": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306"
+        },
+        {
+          "phase": "second_fresh_database_raw_replay",
+          "state": "passed",
+          "exitCode": 2,
+          "report": {
+            "type": "scan_result",
+            "status": "completed_with_decode_issues",
+            "chainId": "31337",
+            "deploymentId": "1",
+            "fromBlock": "2",
+            "toBlock": "109",
+            "committedBatches": [
+              {
+                "fromBlock": "2",
+                "toBlock": "21",
+                "insertedBlocks": 20,
+                "insertedEvents": 18,
+                "duplicateEvents": 0,
+                "decoded": 2,
+                "unknownTopics": 16,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": [
+                  {
+                    "blockNumber": "3",
+                    "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "4",
+                    "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "1",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "2",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "3",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "5",
+                    "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+                    "logIndex": "4",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-governor"
+                  },
+                  {
+                    "blockNumber": "6",
+                    "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "7",
+                    "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "8",
+                    "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "9",
+                    "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "10",
+                    "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  },
+                  {
+                    "blockNumber": "11",
+                    "transactionHash": "0xeaee7638ee683b063482d5c820fd95c52d84274ec915260f864d853a6b54976e",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "sc01-itreasury-v1"
+                  },
+                  {
+                    "blockNumber": "12",
+                    "transactionHash": "0x00393cedec1f3456db99368d809f47ec9ba7dcabd9f2bee1eadd6fe6373a4da6",
+                    "logIndex": "0",
+                    "code": "UNKNOWN_TOPIC",
+                    "abiVersion": "oz-5.4.0-timelock"
+                  }
+                ]
+              },
+              {
+                "fromBlock": "22",
+                "toBlock": "41",
+                "insertedBlocks": 20,
+                "insertedEvents": 0,
+                "duplicateEvents": 0,
+                "decoded": 0,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "42",
+                "toBlock": "61",
+                "insertedBlocks": 20,
+                "insertedEvents": 11,
+                "duplicateEvents": 0,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "62",
+                "toBlock": "81",
+                "insertedBlocks": 20,
+                "insertedEvents": 11,
+                "duplicateEvents": 0,
+                "decoded": 11,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "82",
+                "toBlock": "101",
+                "insertedBlocks": 20,
+                "insertedEvents": 12,
+                "duplicateEvents": 0,
+                "decoded": 12,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              },
+              {
+                "fromBlock": "102",
+                "toBlock": "109",
+                "insertedBlocks": 8,
+                "insertedEvents": 9,
+                "duplicateEvents": 0,
+                "decoded": 9,
+                "unknownTopics": 0,
+                "decodeErrors": 0,
+                "discardedOutsideDeployment": 0,
+                "issues": []
+              }
+            ]
+          },
+          "digest": "73e75846fd9faa353fdfe617c737ac1788cd41dd25165d494e4820df775a9306",
+          "scope": "Raw headers/events replay into a second fresh database only; production projections remain unimplemented."
+        }
+      ],
+      "counts": {
+        "headers": 108,
+        "rawLogs": 61,
+        "decoded": 45,
+        "unknownTopics": 16,
+        "decodeErrors": 0
+      },
+      "unknownTopicCounts": {
+        "0x0553476bf02ef2726e8ce5ced78d63e26e602e4a2257b1f559418e24b4633997": 1,
+        "0x08f74ea46ef7894f65eabfb5e6e695de773a000b47c529ab559178069b226401": 1,
+        "0x11c24f4ead16507c69ac467fbd5e4eed5fb5c699626d2cc6d66421df253886d5": 1,
+        "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d": 8,
+        "0x7e3f7f0708a84de9203036abaa450dccc85ad5ff52f78c170f3edb55cf5e8828": 1,
+        "0xc565b045403dc03c2eea82b81a0465edad9e2e7fc4d97e11421c209da93d7a93": 1,
+        "0xccb45da8d5717e6c4544694297c4ba5cf151d455c9bb0ed4fc7a38411bc05461": 1,
+        "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b": 2
+      },
+      "knownUnsupportedEvents": [
+        "Governor.ProposalThresholdSet",
+        "Governor.QuorumNumeratorUpdated",
+        "Governor.TimelockChange",
+        "Governor.VotingDelaySet",
+        "Governor.VotingPeriodSet",
+        "Timelock.MinDelayChange",
+        "Timelock.RoleGranted",
+        "Timelock.RoleRevoked",
+        "Treasury.RoleGranted",
+        "Treasury.RoleRevoked"
+      ],
+      "ledger": {
+        "total_in": "13000000000000000000000",
+        "total_out": "13000000000000000000000",
+        "payout_total": "13000000000000000000000",
+        "paidRequestIds": [
+          "0x9c2b996e06e531b40c90d9283f854184de5fad55aa694d0ee9385080cf55aa3f",
+          "0xe667a6d27fbe476b3edd9c78f237f349952e3d4535d0aeac3fe6be56540de972"
+        ],
+        "balances": [
+          {
+            "address": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "balance": "7000000000000000000000"
+          },
+          {
+            "address": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "balance": "7000000000000000000000"
+          },
+          {
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "balance": "0"
+          },
+          {
+            "address": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+            "balance": "6000000000000000000000"
+          }
+        ],
+        "totalSupply": "20000000000000000000000"
+      },
+      "state": "passed"
+    }
+  },
+  "negativeGuards": {
+    "exit": 0,
+    "stdout": "forwarded-postgres-guards.txt",
+    "cases": [
+      "remote host rejected",
+      "URL query options rejected",
+      "isolated flag required",
+      "populated database rejected without changing header/event counts",
+      "database not owned by connecting role rejected"
+    ]
+  },
+  "ciAfterFix": "Pending new fix commit/push; no rerun of the reported failing revision requested."
+}

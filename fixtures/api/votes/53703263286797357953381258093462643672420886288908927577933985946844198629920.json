@@ -1,0 +1,52 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v2",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": [
+    {
+      "proposalId": "53703263286797357953381258093462643672420886288908927577933985946844198629920",
+      "voter": "0x9999999999999999999999999999999999999999",
+      "support": 0,
+      "weight": "300000000000000000000",
+      "reason": "Prefer a smaller budget.",
+      "transactionHash": "0x7948467d6002089f867339dd3f05e5ec4dd8609f57103fe2e136ea828fc1b7a6",
+      "transactionIndex": "322",
+      "blockNumber": "8945",
+      "blockHash": "0xb7484a4f93cd37d7dd93e9e9e2804705dec3559cf8c4684ff5b4ab30168b9651",
+      "logIndex": "1"
+    },
+    {
+      "proposalId": "53703263286797357953381258093462643672420886288908927577933985946844198629920",
+      "voter": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "support": 1,
+      "weight": "100000000000000000000",
+      "reason": "Fund this DAO activity.",
+      "transactionHash": "0x0351522c5a919395d968bd6a8cec0009603ec925d628a2ab94cb78e70ab92867",
+      "transactionIndex": "321",
+      "blockNumber": "8945",
+      "blockHash": "0xb7484a4f93cd37d7dd93e9e9e2804705dec3559cf8c4684ff5b4ab30168b9651",
+      "logIndex": "0"
+    }
+  ],
+  "pagination": {
+    "limit": 20,
+    "totalCount": 2,
+    "nextCursor": null
+  }
+}

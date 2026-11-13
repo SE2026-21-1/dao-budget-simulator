@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "sameHeight": {
+    "H": "32",
+    "blockHash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+    "head": "34",
+    "checkpoint": {
+      "deployment_id": "1",
+      "block_number": "32",
+      "block_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+      "header_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+      "observed_head_block": "34",
+      "confirmation_depth": 2,
+      "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+      "sync_status": "syncing",
+      "last_error_code": "DECODE_INCOMPLETE"
+    },
+    "headerCount": 31,
+    "receiptLogCount": 30,
+    "rawEventCount": 30,
+    "distinctEventCount": 30,
+    "decodedCount": 14,
+    "unknownBootstrapCount": 16,
+    "decodeErrorCount": 0,
+    "missingEvents": 0,
+    "duplicateEvents": 0,
+    "rawMismatches": 0,
+    "supportedDecodeMismatches": 0,
+    "finalDigest": "6e7f8a51cf3c573de66b3b7a2792dd1a8df92f5e145bab6debef000c361d4edf",
+    "receiptEvidence": "canonical-rpc-at-H.json",
+    "sqlEvidence": "sql-final.json",
+    "sqlQueries": {
+      "headers": "SELECT block_number::text,block_hash,parent_hash,block_timestamp::text FROM indexed_blocks ORDER BY indexed_blocks.block_number",
+      "events": "SELECT raw_event_id::text,chain_id::text,contract_role,contract_address,block_number::text,block_hash,transaction_hash,transaction_index::text,log_index::text,topics::text[],data,removed,event_name,decoded_payload,rpc_log,decode_status,decode_error_code FROM raw_events ORDER BY raw_events.block_number,raw_events.transaction_index,raw_events.log_index",
+      "checkpoint": "SELECT c.deployment_id::text,c.block_number::text,c.block_hash,b.block_hash AS header_hash,c.observed_head_block::text,c.confirmation_depth,c.source_scope,c.sync_status,c.last_error_code FROM checkpoints c JOIN indexed_blocks b USING(deployment_id,block_number,block_hash)"
+    }
+  },
+  "cleanup": {
+    "anvil": {
+      "stopped": [
+        null,
+        "SIGTERM"
+      ],
+      "rpcUnavailable": true
+    },
+    "postgres": {
+      "stopped": true,
+      "retainedCluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+    }
+  }
+}
+

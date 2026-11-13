@@ -1,0 +1,11 @@
+✔ six endpoints, exact data types, validation, and financial semantics (321.055919ms)
+✔ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (113.359584ms)
+✔ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (84.50916ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 792.295767

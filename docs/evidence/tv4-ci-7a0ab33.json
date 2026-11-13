@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "7a0ab3315e56d476120b17f979dac7d634a481a5",
+  "pushRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342",
+  "pullRequestRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539695150",
+  "jobs": [
+    {
+      "name": "Foundry, Treasury invariants and live smoke",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342/job/119024349389"
+    },
+    {
+      "name": "BE01 fixtures and PostgreSQL constraints",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342/job/119024349639"
+    },
+    {
+      "name": "BE02 TypeScript and isolated PostgreSQL storage",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342/job/119024349676"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12319805373,
+      "name": "tv4-be02-7a0ab3315e56d476120b17f979dac7d634a481a5",
+      "size_in_bytes": 6258
+    },
+    {
+      "id": 12319260936,
+      "name": "tv4-be01-7a0ab3315e56d476120b17f979dac7d634a481a5",
+      "size_in_bytes": 2010
+    },
+    {
+      "id": 12319020769,
+      "name": "tv4-checks-7a0ab3315e56d476120b17f979dac7d634a481a5",
+      "size_in_bytes": 8300
+    }
+  ],
+  "dockerDatabaseLog": "be02-ci-7a0ab33.txt",
+  "scope": "Existing module checks plus Treasury-only stateful tests/local receipt smoke. No full governance/API/reorg/rebuild/UI acceptance."
+}

@@ -1,0 +1,4 @@
+
+> dao-budget-simulator@0.0.0 test:be04:live
+> bash scripts/check_be04_database.sh --live --output reports/be04-live.json
+

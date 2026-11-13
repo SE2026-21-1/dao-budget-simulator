@@ -1,0 +1,41 @@
+
+> dao-budget-simulator@0.0.0 test:be04
+> node --import tsx --test tests/indexer/projection.test.ts tests/indexer/be04-live-receipt.test.mjs
+
+▶ BE04 live receipt polling
+  ✔ keeps polling after null and returns the eventual receipt (5.419699ms)
+  ✔ times out after a finite deadline with step and transaction hash (40.42727ms)
+  ✔ reports RPC failures without exposing provider error details (1.056529ms)
+  ✔ accepts an expected revert and rejects a revert when success was expected (0.264768ms)
+✔ BE04 live receipt polling (48.221307ms)
+✔ raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay (22.307339ms)
+✔ successful lifecycle links same-tx operation/request/Transfer and counts one payment (17.101213ms)
+✔ unrelated BUD, self and zero transfers do not change treasury totals (4.85718ms)
+✔ timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active (3.381808ms)
+✔ quorum/result 0/100/0 -> Defeated (2.295599ms)
+✔ quorum/result 0/100/100 -> Succeeded (2.395801ms)
+✔ quorum/result 200/200/0 -> Defeated (2.178242ms)
+✔ quorum/result 300/200/100 -> Defeated (2.168659ms)
+✔ ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable (7.806985ms)
+✔ Pending cancellation and direct Timelock cancellation are represented (8.649119ms)
+✔ reject inconsistent projection: wrong ID (8.816948ms)
+✔ reject inconsistent projection: wrong description (9.428538ms)
+✔ reject inconsistent projection: wrong salt (10.464908ms)
+✔ reject inconsistent projection: wrong ETA (8.681337ms)
+✔ reject inconsistent projection: wrong executed calldata (6.421626ms)
+✔ reject inconsistent projection: missing transfer (7.548306ms)
+✔ reject inconsistent projection: missing payment (8.220174ms)
+✔ reject inconsistent projection: wrong transaction (8.974639ms)
+✔ reject inconsistent projection: ambiguous transfer (9.832899ms)
+✔ reject inconsistent projection: duplicate vote (9.120261ms)
+✔ reject inconsistent projection: unlinked outflow (11.552889ms)
+✔ malformed/unknown business log cannot be silently skipped (1.163754ms)
+✔ replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events (24.950629ms)
+ℹ tests 27
+ℹ suites 1
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 536.975765

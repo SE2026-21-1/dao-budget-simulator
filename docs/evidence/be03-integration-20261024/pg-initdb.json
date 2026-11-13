@@ -1,0 +1,16 @@
+{
+  "label": "pg-initdb",
+  "command": [
+    "C:\\Program Files\\PostgreSQL\\18\\bin\\initdb.exe",
+    "-D",
+    "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data",
+    "-U",
+    "be03_test",
+    "--auth=trust",
+    "--encoding=UTF8",
+    "--locale=C"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "pg-initdb.txt"
+}

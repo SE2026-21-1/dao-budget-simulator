@@ -1,0 +1,140 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v2",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": {
+    "treasury": {
+      "address": "0x1111111111111111111111111111111111111111",
+      "token": {
+        "address": "0x6666666666666666666666666666666666666666",
+        "symbol": "BUD",
+        "decimals": 18
+      },
+      "balance": "10635124999999999999998",
+      "totalIn": "11902375000000000000000",
+      "totalOut": "1267250000000000000002"
+    },
+    "proposalCounts": {
+      "total": 45,
+      "byState": {
+        "Pending": 7,
+        "Active": 7,
+        "Succeeded": 6,
+        "Defeated": 6,
+        "Queued": 6,
+        "Executed": 7,
+        "Canceled": 6
+      }
+    },
+    "governance": {
+      "governor": "0x3333333333333333333333333333333333333333",
+      "timelock": "0x4444444444444444444444444444444444444444",
+      "govToken": {
+        "address": "0x5555555555555555555555555555555555555555",
+        "symbol": "GOV",
+        "decimals": 18
+      },
+      "clockMode": "mode=timestamp",
+      "proposalThreshold": "50000000000000000000",
+      "votingDelay": "60",
+      "votingPeriod": "300",
+      "timelockDelay": "120",
+      "quorumNumerator": "20",
+      "quorumDenominator": "100",
+      "totalSupply": "1000000000000000000000"
+    },
+    "recentActivity": [
+      {
+        "type": "Transfer",
+        "token": "0x6666666666666666666666666666666666666666",
+        "from": "0x1111111111111111111111111111111111111111",
+        "to": "0x1111111111111111111111111111111111111111",
+        "amount": "500000000000000000",
+        "direction": "self",
+        "proposalId": null,
+        "requestId": null,
+        "transactionHash": "0x3135fefbec4b5e7ffa5f622c0dbb75065dfbbfb51ff087e111f64e80c6a2c3ca",
+        "transactionIndex": "3001",
+        "blockNumber": "8999",
+        "blockHash": "0x42267f77bb3f8ab3998824f2b420e7edd1239df0200f4b3350cbef7ed4b0ec4c",
+        "logIndex": "0"
+      },
+      {
+        "type": "Transfer",
+        "token": "0x6666666666666666666666666666666666666666",
+        "from": "0x7777777777777777777777777777777777777777",
+        "to": "0x1111111111111111111111111111111111111111",
+        "amount": "0",
+        "direction": "in",
+        "proposalId": null,
+        "requestId": null,
+        "transactionHash": "0x7a3bd9714c9777d8449109abcef3cec701956ab3ebe35606f2d94ea757a9e833",
+        "transactionIndex": "3000",
+        "blockNumber": "8998",
+        "blockHash": "0xcb7e9afb20bf7bf6353eba1cf9bf0d5a2c05f04f6e8762d5f4d925a50142f9bd",
+        "logIndex": "0"
+      },
+      {
+        "type": "Transfer",
+        "token": "0x6666666666666666666666666666666666666666",
+        "from": "0x1111111111111111111111111111111111111111",
+        "to": "0x2222222222222222222222222222222222222222",
+        "amount": "1000000000000000000000",
+        "direction": "out",
+        "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545",
+        "requestId": "0x0101010101010101010101010101010101010101010101010101010101010101",
+        "transactionHash": "0x4c14efe7841cd9d227985af8bf936a8594e97ae56382669eb17891f30fcf15cb",
+        "transactionIndex": "5",
+        "blockNumber": "8977",
+        "blockHash": "0x2c45c844dc4992e3d5301461aa2274229a3682d1596ea824e37e490b7fb45d7b",
+        "logIndex": "1"
+      },
+      {
+        "type": "Transfer",
+        "token": "0x6666666666666666666666666666666666666666",
+        "from": "0x1111111111111111111111111111111111111111",
+        "to": "0x000000000000000000000000000000000000006b",
+        "amount": "27125000000000000000",
+        "direction": "out",
+        "proposalId": "108988646388491912983972495270906958785753766793916811189275126397017585597361",
+        "requestId": "0x6fbc23996b3b2815666cf5cc56c9b0c5ea90409e54682754a680af78f13dfe1b",
+        "transactionHash": "0xeae2da96746de635832a6365e5faf1f8944f3a7d4bcd3f91439f29a3825e6cb5",
+        "transactionIndex": "75",
+        "blockNumber": "8976",
+        "blockHash": "0xaaec699105226c98b4a4d6d879d0c5dfea9938708450c3529c374a56a28e8dd6",
+        "logIndex": "1"
+      },
+      {
+        "type": "Transfer",
+        "token": "0x6666666666666666666666666666666666666666",
+        "from": "0x1111111111111111111111111111111111111111",
+        "to": "0x0000000000000000000000000000000000000072",
+        "amount": "34000000000000000001",
+        "direction": "out",
+        "proposalId": "37176691793352832612623203880146219235927758675308785423979149714330767685273",
+        "requestId": "0xed0d5030ae0d4e0377d578eaabe46a8c40b4025d2bd2747df2a0903fe6f66c91",
+        "transactionHash": "0x57833e969c456cc3b92b7f8bc0ac0fbeb7be6cf0fc0da55edc0ea9a777ff64b0",
+        "transactionIndex": "145",
+        "blockNumber": "8975",
+        "blockHash": "0x51f7c8fe1119f9aabf5371fef169c2f720e5c6449e65951ab5f03d3f5366a307",
+        "logIndex": "1"
+      }
+    ]
+  }
+}

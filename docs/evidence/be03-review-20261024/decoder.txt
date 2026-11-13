@@ -1,0 +1,33 @@
+﻿✔ VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields (31.7618ms)
+✔ synthetic vectors cover all eleven required event types and source indexed layouts (0.4125ms)
+✔ decodes governor.ProposalCreated with exact named ABI values (6.6965ms)
+✔ decodes governor.VoteCast with exact named ABI values (1.3028ms)
+✔ decodes governor.ProposalQueued with exact named ABI values (0.5507ms)
+✔ decodes governor.ProposalExecuted with exact named ABI values (0.53ms)
+✔ decodes governor.ProposalCanceled with exact named ABI values (0.912ms)
+✔ decodes timelock.CallScheduled with exact named ABI values (2.9985ms)
+✔ decodes timelock.CallExecuted with exact named ABI values (1.804ms)
+✔ decodes timelock.Cancelled with exact named ABI values (2.3829ms)
+✔ decodes timelock.CallSalt with exact named ABI values (2.0777ms)
+✔ decodes treasury.BudgetDisbursed with exact named ABI values (7.1806ms)
+✔ decodes budget_token.Transfer with exact named ABI values (1.2082ms)
+✔ independent hand-assembled canonical Transfer vector decodes without fixture encoder (1.0955ms)
+✔ preserves uint256 above 2^53 including indexed integers and maximum proposal ID (5.0113ms)
+✔ dynamic description and reason preserve exact Unicode and whitespace (3.7289ms)
+✔ registry Treasury fragment matches handed-over shared JSON ABI exactly (1.9453ms)
+✔ ABI version is explicitly bound to contract role and cannot use object prototype keys (2.198ms)
+✔ unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC (0.3289ms)
+✔ known events reject missing, additional and malformed indexed topics (0.8967ms)
+✔ known events reject truncated, odd, nonhex and trailing data (2.1492ms)
+✔ known events reject noncanonical uint8 and invalid dynamic offsets (3.1113ms)
+✔ NUL in valid Solidity description or reason is raw-only for JSONB storage (5.9336ms)
+✔ invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error (1.1118ms)
+✔ decoded, unknown and malformed logs retain every original RPC field (1.6301ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1272.7065

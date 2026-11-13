@@ -1,0 +1,29 @@
+﻿
+> dao-budget-simulator@0.0.0 test:be03:db
+> powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check_be03_database.ps1
+
+node.exe : initdb: error: could not create restricted token: error code 87
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (initdb: error: ...: error code 87:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+initdb: error: could not re-execute with restricted token: error code 3
+The files belonging to this database system will be owned by user "CodexSandboxOffline".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+initdb: error: could not create directory "C:/Users/Cuongdz": File exists
+creating directory C:/Users/Cuongdz/AppData/Local/Temp/dao-be03-pg-33f4e7f914bf4e618920292fd33dc893/data ... Temporary cluster and logs retained at: C:\Users\Cuongdz\AppData\Local\Temp\dao-be03-pg-33f4e7f914bf4e618920292fd33dc893
+initdb failed.
+At D:\dao-budget-simulator\scripts\check_be03_database.ps1:33 char:32
++     if ($LASTEXITCODE -ne 0) { throw 'initdb failed.' }
++                                ~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (initdb failed.:String) [], RuntimeException
+    + FullyQualifiedErrorId : initdb failed.
+ 

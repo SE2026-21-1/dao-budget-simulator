@@ -1,0 +1,5 @@
+{
+  "command": "node --import tsx --test tests/indexer/decoder.test.ts",
+  "exitCode": 0,
+  "log": "decoder.txt"
+}

@@ -1,0 +1,1 @@
+[stdout] {"status":"PASS","output":"/mnt/d/dao-budget-simulator-be08/docs/evidence/be08-20261027/run-3-after-fix/benchmark.json","successfulRequests":34152,"errorRequests":0,"p95Ms":26.165681999991648,"failedStage":null}

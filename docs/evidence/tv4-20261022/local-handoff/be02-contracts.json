@@ -1,0 +1,26 @@
+[
+  {
+    "role": "budget_token",
+    "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+    "deploymentBlock": "2",
+    "abiVersion": "oz-5.4.0-erc20"
+  },
+  {
+    "role": "treasury",
+    "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+    "deploymentBlock": "3",
+    "abiVersion": "sc01-itreasury-v1"
+  },
+  {
+    "role": "timelock",
+    "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+    "deploymentBlock": "4",
+    "abiVersion": "oz-5.4.0-timelock"
+  },
+  {
+    "role": "governor",
+    "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+    "deploymentBlock": "5",
+    "abiVersion": "oz-5.4.0-governor"
+  }
+]

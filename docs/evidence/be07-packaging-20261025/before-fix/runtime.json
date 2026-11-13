@@ -1,0 +1,6 @@
+{
+  "node": "v24.15.0",
+  "postgres": "postgres (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg26.04+1)",
+  "cluster": "/tmp/dao-be07-packaging-w5tlDC",
+  "port": 44531
+}

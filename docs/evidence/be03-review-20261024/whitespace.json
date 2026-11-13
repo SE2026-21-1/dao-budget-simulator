@@ -1,0 +1,16 @@
+﻿{
+    "tracked":  {
+                    "command":  "git diff --check",
+                    "exitCode":  0,
+                    "output":  "git.exe : warning: in the working copy of \u0027fixtures/be02/README.md\u0027, LF will be replaced by CRLF the next time Git \r\ntouches it\r\nAt line:12 char:18\r\n+ $trackedOutput = \u0026 git diff --check 2\u003e\u00261\r\n+                  ~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\nwarning: in the working copy of \u0027indexer/abi-registry.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/cli.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/config.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/config/example.json\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/reader.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/storage.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027indexer/types.ts\u0027, LF will be replaced by CRLF the next time Git touches it\r\nwarning: in the working copy of \u0027tests/indexer/decoder.test.ts\u0027, LF will be replaced by CRLF the next time Git touches \r\nit"
+                },
+    "untracked":  {
+                      "command":  "git -c core.autocrlf=false -c core.whitespace=cr-at-eol diff --no-index --check -- NUL \u003ceach untracked .ts/.sql/.ps1/.json/.md/.mjs\u003e",
+                      "checkedFiles":  29,
+                      "exitCode":  0,
+                      "failures":  [
+
+                                   ],
+                      "note":  "Native no-index exit 1 means files differ from NUL; whitespace errors set bit 2. CRLF is accepted. Raw stdout/server .txt logs are preserved without normalization."
+                  }
+}

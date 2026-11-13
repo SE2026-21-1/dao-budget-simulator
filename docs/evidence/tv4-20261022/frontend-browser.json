@@ -1,0 +1,128 @@
+{
+  "recordedAt": "2026-10-22T04:42:54.739Z",
+  "scope": "Real Chromium browser acceptance against integrated fixture-only React frontend: production preview plus development error injection. Not wallet/API/chain E2E, no other-browser or assistive-technology certification.",
+  "baseCommit": "5fbf615",
+  "frontendSourceCommit": "47f91d50b7a9104c027dbf05e7a862ddb69d31d0",
+  "browser": "Chrome/150.0.7871.24",
+  "checks": [
+    {
+      "scenario": "dashboard fixture scope and 3 recent proposals",
+      "viewport": 1366,
+      "result": "passed"
+    },
+    {
+      "scenario": "pagination",
+      "rows": [
+        20,
+        20,
+        5
+      ],
+      "lastNextDisabled": true,
+      "result": "passed"
+    },
+    {
+      "scenario": "exact ID, whitespace, partial-ID empty, filter intersection, page reset and 18-decimal detail",
+      "result": "passed"
+    },
+    {
+      "scenario": "proposal not found, route not found, form honestly disabled",
+      "result": "passed"
+    },
+    {
+      "scenario": "mobile long ID/address/18-decimal amount without horizontal page overflow",
+      "viewport": 390,
+      "list": {
+        "width": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390
+      },
+      "detail": {
+        "width": 390,
+        "scrollWidth": 390,
+        "amount": "61,000000000000000001 BUD"
+      },
+      "result": "passed"
+    },
+    {
+      "scenario": "keyboard skip-link, visible focus, main focus, search/select Tab and native selection, Enter navigation",
+      "viewport": 1366,
+      "skipFocus": {
+        "text": "Bỏ qua điều hướng",
+        "top": 8,
+        "outline": "solid"
+      },
+      "result": "passed"
+    },
+    {
+      "scenario": "production dynamic fixture loading state and recovery after network release",
+      "loading": "Đang tải dữ liệu đề xuất mô phỏng…",
+      "blockedFixtureChunks": 3,
+      "rowsAfterRelease": 20,
+      "result": "passed"
+    },
+    {
+      "scenario": "error simulation query disabled in production",
+      "result": "passed"
+    },
+    {
+      "scenario": "development error, retry remains honest while injected error active, disable injection recovers",
+      "result": "passed"
+    },
+    {
+      "scenario": "four screens at both acceptance widths without horizontal page overflow",
+      "layouts": [
+        {
+          "path": "/",
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "path": "/proposals",
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "path": "/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286",
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "path": "/proposals/new",
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "path": "/",
+          "width": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "path": "/proposals",
+          "width": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "path": "/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286",
+          "width": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "path": "/proposals/new",
+          "width": 1366,
+          "scrollWidth": 1366
+        }
+      ],
+      "result": "passed"
+    },
+    {
+      "scenario": "keyboard Enter activates pagination and retry",
+      "result": "passed"
+    }
+  ],
+  "browserErrors": [],
+  "screenshots": [
+    "dashboard-1366.png",
+    "proposals-390.png",
+    "detail-390.png"
+  ]
+}

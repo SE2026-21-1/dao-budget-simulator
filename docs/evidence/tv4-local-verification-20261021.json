@@ -1,0 +1,73 @@
+{
+  "sourceCommit": "7a0ab3315e56d476120b17f979dac7d634a481a5",
+  "date": "2026-10-21",
+  "scope": "TV4 integrated local checks; not full governance acceptance",
+  "foundry": {
+    "command": "FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh",
+    "passed": 58,
+    "failed": 0,
+    "skipped": 0,
+    "invariantChecks": 3,
+    "campaignRuns": 100,
+    "campaignCalls": 5000,
+    "handlerCalls": {
+      "changeRole": 1254,
+      "fund": 1291,
+      "pay": 1234,
+      "payAvailable": 1221
+    },
+    "handlerReverts": 0,
+    "note": "Caught Treasury transaction failures are tracked inside handler, not counted as handler reverts. Every reset seeds one real successful payment. The regression asserts 3 successes and 5 rejected payments; not Governor execute.",
+    "rawLog": "tv4-foundry-20261021.txt"
+  },
+  "backend": {
+    "node": "v24.15.0",
+    "commands": [
+      "npm ci --no-audit --no-fund",
+      "npm run typecheck",
+      "npm run build",
+      "npm run test:be02",
+      "node scripts/check_be01.mjs"
+    ],
+    "unitTests": {
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0
+    },
+    "be01Fixture": {
+      "jsonFiles": 123,
+      "proposals": 45,
+      "pages": [
+        20,
+        20,
+        5
+      ]
+    },
+    "rawLog": "tv4-be02-20261021.txt"
+  },
+  "database": {
+    "command": "BE02_TEST_DATABASE_URL=<owned-loopback-database> BE02_TEST_ISOLATED=1 node --import tsx --test tests/indexer/storage.test.ts",
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "postgres": "18.4",
+    "binaryDistribution": "@embedded-postgres/linux-x64@18.4.0-beta.17 installed outside repository",
+    "isolation": "new initdb cluster, random 127.0.0.1 port and private socket directory, new empty be02_test database; pg_ctl stop and owned temporary files removed afterward",
+    "limitations": "Native test proves PostgreSQL storage/CLI behavior, not the Docker runner. Docker runner is verified separately by GitHub Actions; local Docker denial was not bypassed."
+  },
+  "smoke": {
+    "command": "node --import tsx scripts/smoke_treasury.mjs --output docs/evidence/sc03-local-smoke.json",
+    "evidence": "sc03-local-smoke.json",
+    "transactions": 19,
+    "successful": 13,
+    "reverted": 6,
+    "result": "passed"
+  },
+  "remainingPrerequisites": [
+    "SC04 Governor and SC05 Timelock integration/constructors/final roles",
+    "BE checkpoint/K-confirmations/resume/reorg/projections/API/rebuild",
+    "TV3 shared fixtures/wallet/form/real transaction UI",
+    "independent peer approval and clean-clone execution on another member machine",
+    "testnet/RPC/faucet and Osaka compatibility before any testnet deployment"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "command": "npm run build",
+  "exitCode": 0,
+  "log": "build.txt"
+}

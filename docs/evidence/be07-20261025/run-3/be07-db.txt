@@ -1,0 +1,20 @@
+✔ same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated (230.695994ms)
+✔ deep reorg outside window requires BE06; does not destroy diagnosis data or metadata (50.286564ms)
+✔ recovery crash boundary recoveryMarked resumes with a fresh storage instance (58.33744ms)
+✔ recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance (65.111017ms)
+✔ recovery crash boundary afterRollbackCommit resumes with a fresh storage instance (55.469805ms)
+✔ RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes (57.988724ms)
+✔ recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data (47.746392ms)
+✔ a fork between committed catch-up batches persists recovery and replays on the next invocation (46.707424ms)
+✔ SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart (836.130228ms)
+✔ SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart (740.911441ms)
+✔ SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart (812.514136ms)
+✔ worker exits on wrong chain and rebuild_required instead of retrying forever (148.165105ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3987.006826

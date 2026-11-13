@@ -1,0 +1,6 @@
+Command: npm run build
+Exit code: 0
+
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json

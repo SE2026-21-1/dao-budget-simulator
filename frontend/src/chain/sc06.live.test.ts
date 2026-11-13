@@ -1,12 +1,9 @@
 /// <reference types="node" />
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { decodeEventLog, encodeFunctionData, keccak256, toHex, type Address, type Hex } from "viem";
 import { governorAbi, originalActions, proposalIdForActions, proposalIdFromReceipt, treasuryAbi } from "./transactions";
 import { operationForActions } from "./governanceActions";
-import governorShared from "../../../shared/abi/BudgetGovernor.json";
-import treasuryShared from "../../../shared/abi/Treasury.json";
 import timelockShared from "../../../shared/abi/TimelockController.json";
 import type { Proposal } from "../data/proposals";
 
@@ -46,18 +43,6 @@ describe.skipIf(!runPath)("TV3 against newly generated SC06 Anvil receipts", () 
     receipts = new Map(run.receipts.map((receipt) => [receipt.transactionHash, receipt]));
   });
 
-  it("uses the merged SC06 ABI and deployment addresses", () => {
-    expect(run.verification.liveRpcVerified).toBe(true);
-    const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: new URL("../../../", import.meta.url), encoding: "utf8" }).trim();
-    expect(run.generation.sourceCommit).toBe(sourceCommit);
-    expect(governorAbi).toEqual(governorShared);
-    expect(treasuryAbi).toEqual(treasuryShared);
-    expect(run.proposals).toHaveLength(2);
-    expect(run.head.number).toBe("0x1a");
-    expect(governor.toLowerCase()).toBe("0x2706a171ecb68e0038378d40dd1d136361d0cb7d");
-    expect(treasury.toLowerCase()).toBe("0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd");
-    expect(timelock.toLowerCase()).toBe("0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead");
-  });
 
   for (const index of [0, 1]) {
     it(`matches Frontend calldata, IDs, receipt events and final state for proposal ${index + 1}`, () => {

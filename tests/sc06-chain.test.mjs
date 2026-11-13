@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { checkFixture, historicalQuorum, interfaces, projectFixture, verifyPinnedConfig } from '../scripts/check_sc06_chain.mjs';
 
-const original = JSON.parse(await readFile(new URL('../fixtures/chain/sc06-v1/chain.json', import.meta.url)));
+const original = JSON.parse(await readFile(new URL('../fixtures/chain/sc06-v2/chain.json', import.meta.url)));
 function executedQuorumCall(f, abi) {
   const created = f.expectedDecoded.find(e => e.eventName === 'ProposalCreated' &&
     e.payload.proposalId === f.proposals[0].proposalId);

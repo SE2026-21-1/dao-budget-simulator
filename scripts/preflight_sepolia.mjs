@@ -96,7 +96,7 @@ try {
       const { chainId, gasLimit, type, ...request } = transaction;
       const hash = await forkRpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
       await waitForReceipt(forkRpc, hash, { timeoutMs: 30000 });
-      await forkRpc('anvil_mine', ['0x2']);
+      await forkRpc('anvil_mine', ['0x2', '0x1']);
       return hash;
     } });
   const again = await remote('eth_getBlockByNumber', [height, false]);

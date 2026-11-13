@@ -105,7 +105,7 @@ caller-owned Anvil fork at that exact block/hash, verifies fork identity, impers
 only on that disposable fork, sets synthetic gas balances there, and runs the entire
 five-contract deployment, grants, role audits, renounces, delegations and funding.
 Each of the 17 transactions has its own current-state estimate and actual receipt.
-Two fork blocks are mined **after the transaction receipt is mined**, never on Sepolia;
+Two fork blocks with explicit one-second intervals are mined **after the transaction receipt is mined**, never on Sepolia;
 this avoids racing automining and accidentally producing only one descendant. Fork
 receipt/K2 waits are bounded at 30 seconds. The shared owned-process lifecycle records
 child closure at spawn, handles already signal-exited children, and escalates bounded

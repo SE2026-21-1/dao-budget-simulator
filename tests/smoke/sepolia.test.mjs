@@ -47,7 +47,7 @@ async function withChain(t, run) {
     if (method === 'eth_getBlockByNumber' && params[0] === '0x0') return { ...value, hash: SEPOLIA.genesisHash };
     return value;
   };
-  await transport('anvil_mine', ['0x2']);
+  await transport('anvil_mine', ['0x2', '0x1']);
   const unlocked = await transport('eth_accounts');
   const accounts = Object.fromEntries(names.map((name, index) => [name, unlocked[index]]));
   const state = { rpc, transport, accounts, records: [], snapshots: [] };
@@ -56,7 +56,7 @@ async function withChain(t, run) {
     const hash = await rpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
     state.records.push({ transaction, hash });
     await waitForReceipt(rpc, hash, { timeoutMs: 10000 });
-    await rpc('anvil_mine', ['0x2']);
+    await rpc('anvil_mine', ['0x2', '0x1']);
     return hash;
   };
   state.deploy = overrides => deploySepolia(state.rpc, { root, roleMap: roleMap(accounts), transmit: state.transmit,
@@ -173,8 +173,9 @@ for (const scenario of ['unknownHistoricalHolder', 'omittedRoleLogs', 'missingEx
           const receipts = await Promise.all(state.records.slice(0, 5).map(record => state.rpc('eth_getTransactionReceipt', [record.hash])));
           addresses = { treasury: receipts[2].contractAddress, timelock: receipts[3].contractAddress, governor: receipts[4].contractAddress };
           const send = async (to, data) => {
-            await state.rpc('eth_sendTransaction', [{ from: state.accounts.deployer, to, data }]);
-            await state.rpc('anvil_mine', ['0x2']);
+            const hash = await state.rpc('eth_sendTransaction', [{ from: state.accounts.deployer, to, data }]);
+            await waitForReceipt(state.rpc, hash, { timeoutMs: 10000 });
+            await state.rpc('anvil_mine', ['0x2', '0x1']);
           };
           if (scenario === 'unknownHistoricalHolder') {
             for (const method of ['grantRole', 'revokeRole']) await send(addresses.treasury,
@@ -182,14 +183,22 @@ for (const scenario of ['unknownHistoricalHolder', 'omittedRoleLogs', 'missingEx
           }
           if (scenario === 'missingExecutor') await send(addresses.timelock,
             treasury.encodeFunctionData('revokeRole', [id('EXECUTOR_ROLE'), addresses.governor]));
-          if (scenario === 'wrongRuntime') await state.rpc('anvil_setCode', [addresses.treasury, '0x60006000f3']);
+          if (scenario === 'wrongRuntime') {
+            await state.rpc('anvil_setCode', [addresses.treasury, '0x60006000f3']);
+            await state.rpc('anvil_mine', ['0x3', '0x1']);
+          }
           if (scenario === 'nonceRace') await send(state.accounts.outsider, '0x');
         }
         return hash;
       };
       const cleanRpc = state.rpc;
       state.rpc = async (method, params = []) => {
-        if (scenario === 'omittedRoleLogs' && injected && method === 'eth_getLogs' && params[0].address === addresses.treasury) return [];
+        if (scenario === 'omittedRoleLogs' && injected && method === 'eth_getLogs'
+          && params[0].address.toLowerCase() === addresses.treasury.toLowerCase()) {
+          const logs = await cleanRpc(method, params);
+          assert.ok(logs.length > 0, 'Omission control must hide real canonical role logs');
+          return [];
+        }
         return cleanRpc(method, params);
       };
       await assert.rejects(state.deploy({ transmit: state.transmit }), scenario === 'nonceRace' ? /nonce changed/ : /role|holder|runtime|holder set/i);

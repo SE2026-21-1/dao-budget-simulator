@@ -160,7 +160,14 @@ export async function createVariantHarness({ root, output, adminUrl, report }) {
           }
           const contracts = Object.entries(keys).map(([role, key]) => ({ role, address: address[key].toLowerCase(), deploymentBlock: manifest.contracts[key].deploymentBlock, abiVersion: manifest.contracts[key].abiVersion }));
           const config = parseConfig({ rpcUrl, chainId: '31337', deploymentId, fromBlock: String(start), toBlock: height, batchSize: '7', confirmations: 2, contracts }, {});
-          await rpc('anvil_mine', ['0x2', '0x0']);
+          // interval=0 still follows Anvil's wall clock after elapsed API work.
+          // Explicit same-time descendants keep exact S/E boundaries unchanged.
+          for (let i = 0; i < 2; i++) {
+            await rpc('evm_setNextBlockTimestamp', [head.timestamp]); await rpc('evm_mine');
+          }
+          const confirmedHead = await rpc('eth_getBlockByNumber', ['latest', false]);
+          assert.equal(BigInt(confirmedHead.number), BigInt(head.number) + 2n);
+          assert.equal(confirmedHead.timestamp, head.timestamp, 'K2 confirmation must not move the tested timestamp');
           const transport = new HttpRpc(rpcUrl); const rawResult = await sync(config, transport, new PostgresStorage(pool)); assert.equal(rawResult.checkpoint.hash, head.hash);
           const projection = await project(config, transport, pool);
           const api = createApiServer({ pool, cursorSecret: randomBytes(32).toString('hex'), snapshotTtlSeconds: 3600 }); await listen(api); servers.push(api);

@@ -205,3 +205,16 @@ after one `forge build`; the new suite's fresh-chain identity adapter is express
 fork attempt and remote compatibility/gas result. Evidence and full command stdout/
 exit codes are stored under `docs/evidence/tv4-20261113-sepolia/`; no testnet PASS is
 inferred from either local suite or a disposable fork.
+
+Final new run at `7a0a94fbae0bf9682259f785643d4b30260f5850`: **28/28 PASS, 0 skipped**.
+[Summary](evidence/tv4-20261113-sepolia/summary.json) binds full stdout, commands,
+raw archive and source. Actual PublicNode GOV constructor estimate is **11865462 gas**
+at H12123926/hash
+`0xd0d3078e61e7bcec84bf9e66f005ec4b1860986500f3250025830ac0317c2aea`
+with synthetic balance override. The actual pinned-state fork completed all
+17 transactions/receipts, gates and final audit; owned Anvil exit0. Its Osaka
+total gas9370997 is **not** a remote deployment budget: remote GOV alone estimates
+more than that whole fork total. Keep per-transaction remote estimation mandatory.
+Earlier mining/timestamp/injection/cleanup preparation failures are retained separately.
+**Zero Sepolia broadcast; signer owner, approved map/gas/revision, TV1 delta review
+and real-time Executed/Defeated receipts remain required.**

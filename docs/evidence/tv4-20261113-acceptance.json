@@ -1,0 +1,378 @@
+{
+  "date": "2026-11-13",
+  "runner": "Phan Thanh Dũng / dung0611",
+  "scope": "New isolated local acceptance and testnet preparation, not merge/release/testnet/extension approval",
+  "historicalFailedRun": {
+    "sourceCommit": "f20f8f04e4083f161d5e6a8141e8d5aa06308aa2",
+    "archiveSha256": "4e4735edde53d471374620c4cce66b4c50c0ee41a6696b1ebf9d929091292f70",
+    "status": "FAIL preserved; 8302 successes diagnostic only; outage NOT_RUN"
+  },
+  "baseline": {
+    "sourceCommit": "312104f8dc7b2e182c2210e017d47184f17feacc",
+    "status": "PASS",
+    "successfulRequests": 21473,
+    "p95Ms": 185.64786099997582,
+    "loadFreshnessMaxMs": 27306.26592399995,
+    "outageStatus": "PASS",
+    "peakWorkerRpc": 1,
+    "note": "Same unchanged dataset/concurrency/thresholds. Historical timeout not reproduced this baseline; does not invalidate historical FAIL."
+  },
+  "fixedCampaign": {
+    "sourceCommit": "b7ff654c15adeb3095dd187c04509fd1e60c3331",
+    "status": "PASS",
+    "patchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sourceUnchangedThroughRun": true,
+    "units": 188,
+    "databaseCases": 76,
+    "foundry": 202,
+    "successfulRequests": 11407,
+    "errorRequests": 0,
+    "independentP95Ms": 198.80166800000006,
+    "idle": {
+      "count": 10,
+      "p95Ms": 8483.69324599998,
+      "maxMs": 8483.69324599998
+    },
+    "loadFreshness": {
+      "count": 10,
+      "p95Ms": 17680.627679999976,
+      "maxMs": 17680.627679999976
+    },
+    "outage": {
+      "status": "PASS",
+      "offlineDurationMs": 31250.372820000048,
+      "recoveryMs": 9920.774632000015,
+      "publishedTransactionHash": "0x06c240abe4bedc76ea2eb7950c45d27b795f42f0aceed6b8bd1193b0dde0859b",
+      "publication": {
+        "h": "1200",
+        "hash": "0x9ea3f971769039020d738c15fd3a1ff28431c8d9270094d99eae494572e94a1c"
+      }
+    },
+    "peakWorkerRpc": 4,
+    "normalWorkerErrors": [],
+    "cleanup": {
+      "status": "PASS",
+      "clusterStopped": true,
+      "temporaryFilesRemoved": true,
+      "errors": []
+    },
+    "canonicalRebuild": {
+      "result": "equal",
+      "mismatches": [],
+      "canonical": {
+        "h": "67",
+        "hash": "0x2a98d6b16aeb15333c0ae9b20d26fe4c0b75e56dbd83d9d9eade2ae4a05f6bb3",
+        "head": "69"
+      }
+    },
+    "gates": {
+      "gateHealth": 503,
+      "gateData": 503,
+      "duringCursor": 409,
+      "oldCursor": 409,
+      "deepHealth": 503,
+      "deepData": 503
+    }
+  },
+  "frontend": {
+    "sourceCommit": "da2237fed63eee89341881b076a9551022e31e8f",
+    "tests": 102,
+    "fail": 0,
+    "skip": 0,
+    "lintWarnings": 8,
+    "lintExit": 0,
+    "buildAndTypecheckExit": 0,
+    "liveEnvironment": "Actual owned UI API deployment plus newly generated SC06v2 receipts; no fixture fallback",
+    "configuration": "Blank API => read-only fixtures; explicit VITE_DATA_SOURCE=fixture ignores stale deployment; live API errors never fallback"
+  },
+  "sc06": {
+    "generationSourceCommit": "da2237fed63eee89341881b076a9551022e31e8f",
+    "tests": 32,
+    "fail": 0,
+    "skip": 0,
+    "v1Preserved": true,
+    "firstIntegratedAttempt": {
+      "sourceCommit": "2b9100bca7ebd3d64cceba8316b3f14f15957d28",
+      "pass": 28,
+      "fail": 4,
+      "reason": "Strict historical working-source binding correctly rejected changed chain.ts; regenerated v2 rather than rehashing v1"
+    }
+  },
+  "browser": {
+    "sourceCommit": "2b9100bca7ebd3d64cceba8316b3f14f15957d28",
+    "sourceNote": "Integrated runtime; subsequent uncommitted edits only SC06 fixture selectors and removal of incidental live-test assertions, not frontend runtime. Final CI/source hashes tracked separately.",
+    "adapter": "EIP-1193 forwarder to owned unforked unlocked Anvil; not an extension or testnet",
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "be06-2ee1062475e87e9b19504aaf",
+      "asOfBlock": "55",
+      "asOfBlockHash": "0xad889cec42b66642c07a25d87ff08a1363e8eecf21e28ef3a314120d787f22f1",
+      "asOfTimestamp": "1794545607",
+      "snapshotRevision": "24a49289-7692-4b46-97fd-bd6a102fe92e",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "57",
+        "confirmedBlock": "55",
+        "indexedBlock": "55",
+        "publicationBlock": "55",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-13T04:43:50.430Z",
+        "lastRpcCheckAt": "2026-11-13T11:43:50.432+07:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "proposals": {
+      "Executed": "99280097305227411156162071141873583157005364614035407484247047380233089760528",
+      "Defeated": "68001840367283109518038535094242437554812528898324992499304559261249460465613",
+      "Canceled": "29177993424146027604039373735193293281932561423098329605907930070883560857854"
+    },
+    "executeTransactionHash": "0x87628f4d9297b1856f0eaebae797cbc25a60d6dbb296a433cbab58e70e09dd3b",
+    "cancelTransactionHash": "0x5c3827783ec800075de821970d4f4874927acf6b0a94ff0b00926344159433cc",
+    "viewports": 12,
+    "keyboard": "Tab/Enter skip-link -> main-content at both widths; not full keyboard matrix",
+    "runtimePageErrors": 0,
+    "controlled409503": true,
+    "receiptRetainedAfterCanonicalRefresh": true,
+    "shutdown": {
+      "ownedPortsClosed": {
+        "RPC": true,
+        "API": true,
+        "Vite": true
+      },
+      "ownedPidExists": {
+        "worker": false,
+        "vite": false,
+        "bootstrap": false,
+        "anvil": false
+      },
+      "workerExit": null,
+      "limit": "Bootstrap process group received SIGTERM; worker exit code was not separately retained. Do not claim graceful worker exit0. All owned PIDs absent and RPC/API/Vite ports closed. PostgreSQL pg_ctl stop exit0.",
+      "commands": [
+        {
+          "name": "initdb",
+          "command": [
+            "/tmp/tv4-pg18-20261113/node_modules/@embedded-postgres/linux-x64/native/bin/initdb",
+            "-D",
+            "/tmp/tv4-ui-owned-unhinyxn/data",
+            "-U",
+            "tv4_ui_admin",
+            "--auth=trust",
+            "--encoding=UTF8",
+            "--locale=C"
+          ],
+          "exitCode": 0
+        },
+        {
+          "name": "postgres-start",
+          "command": [
+            "/tmp/tv4-pg18-20261113/node_modules/@embedded-postgres/linux-x64/native/bin/pg_ctl",
+            "start",
+            "-w",
+            "-D",
+            "/tmp/tv4-ui-owned-unhinyxn/data",
+            "-l",
+            "/tmp/tv4-ui-20261113/postgres.log"
+          ],
+          "exitCode": 0
+        },
+        {
+          "name": "database-create",
+          "command": [
+            "node",
+            "-e",
+            "const pg=require('./node_modules/pg');(async()=>{const c=new pg.Client({host:'127.0.0.1',port:Number(process.env.OWN_PORT),user:'tv4_ui_admin',database:'postgres'});await c.connect();await c.query('CREATE ROLE ui_owner LOGIN');await c.query('CREATE DATABASE tv4_ui OWNER ui_owner TEMPLATE template0');await c.end()})().catch(e=>{console.error(e);process.exitCode=1})"
+          ],
+          "exitCode": 0
+        },
+        {
+          "name": "deploy",
+          "command": [
+            "node",
+            "scripts/deploy_local.mjs",
+            "--rpc",
+            "http://127.0.0.1:37281",
+            "--output",
+            "/tmp/tv4-ui-20261113/manifest.json"
+          ],
+          "exitCode": 0
+        },
+        {
+          "name": "vite",
+          "pid": 134512,
+          "exitCode": -15
+        },
+        {
+          "name": "bootstrap",
+          "pid": 134402,
+          "exitCode": -15
+        },
+        {
+          "name": "anvil",
+          "pid": 134082,
+          "exitCode": 0
+        },
+        {
+          "name": "postgres-stop",
+          "exitCode": 0
+        }
+      ]
+    }
+  },
+  "tc10": {
+    "sourceCommit": "764ba4e4eb518fd803ea28d4bbb779f06cb7eba6",
+    "status": "PASS",
+    "cases": 4,
+    "rawArchive": "tv4-20261113-tc10-api-raw.tar.gz",
+    "rawSha256": "3343ceeaba9620087ecdbe0cbf3716612418e483e88f1ffa23b6f7a133ea0d82",
+    "scope": "NEW TC10 four independent empty-chain deployments and fresh PostgreSQL databases; raw receipts -> shared sync/project -> actual HTTP API at H/hash/revision. No CLI-worker, UI, extension wallet, testnet or full QA05 acceptance.",
+    "remaining": "UI/browser NOT RUN; no CLI worker proof (actual shared sync/project); full QA05 remains PARTIAL. No historical evidence rewritten or testnet claim."
+  },
+  "sepolia": {
+    "sourceCommit": "7a0a94fbae0bf9682259f785643d4b30260f5850",
+    "status": "DISPOSABLE_FORK_PREPARATION_PASS_NOT_TESTNET",
+    "command": [
+      "node",
+      "scripts/preflight_sepolia.mjs",
+      "--accounts",
+      "-",
+      "--output",
+      "/tmp/tv4-sepolia-current-20261113/preflight.json"
+    ],
+    "exitCode": 0,
+    "broadcastTransactions": 0,
+    "anchor": {
+      "height": "12123926",
+      "hash": "0xd0d3078e61e7bcec84bf9e66f005ec4b1860986500f3250025830ac0317c2aea",
+      "timestamp": "1794548160"
+    },
+    "remoteGovCreationGas": 11865462,
+    "remoteEstimateScope": "Only GOV initcode on actual PublicNode at pinned H with synthetic balance override; not a full deployment estimate or owner funding proof.",
+    "forkMode": "DISPOSABLE_FORK_NOT_TESTNET",
+    "forkTransactions": 17,
+    "forkReceipts": 17,
+    "forkGas": {
+      "approvedMaxFeePerGas": "1000000000000",
+      "approvedMaxTotalCost": "1000000000000000000000",
+      "conservativeCommittedCost": "11256724100559561",
+      "totalGasUsed": "9370997"
+    },
+    "forkEstimates": [
+      {
+        "label": "deploy GOV",
+        "estimate": "1796207",
+        "gasLimit": "2155449"
+      },
+      {
+        "label": "deploy BUD",
+        "estimate": "541702",
+        "gasLimit": "650043"
+      },
+      {
+        "label": "deploy Treasury",
+        "estimate": "528619",
+        "gasLimit": "634343"
+      },
+      {
+        "label": "deploy Timelock",
+        "estimate": "1559164",
+        "gasLimit": "1870997"
+      },
+      {
+        "label": "deploy Governor",
+        "estimate": "4206017",
+        "gasLimit": "5047221"
+      },
+      {
+        "label": "Treasury.grantRole",
+        "estimate": "51484",
+        "gasLimit": "61781"
+      },
+      {
+        "label": "Treasury.grantRole",
+        "estimate": "51100",
+        "gasLimit": "61320"
+      },
+      {
+        "label": "Timelock.grantRole",
+        "estimate": "51507",
+        "gasLimit": "61809"
+      },
+      {
+        "label": "Timelock.grantRole",
+        "estimate": "51507",
+        "gasLimit": "61809"
+      },
+      {
+        "label": "Timelock.grantRole",
+        "estimate": "51507",
+        "gasLimit": "61809"
+      },
+      {
+        "label": "Treasury.renounceRole",
+        "estimate": "29228",
+        "gasLimit": "35074"
+      },
+      {
+        "label": "Timelock.renounceRole",
+        "estimate": "29206",
+        "gasLimit": "35048"
+      },
+      {
+        "label": "GOV.delegate",
+        "estimate": "95428",
+        "gasLimit": "114514"
+      },
+      {
+        "label": "GOV.delegate",
+        "estimate": "95428",
+        "gasLimit": "114514"
+      },
+      {
+        "label": "GOV.delegate",
+        "estimate": "95428",
+        "gasLimit": "114514"
+      },
+      {
+        "label": "GOV.delegate",
+        "estimate": "95428",
+        "gasLimit": "114514"
+      },
+      {
+        "label": "BUD.transfer",
+        "estimate": "51637",
+        "gasLimit": "61965"
+      }
+    ],
+    "forkRoleAudit": {
+      "height": "12123975",
+      "hash": "0x7b84e031898e37b93b463260200f59d58bde7e925d6ea8b99a7774627e991cbf"
+    },
+    "forkExit": {
+      "code": 0,
+      "signal": null
+    },
+    "tests": {
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "7a0a94fbae0bf9682259f785643d4b30260f5850",
+      "fullStdout": "final-tests.log"
+    },
+    "rawArchive": "../tv4-20261113-raw.tar.gz",
+    "rawMember": "sepolia-current/preflight.json",
+    "rawSha256": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
+    "blockers": [
+      "Signer owner and approved public nine-address role map",
+      "Six encrypted local signers and native gas permission/budget",
+      "TV1 incremental remote-path review and accepted exact deployment revision",
+      "Real-time Sepolia Executed and Defeated receipts; extension and receiver gates remain separate"
+    ]
+  },
+  "rawArchive": "tv4-20261113-raw.tar.gz",
+  "rawSha256": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
+  "runtimeAttribution": "Full local runtime b7ff654; later changes are testnet-only fork/harness fixes, test-only TC10 extension, CI and evidence. Exact final-head GitHub CI is recorded separately; no historical result is relabelled.",
+  "provenance": "tv4-20261113-provenance.json"
+}

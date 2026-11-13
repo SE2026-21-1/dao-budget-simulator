@@ -4,6 +4,61 @@ Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhậ
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
+## Nghiệm thu tích hợp mới — 13/11/2026
+
+Đọc cùng [báo cáo/raw mới](evidence/tv4-20261113-acceptance.md); không đổi attribution
+các mục lịch sử bên dưới. TV3 đã publish `15b62b5`, tích hợp chọn lọc tại `c31f797`;
+PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
+
+- **NFR02–04 local:** full native tại `b7ff654` PASS: 188 unit, 76 DB/API,
+  202 Foundry, SQL/reorg503/cursor409/crash/deep-fork/rebuild cùng H/hash.
+  Benchmark vẫn 100 proposal/1000 vote, 10 client, cùng assertions:
+  11.407 success/0 error, p95=198,801668ms; 10 idle +10 load samples PASS
+  (load max17.680,628ms), outage31,250s và recovery có giao dịch mới PASS.
+  Baseline instrumented `312104f` cũng PASS nhưng load max27.306,266ms;
+  không tái hiện được timeout trong lượt baseline này. Trace chỉ ra 300 RPC
+  tuần tự/vòng, có 100 quorum trùng snapshot; fix TV2 giữ mọi oracle, cache
+  trong một H và tối đa4 proposal đồng thời. Không kết luận host-only hoặc
+  nguyên nhân duy nhất của FAIL cũ. Raw FAIL12/11/p95 diagnostic/outage NOT_RUN
+  vẫn giữ nguyên; không nâng số cũ thành PASS.
+- **Consumer/Swiss UI:** source ghép mới `da2237f` có 102/102 frontend tests,
+  không skip khi bật API live và SC06 live; lint exit0/8warnings, typecheck/build
+  exit0. Blank API vẫn fixture read-only, explicit `VITE_DATA_SOURCE=fixture`
+  cũng khóa giao dịch; lỗi API thật không fallback. SC06 v2 được sinh thật
+  tại `da2237f`, 32/32 mutations PASS; v1/SHA/checksum lịch sử không bị sửa.
+- **TC01/13 và local TC03/14 smoke:** browser runtime `2b9100b` thực hiện
+  propose→A/B For700→queue→execute1000BUD, receipt→CLI worker→API→UI cùng
+  deployment; ExecutedH43, DefeatedH49, CanceledH55, Treasury9000BUD.
+  6 routes×390/1366 không overflow; keyboard skip-link/Enter tới main-content,
+  Console không có page exception; Network/aborted requests và controlled
+  409/503 được giữ trong raw. Fault injection giữ hash, khóa Cancel Pending,
+  canonical refresh đánh giá lại quyền. Adapter Anvil không là extension,
+  không thay mọi keyboard/error/reset variant hoặc receiver/testnet acceptance.
+- **TC10:** bốn NEW branches hashed/zero×P1/P2 trước tại `764ba4e` đều
+  chain→shared sync/project→HTTP API PASS cùng H29/hash/revision riêng,
+  exact winner payout một lần, loser Queued/Ready/ETA, rejected raw logs0.
+  Xem [raw/API evidence](evidence/tv4-20261113-tc10-api.json); không cộng các
+  deployment thành một ledger, không nhận CLI-worker/UI proof từ lượt này.
+- **Full QA05 #16 còn PARTIAL:** per-vector independent receipt/API/UI của
+  TC05/06/08, TC07 tampered-description/reset/UI và các actor/state/history UI
+  còn lại của TC14 chưa được thay bằng unit counts. TC14 15 contract tests và
+  bốn TC10 chain branches trước đã có, không yêu cầu peer làm lại. #17 giữ
+  bounded Done; không có regression mới hoặc claim arbitrary-strategy coverage.
+- **Receiver #36/#40/#42:** tiếp nhận scope TV3 đã báo, chỉ còn redacted raw
+  compare/normalized exports/manifest/verify, API restart/checkpoint và
+  shutdown/owned PID/ports để TV4 tự đối chiếu. Không yêu cầu repeat smoke/rebuild
+  đã đủ evidence; archived H24 không chứng minh endpoint máy nhận còn sống.
+- **Testnet #20:** [đường Sepolia riêng](sepolia-deployment.md), 11155111/
+  PublicNode/K2, giữ local Anvil31337 guard; 28 bootstrap/Sepolia tests PASS
+  tại `7a0a94f`. Chưa signer owner/public map/gas/permission, chưa TV1 review
+  delta remote hoặc Executed+Defeated receipts chờ thời gian thật: BLOCKED.
+  Không yêu cầu làm lại TV1 local SC/SC06 hoặc TV2 recovery review cũ.
+
+PR50 là docs/evidence-only độc lập runtime PR21; CI đúng `d85611b` đạt
+8 TV4 jobs +1 BE08, TV1 COMMENT không được đổi thành approval. Chỉ Project
+nhóm #1 đang mở được cập nhật; Project TV4 #2 giữ closed. Dev vẫn `87738d3`;
+không tự merge, đóng #18/#20 hoặc ký release từ local PASS.
+
 ## Handoff máy nhận và tích hợp consumer TV3 — 11/11/2026
 
 TV4 tiếp nhận ba comment mới của TV3 trên **`4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`**,

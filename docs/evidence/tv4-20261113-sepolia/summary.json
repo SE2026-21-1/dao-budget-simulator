@@ -1,0 +1,141 @@
+{
+  "sourceCommit": "7a0a94fbae0bf9682259f785643d4b30260f5850",
+  "status": "DISPOSABLE_FORK_PREPARATION_PASS_NOT_TESTNET",
+  "command": [
+    "node",
+    "scripts/preflight_sepolia.mjs",
+    "--accounts",
+    "-",
+    "--output",
+    "/tmp/tv4-sepolia-current-20261113/preflight.json"
+  ],
+  "exitCode": 0,
+  "broadcastTransactions": 0,
+  "anchor": {
+    "height": "12123926",
+    "hash": "0xd0d3078e61e7bcec84bf9e66f005ec4b1860986500f3250025830ac0317c2aea",
+    "timestamp": "1794548160"
+  },
+  "remoteGovCreationGas": 11865462,
+  "remoteEstimateScope": "Only GOV initcode on actual PublicNode at pinned H with synthetic balance override; not a full deployment estimate or owner funding proof.",
+  "forkMode": "DISPOSABLE_FORK_NOT_TESTNET",
+  "forkTransactions": 17,
+  "forkReceipts": 17,
+  "forkGas": {
+    "approvedMaxFeePerGas": "1000000000000",
+    "approvedMaxTotalCost": "1000000000000000000000",
+    "conservativeCommittedCost": "11256724100559561",
+    "totalGasUsed": "9370997"
+  },
+  "forkEstimates": [
+    {
+      "label": "deploy GOV",
+      "estimate": "1796207",
+      "gasLimit": "2155449"
+    },
+    {
+      "label": "deploy BUD",
+      "estimate": "541702",
+      "gasLimit": "650043"
+    },
+    {
+      "label": "deploy Treasury",
+      "estimate": "528619",
+      "gasLimit": "634343"
+    },
+    {
+      "label": "deploy Timelock",
+      "estimate": "1559164",
+      "gasLimit": "1870997"
+    },
+    {
+      "label": "deploy Governor",
+      "estimate": "4206017",
+      "gasLimit": "5047221"
+    },
+    {
+      "label": "Treasury.grantRole",
+      "estimate": "51484",
+      "gasLimit": "61781"
+    },
+    {
+      "label": "Treasury.grantRole",
+      "estimate": "51100",
+      "gasLimit": "61320"
+    },
+    {
+      "label": "Timelock.grantRole",
+      "estimate": "51507",
+      "gasLimit": "61809"
+    },
+    {
+      "label": "Timelock.grantRole",
+      "estimate": "51507",
+      "gasLimit": "61809"
+    },
+    {
+      "label": "Timelock.grantRole",
+      "estimate": "51507",
+      "gasLimit": "61809"
+    },
+    {
+      "label": "Treasury.renounceRole",
+      "estimate": "29228",
+      "gasLimit": "35074"
+    },
+    {
+      "label": "Timelock.renounceRole",
+      "estimate": "29206",
+      "gasLimit": "35048"
+    },
+    {
+      "label": "GOV.delegate",
+      "estimate": "95428",
+      "gasLimit": "114514"
+    },
+    {
+      "label": "GOV.delegate",
+      "estimate": "95428",
+      "gasLimit": "114514"
+    },
+    {
+      "label": "GOV.delegate",
+      "estimate": "95428",
+      "gasLimit": "114514"
+    },
+    {
+      "label": "GOV.delegate",
+      "estimate": "95428",
+      "gasLimit": "114514"
+    },
+    {
+      "label": "BUD.transfer",
+      "estimate": "51637",
+      "gasLimit": "61965"
+    }
+  ],
+  "forkRoleAudit": {
+    "height": "12123975",
+    "hash": "0x7b84e031898e37b93b463260200f59d58bde7e925d6ea8b99a7774627e991cbf"
+  },
+  "forkExit": {
+    "code": 0,
+    "signal": null
+  },
+  "tests": {
+    "pass": 28,
+    "fail": 0,
+    "skip": 0,
+    "sourceCommit": "7a0a94fbae0bf9682259f785643d4b30260f5850",
+    "fullStdout": "final-tests.log"
+  },
+  "rawArchive": "../tv4-20261113-raw.tar.gz",
+  "rawMember": "sepolia-current/preflight.json",
+  "rawSha256": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
+  "blockers": [
+    "Signer owner and approved public nine-address role map",
+    "Six encrypted local signers and native gas permission/budget",
+    "TV1 incremental remote-path review and accepted exact deployment revision",
+    "Real-time Sepolia Executed and Defeated receipts; extension and receiver gates remain separate"
+  ]
+}

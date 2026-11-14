@@ -1,7 +1,6 @@
 """Isolated in-memory characterization harness; NOT a blockchain implementation."""
 from dataclasses import dataclass
 import threading
-import time
 
 @dataclass(frozen=True)
 class Request:
@@ -14,6 +13,7 @@ class ApprovalService:
         self._requests = {r.request_id: r for r in requests}
         self._approvals = {}
         self._lock = threading.Lock()
+        self._before_approval_write = None  # deterministic test hook; no production sleep
 
     def read(self, role, request_id):
         return self._requests[request_id]
@@ -36,9 +36,9 @@ class ApprovalService:
             raise KeyError(request_id)
         with self._lock:
             if request_id in self._approvals:
-                return 'already-approved'
-            # Increase scheduling overlap for a local concurrency test.
-            time.sleep(0.002)
+                return 'approved' if self._approvals[request_id] == key else 'already-approved'
+            if self._before_approval_write is not None:
+                self._before_approval_write()
             self._approvals[request_id] = key
             return 'approved'
 

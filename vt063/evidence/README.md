@@ -1,48 +1,21 @@
-# VT-063 execution evidence — local sandbox, 2026-11-14
+# VT-063 execution archive — historical runs vs current runs
 
-Commands from `vt063/` (Python 3.13.5, no third-party packages):
+This document preserves the **initial historical experiment** (2026-11-14), not current acceptance results. For the verified final revision, see `FINAL_VERIFIED_2026-11-14.md`. Data changes between revisions because tests, mutation script and benchmark methodology changed. Never combine old p95 with the new code version.
 
-```sh
-PYTHONPATH=. python -m unittest discover -s tests -v
-python load_150.py
-python mutation_check.py
-```
+| Evidence version | Suite | Mutation | p95 | Interpretation |
+|---|---:|---|---|---|
+| Initial experiment, older code `3649144` | 12/12 pass | 2 failures in a manual mutation | 1.898 ms | Non-synchronized Python threads, artificial 2 ms sleep inside approval |
+| Intermediate revision, `2122da0`–`3a0e569` | 17/17 pass | 3 failures, 5/5 repeats after fixing import cwd | 7.436 ms | One local thread-burst run with artificial sleep |
+| **Final corrected revision** | **19/19 pass** | **specific coordinated concurrency test fails on mutant, 5/5** | **See final file (five synchronized runs)** | Same-key result replay; no artificial sleep; validation tests added |
 
-**Test-first RED stage**, commit `54be81fe2f1fc42f72bc91f8adc1b3e2857f9524`:
-```text
-ERROR: test_review_approval (unittest.loader._FailedTest.test_review_approval)
-ModuleNotFoundError: No module named 'approval_harness'
-Ran 1 test in 0.000s
-FAILED (errors=1)
-```
-This demonstrates a missing implementation/import, *not* a behavioral assertion red. This is an acknowledged limitation.
+### Earlier RED/GREEN history
 
-**GREEN after patch**, commit `36491441be764badda2e0bd35d8d12d005fb974e`:
-```text
-Ran 12 tests in 0.021s
-OK
-```
+- First test-only commit `54be81fe`: `ModuleNotFoundError`; this is only collection failure, **not** behavioral RED.
+- Behavioral RED `1d0a2b0`: owner could edit already-approved request; one failing assertion. Patch `b25e47c` corrected it.
+- Same-key idempotency behavioral RED `04f28b2`: retry unexpectedly returned `already-approved` instead of original `approved`. Patch `d4a258a` corrected replay semantics.
 
-**Deliberate mutation (temporary local edit replacing Lock with nullcontext)**:
-```text
-FAIL: test_150_concurrent_one_approval
-AssertionError: 13 != 1
-FAIL: test_concurrent_same_request_one_approval
-Ran 12 tests in 0.021s
-FAILED (failures=2)
-```
-On restoring the original guard:
-```text
-Ran 12 tests in 0.030s
-OK
-```
-The new `mutation_check.py` reproduces the test without modifying the tracked source. Because thread scheduling is nondeterministic, a particular re-run may occasionally allow the mutant to survive; repeat runs and a deterministic scheduler would be stronger.
+### Audit disclosure
 
-**Local benchmark once (not production load)**:
-```json
-{"mode":"in-process thread burst","tasks":150,"max_workers":150,
- "p95_ms":1.898,"p95_target_ms":4000,
- "successful_first_approvals":1,"approval_count":1,"python":"3.13.5"}
-```
+A prior mutation script accidentally loaded the original module from the repository working directory instead of the mutant. It was fixed and the test was repeated. The final mutation script additionally verifies the **specific failing test method**, not merely the presence of `FAIL:`.
 
-No GitHub Actions or HTTP/DB/EVM integrations have been run. Benchmark p95 does not support a production SLA claim. The PDF report is submitted separately.
+All runs were in a local Python process, not GitHub CI, API, DB or EVM. No production performance assertion follows from this archive.

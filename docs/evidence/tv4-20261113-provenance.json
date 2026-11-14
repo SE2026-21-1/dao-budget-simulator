@@ -1,0 +1,25 @@
+{
+  "reviewedCurrentSource": "7a0a94fbae0bf9682259f785643d4b30260f5850",
+  "fullNativeSource": "b7ff654c15adeb3095dd187c04509fd1e60c3331",
+  "postNativeChangedPaths": [
+    ".github/workflows/ci.yml",
+    "scripts/check_qa05_request_orders.mjs",
+    "scripts/governance_sepolia.mjs",
+    "scripts/preflight_sepolia.mjs",
+    "tests/smoke/sepolia.test.mjs"
+  ],
+  "unchangedFrontEndSinceLiveSuite": {
+    "source": "da2237fed63eee89341881b076a9551022e31e8f",
+    "equal": true
+  },
+  "historicalSc06V1ByteEqual4296c87": true,
+  "relativeLinksChecked": 9,
+  "rawSha256": "f9e49ecbae8b8274780139df1b5e6e57e75ed01cd839186bdc75d99c03a55142",
+  "tc10RawSha256": "3343ceeaba9620087ecdbe0cbf3716612418e483e88f1ffa23b6f7a133ea0d82",
+  "scope": "Later differences are Sepolia preparation and optional TC10 acceptance harness, covered by their separate new runs; no local benchmark result is relabelled as a new SHA. Final-head CI still required.",
+  "credentialFileScan": {
+    "forbiddenFileMatches": [],
+    "credentialJsonFieldMatches": [],
+    "limit": "Scoped archive check, not a global secret audit. Disposable stopped-service cursor/test strings are not owner credentials."
+  }
+}

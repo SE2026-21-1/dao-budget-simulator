@@ -1,0 +1,4429 @@
+{
+  "status": "TRIAGED_FALSE_POSITIVES",
+  "scanner": "gitleaks 8.30.1",
+  "releaseArchiveSha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+  "binarySha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509",
+  "command": [
+    "gitleaks",
+    "dir",
+    "--redact=100",
+    "--ignore-gitleaks-allow",
+    "--no-banner",
+    "--report-format=json",
+    "--report-path=/tmp/tv4-final-scan-wHuSGc/gitleaks.json",
+    "/tmp/tv4-final-scan-wHuSGc/snapshot"
+  ],
+  "sourceIndexTree": "301507023d0c1e50fd9548b23b778fd1b97fa95b",
+  "rawExitCode": 1,
+  "rawFindingCount": 550,
+  "categories": {
+    "public-file-sha256": 164,
+    "public-evm-address": 386
+  },
+  "confirmedCredentialFindings": 0,
+  "unreviewedFindings": 0,
+  "scope": "All staged files exported via git checkout-index. No dependencies/build caches/submodule contents or user AD-064 file/README link. This scan and triage output and later publication metadata were generated afterward and are not claimed to scan themselves.",
+  "method": "Read every finding span in exact exported source. Classify explicit filename-keyed source/artifact SHA-256 digests and 20-byte EVM addresses in public contract/account/token data. No suppression or allowlist; raw exit 1 preserved. Pattern scan is not proof of absence of every credential.",
+  "findings": [
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/initial-source-hash-failure-integration.json",
+      "StartLine": 33,
+      "EndLine": 33,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/initial-source-hash-failure-integration.json",
+      "StartLine": 34,
+      "EndLine": 34,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/preprocessor-check-attempt-integration.json",
+      "StartLine": 33,
+      "EndLine": 33,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/preprocessor-check-attempt-integration.json",
+      "StartLine": 34,
+      "EndLine": 34,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-h67.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-h67.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-h67.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-after-head-73-at-h67.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-after-head-73-at-h67.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-after-head-73-at-h67.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-after-head-73-at-h67.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-after-head-73-at-h67.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-after-head-73-at-h67.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/rebuild-after-head-73-at-h67.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/pg-pipe-attempt-integration.json",
+      "StartLine": 127,
+      "EndLine": 127,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/pg-pipe-attempt-integration.json",
+      "StartLine": 128,
+      "EndLine": 128,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-reference-h67.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-reference-h67.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-reference-h67.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-reference-h67.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/concurrency-attempt-integration.json",
+      "StartLine": 153,
+      "EndLine": 153,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/concurrency-attempt-integration.json",
+      "StartLine": 154,
+      "EndLine": 154,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-rebuild-h67.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-rebuild-h67.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-rebuild-h67.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/normalized-rebuild-h67.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-h67.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/verification.json",
+      "StartLine": 281,
+      "EndLine": 281,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/verification.json",
+      "StartLine": 282,
+      "EndLine": 282,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc02-local-smoke.json",
+      "StartLine": 95,
+      "EndLine": 95,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/manifest.json",
+      "StartLine": 889,
+      "EndLine": 889,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/manifest.json",
+      "StartLine": 914,
+      "EndLine": 914,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/manifest.json",
+      "StartLine": 917,
+      "EndLine": 917,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/manifest.json",
+      "StartLine": 918,
+      "EndLine": 918,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 611,
+      "EndLine": 611,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 627,
+      "EndLine": 627,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 643,
+      "EndLine": 643,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 659,
+      "EndLine": 659,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 1546,
+      "EndLine": 1546,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 1562,
+      "EndLine": 1562,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 1578,
+      "EndLine": 1578,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/mismatch-probe.json",
+      "StartLine": 1594,
+      "EndLine": 1594,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/browser.json",
+      "StartLine": 262,
+      "EndLine": 262,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-review-20261024/verification.json",
+      "StartLine": 304,
+      "EndLine": 304,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-review-20261024/verification.json",
+      "StartLine": 305,
+      "EndLine": 305,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-rebuild.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-rebuild.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-rebuild.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/local-handoff/manifest.json",
+      "StartLine": 872,
+      "EndLine": 872,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/local-handoff/manifest.json",
+      "StartLine": 897,
+      "EndLine": 897,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/local-handoff/manifest.json",
+      "StartLine": 900,
+      "EndLine": 900,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/local-handoff/manifest.json",
+      "StartLine": 901,
+      "EndLine": 901,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/verification.json",
+      "StartLine": 80,
+      "EndLine": 80,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/clean-governance-summary.json",
+      "StartLine": 10,
+      "EndLine": 10,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/clean-governance-summary.json",
+      "StartLine": 11,
+      "EndLine": 11,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/treasury-smoke.json",
+      "StartLine": 5,
+      "EndLine": 5,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/integration.json",
+      "StartLine": 2668,
+      "EndLine": 2668,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/integration.json",
+      "StartLine": 2669,
+      "EndLine": 2669,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-rebuild.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/source-provenance.json",
+      "StartLine": 929,
+      "EndLine": 929,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/source-provenance.json",
+      "StartLine": 954,
+      "EndLine": 954,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/source-provenance.json",
+      "StartLine": 957,
+      "EndLine": 957,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/source-provenance.json",
+      "StartLine": 958,
+      "EndLine": 958,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 17,
+      "EndLine": 17,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 18,
+      "EndLine": 18,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 19,
+      "EndLine": 19,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 38,
+      "EndLine": 38,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 39,
+      "EndLine": 39,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 47,
+      "EndLine": 47,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/rebuild-comparison.json",
+      "StartLine": 93,
+      "EndLine": 93,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-rebuild.json",
+      "StartLine": 108,
+      "EndLine": 108,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-rebuild.json",
+      "StartLine": 123,
+      "EndLine": 123,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-rebuild.json",
+      "StartLine": 126,
+      "EndLine": 126,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 2551,
+      "EndLine": 2551,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 2576,
+      "EndLine": 2576,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 2579,
+      "EndLine": 2579,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 2580,
+      "EndLine": 2580,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/verification.json",
+      "StartLine": 15,
+      "EndLine": 15,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-target.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-target.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-target.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-target.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 13,
+      "EndLine": 13,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 14,
+      "EndLine": 14,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 36,
+      "EndLine": 36,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 37,
+      "EndLine": 37,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 91,
+      "EndLine": 91,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/final-source-verification.json",
+      "StartLine": 92,
+      "EndLine": 92,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-target.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-target.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-target.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-target.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc03-local-smoke.json",
+      "StartLine": 5,
+      "EndLine": 5,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 611,
+      "EndLine": 611,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 627,
+      "EndLine": 627,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 643,
+      "EndLine": 643,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 659,
+      "EndLine": 659,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1546,
+      "EndLine": 1546,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1562,
+      "EndLine": 1562,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1578,
+      "EndLine": 1578,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1594,
+      "EndLine": 1594,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 8,
+      "EndLine": 8,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/treasury.json",
+      "StartLine": 5,
+      "EndLine": 5,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native-interruption/report.json",
+      "StartLine": 46,
+      "EndLine": 46,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-reference.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-reference.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-reference.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-reference.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/report.json",
+      "StartLine": 88,
+      "EndLine": 88,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/report.json",
+      "StartLine": 102,
+      "EndLine": 102,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-reference.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-reference.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-reference.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-reference.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-target.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-target.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-target.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-target.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/report.json",
+      "StartLine": 97,
+      "EndLine": 97,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/2-S_1.json",
+      "StartLine": 146,
+      "EndLine": 146,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/2-S_1.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/2-S_1.json",
+      "StartLine": 164,
+      "EndLine": 164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/2-S_1.json",
+      "StartLine": 301,
+      "EndLine": 301,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/2-S_1.json",
+      "StartLine": 666,
+      "EndLine": 666,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/3-D.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/3-D.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/3-D.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/3-D.json",
+      "StartLine": 482,
+      "EndLine": 482,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/3-D.json",
+      "StartLine": 1016,
+      "EndLine": 1016,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/governance-storage.json",
+      "StartLine": 8,
+      "EndLine": 8,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/governance-storage.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 151,
+      "EndLine": 151,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-restored-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 2551,
+      "EndLine": 2551,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 2576,
+      "EndLine": 2576,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 2579,
+      "EndLine": 2579,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 2580,
+      "EndLine": 2580,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-reference.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-reference.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-reference.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-reference.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 2588,
+      "EndLine": 2588,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 2613,
+      "EndLine": 2613,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 2616,
+      "EndLine": 2616,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 2617,
+      "EndLine": 2617,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 8,
+      "EndLine": 8,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 16,
+      "EndLine": 16,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 17,
+      "EndLine": 17,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 18,
+      "EndLine": 18,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 37,
+      "EndLine": 37,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 38,
+      "EndLine": 38,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 46,
+      "EndLine": 46,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be03-integration-20261024/wsl-provenance.json",
+      "StartLine": 92,
+      "EndLine": 92,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 2588,
+      "EndLine": 2588,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 2613,
+      "EndLine": 2613,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 2616,
+      "EndLine": 2616,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 2617,
+      "EndLine": 2617,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-target.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-target.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-target.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-target.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/5-E-1.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/5-E-1.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/5-E-1.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/5-E-1.json",
+      "StartLine": 511,
+      "EndLine": 511,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/5-E-1.json",
+      "StartLine": 1074,
+      "EndLine": 1074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/2-S_1.json",
+      "StartLine": 146,
+      "EndLine": 146,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/2-S_1.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/2-S_1.json",
+      "StartLine": 164,
+      "EndLine": 164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/2-S_1.json",
+      "StartLine": 301,
+      "EndLine": 301,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/2-S_1.json",
+      "StartLine": 666,
+      "EndLine": 666,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/live.json",
+      "StartLine": 2136,
+      "EndLine": 2136,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/live.json",
+      "StartLine": 2161,
+      "EndLine": 2161,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/live.json",
+      "StartLine": 2164,
+      "EndLine": 2164,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/live.json",
+      "StartLine": 2165,
+      "EndLine": 2165,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/verification.json",
+      "StartLine": 34,
+      "EndLine": 34,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/verification.json",
+      "StartLine": 42,
+      "EndLine": 42,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 527,
+      "EndLine": 527,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 543,
+      "EndLine": 543,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 1148,
+      "EndLine": 1148,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/6-E.json",
+      "StartLine": 1164,
+      "EndLine": 1164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/treasury.json",
+      "StartLine": 5,
+      "EndLine": 5,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 2588,
+      "EndLine": 2588,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 2613,
+      "EndLine": 2613,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 2616,
+      "EndLine": 2616,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 2617,
+      "EndLine": 2617,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/1-S.json",
+      "StartLine": 146,
+      "EndLine": 146,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/1-S.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/1-S.json",
+      "StartLine": 164,
+      "EndLine": 164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/1-S.json",
+      "StartLine": 283,
+      "EndLine": 283,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/1-S.json",
+      "StartLine": 630,
+      "EndLine": 630,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/1-S.json",
+      "StartLine": 146,
+      "EndLine": 146,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/1-S.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/1-S.json",
+      "StartLine": 164,
+      "EndLine": 164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/1-S.json",
+      "StartLine": 283,
+      "EndLine": 283,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/1-S.json",
+      "StartLine": 630,
+      "EndLine": 630,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 10,
+      "EndLine": 10,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-first-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 10,
+      "EndLine": 10,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/4-D_1.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/4-D_1.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/4-D_1.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/4-D_1.json",
+      "StartLine": 511,
+      "EndLine": 511,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/4-D_1.json",
+      "StartLine": 1074,
+      "EndLine": 1074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-recovery.json",
+      "StartLine": 554,
+      "EndLine": 554,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-recovery.json",
+      "StartLine": 571,
+      "EndLine": 571,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-recovery.json",
+      "StartLine": 798,
+      "EndLine": 798,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-recovery.json",
+      "StartLine": 813,
+      "EndLine": 813,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/3-D.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/3-D.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/3-D.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/3-D.json",
+      "StartLine": 482,
+      "EndLine": 482,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/3-D.json",
+      "StartLine": 1016,
+      "EndLine": 1016,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 611,
+      "EndLine": 611,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 627,
+      "EndLine": 627,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 643,
+      "EndLine": 643,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 659,
+      "EndLine": 659,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1546,
+      "EndLine": 1546,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1562,
+      "EndLine": 1562,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1578,
+      "EndLine": 1578,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-mismatch-probe.json",
+      "StartLine": 1594,
+      "EndLine": 1594,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 527,
+      "EndLine": 527,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 543,
+      "EndLine": 543,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 1148,
+      "EndLine": 1148,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/6-E.json",
+      "StartLine": 1164,
+      "EndLine": 1164,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-20261024/live.json",
+      "StartLine": 3402,
+      "EndLine": 3402,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1065,
+      "EndLine": 1065,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1080,
+      "EndLine": 1080,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1083,
+      "EndLine": 1083,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1202,
+      "EndLine": 1202,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1549,
+      "EndLine": 1549,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1946,
+      "EndLine": 1946,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1961,
+      "EndLine": 1961,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 1964,
+      "EndLine": 1964,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 2101,
+      "EndLine": 2101,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 188,
+      "EndLine": 188,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 203,
+      "EndLine": 203,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 206,
+      "EndLine": 206,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 899,
+      "EndLine": 899,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 915,
+      "EndLine": 915,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 1862,
+      "EndLine": 1862,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 1878,
+      "EndLine": 1878,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 2222,
+      "EndLine": 2222,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/7-eight-states.json",
+      "StartLine": 2237,
+      "EndLine": 2237,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-reference.json",
+      "StartLine": 587,
+      "EndLine": 587,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-reference.json",
+      "StartLine": 603,
+      "EndLine": 603,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-reference.json",
+      "StartLine": 619,
+      "EndLine": 619,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-reference.json",
+      "StartLine": 635,
+      "EndLine": 635,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-restored-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/5-E-1.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/5-E-1.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/5-E-1.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/5-E-1.json",
+      "StartLine": 511,
+      "EndLine": 511,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/5-E-1.json",
+      "StartLine": 1074,
+      "EndLine": 1074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4074,
+      "EndLine": 4074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4088,
+      "EndLine": 4088,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4102,
+      "EndLine": 4102,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4116,
+      "EndLine": 4116,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4298,
+      "EndLine": 4298,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4313,
+      "EndLine": 4313,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4328,
+      "EndLine": 4328,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4343,
+      "EndLine": 4343,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4724,
+      "EndLine": 4724,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be05-20261024/live.json",
+      "StartLine": 4741,
+      "EndLine": 4741,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/4-D_1.json",
+      "StartLine": 158,
+      "EndLine": 158,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/4-D_1.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/4-D_1.json",
+      "StartLine": 176,
+      "EndLine": 176,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/4-D_1.json",
+      "StartLine": 511,
+      "EndLine": 511,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/4-D_1.json",
+      "StartLine": 1074,
+      "EndLine": 1074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 4839,
+      "EndLine": 4839,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 4864,
+      "EndLine": 4864,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 9,
+      "EndLine": 9,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 10,
+      "EndLine": 10,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final.json",
+      "StartLine": 152,
+      "EndLine": 152,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final.json",
+      "StartLine": 173,
+      "EndLine": 173,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final.json",
+      "StartLine": 1407,
+      "EndLine": 1407,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final.json",
+      "StartLine": 1417,
+      "EndLine": 1417,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 2466,
+      "EndLine": 2466,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 2875,
+      "EndLine": 2875,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 2890,
+      "EndLine": 2890,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 2893,
+      "EndLine": 2893,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 4840,
+      "EndLine": 4840,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4111,
+      "EndLine": 4111,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4125,
+      "EndLine": 4125,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4139,
+      "EndLine": 4139,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4153,
+      "EndLine": 4153,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4335,
+      "EndLine": 4335,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4350,
+      "EndLine": 4350,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4365,
+      "EndLine": 4365,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 4380,
+      "EndLine": 4380,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4111,
+      "EndLine": 4111,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4125,
+      "EndLine": 4125,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4139,
+      "EndLine": 4139,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4153,
+      "EndLine": 4153,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4616,
+      "EndLine": 4616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4631,
+      "EndLine": 4631,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4634,
+      "EndLine": 4634,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json.be06-first-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 4074,
+      "EndLine": 4074,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 4088,
+      "EndLine": 4088,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 4102,
+      "EndLine": 4102,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be04-p2-fix-20261024/be04-live-final-run.json",
+      "StartLine": 4116,
+      "EndLine": 4116,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1065,
+      "EndLine": 1065,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1080,
+      "EndLine": 1080,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1083,
+      "EndLine": 1083,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1202,
+      "EndLine": 1202,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1549,
+      "EndLine": 1549,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1946,
+      "EndLine": 1946,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1961,
+      "EndLine": 1961,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 1964,
+      "EndLine": 1964,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 2101,
+      "EndLine": 2101,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/governance-storage.json",
+      "StartLine": 4839,
+      "EndLine": 4839,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 980,
+      "EndLine": 980,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 1005,
+      "EndLine": 1005,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 1008,
+      "EndLine": 1008,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 1009,
+      "EndLine": 1009,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 600,
+      "EndLine": 600,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 616,
+      "EndLine": 616,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 632,
+      "EndLine": 632,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 648,
+      "EndLine": 648,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1535,
+      "EndLine": 1535,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1551,
+      "EndLine": 1551,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1567,
+      "EndLine": 1567,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json.be06-advanced-compare.json",
+      "StartLine": 1583,
+      "EndLine": 1583,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4803,
+      "EndLine": 4803,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4818,
+      "EndLine": 4818,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 4821,
+      "EndLine": 4821,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 151,
+      "EndLine": 151,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/governance-storage.json",
+      "StartLine": 4867,
+      "EndLine": 4867,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261022/governance-storage.json",
+      "StartLine": 4868,
+      "EndLine": 4868,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 151,
+      "EndLine": 151,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 161,
+      "EndLine": 161,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5104,
+      "EndLine": 5104,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5119,
+      "EndLine": 5119,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5122,
+      "EndLine": 5122,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5291,
+      "EndLine": 5291,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5306,
+      "EndLine": 5306,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5309,
+      "EndLine": 5309,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 5435,
+      "EndLine": 5435,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 5451,
+      "EndLine": 5451,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 5467,
+      "EndLine": 5467,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 5483,
+      "EndLine": 5483,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 3199,
+      "EndLine": 3199,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 2668,
+      "EndLine": 2668,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 2693,
+      "EndLine": 2693,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 2696,
+      "EndLine": 2696,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-role-audit.json",
+      "StartLine": 2697,
+      "EndLine": 2697,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 4865,
+      "EndLine": 4865,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 4868,
+      "EndLine": 4868,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261023/governance-storage.json",
+      "StartLine": 4869,
+      "EndLine": 4869,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 3733,
+      "EndLine": 3733,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 4142,
+      "EndLine": 4142,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 4157,
+      "EndLine": 4157,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 4160,
+      "EndLine": 4160,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4111,
+      "EndLine": 4111,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4125,
+      "EndLine": 4125,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4139,
+      "EndLine": 4139,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4153,
+      "EndLine": 4153,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4335,
+      "EndLine": 4335,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4350,
+      "EndLine": 4350,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4365,
+      "EndLine": 4365,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 4380,
+      "EndLine": 4380,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 4867,
+      "EndLine": 4867,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/sc04-local-smoke.json",
+      "StartLine": 4868,
+      "EndLine": 4868,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 4495,
+      "EndLine": 4495,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 4840,
+      "EndLine": 4840,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 2466,
+      "EndLine": 2466,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 2875,
+      "EndLine": 2875,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 2890,
+      "EndLine": 2890,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 2893,
+      "EndLine": 2893,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 4840,
+      "EndLine": 4840,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 5058,
+      "EndLine": 5058,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 3199,
+      "EndLine": 3199,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 5467,
+      "EndLine": 5467,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 5482,
+      "EndLine": 5482,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 5485,
+      "EndLine": 5485,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 5820,
+      "EndLine": 5820,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 6383,
+      "EndLine": 6383,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 4865,
+      "EndLine": 4865,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 4868,
+      "EndLine": 4868,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/governance-storage.json",
+      "StartLine": 4869,
+      "EndLine": 4869,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 6370,
+      "EndLine": 6370,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 6386,
+      "EndLine": 6386,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 6402,
+      "EndLine": 6402,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 6418,
+      "EndLine": 6418,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5923,
+      "EndLine": 5923,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5939,
+      "EndLine": 5939,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5955,
+      "EndLine": 5955,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 4865,
+      "EndLine": 4865,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 4868,
+      "EndLine": 4868,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/governance-storage.json",
+      "StartLine": 4869,
+      "EndLine": 4869,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 6792,
+      "EndLine": 6792,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 6807,
+      "EndLine": 6807,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 6810,
+      "EndLine": 6810,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 7161,
+      "EndLine": 7161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 7177,
+      "EndLine": 7177,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 11109,
+      "EndLine": 11109,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 11134,
+      "EndLine": 11134,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 11137,
+      "EndLine": 11137,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/benchmark.json",
+      "StartLine": 11138,
+      "EndLine": 11138,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 3733,
+      "EndLine": 3733,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 4142,
+      "EndLine": 4142,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 4157,
+      "EndLine": 4157,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 4160,
+      "EndLine": 4160,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 5971,
+      "EndLine": 5971,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7305,
+      "EndLine": 7305,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7321,
+      "EndLine": 7321,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7337,
+      "EndLine": 7337,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7353,
+      "EndLine": 7353,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5104,
+      "EndLine": 5104,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5119,
+      "EndLine": 5119,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5122,
+      "EndLine": 5122,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5291,
+      "EndLine": 5291,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5306,
+      "EndLine": 5306,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5309,
+      "EndLine": 5309,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 4495,
+      "EndLine": 4495,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7667,
+      "EndLine": 7667,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/be06-20261024/live.json",
+      "StartLine": 7684,
+      "EndLine": 7684,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 7782,
+      "EndLine": 7782,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 7798,
+      "EndLine": 7798,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 5058,
+      "EndLine": 5058,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5923,
+      "EndLine": 5923,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5939,
+      "EndLine": 5939,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5955,
+      "EndLine": 5955,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 5467,
+      "EndLine": 5467,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 5482,
+      "EndLine": 5482,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 5485,
+      "EndLine": 5485,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 5820,
+      "EndLine": 5820,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 6383,
+      "EndLine": 6383,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 6858,
+      "EndLine": 6858,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 6874,
+      "EndLine": 6874,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 6890,
+      "EndLine": 6890,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 6906,
+      "EndLine": 6906,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 8949,
+      "EndLine": 8949,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 8974,
+      "EndLine": 8974,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 8977,
+      "EndLine": 8977,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12/report.json",
+      "StartLine": 8978,
+      "EndLine": 8978,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 11109,
+      "EndLine": 11109,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 11134,
+      "EndLine": 11134,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 11137,
+      "EndLine": 11137,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/benchmark.json",
+      "StartLine": 11138,
+      "EndLine": 11138,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 6792,
+      "EndLine": 6792,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 6807,
+      "EndLine": 6807,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 6810,
+      "EndLine": 6810,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 7161,
+      "EndLine": 7161,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 7177,
+      "EndLine": 7177,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 7793,
+      "EndLine": 7793,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 7809,
+      "EndLine": 7809,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 7825,
+      "EndLine": 7825,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 7841,
+      "EndLine": 7841,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 8155,
+      "EndLine": 8155,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/clean/native/live.json",
+      "StartLine": 8172,
+      "EndLine": 8172,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 7782,
+      "EndLine": 7782,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 7798,
+      "EndLine": 7798,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 11110,
+      "EndLine": 11110,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 11135,
+      "EndLine": 11135,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 11138,
+      "EndLine": 11138,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261025-final/benchmark.json",
+      "StartLine": 11139,
+      "EndLine": 11139,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 5971,
+      "EndLine": 5971,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 8263,
+      "EndLine": 8263,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 8278,
+      "EndLine": 8278,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 8281,
+      "EndLine": 8281,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 6858,
+      "EndLine": 6858,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 6874,
+      "EndLine": 6874,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 6890,
+      "EndLine": 6890,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 6906,
+      "EndLine": 6906,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 8974,
+      "EndLine": 8974,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 8990,
+      "EndLine": 8990,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 7793,
+      "EndLine": 7793,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 7809,
+      "EndLine": 7809,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 7825,
+      "EndLine": 7825,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 7841,
+      "EndLine": 7841,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 8155,
+      "EndLine": 8155,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/native/live.json",
+      "StartLine": 8172,
+      "EndLine": 8172,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 9937,
+      "EndLine": 9937,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 9953,
+      "EndLine": 9953,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 10297,
+      "EndLine": 10297,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 10312,
+      "EndLine": 10312,
+      "classification": "public-evm-address",
+      "basis": "20-byte EVM address in exact snapshot finding span; public contract/account/token data"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 12145,
+      "EndLine": 12145,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 12170,
+      "EndLine": 12170,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 12173,
+      "EndLine": 12173,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    },
+    {
+      "RuleID": "generic-api-key",
+      "File": "docs/evidence/tv4-20261024-acceptance/tc12-complete/report.json",
+      "StartLine": 12174,
+      "EndLine": 12174,
+      "classification": "public-file-sha256",
+      "basis": "64-hex source/artifact digest, filename is JSON property"
+    }
+  ]
+}

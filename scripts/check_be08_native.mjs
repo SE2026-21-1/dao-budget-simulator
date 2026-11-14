@@ -241,7 +241,7 @@ try {
   }
   report.provenance.baseCommit = execFileSync('git',['-c','core.autocrlf=true','rev-parse','HEAD'],{cwd:root,maxBuffer:64*1024*1024,encoding:'utf8'}).trim();
   report.provenance.branch = execFileSync('git',['-c','core.autocrlf=true','branch','--show-current'],{cwd:root,maxBuffer:64*1024*1024,encoding:'utf8'}).trim();
-  const parts = [execFileSync('git',['-c','core.autocrlf=true','diff','--binary','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**'],{cwd:root,maxBuffer:64*1024*1024})];
+  const parts = [execFileSync('git',['-c','core.autocrlf=true','diff','HEAD','--binary','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**'],{cwd:root,maxBuffer:64*1024*1024})];
   const untracked = execFileSync('git',['-c','core.autocrlf=true','ls-files','--others','--exclude-standard','-z'],{cwd:root,maxBuffer:64*1024*1024,encoding:'utf8'}).split('\0').filter(p=>p&&!p.startsWith('docs/evidence/')&&!p.startsWith('reports/'));
   for(const path of untracked) { try { parts.push(execFileSync('git',['-c','core.autocrlf=true','diff','--no-index','--binary','--','/dev/null',path],{cwd:root,maxBuffer:64*1024*1024})); }
     catch(error) { if(error.status!==1) throw error; parts.push(error.stdout); } }

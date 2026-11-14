@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "ownedBrowserPortsClosed": {
+    "postgres": true,
+    "rpc": true,
+    "api": true,
+    "frontend": true
+  },
+  "fixturePreviewPort4178Closed": true,
+  "nativeClusterCleanup": "native/report.json",
+  "nativeSignalCleanup": "native-interruption/signal-driver.json",
+  "benchmarkCleanup": "benchmark.json",
+  "cleanCloneNativeCleanup": "clean/native/report.json",
+  "tc12PostgresPort39187Closed": true,
+  "tc12AnvilPort37397Closed": true,
+  "ownedTemporaryPathsRemoved": [
+    "/tmp/dao-tv4-native-interruption.py",
+    "/tmp/dao-tv4-browser-o5zsrk6t",
+    "/tmp/dao-tv4-tc12-zrqnm5i7",
+    "/tmp/dao-tv4-clean-f96k050f",
+    "/tmp/dao-tv4-pg18-runtime",
+    "/tmp/dao-tv4-gitleaks-jww4ejep"
+  ],
+  "callerServicesTouched": false
+}

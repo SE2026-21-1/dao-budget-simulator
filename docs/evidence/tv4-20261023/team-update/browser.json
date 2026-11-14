@@ -1,0 +1,95 @@
+{
+  "scope": "TV3 design integration using canonical synthetic BE01 fixtures; not wallet/API/chain E2E",
+  "source": "26ecca741259946dac7f04338219126437122947",
+  "skipBefore": {
+    "focused": true,
+    "visibleAboveHeader": false
+  },
+  "skipAfter": {
+    "focused": true,
+    "visibleAboveHeader": true
+  },
+  "layouts": [
+    {
+      "route": "/",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    {
+      "route": "/proposals",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    {
+      "route": "/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    {
+      "route": "/proposals/new",
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 1366,
+      "scrollWidth": 1366,
+      "overflow": false
+    },
+    {
+      "route": "/proposals",
+      "width": 1366,
+      "scrollWidth": 1366,
+      "overflow": false
+    },
+    {
+      "route": "/proposals/32591545501524741886300998079617704300347801580532258275547383289645120742286",
+      "width": 1366,
+      "scrollWidth": 1366,
+      "overflow": false
+    },
+    {
+      "route": "/proposals/new",
+      "width": 1366,
+      "scrollWidth": 1366,
+      "overflow": false
+    }
+  ],
+  "pagination": [
+    20,
+    20,
+    5
+  ],
+  "dashboard": {
+    "values": [
+      "45",
+      "7",
+      "7",
+      "≈ 2.871,875 BUD"
+    ],
+    "exactProposedAmount": "2.871,875000000000000015 BUD",
+    "representativeRows": 6,
+    "statusBars": 7,
+    "distributionLabel": "Pending: 7, Active: 7, Succeeded: 6, Defeated: 6, Queued: 6, Executed: 7, Canceled: 6"
+  },
+  "compactFirstAmount": "≈ 61 BUD",
+  "exactFirstAmountTooltip": "61,000000000000000001 BUD",
+  "executedFilter": 7,
+  "exactSearch": 1,
+  "detailAmount": "61,000000000000000001 BUD",
+  "retryKeepsExplicitDevError": true,
+  "errorRecovery": 20,
+  "production": {
+    "url": "http://127.0.0.1:5184",
+    "ignoresDevErrorInjection": true
+  },
+  "browserErrors": {
+    "entries": [],
+    "nextSeq": 43,
+    "dropped": 0
+  }
+}

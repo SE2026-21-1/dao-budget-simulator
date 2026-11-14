@@ -9,7 +9,7 @@ interface Props {
 
 export default function FixtureLoadState({ status, message, retry, simulateError }: Props) {
   if (status === "loading") {
-    return <div className="empty-state" role="status">Đang tải dữ liệu đề xuất mô phỏng…</div>;
+    return <div className="loading-stack" role="status" aria-label="Đang tải dữ liệu đề xuất"><div className="loading-skeleton" /><div className="loading-skeleton" /><div className="loading-skeleton" /><span>Đang tải snapshot đề xuất…</span></div>;
   }
   return (
     <div className="empty-state empty-state--error" role="alert">

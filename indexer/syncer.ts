@@ -3,7 +3,7 @@ import { blockRanges, readBatch, readHeader } from './reader.js';
 import { quantity, type RpcTransport } from './rpc.js';
 import { confirmationDepth, firstBlock, safeBlock } from './scope.js';
 import { StorageError } from './storage.js';
-import type { Checkpoint, DecodeIssue, IndexerConfig, SyncStorage } from './types.js';
+import type { BlockHeader, Checkpoint, DecodeIssue, IndexerConfig, SyncStorage } from './types.js';
 
 export interface SyncReport {
   status: 'raw_synced' | 'raw_synced_with_decode_issues' | 'failed';
@@ -18,6 +18,7 @@ export interface SyncReport {
   issues: DecodeIssue[];
   committedBatches: number;
   error?: { code: string; message: string; retryable?: boolean };
+  reorg?: { from: string; ancestor: string | null; replayFrom: string };
 }
 
 export class SyncError extends Error {
@@ -37,7 +38,8 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
       throw new IndexerError('CHAIN_ID_MISMATCH', 'RPC chain differs from configuration.');
     }
     cp = await storage.loadCheckpoint(config);
-    let previous;
+    let previous: BlockHeader | undefined;
+    const initial = cp;
     if (cp) {
       report.checkpoint = { number: cp.number.toString(), hash: cp.hash };
       try { previous = await readHeader(rpc, cp.number); } // Check even when idle.
@@ -54,11 +56,15 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
         report.checkpoint = cp ? { number: cp.number.toString(), hash: cp.hash } : null;
       }
     }
+    if (initial && (initial.number !== cp?.number || initial.hash !== cp?.hash))
+      report.reorg = { from: initial.number.toString(), ancestor: cp?.number.toString() ?? null,
+        replayFrom: (cp ? cp.number + 1n : firstBlock(config)).toString() };
     const head = quantity(await rpc.call('eth_blockNumber', []), 'eth_blockNumber');
-    if (cp && head < cp.number) throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC head is below verified checkpoint.');
     const safe = safeBlock(head, k);
     report.head = head.toString();
     report.safeBlock = safe?.toString() ?? null;
+    if (cp && head < cp.number + BigInt(k))
+      throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC head is behind the saved confirmed checkpoint; preserve data and retry.', true);
     const to = safe === null ? null : config.toBlock === 'latest' || config.toBlock > safe ? safe : config.toBlock;
     const from = cp ? cp.number + 1n : firstBlock(config);
     if (to !== null && from <= to) {
@@ -81,6 +87,7 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
       await storage.recoverCheckpoint?.(config, rpc, cp);
       throw new IndexerError('REORG_RETRY', 'Checkpoint changed after ingestion; recovery persisted. Run sync again.');
     }
+    if (cp) await storage.completeSync(config, cp, head);
     await storage.observe?.(config, head, cp);
     Object.assign(report, await storage.decodeIssues(config, cp?.number));
     report.decodeComplete = report.unknownTopics + report.decodeErrors === 0;

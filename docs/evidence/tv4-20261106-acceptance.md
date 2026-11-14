@@ -1,0 +1,196 @@
+# TV4 — Đối chiếu và nghiệm thu 06/11/2026
+
+**Source phân biệt:** Dev `87738d3f792c3a283a52b5c18c306809d6cfcfd4`, PR #21 trước đồng bộ `640389fd9f83e76b7eaeb8853fd18a1fb276a2f1`, PR #31 VT-064 `9dc2ba90cad18d810931135a99d1ad5d94690380` (không nhập). Worktree cá nhân có thay đổi chưa commit được giữ nguyên; TV4 tạo worktree riêng để chạy Dev và chỉnh PR #21. Main `ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4` không phải base tích hợp.
+
+## Đối chiếu lại head PR #21 — 08/11/2026
+
+PR #21 trước commit tài liệu này: head `36756d5277ceae9e8a4ca898339868ba6c0871f9` →
+base Dev `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. CI **đúng head**
+[push 42246292210](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246292210)
+và [PR 42246301276](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301276)
+đều 9/9 job success; [BE08 PR 42246301219](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42246301219)
+success. Lượt FAIL ở `bc17d34` mục dưới vẫn là lịch sử, không phải kết quả head hiện tại.
+CI status không thay raw artifact hoặc approval.
+
+Lượt **CI mới trên `c5f84f8` đã FAIL trước khi chạy test phụ thuộc
+Foundry**: [push 42466361404](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466361404)
+5/9 job success, [PR 42466365790](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466365790)
+5/9 job success, [BE08 42466365828](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42466365828)
+FAIL. Annotations của cả năm job Foundry nêu HTTP 504 khi tải
+`foundryup_linux_amd64`, release attestation hoặc Foundry 1.8.5 attestation;
+không phải test quorum/backend thất bại. Thử lại cùng action/version trên
+`8ac09dac` ([push 42467642705](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42467642705))
+vẫn **FAIL**: cả ba lượt mỗi job nhận HTTP 504 từ `foundryup_linux_amd64`;
+5/9 job không phụ thuộc Foundry PASS, 4/9 fail trước test. Retry giữ lại cho
+lỗi thoáng qua; khi cả ba lần đều lỗi, `.github/actions/install-foundry/action.yml`
+chỉ lấy OCI image Foundry v1.8.5 theo digest immutable
+`sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043`
+và bắt buộc `gh attestation verify` signer workflow chính thức trước khi
+copy forge/cast/anvil. Cả fallback và kiểm version fail-closed; không tắt
+attestation, không bỏ qua suite. CI của commit chứa fallback phải được kiểm
+riêng; success cũ `36756d5` không thay CI của commit mới.
+
+## Audit CI và tính đúng của test — 08/11/2026
+
+Head trước sửa `d9ea994084ab3838bf0451f7681381ad372bcb43`:
+[push CI 42468103856](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468103856)
+và [PR CI 42468107848](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107848)
+9/9 success; [BE08 CI 42468107949](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42468107949)
+1/1 success. Những lượt 504 cũ do tải Foundry, không phải assertion test; fallback
+OCI có attestation đã cho suite chạy lại. Tuy nhiên hai bước BE03 trong
+`.github/workflows/ci.yml` pipe test qua `tee` dưới shell mặc định
+`bash -e` **không có pipefail**: tái hiện `false | tee /dev/null` trả **0**
+với shell mặc định, trả **1** với `bash --noprofile --norc -eo pipefail`.
+Do đó nhãn xanh BE03 cũ không tự chứng minh hai test BE03 thành công.
+Đặt `shell: bash` ở **cả hai** bước để GitHub Actions bật `-eo pipefail`;
+không bỏ test hay nới assertion. Parse YAML hai workflow: cả **20 bước `tee`**
+trong CI chính nay đều dùng shell này; BE08 riêng không pipe `tee` và runner
+từ chối TAP fail/skipped/todo. BE03 DB chạy lại cluster cô lập **18/18 PASS**.
+
+Hai runner tạo `source.patch` bằng `git diff` (index→working tree), nên khi
+stage một sửa đổi rồi không sửa tiếp, patch có thể rỗng dù source chạy đã đổi.
+Runner BE07 còn bỏ sót file staged-only trong `tested-source.json.files`.
+Repo thử tạm: commit `file.txt=before`, sửa `after` rồi `git add`; cách cũ
+trả patch rỗng và danh sách `--modified` rỗng, `git diff HEAD --binary`
+có `after` và `git diff HEAD --name-only` có `file.txt`. Sửa hai runner lấy
+patch từ HEAD; BE07 gom cả tracked staged/unstaged và untracked để hash.
+Smoke thực thi đúng đoạn capture từ hai runner trong repo tạm staged-only:
+BE07 hash `after` và patch chứa `+after`; BE08 patch cũng chứa `+after`.
+Smoke thêm staged `staged`, worktree `after-stage` và file mới `untracked`:
+BE07 hash nội dung cuối của cả hai; patch của BE07/BE08 chứa `+after-stage`
+và `+untracked`, không lẫn nội dung trung gian `+staged`.
+Không sửa dữ liệu thô trong archive Dev cũ: patch SHA rỗng của archive đó
+vẫn hợp lệ vì Dev lúc chạy sạch.
+
+BE08 outage trước đây chỉ kiểm health chuyển `lagging → synced`: heartbeat
+không chứng minh worker **publish tiếp** sau phục hồi. Bổ sung một transfer BUD
+mới **sau** khi RPC trở lại, mine K=2 và đợi tx xuất hiện trên API cùng H/hash
+projection SQL; đối chiếu ledger sau outage. Mẫu recovery riêng không trộn
+vào 10 idle + 10 load của NFR03; `recoveryMs` mới tính đến publication.
+Kết quả archive cũ 525,824ms chỉ đo tới health `synced`, không phải
+post-outage publication.
+Raw archive Dev cũ ghi benchmark PASS/outage PASS nhưng chỉ có 10 idle +
+10 load sample, `datasetAfterOutage.counts.transfers=21` (1 seed + 20 mẫu);
+không có tx/hash chứng minh publication **sau** outage.
+
+Chạy lại Node 24.15.0 tại worktree PR riêng: `npm run test:be03`
+**25/25 PASS, 0 skip**; `npm run test:be08` **10/10 PASS, 0 skip**;
+`npm run test:bootstrap` trên Anvil riêng **15/15 PASS, 0 skip**.
+SC06 fixture **32/32 PASS**, Foundry CI seed `0x20261021` **187/187 PASS**,
+frontend unit **14/14 PASS**; lint frontend exit 0 nhưng **8 warning**,
+build PASS có cảnh báo bundle 607,29 kB. Regression quorum chọn đúng snapshot
+Executed khi archive có thêm proposal, ép **riêng** archived quorum
+200→1.001 GOV và đòi đúng lỗi historical quorum; Against test For150 >
+Against100 nhưng For+Abstain150 < quorum200. Invariant `afterInvariant`
+đòi execute thành công trong mỗi run; bộ đếm log cuối không là tổng 100 runs.
+FE live, browser extension và CI raw ZIP vẫn là gate riêng, không suy từ
+14 frontend tests/nhãn 9/9 CI. CI commit chứa các sửa trên phải đối chiếu
+riêng sau push.
+
+**Native smoke đúng thay đổi** (local, không phải CI): Node24.15.0,
+PostgreSQL18.4/Forge1.8.5/Anvil1.8.5, cluster và chain riêng;
+`npm run test:be08:native -- --postgres-bin
+/tmp/dao-tv4-ci-audit-pg/node_modules/@embedded-postgres/linux-x64/native/bin
+--output /tmp/dao-tv4-ci-audit-native-20261108 --benchmark` → **PASS 13/13
+suite, không skip**, cleanup stopped/removed, `sourceUnchangedThroughRun:true`.
+BE02 DB21, BE03 DB18, BE04 DB10, BE05 DB7, BE06 DB1, BE07 DB18, unit183,
+Foundry187; BE01 SQL, typecheck, build, BE07 live và benchmark PASS. Source
+`baseCommit=d9ea994084ab3838bf0451f7681381ad372bcb43` + patch SHA-256
+`0bbd9c5c509e9f69c7ddcf38558f7dbfa53e4499f42b3506d45d6371ff523e4f`
+(đối chiếu lại `source.patch`). Raw benchmark: **18.841/18.841 HTTP
+success/0 error**, p95 nearest-rank **192,007679ms** từ raw; riêng 5.760
+request bắt đầu trong 60 giây đầu p95 **181,827614ms**; load tổng
+208,110466 giây đến khi freshness hoàn thành. NFR03 giữ **10 idle +
+10 load** (p95 load 27.376,1774ms, max như vậy), không tính mẫu recovery.
+RPC trả503 **31.251,019ms**; sau mở lại `synced`, transfer **mới**
+`0x06c240abe4bedc76ea2eb7950c45d27b795f42f0aceed6b8bd1193b0dde0859b`
+tại **H1200**/hash
+`0xbbe0d0c5b36955293ee62f70a9fba667e3a2de0a684ba995e1ad5610f90cb0f7`
+hiện trên API và projection SQL; recovery publication 12.441,545ms.
+Ledger chuyển từ 21 sang **22 transfer** (seed1 + 20 normal + 1 recovery).
+[Raw local 08/11](tv4-20261108-ci-test-raw.tar.gz) SHA-256
+`0a28eab726dc0cf4679188b5b4c4e8d12f216dd0d806f4a6ee16bbf90f868f41`
+gồm report, tested-source, source.patch, live và raw benchmark. **Không**
+gán các số local này cho artifact GitHub CI hoặc máy/testnet khác.
+
+Đối chiếu yêu cầu [TV1 REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129):
+
+| Yêu cầu | Source/commit và kết quả kiểm độc lập tại head |
+|---|---|
+| Oracle độc lập, quorum(S)=200 GOV | `scripts/check_sc06_chain.mjs::historicalQuorum` (`4b76a82`) replay GOV mint Transfer và QuorumNumeratorUpdated đến S, đối chiếu getter nguồn cung/numerator tại H; `projectFixture` so archived quorum(S) trước evaluate. `tests/sc06-chain.test.mjs` xác nhận 200 GOV. |
+| Mutation riêng 200→1.001 GOV, đúng lỗi và nhiều proposal | `tests/sc06-chain.test.mjs::executedQuorumCall` (`6c9b73f`, `c979560`) chọn theo ProposalCreated/voteStart của proposal Executed, không chọn nhầm proposal Canceled; `assert.rejects` đòi lỗi `Governor.quorum(snapshot) differs from historical GOV supply and quorum configuration`. Local Node 24.15.0: 32/32 PASS, full offline checker 24 receipt/42 log/H26 PASS. Không ghi nhận đây là live RPC mới (`liveRpcVerified:false`). |
+| Against không cấp quorum | `tests/integration/TimelockGovernance.t.sol::testAgainstVotesDoNotSupplyQuorumForFailedProposal` (`4b76a82`): For150 > Against100, tổng250 ≥ quorum200 nhưng For+Abstain150 <200; Defeated. Chạy riêng 1/1 PASS. |
+| README/provenance/bootstrap/CI history | `fixtures/chain/sc06-v1/README.md` (`bc17d34`) ghi source `c979560`, luồng pre-renounce→renounce→pre-funding, 32 ca; `.github/workflows/ci.yml` (`6f60ba5`) `fetch-depth: 0`. Forge fmt, root typecheck/build PASS. TV1 cần review lại trên SHA mới, TV2/TV3 xác nhận ABI/consumer; không tự gỡ Request changes. |
+
+Tại cùng worktree PR head (Node 24.15.0/Forge 1.8.5), `npm run
+test:bootstrap` **15/15 PASS** trên Anvil riêng; `FOUNDRY_PROFILE=ci
+FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path
+tests/invariant/GovernanceInvariant.t.sol -vv` **4/4 PASS**, 100 runs × 50
+calls, seed cố định, 0 framework reverts. Ghost oracle kiểm paid requests,
+quyền/path, ledger và snapshot; log **chuỗi cuối** ghi 5 Governor execute
+successes/2 execute reverts/0 cancel successes/0 transferFrom successes, không
+được cộng chuỗi cuối thành tổng toàn campaign hay suy bao phủ mọi strategy.
+`npm run lint --prefix frontend` exit 0 với **8 warning** ở wallet; frontend
+14/14 tests và build PASS (bundle 607,29 kB, warning >500 kB). Đây là
+fixture/unit ở head PR, **không** phải FE↔API live mới hoặc ví extension.
+
+Đọc lại archive **local Dev** `tv4-20261106-be08-raw.tar.gz`: SHA-256
+`3406b240b6d637134ce0b1153cabaf84fceab307adb62127fb7f40057dfda7dd`,
+`tested-source.json` gắn Dev `87738d3`, `sourceUnchangedThroughRun:true`, patch
+SHA-256 rỗng `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+Tự tính từ 20.986 `load.rawSamples`: 0 HTTP errors, p95 nearest-rank
+**212,460931 ms**; mỗi endpoint lần lượt list 7.000/227,103169 ms,
+summary 3.499/117,424224 ms, detail 3.498/171,183035 ms,
+votes 3.496/230,638486 ms, transfers 3.493/219,007609 ms. `elapsedIncludingDrainMs`
+= **254.634,531 ms** vì worker tiếp tục trong lúc đo freshness; không gọi 20.986
+request là tải cố định 60 giây. Riêng các request bắt đầu trước 60.000 ms có
+4.967 mẫu, p95 **220,937631 ms**; mẫu chéo ranh giới vẫn được tính theo lúc bắt đầu.
+Freshness 20/20, p95 27.884,381988 ms và max 28.443,131451 ms; margin
+~1,557 giây so với 30 giây, chưa bảo đảm máy khác. ZIP artifact **CI**
+`13391310183` chưa đọc được (401); không gán thống kê local cho CI. #18/#37
+còn chờ TV2 xác nhận từng gate và artifact CI, #40/#42 chờ service sống và máy
+thành viên khác. RPC/API/UI ở `:8545/:3000/:5173/:5174` đều không kết nối khi
+kiểm lại; archive H24/H79/H82 không phải endpoint đang chạy.
+
+## Sau review PR #21 — quorum, UI và BE09 (nguồn mới ngày 06/11)
+
+- TV1 [REQUEST_CHANGES](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5802033129) tại `a9db100`: checker cũ chấp nhận mutation *riêng* `quorum(snapshot)` 200→1.001 GOV. Source fix `4b76a82`, regression sửa đích snapshot tại `c9795605277bd0500275804b7873618f13220c13`: oracle replay GOV constructor Transfer và lịch sử QuorumNumeratorUpdated tại S, đối chiếu supply/numerator H, rồi mới so raw quorum(S); không dùng chính raw quorum làm expected. Test Against 100/For 150/Abstain 0 với quorum 200 chứng minh For>Against nhưng chỉ Against làm tổng tới quorum; contract từ chối queue. Fixture tạo lại từ source **`c979560`** bằng Anvil mới: H26/hash `0xb36562d70d1229faa1e3ab713e12cc594727b3ab30c0c062f26c0c6192d9e20e`, 24 receipt/42 log, live RPC verified khi tạo, [chain.json](../../fixtures/chain/sc06-v1/chain.json) SHA256 `324491f6345cef24e1d10d51e2490a5718d86b287b866ef478141d0c39c58b8d`. Checker offline PASS, **32/32** SC06 mutation cases PASS/0 fail/0 skip; contract 187/187, bootstrap15/15, backend projection24/24, frontend14/14, lint exit0 (8 warning)/build PASS trên worktree source và archive mới. CI trên revision công bố cần kiểm lại; cũ không xác nhận fix. Chờ TV1 review lại và TV2/TV3 kiểm ABI/consumer.
+- TV2 [review UI cũ](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#discussion_r4371072184): thêm hiển thị H/hash đầy đủ/snapshotRevision và trạng thái sync **tại lúc tải** trên dashboard, list, detail (cả không tìm thấy ID); health tự thăm dò riêng, không đồng nhất health mới với snapshot cũ. Browser Chromium 390/1366 trên fixture không tràn, và trên **API thực BE09** tại H24/hash `0xa77bd38e56182b7eafb6dbb4aa71df805e1f090dd94049fb05dc7f58b1098dab`/revision `4604cb23-4da1-4213-87b3-fb607ca1242e` thấy Executed, `synced`, không tràn. Cần TV3 review và nhập vào nhánh FE/Dev, không đóng [#9](https://github.com/SE2026-21-1/dao-budget-simulator/issues/9) chỉ bằng browser local.
+- TV4 độc lập chạy full `preflight → up → verify → status` trên PR [#46](https://github.com/SE2026-21-1/dao-budget-simulator/pull/46) **committed `22122bd`**, không dùng script chưa commit của report cũ: sáu GET200, contract/API H24/hash, restart worker/digest, CORS204, FE live1/1 PASS/0 skip. [Báo cáo BE09 riêng](tv4-20261106-be09-review.md) ghi công cụ, report/checksum/giới hạn; runtime loopback cô lập đã `down`, không báo endpoint còn sống hoặc TV3/máy khác/extension wallet đã nghiệm thu. Chờ peer/TV3 tại #40/#41.
+
+### CI hồi quy sau review SC06
+
+PR #21 head `bc17d3475bdcb988fee1187393d925acb88c5864`: [push CI #151](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244550157) và [PR CI #152](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561248) **FAIL 1/9 job** tại bước `Reject SC06 archived receipt and isolated quorum mutations`; 8 job còn lại PASS. PR chạy merge ref `9e99e074f903825275c46ffb1654982cadaab811`, push chạy head; [BE08 riêng](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42244561249) là workflow khác. Chưa mở được step log/artifact khi không có phiên GitHub; không gán stack trace phỏng đoán cho CI.
+
+Tái hiện nguyên nhân cấu hình: `actions/checkout` mặc định fetch-depth 1, nhưng SC06 provenance cần `git rev-parse --verify c9795605277bd0500275804b7873618f13220c13^{commit}` và đọc Git blobs tại commit sinh archive. Trên checkout **thật** `refs/pull/21/merge` chỉ fetch `--depth=1`, `git cat-file -e c979560^{commit}` trả exit 128/`Not a valid object name`; `git fetch --unshallow` rồi `cat-file` và `git merge-base --is-ancestor` đều PASS. Trên checkout merge ref đầy đủ, `node --import tsx scripts/check_sc06_chain.mjs` và 32/32 mutation tests PASS. Sửa duy nhất job `contracts` thành `fetch-depth: 0`, giữ oracle/assertion và không thay workflow BE08. Cần kiểm **lượt CI mới trên commit chứa sửa đổi**, không nhận PASS cho `bc17d34`.
+
+## CI và artifact: review, không phải số đo local
+
+- [TV4 CI 41973419072](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973419072) và [BE08 CI 41973418947](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41973418947) báo success ở Dev `87738d3`; không áp dụng cho diff/commit mới trên PR #21.
+- [Metadata artifact 13391310183](https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/artifacts/13391310183): tên `be08-87738d3f792c3a283a52b5c18c306809d6cfcfd4`, 1.253.169 byte, digest ZIP `d5d645c85c67efbea290213b591f34d8f24f0421dc9dcb71179bc69d123cd766`; hạn 19/11/2026. API download ZIP 401 và job logs 403 khi chưa có GitHub API credential. Vì chưa tải được, **chưa xác minh tested-source/live/benchmark/raw trong chính artifact CI**; status success không thay raw samples hoặc chữ ký nghiệm thu.
+- [BE08 runbook](../be08.md) đo 100 proposal/1.000 vote on-chain, 10 closed-loop client, warmup 5s tách riêng, ít nhất 60s tải; thời gian tính đến hết JSON body, không loại lỗi, nearest-rank `ceil(.95*N)-1` tổng và từng endpoint. NFR03: 10 idle + 10 load deposit đủ K=2 tới API/SQL H/hash, mỗi mẫu <30s; outage RPC >31s phải lagging rồi synced. Số cũ tại `docs/evidence/be08-20261027/run-4-final/benchmark.json` **không phải** số CI mới.
+
+## Chạy mới độc lập trên Dev (không phải artifact CI)
+
+| Hạng mục | SHA, môi trường, lệnh / expected | Actual, trạng thái, log |
+|---|---|---|
+| Toolchain / native BE08 #18 | Dev **`87738d3f792c3a283a52b5c18c306809d6cfcfd4`**, source patch rỗng; Linux x64, Node 24.15.0, Forge/Anvil 1.8.5, Solc 0.8.37, PostgreSQL 18.4 binary + libicu60 chỉ trong `/tmp`. `LD_LIBRARY_PATH=/tmp/dao-tv4-libicu60/usr/lib/x86_64-linux-gnu npm run test:be08:native -- --postgres-bin /tmp/dao-tv4-pg18-20261106/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/dao-be08-new-20261106 --benchmark` (PATH Node24); expected full fresh-cluster suites, governance, K=2/recovery, 100 proposal/1.000 vote, cleanup | **PASS** `report.json`: storage 21, checkpoint 16, projection 10, API 6 (bao gồm schema 001–004), BE06 DB 1, backend unit 143, BE07 DB 18, Foundry 180; 0 skipped trong các suite, typecheck/build/live/benchmark PASS, cluster dừng và xóa. `report.json` SHA256 `f88728dfe9ec69031439edd49e174d676bd9ebad23932cc9e941427b97a07bfa`, `tested-source.json` SHA256 `7932efa321efce53b4cc782ae9be48945e2cc6adfd6c324feb65f36c3e4ae5e2`, `live.json` SHA256 `2e0742b6f88c3e5d3fcce4ef8bfcb4b0e144e3034765a51ad77b99069cf9031f`, `benchmark.json` SHA256 `81cae27d45af34af35c5daa5ff06dc34c5c69493f906357ff0c048ba89c30ec4` tại `/tmp/dao-be08-new-20261106/` (**chưa upload**, cần lưu bền vững). |
+| Recovery/BE07 #18 | Cùng Dev/cluster; expected K=2, atomic checkpoint, crash trước/sau COMMIT, rollback/replay raw+derived, orphan không được phục vụ, gate 503 và cursor 409, deep fork fail-closed, rebuild DB rỗng so H/hash | **PASS** `live.json`/BE07 DB: ancestor H19; reorg 3 replay cycles; recovery health/data 503, cursor 409, deep-fork health/data 503 và `rebuild_required`; SIGKILL trước COMMIT thấy `replaying`, sau COMMIT thấy `ready`; BE06 rebuilt DB mới compare `equal` cùng H67/hash `0x6b3815ec1552847482f5b1775f9af6923709bc79d0d5368307de7e785ae3fce9`, không mismatch. Outage RPC 31.250,653ms, health `lagging` lagSeconds 34 → `synced` sau RPC thật; phục hồi 525,824ms; retry per logical ID hữu hạn (đa số 4 attempts và backoff có jitter). Unknown ancillary topics 16 vẫn báo, không xóa raw. |
+| Freshness #37 | Schema 001–004: no checkpoint `lagSeconds:null`; checkpoint stale >30s → `lagging` → update thật `synced`. Schema 001–005: `lastCheckedAt` verified RPC, checkpoint mới không tự chứng minh freshness | **PASS** `tests/api/server.test.mjs` trong native API 6/6: 001–004 cách ly schema, stale 31s, no checkpoint null; 005 stale checkpoint + recent verified RPC vẫn synced và recent checkpoint + `lastCheckedAt:null` không synced. `tests/indexer/be07-db.test.mjs` 18/18 gồm SQL-lock không giả heartbeat RPC. |
+| Benchmark NFR02–04 #18 | Cùng Dev/cluster, 100 proposal + 1.000 vote, chain H1137/hash `0xfec69b463682e8e66955e20e1f54f293ad0a1e387ff228c1185adfbab666656e`, warmup riêng, 10 closed-loop client 60s; p95 nearest-rank từ `load.rawSamples[][5]`, lỗi từ `[][7]`; freshness 10 idle + 10 load từ `freshness.samples[].elapsedMs` | **PASS local**: tự tính lại **20.986/20.986 HTTP success, 0 lỗi, p95 tổng 212,460931ms**; endpoint list 7.000 p95 227,103169; summary 3.499 p95 117,424224; detail 3.498 p95 171,183035; votes 3.496 p95 230,638486; transfers 3.493 p95 219,007609. Freshness 20/20 PASS, p95 **27.884,381988ms**, max **28.443,131451ms** (<30s, margin ~1,557s ở mẫu chậm nhất); idle p95 9.795,059998ms. **Rủi ro:** margin nhỏ, một lượt local không bảo đảm mọi môi trường. 31s outage loại khỏi normal-RPC freshness theo runbook, không trộn mẫu. Raw ở `benchmark.json`, không gán số này cho CI. |
+| SC06 #43 | Dev `87738d3`, `node --import tsx --test tests/sc06-chain.test.mjs`; PR #21 code/test source `8245c9c` và `node --import tsx scripts/generate_sc06_chain.mjs /tmp/dao-sc06-final-20261106`; expected canonical receipt/ABI/projection và coupled tampering bị từ chối | **PASS 28/28** canonical Dev. Mutation độc lập đổi *cả hai* `manifest.config.quorumNumerator` và `roleAudit.config.quorumNumerator` `20→21`: checker cũ `UNEXPECTED_ACCEPTED` (FAIL trước fix). PR #21 so 10 getter với pinned eth_call và seed với Transfer canonical; bản fixture cũ **FAIL** vì pin hash API từ Dev (đúng cơ chế provenance), đã regenerate từ commit `8245c9c` trên Anvil thật: 24 receipt/42 log/27 block, 1 payout, projection Executed+Canceled, verified RPC. Full checker trên fixture mới kiểm cả coupled quorum/seed bị từ chối **đúng lý do**, không nới provenance. Chưa peer TV1/TV2/TV3; lỗi là oracle bằng chứng, không phải contract bị đổi quorum. |
+| Service #40 | `curl` tới `127.0.0.1:3000`, `:8545`, `:18545`, `:5173`, `:5174`; expected API/RPC của cùng deployment còn hoạt động | HTTP `000` / connection refused trên các cổng; **BLOCKED** cho demo archived. Không xem address/endpoint trong CI hoặc handoff cũ là service hiện sống. TV2/TV3 cần bàn giao manifest, API và RPC mới cùng chain nếu muốn peer truy cập. |
+| Frontend TV3 | `681289bb1f11db87bdfcb15c6b28d1d995229835`, Node24, `npm ci --prefix frontend && npm run test --prefix frontend -- --run && npm run build --prefix frontend`; expected unit/build | 49 PASS, **1 SKIP live** (thiếu bốn `BE05_LIVE_*`), build PASS có warning bundle 614,09 kB. Không gọi đây là FE↔API nghiệm thu. |
+| Native TV4 PR #21 | Source merge `c002fbefe45214737a23de482e3c85158d742bfe` + working patch tài liệu/SC06 đang ghi riêng; Node24.15.0/PG18.4/Anvil1.8.5, `npm run test:tv4:native -- --postgres-bin /tmp/dao-tv4-pg18-20261106/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/dao-tv4-ui-new-20261106 --ui` (PATH Node24, libicu60); expected native DB, governance, BE06, recovery, browser same H/hash | **PASS** `report.json` BE01 SQL, storage21, checkpoint18, projection10, API7, BE06 DB1, governance storage và live BE06; cleanup stopped/removed. `live.json` 10 phases, recovery health503/cursor409, orphan0/replacement1; real Chromium 1366/390 không overflow, payment Executed, low-quorum Defeated, Treasury **1.002 BUD** cùng H79/hash `0x67588fad27adcb5f6d48ae92b2ae33ed41e9893ab4490be2b1f6b597f5c97e19`/revision `04ddb7e5-a760-4feb-8d18-9ba5420292b7`. Ở viewport 390, Tab đầu tới skip link; indexer hiện `lagging` khi runner tạm dừng >30s và UI cảnh báo, sau RPC sync thật chuyển `synced` (health vẫn degraded do unknown topics). Log/ảnh: [archive UI raw](tv4-20261106-ui-raw.tar.gz) SHA256 `1fa06d500bc41905e0f4d716b16452bf1e9c84b800e092a41443efeba9ffad6e`. Không có browser extension, không ghi là ký giao dịch từ ví. |
+| FE↔API live #36/#41 | TV3 `681289b`, bốn biến `BE05_LIVE_API_URL=http://127.0.0.1:41111`, `BE05_LIVE_CHAIN_ID=31337`, `BE05_LIVE_DEPLOYMENT_ID=be04-live`, `BE05_LIVE_RPC_URL=http://127.0.0.1:41705` thuộc **cùng** native runner PR #21 H79; Node24 `npm run test --prefix frontend -- --run src/data/api.live.test.ts`; expected sáu endpoint/H/hash/revision/cursor/RPC + health synced | Lượt đầu **FAIL** `expected 'lagging' to be 'synced'`: runner pause không còn worker heartbeat >30s (UI hiển thị lagging đúng hợp đồng). Chạy **RPC sync thật** bằng `sync(parseConfig(...), new HttpRpc(...), new PostgresStorage(pool))` với chính DB/config/deployment của runner; trả checkpoint H79/hash canonical, không sửa trực tiếp timestamp; sau đó suite **PASS 1/1, 0 SKIP**. URL loopback chỉ sống trong lượt runner; teardown đã dừng, không phải #40 service công khai. |
+| INV01–04 #43 | PR #21 source `8245c9c` (contract files đã pin tại merge `c002fbe`), `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/invariant/GovernanceInvariant.t.sol -vv`; expected ≥100×50, oracle ghost độc lập khỏi Treasury/GOV, execute thành công trong chuỗi | **PASS 4/4**, runs100/calls5.000/reverts0. Log cuối: sequence actions51, reachable lifecycle5, Governor execute successes5, execute reverts2, vote successes25, queue successes5; `total BUD paid=5000000000000000000`. Ghost votes/ledger/payment không hỏi contract làm oracle; các chỉ số log là sequence cuối, **không phải thống kê cộng 100 runs**. Zero cancel successes/zero transferFrom successes của chuỗi log cuối không chứng minh mọi strategy; cần peer TV1. |
+| FE code PR #21 | Node24, `npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend`; expected không có lỗi, warning không giấu | **PASS** lint exit0 (8 warning `wallet.tsx`), unit14/14, build PASS; bundle 606,80 kB warning. Không đồng nhất với TV3 49/1 live ở branch riêng. |
+| Browser ví→receipt→worker→API→UI #36/#41 | PR #21 source `1fec861514b35c7f28df4647aa2cc9aeb9e158c9`, Node24/PG18.4/Anvil1.8.5/Chromium EIP-1193 adapter vào account Anvil **đã mở khóa**, không phải extension wallet. Lượt native thứ hai: `npm run test:tv4:native -- --postgres-bin /tmp/dao-tv4-pg18-20261106/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/dao-tv4-wallet-new-20261106 --ui`; expected propose ký/receipt, mine K=2, sync + project thật, UI cùng H/hash | **PASS local, không phải ví extension**: browser gửi 1,000000000000000001 BUD (base units `1000000000000000001`), tx `0xb4fa5ad3611585499b25810aef2a71f7de099e7a58ca1d81e865899c11aba82b`, receipt status `0x1` H82; `sync` checkpoint + `project` H82/hash `0xada425d6f464265671bffb33a91d8c1ff96df296f7c3f7d6214737d7e830526e`, API `/summary` và `/proposals` HTTP200 có proposal ID `74378405486080455849781532937936526702787487559442134032932820098912876457731` Pending, mô tả nguyên bản, tx hash, amount chính xác; Chromium xem cùng proposal tại 1366/390. Ban đầu H79, sau publish H82, snapshotRevision vẫn `002155dc-e257-42c9-aeee-faead2a19731` (không giả đổi revision). Ảnh chụp sau >30 giây thấy `lagging` dù dữ liệu H82 chính xác, đúng freshness; runner đã PASS và dọn cluster. `browser-wallet-flow.json`, `report.json`, ảnh trong archive wallet ở dưới. Vote/queue/execute/cancel cho proposal này không làm; runner đã chạy các hành động này trên proposal seed khác. |
+
+[Archive raw BE08](tv4-20261106-be08-raw.tar.gz) SHA256 `3406b240b6d637134ce0b1153cabaf84fceab307adb62127fb7f40057dfda7dd` gồm `report.json`, `tested-source.json`, `live.json`, `benchmark.json` (20.986 raw samples, 20 freshness samples); giải bằng `tar -xzf ... -C <new-dir>`. [Archive UI raw](tv4-20261106-ui-raw.tar.gz) gồm report, live, browser JSON và hai ảnh PNG. [Archive wallet→worker→API raw](tv4-20261106-wallet-raw.tar.gz) SHA256 `dcf4fd313d3b0a1dd88e41e81fba5f9346b81d10c0a0b20be1555fec978e7320` gồm native report/live, baseline H79 handoff, chứng cứ flow H82, ảnh Chromium 1366/390; ảnh sau publish H82 nên không được hiểu là ảnh H79. Không chứa mật khẩu DB hay khóa ký; chỉ là dữ liệu local Anvil. CI raw artifact vẫn không truy cập được.
+
+PR #21 đã merge Dev trong worktree riêng ở `c002fbefe45214737a23de482e3c85158d742bfe` (giải conflict API freshness/test và live runner), push head `1fec861514b35c7f28df4647aa2cc9aeb9e158c9` lên `feature/tv4-operation`, base Dev; **chưa merge**. [Push TV4 CI 42158101583](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158101583) success 9/9, [PR TV4 CI 42158107991](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107991) success 9/9, [PR BE08 CI 42158107891](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/42158107891) success 1/1 trên merge SHA `e91f55338fbea9647ea65ed42d0ab4e4592e3624`; artifact CI mới digest `5711feeb13e5df1f7afee02a5aca173ed0a2a9e1089d71398f2a984a5adcafb9`, chưa tải raw do 401. **Các run CI trên head này không bao gồm commit chứng cứ wallet bổ sung sau đó; kiểm tra CI lại khi push.** Node22 do PATH sai làm native TV4 lần đầu dừng ngay tại guard `Node.js >=24`, không có cluster hay report; lượt Node24 PASS ở trên. Docker socket không đủ quyền, native PostgreSQL riêng thay Docker.
+
+FE live **PASS chỉ trên local same-deployment** với bốn biến và runner nêu trên; flow ví→receipt→worker→API→UI dùng EIP-1193 adapter tới Anvil unlock, **không thay ví extension**/approval người dùng, testnet network/signer/gas hay clone trên máy khác. Không có GitHub API auth/gh hoặc phiên GitHub đăng nhập, SSH Git chỉ push được; chưa đăng comment, sửa Project, đổi metadata PR hoặc tạo PR qua API. Trang [Projects công khai](https://github.com/orgs/SE2026-21-1/projects) trả 0, không loại trừ project riêng tư. Bảng cập nhật board đề xuất ở [checklist](../tv4-checklist.md).
+
+**Liên kết issue:** [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18), [#37](https://github.com/SE2026-21-1/dao-budget-simulator/issues/37), [#36](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36), [#40](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40), [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41), [#42](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42), [#43](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43), [#44](https://github.com/SE2026-21-1/dao-budget-simulator/issues/44). Chưa đóng issue chỉ vì code/CI đã merge; peer review, FE live và testnet là gate riêng.

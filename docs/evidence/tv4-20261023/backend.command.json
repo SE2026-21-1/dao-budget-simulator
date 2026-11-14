@@ -1,0 +1,16 @@
+{
+  "label": "backend",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=node@24.15.0",
+    "--",
+    "sh",
+    "-c",
+    "npm run typecheck && npm run build && npm run test:be02 && node scripts/check_be01.mjs && node --import tsx --test tests/indexer/storage.test.ts"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 77.558,
+  "log": "backend.txt"
+}

@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import pg from 'pg';
@@ -121,15 +120,16 @@ function checkScan(result, expectedLogs) {
   }
 }
 
-async function cliScan({ root, directory, connectionString, input, expectedLogs, label }) {
+async function cliScan({ root, directory, connectionString, input, expectedLogs, label, lifecycle }) {
   const path = join(directory, `${label}.json`);
+  lifecycle.throwIfInterrupted();
   await writeFile(path, JSON.stringify(input));
   const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('PG') &&
     !['DATABASE_URL', 'RPC_URL', 'TV4_SMOKE_DATABASE_URL', 'TV4_SMOKE_REBUILD_DATABASE_URL', 'NODE_OPTIONS'].includes(key)));
   env.DATABASE_URL = connectionString;
   env.PGOPTIONS = '-c search_path=public';
   let stdout = '', stderr = '';
-  const child = spawn(process.execPath, ['--import', 'tsx', join(root, 'indexer/cli.ts'), '--config', path],
+  const child = lifecycle.spawn(process.execPath, ['--import', 'tsx', join(root, 'indexer/cli.ts'), '--config', path],
     { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] });
   child.stdout.on('data', chunk => { stdout += chunk; });
   child.stderr.on('data', chunk => { stderr += chunk; });
@@ -166,7 +166,8 @@ async function ledger(pool, deploymentId, treasury, expected, readBalance, readS
   return { ...totals, paidRequestIds: payments, balances: balances.filter(item => item.address !== ZeroAddress), totalSupply: String(supply) };
 }
 
-export async function governanceStorageSmoke({ root, urls, manifest, abis, config, batch, head, chainLedger, readBalance, readSupply }) {
+export async function governanceStorageSmoke({ root, urls, manifest, abis, config, batch, head, chainLedger, readBalance, readSupply, lifecycle }) {
+  lifecycle.throwIfInterrupted();
   const pools = urls.map(connectionString => new pg.Pool({ connectionString, max: 1,
     options: '-c search_path=public', connectionTimeoutMillis: 10_000, idleTimeoutMillis: 0 }));
   let directory;
@@ -179,9 +180,9 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     // Also reject IPv4/IPv6 aliases of the same local instance/database.
     assert.notEqual(`${identities[0].port}/${identities[0].database}`, `${identities[1].port}/${identities[1].database}`,
       'Source and rebuild database names must differ on the same local port');
-    directory = await mkdtemp(join(tmpdir(), 'tv4-governance-storage-'));
+    directory = await lifecycle.temporaryDirectory(join(tmpdir(), 'tv4-governance-storage-'));
     const sourceHashes = {};
-    for (const path of ['scripts/governance_storage.mjs', 'scripts/smoke_governance.mjs', 'indexer/config.ts', 'indexer/rpc.ts', 'indexer/reader.ts',
+    for (const path of ['scripts/governance_storage.mjs', 'scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'indexer/config.ts', 'indexer/rpc.ts', 'indexer/reader.ts',
       'indexer/scanner.ts', 'indexer/storage.ts', 'indexer/cli.ts', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'database/migrations/001_initial.sql', 'package-lock.json']) {
       sourceHashes[path] = sha(await readFile(join(root, path)));
     }
@@ -239,7 +240,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
       scope: 'Real PostgreSQL trigger raises on second header INSERT; failed batch rolls back, prior finite batches unchanged.' });
 
     phase = 'cli_remaining_fixed_range';
-    const continuation = await cliScan({ root, directory, connectionString: urls[0],
+    const continuation = await cliScan({ root, directory, connectionString: urls[0], lifecycle,
       input: input(deploymentIds[0], midpoint + 1n, config.toBlock), expectedLogs: batch.logs.filter(item => item.log.blockNumber > midpoint), label: 'remaining' });
     result.phases.push({ phase, state: 'passed', ...continuation,
       scope: 'Explicit finite range across process boundary, not checkpoint discovery/resume.' });
@@ -276,14 +277,14 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     assert.deepEqual(await snapshot(pools[0], deploymentIds[0]), stored);
     result.phases.push({ phase, state: 'passed', report: rerun, digest: stored.digest });
     phase = 'cli_new_process_full_rerun_idempotent';
-    const restart = await cliScan({ root, directory, connectionString: urls[0], input: input(deploymentIds[0], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'restart' });
+    const restart = await cliScan({ root, directory, connectionString: urls[0], input: input(deploymentIds[0], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'restart', lifecycle });
     assert.equal(restart.exitCode, 2, 'Unknown initialization topics must produce CLI exit 2');
     assert.ok(restart.report.committedBatches.every(item => item.insertedBlocks === 0 && item.insertedEvents === 0));
     assert.deepEqual(await snapshot(pools[0], deploymentIds[0]), stored);
     result.phases.push({ phase, state: 'passed', ...restart, digest: stored.digest });
 
     phase = 'second_fresh_database_raw_replay';
-    const replay = await cliScan({ root, directory, connectionString: urls[1], input: input(deploymentIds[1], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'rebuild' });
+    const replay = await cliScan({ root, directory, connectionString: urls[1], input: input(deploymentIds[1], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'rebuild', lifecycle });
     const rebuilt = await snapshot(pools[1], deploymentIds[1]);
     assert.deepEqual(rebuilt, stored, 'Second fresh database raw replay differs');
     assert.deepEqual(await ledger(pools[1], deploymentIds[1], manifest.contracts.Treasury.address.toLowerCase(), chainLedger, readBalance, readSupply), sqlLedger);
@@ -311,7 +312,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     throw new Error(`TV4 storage smoke failed in ${phase} (${code})${detail}; no database credentials are included.`);
   } finally {
     const cleanup = await Promise.allSettled(pools.map(pool => pool.end()));
-    if (directory) await rm(directory, { recursive: true, force: true });
+    if (directory) await lifecycle.removeDirectory(directory);
     if (cleanup.some(item => item.status === 'rejected')) throw new Error('TV4 storage smoke pool cleanup failed');
   }
 }

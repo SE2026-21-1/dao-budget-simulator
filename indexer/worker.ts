@@ -6,7 +6,7 @@ import { sync, SyncError } from './syncer.js';
 import { project } from './projection/projector.js';
 import type { IndexerConfig } from './types.js';
 
-const transient = new Set(['RPC_UNAVAILABLE','CHECKPOINT_HEAD_BEHIND','REORG_RETRY','BLOCK_CHANGED']);
+const transient: Record<string, true> = { RPC_UNAVAILABLE: true, CHECKPOINT_HEAD_BEHIND: true, REORG_RETRY: true, BLOCK_CHANGED: true };
 /** One serial writer loop; shutdown aborts HTTP, body reads and backoff. */
 export async function worker(config: IndexerConfig, pool: Pool, signal: AbortSignal,
   emit: (value: unknown) => void, rpc: RpcTransport = new HttpRpc(config.rpcUrl, 5000, { signal })): Promise<void> {
@@ -25,7 +25,7 @@ export async function worker(config: IndexerConfig, pool: Pool, signal: AbortSig
       if (signal.aborted) return;
       const info = error instanceof SyncError ? error.report.error! : error instanceof StorageError ? {code:error.code,message:error.message,retryable:error.retryable} : publicError(error);
       emit({ type: 'worker_error', ...info });
-      if (!transient.has(info.code) && !('retryable' in info && info.retryable)) throw error;
+      if (!Object.hasOwn(transient, info.code) && !('retryable' in info && info.retryable)) throw error;
     }
     try { await pause(config.pollIntervalMs ?? 1000, signal); } catch { if (!signal.aborted) throw new IndexerError('WORKER_FAILED', 'Worker timer failed.'); }
   }

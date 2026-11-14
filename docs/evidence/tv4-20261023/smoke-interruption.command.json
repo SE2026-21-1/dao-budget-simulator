@@ -1,0 +1,11 @@
+{
+  "label": "smoke-interruption",
+  "command": [
+    "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+    "--test",
+    "tests/smoke/interruption.test.mjs"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 47.452,
+  "log": "smoke-interruption.txt"
+}

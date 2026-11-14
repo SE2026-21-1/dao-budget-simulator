@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "kind": "qa05-disposition",
+  "generatedAt": "2026-11-14T13:35:12.141Z",
+  "generatorCommit": "233e1193d5ce7aa399d5551b36916e74f16bbc66",
+  "sourceHashes": {
+    "scripts/check_qa05_disposition.mjs": "c9ee87f0a36d20df18e73589aa14ebf9facb1cb5e42a1f08cf6873c7cf056f0e",
+    "scripts/qa05_actor_transition_cases.mjs": "3adf2842510af3e1ab1e2cfb39bf07f7cffee141becf1d490fc47f6ca250111d",
+    "scripts/check_qa05_variants.mjs": "f42c86c38ac688ec685db87b2a4750fa0ac08eb66366082732a85f01a5af218d"
+  },
+  "scope": "Review-based disposition only; no new chain, browser, extension-wallet or testnet execution. Original campaign attribution and historical failures remain unchanged.",
+  "sourceIndex": {
+    "path": "docs/evidence/tv4-20261113-qa05-live.json",
+    "sha256": "d1181fa0c13c44cbc7c5fb22e698cec9b9dec2b276f45e991291db18183dc933"
+  },
+  "rawArchive": {
+    "path": "docs/evidence/tv4-20261113-qa05-live-raw.tar.gz",
+    "sha256": "b70beafc358b7132671d099c8611b3af0d8447366fa5b5919c7a98cc8a3fb7af"
+  },
+  "review": {
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+    "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+    "scope": "TV1 SC10, SC06 v3 and Ready(single) only; not whole-PR approval"
+  },
+  "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+  "campaigns": [
+    {
+      "sourceCommit": "3d539f141c5deca3ba3c3b2369fe8c891fcb64d7",
+      "cases": 184,
+      "counts": {
+        "PASS": 184,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 0,
+        "BLOCKED": 0
+      },
+      "scenarioReceipts": 958,
+      "browserCheckpoints": 422
+    },
+    {
+      "sourceCommit": "03b86960e692ccbb87f265ca07ba84fe90864ff1",
+      "cases": 4,
+      "counts": {
+        "PASS": 4,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 0,
+        "BLOCKED": 0
+      },
+      "scenarioReceipts": 40,
+      "browserCheckpoints": 4
+    }
+  ],
+  "preconditions": [
+    {
+      "label": "TC06/A/execute/Ready(single)",
+      "actor": "A",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/A/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/B/execute/Ready(single)",
+      "actor": "B",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/B/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/C/execute/Ready(single)",
+      "actor": "C",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/C/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/D/execute/Ready(single)",
+      "actor": "D",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/D/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/funding/execute/Ready(single)",
+      "actor": "funding",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/funding/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/deployer/execute/Ready(single)",
+      "actor": "deployer",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/deployer/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/caller/execute/Ready(single)",
+      "actor": "caller",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/caller/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/recipient/execute/Ready(single)",
+      "actor": "recipient",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/recipient/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/outsider/execute/Ready(single)",
+      "actor": "outsider",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/outsider/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    },
+    {
+      "label": "TC06/recipient2/execute/Ready(single)",
+      "actor": "recipient2",
+      "status": "N/A",
+      "disposition": "production-unreachable",
+      "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+      "reviewedCommit": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "assumptions": "Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.",
+      "reason": "Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.",
+      "reachableControl": "TC06/recipient2/execute/role-first-single-Unset",
+      "previousStatus": "BLOCKED"
+    }
+  ],
+  "counts": {
+    "reachableCases": {
+      "PASS": 188,
+      "FAIL": 0,
+      "SKIP": 0,
+      "N/A": 0,
+      "BLOCKED": 0
+    },
+    "preconditions": {
+      "PASS": 0,
+      "FAIL": 0,
+      "SKIP": 0,
+      "N/A": 10,
+      "BLOCKED": 0
+    },
+    "total": {
+      "PASS": 188,
+      "FAIL": 0,
+      "SKIP": 0,
+      "N/A": 10,
+      "BLOCKED": 0
+    }
+  },
+  "note": "Cross-campaign disposition inventory, not one combined campaign or ledger. N/A does not count as PASS. Historical earlierFailedRuns are retained in sourceIndex and are not included in successful-campaign counts. Ready(batch), ETA, replay, mutation, rollback, single-Unset receipts and bootstrap negative controls remain required and unchanged."
+}

@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os';
 import { performance } from 'node:perf_hooks';
 import { metrics } from './be08_measurement.mjs';
 import { summarizeOutageCalls } from './be08_rpc_outage.mjs';
+import { startDiagnostics } from './be08_diagnostics.mjs';
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -19,18 +20,31 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     scope: 'Owned Anvil, real CLI worker, 100 proposals/1000 votes; no production/testnet SLA. Outage is excluded from normal-RPC samples.' };
   let offline = false, child, stdout = '', stderr = '', stopping = false, fatal;
   const attempts = [];
+  const rpcSamples = state.rpcSamples = [];
+  let inFlight = 0;
   const proxy = createServer(async (req, res) => {
+    let observation;
     try {
       let text = ''; for await (const chunk of req) text += chunk;
       const body = JSON.parse(text);
+      observation = { at: new Date().toISOString(), monotonicMs: performance.now(), method: body.method,
+        selector: body.method === 'eth_call' ? body.params?.[0]?.data?.slice(0, 10) : null,
+        id: body.id, offline, inFlight: ++inFlight };
       if (offline) {
         attempts.push({ at: new Date().toISOString(), monotonicMs: performance.now(), method: body.method, params: body.params, id: body.id, httpStatus: 503 });
+        observation.httpStatus = 503;
         res.writeHead(503); res.end(); return;
       }
       const result = await rpc(body.method, body.params);
+      observation.httpStatus = 200;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ jsonrpc: '2.0', id: body.id, result }));
-    } catch { res.writeHead(503); res.end(); }
+    } catch (error) {
+      if (observation) { observation.httpStatus = 503; observation.error = error.message; }
+      res.writeHead(503); res.end();
+    } finally {
+      if (observation) { observation.elapsedMs = performance.now() - observation.monotonicMs; rpcSamples.push(observation); inFlight--; }
+    }
   });
   proxy.listen(0, '127.0.0.1'); await once(proxy, 'listening');
   const directory = await scope.temporaryDirectory(join(tmpdir(), 'dao-be08-worker-'));
@@ -42,6 +56,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
   child = scope.spawn(process.execPath, ['--import', 'tsx', 'indexer/cli.ts', '--config', file, '--worker'],
     { cwd: root, env: { ...process.env, DATABASE_URL: dbUrl }, stdio: ['ignore', 'pipe', 'pipe'] });
   const closed = once(child, 'close');
+  const stopDiagnostics = startDiagnostics(dbUrl, deploymentId, child.pid, state);
   child.on('error', error => { fatal = error; });
   child.stdout.setEncoding('utf8'); child.stderr.setEncoding('utf8');
   let pending = '';
@@ -126,7 +141,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     for (let i = 0; i < count; i++) { await sample(options); await sleep(150 + (i * 173) % 850); }
     state[options.phase] = metrics(state.samples.filter(s => s.phase === options.phase && s.status === 'PASS').map(s => s.elapsedMs));
   }
-  async function outage(base) {
+  async function outage(base, send) {
     const result = state.outage = { status: 'RUNNING', excludedFromNormalRpc: true, httpAttempts: attempts };
     await waitFor(async () => (await get(base, '/health')).context.sync.status === 'synced');
     state.normalWorkerErrors = state.workerEvents.filter(e => e.type === 'worker_error');
@@ -148,8 +163,12 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
       result.recoveredHealth = await get(base, '/health');
       return result.recoveredHealth.context.sync.status === 'synced';
     });
+    // A fresh confirmed transfer must publish after RPC returns; a synced heartbeat alone is insufficient.
+    await sample({ phase: 'recovery', base, send });
+    result.publishedTransactionHash = state.samples.at(-1).transactionHash;
+    result.publication = state.samples.at(-1).publication;
     result.recoveryMs = performance.now() - restored; result.status = 'PASS';
-    state.normal = metrics(state.samples.filter(s => s.status === 'PASS').map(s => s.elapsedMs));
+    state.normal = metrics(state.samples.filter(s => (s.phase === 'idle' || s.phase === 'load') && s.status === 'PASS').map(s => s.elapsedMs));
     state.status = state.errors.length === 0 && state.idle.count >= 10 && state.load.count >= 10 ? 'PASS' : 'FAIL';
     assert.equal(state.status, 'PASS');
   }
@@ -161,7 +180,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
       const [code, signal] = await closed; state.workerExit = { code, signal };
       assert.equal(code, 0, 'Worker must shut down cleanly'); assert.equal(signal, null);
     }
-    finally { clearTimeout(timer); proxy.closeAllConnections(); await new Promise(resolve => proxy.close(resolve)); }
+    finally { clearTimeout(timer); await stopDiagnostics(); proxy.closeAllConnections(); await new Promise(resolve => proxy.close(resolve)); }
     state.stdout = stdout; state.stderr = stderr;
   }
   return { ready, samples, outage, close, check };

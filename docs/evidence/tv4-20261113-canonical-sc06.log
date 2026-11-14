@@ -1,0 +1,40 @@
+✔ canonical receipts decode with TV2 and link calldata/IDs, ledger and Pending cancel (1808.622686ms)
+✔ SC06 raw logs replay through TV2 classify/buildModel/evaluate at canonical H (113.43851ms)
+✔ pinned chain getters reject coupled manifest and audit changes (31.73618ms)
+✔ rejects isolated archived quorum(snapshot) mutation against receipt-derived historical supply (1786.489161ms)
+✔ reject changed fixture: generationHash (264.946596ms)
+✔ reject changed fixture: missingGenerationHash (25.686081ms)
+✔ reject changed fixture: invalidCommit (28.917556ms)
+✔ reject changed fixture: wrongCommit (28.706322ms)
+✔ reject changed fixture: phase1CommitNotContainingGenerator (72.678408ms)
+✔ reject changed fixture: manifestHash (1027.307349ms)
+✔ reject changed fixture: coupledConfigChange (1541.695814ms)
+✔ reject changed fixture: coupledSeedChange (1549.991113ms)
+✔ reject changed fixture: auditHead (1175.834618ms)
+✔ reject changed fixture: abiVersion (1299.260297ms)
+✔ reject changed fixture: contractAddress (1245.576396ms)
+✔ reject changed fixture: wrongLogBlock (1498.49203ms)
+✔ reject changed fixture: wrongTransactionBlock (1466.980828ms)
+✔ reject changed fixture: auditHolder (1584.025371ms)
+✔ reject changed fixture: runtime (1707.492094ms)
+✔ reject changed fixture: amount (2045.433103ms)
+✔ reject changed fixture: descriptionWhitespace (2046.117497ms)
+✔ reject changed fixture: unicodeNormalization (1999.023372ms)
+✔ reject changed fixture: descriptionHash (1920.523431ms)
+✔ reject changed fixture: proposalId (1562.87819ms)
+✔ reject changed fixture: operationId (1559.377574ms)
+✔ reject changed fixture: salt (1655.734132ms)
+✔ reject changed fixture: blockHash (1558.310059ms)
+✔ reject changed fixture: missingReceipt (1570.243247ms)
+✔ reject changed fixture: rawLogData (1524.010089ms)
+✔ reject changed fixture: logIndex (1445.515807ms)
+✔ reject changed fixture: doubleCountedOutflow (1559.757823ms)
+✔ reject changed fixture: canceledOperation (1566.920535ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41249.023894

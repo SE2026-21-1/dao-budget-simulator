@@ -1,0 +1,63 @@
+name: Install pinned Foundry
+# Retry the verified release on 5xx, then verify the official OCI image if
+# GitHub Releases remains unavailable. Never run an unverified fallback.
+description: Install verified Foundry 1.8.5 with bounded retries and OCI fallback
+runs:
+  using: composite
+  steps:
+    - id: first
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.first.outcome == 'failure'
+      shell: bash
+      run: sleep 20
+    - id: second
+      if: steps.first.outcome == 'failure'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.second.outcome == 'failure'
+      shell: bash
+      run: sleep 60
+    - id: third
+      if: steps.second.outcome == 'failure'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - name: Verify and extract pinned official image
+      if: steps.third.outcome == 'failure'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        image=ghcr.io/foundry-rs/foundry@sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043
+        printf '%s' "$GH_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+        gh attestation verify "oci://$image" \
+          --repo foundry-rs/foundry \
+          --signer-workflow foundry-rs/foundry/.github/workflows/docker-publish.yml
+        docker pull "$image"
+        container=$(docker create "$image")
+        trap 'docker rm -f "$container" >/dev/null 2>&1 || true' EXIT
+        bin_dir="$RUNNER_TEMP/foundry-verified"
+        mkdir -p "$bin_dir"
+        for tool in forge cast anvil; do
+          docker cp "$container:/usr/local/bin/$tool" "$bin_dir/$tool"
+          chmod +x "$bin_dir/$tool"
+        done
+        echo "$bin_dir" >> "$GITHUB_PATH"
+    - name: Verify installed versions
+      shell: bash
+      run: |
+        for tool in forge cast anvil; do
+          version="$($tool --version)"
+          echo "$version"
+          [[ "$version" == "$tool Version: 1.8.5"* ]] || exit 1
+        done

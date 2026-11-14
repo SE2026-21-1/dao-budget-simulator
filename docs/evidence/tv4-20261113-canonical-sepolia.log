@@ -1,0 +1,36 @@
+✔ clean production deployment audits bootstrap before renouncing and final roles before funding (6426.766324ms)
+✔ bootstrap gate rejects missing Governor executor before renounce or funding (2862.327313ms)
+✔ bootstrap gate rejects extra holder discovered outside the demo account list before renounce or funding (2709.325148ms)
+✔ bootstrap gate rejects revoked unknown historical holder before renounce or funding (2823.045329ms)
+✔ bootstrap gate rejects public zero-address executor before renounce or funding (3573.64833ms)
+✔ bootstrap gate rejects wrong real constructor link before renounce or funding (3234.085588ms)
+✔ bootstrap gate rejects wrong deployed compiler code before renounce or funding (3354.160218ms)
+✔ bootstrap gate rejects M-01 stale scheduleBatch survives revoked bootstrap proposer before renounce or funding (3651.047846ms)
+✔ bootstrap gate rejects canceled bootstrap operation history remains forbidden before renounce or funding (3321.912937ms)
+✔ bootstrap gate rejects Done bootstrap operation history remains forbidden before renounce or funding (3417.730716ms)
+✔ bootstrap gate rejects silently truncated operation logs cannot hide canceled bootstrap history before renounce or funding (3357.444081ms)
+✔ bootstrap gate rejects wrong minDelay after legitimate scheduled self-update before renounce or funding (3115.099499ms)
+✔ bootstrap gate rejects missing runtime RPC evidence fails closed before renounce or funding (2323.777758ms)
+✔ bootstrap gate rejects missing complete log evidence fails closed before renounce or funding (2490.357208ms)
+✔ wrong actual chain rejects before deployment (833.334511ms)
+✔ public role map locks chain, source, owner and distinct nonzero accounts (24.781653ms)
+✔ network identity rejects wrong chain and wrong genesis (2.509889ms)
+✔ local loopback and empty-unforked chain31337 guards remain intact (7.730091ms)
+✔ K2 uses two descendants and rejects reorganized receipt (2.64502ms)
+✔ journal refuses overwrite and CLI rejects unknown or duplicate flags (44.333166ms)
+✔ already signal-exited owned child cleanup completes and retains failure evidence (76.83639ms)
+✔ real encrypted JSON keystore signs approved sender and rejects mismatches (12486.952784ms)
+✔ synthetic chain exercises full constructors/runtime/ABI, pre-renounce, final roles and funding (19367.664472ms)
+✔ pre-renounce fails closed: unknownHistoricalHolder; no renounce/funding (3696.074824ms)
+✔ pre-renounce fails closed: omittedRoleLogs; no renounce/funding (3347.784425ms)
+✔ pre-renounce fails closed: missingExecutor; no renounce/funding (3572.326898ms)
+✔ pre-renounce fails closed: wrongRuntime; no renounce/funding (2861.736657ms)
+✔ pre-renounce fails closed: nonceRace; no renounce/funding (6378.190054ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 52556.131178

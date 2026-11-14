@@ -1,0 +1,23 @@
+{
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "scripts/check_tv4_native.mjs",
+    "--postgres-bin",
+    "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin",
+    "--output",
+    "/home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261024-acceptance/native-interruption"
+  ],
+  "signal": "SIGTERM",
+  "barrier": "owned pg_ctl server started stdout",
+  "exitCode": 143,
+  "portClosed": true,
+  "cleanup": {
+    "status": "PASS",
+    "clusterStopped": true,
+    "temporaryFilesRemoved": true,
+    "errors": []
+  },
+  "status": "PASS"
+}

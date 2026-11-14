@@ -5,9 +5,9 @@ import { quantity } from '../rpc.js';
 import { runtime } from '../recovery.js';
 import { IndexerError } from '../errors.js';
 import type { RpcTransport } from '../rpc.js';
-import { checkpoint, verifyMetadata } from '../storage.js';
+import { checkpoint, invalidatePublication, verifyMetadata } from '../storage.js';
 import { confirmationDepth, scopeHash } from '../scope.js';
-import type { IndexerConfig, JsonObject, NormalizedLog } from '../types.js';
+import type { Checkpoint, IndexerConfig, JsonObject, NormalizedLog } from '../types.js';
 import { canonical, reconcile } from './chain.js';
 import { buildModel, classify, requireProjection, type Evaluated, type Model, type SourceEvent } from './model.js';
 
@@ -27,13 +27,23 @@ export interface ProjectionReport {
   rawDecodeIssues: number;
 }
 
-/** Replays through the latest verified raw H and publishes all derived tables atomically.
- * Full replay is intentional for the BE04 MVP; no external metadata/previous projection is used.
- */
+class ProjectionReorgError extends IndexerError {
+  constructor(readonly checkpoint: Checkpoint) {
+    super('PROJECTION_REORG', 'Projection H is no longer canonical; publication must be invalidated.');
+  }
+}
+
+/** Replays the verified raw prefix and atomically publishes one reconciled H/hash. */
 export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
   try { return await projectTransaction(config, rpc, pool); }
   catch (error) {
     // The failed publication transaction has released its lock/connection first.
+    if (error instanceof ProjectionReorgError) {
+      // A verified mismatch is already evidence of a fork. Persist the gate
+      // before another RPC request can fail and leave known-orphan data serving.
+      await new PostgresStorage(pool).recoverCheckpoint(config, rpc, error.checkpoint);
+      throw new IndexerError('REORG_RETRY', 'Reorg detected during projection; recovery persisted.');
+    }
     const state = (await pool.query("SELECT to_jsonb(d)->'indexer_state' AS s FROM deployments d WHERE deployment_id=$1", [config.deploymentId])).rows[0]?.s;
     if (state && state.phase !== 'rebuild_required' && quantity(await rpc.call('eth_chainId', []), 'chainId') === config.chainId) {
       const storage = new PostgresStorage(pool);
@@ -58,12 +68,14 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
 
 async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
   const client = await pool.connect();
+  let cp: Checkpoint | null = null;
+  let legacy = false;
   try {
     await client.query('BEGIN');
     // The same lock as BE03 prevents raw writes/redecode during reconciliation.
     await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
     await verifyMetadata(client, config, true);
-    const cp = await checkpoint(client, config);
+    cp = await checkpoint(client, config);
     requireProjection(cp, 'A verified BE03 raw checkpoint is required before BE04 projection.');
     const meta = (
       await client.query(`SELECT snapshot_revision::text FROM deployments WHERE deployment_id=$1`, [
@@ -82,6 +94,7 @@ async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool
       await client.query('SELECT sync_status FROM checkpoints WHERE deployment_id=$1', [config.deploymentId])
     ).rows[0];
     const recovery = await runtime(client, config.deploymentId);
+    legacy = recovery === null;
     requireProjection(status.sync_status !== 'rebuild_required' && recovery?.phase !== 'rebuild_required' && recovery?.phase !== 'recovering', 'Recovery gate blocks publication.');
     const old = (
       await client.query('SELECT block_number::text FROM projection_checkpoints WHERE deployment_id=$1', [
@@ -195,6 +208,22 @@ async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool
     };
   } catch (error) {
     await client.query('ROLLBACK');
+    if (legacy && cp && error instanceof IndexerError && error.code === 'PROJECTION_REORG') {
+      try {
+        await client.query('BEGIN');
+        await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+        await verifyMetadata(client, config, true);
+        const current = await checkpoint(client, config);
+        if (current?.number === cp.number && current.hash === cp.hash)
+          await invalidatePublication(client, config, error.code);
+        await client.query('COMMIT');
+      } catch (barrierError) {
+        await client.query('ROLLBACK');
+        throw barrierError;
+      }
+    }
+    if (!legacy && cp && error instanceof IndexerError && error.code === 'PROJECTION_REORG')
+      throw new ProjectionReorgError(cp);
     if (error instanceof IndexerError) throw error;
     if (error instanceof Error && error.name === 'StorageError') throw error;
     throw new IndexerError(

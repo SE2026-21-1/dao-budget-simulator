@@ -1,0 +1,278 @@
+# TV4 Sepolia deployment path — 14 November 2026
+
+## Scope and status
+
+Separate path for **Ethereum Sepolia 11155111**, public read/broadcast RPC
+`https://ethereum-sepolia-rpc.publicnode.com`, **K=2 descendants** (not consensus
+finality), Solidity 0.8.37 / optimizer 200 / Osaka, voting delay/period 60/300s,
+Timelock 120s. No local guard is relaxed: `deploy_local.mjs` still requires a
+new, empty, unforked, numeric-loopback Anvil 31337.
+
+This implementation is preparation, **not a testnet deployment or acceptance**.
+No signer owner/public approved account map, native-gas authorization or signed
+Sepolia transactions have been supplied. Actual deployment SHA and contract
+addresses remain UNKNOWN. No Executed/Defeated claim is made. Do not replace
+these missing addresses with local fixtures, the synthetic preflight map, or
+fork contract addresses.
+
+Current #20 decision and original review:
+- [TV4 network decision](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6787670054).
+- [TV1 local security/deployment PASS; testnet BLOCKED](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6763792761).
+- [12 November testnet gate](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6818101258).
+
+## Public address-role map
+
+Provide a public JSON object with **only** these keys:
+
+| Field | Required value |
+| --- | --- |
+| `format` | `dao-budget-sepolia-accounts-v1` |
+| `chainId` | string `11155111` |
+| `approvedSourceCommit` | full accepted deployment Git HEAD SHA |
+| `signerOwner` | named responsible signer owner; not a claim of peer approval |
+| `accounts` | exactly A, B, C, D, funding, deployer, caller, recipient, outsider |
+
+All nine addresses must be valid, distinct and nonzero. A/B/C/D initially hold
+400/300/200/100 GOV and sign their own delegation. `funding` receives 20000 BUD
+and signs the 10000 BUD seed only after the final role gate. `deployer` deploys,
+grants and renounces bootstrap admin. Caller/recipient/outsider need no deployment
+signer; their later campaign use must be authorized separately. Do not put a
+private key, mnemonic, password, RPC credential or keystore contents in this map.
+Unexpected fields are rejected before the map is journaled.
+
+## Current owner acceptance checklist — deployment BLOCKED
+
+TV1's [technical delta approval](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+reviews `94d5367c8d60326b9b9f7de09265be531743f3b8` for SC10, SC06 v3 and
+Ready(single) only. Do not request the completed review again. The owner must
+select and publicly accept the **exact full integrated deployment revision**;
+neither the reviewed SHA nor a historical evidence SHA automatically selects it.
+That selection is **OWNER-REQUIRED / missing**. Any source or dependency changes
+relative to the reviewed revision need review of their exact delta, not a rerun
+of the already accepted review.
+
+All unchecked items below are owner-required and currently missing; none is
+implied by a fork run, technical review, or this runbook:
+
+- [ ] Publish the selected full integrated SHA and acceptance of its exact
+  contracts, locked dependencies, compiler/settings and deployment scripts.
+- [ ] Publish the nine-address map above under the current configuration:
+  A/B/C/D, funding, deployer, caller, recipient, outsider. No real addresses have
+  been supplied; do not substitute synthetic accounts.
+- [ ] Name the responsible custodian for **each** of A, B, C, D, funding and
+  deployer (one person may own several, but record each mapping). Each custodian
+  confirms custody and ability to sign for the matching public address, dedicated
+  testnet-only use, and exclusive deployment/campaign use with no concurrent
+  wallet, script or other sender. Never publish custody secrets.
+- [ ] Confirm use of the reviewed encrypted-keystore/inherited-FD signing path
+  below, address matching and secure local custody; publish confirmation only,
+  not keystores, passwords, keys, private configuration or FD contents.
+- [ ] Name the native-ETH funder and record actual Sepolia native balances for all
+  six signers at a public block/hash. Supply actual-map preflight per-transaction
+  estimates, headroom and per-signer requirements; explicitly accept that fork
+  totals are not remote gas budgets and current remote estimation remains required.
+- [ ] Approve numeric maximum gas price/fee cap in wei and cumulative conservative
+  native-cost budget in wei, with sufficient balance for each signer. Identify
+  funding transfers/receipts; BUD seed funding is not native gas funding.
+- [ ] Explicitly authorize **broadcast**, naming owner, selected full SHA, map,
+  Ethereum Sepolia chainId `11155111`, the public RPC below, fee cap and total
+  budget. Source acceptance or faucet funding alone is not broadcast permission.
+- [ ] Accept pending/latest/expected nonce checks and exclusive signing through
+  completion; on nonce mismatch, RPC/network/chain/genesis mismatch, timeout,
+  ambiguous send, missing history or audit failure: **stop, preserve evidence,
+  no resend and no blind rerun**. Reconcile the recorded unsigned request,
+  sender, nonce, any hash, chain transaction and receipt against canonical chain
+  state before any owner/reviewer-approved recovery. A timeout is not proof
+  that nothing was sent; do not issue a replacement merely because no hash returned.
+
+Source merge acceptance is separate from deployment authorization and testnet
+acceptance. Testnet requires the actual deployment manifest/audits and real-time
+Executed/Defeated evidence below. Receiver-clone #42, extension/API/UI #19/#41
+and release acceptance remain independent gates; none is waived by source merge,
+this technical approval, a fork PASS or a testnet deployment.
+
+## Secure signing, without requesting secrets
+
+`deploy_sepolia.mjs` uses the real ethers encrypted JSON keystore implementation.
+The signer owner runs it locally, retains the encrypted keystores, and supplies
+passwords only via inherited file descriptors >=3. Passwords/private keys are
+never arguments, environment variables, manifest fields, or chat/GitHub inputs.
+Decrypted wallets remain in process memory only. No demo private key or unlocked
+remote account is used. An owner may create/import the encrypted keystores with
+`cast wallet import` interactively; do not use `--private-key` or shell history.
+
+A private local signer-config JSON has exactly six entries A/B/C/D/funding/deployer.
+Each entry contains `{ "path": "/owner/local/encrypted-keystore.json", "passwordFd": 3 }`.
+Use a different inherited FD per password if necessary. It contains paths and FD
+numbers, not passwords or decrypted keys. Restrict access to the owner; do not
+commit or upload it. Keystore addresses are checked against the approved public
+map before any broadcast. Owner-controlled inherited descriptors may be opened
+from a protected local password manager/file; example shell redirection below
+refers to a locally managed secret, not a request to publish one.
+
+```bash
+export PATH=/home/ptdung/.nvm/versions/node/v24.15.0/bin:$PATH
+# On a clean checkout of the accepted SHA, initialized submodules, npm ci:
+forge build
+# Obtain reviewed gas caps from the preflight; APPROVED_* are public permissions.
+node scripts/deploy_sepolia.mjs \
+  --accounts /owner/public-sepolia-accounts.json \
+  --keystores /owner/private-signer-config.json \
+  --output /owner/new-sepolia-deployment.json \
+  --approve-chain 11155111 --approve-source "$APPROVED_SOURCE_SHA" \
+  --max-fee-wei "$APPROVED_MAX_GAS_PRICE_WEI" \
+  --max-total-cost-wei "$APPROVED_TOTAL_NATIVE_GAS_BUDGET_WEI" \
+  3< /owner/protected-local-password-source
+node scripts/check_roles_sepolia.mjs --manifest /owner/new-sepolia-deployment.json
+```
+
+The broadcast CLI hardcodes the selected public endpoint and chain/genesis, rejects
+dirty tracked files, requires explicit exact-SHA/chain/budget permission, and will
+not accept a fork manifest as a remote deployment. Receipt wait never resends.
+Use the manifest's source SHA checkout when checking later; the checker deliberately
+rejects a different HEAD or changed source/compiler/ABI/script bytes.
+
+## Signer-independent read-only/fork preparation
+
+```bash
+# New output paths only. '-' creates conspicuously UNAPPROVED synthetic public addresses.
+node scripts/preflight_sepolia.mjs --accounts - --output /tmp/sepolia-preflight.json
+# Once the owner's public map is available, estimate that actual address/nonce path:
+node scripts/preflight_sepolia.mjs --accounts /owner/public-sepolia-accounts.json \
+  --output /tmp/sepolia-approved-map-preflight.json
+```
+
+The preflight records all remote JSON-RPC requests/results/errors and a pinned
+K2 H/hash. Remote transport refuses send/Anvil methods. It attempts GOV creation
+estimation with the actual compiled initcode on remote Sepolia at H using an
+explicit synthetic balance state override (no state change); unsupported overrides
+are recorded, never replaced with fictional remote success. It then starts a
+caller-owned Anvil fork at that exact block/hash, verifies fork identity, impersonates
+only on that disposable fork, sets synthetic gas balances there, and runs the entire
+five-contract deployment, grants, role audits, renounces, delegations and funding.
+The immutable genesis header is fetched directly from the verified public upstream,
+not through Anvil's archive-state loader (PublicNode can serve the genesis header
+while pruning genesis state). All execution/state requests still use the actual
+pinned fork; fork metadata and its H/hash must match the public upstream.
+Each of the 17 transactions has its own current-state estimate and actual receipt.
+Two fork blocks with explicit one-second intervals are mined **after the transaction receipt is mined**, never on Sepolia;
+this avoids racing automining and accidentally producing only one descendant. Fork
+receipt/K2 waits are bounded at 30 seconds. The shared owned-process lifecycle records
+child closure at spawn, handles already signal-exited children, and escalates bounded
+SIGTERM to SIGKILL when needed. Failure reports and the full fork journal are retained.
+
+These are real pinned Sepolia **state-fork** estimates but Anvil **Osaka** execution;
+they are not a complete proof of the remote chain's later fork/gas rules. A successful
+remote GOV estimate proves that constructor only at the recorded H/override. The
+signed path separately runs `eth_estimateGas` on the real endpoint immediately
+before every transaction. It applies 20% gas-limit headroom, checks the pending
+block limit, current gas price against owner cap, balance, cumulative conservative
+cost and pending/latest/expected campaign nonce. It refuses unexpected concurrent
+signer activity. Do not copy the old local fixed 15M gas limit to testnet. Native gas
+reported by the synthetic fork is not evidence that a real account is funded.
+
+## Constructors, provenance, irreversible gates
+
+The locked local configuration and shared provenance/role/operation audit are reused,
+not copied. Local audit defaults remain chain31337; a separate strict Sepolia wrapper
+supplies the trusted network policy and K2 audit height. The wrapper also audits a
+canonical tip snapshot so the two confirmation-gap blocks cannot conceal roles or
+operations; K2 and tip hashes are rechecked. Audits are observations at H, not an
+atomic lock against another signer. Exclusive owner control and nonce enforcement
+are required throughout bootstrap.
+
+| Contract | Constructor |
+| --- | --- |
+| GOV | A, B, C, D |
+| BUD | funding |
+| Treasury | BUD, deployer |
+| Timelock | 120, empty proposer/executor arrays, deployer |
+| Governor | GOV, Treasury, Timelock |
+
+The manifest binds exact HEAD, Solidity compiler/settings/locked OZ revision, source
+hashes, artifacts, complete compiler ABI semantics/hashes, initcode and constructor
+transaction, runtime identity (compiler immutable-reference normalization plus actual
+linked getters), deployment receipts/blocks and contract ABI versions. Testnet script
+hashes include the durable-journal and owned-process lifecycle helpers. All observations are pinned by H/hash;
+canonical receipt replay for **every transaction in every scanned block** cross-checks
+role and Timelock operation `eth_getLogs`, so omissions, history outages, unknown or
+temporarily granted/revoked holders, public executor, changed admins, stale/canceled/
+executed bootstrap operations, wrong code/constructors/configuration all fail closed.
+RPC pruning or provider range limits are blockers, not permission to skip history.
+
+Before first renounce, bootstrap audit requires full final roles plus only the
+approved deployer DEFAULT_ADMIN_ROLE; BUD remains entirely with funding and Treasury
+is empty. The complete gate is repeated immediately before the first renounce.
+Final audit gates funding after both renounces, and again after delegation. Final:
+
+- Treasury admin + spender: only Timelock.
+- Timelock admin: only Timelock; proposer/executor/canceller: only Governor.
+- No zero/public executor, deployer or other EOA privilege; no bootstrap operation.
+
+The new output file is reserved exclusively before chain writes. Mode0600 atomic
+fsync/rename journals preserve unsigned requests, estimates, submitted hashes,
+receipts and gate H/hash before progressing. A failure stops; it does not revoke to
+hide history, fund anyway, auto-renounce, reset the chain, or retry a transaction.
+A transport timeout may have broadcast a transaction before returning its hash:
+**keep the journal and chain**, reconcile sender nonce/receipt with the owner, and
+repair under retained authority or redeploy only after review. No automatic resume
+is implemented. After partial renounce a reviewed recovery/new deployment may be
+necessary; do not blindly rerun the deployment CLI.
+
+## TV1 approved delta and post-deployment notification
+
+The technical delta review linked above is complete for its stated scope and
+reviewed revision. Preserve the completed local PASS, SC02 handoff and mapping
+review. Only subsequent source/dependency changes require exact-delta review;
+do not make the old pending re-review a deployment prerequisite.
+
+Once the public owner gates above are complete, **before broadcast**, notify TV1
+in #20/PR #21 with the selected full integrated SHA, public address/custodian map,
+signing confirmation, public authorization/budget record and completed checklist.
+Coordinate the actual deployment audit; do not interpret technical approval as
+broadcast permission. After the authorized deployment, attach the actual
+deployment manifest, constructor arguments and initcode identities, deployed
+runtime identities, all deployment/bootstrap/delegation/funding transaction
+hashes and receipts, complete historical role/operation audit, final role map,
+and the read-only checker result pinned to canonical H/hash (K2 and tip).
+Do not submit fork or synthetic receipts as deployment evidence.
+
+Actual Executed and Defeated proposals must use real chain timestamps, with no
+time warp. Record proposal descriptions, actions, votes, lifecycle timestamps,
+transaction hashes/receipts and the same-SHA manifest for TV1's testnet acceptance.
+Until those actual artifacts exist, testnet acceptance stays **BLOCKED**.
+Receiver-clone #42, extension/API/UI #19/#41 and release gates remain separate.
+
+## Narrow verification and evidence
+
+Affected suites: `node --test tests/smoke/bootstrap.test.mjs tests/smoke/sepolia.test.mjs`
+after one `forge build`; the new suite's fresh-chain identity adapter is expressly
+**synthetic**, not a Sepolia fork. Preflight above separately captures the actual
+fork attempt and remote compatibility/gas result. Evidence and full command stdout/
+exit codes are stored under `docs/evidence/tv4-20261113-sepolia/`; no testnet PASS is
+inferred from either local suite or a disposable fork.
+
+Final new run at `7a0a94fbae0bf9682259f785643d4b30260f5850`: **28/28 PASS, 0 skipped**.
+[Summary](evidence/tv4-20261113-sepolia/summary.json) binds full stdout, commands,
+raw archive and source. Actual PublicNode GOV constructor estimate is **11865462 gas**
+at H12123926/hash
+`0xd0d3078e61e7bcec84bf9e66f005ec4b1860986500f3250025830ac0317c2aea`
+with synthetic balance override. The actual pinned-state fork completed all
+17 transactions/receipts, gates and final audit; owned Anvil exit0. Its Osaka
+total gas9370997 is **not** a remote deployment budget: remote GOV alone estimates
+more than that whole fork total. Keep per-transaction remote estimation mandatory.
+Earlier mining/timestamp/injection/cleanup preparation failures are retained separately.
+**Zero Sepolia broadcast; signer owner, approved map/gas/revision, explicit broadcast
+authorization and real-time Executed/Defeated receipts remain required. The technical
+delta review is now approved as linked above; historical evidence is unchanged.**
+
+Canonical recursive rebuild/preflight at `7fb2958` supersedes the *build context*
+for new deployments, not the attribution of that earlier run. All five canonical
+artifact hashes match v1/CI; v2 creation-code prefixes before CBOR are identical.
+The loader now fails before artifact access for incomplete or unpinned recursive
+dependencies. [Correction](evidence/tv4-20261113-canonical.json):32SC06,28bootstrap/
+Sepolia and2frontend canonical-SC06 live PASS; dependency boundary regression1PASS.
+Actual canonical GOV estimate11865474gas at H12124083/hash
+`0x1a44d74863c11ca6c30ba9fb911924bda13cfd0d686971aec3c995d755e56317`;
+state-fork17transactions/roles/gates PASS, totalGasUsed9371009, owned Anvil exit0.
+Still zero remote broadcasts and no signer-owner/deployment/testnet acceptance.

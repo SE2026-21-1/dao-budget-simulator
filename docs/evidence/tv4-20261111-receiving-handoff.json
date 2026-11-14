@@ -1,0 +1,121 @@
+{
+  "date": "2026-11-11",
+  "acceptedBy": "Phan Thanh Dũng / TV4 / dung0611",
+  "classification": "Peer-reported partial receiving acceptance; not an independent TV4 execution or raw-checksum verification",
+  "sourceCommit": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+  "candidateSource": "96593b3a5af4eff77e6d4291169f219fb641bf6c",
+  "devCommit": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+  "deployment": {
+    "chainId": 31337,
+    "deploymentId": "be09-local-20261111T071940Z-0210c9c44501",
+    "asOfBlock": "24",
+    "asOfBlockHash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd",
+    "snapshotRevision": "440c6ec1-f436-4f48-958f-07f68a80a99e"
+  },
+  "reportedChecksums": {
+    "independentlyVerified": false,
+    "publicManifest": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b",
+    "verifyResults": "2ec33550c9acc4f8b017c614acef83375f13ef7508a29449e750c39784cb1900",
+    "compareReport": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2"
+  },
+  "issues": [
+    {
+      "number": 40,
+      "status": "PARTIAL/In review",
+      "reportedPass": [
+        "WSL clean clone/submodules/pinned toolchains",
+        "foreground serve, reopened terminal status, verify/status,5/5 observed live",
+        "6GET200/CORS204/FElive1PASS0SKIP",
+        "controlled worker restart/digest unchanged"
+      ],
+      "remaining": [
+        "TV3 record Ctrl-C/shutdown, supervisor exit, owned services/ports/log retention",
+        "redacted public manifest/verify/raw logs for TV4 review"
+      ],
+      "owners": [
+        "TV3 receiver",
+        "TV2 lifecycle support",
+        "TV4 acceptance"
+      ]
+    },
+    {
+      "number": 36,
+      "status": "PARTIAL/In review",
+      "reportedPass": [
+        "Windows4GET200 and correct chain/CORS",
+        "five contract addresses match",
+        "api.live1PASS0SKIP against exact receiving deployment"
+      ],
+      "remaining": [
+        "TV3 set process-scoped VITE_DEPLOYMENT_ID from runtime.deploymentName and start fresh owner-managed Vite",
+        "browser SnapshotInfo deployment/H/hash/revision plus visual/keyboard",
+        "extension end-to-end remains19/41"
+      ],
+      "remediation": "frontend/README.md Windows receiving run; no env file mutation, process kill, fixture fallback or wildcardCORS",
+      "owners": [
+        "TV3 Windows/browser",
+        "TV2 API/CORS",
+        "TV4 acceptance"
+      ]
+    },
+    {
+      "number": 42,
+      "status": "PARTIAL/In review",
+      "reportedPass": [
+        "clean independent WSL clone and builds",
+        "new empty isolated target DB; serving reference readonly",
+        "rebuild/export reference/export target/compare all exit0, equal0mismatch atsameH/hash",
+        "BE06unit5PASS"
+      ],
+      "remaining": [
+        "redacted source/manifest/compare exports and logs for TV2/TV4 raw review",
+        "API restart/checkpoint evidence not established by worker restart alone"
+      ],
+      "owners": [
+        "TV3 receiver",
+        "TV2 backend evidence review",
+        "TV4 acceptance"
+      ]
+    }
+  ],
+  "publicPeerComments": [
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378",
+      "author": "LangXiTrum2005",
+      "createdAt": "2026-11-11T07:41:42Z",
+      "body": "### [TV3 Independent Rebuild] BE06 rebuild verification – PARTIAL\n\nTV3 đã chạy kiểm chứng mới ngày 11/11/2026 trên Ubuntu WSL 26.04.1, clean clone Linux tại `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`, submodules sạch và dependencies cài từ hai lockfile. Node 24.15.0/npm 11.12.1, Foundry 1.8.5, PostgreSQL 18.4; root typecheck/build, frontend build và `forge build` PASS.\n\n- Tạo database **đích mới, rỗng** trong cluster cô lập của run BE09; database đang phục vụ API chỉ làm reference đọc, không làm target.\n- Chạy `BE06 rebuild → export reference → export target → compare`: cả bốn lệnh exit 0.\n- `compare` trả `equal`, **0 mismatch**. Reference và target cùng H `24`, block hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd` trên deployment `be09-local-20261111T071940Z-0210c9c44501`, chain `31337`.\n- BE06 unit **5/5 PASS**; frontend **49 PASS, 1 SKIP**; lint PASS (8 warnings), build PASS.\n- SHA-256 của compare report: `34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2`. Giữ report/log riêng để đối chiếu, không đăng URL database hoặc secret.\n\n**Giới hạn:** Evidence này thuộc source `4cba99a`, không thay kiểm candidate PR #21 tại HEAD mới. Chưa chứng minh API restart/checkpoint nếu tiêu chí nghiệm thu yêu cầu; worker restart/digest đã được kiểm trong run BE09 ở #40. Nhờ @daongocuong và @dung0611 đối chiếu báo cáo, xác nhận phạm vi receiving-machine rebuild và phần cần chạy thêm trước khi đóng gate. Đề nghị giữ #42 **PARTIAL**."
+    },
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841",
+      "author": "LangXiTrum2005",
+      "createdAt": "2026-11-11T07:41:17Z",
+      "body": "### [TV3 Windows FE ↔ BE09] Live API verification – PARTIAL\n\nTV3 đã kiểm chứng mới ngày 11/11/2026 từ Windows checkout `feature/tv3-frontend` tại `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44` tới run BE09 trên WSL, deployment `be09-local-20261111T071940Z-0210c9c44501`.\n\n- Từ Windows, API health, proposals, summary và treasury/transfers đều HTTP 200; các response cùng H `24`, hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`, revision `440c6ec1-f436-4f48-958f-07f68a80a99e`.\n- RPC `eth_chainId` trả `31337`; CORS preflight HTTP 204.\n- Chạy mới `frontend/src/data/api.live.test.ts` với đủ bốn biến `BE05_LIVE_*` chỉ trong tiến trình test: **1 PASS, 0 SKIP**.\n- Năm địa chỉ contract, chain ID, API URL và RPC URL trong cấu hình Windows khớp manifest của run.\n\n**Giới hạn:** `VITE_DEPLOYMENT_ID` của frontend Windows chưa khớp deployment hiện tại; tiến trình Vite Windows đang chạy cũng chưa phục vụ ID mới. Chưa có Browser/SnapshotInfo live PASS trên deployment này. TV3 chưa sửa `.env.local` hoặc restart Vite trong lượt kiểm.\n\nNhờ @daongocuong và @dung0611 ghi nhận phạm vi FE↔API live từ máy nhận và đối chiếu manifest/API. TV3 sẽ căn chỉnh cấu hình local rồi kiểm browser trên cùng run ở nhiệm vụ tiếp theo. Đề nghị giữ #36 **PARTIAL**, chưa đóng issue."
+    },
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124",
+      "author": "LangXiTrum2005",
+      "createdAt": "2026-11-11T07:40:53Z",
+      "body": "### [TV3 Receiving WSL] BE09 retest – PARTIAL\n\nTV3 đã kiểm chứng mới ngày 11/11/2026 trên Ubuntu WSL 26.04.1, clean clone tại commit `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44` (PR #48 đã merge vào nhánh TV3).\n\n- Node 24.15.0, npm 11.12.1, Foundry/Anvil 1.8.5, PostgreSQL 18.4.\n- `preflight → serve → status → verify → status`: PASS; kiểm `status` từ phiên WSL mở lại: PASS.\n- PostgreSQL, Anvil, worker, API và Vite: 5/5 LIVE tại thời điểm kiểm tra; foreground `serve` được giữ hoạt động.\n- Sáu API GET HTTP 200; CORS preflight HTTP 204; FE live 1 PASS, 0 SKIP.\n- Worker restart có kiểm soát; database digest không đổi.\n- Deployment `be09-local-20261111T071940Z-0210c9c44501`; chain ID `31337`; H `24`; block hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`; snapshot revision `440c6ec1-f436-4f48-958f-07f68a80a99e`.\n- SHA-256 của public manifest: `72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b`; verify results: `2ec33550c9acc4f8b017c614acef83375f13ef7508a29449e750c39784cb1900`. Run/log được giữ riêng tư để đối chiếu, không đăng env/secrets.\n\n**Giới hạn:** Chưa nghiệm thu Ctrl-C/shutdown lifecycle của đúng run; kết quả này không thay extension-wallet hoặc testnet acceptance. Nhờ @daongocuong và @dung0611 đối chiếu evidence, xác nhận phạm vi receiving WSL đã đạt và hỗ trợ kiểm lifecycle cuối. Đề nghị giữ #40 **PARTIAL**, chưa đóng issue."
+    }
+  ],
+  "access": {
+    "ssh": "No configured SSH hosts",
+    "documentedLocalEndpoints": [
+      {
+        "url": "http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=be09-local-20261111T071940Z-0210c9c44501",
+        "error": "ECONNREFUSED: Unable to connect. Is the computer able to access the url?"
+      },
+      {
+        "url": "http://127.0.0.1:5173/",
+        "error": "ECONNREFUSED: Unable to connect. Is the computer able to access the url?"
+      }
+    ],
+    "limit": "No receiver run path or downloadable public artifacts provided. Local loopback refusal is not a failure of the receiving WSL run."
+  },
+  "notAccepted": [
+    "No issue closure or Dev integration",
+    "No new TV3 retest of snapshot-guard delta inferred",
+    "No extension wallet/testnet/full acceptance",
+    "No comparison of private raw files from checksum strings alone"
+  ]
+}

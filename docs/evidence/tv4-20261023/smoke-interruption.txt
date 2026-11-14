@@ -1,0 +1,16 @@
+✔ smoke_governance.mjs: SIGINT cleans real Anvil (4042.114465ms)
+✔ smoke_governance.mjs: SIGTERM cleans real Anvil with repeated signal and SIGKILL escalation (8713.498593ms)
+✔ smoke_treasury.mjs: SIGINT cleans real Anvil with repeated signal and SIGKILL escalation (9294.736778ms)
+✔ smoke_treasury.mjs: SIGTERM cleans real Anvil (6469.504879ms)
+✔ owned storage-style temporary directory: SIGINT cleans real Anvil and files (1365.227497ms)
+✔ staged successful evidence: SIGINT discards files during concurrent final cleanup (8522.220746ms)
+✔ owned storage-style temporary directory: SIGTERM cleans real Anvil and files (1794.43899ms)
+✔ staged successful evidence: SIGTERM discards files during concurrent final cleanup (6544.981419ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47242.80308

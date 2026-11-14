@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "228077a6f18944fb7fc6852c65f217db8a368024",
+  "command": [
+    "git",
+    "clone",
+    "--no-local",
+    "--recurse-submodules",
+    "/home/ptdung/solidity-projects/dao-budget-simulator",
+    "/tmp/tv4-clean-228077a"
+  ],
+  "sourceOverlay": false,
+  "copiedNodeModules": false,
+  "copiedFoundryOutputs": false,
+  "sameMachine": true,
+  "compilerCache": "global Solidity compiler already available; no claim of first download on a fresh OS",
+  "submodules": {
+    "forgeStd": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219",
+    "openzeppelin": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+  },
+  "installation": "clean-install.command.json",
+  "verification": "clean-contracts.command.json and clean-node.command.json after completion",
+  "result": "passed",
+  "checks": [
+    "clean-install.command.json",
+    "clean-contracts.command.json",
+    "clean-node.command.json"
+  ],
+  "governanceSmoke": "clean-governance-summary.json"
+}

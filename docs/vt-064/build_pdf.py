@@ -1,4 +1,4 @@
-"""Render the Vietnamese report, AI disclosure, and verbatim evidence artifacts.
+"""Render the Vietnamese report and compact, linked AI/evidence appendices.
 
 Run with a Python venv containing reportlab. Main content is also emitted as
 /tmp/vt064-main-only.pdf so its page count can be inspected independently.
@@ -199,39 +199,13 @@ class ReportDocument(SimpleDocTemplate):
         canvas.restoreState()
 
 
-def evidence_paths() -> list[Path]:
-    # Include only the current execution trail; historical logs and raw latency
-    # samples remain downloadable on the submission branch without duplicating
-    # hundreds of JSON values in the PDF.
-    names = (
-        "20261114-red.log", "20261114-implementation.patch",
-        "20261114-green.log", "20261114-mutation.patch",
-        "20261114-mutation.log", "20261114-mutation-clean.log",
-        "20261114-coverage.log", "20261114-regression.log",
-        "20261114-flaky-1.log", "20261114-flaky-2.log",
-    )
-    return [HERE / name for name in names if (HERE / name).is_file()]
 
 
 def build(path: Path, appendix: bool):
     flow = markdown(HERE / "report.md")
     if appendix:
         flow.append(PageBreak())
-        flow.extend(markdown(HERE / "AI-usage.md", appendix=True))
-        title = Paragraph("Phụ lục B — bằng chứng thực thi chọn lọc", APPENDIX_TITLE)
-        title.section = "appendix"
-        flow.extend([PageBreak(), title])
-        flow.append(Paragraph(
-            "Các tệp chọn dưới đây được đính kèm nguyên văn, không cắt phần lỗi. "
-            "Các log lịch sử, typecheck/build và toàn bộ 80 latency samples mỗi run "
-            "được giữ trên nhánh nộp trong docs/vt-064; xem README và "
-            "20261114-results.json/20261114-load.json. Tên tệp không tự chứng minh "
-            "lệnh đã chạy: đối chiếu source SHA, command và exit code trong log. "
-            "Phụ lục không tính vào giới hạn trang nội dung chính.", BODY))
-        for evidence in evidence_paths():
-            flow.append(Paragraph(marked(evidence.name), HEADING))
-            flow.extend(evidence_line(line)
-                        for line in evidence.read_text(encoding="utf8").splitlines())
+        flow.extend(markdown(HERE / "appendix-summary.md", appendix=True))
     doc = ReportDocument(
         str(path), pagesize=A4, leftMargin=36, rightMargin=36,
         topMargin=38, bottomMargin=39,

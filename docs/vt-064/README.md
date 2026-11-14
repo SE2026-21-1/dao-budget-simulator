@@ -50,9 +50,9 @@ The mutant must exit1 with Missing expected rejection; unmodified source must ex
 
 Required output at repository root:`BT3_23001850_VT-064.pdf`. Main content must be≤8pages; AI log/execution appendices excluded. Report source:`report.md`; links/table/Unicode rendered with DejaVu Sans:
 
-Verified output14/11: **5 main pages +10 appendix pages**, reflection314words.
-`20261114-pdf-verification.log` records page counts, first-page required fields,
-links and PDF checksum. Main pages and the failure appendix were visually inspected.
+Shortened output14/11: **5 main pages +2 appendix pages =7 pages total**, reflection314words.
+`20261114-pdf-short-verification.log` records the new page counts, links and checksum.
+Full AI log and raw execution logs remain on GitHub; only the PDF appendices are condensed.
 
 ```bash
 python3 -m venv /tmp/vt064-pdf

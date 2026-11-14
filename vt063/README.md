@@ -12,7 +12,7 @@ PYTHONPATH=vt063 python vt063/mutation_check.py
 PYTHONPATH=vt063 python vt063/load_150.py
 ```
 
-25 tests should pass (19 in-memory unit + 6 SQLite integration); the mutation script should return code 0 **only if the specific forced-interleaving test fails on the mutant**. It uses a temporary source copy; no mutation is committed. Coverage requires optional `coverage` (`pip install coverage==7.10.7`):
+27 tests should pass (19 in-memory unit + 8 SQLite integration); the mutation script should return code 0 **only if the specific forced-interleaving test fails on the mutant**. It uses a temporary source copy; no mutation is committed. Coverage requires optional `coverage` (`pip install coverage==7.10.7`):
 
 ```sh
 PYTHONPATH=vt063 python -m coverage run --branch --source=approval_harness -m unittest discover -s vt063/tests -v
@@ -34,7 +34,7 @@ The same commands are checked in GitHub Actions with Python 3.11 and 3.13. A wor
 - Test-only initial collection RED `54be81f` (import error; not a behavioral RED).
 - Behavioral RED `1d0a2b0` (edit-after-approve) → patch `b25e47c`.
 - Behavioral RED `04f28b2` (same-key retry semantics) → patch `d4a258a`.
-- Local final: 25/25 tests pass (19 in-memory + 6 SQLite); temporary mutation detected by coordinated T17, 5/5 runs; line/branch harness coverage 100% (41 statements, 14 branches).
+- Local final: 27/27 tests pass (19 in-memory + 6 SQLite); temporary mutation detected by coordinated T17, 5/5 runs; line/branch harness coverage 100% (41 statements, 14 branches).
 - New synchronized Python 150-thread test: five p95 values 0.0012–0.0022 ms; this excludes startup queuing and external systems, **not** a 150-user HTTP SLA.
 - Full decision table, 19 test cases, priority and traceability: `vt063/TEST_PLAN.md`.
 - Historical runs vs final results: `vt063/evidence/README.md` and `vt063/evidence/FINAL_VERIFIED_2026-11-14.md`. Execution evidence is **local**, not CI.
@@ -48,9 +48,9 @@ Unlike the earlier in-memory Lock, the `sqlite_approval.py` adapter uses SQLite 
 
 Test-first evidence:
 - RED scaffold commit `c0e2d22`; tests-only commit `bfb6d02`: six SQLite behavioral assertions failed.
-- GREEN transaction patch `77c751d`, process-spawn portability fix `e79cfe8`: entire test suite 25/25 pass.
+- GREEN transaction patch `77c751d`, process-spawn portability fix `e79cfe8`: entire test suite 27/27 pass.
 - Deliberate bypass of SQLite idempotency check: `sqlite_mutation_check.py` operates on a temporary copy and kills the mutant on the exact same-key retry test.
-- SQLite-only coverage: 36 statements, 10 branches, 100% (no claim about server auth or DAO).
+- SQLite-only coverage: 38 statements, 12 branches, 100% (no claim about server auth or DAO).
 - Five local synchronized bursts with 150 SQLite connections each, p95 values 47.324–113.538 ms, median run p95 66.316 ms; **no HTTP or 150 users**.
 
 Run from repository root:
@@ -63,4 +63,23 @@ PYTHONPATH=vt063 python -m coverage run --branch --source=sqlite_approval -m uni
 PYTHONPATH=vt063 python -m coverage report -m
 ```
 
-Full traceability T01–T25 is in `TEST_PLAN.md`; SQLite local evidence and CI link are in `evidence/SQLITE_VERIFIED_2026-11-14.md`. CI run that passed on the new integration workflow: https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/43610380757. Neither local performance nor CI establishes an HTTP, on-chain or production guarantee.
+Full traceability T01–T27 is in `TEST_PLAN.md`; SQLite local evidence and CI link are in `evidence/SQLITE_VERIFIED_2026-11-14.md`. CI run that passed on the new integration workflow: https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/43610380757. Neither local performance nor CI establishes an HTTP, on-chain or production guarantee.
+
+
+## Post-review verification: transaction lock and actual SQLite audit failure
+
+Two additional tests in `tests/test_sqlite_approval.py`:
+
+- **T26** uses a SQLite `BEFORE INSERT` trigger with `RAISE(ABORT, ...)` to force a *real database error* during audit insertion. It checks both tables are empty after rollback and a retry succeeds after removing the trigger.
+- **T27** uses an optional test-only `before_insert` synchronization hook to coordinate two connections between checking approval state and inserting. The normal `BEGIN IMMEDIATE` code returns `approved` and `already-approved`; when mutated to deferred `BEGIN`, the named T27 test encounters `sqlite3.OperationalError: database is locked`. The mutant is created in a temporary copy and 3/3 local repetitions killed it.
+
+```sh
+PYTHONPATH=vt063 python vt063/sqlite_transaction_mutation_check.py
+PYTHONPATH=vt063 python -m unittest discover -s vt063/tests -v
+```
+
+The updated 150-task SQLite benchmark reports, per run, p95/p99/max, throughput, busy_timeout 15000 ms, **1 approved, 149 already-approved, 0 errors**, and 1 approval + audit row. Five local p95 samples (ms): **347.719, 58.006, 111.734, 66.694, 88.120**. Median of run p95 is 88.120 ms. Do not infer 150 HTTP-user SLA, and do not mix these values with older code versions.
+
+Documentation and actual local outputs: `evidence/REVIEW_FIX_VERIFIED_2026-11-14.md`. **AI disclosure:** local testing/document generation was executed by ChatGPT-operated Linux tools; no claim of direct student workstation execution. GitHub Actions is independently repeatable. Earlier `54be81f` is a test-import RED only; initial implementation `3649144` predates the behavioral REDs, and `cbeaf23` was the first load script. Do not rewrite commit history.
+
+All code here is a standalone Python/SQLite harness, **not an implemented role in EVM DAO governance**. Do not merge without team review.

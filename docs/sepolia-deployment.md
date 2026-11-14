@@ -1,4 +1,4 @@
-# TV4 Sepolia deployment path — 13 November 2026
+# TV4 Sepolia deployment path — 14 November 2026
 
 ## Scope and status
 
@@ -40,10 +40,56 @@ signer; their later campaign use must be authorized separately. Do not put a
 private key, mnemonic, password, RPC credential or keystore contents in this map.
 Unexpected fields are rejected before the map is journaled.
 
-The owner must approve the exact integrated source revision and maximum fee / total
-native-gas budget, use dedicated testnet-only accounts, obtain faucet gas for all
-six signing accounts, and ensure no other process sends from these accounts during
-the campaign. Independent TV1 approval is separate from the owner's address map.
+## Current owner acceptance checklist — deployment BLOCKED
+
+TV1's [technical delta approval](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+reviews `94d5367c8d60326b9b9f7de09265be531743f3b8` for SC10, SC06 v3 and
+Ready(single) only. Do not request the completed review again. The owner must
+select and publicly accept the **exact full integrated deployment revision**;
+neither the reviewed SHA nor a historical evidence SHA automatically selects it.
+That selection is **OWNER-REQUIRED / missing**. Any source or dependency changes
+relative to the reviewed revision need review of their exact delta, not a rerun
+of the already accepted review.
+
+All unchecked items below are owner-required and currently missing; none is
+implied by a fork run, technical review, or this runbook:
+
+- [ ] Publish the selected full integrated SHA and acceptance of its exact
+  contracts, locked dependencies, compiler/settings and deployment scripts.
+- [ ] Publish the nine-address map above under the current configuration:
+  A/B/C/D, funding, deployer, caller, recipient, outsider. No real addresses have
+  been supplied; do not substitute synthetic accounts.
+- [ ] Name the responsible custodian for **each** of A, B, C, D, funding and
+  deployer (one person may own several, but record each mapping). Each custodian
+  confirms custody and ability to sign for the matching public address, dedicated
+  testnet-only use, and exclusive deployment/campaign use with no concurrent
+  wallet, script or other sender. Never publish custody secrets.
+- [ ] Confirm use of the reviewed encrypted-keystore/inherited-FD signing path
+  below, address matching and secure local custody; publish confirmation only,
+  not keystores, passwords, keys, private configuration or FD contents.
+- [ ] Name the native-ETH funder and record actual Sepolia native balances for all
+  six signers at a public block/hash. Supply actual-map preflight per-transaction
+  estimates, headroom and per-signer requirements; explicitly accept that fork
+  totals are not remote gas budgets and current remote estimation remains required.
+- [ ] Approve numeric maximum gas price/fee cap in wei and cumulative conservative
+  native-cost budget in wei, with sufficient balance for each signer. Identify
+  funding transfers/receipts; BUD seed funding is not native gas funding.
+- [ ] Explicitly authorize **broadcast**, naming owner, selected full SHA, map,
+  Ethereum Sepolia chainId `11155111`, the public RPC below, fee cap and total
+  budget. Source acceptance or faucet funding alone is not broadcast permission.
+- [ ] Accept pending/latest/expected nonce checks and exclusive signing through
+  completion; on nonce mismatch, RPC/network/chain/genesis mismatch, timeout,
+  ambiguous send, missing history or audit failure: **stop, preserve evidence,
+  no resend and no blind rerun**. Reconcile the recorded unsigned request,
+  sender, nonce, any hash, chain transaction and receipt against canonical chain
+  state before any owner/reviewer-approved recovery. A timeout is not proof
+  that nothing was sent; do not issue a replacement merely because no hash returned.
+
+Source merge acceptance is separate from deployment authorization and testnet
+acceptance. Testnet requires the actual deployment manifest/audits and real-time
+Executed/Defeated evidence below. Receiver-clone #42, extension/API/UI #19/#41
+and release acceptance remain independent gates; none is waived by source merge,
+this technical approval, a fork PASS or a testnet deployment.
 
 ## Secure signing, without requesting secrets
 
@@ -173,29 +219,29 @@ repair under retained authority or redeploy only after review. No automatic resu
 is implemented. After partial renounce a reviewed recovery/new deployment may be
 necessary; do not blindly rerun the deployment CLI.
 
-## TV1 incremental review request (preserve completed local review)
+## TV1 approved delta and post-deployment notification
 
-Do not reopen the 10 November local PASS, SC02 handoff or mapping review. Review only:
+The technical delta review linked above is complete for its stated scope and
+reviewed revision. Preserve the completed local PASS, SC02 handoff and mapping
+review. Only subsequent source/dependency changes require exact-delta review;
+do not make the old pending re-review a deployment prerequisite.
 
-1. Shared helper exports and trusted policy injection: local wrapper still refuses
-   remote/fork/nonempty deployments; Sepolia chain+genesis+K2 cannot come from a
-   manifest/CLI override.
-2. Public map/exact-SHA acceptance, encrypted-keystore/FD-only signing, sender checks,
-   no secrets in evidence, exclusive-account assumption and no automatic resend.
-3. Remote current-state estimates, fee/total caps, nonce/balance/block-limit checks;
-   pinned-state fork versus actual remote fork/gas compatibility limitations.
-4. Durable manifest, constructor/runtime/ABI/source verification, complete receipt
-   and historical role/operation audit at K2 and canonical tip; pre-renounce and
-   pre-funding ordering, including partial-failure recovery.
-5. New negative controls and unchanged original bootstrap suite at the integrated
-   SHA. Then owner-authorized deployment followed by read-only role checker.
+Once the public owner gates above are complete, **before broadcast**, notify TV1
+in #20/PR #21 with the selected full integrated SHA, public address/custodian map,
+signing confirmation, public authorization/budget record and completed checklist.
+Coordinate the actual deployment audit; do not interpret technical approval as
+broadcast permission. After the authorized deployment, attach the actual
+deployment manifest, constructor arguments and initcode identities, deployed
+runtime identities, all deployment/bootstrap/delegation/funding transaction
+hashes and receipts, complete historical role/operation audit, final role map,
+and the read-only checker result pinned to canonical H/hash (K2 and tip).
+Do not submit fork or synthetic receipts as deployment evidence.
 
-Only after the group accepts the integrated revision and TV1 approves this delta,
-the named owner supplies the public map, secure local signers and approved native
-gas may broadcast proceed. Actual Executed and Defeated proposals must wait for
-real chain timestamps, record descriptions/actions/votes/tx hashes/receipts and
-manifest at the same SHA; no time warp. Receiver-clone #42 and extension/API/UI
-#19/#41 remain independent acceptance gates.
+Actual Executed and Defeated proposals must use real chain timestamps, with no
+time warp. Record proposal descriptions, actions, votes, lifecycle timestamps,
+transaction hashes/receipts and the same-SHA manifest for TV1's testnet acceptance.
+Until those actual artifacts exist, testnet acceptance stays **BLOCKED**.
+Receiver-clone #42, extension/API/UI #19/#41 and release gates remain separate.
 
 ## Narrow verification and evidence
 
@@ -216,8 +262,9 @@ with synthetic balance override. The actual pinned-state fork completed all
 total gas9370997 is **not** a remote deployment budget: remote GOV alone estimates
 more than that whole fork total. Keep per-transaction remote estimation mandatory.
 Earlier mining/timestamp/injection/cleanup preparation failures are retained separately.
-**Zero Sepolia broadcast; signer owner, approved map/gas/revision, TV1 delta review
-and real-time Executed/Defeated receipts remain required.**
+**Zero Sepolia broadcast; signer owner, approved map/gas/revision, explicit broadcast
+authorization and real-time Executed/Defeated receipts remain required. The technical
+delta review is now approved as linked above; historical evidence is unchanged.**
 
 Canonical recursive rebuild/preflight at `7fb2958` supersedes the *build context*
 for new deployments, not the attribution of that earlier run. All five canonical

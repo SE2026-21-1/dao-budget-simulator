@@ -11,7 +11,7 @@ def initialize(path, requests=(("r1", 100, "alice"),)):
         """)
         conn.executemany('INSERT OR IGNORE INTO requests VALUES(?,?,?)', requests)
 
-def approve(path, role, request_id, key, fail_audit=False):
+def approve(path, role, request_id, key, fail_audit=False, before_insert=None):
     """Approve exactly once via a durable transaction, including audit in the same commit."""
     if role != 'reviewer':
         raise PermissionError('reviewer required')
@@ -27,6 +27,8 @@ def approve(path, role, request_id, key, fail_audit=False):
         if old is not None:
             result = 'approved' if old[0] == key else 'already-approved'
         else:
+            if before_insert is not None:  # test-only synchronization hook
+                before_insert()
             conn.execute('INSERT INTO approvals VALUES(?,?)', (request_id, key))
             if fail_audit:
                 raise RuntimeError('injected audit write failure')

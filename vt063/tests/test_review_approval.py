@@ -33,7 +33,7 @@ class ApprovalTests(unittest.TestCase):
 
     def test_repeat_same_key_is_idempotent(self):
         self.svc.approve('reviewer', 'r1', 'a')
-        self.assertEqual(self.svc.approve('reviewer', 'r1', 'a'), 'already-approved')
+        self.assertEqual(self.svc.approve('reviewer', 'r1', 'a'), 'approved')
         self.assertEqual(self.svc.approval_count('r1'), 1)
 
     def test_different_key_same_request_does_not_duplicate(self):

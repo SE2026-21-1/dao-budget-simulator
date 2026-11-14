@@ -41,6 +41,16 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual(self.svc.approve('reviewer', 'r1', 'b'), 'already-approved')
         self.assertEqual(self.svc.approval_count('r1'), 1)
 
+    def test_validation_precedence_role_first(self):
+        with self.assertRaises(PermissionError):
+            self.svc.approve('guest', 'missing', '')
+        self.assertEqual(self.svc.total_approvals(), 0)
+
+    def test_validation_precedence_key_before_lookup(self):
+        with self.assertRaises(ValueError):
+            self.svc.approve('reviewer', 'missing', '')
+        self.assertEqual(self.svc.total_approvals(), 0)
+
     def test_missing_request_does_not_write(self):
         with self.assertRaises(KeyError):
             self.svc.approve('reviewer', 'missing', 'k')
@@ -85,27 +95,15 @@ class ApprovalTests(unittest.TestCase):
         self.assertEqual(self.svc.approval_count('r1'), 1)
 
     def test_forced_interleaving_exposes_missing_guard(self):
-        """Make both unguarded threads observe missing approval before either write."""
-        class CoordinatedApprovals(dict):
-            def __init__(self):
-                super().__init__()
-                self.barrier = threading.Barrier(2)
-                self.calls = 0
-                self.counter_lock = threading.Lock()
-
-            def __contains__(self, key):
-                with self.counter_lock:
-                    self.calls += 1
-                    call_number = self.calls
-                if call_number <= 2:
-                    try:
-                        # Protected version times out once; mutant permits two threads.
-                        self.barrier.wait(timeout=0.2)
-                    except threading.BrokenBarrierError:
-                        pass
-                return super().__contains__(key)
-
-        self.svc._approvals = CoordinatedApprovals()
+        """Deterministically expose missing guard at the check/write boundary."""
+        check_write_barrier = threading.Barrier(2)
+        def sync_before_write():
+            try:
+                check_write_barrier.wait(timeout=0.15)
+            except threading.BrokenBarrierError:
+                # With lock, second worker cannot reach the hook before first exits.
+                pass
+        self.svc._before_approval_write = sync_before_write
         start = threading.Barrier(2)
         def work(key):
             start.wait(timeout=2)

@@ -51,6 +51,29 @@ class ApprovalTests(unittest.TestCase):
             self.svc.approve('reviewer', 'r1', '')
         self.assertEqual(self.svc.total_approvals(), 0)
 
+    def test_approved_request_cannot_be_edited_by_owner(self):
+        """Approved decision must not silently become approval of different source data."""
+        self.svc.approve('reviewer', 'r1', 'k-accepted')
+        with self.assertRaises(PermissionError):
+            self.svc.edit('owner', 'r1', 999)
+        self.assertEqual(self.svc.read('guest', 'r1').amount, 100)
+
+    def test_owner_can_edit_before_approval(self):
+        self.svc.edit('owner', 'r1', 120)
+        self.assertEqual(self.svc.read('reviewer', 'r1').amount, 120)
+        self.assertEqual(self.svc.total_approvals(), 0)
+
+    def test_distinct_requests_approve_independently(self):
+        service = ApprovalService([Request('r1', 100, 'alice'), Request('r2', 200, 'bob')])
+        self.assertEqual(service.approve('reviewer', 'r1', 'key'), 'approved')
+        self.assertEqual(service.approve('reviewer', 'r2', 'key'), 'approved')
+        self.assertEqual(service.total_approvals(), 2)
+
+    def test_guest_cannot_edit(self):
+        with self.assertRaises(PermissionError):
+            self.svc.edit('guest', 'r1', 333)
+        self.assertEqual(self.svc.read('guest', 'r1').amount, 100)
+
     def test_concurrent_same_request_one_approval(self):
         barrier = threading.Barrier(2)
         def work(key):

@@ -33,6 +33,35 @@ class SQLiteApprovalTests(unittest.TestCase):
         self.assertEqual((count(self.path), count(self.path, 'approval_audit')), (0, 0))
         self.assertEqual(approve(self.path, 'reviewer', 'r1', 'k1'), 'approved')
 
+    def test_real_sqlite_audit_insert_failure_rolls_back(self):
+        import sqlite3
+        with sqlite3.connect(self.path) as db:
+            db.execute("""CREATE TRIGGER audit_denied BEFORE INSERT ON approval_audit
+                BEGIN SELECT RAISE(ABORT, 'audit-write-rejected'); END;""")
+        with self.assertRaisesRegex(sqlite3.IntegrityError, 'audit-write-rejected'):
+            approve(self.path, 'reviewer', 'r1', 'audit-key')
+        self.assertEqual((count(self.path), count(self.path, 'approval_audit')), (0, 0))
+        with sqlite3.connect(self.path) as db:
+            db.execute('DROP TRIGGER audit_denied')
+        self.assertEqual(approve(self.path, 'reviewer', 'r1', 'audit-key'), 'approved')
+        self.assertEqual((count(self.path), count(self.path, 'approval_audit')), (1, 1))
+
+    def test_begin_immediate_serializes_check_then_insert(self):
+        import threading
+        barrier = threading.Barrier(2)
+        def overlap_hook():
+            try:
+                barrier.wait(timeout=0.35)
+            except threading.BrokenBarrierError:
+                pass
+        def one(key):
+            return approve(self.path, 'reviewer', 'r1', key, before_insert=overlap_hook)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(one, key) for key in ('thread-1', 'thread-2')]
+            result = [f.result(timeout=10) for f in futures]
+        self.assertCountEqual(result, ['approved', 'already-approved'])
+        self.assertEqual((count(self.path), count(self.path, 'approval_audit')), (1, 1))
+
     def test_unknown_request_and_wrong_role_are_negative(self):
         with self.assertRaises(PermissionError):
             approve(self.path, 'guest', 'r1', 'k')

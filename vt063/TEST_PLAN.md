@@ -81,3 +81,23 @@ All unit cases are in `vt063/tests/test_review_approval.py`, with test-first com
 - **CI workflow added** at `.github/workflows/vt063-tests.yml`; addition does not imply CI has already passed. Use the GitHub checks page to establish status.
 - **Risk not proven**: cross-process DB uniqueness, authenticated reviewer identity, atomic approval+audit record, original request policies and real on-chain invariants.
 - **Global lock** serializes independent requests; not presented as throughput-optimal. Refactor only after integrating a production datastore that supports atomic uniqueness.
+
+
+## Second vertical slice — SQLite integration (T20–T25)
+
+The original 19 in-memory tests remain; **six additional integration tests** use real temporary SQLite files. This is independent of the API and does not claim end-to-end DAO functionality. The transactional invariant is: for a requestId, `count(approvals) <= 1`, and every successful first approval has exactly one matching committed `approval_audit` row. Failure before audit insertion must roll back both inserts. `BEGIN IMMEDIATE` provides a single SQLite write transaction; `PRIMARY KEY(request_id)` adds a persistent uniqueness constraint.
+
+| ID | Risk/criterion | Level | Precondition / input | Expected result | Priority | Executable test method |
+|---|---|---|---|---|---|---|
+| T20 | AC2, audit atomicity | SQLite integration | First approval of existing r1 with key k1 | 1 approval, 1 audit | P0 | test_insert_approval_and_audit_atomically |
+| T21 | AC4, idempotency | SQLite integration | Retry k1 then distinct k2 | original approved replay, then already-approved; 1 row each | P0 | test_retry_replays_original_response_and_preserves_audit |
+| T22 | AC4, failure-path | SQLite integration | fail_audit=True between two inserts | RuntimeError; both tables empty; successful subsequent retry | P0 | test_failure_during_audit_rolls_back_approval |
+| T23 | AC3, negatives | SQLite integration | guest role, unknown request, empty key | PermissionError, KeyError, ValueError; no writes | P0 | test_unknown_request_and_wrong_role_are_negative |
+| T24 | AC4, race across processes | SQLite integration | Two spawned processes with distinct keys approve same r1 | [approved, already-approved]; count 1+1 | P0 | test_two_independent_processes_serialize_same_request |
+| T25 | AC4, contention | SQLite integration | 30 threads, distinct connections and keys to same r1 | One approved, approval/audit 1 each | P0 | test_30_simultaneous_db_connections_never_duplicate |
+
+Test file: `vt063/tests/test_sqlite_approval.py`. Recorded RED: scaffold `c0e2d22` + tests-only commit `bfb6d02`, **6/6 behavioral tests fail**. GREEN: `77c751d`, portable `spawn` update `e79cfe8`, **25/25 whole suite pass** locally. SQLite idempotency-guard mutant in `sqlite_mutation_check.py` causes the exact retry test to error (`UNIQUE constraint failed`), while the tracked production adapter remains unchanged. CI run `43610380757` passed on Python 3.11 and 3.13. Run the latest GitHub Actions checks for subsequent documentation commits.
+
+**150-task SQLite performance:** `sqlite_load_150.py` executes five 150-thread bursts, one new SQLite DB per burst; p95 values (ms) 113.538 / 72.898 / 59.291 / 47.324 / 66.316, median run p95 66.316. This is local database contention, not HTTP/real-user traffic; the 4,000-ms SLA is therefore *not* verified. Evidence: `vt063/evidence/SQLITE_VERIFIED_2026-11-14.md`.
+
+**Risk residuals:** authenticated reviewer mapping, approval→on-chain governance coupling, durable audit events outside this table, multi-node SQLite limits, replica behavior, full HTTP/E2E testing, testnet and 150 independently generated user requests. The SQLite test strengthens evidence beyond the earlier one-process Lock but does not address those unproven risks.

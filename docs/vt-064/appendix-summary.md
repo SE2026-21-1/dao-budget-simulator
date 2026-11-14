@@ -42,3 +42,114 @@ node --import tsx scripts/benchmark_vt064.mjs
 ```
 
 [README](README.md) có lệnh coverage và hướng dẫn tái tạo mutant trong worktree disposable;không áp mutation lên nhánh nộp. [PDF source](report.md) giữ17casefamilies,traceability và reflection314từ. Không tuyên bố upload Classroom,peer review,DB/chain/walletE2E hoặc durability khi mất điện.
+
+<!-- pagebreak -->
+
+# Phụ lục C — test thất bại trước patch
+
+**Source:** `31cd65858a18d5a47862f62321fb3bed09758b4f`. Đây là commit plan/tests, trước runtime fix. Chạy trên worktree sạch từ baseline0328eea, không lấy thay đổi chưa commit ở checkout cá nhân.
+
+**Lệnh chạy:**
+
+```bash
+node --import tsx --test tests/indexer/import-encoding.test.ts
+```
+
+**Trích kết quả thật:** [20261114-red.log](20261114-red.log). Các đoạn dưới chọn phần counterexamples, counts và nguyên nhân; không phải toàn bộ log hoặc lần chạy mới.
+
+```text
+EXIT_CODE=1
+✖ invalid_leading_byte
+✖ stray_continuation
+✖ overlong_slash
+✖ encoded_surrogate
+✖ above_unicode_max
+✖ incomplete_before_ascii
+tests 14
+pass 7
+fail 7
+skipped 0
+AssertionError [ERR_ASSERTION]: Missing expected rejection:
+invalid_leading_byte: bytes=ff
+```
+
+Tên/counts/error được giữ từ log; timings và các stack frames được bỏ trong bản trích. Sáu subcases hỏng encoding cộng parent group tạo7checksFAIL, không phải7defects độc lập.
+
+**Vì sao fail đúng lý do?** Bytes hỏng được đặt bên trong JSON string; nếu decode bằng replacement thì JSON vẫn parse được. CLI cũ trả success thay vì reject, nên assert.rejects phát hiện hành vi sai. Không phải lỗi thiếu dependency/module hay JSON luôn sai cú pháp. Valid Unicode, EOF và BOM controls đã chạy trong cùng suite.
+
+**Review patch trước chấp nhận:** [diff đầy đủ](20261114-implementation.patch) chỉ thay cách đọc/đếm raw bytes, decoder fatal có state/EOF flush và test launcher. Không sửa saveDraft, API, database hoặc contract. Decoder không được normalize dữ liệu hoặc âm thầm chấp nhận BOM đầu file.
+
+**Sau patch:** runtime source `8e6f27ac645382901b62e21db8b43b20c19acae8`, [GREEN log](20261114-green.log) ghi21/21PASS,0FAIL/SKIP. Typecheck/build cũng exit0. Counts là Node checks gồm groups/subtests, không phóng đại thành21featurefamilies.
+
+<!-- pagebreak -->
+
+# Phụ lục D — mutation giết được bằng test
+
+**Mutation bắt buộc VT-064:** trả success dù persistence thất bại. Commit local riêng `3e6ce686421c7e79f8beedbac9417958c0008616`, branch experiment/23001850-vt064-false-success-20261114. [Diff gốc](20261114-mutation.patch) được lưu để review; không push code lỗi.
+
+**Thay đổi cố ý trong catch của mkdir:**
+
+```typescript
+// Bản đúng:
+catch (error) {
+  throw new ImportFailure(index, imported, rejected, error);
+}
+// Mutant:
+catch {
+  imported.push({ index, id: draft.id });
+  continue;
+}
+```
+
+Đây là trình bày lại cùng thay đổi một dòng trong diff, không phải patch thứ hai. Với destination là regular file, mkdir thất bại; mutant vẫn ghi report imported rồi trả completed dù không có draft được lưu.
+
+**Lệnh chạy trên worktree mutant:**
+
+```bash
+node --import tsx --test \
+  --test-name-pattern='persistence failure cannot be returned as success' \
+  tests/indexer/import.test.ts
+```
+
+**Trích lỗi thực:** [mutation.log](20261114-mutation.log).
+
+```text
+EXIT_CODE=1
+tests 1
+pass 0
+fail 1
+AssertionError [ERR_ASSERTION]: Missing expected rejection.
+```
+
+**Control trên source sạch:** [mutation-clean.log](20261114-mutation-clean.log) ghi exit0,1PASS/0FAIL cho cùng test. Git ancestry check xác nhận mutant không thuộc nhánh nộp; clean source vẫn ném ImportFailure và không có success giả. Mutation không phải compile error: test thất bại do hàm trả thành công sai.
+
+**Giới hạn kết luận:** Một mutation bị giết không chứng minh mọi filesystem failure đều được bắt. T08 kiểm thêm write đầu thành công rồi write sau thất bại: file đầu còn nguyên, partial report đúng và không claim các dòng chưa chạy. Crash/power-loss durability vẫn chưa được chứng minh.
+
+<!-- pagebreak -->
+
+# Phụ lục E — coverage, regression và tải
+
+**Coverage tại source8e6f27a:** [log đầy đủ](20261114-coverage.log). Trích số đo V8, không phải phần trăm tự ước lượng:
+
+```text
+tests 21
+pass 21
+fail 0
+skipped 0
+file        | line % | branch % | funcs % | uncovered lines
+cli.ts      |  91.89 |    75.00 |  100.00 | 8-10
+drafts.ts   | 100.00 |   100.00 |   90.91 |
+all files   |  97.78 |    96.36 |   92.31 |
+```
+
+Các số trên không thay disk oracle, mutation hoặc risk coverage. CLI usage path còn thiếu; line/branch100% của drafts không có nghĩa mọi lỗi write/sync/link/unlink đã được fault-inject hay crash-tested.
+
+**Behavior cũ không liên quan:** [BE07 regression](20261114-regression.log) tại8e6f27a:15PASS,0FAIL/SKIP. Git blob của API server, BE07 tests và drafts.ts bằng baseline0328eea. Không sửa assertion cũ để làm xanh; không gọi BE07 unit là PostgreSQL/full-chain acceptance.
+
+**Flaky review:** [replay1](20261114-flaky-1.log) và [replay2](20261114-flaky-2.log) tạib79beda đổi thứ tự test files và concurrency1/4; mỗi lượt3selected checksPASS. Temp directories tách biệt; race chỉ yêu cầu đúng một winner và report khớp file, không pin người thắng. Fixed seed cho phép tái lập, không loại trừ mọi interleaving hoặc dữ liệu ngẫu nhiên khác.
+
+**80 tác vụ đồng thời:** [raw samples](20261114-load.json) giữ80latencies cho từng run; script có8warmups, dùng monotonic clock và ghi/read-back file thật. Ba run riêng đều80complete/0errors; p95 được tính lại bằng sorted samples[75], so ngưỡng2500ms, không lấy trung bình p95 hoặc cộng thành240tasks đồng thời.
+
+**Giới hạn tải:** Một Node process,80logical tasks,1draft/task trên temporary filesystem local. Mốc chung gồm scheduling, write/sync/link và read-back; không phải80HTTPclients,80physicalthreads hoặc load DB/RPC/wallet. Kết quả chỉ đủ cho slice được đo.
+
+**Tái lập và đối chiếu:** [README](README.md) chứa commands, [results.json](20261114-results.json) gắn baseline/sourceSHA/exit codes và [module plan](20261114-module-plan.md) ghi context/prompt/review thật. Không chạy lại runtime tests chỉ để đổi độ dài PDF; tất cả số liệu vẫn thuộc các lượt và source đã nêu.

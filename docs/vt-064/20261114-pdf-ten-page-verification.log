@@ -1,0 +1,70 @@
+TOTAL_PAGES=10
+MAIN_PAGES=5
+APPENDIX_PAGES=5
+FONT=Body9.2pt/table8pt unchanged
+CHANGE=Added selected RED,mutation,coverage/regression/load evidence pages to appendices; main report/runtime/full logs unchanged.
+VISUAL=Three added appendix pages inspected; section and error details fit without clipping.
+LINKS=Full AI usage,RED,mutation,coverage and rawlatencies annotations verified.
+PDF_SHA256=1c35d16b08adcb625c3afc0d345534ebf2ca21d6b18d4d19aed274d329e61799
+RUNTIME_TESTS=Not rerun for document-only change; existing execution source attribution preserved.
+
+Title:           BT3_23001850_VT-064 — kèm phụ lục
+Subject:         VT-064: nội dung chính và phụ lục tách biệt; không tự giảm cỡ chữ để ép số trang
+Keywords:        
+Author:          Phan Thanh Dũng / AI-assisted; disclosure in appendix A
+Creator:         (unspecified)
+Producer:        ReportLab PDF Library - (opensource)
+CreationDate:    Sat Nov 14 22:23:10 2026 +07
+ModDate:         Sat Nov 14 22:23:10 2026 +07
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           10
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       93245 bytes
+Optimized:       no
+PDF version:     1.4
+
+Page  Type          URL
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt064-submission-20261114
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-module-plan.md
+   4  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/README.md
+   6  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/AI-usage.md
+   6  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-module-plan.md
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt064-submission-20261114/docs/vt-064
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-red.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-green.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-implementation.patch
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation.patch
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation-clean.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-regression.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-flaky-1.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-flaky-2.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-coverage.log
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-load.json
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-results.json
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/README.md
+   7  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/report.md
+   8  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-red.log
+   8  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-implementation.patch
+   8  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-green.log
+   9  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation.patch
+   9  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation.log
+   9  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-mutation-clean.log
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-coverage.log
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-regression.log
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-flaky-1.log
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-flaky-2.log
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-load.json
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/README.md
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-results.json
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-module-plan.md
+  10  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-module-plan.md

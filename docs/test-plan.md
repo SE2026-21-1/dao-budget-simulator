@@ -49,11 +49,19 @@ PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
 - **QA05 reachable:** `3d539f1` chạy184cases/958scenario receipts/422live UI
   checkpoints/13text vectors PASS; TC05/06/07/08/14 per-vector reset/receipt/
   API/UI gaps nêu ngày11/11 đã được bổ sung. [Source/raw/failures/limits](evidence/tv4-20261113-qa05-live.md).
-  Full #7/#16 vẫn PARTIAL:10genuine Ready(single) preconditions không thể có
-  khi Governor chỉ scheduleBatch và là proposer duy nhất; chờ TV1 chấp nhận
-  N/A hoặc chỉ ra setup production-reachable hợp lệ. Không impersonate/grant
-  role để lấy PASS; role-first single-Unset denial không thay Ready proof.
-  Không yêu cầu peer chạy lại scope cũ. #17 bounded Done giữ nguyên.
+  Ten `TC06/{actor}/execute/Ready(single)` preconditions hiện là **N/A — production-unreachable**,
+  không phải PASS, theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+  tại `94d5367c8d60326b9b9f7de09265be531743f3b8` (chỉ SC10, SC06 v3, Ready(single)).
+  Actors: A, B, C, D, funding, deployer, caller, recipient, outsider, recipient2.
+  Sau valid audited bootstrap, Governor sole proposer chỉ scheduleBatch; single vẫn Unset.
+  Giả định contracts/dependencies nguyên bản, audited role graph, không stale bootstrap
+  operation/impersonation/extra grants/open proposer/storage injection. Role-first single-Unset
+  vẫn là reachable control riêng; Ready(batch), ETA/replay/mutation/rollback/bootstrap negatives giữ nguyên.
+  Counts độc lập PASS/FAIL/SKIP/N/A/BLOCKED: matrix184/0/0/0/0; TC10 riêng4/0/0/0/0;
+  preconditions0/0/0/10/0; tổng disposition188/0/0/10/0, không là một run mới hay198PASS.
+  Historical index/raw/SHA không đổi; tạo disposition version mới từ immutable index,
+  không chạy lại browser campaign. Full #7/#16 vẫn theo applicable peer/receiver/integration
+  gates, không còn chờ quyết định Ready(single). #17 bounded Done giữ nguyên.
 - **Receiver #36/#40/#42:** tiếp nhận scope TV3 đã báo, chỉ còn redacted raw
   compare/normalized exports/manifest/verify, API restart/checkpoint và
   shutdown/owned PID/ports để TV4 tự đối chiếu. Không yêu cầu repeat smoke/rebuild

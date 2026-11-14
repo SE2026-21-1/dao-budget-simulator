@@ -2,6 +2,29 @@ import assert from 'node:assert/strict';
 import { id, ZeroAddress, ZeroHash } from 'ethers';
 
 const ACTORS = ['A', 'B', 'C', 'D', 'funding', 'deployer', 'caller', 'recipient', 'outsider', 'recipient2'];
+export const READY_SINGLE_DISPOSITION = {
+  status: 'N/A',
+  disposition: 'production-unreachable',
+  review: 'https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037',
+  reviewedCommit: '94d5367c8d60326b9b9f7de09265be531743f3b8',
+  assumptions: 'Audited valid bootstrap and final role graph; exact unmodified production contracts and pinned dependencies; no stale bootstrap operation, impersonation, extra grants, open proposer or storage injection.',
+  reason: 'Governor is the sole proposer and only calls scheduleBatch; the distinct single operation remains Unset. Role-first single-Unset receipts are independent reachable controls, not Ready(single) proof.',
+};
+export const readySinglePreconditions = () => ACTORS.map(actor => ({
+  label: `TC06/${actor}/execute/Ready(single)`, actor, ...READY_SINGLE_DISPOSITION,
+  reachableControl: `TC06/${actor}/execute/role-first-single-Unset`,
+}));
+
+// Reachable case results and inapplicable preconditions are separate populations.
+export function dispositionCounts(cases, preconditions) {
+  const counts = { PASS: 0, FAIL: 0, SKIP: 0, 'N/A': 0, BLOCKED: 0 };
+  for (const row of [...cases, ...preconditions]) {
+    const status = row.result ?? row.status;
+    assert.ok(Object.hasOwn(counts, status), `Unknown QA05 disposition: ${status}`);
+    counts[status]++;
+  }
+  return counts;
+}
 const CANCEL_ACTORS = ['A', 'outsider', 'deployer'];
 const CANCEL = 'cancel(address[],uint256[],bytes[],bytes32)';
 const bitmap = n => `0x${BigInt(n).toString(16).padStart(64, '0')}`;
@@ -147,9 +170,10 @@ export async function runCases(harness) {
         const singleId = await ctx.one('Timelock', 'hashOperation', args);
         assert.notEqual(singleId, p.operationId);
         assert.equal(await ctx.one('Timelock', 'getTimestamp', [singleId]), 0n);
-        ctx.row.checks.push({ name: 'Genuine Ready(single) precondition', status: 'BLOCKED', scope: 'Ready(single) authorization proof only; role-first receipt below is reachable',
+        ctx.row.checks.push({ name: 'Genuine Ready(single) precondition', ...READY_SINGLE_DISPOSITION,
+          label: `TC06/${actor}/execute/Ready(single)`,
+          scope: 'Ready(single) authorization proof only; role-first receipt below is reachable',
           singleId, singleTimestamp: '0', batchId: p.operationId, batchTimestamp: String(p.eta),
-          reason: 'GovernorTimelockControl._queueOperations calls scheduleBatch only; final PROPOSER_ROLE is Governor only. No EOA or zero/open proposer. No impersonation, role grant or storage injection permitted.',
           sources: ['lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol:_queueOperations', 'lib/openzeppelin-contracts/contracts/governance/TimelockController.sol:hashOperation/hashOperationBatch'],
           authorizedOpenExecutor: 'EXECUTOR_ROLE(0) is false in final graph. Were it open, execute(single) would reach TimelockUnexpectedOperationState(singleId,Ready bitmap 0x04), not execute the distinct Ready batch. Not exercised or claimed as Ready(single) proof.' });
       }
@@ -314,6 +338,5 @@ export async function runCases(harness) {
 
   return { labels, count: labels.length,
     familyCounts: Object.fromEntries(['TC06', 'TC07', 'TC14'].map(family => [family, labels.filter(label => label.startsWith(`${family}/`)).length])),
-    preconditionMismatches: [{ label: 'TC06/*/execute/Ready(single)', count: ACTORS.length,
-      status: 'BLOCKED', reason: 'No production-reachable Ready single operation: only Governor is proposer and Governor schedules batches exclusively. Separate role-first single-Unset receipts are not substitutes for that proof.' }] };
+    preconditions: readySinglePreconditions() };
 }

@@ -101,3 +101,21 @@ Test file: `vt063/tests/test_sqlite_approval.py`. Recorded RED: scaffold `c0e2d2
 **150-task SQLite performance:** `sqlite_load_150.py` executes five 150-thread bursts, one new SQLite DB per burst; p95 values (ms) 113.538 / 72.898 / 59.291 / 47.324 / 66.316, median run p95 66.316. This is local database contention, not HTTP/real-user traffic; the 4,000-ms SLA is therefore *not* verified. Evidence: `vt063/evidence/SQLITE_VERIFIED_2026-11-14.md`.
 
 **Risk residuals:** authenticated reviewer mapping, approval→on-chain governance coupling, durable audit events outside this table, multi-node SQLite limits, replica behavior, full HTTP/E2E testing, testnet and 150 independently generated user requests. The SQLite test strengthens evidence beyond the earlier one-process Lock but does not address those unproven risks.
+
+
+## Reviewed improvements: T26–T27, transaction mutation, actual SQLite audit failure
+
+| ID | Criterion/risk | Level | Input/setup | Expected | Priority | Test |
+|---|---|---|---|---|---|---|
+| T26 | I3: actual database failure path | SQLite integration | CREATE TRIGGER audit_denied BEFORE INSERT ON approval_audit RAISE(ABORT, ...), approve r1 | sqlite3.IntegrityError; approval and audit count both 0; drop trigger then retry succeeds | P0 | test_real_sqlite_audit_insert_failure_rolls_back |
+| T27 | AC4: transaction locking race | SQLite integration/concurrency | Two SQLite connections, per-test before_insert barrier; mutate BEGIN IMMEDIATE to deferred BEGIN | Original one approved + one already-approved; mutant causes sqlite3.OperationalError database is locked | P0 | test_begin_immediate_serializes_check_then_insert |
+
+The test-only `before_insert` callback is optional and `None` by default; it introduces test coupling, **not** an application callback. Avoid using it in production. The mutation script `sqlite_transaction_mutation_check.py` writes the mutant into a temporary directory, runs the SQLite tests against it, requires the precise T27 test to error/fail and restores source implicitly on temporary-directory cleanup. Three local repetitions killed the mutant. Distinct from the older `sqlite_mutation_check.py` which bypasses the idempotency conditional and is caught by SQLite's uniqueness constraint.
+
+Commit trace: transaction seam `4fad8fd`, T26/T27 `dfbea07`, transaction mutant script `44bdb9a`, performance telemetry `dd3bc69`, CI wiring `b1dce0f`. Original harness first patch `3649144` and initial benchmark `cbeaf23` remain in history; the first import error at `54be81f` is not a behavioral RED. SQLite six behavioral RED tests predated the SQLite GREEN patch.
+
+Decision table rules map: D1→T04/T05/T18/T23; D2→T10/T19/T23; D3→T09/T23; D4→T06/T20; D5a→T07/T21; D5b→T08/T21; D6→T11/T12/T17/T24/T25/T27; D7→T07/T08/T21. Rule D6 reaches its decisive state inside the transaction, not necessarily at the arrival moment.
+
+The upgraded SQLite 150-thread benchmark now reports **approved=1, already-approved=149, errors=0**, busy_timeout=15000 ms, p95, p99, max, and throughput for each of five local trials; five-run variability reflects process scheduling and SQLite lock contention, not a stable production SLA. See `vt063/evidence/REVIEW_FIX_VERIFIED_2026-11-14.md`.
+
+Execution disclosure: local runs were conducted using AI-operated tools in an isolated Linux/Python environment; GitHub Actions provides independently reproducible CI evidence. Student-run Windows evidence has **not** been claimed.

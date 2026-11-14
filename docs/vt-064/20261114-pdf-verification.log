@@ -1,0 +1,65 @@
+COMMAND=python docs/vt-064/build_pdf.py (ReportLab5.1.0)
+EXIT_CODE=0
+MAIN_PAGES=5
+FULL_PAGES=15
+APPENDIX_PAGES=10
+REFLECTION_WORDS=314
+FIRST_PAGE_REQUIRED_FIELDS=PASS
+MARKDOWN_LINKS=PASS
+VISUAL=Main pages1-5 contact sheet inspected; final performance table and full reflection separately inspected.
+PDF_SHA256=d2df5f3a5c27b533db94358907c852e2755301ce964dab91787609d6616e77a7
+
+PDFINFO_MAIN
+Title:           BT3_23001850_VT-064 — nội dung chính
+Subject:         VT-064: nội dung chính và phụ lục tách biệt; không tự giảm cỡ chữ để ép số trang
+Keywords:        
+Author:          Phan Thanh Dũng / AI-assisted; disclosure in appendix A
+Creator:         (unspecified)
+Producer:        ReportLab PDF Library - (opensource)
+CreationDate:    Sat Nov 14 22:10:47 2026 +07
+ModDate:         Sat Nov 14 22:10:47 2026 +07
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           5
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       69523 bytes
+Optimized:       no
+PDF version:     1.4
+
+PDFINFO_FULL
+Title:           BT3_23001850_VT-064 — kèm phụ lục
+Subject:         VT-064: nội dung chính và phụ lục tách biệt; không tự giảm cỡ chữ để ép số trang
+Keywords:        
+Author:          Phan Thanh Dũng / AI-assisted; disclosure in appendix A
+Creator:         (unspecified)
+Producer:        ReportLab PDF Library - (opensource)
+CreationDate:    Sat Nov 14 22:10:47 2026 +07
+ModDate:         Sat Nov 14 22:10:47 2026 +07
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           15
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       95175 bytes
+Optimized:       no
+PDF version:     1.4
+
+LINKS
+Page  Type          URL
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/tree/personal/23001850-vt064-submission-20261114
+   1  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/20261114-module-plan.md
+   4  Annotation    https://github.com/SE2026-21-1/dao-budget-simulator/blob/personal/23001850-vt064-submission-20261114/docs/vt-064/README.md

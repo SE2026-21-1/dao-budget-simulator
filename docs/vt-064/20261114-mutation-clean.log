@@ -1,0 +1,18 @@
+SOURCE_COMMIT=b79bedada37a9b61495a7920cf399d5e6319ad0b
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/node", "--import", "tsx", "--test", "--test-name-pattern=persistence failure cannot be returned as success", "tests/indexer/import.test.ts"]
+NODE=24.15.0
+EXIT_CODE=0
+ELAPSED_SECONDS=0.400
+
+STDOUT
+✔ persistence failure cannot be returned as success (22.862355ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 310.972622
+
+STDERR

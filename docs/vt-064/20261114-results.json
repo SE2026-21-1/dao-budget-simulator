@@ -1,0 +1,143 @@
+{
+  "student": {
+    "name": "Phan Thanh Dũng",
+    "id": "23001850",
+    "variant": "VT-064",
+    "team": "SE2026-T16",
+    "project": "BC-03"
+  },
+  "originalBaseline": "1bb182144d516c13d6bb32fc30d2778af71a8169",
+  "newWorktreeBaseline": "0328eea8e3f5fca5fb7c5e1f92fa744720e4f43c",
+  "branch": "personal/23001850-vt064-submission-20261114",
+  "originalHistory": "Original PR31 was already merged on2026-11-09, merge b67611e3a7c2f0f1a827b2fbffcb921b27d011c3, no submitted reviews returned by API. New submission branch not merged; historical facts not erased.",
+  "red": {
+    "sourceCommit": "31cd65858a18d5a47862f62321fb3bed09758b4f",
+    "exit": 1,
+    "command": [
+      "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/indexer/import-encoding.test.ts"
+    ]
+  },
+  "redInterpretation": "Six malformed-byte subcases incorrectly succeeded before patch; RED:14 checks,7pass7fail including parent group. This is a behavioral RED, not a missing-module failure.",
+  "green": {
+    "sourceCommit": "8e6f27ac645382901b62e21db8b43b20c19acae8",
+    "exit": 0,
+    "command": [
+      "/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm",
+      "run",
+      "test:vt064"
+    ]
+  },
+  "greenCounts": {
+    "nodeChecks": 21,
+    "pass": 21,
+    "fail": 0,
+    "skip": 0,
+    "note": "Includes group/subtest counts; not21independent feature families."
+  },
+  "regression": {
+    "sourceCommit": "8e6f27ac645382901b62e21db8b43b20c19acae8",
+    "exit": 0,
+    "command": [
+      "/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm",
+      "run",
+      "test:be07"
+    ]
+  },
+  "regressionCounts": {
+    "pass": 15,
+    "fail": 0,
+    "skip": 0
+  },
+  "coverage": {
+    "sourceCommit": "8e6f27ac645382901b62e21db8b43b20c19acae8",
+    "line": {
+      "cli.ts": 91.89,
+      "drafts.ts": 100.0,
+      "all": 97.78
+    },
+    "branch": {
+      "cli.ts": 75.0,
+      "drafts.ts": 100.0,
+      "all": 96.36
+    },
+    "limits": "Node V8 source-mapped path coverage is not proof of all filesystem errors, durability after crash/power failure, or chain/API correctness; cli usage/error paths remain uncovered."
+  },
+  "mutation": {
+    "commit": "3e6ce686421c7e79f8beedbac9417958c0008616",
+    "branch": "experiment/23001850-vt064-false-success-20261114",
+    "exit": 1,
+    "killedBy": "persistence failure cannot be returned as success",
+    "reason": "Missing expected rejection",
+    "ancestorOfSubmission": false,
+    "published": false,
+    "cleanControlExit": 0
+  },
+  "flakyRuns": [
+    {
+      "sourceCommit": "b79bedada37a9b61495a7920cf399d5e6319ad0b",
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=seeded|concurrent same-ID",
+        "tests/indexer/import.test.ts",
+        "tests/indexer/import-encoding.test.ts"
+      ],
+      "exit": 0
+    },
+    {
+      "sourceCommit": "b79bedada37a9b61495a7920cf399d5e6319ad0b",
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=4",
+        "--test-name-pattern=seeded|concurrent same-ID",
+        "tests/indexer/import-encoding.test.ts",
+        "tests/indexer/import.test.ts"
+      ],
+      "exit": 0
+    }
+  ],
+  "loadSourceCommit": "b79bedada37a9b61495a7920cf399d5e6319ad0b",
+  "loadRuns": [
+    {
+      "run": 1,
+      "tasks": 80,
+      "completed": 80,
+      "p95Ms": 109.01223899999997,
+      "errors": 0,
+      "targetMs": 2500
+    },
+    {
+      "run": 2,
+      "tasks": 80,
+      "completed": 80,
+      "p95Ms": 88.52307100000002,
+      "errors": 0,
+      "targetMs": 2500
+    },
+    {
+      "run": 3,
+      "tasks": 80,
+      "completed": 80,
+      "p95Ms": 88.186631,
+      "errors": 0,
+      "targetMs": 2500
+    }
+  ],
+  "loadLimits": "In-process80tasks on real local temporary filesystem with one draft per task,8warmups,sharedrelease timestamp includes scheduling/write/fsync/link/readback. Not80externalusers orHTTP/DB/RPC/wallet load;3separate runs not240concurrenttasks. Raw80samples per run in20261114-load.json.",
+  "unchangedGitBlobsFromNewBaseline": {
+    "indexer/import/drafts.ts": "f591a944af775237b7da37e658b153519d930662",
+    "tests/indexer/be07.test.ts": "94664c395a0b71280fd0061008cae862aa429a1e",
+    "indexer/api/server.ts": "29f019dae5649c48139ae9adbbb9bb7ec3e2355b"
+  },
+  "commandsAreExecutedNotRecommendations": true
+}

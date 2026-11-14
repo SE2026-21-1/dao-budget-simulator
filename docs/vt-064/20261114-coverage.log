@@ -1,0 +1,52 @@
+SOURCE_COMMIT=8e6f27ac645382901b62e21db8b43b20c19acae8
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/node", "--experimental-test-coverage", "--test-coverage-include=indexer/import/**", "--import", "tsx", "--test", "tests/indexer/import.test.ts", "tests/indexer/import-encoding.test.ts"]
+NODE=24.15.0
+EXIT_CODE=0
+ELAPSED_SECONDS=6.536
+
+STDOUT
+▶ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors
+  ✔ invalid_leading_byte (616.357448ms)
+  ✔ stray_continuation (323.584278ms)
+  ✔ overlong_slash (329.73363ms)
+  ✔ encoded_surrogate (361.945991ms)
+  ✔ above_unicode_max (392.43113ms)
+  ✔ incomplete_before_ascii (398.395616ms)
+✔ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors (2429.236884ms)
+✔ CLI rejects a UTF-8 sequence truncated at EOF without committing the preceding JSON array (351.222405ms)
+✔ CLI retains the existing rejection of a leading UTF-8 BOM (357.05139ms)
+▶ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary
+  ✔ two_byte (317.856968ms)
+  ✔ three_byte (286.914611ms)
+  ✔ four_byte (367.213417ms)
+✔ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary (973.827122ms)
+✔ CLI persists a seeded generated valid-Unicode batch without replacement or normalization (685.515284ms)
+✔ mixed import retains both valid neighbors and exact values (57.887457ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (11.003993ms)
+✔ seeded generated batches persist exactly their valid records (649.730258ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (17.546143ms)
+✔ persistence failure cannot be returned as success (5.531672ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (11.171005ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (1812.92798ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5500.236423
+ℹ start of coverage report
+ℹ ------------------------------------------------------------
+ℹ file        | line % | branch % | funcs % | uncovered lines
+ℹ ------------------------------------------------------------
+ℹ indexer     |        |          |         | 
+ℹ  import     |        |          |         | 
+ℹ   cli.ts    |  91.89 |    75.00 |  100.00 | 8-10
+ℹ   drafts.ts | 100.00 |   100.00 |   90.91 | 
+ℹ ------------------------------------------------------------
+ℹ all files   |  97.78 |    96.36 |   92.31 | 
+ℹ ------------------------------------------------------------
+ℹ end of coverage report
+
+STDERR

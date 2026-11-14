@@ -1,0 +1,13 @@
+SOURCE_COMMIT=8e6f27ac645382901b62e21db8b43b20c19acae8
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm", "run", "build"]
+NODE=24.15.0
+EXIT_CODE=0
+ELAPSED_SECONDS=5.604
+
+STDOUT
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+STDERR

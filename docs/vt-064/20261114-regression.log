@@ -1,0 +1,36 @@
+SOURCE_COMMIT=8e6f27ac645382901b62e21db8b43b20c19acae8
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm", "run", "test:be07"]
+NODE=24.15.0
+EXIT_CODE=0
+ELAPSED_SECONDS=4.013
+
+STDOUT
+
+> dao-budget-simulator@0.0.0 test:be07
+> node --import tsx --test tests/indexer/be07.test.ts
+
+✔ RPC retries 429, then recovers (real HTTP) (144.531001ms)
+✔ RPC retries 500, then recovers (real HTTP) (41.390712ms)
+✔ RPC retries 503, then recovers (real HTTP) (25.294617ms)
+✔ RPC retries network, then recovers (real HTTP) (30.851802ms)
+✔ RPC retries timeout, then recovers (real HTTP) (2018.658847ms)
+✔ RPC retries -32005, then recovers (real HTTP) (15.533473ms)
+✔ RPC permanent -32601 is attempted once (10.305201ms)
+✔ RPC permanent -32602 is attempted once (6.318699ms)
+✔ RPC permanent -32000 is attempted once (5.975696ms)
+✔ RPC permanent 401 is attempted once (9.629926ms)
+✔ RPC permanent 403 is attempted once (5.092336ms)
+✔ RPC retries are bounded, exponential, jittered and interruptible (108.373645ms)
+✔ freshness changes after 30 seconds with zero new events; recovery gates are explicit (1.135944ms)
+✔ recovery config validates bounded window and polling interval (16.133504ms)
+✔ invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response (48.001534ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3609.941046
+
+STDERR

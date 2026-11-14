@@ -1,15 +1,16 @@
-"""Render the VT-064 report and evidence into the required Unicode PDF.
+"""Render the Vietnamese report, AI disclosure, and verbatim evidence artifacts.
 
-Run with a Python venv containing reportlab; the source of truth is report.md/AI-usage.md.
+Run with a Python venv containing reportlab. Main content is also emitted as
+/tmp/vt064-main-only.pdf so its page count can be inspected independently.
 """
 from __future__ import annotations
 
 import html
 import re
 from pathlib import Path
+from urllib.parse import urljoin, urlsplit
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
@@ -19,54 +20,151 @@ from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 OUTPUT = ROOT / "BT3_23001850_VT-064.pdf"
+MAIN_OUTPUT = Path("/tmp/vt064-main-only.pdf")
+SOURCE_URL = (
+    "https://github.com/SE2026-21-1/dao-budget-simulator/"
+    "blob/personal/23001850-vt064-submission-20261114/docs/vt-064/"
+)
+CONTENT_WIDTH = A4[0] - 72
 pdfmetrics.registerFont(TTFont("DejaVu", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"))
 pdfmetrics.registerFont(TTFont("DejaVuBold", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"))
-pdfmetrics.registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVuBold")
+pdfmetrics.registerFontFamily("DejaVu", normal="DejaVu", bold="DejaVuBold",
+                            italic="DejaVu", boldItalic="DejaVuBold")
 
-BODY = ParagraphStyle("Body", fontName="DejaVu", fontSize=8.1, leading=12, spaceAfter=6)
-HEADING = ParagraphStyle("Heading", parent=BODY, fontName="DejaVuBold", fontSize=11, leading=15, spaceBefore=11, spaceAfter=5)
-TITLE = ParagraphStyle("Title", parent=BODY, fontName="DejaVuBold", fontSize=15, leading=20, spaceAfter=12)
-SMALL = ParagraphStyle("Small", parent=BODY, fontSize=6.8, leading=9, spaceAfter=1)
-LABEL = ParagraphStyle("Label", parent=SMALL, fontName="DejaVuBold", alignment=TA_CENTER)
-MONO = ParagraphStyle("Evidence", parent=SMALL, fontSize=7, leading=10)
+BODY = ParagraphStyle("Body", fontName="DejaVu", fontSize=9.2, leading=13,
+                      spaceAfter=6, splitLongWords=1, allowWidows=0, allowOrphans=0)
+HEADING = ParagraphStyle("Heading", parent=BODY, fontName="DejaVuBold",
+                         fontSize=11.2, leading=15, spaceBefore=11, spaceAfter=5,
+                         keepWithNext=True)
+SUBHEADING = ParagraphStyle("Subheading", parent=HEADING, fontSize=10, leading=13)
+TITLE = ParagraphStyle("Title", parent=HEADING, fontSize=15, leading=20,
+                       spaceBefore=0, spaceAfter=12)
+APPENDIX_TITLE = ParagraphStyle("AppendixTitle", parent=TITLE,
+                                textColor=colors.HexColor("#25345a"))
+CELL = ParagraphStyle("Cell", parent=BODY, fontSize=8, leading=10.8, spaceAfter=1)
+CELL_HEADER = ParagraphStyle("CellHeader", parent=CELL, fontName="DejaVuBold")
+EVIDENCE = ParagraphStyle("Evidence", parent=CELL, leading=10.5, spaceAfter=1)
+
+# Tokenize before escaping or inserting markup: a URL inside a Markdown link must
+# not become a second, nested ReportLab link. Parentheses in URL paths are allowed.
+INLINE = re.compile(
+    r"`(?P<code>[^`]+)`"
+    r"|\[(?P<label>[^\]]+)\]\((?P<href>(?:[^()\s]|\([^()\s]*\))+)"
+    r'(?:\s+"[^"]*")?\)'
+    r"|\*\*(?P<bold>.+?)\*\*"
+    r"|\*(?P<italic>[^*]+)\*"
+    r"|(?P<url>https?://[^\s<>]+)"
+)
 
 
-def marked(text: str) -> str:
-    text = html.escape(text)
-    text = re.sub(r"`([^`]+)`", lambda m: f'<font color="#25345a">{m.group(1)}</font>', text)
-    text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
-    text = re.sub(r"(https://[^\s<]+)", lambda m: f'<link href="{m.group(1)}">{m.group(1)}</link>', text)
-    return text
+def marked(text: str, hyperlinks: bool = True) -> str:
+    parts: list[str] = []
+    end = 0
+    for match in INLINE.finditer(text):
+        parts.append(html.escape(text[end:match.start()]))
+        if match["code"] is not None:
+            parts.append(f'<font color="#25345a">{html.escape(match["code"])}</font>')
+        elif match["label"] is not None:
+            label = marked(match["label"], hyperlinks=False)
+            href = urljoin(SOURCE_URL, match["href"])
+            if hyperlinks and urlsplit(href).scheme in {"http", "https", "mailto"}:
+                parts.append(f'<link href="{html.escape(href, quote=True)}" '
+                             f'color="#174c8c">{label}</link>')
+            else:
+                parts.append(label)
+        elif match["bold"] is not None:
+            parts.append(f'<b>{marked(match["bold"], hyperlinks=hyperlinks)}</b>')
+        elif match["italic"] is not None:
+            parts.append(f'<i>{marked(match["italic"], hyperlinks=hyperlinks)}</i>')
+        else:
+            url = match["url"]
+            suffix = ""
+            while url and (
+                url[-1] in ".,;:!?"
+                or (url[-1] == ")" and url.count(")") > url.count("("))
+                or (url[-1] == "]" and url.count("]") > url.count("["))
+            ):
+                suffix = url[-1] + suffix
+                url = url[:-1]
+            escaped = html.escape(url, quote=True)
+            parts.append(f'<link href="{escaped}" color="#174c8c">{escaped}</link>'
+                         if hyperlinks else escaped)
+            parts.append(html.escape(suffix))
+        end = match.end()
+    parts.append(html.escape(text[end:]))
+    return "".join(parts)
 
 
-def markdown(path: Path) -> list:
+def evidence_line(line: str) -> Paragraph:
+    # Preserve indentation, empty lines, and all failure detail; Paragraph still
+    # wraps long tokens (SHA/path/URL) within the available frame or table cell.
+    text = html.escape(line.expandtabs(4)).replace(" ", "&#160;")
+    return Paragraph(text or "&#160;", EVIDENCE)
+
+
+def table_cells(line: str) -> list[str]:
+    text = line.strip()[1:]
+    if text.endswith("|") and not text.endswith(r"\|"):
+        text = text[:-1]
+    return [cell.strip().replace(r"\|", "|")
+            for cell in re.split(r"(?<!\\)\|", text)]
+
+
+def markdown(path: Path, appendix: bool = False) -> list:
     lines = path.read_text(encoding="utf8").splitlines()
     flow: list = []
     i = 0
+    fenced = False
+    has_title = False
+    if appendix and not any(line.startswith("# ") for line in lines):
+        title = Paragraph("Phụ lục A — AI Usage Log", APPENDIX_TITLE)
+        title.section = "appendix"
+        flow.append(title)
     while i < len(lines):
         line = lines[i].strip()
-        if not line:
+        if line.startswith("```"):
+            fenced = not fenced
             i += 1
             continue
-        if line.startswith("# "):
-            flow.append(Paragraph(marked(line[2:]), TITLE))
-        elif line.startswith("## "):
-            flow.append(Paragraph(marked(line[3:]), HEADING))
-        elif line.startswith("| "):
+        if fenced:
+            flow.append(evidence_line(lines[i]))
+        elif not line:
+            i += 1
+            continue
+        elif line == "<!-- pagebreak -->":
+            flow.append(PageBreak())
+        elif heading := re.match(r"^(#{1,6})\s+(.+)$", line):
+            level = len(heading[1])
+            text = heading[2]
+            if level == 1:
+                if appendix and not has_title:
+                    text = re.sub(r"^Phụ lục(?:\s+A)?\s*[—–-]?\s*", "", text)
+                    text = f"Phụ lục A — {text}"
+                title = Paragraph(marked(text), APPENDIX_TITLE if appendix else TITLE)
+                title.section = "appendix" if appendix else "main"
+                flow.append(title)
+                has_title = True
+            else:
+                flow.append(Paragraph(marked(text), HEADING if level == 2 else SUBHEADING))
+        elif line.startswith("|"):
             rows: list[list[str]] = []
             while i < len(lines) and lines[i].strip().startswith("|"):
-                cells = [cell.strip() for cell in lines[i].strip().strip("|").split("|")]
-                if not all(set(cell.replace(" ", "")) <= set(":-") for cell in cells):
+                cells = table_cells(lines[i])
+                if not all(re.fullmatch(r":?-+:?", cell.replace(" ", "")) for cell in cells):
                     rows.append(cells)
                 i += 1
-            widths = {6: [44, 70, 65, 125, 156, 26],
-                      5: [91, 79, 146, 103, 67],
-                      4: [66, 126, 217, 77]}.get(len(rows[0]))
-            if widths is None:
-                widths = [486 / len(rows[0])] * len(rows[0])
-            data = [[Paragraph(marked(cell), LABEL if j == 0 else SMALL)
-                     for j, cell in enumerate(row)] for row in rows]
-            table = Table(data, colWidths=widths, repeatRows=1, hAlign="LEFT")
+            if not rows:
+                continue
+            columns = max(map(len, rows))
+            weights = {6: [44, 70, 65, 125, 156, 26],
+                       5: [91, 79, 146, 103, 67],
+                       4: [66, 126, 217, 77]}.get(columns, [1] * columns)
+            widths = [CONTENT_WIDTH * weight / sum(weights) for weight in weights]
+            data = [[Paragraph(marked(cell), CELL_HEADER if row_index == 0 else CELL)
+                     for cell in row + [""] * (columns - len(row))]
+                    for row_index, row in enumerate(rows)]
+            table = Table(data, colWidths=widths, repeatRows=1, hAlign="LEFT",
+                          splitByRow=1, splitInRow=1)
             table.setStyle(TableStyle([
                 ("VALIGN", (0, 0), (-1, -1), "TOP"),
                 ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8edf5")),
@@ -77,8 +175,7 @@ def markdown(path: Path) -> list:
                 ("LEFTPADDING", (0, 0), (-1, -1), 3),
                 ("RIGHTPADDING", (0, 0), (-1, -1), 3),
             ]))
-            flow.append(table)
-            flow.append(Spacer(1, 6))
+            flow.extend([table, Spacer(1, 6)])
             continue
         else:
             flow.append(Paragraph(marked(line), BODY))
@@ -86,35 +183,67 @@ def markdown(path: Path) -> list:
     return flow
 
 
-def footer(canvas, doc):
-    canvas.saveState()
-    canvas.setFont("DejaVu", 7)
-    canvas.drawString(36, 26, "BT3 · 23001850 · VT-064")
-    canvas.drawRightString(A4[0] - 36, 26, f"Trang {doc.page}")
-    canvas.restoreState()
+class ReportDocument(SimpleDocTemplate):
+    section = "main"
+
+    def afterFlowable(self, flowable):
+        self.section = getattr(flowable, "section", self.section)
+
+    def afterPage(self):
+        canvas = self.canv
+        canvas.saveState()
+        canvas.setFont("DejaVu", 8)
+        canvas.drawString(36, 26, "BT3 · 23001850 · VT-064")
+        section = "Phụ lục" if self.section == "appendix" else "Nội dung chính"
+        canvas.drawRightString(A4[0] - 36, 26, f"{section} · Trang {self.page}")
+        canvas.restoreState()
+
+
+def evidence_paths() -> list[Path]:
+    # Include only the current execution trail; historical logs and raw latency
+    # samples remain downloadable on the submission branch without duplicating
+    # hundreds of JSON values in the PDF.
+    names = (
+        "20261114-red.log", "20261114-implementation.patch",
+        "20261114-green.log", "20261114-mutation.patch",
+        "20261114-mutation.log", "20261114-mutation-clean.log",
+        "20261114-coverage.log", "20261114-regression.log",
+        "20261114-flaky-1.log", "20261114-flaky-2.log",
+    )
+    return [HERE / name for name in names if (HERE / name).is_file()]
 
 
 def build(path: Path, appendix: bool):
     flow = markdown(HERE / "report.md")
     if appendix:
-        flow.extend([PageBreak(), Paragraph("Phụ lục A — AI Usage Log", TITLE)])
-        flow.extend(markdown(HERE / "AI-usage.md"))
-        flow.extend([PageBreak(), Paragraph("Phụ lục B — bằng chứng chạy", TITLE)])
-        for name in ("red.log", "review-red.log", "mutation.patch", "mutation.log", "green.log", "coverage.log", "load.json"):
-            text = (HERE / name).read_text(encoding="utf8").splitlines()
-            if name == "mutation.patch":
-                excerpt = text
-            else:
-                excerpt = text[-25:] if name in ("load.json", "coverage.log") else text[:12]
-            flow.append(Paragraph(name, HEADING))
-            flow.extend(Paragraph(html.escape(line) or " ", MONO) for line in excerpt)
-    doc = SimpleDocTemplate(str(path), pagesize=A4, leftMargin=36, rightMargin=36,
-                            topMargin=38, bottomMargin=39, title="BT3_23001850_VT-064",
-                            author="Phan Thanh Dung / AI-assisted draft")
-    doc.build(flow, onFirstPage=footer, onLaterPages=footer)
+        flow.append(PageBreak())
+        flow.extend(markdown(HERE / "AI-usage.md", appendix=True))
+        title = Paragraph("Phụ lục B — bằng chứng thực thi chọn lọc", APPENDIX_TITLE)
+        title.section = "appendix"
+        flow.extend([PageBreak(), title])
+        flow.append(Paragraph(
+            "Các tệp chọn dưới đây được đính kèm nguyên văn, không cắt phần lỗi. "
+            "Các log lịch sử, typecheck/build và toàn bộ 80 latency samples mỗi run "
+            "được giữ trên nhánh nộp trong docs/vt-064; xem README và "
+            "20261114-results.json/20261114-load.json. Tên tệp không tự chứng minh "
+            "lệnh đã chạy: đối chiếu source SHA, command và exit code trong log. "
+            "Phụ lục không tính vào giới hạn trang nội dung chính.", BODY))
+        for evidence in evidence_paths():
+            flow.append(Paragraph(marked(evidence.name), HEADING))
+            flow.extend(evidence_line(line)
+                        for line in evidence.read_text(encoding="utf8").splitlines())
+    doc = ReportDocument(
+        str(path), pagesize=A4, leftMargin=36, rightMargin=36,
+        topMargin=38, bottomMargin=39,
+        title="BT3_23001850_VT-064" + (" — kèm phụ lục" if appendix else " — nội dung chính"),
+        author="Phan Thanh Dũng / AI-assisted; disclosure in appendix A",
+        subject="VT-064: nội dung chính và phụ lục tách biệt; không tự giảm cỡ chữ để ép số trang",
+    )
+    doc.build(flow)
 
 
 if __name__ == "__main__":
-    build(Path("/tmp/vt064-main-only.pdf"), False)
+    build(MAIN_OUTPUT, False)
     build(OUTPUT, True)
-    print(f"Generated {OUTPUT}")
+    print(f"Generated {MAIN_OUTPUT} (main content only)")
+    print(f"Generated {OUTPUT} (main content and appendices)")

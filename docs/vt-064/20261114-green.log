@@ -1,0 +1,44 @@
+SOURCE_COMMIT=8e6f27ac645382901b62e21db8b43b20c19acae8
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm", "run", "test:vt064"]
+NODE=24.15.0
+EXIT_CODE=0
+ELAPSED_SECONDS=4.803
+
+STDOUT
+
+> dao-budget-simulator@0.0.0 test:vt064
+> node --import tsx --test tests/indexer/import.test.ts tests/indexer/import-encoding.test.ts
+
+▶ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors
+  ✔ invalid_leading_byte (764.481251ms)
+  ✔ stray_continuation (352.381784ms)
+  ✔ overlong_slash (256.877115ms)
+  ✔ encoded_surrogate (334.060476ms)
+  ✔ above_unicode_max (268.33404ms)
+  ✔ incomplete_before_ascii (243.89845ms)
+✔ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors (2228.015045ms)
+✔ CLI rejects a UTF-8 sequence truncated at EOF without committing the preceding JSON array (366.170898ms)
+✔ CLI retains the existing rejection of a leading UTF-8 BOM (260.276008ms)
+▶ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary
+  ✔ two_byte (277.960826ms)
+  ✔ three_byte (240.153256ms)
+  ✔ four_byte (220.510725ms)
+✔ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary (740.805166ms)
+✔ CLI persists a seeded generated valid-Unicode batch without replacement or normalization (353.138873ms)
+✔ mixed import retains both valid neighbors and exact values (70.963172ms)
+✔ invalid records and empty input cannot create a draft or escape the directory (12.437221ms)
+✔ seeded generated batches persist exactly their valid records (1082.878551ms)
+✔ duplicate and concurrent same-ID imports preserve exactly one winner (32.414371ms)
+✔ persistence failure cannot be returned as success (6.741637ms)
+✔ mid-batch storage failure preserves prior committed row without claiming later rows (11.898316ms)
+✔ CLI reports accepted/rejected rows and fails closed on invalid input/persistence (1520.023346ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4369.077573
+
+STDERR

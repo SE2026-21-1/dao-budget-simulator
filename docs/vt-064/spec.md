@@ -2,6 +2,17 @@
 
 Baseline: `1bb182144d516c13d6bb32fc30d2778af71a8169`, branch `personal/23001850-vt-064-bulk-import`. Individual exercise; no upstream merge.
 
+**Historical specification:** the baseline/branch and “no upstream merge” above
+describe the original writing time, not the current GitHub state. Original PR31
+was merged on09/11/2026; the new submission branch
+`personal/23001850-vt064-submission-20261114` is separate and not merged.
+The14/11 clarification of AC1 requires valid UTF-8 with a raw-byte1MiB bound:
+malformed encoding/JSON rejects the whole file before writes, whereas invalid
+records inside valid JSON remain independent row rejections. See the actual
+pre-patch [module-only plan and review](20261114-module-plan.md),
+[current17-case matrix/results](report.md) and [source-bound evidence](20261114-results.json).
+This dated clarification does not reattribute the historical plan/logs below.
+
 ## Problem
 
 An operator needs a repeatable offline bulk import of **draft** BUD spending requests. One malformed record must not discard other valid drafts. Imported drafts are *not* Governor proposals, votes, or Treasury authorizations. The existing read model only contains confirmed chain facts.

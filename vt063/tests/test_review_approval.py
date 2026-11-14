@@ -84,6 +84,37 @@ class ApprovalTests(unittest.TestCase):
         self.assertCountEqual(results, ['approved', 'already-approved'])
         self.assertEqual(self.svc.approval_count('r1'), 1)
 
+    def test_forced_interleaving_exposes_missing_guard(self):
+        """Make both unguarded threads observe missing approval before either write."""
+        class CoordinatedApprovals(dict):
+            def __init__(self):
+                super().__init__()
+                self.barrier = threading.Barrier(2)
+                self.calls = 0
+                self.counter_lock = threading.Lock()
+
+            def __contains__(self, key):
+                with self.counter_lock:
+                    self.calls += 1
+                    call_number = self.calls
+                if call_number <= 2:
+                    try:
+                        # Protected version times out once; mutant permits two threads.
+                        self.barrier.wait(timeout=0.2)
+                    except threading.BrokenBarrierError:
+                        pass
+                return super().__contains__(key)
+
+        self.svc._approvals = CoordinatedApprovals()
+        start = threading.Barrier(2)
+        def work(key):
+            start.wait(timeout=2)
+            return self.svc.approve('reviewer', 'r1', key)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+            results = list(pool.map(work, ('x', 'y')))
+        self.assertCountEqual(results, ['approved', 'already-approved'])
+        self.assertEqual(self.svc.approval_count('r1'), 1)
+
     def test_150_concurrent_one_approval(self):
         with concurrent.futures.ThreadPoolExecutor(max_workers=150) as pool:
             results = list(pool.map(lambda i: self.svc.approve('reviewer', 'r1', f'k{i}'), range(150)))

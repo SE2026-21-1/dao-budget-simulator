@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install coverage
         run: python -m pip install coverage==7.10.7
-      - name: Run 25 unit and SQLite integration tests with branch coverage
+      - name: Run 27 unit and SQLite integration tests with branch coverage
         run: |
           PYTHONPATH=vt063 python -m coverage run --branch --source=approval_harness -m unittest discover -s vt063/tests -v
           PYTHONPATH=vt063 python -m coverage report -m
@@ -29,6 +29,8 @@ jobs:
         run: PYTHONPATH=vt063 python vt063/mutation_check.py
       - name: SQLite guard mutation must be detected
         run: PYTHONPATH=vt063 python vt063/sqlite_mutation_check.py
+      - name: BEGIN IMMEDIATE transaction mutation must be detected
+        run: PYTHONPATH=vt063 python vt063/sqlite_transaction_mutation_check.py
       - name: SQLite 150-thread contention experiment (not HTTP SLA)
         run: PYTHONPATH=vt063 python vt063/sqlite_load_150.py
       - name: Local 150-thread experiment (not SLA)

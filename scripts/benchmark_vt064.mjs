@@ -26,6 +26,8 @@ try {
   const p95Ms = samples[Math.ceil(tasks * .95) - 1];
   const report = { tasks, completed: samples.length, errors: 0, p95Ms, maxMs: samples.at(-1), targetMs: 2500,
     meetsTarget: p95Ms <= 2500, method: '80 concurrent in-process importer tasks; one real file persisted and read back per task',
+    samplesMs: samples, percentileMethod: 'nearest rank: sorted samples[ceil(80 * 0.95) - 1]',
+    timing: 'Shared release timestamp includes task scheduling, actual file persistence and read-back.',
     environment: { node: process.version, platform: process.platform, arch: process.arch },
     limits: 'Local filesystem and Node task scheduling only; no HTTP, PostgreSQL, RPC, wallet or 80 external users.' };
   console.log(JSON.stringify(report, null, 2));

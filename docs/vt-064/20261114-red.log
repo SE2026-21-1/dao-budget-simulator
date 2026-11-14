@@ -1,0 +1,137 @@
+SOURCE_COMMIT=31cd65858a18d5a47862f62321fb3bed09758b4f
+COMMAND=["/home/ptdung/.nvm/versions/node/v24.15.0/bin/node", "--import", "tsx", "--test", "tests/indexer/import-encoding.test.ts"]
+NODE=24.15.0
+EXIT_CODE=1
+ELAPSED_SECONDS=3.887
+
+STDOUT
+▶ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors
+  ✖ invalid_leading_byte (497.712715ms)
+  ✖ stray_continuation (263.571629ms)
+  ✖ overlong_slash (269.615396ms)
+  ✖ encoded_surrogate (237.443726ms)
+  ✖ above_unicode_max (237.517421ms)
+  ✖ incomplete_before_ascii (259.223136ms)
+✖ CLI rejects malformed UTF-8 inside otherwise valid JSON without persisting valid neighbors (1771.730751ms)
+✔ CLI rejects a UTF-8 sequence truncated at EOF without committing the preceding JSON array (215.784898ms)
+✔ CLI retains the existing rejection of a leading UTF-8 BOM (216.798483ms)
+▶ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary
+  ✔ two_byte (242.090036ms)
+  ✔ three_byte (217.698295ms)
+  ✔ four_byte (214.662367ms)
+✔ CLI preserves Unicode whose UTF-8 bytes span the 64 KiB read boundary (676.405944ms)
+✔ CLI persists a seeded generated valid-Unicode batch without replacement or normalization (349.526314ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 7
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3757.872097
+
+✖ failing tests:
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ invalid_leading_byte (497.712715ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: invalid_leading_byte: bytes=ff
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ stray_continuation (263.571629ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: stray_continuation: bytes=80
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ overlong_slash (269.615396ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: overlong_slash: bytes=c0af
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ encoded_surrogate (237.443726ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: encoded_surrogate: bytes=eda080
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ above_unicode_max (237.517421ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: above_unicode_max: bytes=f4908080
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/import-encoding.test.ts:1:2611
+✖ incomplete_before_ascii (259.223136ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: incomplete_before_ascii: bytes=e282
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async rejectsInput (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:30:3)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:76:7)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async TestContext.<anonymous> (/tmp/dao-vt064-submission-20261114/tests/indexer/import-encoding.test.ts:68:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+STDERR

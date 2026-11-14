@@ -1,0 +1,36 @@
+diff --git a/indexer/import/cli.ts b/indexer/import/cli.ts
+index fb46394..245d339 100644
+--- a/indexer/import/cli.ts
++++ b/indexer/import/cli.ts
+@@ -10,11 +10,15 @@ export async function main(args: string[] = process.argv.slice(2)): Promise<numb
+   try {
+     let text = '';
+     let bytes = 0;
+-    for await (const chunk of createReadStream(args[0], { encoding: 'utf8' })) {
+-      bytes += Buffer.byteLength(chunk);
++    const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
++    for await (const chunk of createReadStream(args[0])) {
++      bytes += chunk.length;
+       if (bytes > 1024 * 1024) throw new InputError('Input must be at most 1 MiB.');
+-      text += chunk;
++      try { text += decoder.decode(chunk, { stream: true }); }
++      catch { throw new InputError('Input must be valid UTF-8.'); }
+     }
++    try { text += decoder.decode(); }
++    catch { throw new InputError('Input must be valid UTF-8.'); }
+     let rows: unknown;
+     try { rows = JSON.parse(text) as unknown; }
+     catch { throw new InputError('Input must contain a JSON array.'); }
+diff --git a/package.json b/package.json
+index ea5db55..efc795f 100644
+--- a/package.json
++++ b/package.json
+@@ -12,7 +12,7 @@
+     "indexer": "tsx indexer/cli.ts",
+     "api": "tsx indexer/api/main.ts",
+     "import:drafts": "tsx indexer/import/cli.ts",
+-    "test:vt064": "tsx --test tests/indexer/import.test.ts",
++    "test:vt064": "node --import tsx --test tests/indexer/import.test.ts tests/indexer/import-encoding.test.ts",
+     "be06": "tsx indexer/be06/cli.ts",
+     "test:api": "node --import tsx --test tests/api/server.test.mjs",
+     "test:api:db": "bash scripts/check_be05_database.sh",

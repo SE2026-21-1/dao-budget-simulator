@@ -10,11 +10,15 @@ export async function main(args: string[] = process.argv.slice(2)): Promise<numb
   try {
     let text = '';
     let bytes = 0;
-    for await (const chunk of createReadStream(args[0], { encoding: 'utf8' })) {
-      bytes += Buffer.byteLength(chunk);
+    const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
+    for await (const chunk of createReadStream(args[0])) {
+      bytes += chunk.length;
       if (bytes > 1024 * 1024) throw new InputError('Input must be at most 1 MiB.');
-      text += chunk;
+      try { text += decoder.decode(chunk, { stream: true }); }
+      catch { throw new InputError('Input must be valid UTF-8.'); }
     }
+    try { text += decoder.decode(); }
+    catch { throw new InputError('Input must be valid UTF-8.'); }
     let rows: unknown;
     try { rows = JSON.parse(text) as unknown; }
     catch { throw new InputError('Input must contain a JSON array.'); }

@@ -183,6 +183,30 @@ describe("VT-062 receipt retry", () => {
     expect(nextSend).toHaveBeenCalledTimes(1);
   });
 
+  it.each(["reverted", "cancelled"] as const)(
+    "allows a new attempt with the same identity after a confirmed %s outcome",
+    async (kind) => {
+      hookHarness.waitForReceipt
+        .mockRejectedValueOnce(new ReceiptTerminalError(kind, kind))
+        .mockResolvedValueOnce(receiptFor(H2));
+      const send = vi.fn<() => Promise<Hash>>()
+        .mockResolvedValueOnce(H1)
+        .mockResolvedValueOnce(H2);
+      const afterReceipt = vi.fn();
+
+      expect(await useHarnessTransaction().run(send, afterReceipt, "same-request")).toBeNull();
+      expect(send).toHaveBeenCalledTimes(1);
+      expect(afterReceipt).not.toHaveBeenCalled();
+
+      const second = await useHarnessTransaction().run(send, afterReceipt, "same-request");
+      expect(second).toMatchObject({ transactionHash: H2 });
+      expect(send).toHaveBeenCalledTimes(2);
+      expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(1, H1);
+      expect(hookHarness.waitForReceipt).toHaveBeenNthCalledWith(2, H2);
+      expect(afterReceipt).toHaveBeenCalledTimes(1);
+    },
+  );
+
   it("preserves the old new-action behavior for callers without a request key", async () => {
     hookHarness.waitForReceipt
       .mockRejectedValueOnce(new Error("RPC timeout"))

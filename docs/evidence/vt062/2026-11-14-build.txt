@@ -1,0 +1,12 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+src/chain/proposalIdFromReceipt.vt062.test.ts(23,37): error TS2322: Type '(`0x${string}` | `0x${string}`[] | null)[]' is not assignable to type 'readonly `0x${string}`[]'.
+  Type '`0x${string}` | `0x${string}`[] | null' is not assignable to type '`0x${string}`'.
+    Type 'null' is not assignable to type '`0x${string}`'.
+src/chain/proposalIdFromReceipt.vt062.test.ts(28,73): error TS2322: Type '(`0x${string}` | `0x${string}`[] | null)[]' is not assignable to type 'readonly `0x${string}`[]'.
+  Type '`0x${string}` | `0x${string}`[] | null' is not assignable to type '`0x${string}`'.
+    Type 'null' is not assignable to type '`0x${string}`'.
+EXIT_CODE=2

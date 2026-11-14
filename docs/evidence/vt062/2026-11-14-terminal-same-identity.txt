@@ -1,0 +1,15 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> frontend@0.0.0 test
+> vitest run src/chain/useTransaction.vt062.test.ts
+
+
+ RUN  v4.1.12 /workspace/scratch/30999eaa8a67/repo/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  20:22:59
+   Duration  285ms (transform 56ms, setup 0ms, import 74ms, tests 10ms, environment 0ms)
+
+EXIT_CODE=0

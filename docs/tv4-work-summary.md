@@ -8,6 +8,28 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Cập nhật disposition TV1 — 14/11/2026
+
+Đã tiếp nhận [review5901055037](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+trên94d5367: chỉ SC10/SC06v3/Ready(single), không approval toàn PR.
+Đúng10 `TC06/{A,B,C,D,funding,deployer,caller,recipient,outsider,recipient2}/execute/Ready(single)`
+là **N/A — production-unreachable**: audited bootstrap, Governor sole proposer,
+scheduleBatch-only, singleUnset; contracts/dependencies đúng revision, không stale
+bootstrap/impersonation/extra grants/storage injection. Không cộng N/A thành PASS.
+[Version mới](evidence/tv4-20261114-qa05-disposition.json) giữ188PASS,0FAIL,0SKIP,
+10N/A,0BLOCKED trong inventory hai campaign; raw/index/lịch sử thất bại bất biến.
+Ready(batch)/ETA/replay/mutation/rollback/bootstrap negatives vẫn nguyên.
+[Checklist Sepolia](sepolia-deployment.md) đã tách technical review xong khỏi
+owner-selected revision/public9addresses/6custodians/gas-budget/broadcast còn thiếu.
+Dev46287df được merge giữ lịch sử090ce6c; TV3 current consumer và TV2 SnapshotInfo
+acknowledgement còn chờ, CI phải gắn HEAD/candidate mới. Receiver/extension/testnet/release riêng.
+Tiếp nhận fix TV2 `e065179` bằng `aadd59c`, giữ tác giả TV2: repeated unchanged
+accountsChanged/chainChanged không xóa GOV reads. [Kiểm tra mới tại233e119](evidence/tv4-20261114-verification.json):
+49 frontend tests PASS, lint8warnings/exit0, buildPASS/bundlewarning; Chromium
+thật giữ500GOV/400votes sau event lặp bằng synthetic read-only provider/RPC.
+Đây không là extension, chain deployment hoặc testnet proof.
+
+
 ## QA05 và bàn giao báo cáo — 11/11/2026
 
 Phan Thanh Dũng, MSV23001850, TV4, `dung0611`: giữ nguyên checkout cá nhân

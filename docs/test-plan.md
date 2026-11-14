@@ -59,7 +59,8 @@ PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
   vẫn là reachable control riêng; Ready(batch), ETA/replay/mutation/rollback/bootstrap negatives giữ nguyên.
   Counts độc lập PASS/FAIL/SKIP/N/A/BLOCKED: matrix184/0/0/0/0; TC10 riêng4/0/0/0/0;
   preconditions0/0/0/10/0; tổng disposition188/0/0/10/0, không là một run mới hay198PASS.
-  Historical index/raw/SHA không đổi; tạo disposition version mới từ immutable index,
+  [Disposition version 14/11](evidence/tv4-20261114-qa05-disposition.json) sinh bằng
+  `node scripts/check_qa05_disposition.mjs --output <NEW-file>` từ immutable index/raw;
   không chạy lại browser campaign. Full #7/#16 vẫn theo applicable peer/receiver/integration
   gates, không còn chờ quyết định Ready(single). #17 bounded Done giữ nguyên.
 - **Receiver #36/#40/#42:** tiếp nhận scope TV3 đã báo, chỉ còn redacted raw
@@ -68,14 +69,18 @@ PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
   đã đủ evidence; archived H24 không chứng minh endpoint máy nhận còn sống.
 - **Testnet #20:** [đường Sepolia riêng](sepolia-deployment.md), 11155111/
   PublicNode/K2, giữ local Anvil31337 guard; canonical28bootstrap/Sepolia tests
-  và actual17tx state-fork PASS tại `7fb2958`. Chưa signer owner/public map/gas/permission, chưa TV1 review
-  delta remote hoặc Executed+Defeated receipts chờ thời gian thật: BLOCKED.
-  Không yêu cầu làm lại TV1 local SC/SC06 hoặc TV2 recovery review cũ.
+  và actual17tx state-fork PASS tại `7fb2958`. TV1 đã [approve đúng delta](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+  trên `94d5367`; không yêu cầu re-review SC/SC06/remote không đổi.
+  Chưa owner-selected integrated revision, public9-address map,6custody confirmations,
+  native gas/funder/fee/budget/broadcast permission hoặc real-time Executed+Defeated: **BLOCKED**.
 
-PR50 là docs/evidence-only độc lập runtime PR21; CI đúng `d85611b` đạt
-8 TV4 jobs +1 BE08, TV1 COMMENT không được đổi thành approval. Chỉ Project
-nhóm #1 đang mở được cập nhật; Project TV4 #2 giữ closed. Dev vẫn `87738d3`;
-không tự merge, đóng #18/#20 hoặc ký release từ local PASS.
+**Cập nhật tích hợp 14/11:** PR50 đã merge `46287df95f58fc53fb13224848a3d3cbe4639438`
+vào Dev. Merge giữ lịch sử `090ce6c` đưa đúng Dev này vào candidate PR21;
+không gán CI cũ của base87738d3 cho candidate mới. Consumer fix gốc TV2 `e065179`
+được tiếp nhận có attribution bằng `aadd59c`; PR51 không tự merge vào nhánh TV3.
+TV3 còn review current integrated consumer/config; TV2 cần acknowledge SnapshotInfo
+thread. Receiver/extension/testnet/release là gate riêng, không ngăn riêng source
+sau khi đủ scoped reviews và exact-head/integration CI. Project#1 active; #2 closed giữ nguyên.
 
 ## Handoff máy nhận và tích hợp consumer TV3 — 11/11/2026
 

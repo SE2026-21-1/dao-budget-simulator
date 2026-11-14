@@ -1,0 +1,67 @@
+{
+  "sourceCommit": "233e119",
+  "baseDev": "46287df95f58fc53fb13224848a3d3cbe4639438",
+  "mergeCommit": "090ce6c",
+  "scope": "Narrow checks for disposition source and dependent TV2 wallet fix; no repeated expensive campaigns. Documentation/evidence updates after tested source do not change runtime/generator bytes.",
+  "node": "24.15.0",
+  "checks": [
+    {
+      "command": "node scripts/check_qa05_disposition.mjs --output /tmp/tv4-qa05-disposition-20261114.json",
+      "exit": 0,
+      "counts": {
+        "PASS": 188,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 10,
+        "BLOCKED": 0
+      },
+      "note": "Immutable successful-campaign inventory; not newly executed 188 cases."
+    },
+    {
+      "command": "node --check scripts/check_qa05_variants.mjs",
+      "exit": 0
+    },
+    {
+      "command": "npm run test --prefix frontend -- src/chain/wallet.test.tsx src/chain/config.test.ts src/data/useProposalFixtures.test.tsx src/components/TreasurySection.test.tsx src/pages/ProposalDetailPage.test.tsx",
+      "exit": 0,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "npm run lint --prefix frontend",
+      "exit": 0,
+      "warnings": 8
+    },
+    {
+      "command": "npm run build --prefix frontend",
+      "exit": 0,
+      "note": "Retained >500kB bundle warning."
+    },
+    {
+      "command": "sha256sum -c SHA256SUMS (docs/evidence/tv2-be09-20261113)",
+      "exit": 0,
+      "matched": 11
+    },
+    {
+      "command": "Parse published TV2 isolated API restart JSON; assert before/after checks/pub/digest/context equality, stop exit0 and PASS",
+      "exit": 0,
+      "note": "TV4 offline validation of published bytes, not TV4 execution of TV2 restart or TV3 rebuild."
+    }
+  ],
+  "walletBrowser": {
+    "status": "PASS",
+    "mode": "Actual React/Vite/Chromium; synthetic read-only injected provider and local RPC, intentionally unavailable API. No chain sends, no extension/receiver/testnet claim.",
+    "before": [
+      "500 GOV",
+      "400 GOV"
+    ],
+    "afterRepeatedSameAccountAndChain": [
+      "500 GOV",
+      "400 GOV"
+    ],
+    "screenshot": "tv4-20261114-wallet-smoke.webp",
+    "preparationFailure": "Initial throwaway RPC had wrong getVotes selector; assertion failed before event check. Corrected stub selector to 0x9ab24eb0; complete smoke then passed. Not a product regression."
+  },
+  "notRun": "No new Foundry/native DB/benchmark/browser-chain campaign or Sepolia broadcast. Existing campaign attribution retained."
+}

@@ -2,6 +2,31 @@
 
 Người chạy: Phan Thanh Dũng (`dung0611`). Không merge, self-approve, auto-merge, đóng gate release hoặc broadcast Sepolia. Worktree cá nhân VT-064 ban đầu (33 modified/7 untracked) được giữ nguyên; mọi thay đổi ở worktree TV4 riêng. Tài khoản có push/triage, không admin. Chỉ cập nhật Project nhóm #1 đang mở; Project TV4 #2 đã đóng.
 
+## Superseding disposition and gates — 14/11/2026
+
+The campaign results below retain their original dates/source SHAs. TV1 has now
+[approved SC10, SC06 v3 and Ready(single)](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+at reviewed `94d5367c8d60326b9b9f7de09265be531743f3b8`. The ten Ready(single)
+preconditions below are now **N/A — production-unreachable**, not BLOCKED or PASS:
+[new disposition/version/counts](tv4-20261114-qa05-disposition.json). This assumes
+the audited final graph, unmodified contracts/pinned dependencies, no stale
+bootstrap operation, impersonation, extra grant or storage injection; Governor
+is sole proposer, only scheduleBatch, corresponding single remains Unset.
+Reachable cases retain188PASS across two separately sourced campaigns; N/A10,
+FAIL/SKIP/BLOCKED0 in that disposition inventory; failed earlier runs remain raw history.
+
+PR50 is merged into Dev46287df; candidate merge090ce6c integrates that exact
+Dev history. Current PR21 source still needs TV3 consumer/config delta review and
+TV2 acknowledgement of the existing SnapshotInfo thread plus new exact-head CI.
+TV1's scoped approval is not whole-PR approval. Source merge is authorized once
+eligible; it is not pending another blanket human merge decision.
+Sepolia stays BLOCKED on owner revision/map/custody/native-gas/broadcast decisions,
+not on the completed TV1 technical review. See [owner checklist](../sepolia-deployment.md).
+TV2's published isolated restart bytes/checksums are now available under
+[receiver evidence](tv2-be09-20261113/README.md); they do not substitute TV3's
+still-missing rebuild/normalized-export bytes or same-run shutdown proof.
+
+
 ## 1. Source và attribution
 
 | Lượt mới | Source thực chạy | Kết quả/phạm vi |

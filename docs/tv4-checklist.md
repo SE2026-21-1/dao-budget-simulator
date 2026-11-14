@@ -5,6 +5,19 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+**Disposition hiện hành 14/11:** [TV1 review5901055037](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+đã chấp nhận đúng10 TC06/execute/Ready(single) là **N/A — production-unreachable**,
+không PASS; Governor sole proposer chỉ scheduleBatch nên singleUnset, với audited
+bootstrap/role graph, contracts/dependencies đúng revision và không extra grants/
+bootstrap tồn đọng/impersonation/storage injection. [Version/counts mới](evidence/tv4-20261114-qa05-disposition.json):
+188PASS/0FAIL/0SKIP/10N/A/0BLOCKED cho inventory hai campaign; raw cũ không sửa.
+Ready(batch), ETA/replay/mutation/rollback và bootstrap negatives giữ nguyên.
+[Sepolia owner checklist](sepolia-deployment.md) còn BLOCKED dù technical review đã xong.
+Dev hiện46287df, đã merge vào candidate090ce6c; gate source còn scoped TV3 consumer/config,
+TV2 SnapshotInfo acknowledgement và exact-head/integration CI, không toàn bộ receiver/testnet/release.
+Các số/ngày/SHA trong các mục cũ bên dưới là lịch sử, không thay current disposition này.
+
+
 **Tiếp nhận TV3 máy nhận11/11 — trạng thái hiện hành:** [#40 WSL](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124),
 [#36 Windows live](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841),
 [#42 clean clone/rebuild equal](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378)

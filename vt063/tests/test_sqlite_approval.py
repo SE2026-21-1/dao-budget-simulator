@@ -2,6 +2,7 @@
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
 import tempfile
+import multiprocessing
 import unittest
 from sqlite_approval import approve, count, initialize
 
@@ -42,7 +43,7 @@ class SQLiteApprovalTests(unittest.TestCase):
         self.assertEqual(count(self.path), 0)
 
     def test_two_independent_processes_serialize_same_request(self):
-        with ProcessPoolExecutor(max_workers=2) as pool:
+        with ProcessPoolExecutor(max_workers=2, mp_context=multiprocessing.get_context("spawn")) as pool:
             result = list(pool.map(worker, [(self.path, 'key-a'), (self.path, 'key-b')]))
         self.assertCountEqual(result, ['approved', 'already-approved'])
         self.assertEqual((count(self.path), count(self.path, 'approval_audit')), (1, 1))

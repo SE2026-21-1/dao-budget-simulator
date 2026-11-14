@@ -21,8 +21,11 @@ class ApprovalService:
     def edit(self, role, request_id, amount):
         if role != 'owner':
             raise PermissionError('only owner can edit source data')
-        original = self._requests[request_id]
-        self._requests[request_id] = Request(request_id, amount, original.creator)
+        with self._lock:
+            if request_id in self._approvals:
+                raise PermissionError('approved request is immutable')
+            original = self._requests[request_id]
+            self._requests[request_id] = Request(request_id, amount, original.creator)
 
     def approve(self, role, request_id, key):
         if role != 'reviewer':

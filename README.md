@@ -95,6 +95,12 @@ Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nh�
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
 Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
 
+Các lệnh `npm run test:be02`, `npm run test:be03`, `npm run test:be06` dùng
+`node --import tsx --test`, như BE04/BE07/BE08, thay vì IPC server của CLI
+`tsx --test`. Chúng chạy được khi Unix sockets bị hạn chế nhưng TCP loopback
+vẫn được phép; giữ nguyên test files, assertions và dependency
+([#47](https://github.com/SE2026-21-1/dao-budget-simulator/issues/47)).
+
 [CI bản triển khai `7a0ab33`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342)
 đã chạy thành công cả ba job; [metadata và log SQL](docs/evidence/tv4-ci-7a0ab33.json).
 Đây không chứng minh Governor/Timelock, checkpoint/reorg/rebuild, HTTP API,

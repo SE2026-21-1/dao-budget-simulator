@@ -25,7 +25,18 @@ variants=()
 cleanup() {
   local code=$?
   trap - EXIT INT TERM
-  if (( code != 0 )); then "${compose[@]}" logs --no-color --tail 100 >&2 || true; fi
+  if (( code != 0 )); then
+    "${compose[@]}" logs --no-color --tail 30 >&2 || true
+    # This is an owned synthetic topology. Print only public health/catalog
+    # fields, never environment values, connection strings or backup contents.
+    "${compose[@]}" exec -T api node --input-type=module - <<'JS' || true
+const query = new URLSearchParams({chainId:process.env.CHAIN_ID,deploymentId:process.env.DEPLOYMENT_ID});
+const response = await fetch('http://127.0.0.1:3000/api/health?' + query, {signal:AbortSignal.timeout(3000)});
+console.error('API_HEALTH_DIAGNOSTIC', response.status, await response.text());
+JS
+    "${compose[@]}" exec -T postgres psql -X -At -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+      -c "SELECT jsonb_build_object('deploymentName',d.deployment_name,'deploymentBlock',d.deployment_block,'phase',d.indexer_state->>'phase','checked',d.indexer_state->>'lastCheckedAt','rawHeight',c.block_number,'projectionHeight',p.block_number,'sourceMatch',c.source_scope=p.source_scope,'revisionMatch',d.snapshot_revision=p.snapshot_revision,'headerCount',(SELECT count(*) FROM indexed_blocks WHERE deployment_id=d.deployment_id AND block_number BETWEEN d.deployment_block AND p.block_number),'contracts',(SELECT jsonb_agg(jsonb_build_object('role',contract_role,'abi',abi_version,'block',deployment_block)) FROM deployment_contracts WHERE deployment_id=d.deployment_id)) FROM deployments d LEFT JOIN checkpoints c USING(deployment_id) LEFT JOIN projection_checkpoints p USING(deployment_id)" >&2 || true
+  fi
   docker rm -f "$project-missing" "$project-fixture" >/dev/null 2>&1 || true
   "${compose[@]}" down --volumes --remove-orphans --timeout 15 || code=1
   if ((${#variants[@]})); then docker image rm "${variants[@]}" >/dev/null || code=1; fi

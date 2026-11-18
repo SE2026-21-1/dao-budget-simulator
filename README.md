@@ -95,6 +95,16 @@ Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nh�
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
 Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
 
+CI (`ci.yml`, `be08.yml`) dùng helper chung
+`.github/actions/install-foundry`, giữ Foundry **1.8.5**. Khi upstream installer
+lỗi (như [BE08 run 44259413059](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44259413059)
+HTTP403 tại `foundryup/releases/latest/download` trước khi chạy test), helper thử
+tối đa ba lần rồi dùng image Foundry chính thức khóa digest; phải xác minh
+attestation đúng repo/workflow trước khi trích `forge`, `cast`, `anvil` và kiểm
+phiên bản cả ba. Fallback cần Docker và GitHub CLI trên runner; nếu xác minh lỗi,
+job dừng. Không bỏ pin/attestation, đổi quyền truy cập hay rerun mù để che lỗi;
+kiểm log bước cài đặt trước, chỉ coi acceptance đạt khi các bước test thật đã chạy.
+
 Các lệnh `npm run test:be02`, `npm run test:be03`, `npm run test:be06` dùng
 `node --import tsx --test`, như BE04/BE07/BE08, thay vì IPC server của CLI
 `tsx --test`. Chúng chạy được khi Unix sockets bị hạn chế nhưng TCP loopback

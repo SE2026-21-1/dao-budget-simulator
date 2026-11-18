@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-11",
+  "sourceCommit": "96593b3a5af4eff77e6d4291169f219fb641bf6c",
+  "integrationCommit": "cd4d8fd6372c1af0bd5d8b67bee5e42a33ac89a6",
+  "tv3Source": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+  "baseCommit": "71034ca8f39038ea5cfda4e8b78d510165950057",
+  "sourceHashes": {
+    "frontend/src/chain/governanceActions.ts": "bb22fb31edec4ba10ed0921c0de97087560135578437e71f12edf3691784e13d",
+    "frontend/src/chain/governanceActions.test.ts": "b63a18e23eed983bf4eea57fe470640d61d51d5de371e63c5c7e07f8e7a0bd8b",
+    "frontend/src/chain/sc06-v1.vectors.json": "459253463c700084c1a939b02a3f293042b95b62db2b621c7070c7c7aa0864d5",
+    "frontend/src/chain/transactions.ts": "c5590a588be833137a5ec1a8c56e4bdf140f208788931d146c279d86d8123d6a",
+    "frontend/src/chain/useTransaction.ts": "f49a65a62c05ed23b95c23c00cf74dbfd96c74be505b3667f84a4d83a7c60558",
+    "frontend/src/components/ProposalActions.tsx": "580e343720f128d54c000094166ab620522b27bae8534a39cdf9b248b192e7c1",
+    "frontend/src/pages/CreateProposalPage.tsx": "fd509852c1ecacc369935ebb290e2ac058f2989e3e3e93b2c74ec97c6a76fe07",
+    "frontend/src/pages/ProposalDetailPage.test.tsx": "6c0cbf5ef74670a411ff987056b070a409ca2c45fe5c6f7ed15e170dfd5cff3c"
+  },
+  "cutover": [
+    "TV3 preflight/outcome verify before success combined with retained WalletSession(snapshotSignal)",
+    "Remove obsolete currentProposalState and duplicate inline preflight",
+    "Propose receipt must match configured Governor, to, and expected payload-derived ID",
+    "Outcome failure keeps receipt hash/error and refresh cannot report success",
+    "Keep account/support captured across receipt await; not retargeted to changed wallet",
+    "Create confirmed ID reuses existing proposal-full-id wrapping rule"
+  ],
+  "verification": [
+    {
+      "sourceCommit": "cd4d8fd6372c1af0bd5d8b67bee5e42a33ac89a6",
+      "commands": [
+        "npm run test --prefix frontend",
+        "npm run lint --prefix frontend",
+        "npm run build --prefix frontend"
+      ],
+      "result": "65PASS/0FAIL/0SKIP; lint exit0 with8 existing warnings; build exit0 with bundle-size warning",
+      "raw": "frontend-checks.log"
+    },
+    {
+      "sourceCommit": "96593b3a5af4eff77e6d4291169f219fb641bf6c",
+      "command": "npm run build --prefix frontend",
+      "result": "PASS tsc/vite; bundle-size warning retained"
+    },
+    {
+      "command": "node /tmp/tv4-tv3-integration-20261111/verify-ui.mjs",
+      "result": "PASS",
+      "raw": "receipt-proof.json and browser.json",
+      "scope": "Actual Chromium UI, controlled HTTP API transport fixture and owned real Anvil unlocked-account EIP1193 adapter. Not PostgreSQL/worker, extension, receiving WSL or testnet."
+    }
+  ],
+  "newBehaviorCoverage": {
+    "unit": "New imported behavior/preflight/event and pinned outcome checks plus3 UI missing-event/wrong-emitter/wrong-receipt-block-state cases; positive retries and unchanged409/503 no-send controls. Dropped imported fixture self-comparison test.",
+    "archivedVectors": "TV3 sc06-v1.vectors.json retains source83301112c10bcc60635e7ec7180f8049f75d4ba9. Static consumer vectors, not new chain/SC06 execution.",
+    "execute": {
+      "hash": "0xb54e6de7967aef095a83cef0b25579acb74aa10f78976e052ac63874ace18c82",
+      "height": "25",
+      "blockHash": "0xc011485986e79decb45616a2f17e276047d2a489babc7732f3d2acf772ad8437",
+      "receiptStatus": "0x1",
+      "treasury": "9000000000000000000000",
+      "recipient": "1000000000000000000000",
+      "transport": "409→503 preserves oldH24/hash/rev1 and receipt, Execute disabled; canonicalH25/hash/rev2 Executed and no Execute"
+    },
+    "propose": {
+      "hash": "0xe7267fb836a06c2b5e2390bf99ceca55153fa1df300b124f23dbe1164c8f6adc",
+      "height": "26",
+      "amount": "1weiBUD",
+      "proposalId": "31536455428704265857193200503071537838190860591127369036216142617648637662603",
+      "assertions": "Governor receipt emitter/to; receipt ID equals independent hash of actual tx payload and rendered link; canonical receipt block hash; no claim API fixture indexed this proposal"
+    },
+    "mobile": {
+      "viewport": 390,
+      "initialScrollWidth": 635,
+      "finalScrollWidth": 390,
+      "receiptAndIdRetained": true,
+      "fix": "Existing proposal-full-id class, no CSS/config/style redesign"
+    }
+  },
+  "initialHarnessFailures": [
+    "Wrong relative Vite script path at first service launch; fixed cwd-relative path, not accepted as a runtime pass",
+    "Late page injection did not discover wallet; adapter installed through addInitScript before reload",
+    "Cross-context injected counter unavailable; not used as send-count evidence. No no-extra-send assertion from that undefined value. Unit409/503 tests assert no-send."
+  ],
+  "ci": "Not asserted in this source artifact: check exact pushed HEAD on PR21, not base CI",
+  "rawArchive": {
+    "path": "tv4-20261111-tv3-integration-raw.tar.gz",
+    "sha256": "18c9b57c926326b6ef8f664181b130c91dad041c3029c8727f199dba1ff39120"
+  },
+  "remaining": [
+    "TV3 review/retest combined delta and integrate their uncommitted SwissFintech safely",
+    "No receiver raw checksums verified; see separate receiving handoff",
+    "Dev87738d3 integration and post-integration18/47 validation",
+    "Extension19/41,testnet20 and report44 gates remain"
+  ]
+}

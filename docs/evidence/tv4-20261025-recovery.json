@@ -1,0 +1,889 @@
+{
+  "format": "dao-budget-tv4-recovery-20261025",
+  "scope": "Uncommitted local operational fixes; no GitHub CI/testnet/extension/peer approval claim",
+  "native": {
+    "status": "PASS",
+    "runtime": {
+      "node": "v24.15.0",
+      "executable": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+      "platform": "linux",
+      "arch": "x64",
+      "postgresBin": "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin",
+      "postgres": "postgres (PostgreSQL) 18.4",
+      "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+      "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+      "tsx": "4.23.15",
+      "typescript": "5.9.3",
+      "pg": "8.23.1",
+      "postgresServer": "PostgreSQL 18.4 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit"
+    },
+    "suites": {
+      "be01-sql": {
+        "status": "PASS",
+        "durationMs": 1461
+      },
+      "be02-storage": {
+        "status": "PASS",
+        "tests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 19111
+      },
+      "be03-checkpoint-crash": {
+        "status": "PASS",
+        "tests": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 11513
+      },
+      "be04-projection": {
+        "status": "PASS",
+        "tests": {
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 8320
+      },
+      "be05-api": {
+        "status": "PASS",
+        "tests": {
+          "tests": 4,
+          "pass": 4,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 3537
+      },
+      "be06-two-db": {
+        "status": "PASS",
+        "tests": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 1988
+      },
+      "governance-storage": {
+        "status": "PASS",
+        "durationMs": 33204
+      },
+      "live-api-be06": {
+        "status": "PASS",
+        "evidence": "live.json",
+        "durationMs": 47304
+      }
+    },
+    "cleanup": {
+      "status": "PASS",
+      "clusterStopped": true,
+      "temporaryFilesRemoved": true,
+      "errors": []
+    },
+    "commands": [
+      {
+        "name": "postgres-version",
+        "argv": [
+          "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin/postgres",
+          "--version"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 39
+      },
+      {
+        "name": "anvil-version",
+        "argv": [
+          "anvil",
+          "--version"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 29
+      },
+      {
+        "name": "forge-version",
+        "argv": [
+          "forge",
+          "--version"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 68
+      },
+      {
+        "name": "initdb",
+        "argv": [
+          "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin/initdb",
+          "-D",
+          "/tmp/dao-tv4-native-vWvmVP/data",
+          "-U",
+          "tv4_native_admin",
+          "--auth-local=trust",
+          "--auth-host=scram-sha-256",
+          "--pwfile",
+          "/tmp/dao-tv4-native-vWvmVP/password",
+          "--encoding=UTF8",
+          "--locale=C"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 3336
+      },
+      {
+        "name": "postgres-start",
+        "argv": [
+          "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin/pg_ctl",
+          "start",
+          "-w",
+          "-t",
+          "30",
+          "-D",
+          "/tmp/dao-tv4-native-vWvmVP/data",
+          "-l",
+          "/tmp/dao-tv4-native-vWvmVP/postgres.log"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 262
+      },
+      {
+        "name": "postgres-identity",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--input-type=module",
+          "-e",
+          "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 449
+      },
+      {
+        "name": "create-fresh-databases",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--input-type=module",
+          "-e",
+          "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 2589
+      },
+      {
+        "name": "be01-migrate",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--input-type=module",
+          "-e",
+          "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 895
+      },
+      {
+        "name": "be01-constraints",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--input-type=module",
+          "-e",
+          "import pg from 'pg';\nlet input = ''; for await (const chunk of process.stdin) input += chunk;\nconst client = new pg.Client({ connectionTimeoutMillis: 5000, query_timeout: 60000 });\nclient.on('notice', notice => console.log(notice.message));\ntry {\n  await client.connect();\n  for (const sql of JSON.parse(input)) {\n    const result = await client.query(sql);\n    for (const item of Array.isArray(result) ? result : [result])\n      console.log(JSON.stringify({ command: item.command, rows: item.rows }));\n  }\n} finally { await client.end(); }"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 556
+      },
+      {
+        "name": "be02-storage",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/indexer/storage.test.ts"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 19109
+      },
+      {
+        "name": "be03-checkpoint-crash",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/indexer/checkpoint-storage.test.ts"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 11512
+      },
+      {
+        "name": "be04-projection",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/indexer/projection-storage.test.ts"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 8319
+      },
+      {
+        "name": "be05-api",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/api/server.test.mjs"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 3536
+      },
+      {
+        "name": "be06-two-db",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-reporter=tap",
+          "tests/indexer/be06-db.test.mjs"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 1988
+      },
+      {
+        "name": "governance-storage",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "scripts/smoke_governance.mjs",
+          "--output",
+          "/tmp/dao-tv4-recovery-native-20261025/governance-storage.json",
+          "--database"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 33191
+      },
+      {
+        "name": "live-api-be06",
+        "argv": [
+          "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+          "--import",
+          "tsx",
+          "scripts/check_be04_live.mjs",
+          "--output",
+          "/tmp/dao-tv4-recovery-native-20261025/live.json",
+          "--api",
+          "--be06"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 47297
+      },
+      {
+        "name": "postgres-stop-fast",
+        "argv": [
+          "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin/pg_ctl",
+          "stop",
+          "-w",
+          "-t",
+          "15",
+          "-m",
+          "fast",
+          "-D",
+          "/tmp/dao-tv4-native-vWvmVP/data"
+        ],
+        "status": "PASS",
+        "exitCode": 0,
+        "durationMs": 913
+      }
+    ]
+  },
+  "recovery": {
+    "status": "PASS",
+    "interrupted": {
+      "summaryStatus": 503,
+      "cursorStatus": 409
+    },
+    "recovery": {
+      "status": "raw_synced_with_decode_issues",
+      "chainId": "31337",
+      "deploymentId": "1",
+      "checkpoint": {
+        "number": "76",
+        "hash": "0xcc9af05253f72970f01506d2201205b08f38bdfaf487198188b755e17c489eb3"
+      },
+      "decodeComplete": false,
+      "unknownTopics": 16,
+      "decodeErrors": 0,
+      "issues": [
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "sc01-itreasury-v1",
+          "blockNumber": "3",
+          "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "4",
+          "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "1",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "4",
+          "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "2",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "4",
+          "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-governor",
+          "blockNumber": "5",
+          "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "1",
+          "abiVersion": "oz-5.4.0-governor",
+          "blockNumber": "5",
+          "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "2",
+          "abiVersion": "oz-5.4.0-governor",
+          "blockNumber": "5",
+          "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "3",
+          "abiVersion": "oz-5.4.0-governor",
+          "blockNumber": "5",
+          "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "4",
+          "abiVersion": "oz-5.4.0-governor",
+          "blockNumber": "5",
+          "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "sc01-itreasury-v1",
+          "blockNumber": "6",
+          "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "sc01-itreasury-v1",
+          "blockNumber": "7",
+          "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "8",
+          "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "9",
+          "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "10",
+          "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "sc01-itreasury-v1",
+          "blockNumber": "11",
+          "transactionHash": "0xeaee7638ee683b063482d5c820fd95c52d84274ec915260f864d853a6b54976e"
+        },
+        {
+          "code": "UNKNOWN_TOPIC",
+          "logIndex": "0",
+          "abiVersion": "oz-5.4.0-timelock",
+          "blockNumber": "12",
+          "transactionHash": "0x00393cedec1f3456db99368d809f47ec9ba7dcabd9f2bee1eadd6fe6373a4da6"
+        }
+      ],
+      "committedBatches": 1,
+      "head": "78",
+      "safeBlock": "76",
+      "reorg": {
+        "from": "75",
+        "ancestor": "73",
+        "replayFrom": "74"
+      }
+    },
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "1",
+      "asOfBlock": "76",
+      "asOfBlockHash": "0xcc9af05253f72970f01506d2201205b08f38bdfaf487198188b755e17c489eb3",
+      "asOfTimestamp": "1800001002",
+      "snapshotRevision": "9960ed07-62ee-49c9-9e39-299ad88830a7",
+      "dataKind": "chain"
+    },
+    "oldRevision": "8c49d313-24f5-4195-b2a8-5ec1764a212a",
+    "orphanTransaction": "0x9f6b152ed1af7736f5b1ddd1d8965d8542026fc3b1b069bb960fa80108815aca",
+    "replacementTransaction": "0xf4d85f568b137429e007763456d266690ef301d60625332a4d92c55189d5ded7",
+    "orphanRows": 0,
+    "replacementRows": 1,
+    "oldCursorAfterStatus": 409,
+    "balance": "1002000000000000000000",
+    "freshness": {
+      "stale": {
+        "status": "lagging",
+        "headBlock": "78",
+        "confirmedBlock": "76",
+        "indexedBlock": "76",
+        "lagBlocks": "0",
+        "lagSeconds": "31",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-10-25T13:21:27.846Z"
+      },
+      "fresh": {
+        "status": "synced",
+        "headBlock": "78",
+        "confirmedBlock": "76",
+        "indexedBlock": "76",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-10-25T13:21:58.877Z"
+      }
+    }
+  },
+  "fixedHRebuild": {
+    "status": "PASS",
+    "first": {
+      "result": "equal",
+      "chainCrossCheck": {
+        "block": "67",
+        "hash": "0xc43f9b5ac6db6cab1b1c8459b7f3e5bae5a0fbfc95dfae8ffff78264fa7c142b",
+        "reference": "PASS",
+        "rebuild": "PASS",
+        "proposals": 6,
+        "operations": 3,
+        "treasuryBalance": "1000000000000000000000"
+      },
+      "mismatches": []
+    },
+    "advanced": {
+      "result": "equal",
+      "chainCrossCheck": {
+        "block": "67",
+        "hash": "0xc43f9b5ac6db6cab1b1c8459b7f3e5bae5a0fbfc95dfae8ffff78264fa7c142b",
+        "reference": "PASS",
+        "rebuild": "PASS",
+        "proposals": 6,
+        "operations": 3,
+        "treasuryBalance": "1000000000000000000000"
+      },
+      "mismatches": []
+    },
+    "normalizedHashes": {
+      "reference": "1968b1d35b7aa447d3dbd3878a68457adba04e708b6e913936c7b606a65a5ae9",
+      "firstRebuild": "1968b1d35b7aa447d3dbd3878a68457adba04e708b6e913936c7b606a65a5ae9",
+      "advancedRebuild": "1968b1d35b7aa447d3dbd3878a68457adba04e708b6e913936c7b606a65a5ae9"
+    }
+  },
+  "sourceHashes": {
+    "indexer/projection/model.ts": "2239615b0f3d6a193aec31adecedb3b16b2e205027d32acf10638e3f4011093b",
+    "indexer/projection/chain.ts": "35a4fb83ef7201dc3778c4e4298b9264d54cd8049b6d39ebf7d792b132f765bb",
+    "indexer/projection/projector.ts": "63fe800d543bc3d2f33605b844656b0cf31dc71162fc1271feac0be84d3a3dfa",
+    "indexer/api/server.ts": "746e12f3e445ce70c9816075b8f99c855f745ec8a9c315a101e9d46ee3c9e980",
+    "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+    "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+    "indexer/storage.ts": "d3d929eb92fd3ff8a8990bdb80f93e90d6c13219d72602675b60b4e45a98bbd6",
+    "indexer/cli.ts": "aabe19cca67b76c174add614ea8972e1a2751c07de9171a6598a86c70d58d4d0",
+    "indexer/api/main.ts": "99082e575492d4fb26b28c698fb41a7ee1f32c4c7437b1af912596c217dc1d68",
+    "scripts/check_be04_live.mjs": "3bbadc1e5292023d0840708b33a99e813ada37b5b23c45318416d92d739ca68b",
+    "scripts/check_be05_database.sh": "12bb3065a13c8bacf9052ed8c09dc0869db15f23f63a4c10356d90c5ce12994b",
+    "scripts/check_be05_live_database.sh": "870e7d3012284320f96ffcafddcc2b2b0dc636bb722e76c3a550bcb0d84aad9c",
+    "scripts/governance_local.mjs": "ea4aa4140f4432cd49ac48c030ef749837750b741a224c330972cf14df13a65f",
+    "scripts/receipt.mjs": "7ab45e22efc30b5102f69bbf63f60edc931647eb210d0200258967707147c246",
+    "tests/indexer/projection-storage.test.ts": "4ec0139ff498b7dfaa4a416b70cabdb6b5bdfcd13e41b202bc59ff816ea1d7f5",
+    "tests/indexer/be04-live-receipt.test.mjs": "c24fc4328ce13581daa7fad9eff25617fdc7201b9a284a828f8309471c3e6d51",
+    "tests/api/server.test.mjs": "a1096b52cb8fb17674a53855a4753cdf562239272df069d427c8f915767e68f5",
+    "package.json": "5bd3413d1e2eda3ad1807243ee2c0a439abbb8ee7b322c42cf676916c6005ad3",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    ".github/workflows/ci.yml": "488cc29f83b0e1550865df224b1aacec5cc48f82f5c25540bc9fb975e2daa5a0",
+    ".env.example": "882e87081e00a82bff936e1ce946f11cd1df576324164d304cc76ef9f2b27c31",
+    "docs/api.md": "f6553f1b1942c055ea0bac0347cfaea8e2430f1d4cb3f84fad22609933813b55",
+    "docs/be03.md": "e6c374486f87aa75bffce068093160da4e7518409435e928a25039650882c60f",
+    "docs/be04.md": "745c2fa1cbb497d44c13dbeed74b4d3b4d7e35a54f90e8d307be6cb64f1483fa",
+    "README.md": "3df301955d60372c02d384abb1b08be97a44c4991bbbe1ec98a306e16f05f194",
+    "docs/be06.md": "3870ea8dbb4c32ed4119226d6cbf3cd50c2338ef09856a8d066d822d1cd184e1",
+    "indexer/config/be06.manifest.example.json": "595c7b0511e6bed65c109ccf7dfcbf8cede74186ce93084836634d96d0cf82a5",
+    "indexer/be06/manifest.ts": "df32fddcd78ab1e68fa256ac1a536741bc86af43c1c5d6285ad52c2619179d67",
+    "indexer/be06/rebuild.ts": "bb21203ae56e3dda4e84c015dba5c27165d462b5af2f53c934fbecf79c93a957",
+    "indexer/be06/compare.ts": "0a58da3c272849a4891f4693fafb2cbce0a919e592896191b1dab7c6e593cf9b",
+    "indexer/be06/cli.ts": "e156e45aab265c16f5993ff99620aae9b103f1c5ab7b78391965b1fb214173f2",
+    "tests/indexer/be06.test.ts": "efc7b885f511133e3cb27722d2b748d6284de4c2f82254bd048ebcc56c71f22d",
+    "tests/indexer/be06-db.test.mjs": "b9252ddbd18b13b9699ae364f0d88f96b689a653686c1c54a384328de74fa22a"
+  },
+  "backend": {
+    "build": "PASS",
+    "typecheck": "PASS",
+    "tests": 157,
+    "fail": 0,
+    "source": "artifact://32",
+    "initialBuildFailure": "A remaining materialize buildSync(raw) call caused TS2554; corrected to reuse scopeState.sync before the successful build and live/API tests."
+  },
+  "frontend": {
+    "lint": "PASS with one existing WalletProvider set-state-in-effect warning",
+    "tests": 6,
+    "build": "PASS",
+    "mainChunkKB": 599.14,
+    "gzipKB": 173.78,
+    "chunkWarning": true
+  },
+  "browser": {
+    "pausedMs": 32694,
+    "fresh": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tv4-browser",
+          "asOfBlock": "19",
+          "asOfBlockHash": "0x14036159cb5938f490ff9526f30560a5b1c698f8f1e1261c1514eb041bba6918",
+          "asOfTimestamp": "1792934468",
+          "snapshotRevision": "6b9b8ac2-9c44-4510-9076-c9d3a1757319",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "21",
+            "confirmedBlock": "19",
+            "indexedBlock": "19",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T13:21:34.373Z"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "19",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    "stale": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tv4-browser",
+          "asOfBlock": "19",
+          "asOfBlockHash": "0x14036159cb5938f490ff9526f30560a5b1c698f8f1e1261c1514eb041bba6918",
+          "asOfTimestamp": "1792934468",
+          "snapshotRevision": "6b9b8ac2-9c44-4510-9076-c9d3a1757319",
+          "dataKind": "chain",
+          "sync": {
+            "status": "lagging",
+            "headBlock": "21",
+            "confirmedBlock": "19",
+            "indexedBlock": "19",
+            "lagBlocks": "0",
+            "lagSeconds": "33",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T13:21:35.055Z"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "lagging",
+          "publication": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "19",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    "staleText": "API: degraded · DB: up · Indexer: lagging · Publication: ready\n\nĐộ trễ indexer: 0 block. Độ trễ projection: 0 block.\n\nDữ liệu có thể đã cũ: pipeline chưa xác minh hoặc publication đang trễ. Độ trễ theo dõi: 33 giây. Trang tự kiểm tra lại để cập nhật khi indexer phục hồi.\n\nCó raw event chưa giải mã đầy đủ; kiểm tra indexer trước khi dùng số liệu.\n\nPipeline có cảnh báo. Health BE05 không thăm dò RPC; không đồng nghĩa RPC đang down.\n\nKiểm tra API",
+    "recovered": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tv4-browser",
+          "asOfBlock": "21",
+          "asOfBlockHash": "0xd2970ecc001a51a7f9099d3c9994df1254e89650efda3d96c97bc9852309b962",
+          "asOfTimestamp": "1792934472",
+          "snapshotRevision": "6b9b8ac2-9c44-4510-9076-c9d3a1757319",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "23",
+            "confirmedBlock": "21",
+            "indexedBlock": "21",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T13:22:32.845Z"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "21",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    "recoveredText": "API: degraded · DB: up · Indexer: synced · Publication: ready\n\nĐộ trễ indexer: 0 block. Độ trễ projection: 0 block.\n\nCó raw event chưa giải mã đầy đủ; kiểm tra indexer trước khi dùng số liệu.\n\nPipeline có cảnh báo. Health BE05 không thăm dò RPC; không đồng nghĩa RPC đang down.\n\nKiểm tra API",
+    "viewport": {
+      "alertGone": true,
+      "width": 390,
+      "scroll": 390
+    },
+    "deposit": {
+      "transactionHash": "0x9c5cf252123f8eecbeae224ab8d4db23155830432b21bebdb124db9b0b62f9c5",
+      "head": "0x17"
+    },
+    "confirmedEvent": {
+      "observedMs": 3101,
+      "summary": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "tv4-browser",
+          "asOfBlock": "22",
+          "asOfBlockHash": "0x0565183e2de39d99ef70afba24a071fde0afacc4fe0d53b162a316da9ea4350f",
+          "asOfTimestamp": "1792934500",
+          "snapshotRevision": "6b9b8ac2-9c44-4510-9076-c9d3a1757319",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "24",
+            "confirmedBlock": "22",
+            "indexedBlock": "22",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-10-25T13:24:11.914Z"
+          }
+        },
+        "data": {
+          "treasury": {
+            "token": {
+              "symbol": "BUD",
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "decimals": 18
+            },
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "balance": "10001000000000000000000",
+            "totalIn": "10001000000000000000000",
+            "totalOut": "0"
+          },
+          "governance": {
+            "govToken": {
+              "symbol": "GOV",
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "decimals": 18
+            },
+            "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "clockMode": "mode=timestamp",
+            "totalSupply": "1000000000000000000000",
+            "votingDelay": "60",
+            "votingPeriod": "300",
+            "timelockDelay": "120",
+            "quorumNumerator": "20",
+            "proposalThreshold": "50000000000000000000",
+            "quorumDenominator": "100"
+          },
+          "proposalCounts": {
+            "total": 0,
+            "byState": {
+              "Active": 0,
+              "Queued": 0,
+              "Pending": 0,
+              "Canceled": 0,
+              "Defeated": 0,
+              "Executed": 0,
+              "Succeeded": 0
+            }
+          },
+          "recentActivity": [
+            {
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "1000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x0565183e2de39d99ef70afba24a071fde0afacc4fe0d53b162a316da9ea4350f",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "22",
+              "transactionHash": "0x9c5cf252123f8eecbeae224ab8d4db23155830432b21bebdb124db9b0b62f9c5",
+              "transactionIndex": "0"
+            },
+            {
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "10000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x14036159cb5938f490ff9526f30560a5b1c698f8f1e1261c1514eb041bba6918",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "19",
+              "transactionHash": "0x498cf262e27653f80af145fb6649fa7d1ee2257e3e76e1324a6c2d8f592dd2a6",
+              "transactionIndex": "0"
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "status": "PASS",
+      "closedPorts": [
+        {
+          "port": 43937,
+          "closed": true
+        },
+        {
+          "port": 38029,
+          "closed": true
+        },
+        {
+          "port": 45653,
+          "closed": true
+        },
+        {
+          "port": 37119,
+          "closed": true
+        },
+        {
+          "port": 33389,
+          "closed": true
+        },
+        {
+          "port": 35405,
+          "closed": true
+        },
+        {
+          "port": 33849,
+          "closed": true
+        },
+        {
+          "port": 35451,
+          "closed": true
+        },
+        {
+          "port": 43037,
+          "closed": true
+        },
+        {
+          "port": 41367,
+          "closed": true
+        }
+      ],
+      "temporaryClustersRemoved": true,
+      "note": "Service stop killed process group before harness report. Both owned PostgreSQL clusters explicitly pg_ctl stopped; ports checked closed. Watch active/idle signal semantics independently passed CLI regressions."
+    }
+  },
+  "provenanceNote": "Native preflight hashed sources before an API callsite correction. Live-run final sourceHashes label the code exercised by live recovery. Documentation subsequently updated; historical reports unchanged.",
+  "limits": [
+    "64-block automatic recovery window; deeper reorg requires explicit BE06 rebuild",
+    "Freshness is a heartbeat/publication indicator, not proof of every event latency",
+    "Browser uses real local watch/API and no wallet injection; extension/testnet not exercised",
+    "No post-change benchmark, independent-machine run, GitHub publication or peer approval"
+  ],
+  "historicalContractRun": {
+    "tests": 147,
+    "fail": 0,
+    "skip": 0,
+    "note": "Executed earlier in the same inspection before these backend/UI-only changes; contracts unchanged."
+  }
+}

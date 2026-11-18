@@ -1,0 +1,220 @@
+{
+  "format": "dao-budget-tv4-acceptance-v1",
+  "date": "2026-10-24",
+  "status": "PARTIAL_BLOCKED",
+  "releaseAccepted": false,
+  "integration": {
+    "Dev": "14517796d3b3641160735e202a12008e71ebebb2",
+    "backendCandidate": "c41a9ab97ad24d9b156eb03baa504dff43b165ec",
+    "frontendSource": "9f4d57a",
+    "mergeCommits": [
+      "613b62dfc5633c7418242bcb14690d88c091c0d6",
+      "0480c842e494596155b0f67ee189736aea6641a7",
+      "c34889604ecfa1a0d85539ef25250363ad49596b"
+    ]
+  },
+  "runtime": {
+    "node": "24.15.0",
+    "foundry": "1.8.5",
+    "solidity": "0.8.37",
+    "evm": "osaka",
+    "postgres": "18.4",
+    "postgresBinaryPackage": "@embedded-postgres/linux-x64@18.4.0-beta.17",
+    "docker": "permission denied; no escalation"
+  },
+  "sourceHashes": {
+    "frontend/src/App.tsx": "73b717449f3d057a926a8f2fd037f6ce3c4f38a830b14ec1e0824544d611601b",
+    "frontend/src/main.tsx": "cbb077e3e4840e7b0213504edb8fa14a71351905152f2210c1e2a1e586fe77d3",
+    "frontend/src/index.css": "0ccec719ca84004c439b4fdeae050391c8ca565d42bcf88aae55b6a7b2ccee12",
+    "frontend/src/chain/WalletProvider.tsx": "dd598344f87a938511518c4f703fa64dd9b46b34dee0c22e70655a2729ab5604",
+    "frontend/src/chain/wallet.ts": "1e5f5402fcae91dbfe08c6d927bf425a389870fae8de34f3d1879decb75a3f87",
+    "frontend/src/chain/wallet-context.ts": "6bac8039890342fe4ad5308ba36ee8401c5f406efabd0fd45bc8df769f0eba48",
+    "frontend/src/chain/transactions.ts": "39b89173cd47addcb78d9a28cc95d2a13c8d88a39f4449510b5970579c306be9",
+    "frontend/src/chain/useTransaction.ts": "632249c8480d114bb6e7bbe05b9c2296072e30e2f05c6436fbfd888eafc32c7f",
+    "frontend/src/data/api.ts": "c0d690ccadc8eb824082b3e4f47b48037278da8590e723818178333e1ea2edc2",
+    "frontend/src/data/useProposalFixtures.ts": "6cef194ed89144c4a65ebdb448922ed022ccd4eba5b287807f0311db7e29731a",
+    "frontend/src/pages/CreateProposalPage.tsx": "20e7a6822e9c4ef52cadcd55e8257887332af0a0c435f1499d7e74cc66c423e3",
+    "frontend/src/pages/DashboardPage.tsx": "e2cae66a7090a64d3ac96709e1a48c79950cef12674307ecea2dc6ce55dcbe86",
+    "frontend/src/pages/ProposalDetailPage.tsx": "96ca86ce13e479d6ec7a94f9487571463b8d9500a405a2f2e3e873fd29cd9b15",
+    "frontend/src/components/ProposalActions.tsx": "091a963d2cab5fd8d4cc5c2f001dbac428e6587b7c8784504ea1b301b0f2a666",
+    "frontend/src/components/TreasurySection.tsx": "8322705dd426b0ec6a977d7933f939c4995247dd1bd9aa1005abc1db6f094695",
+    "scripts/check_tv4_native.mjs": "c9d42e22401edf629b6bfb9f6903d050e159e6ca06c207499582c93e5979b14e",
+    "scripts/benchmark_api.mjs": "d1b5eb01dddb2845b1402ab8cd3fa0bb5272c297d77eeff0a9cdb6d473c78513",
+    "package.json": "5bd3413d1e2eda3ad1807243ee2c0a439abbb8ee7b322c42cf676916c6005ad3",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    ".github/workflows/ci.yml": "488cc29f83b0e1550865df224b1aacec5cc48f82f5c25540bc9fb975e2daa5a0",
+    ".nvmrc": "b911698dc3cf3227d34d0ad6727f1c4408791203c9665de99ab959331a1fb07d",
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9"
+  },
+  "observedChecks": {
+    "contracts": {
+      "command": "FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh",
+      "pass": 147,
+      "fail": 0,
+      "skipped": 0,
+      "evidence": "contracts.txt"
+    },
+    "backendUnits": {
+      "BE02": 64,
+      "BE03": 22,
+      "BE04": 27,
+      "BE06": 5,
+      "interruption": 8,
+      "evidence": "backend.txt"
+    },
+    "database": {
+      "BE02": 21,
+      "BE03": 16,
+      "BE04": 10,
+      "BE05": 3,
+      "BE06": 1,
+      "evidence": "native/report.json",
+      "status": "PASS"
+    },
+    "frontend": {
+      "behaviorTests": 6,
+      "build": "PASS after ApiError TS1294 correction; final committed clone separately verified",
+      "lint": "PASS with warnings; see candidate/clone logs",
+      "evidence": [
+        "frontend.txt",
+        "frontend-build-fixed.txt",
+        "frontend-final.txt"
+      ]
+    },
+    "nativeSigterm": {
+      "exitCode": 143,
+      "status": "PASS",
+      "evidence": "native-interruption/signal-driver.json"
+    },
+    "liveApiBe06": {
+      "status": "PASS",
+      "H": "67",
+      "evidence": "native/live.json"
+    },
+    "browser": {
+      "status": "PASS",
+      "checks": 12,
+      "routeViewportPairs": 8,
+      "wallet": "injected EIP-1193 forward to owned Anvil",
+      "evidence": "browser.json"
+    },
+    "NFR02": {
+      "status": "PASS_LOCAL",
+      "proposals": 100,
+      "votes": 1000,
+      "clients": 10,
+      "seconds": 60,
+      "successfulRequests": 8133,
+      "errorRequests": 0,
+      "p95Ms": 133.6519580000022,
+      "evidence": "benchmark.json"
+    },
+    "cleanClone": {
+      "status": "PASS",
+      "candidate": "d2617d09694cefd53aa18d23c34335852406102d",
+      "sameMachine": true,
+      "sourceOverlay": false,
+      "reusedProjectNodeModulesOutCache": false,
+      "freshNpmCache": true,
+      "toolchainCompilerAlreadyInstalled": true,
+      "runtimeSourceFilesMatchedCandidate": 23,
+      "observedTests": 330,
+      "benchmarkSuccessfulRequests": 8636,
+      "benchmarkErrorRequests": 0,
+      "benchmarkP95Ms": 127.60182499999064,
+      "evidence": "clean/report.json"
+    },
+    "tc12EightProposalsAndBoundaries": {
+      "status": "PASS",
+      "cases": 7,
+      "freshDatabases": 14,
+      "finalH": "49",
+      "finalTimestamp": "1800001024",
+      "fixture": "Executed, Queued Waiting, Queued Ready, Succeeded, Defeated, Active, Canceled, Pending",
+      "boundaryCases": ["S", "S+1", "D", "D+1", "E-1", "E"],
+      "normalizedAndChainComparisons": "equal for all seven cases",
+      "apiAtFinalH": "PASS including Pending quorum=null",
+      "driver": "run-tc12.mjs",
+      "driverSha256": "1be51d5079536d814189d4b13d18e204d9fa46a1a13039aaab5f806cc8cc15a3",
+      "evidence": "tc12-complete/report.json",
+      "initialHarnessMetadataFailurePreserved": "tc12/report.json",
+      "notAccepted": "historical RPC failure and cursor invalidation after reorg"
+    },
+    "secretScanHistory": {
+      "status": "TRIAGED_FALSE_POSITIVES",
+      "scanner": "gitleaks 8.30.1",
+      "candidate": "d2617d09694cefd53aa18d23c34335852406102d",
+      "commits": 49,
+      "rawExitCode": 1,
+      "rawFindings": 283,
+      "confirmedCredentials": 0,
+      "unreviewedFindings": 0,
+      "suppressionOrAllowlistAdded": false,
+      "evidence": "gitleaks-triage.json"
+    },
+    "secretScanStagedSnapshot": {
+      "status": "TRIAGED_FALSE_POSITIVES",
+      "sourceIndexTree": "efdb0ae14800895a3246922e9b1a01b57c430ff6",
+      "snapshotSubsequentlyCommittedAs": "5fe1f96f27f5842d799f3a3928e3d9fa1e45a225",
+      "rawExitCode": 1,
+      "rawFindings": 536,
+      "publicAddresses": 384,
+      "publicFileDigests": 152,
+      "confirmedCredentials": 0,
+      "unreviewedFindings": 0,
+      "userAd064ChangesExcluded": true,
+      "evidence": "gitleaks-staged-triage.json",
+      "limit": "Scan output/triage and later integrity/docs updates were generated after this snapshot."
+    },
+    "freshnessSample": {
+      "confirmedToApiMs": 374.39,
+      "productionSlaAccepted": false,
+      "evidence": "freshness-sample.json"
+    },
+    "reorg": {
+      "status": "NOT_ACCEPTED",
+      "ingestionStops": true,
+      "apiStillServesOrphanedHash": true,
+      "evidence": "reorg.json"
+    }
+  },
+  "publication": {
+    "status": "PUSHED",
+    "branch": "feature/tv4-operation",
+    "publishedCommit": "24f576e1be10bc0a2d0814a73a551067ca31b777",
+    "transport": "existing SSH agent with strict host-key verification",
+    "originConfigurationUnchanged": true,
+    "ciRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40113995662",
+    "ciConclusionForPublishedCommit": "success",
+    "successfulJobs": 8,
+    "pr21HeadSynchronized": true,
+    "evidence": "publication.json",
+    "prIssueBodiesAndNewReviewRequestsPosted": false
+  },
+  "blockers": [
+    {
+      "owner": "TV2",
+      "scope": "BE07 rollback/replay, window/backoff and API/cursor invalidation; production freshness"
+    },
+    {
+      "owner": "TV1/TV4",
+      "scope": "Approved testnet network/RPC/compiler support, securely configured funded signer; real-time Executed/Defeated demo"
+    },
+    {
+      "owner": "team",
+      "scope": "Peer approval, wallet extension and another-machine reproducibility"
+    },
+    {
+      "owner": "GitHub API authentication",
+      "scope": "Update PR21/issues18/19/20 bodies/comments and new review requests; code/evidence push via SSH is complete"
+    }
+  ],
+  "preservedUserChanges": {
+    "untrackedDocument": "docs/AD-064-architecture-review.md",
+    "sha256": "cd7e8841bee12b489f4d08d97a353d15e6ada20750a11c67636678efa34ec2a2",
+    "README_AD064_link": "Preserved separately; excluded from assistant commits"
+  },
+  "cleanup": "cleanup.json",
+  "evidenceIntegrity": "SHA256SUMS (excludes itself)"
+}

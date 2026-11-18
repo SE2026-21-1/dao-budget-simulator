@@ -1,0 +1,305 @@
+{
+  "format": "tv4-project2-followthrough-v1",
+  "date": "2026-11-10",
+  "source": {
+    "testedBase": "49cbc44103d3baf1652a482a36926b2a8fcd4381",
+    "testedPatchSha256": "e4043e839af8fd2270b31d5489b4f7463b7c065de2fec321a93af64e23c610cc",
+    "sourceCommit": "9ad0aeaffd8c2a6135c05a2151148e792c84022c",
+    "sourceUnchangedThroughRun": true,
+    "personalWorktreePreserved": true,
+    "personalVT064NotIntegrated": true
+  },
+  "verification": {
+    "backend": {
+      "be01-sql": {
+        "status": "PASS",
+        "durationMs": 1020
+      },
+      "be02-storage": {
+        "status": "PASS",
+        "tests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 13074
+      },
+      "be03-checkpoint-crash": {
+        "status": "PASS",
+        "tests": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 11205
+      },
+      "be04-projection": {
+        "status": "PASS",
+        "tests": {
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 12914
+      },
+      "be05-api": {
+        "status": "PASS",
+        "tests": {
+          "tests": 7,
+          "pass": 7,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 9488
+      },
+      "be06-two-db": {
+        "status": "PASS",
+        "tests": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 4983
+      },
+      "typecheck": {
+        "status": "PASS",
+        "durationMs": 8993
+      },
+      "build": {
+        "status": "PASS",
+        "durationMs": 6193
+      },
+      "unit": {
+        "status": "PASS",
+        "tests": {
+          "tests": 183,
+          "pass": 183,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 36856
+      },
+      "contracts": {
+        "status": "PASS",
+        "durationMs": 116973
+      },
+      "be07-db": {
+        "status": "PASS",
+        "tests": {
+          "tests": 19,
+          "pass": 19,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 9618
+      },
+      "live-be07": {
+        "status": "PASS",
+        "durationMs": 51976
+      },
+      "api-benchmark": {
+        "status": "PASS",
+        "evidence": "benchmark.json",
+        "durationMs": 490772
+      }
+    },
+    "cleanup": {
+      "status": "PASS",
+      "clusterStopped": true,
+      "temporaryFilesRemoved": true,
+      "errors": []
+    },
+    "contracts": {
+      "passed": 187,
+      "failed": 0
+    },
+    "frontend": {
+      "passed": 24,
+      "failed": 0,
+      "lintErrors": 0,
+      "lintWarnings": 8,
+      "build": "PASS",
+      "bundleWarning": true
+    },
+    "fixtureBrowser": {
+      "widths": [
+        390,
+        1366
+      ],
+      "horizontalOverflow": false,
+      "snapshotHashRevisionVisible": true,
+      "fundingDisabled": true,
+      "extensionWallet": false
+    },
+    "restrictedUnixSocketCommands": {
+      "node": "24.15.0",
+      "restriction": "seccomp denies socket(AF_UNIX) with EPERM; loopback TCP separately verified",
+      "BE02": 100,
+      "BE03": 25,
+      "BE06": 5,
+      "failures": 0
+    },
+    "sc06": {
+      "sourceCommit": "9ad0aeaffd8c2a6135c05a2151148e792c84022c",
+      "verification": {
+        "receipts": 24,
+        "logs": 42,
+        "blocks": 27,
+        "decoded": 14,
+        "unknownTopics": 16,
+        "disbursements": 1,
+        "outgoingBaseUnits": "1000000000000000000000",
+        "projection": {
+          "asOfBlock": "26",
+          "blockHash": "0x166146af450c2d638a0914f63d71ab96f19cbca2eea77d35f98467a406c13afd",
+          "proposals": 2,
+          "votes": 2,
+          "forBaseUnits": "700000000000000000000",
+          "operations": 1,
+          "disbursements": 1,
+          "totalOut": "1000000000000000000000",
+          "balance": "9000000000000000000000",
+          "states": [
+            "Executed",
+            "Canceled"
+          ],
+          "ancillary": 16
+        },
+        "liveRpcVerified": true
+      },
+      "offlineAndMutationTests": 32,
+      "failed": 0,
+      "oldArchiveWasRejected": true
+    }
+  },
+  "localBenchmark": {
+    "status": "PASS",
+    "requests": 21493,
+    "errors": 0,
+    "p95Ms": 182.6637139999657,
+    "scope": "New local integration worktree run, not Dev CI or testnet"
+  },
+  "archive": {
+    "path": "tv4-20261110-integration-raw.tar.gz",
+    "sha256": "2993394b663ec554788dbef419169cfa60e4b0f549beea1d1dfd159fab04743d"
+  },
+  "previousDevCI": {
+    "artifact": 13391310183,
+    "baseCommit": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+    "sourceFilesChecked": 262,
+    "sourceMismatches": [],
+    "patchBytes": 0,
+    "patchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reportStatus": "PASS",
+    "requests": 31248,
+    "errors": 0,
+    "p95Ms": 27.947924999985844,
+    "freshnessSamples": 20,
+    "freshnessMaxMs": 5590.674367999978,
+    "outageMs": 31250.089657999983,
+    "staleStatus": "lagging",
+    "recoveredStatus": "synced",
+    "liveStatus": "PASS",
+    "recoveryStatus": "PASS",
+    "be07Keys": [
+      "before",
+      "ancestor",
+      "canonical",
+      "mode",
+      "publicationCrashes",
+      "rebuild",
+      "compare",
+      "normalRpcFreshness",
+      "outage",
+      "status",
+      "recoveryState",
+      "projection",
+      "gateHealth",
+      "gateData",
+      "duringCursor",
+      "recovered",
+      "oldCursor",
+      "deepHealth",
+      "deepData",
+      "checks"
+    ],
+    "zipDigest": "sha256:d5d645c85c67efbea290213b591f34d8f24f0421dc9dcb71179bc69d123cd766",
+    "zipBytes": 1253169
+  },
+  "pr48": {
+    "head": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+    "review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/48#pullrequestreview-5836325165",
+    "status": "PASS",
+    "context": {
+      "chainId": "31337",
+      "deploymentName": "be09-local-20261110T031009Z-ae7ab61a75a3",
+      "H": "24",
+      "hash": "0x6a18e1cc6e85f8c7ece8f90b84b04e53a66170a9c01eb3e0fc39ce47681610bb",
+      "revision": "a0d791aa-8ef7-4b80-b848-d2fb4e9e12a6"
+    },
+    "contractComparison": {
+      "H": "24",
+      "hash": "0x6a18e1cc6e85f8c7ece8f90b84b04e53a66170a9c01eb3e0fc39ce47681610bb",
+      "revision": "a0d791aa-8ef7-4b80-b848-d2fb4e9e12a6",
+      "proposalState": "Executed",
+      "votes": [
+        "0",
+        "700000000000000000000",
+        "0"
+      ],
+      "paidRequest": true,
+      "treasuryBalance": "9000000000000000000000",
+      "apiAndChainVoteRows": 2,
+      "apiAndChainTransfers": 2,
+      "totalIn": "10000000000000000000000",
+      "totalOut": "1000000000000000000000",
+      "result": "PASS"
+    },
+    "cors": {
+      "preflightHttpStatus": 204,
+      "allowOrigin": "http://127.0.0.1:5173",
+      "expectedOrigin": "http://127.0.0.1:5173"
+    },
+    "liveTest": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "workerDigestUnchanged": true,
+    "ownershipRegression": 1,
+    "cleanup": "Explicit down PASS; subsequent status all five DOWN; data/log retained",
+    "limitations": [
+      "Linux only; receiving WSL not exercised",
+      "PTY Ctrl-C supervisor exited 1; automatic Ctrl-C cleanup not accepted",
+      "No extension-wallet or testnet acceptance"
+    ]
+  },
+  "remainingGates": {
+    "18": "New verified-reorg/RPC-loss regression fixed on PR21; requires peer review and integration",
+    "20": "Agreed testnet network/RPC/Osaka-compatible configuration and safely funded signer",
+    "40": "TV3 receiving-WSL current-head retest",
+    "41": "Full extension-wallet workflow on matching deployment",
+    "42": "Independent-recipient rebuild/compare proof",
+    "44": "Accepted release revision/demo and peer signoff"
+  }
+}

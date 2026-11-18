@@ -1,8 +1,12 @@
-# DAO Budget Simulator — giao diện contract SC06 (giai đoạn 1)
+# DAO Budget Simulator — tài liệu contract SC06/SC09
 
 Căn cứ: hai tài liệu yêu cầu phiên bản 1.0 ngày 11/10/2026 trong `docs/requirements/`.
-Giao diện dưới đây đối chiếu implementation và compiler ABI tại base Dev `0b43364`.
-SC06 giai đoạn 1 chuẩn hóa ABI/tài liệu, chưa cung cấp receipt/log hay consumer acceptance.
+Source kiểm chứng ngày 11/11/2026: `d8f8743179d7748d0e05499646b5d9322820c782`.
+Tài liệu bàn giao trên base PR #21 `105f2ba4bebc2e6b761027eb01792c521875ec07`, chỉ docs/evidence mới hơn source này;
+base Dev `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. Production contracts/ABI không đổi
+so với peer revision `ff484fb`; source fixture hiện hành là `9ad0aea` trong chain.json.
+SC06 đã có receipt/log thật local và peer TV1/TV2; frontend consumer, testnet và release
+vẫn có gate riêng. Tài liệu giai đoạn 1/base `0b43364` là lịch sử, không phải trạng thái hiện tại.
 Full function/event/error signatures (gồm inherited và indexed flags) nằm trong
 [catalog compiler](sc06-abi-reference.md); quy trình kiểm tra/bàn giao ở [SC06](sc06-handoff.md).
 
@@ -15,7 +19,7 @@ Full function/event/error signatures (gồm inherited và indexed flags) nằm t
 | OpenZeppelin Contracts | 5.4.0, revision trong foundry.lock/submodule |
 | forge-std | 1.17.0, revision trong foundry.lock/submodule |
 | Optimizer | bật, 200 runs |
-| EVM | osaka, giữ cấu hình local hiện tại; TV4 xác nhận mạng testnet trước deploy |
+| EVM | osaka cho build local; TV4 có probe read-only Sepolia hạn chế, chưa xác minh compiled-contract deployment/gas trên testnet |
 
 Solidity pragma `^0.8.20` của interface tương thích compiler đã khóa.
 Governor OpenZeppelin 5.4.0 cần compiler tối thiểu 0.8.24.
@@ -27,6 +31,14 @@ GOV: ERC20Votes, nguồn cung cố định 1.000, A/B/C/D = 400/300/200/100.
 BUD: ERC-20 không phí, mint một lần 20.000; Treasury nhận 10.000, ví nạp quỹ 10.000.
 Hai token có 18 decimals; lượng on-chain = lượng token × 10^18.
 TV1 bàn giao constructor và trình tự phân bổ cho TV4; không thêm public mint.
+
+| Contract | Trách nhiệm và liên kết |
+|---|---|
+| GovernanceToken | GOV ERC20Votes, timestamp checkpoints; Governor.token() trỏ GOV |
+| BudgetToken | BUD ERC20 cố định, không phí; Treasury.budgetToken() trỏ BUD |
+| Treasury | Giữ BUD, kiểm quyền/số dư/requestId trước chuyển token; không tự vote hoặc queue |
+| BudgetGovernor | Kiểm proposal, snapshot/voting/quorum và creator Pending cancel; treasury() và timelock() cố định theo cấu hình |
+| TimelockController | OpenZeppelin 5.4.0 nguyên bản, schedule/Ready/execute theo minDelay; gọi Treasury với SPENDER_ROLE |
 
 Threshold: 50 GOV voting power đã delegate tại checkpoint quá khứ theo Governor.
 Quorum: 20% tổng cung tại snapshot. For + Abstain tính quorum; For phải lớn hơn Against.
@@ -107,10 +119,20 @@ mới là không có operation từng được schedule, kể cả đã cancel h
 xóa operation cũ. Gate lỗi phải dừng renounce/funding; sau renounce audit lại trước funding.
 Xem trình tự và giới hạn đầy đủ trong [SC05](sc05-timelock-roles.md).
 
-**Bàn giao còn mở cho TV4:** `scripts/governance_local.mjs` hiện renounce trước role audit và
-chưa audit lịch sử operation. Helper preflight trong Foundry không thay thế gate của deployment
-script. TV4 cần bổ sung gate và negative controls, lưu bằng chứng local; TV1 review trước testnet.
-Test contract xanh và SC06 ABI/checker không đồng nghĩa SC05 đã nghiệm thu deployment hoàn toàn.
+**Deployment local hiện hành:** [governance_local.mjs](../scripts/governance_local.mjs) thực hiện
+`preRenounceRoleCheck` → renounce Treasury admin → renounce Timelock admin →
+`preFundingRoleCheck` → delegate/checkpoint quá khứ → funding 10.000 BUD → `roleCheck`.
+Preflight diễn ra trước khi mất quyền sửa cấu hình; final pre-funding audit phải đạt rồi mới nạp BUD.
+Script local không cấp operational role tạm; checker chỉ cho final holders cộng bootstrap admin ở
+stage bootstrap, và final matrix ở stage final. Grant/revoke/admin graph được replay từ lịch sử đầy đủ;
+[operation audit](../scripts/governance_operations.mjs) đối chiếu receipts và từ chối lịch sử operation
+trong bootstrap, kể cả đã Cancelled/Done. Nhận định cũ “renounce trước audit/chưa audit operation”
+không còn đúng tại candidate này.
+
+TV1 đã kiểm local audit/roles tại `ff484fb` (15 bootstrap tests); TV4 lưu thêm
+[peer governance proof](evidence/tv4-20261111-peer-acceptance.json). Đây không phải chứng nhận
+deployment testnet: [deploy_local](../scripts/deploy_local.mjs) và checker cố ý khóa chainId 31337,
+Anvil mới/unforked/unlocked; đường signer/testnet cần review riêng trước khi gửi giao dịch.
 Mọi ví có thể queue/execute qua Governor khi hợp lệ; ví thường không schedule/execute trực tiếp Timelock.
 Không có đường chi riêng của deployer hoặc hủy khẩn cấp sau Pending; chỉ creator hủy Pending.
 
@@ -164,4 +186,71 @@ hàm đọc, lỗi và decimals; TV4 review toolchain, constructor/role và trì
 - [ ] Bằng chứng từ clone sạch được ghi trong PR/CI khi bàn giao.
 
 SC01 sẵn sàng review sau kiểm tra local; chỉ đóng task khi các mục review/tái lập đã được xác nhận.
-Checklist SC01 phía trên là lịch sử; trạng thái SC06 giai đoạn 1 và phần còn thiếu ghi tại docs/sc06-handoff.md.
+Checklist SC01 phía trên là lịch sử, không ghi đè trạng thái SC06 hiện hành. Xem [SC06 handoff](sc06-handoff.md), [SC07 coverage](sc07-test-coverage.md) và [SC09/report #44](sc09-smart-contracts-report.md).
+
+## Snapshot, quorum, ETA và điều kiện giải ngân
+
+| Mốc/điều kiện | Quy tắc hiện hành |
+|---|---|
+| S−1 và S | Proposal Pending; vote bị từ chối, creator có thể cancel. Lookup checkpoint S cần clock > S |
+| S+1 đến D | Active, mỗi ví vote một lần với quyền tại S; tại D vẫn được bỏ phiếu lần đầu |
+| D+1 | Succeeded khi For + Abstain >= 20% past supply và For > Against, nếu không Defeated |
+| Queue | Chỉ Succeeded, qua Governor; ETA = timestamp queue + 120 giây |
+| ETA−1 / ETA | Operation Waiting / Ready; execute từ ETA nếu đủ mọi điều kiện khác |
+| Execute | Đúng targets/values/calldata/descriptionHash, chưa execute, operation Ready, Treasury đủ BUD và request chưa paid |
+| Thành công/revert | Thành công mới Executed/Done/paid=true; lỗi revert cả token/state/events và có thể retry thiếu quỹ sau topup |
+
+Unit/integration kiểm các biên và exact errors tại [mapping SC07](sc07-test-coverage.md).
+Bootstrap sạch là tiền điều kiện: operation được bootstrap schedule trước rồi revoke vẫn tồn tại;
+không coi revoke role là cancel operation. Không có emergency cancel sau Pending hoặc đường EOA
+admin để khôi phục sau renounce. Cấu hình sai sau bàn giao có thể phải redeploy.
+
+## Đối chiếu dữ liệu chain tại cùng H/hash
+
+1. Chọn chainId/deployment và block H/hash canonical; xác minh manifest, receipt deploy,
+   source/compiler/dependency/ABI/runtime và các liên kết getter của năm contract.
+2. Quét raw logs từ deployment block đến H, giữ blockHash/txHash/logIndex. Kiểm receipt status,
+   canonical ancestry và indexed flags; receipt revert không có log thành công để cộng.
+3. Liên kết ProposalCreated → calldata requestId/recipient/amount, proposalId và operationId bằng
+   description bytes nguyên bản và salt batch. Một request có thể thuộc nhiều proposal.
+4. Chỉ BUD Transfer vào/ra Treasury tạo ledger; BudgetDisbursed nối metadata khoản chi, không cộng
+   thành lần chi thứ hai. Balance tại H phải bằng tổng vào − tổng ra; bỏ self-transfer khỏi net flow.
+5. Gọi state/votes/quorum(snapshot), paidRequests, operation timestamp/state và BUD balanceOf tại
+   cùng H; kiểm lại hash H sau audit. Empty blocks vẫn làm state theo thời gian thay đổi.
+6. API/rebuild cần cùng deployment/H/hash; nếu có snapshotRevision phải ghi đúng revision đã publish.
+   Không gộp các chain/reset branch dù cùng block number, không gán API revision cho receipt-only run.
+
+[SC06 fixture](../fixtures/chain/sc06-v1/README.md) có provenance/runtime và live-RPC verification
+lúc tạo; offline archive không là Merkle/state proof hoặc cam kết RPC vẫn sống. TV2 sở hữu pipeline
+indexer/API/reorg/rebuild; TV1 review phép tính và giao diện contract, không ký thay nghiệm thu TV2.
+
+## Giới hạn mô phỏng và các gate còn mở
+
+| Phạm vi | Đã chứng minh / giới hạn | Trạng thái còn lại |
+|---|---|---|
+| SC07 | Unit/boundary contract-level technical PASS; không phát hiện nhu cầu sửa production | Tài liệu tích hợp chờ TV4 review |
+| QA05/QA06 | TV4 local 202/202 Foundry, 21/21 attack tại b7a74ce; INV01–04 bounded đã peer chốt | Full actor/reset/receipt/API/UI variants vẫn PARTIAL; không suy mọi strategy |
+| Voting/quỹ | Không chống Sybil, mua GOV trước snapshot hoặc bảo đảm quỹ cho proposal chưa execute | Không mở rộng bảo đảm ngoài mô phỏng |
+| Bootstrap/config | Final matrix và no-bootstrap-operation audit local PASS | Sau renounce không có governance quản lý role/settings theo whitelist MVP |
+| Frontend | Có adapter/local evidence, chưa thay chữ ký ví extension | TV3 consumer/full extension workflow #19/#41 còn mở |
+| Testnet | TV4 chọn Sepolia/11155111/K=2; PublicNode identity/CLZ probe read-only, chưa deploy | BLOCKED #20: signer an toàn có gas, đường remote deploy/check-roles được review, kiểm compiled bytecode/gas, manifest/receipts và Executed/Defeated thời gian thật |
+| Tích hợp/release | Candidate khác Dev; local evidence không là máy nhận độc lập | #18/#47 tích hợp, #40 môi trường nhận, #42 máy khác, #44 release/report còn gate riêng |
+
+Bàn giao cho nhóm trưởng: [SC09 — phần Smart Contracts của báo cáo #44](sc09-smart-contracts-report.md).
+
+
+### Testnet: cấu hình đã chọn, triển khai vẫn bị chặn
+
+[TV4 preflight](evidence/tv4-20261111-testnet-preflight.json) ghi lựa chọn Sepolia,
+chainId 11155111, K=2 và RPC `https://ethereum-sepolia-rpc.publicnode.com`.
+Đây là lựa chọn cấu hình của TV4, không tự thay deployment authorization hoặc peer approval.
+Báo cáo source d8f8743 chỉ có read-only eth_chainId/block/eth_call CLZ(1)=255;
+block head và latest eth_call không được khẳng định cùng H/hash. Không có transaction
+broadcast hoặc signer được sử dụng; probe không thay kiểm toàn bộ compiled bytecode,
+gas estimation theo fork hiện hành, ABI/indexer hoặc contract roles trên testnet.
+
+Phải có signer owner/account-role map riêng và balance gas được xác minh, signer an toàn,
+remote deployment/check-roles path được TV1 review, revision/CI được chấp nhận, manifest và
+receipts thật. Chờ voting/timelock bằng thời gian thực, không warp/mine testnet.
+Không dùng account unlocked/khóa demo archived hoặc tắt guard local để gửi lên mạng ngoài.
+#20 vẫn BLOCKED; đợt tài liệu này không gọi RPC testnet hay gửi giao dịch.

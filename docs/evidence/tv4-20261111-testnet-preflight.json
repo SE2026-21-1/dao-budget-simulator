@@ -1,0 +1,137 @@
+{
+  "reportWrittenAtUtc": "2026-11-11T05:10:47.341Z",
+  "sourceRevision": "d8f8743179d7748d0e05499646b5d9322820c782",
+  "observedDevRevision": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+  "decision": "TV4 selects Ethereum Sepolia for the testnet campaign per user request. Configuration selection is not deployment authorization, testnet acceptance, group review or a claim of transactions sent.",
+  "configuration": {
+    "network": "Ethereum Sepolia",
+    "chainId": 11155111,
+    "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+    "confirmations": 2,
+    "compiler": "0.8.37",
+    "evmTarget": "osaka",
+    "foundry": "1.8.5",
+    "node": "24.15.0",
+    "explorer": "https://sepolia.etherscan.io",
+    "governance": {
+      "votingDelaySeconds": 60,
+      "votingPeriodSeconds": 300,
+      "timelockDelaySeconds": 120
+    },
+    "timePolicy": "Real elapsed time only; no evm_increaseTime/warp on testnet",
+    "gasPolicy": "Estimate each transaction against current remote fork and signer balance; do not copy fixed Anvil gas assumptions"
+  },
+  "sources": [
+    {
+      "url": "https://ethereum.org/developers/docs/networks/",
+      "fact": "Current network guide recommends Sepolia for application development; Hoodi for validator/staking testing."
+    },
+    {
+      "url": "https://blog.ethereum.org/2025/09/26/fusaka-testnet-announcement",
+      "fact": "Sepolia Fusaka (Osaka execution upgrade) activation scheduled 2025-10-14."
+    },
+    {
+      "url": "https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement",
+      "fact": "Sepolia Glamsterdam activation scheduled 2026-10-06; newer gas/accounting rules require actual remote estimation, not Osaka-local gas assumptions."
+    },
+    {
+      "url": "https://chainid.network/chains.json",
+      "fact": "Public metadata lists chainId11155111 and selected public RPC endpoint."
+    }
+  ],
+  "readOnlyProbe": {
+    "requests": [
+      {
+        "method": "eth_chainId",
+        "params": []
+      },
+      {
+        "method": "eth_getBlockByNumber",
+        "params": [
+          "latest",
+          false
+        ]
+      },
+      {
+        "method": "eth_call",
+        "params": [
+          {
+            "data": "0x60011e60005260206000f3",
+            "gas": "0x1e8480"
+          },
+          "latest"
+        ]
+      }
+    ],
+    "responses": [
+      {
+        "url": "https://ethereum-sepolia-rpc.publicnode.com",
+        "http": 200,
+        "chainId": "0xaa36a7",
+        "head": {
+          "number": "0xb8c708",
+          "hash": "0x73db8db5e03b0adb74e93aa13b6614464e76926ff3c2e896088f643092e74c33",
+          "timestamp": "0x6af3f86c"
+        },
+        "clzCall": {
+          "jsonrpc": "2.0",
+          "id": 3,
+          "result": "0x00000000000000000000000000000000000000000000000000000000000000ff"
+        },
+        "readOnly": true
+      },
+      {
+        "url": "https://sepolia.drpc.org",
+        "http": 400,
+        "head": null,
+        "clzCall": {
+          "id": 3,
+          "jsonrpc": "2.0",
+          "error": {
+            "message": "chain is not available on free plan, please upgrade to paid plan",
+            "code": 35
+          }
+        },
+        "readOnly": true
+      }
+    ],
+    "expectedClz1": "0x00000000000000000000000000000000000000000000000000000000000000ff",
+    "interpretation": "Selected endpoint returned chain11155111 and CLZ(1)=255; this is a limited Osaka opcode availability probe, not full compiled-contract deployment or gas/ABI/indexer acceptance. Batch head and latest eth_call are not asserted to be the same block.",
+    "broadcastTransactions": 0,
+    "signerUsed": false
+  },
+  "tv1Handoffs": [
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495",
+      "acceptedScope": "Contract mapping complete at d8f8743; independently ran15 new tests; reviewed archive/checksum/four TC10rows. Full202 is TV4 evidence, not independently rerun by TV1."
+    },
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/8#issuecomment-6787396657",
+      "acceptedScope": "SC02 contract/ABI/handoff PASS; frontend read/delegate consumer remains TV3."
+    },
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-6763792761",
+      "acceptedScope": "TV1 local security/deployment PASS; testnet explicitly BLOCKED."
+    }
+  ],
+  "gate": {
+    "status": "BLOCKED",
+    "localReview": "PASS; no longer waiting for old TV1 mapping/token/deployment review",
+    "rpcIdentityAndLimitedOsakaProbe": "PASS read-only",
+    "missing": [
+      "Named signer owner, dedicated public testnet addresses/account-role map, controlled wallet or secure signer access and measured native gas balance; never publish private keys",
+      "Testnet-only signed deployment/check-roles path and TV1 incremental review, including current-fork gas estimation and pre-renounce manifest/role checks; existing deploy_local.mjs explicitly requires empty loopback Anvil31337 and must not be repurposed by disabling guards",
+      "Accepted integration/deployment source revision and applicable CI; Dev still87738d3, candidate d8f8743 not merged",
+      "Remote deployment manifest/addresses/receipts and real-time Executed/Defeated evidence",
+      "Independent receiver clone/restart/rebuild evidence and separate extension-wallet acceptance where required"
+    ]
+  },
+  "notRun": [
+    "Testnet broadcast/deployment",
+    "Signer balance/gas authorization checks (no signer supplied)",
+    "Compiled-contract compatibility on testnet",
+    "Extension wallet",
+    "Independent receiver machine"
+  ],
+  "testnetAccepted": false
+}

@@ -1,0 +1,1528 @@
+{
+  "format": "dao-budget-tv4-final-acceptance-v1",
+  "status": "PASS",
+  "scope": "Local unforked owned Anvil and isolated native PostgreSQL; not release/testnet/peer approval",
+  "baseCommit": "2ca6a30e306c6c0a784b0cd59e3b0bfffbb9c373",
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+    "platform": "linux",
+    "arch": "x64",
+    "postgresBin": "/tmp/dao-inspection-pg-20261025/node_modules/@embedded-postgres/linux-x64/native/bin",
+    "postgres": "postgres (PostgreSQL) 18.4",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "pg": "8.23.1",
+    "postgresServer": "PostgreSQL 18.4 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit"
+  },
+  "checks": {
+    "contract": {
+      "status": "PASS",
+      "tests": 185,
+      "newSC05Tests": 38,
+      "profile": "ci",
+      "fuzzSeed": "0x20261021",
+      "format": "PASS",
+      "SC01Fixture": "PASS",
+      "timelockAbiEntries": 46,
+      "compilerAbiEqual": true,
+      "source": "Observed post-integration Foundry/SC01 output; no contract edits since that run"
+    },
+    "backend": {
+      "build": "PASS",
+      "typecheck": "PASS",
+      "tests": 165,
+      "backendTests": 157,
+      "smokeInterruptionTests": 8,
+      "source": "Observed combined backend and smoke-interruption runner output; final DB API checks below exercise canonical cursor change"
+    },
+    "frontend": {
+      "lintExitCode": 0,
+      "tests": 6,
+      "build": "PASS",
+      "remainingWarnings": [
+        "WalletProvider react/set-state-in-effect",
+        "Main bundle exceeds 500kB"
+      ],
+      "browserEvidence": "tv4-20261025-recovery.json"
+    },
+    "bootstrap": {
+      "status": "PASS",
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "--test",
+        "tests/smoke/bootstrap.test.mjs"
+      ],
+      "tests": 14,
+      "exitCode": 0,
+      "startedAt": "2026-10-25T15:36:32.054Z",
+      "finishedAt": "2026-10-25T15:37:11.840Z",
+      "stdout": "✔ clean production deployment audits bootstrap before renouncing and final roles before funding (6343.29274ms)\n✔ bootstrap gate rejects missing Governor executor before renounce or funding (3099.00495ms)\n✔ bootstrap gate rejects extra holder discovered outside the demo account list before renounce or funding (2533.664696ms)\n✔ bootstrap gate rejects public zero-address executor before renounce or funding (2478.499526ms)\n✔ bootstrap gate rejects wrong real constructor link before renounce or funding (2116.079733ms)\n✔ bootstrap gate rejects wrong deployed compiler code before renounce or funding (2004.242663ms)\n✔ bootstrap gate rejects M-01 stale scheduleBatch survives revoked bootstrap proposer before renounce or funding (2837.815737ms)\n✔ bootstrap gate rejects canceled bootstrap operation history remains forbidden before renounce or funding (3225.898193ms)\n✔ bootstrap gate rejects Done bootstrap operation history remains forbidden before renounce or funding (3093.381419ms)\n✔ bootstrap gate rejects silently truncated operation logs cannot hide canceled bootstrap history before renounce or funding (3181.044429ms)\n✔ bootstrap gate rejects wrong minDelay after legitimate scheduled self-update before renounce or funding (2822.010018ms)\n✔ bootstrap gate rejects missing runtime RPC evidence fails closed before renounce or funding (2115.527396ms)\n✔ bootstrap gate rejects missing complete log evidence fails closed before renounce or funding (2318.065253ms)\n✔ wrong actual chain rejects before deployment (928.514194ms)\nℹ tests 14\nℹ suites 0\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 39665.940205\n",
+      "stderr": ""
+    },
+    "native": {
+      "status": "PASS",
+      "startedAt": "2026-10-25T14:23:33.860Z",
+      "finishedAt": "2026-10-25T14:28:54.589Z",
+      "suites": {
+        "be01-sql": {
+          "status": "PASS",
+          "durationMs": 1114
+        },
+        "be02-storage": {
+          "status": "PASS",
+          "tests": {
+            "tests": 21,
+            "pass": 21,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "durationMs": 13572
+        },
+        "be03-checkpoint-crash": {
+          "status": "PASS",
+          "tests": {
+            "tests": 18,
+            "pass": 18,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "durationMs": 8554
+        },
+        "be04-projection": {
+          "status": "PASS",
+          "tests": {
+            "tests": 10,
+            "pass": 10,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "durationMs": 9751
+        },
+        "be05-api": {
+          "status": "PASS",
+          "tests": {
+            "tests": 4,
+            "pass": 4,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "durationMs": 6178
+        },
+        "be06-two-db": {
+          "status": "PASS",
+          "tests": {
+            "tests": 1,
+            "pass": 1,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "durationMs": 2054
+        },
+        "governance-storage": {
+          "status": "PASS",
+          "durationMs": 25024
+        },
+        "live-api-be06": {
+          "status": "PASS",
+          "evidence": "live.json",
+          "durationMs": 35061
+        },
+        "api-benchmark": {
+          "status": "PASS",
+          "evidence": "benchmark.json",
+          "durationMs": 211785
+        }
+      },
+      "provenance": {
+        "sourceHashes": {
+          "scripts/check_tv4_native.mjs": "5f75f2a9eed3b03a63fce740c999c1dccdb88e16efe247c7207b46570d2a5e58",
+          "scripts/benchmark_api.mjs": "d1b5eb01dddb2845b1402ab8cd3fa0bb5272c297d77eeff0a9cdb6d473c78513",
+          "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+          "scripts/check_be04_live.mjs": "3bbadc1e5292023d0840708b33a99e813ada37b5b23c45318416d92d739ca68b",
+          "scripts/smoke_governance.mjs": "47e0e502bc4a3925fdc4f96bf6a9aab04faa7c1392c0d27a7a79aa85c22f5f74",
+          "scripts/governance_storage.mjs": "f2b6338e174d229c5840b9c5cdff1920c5c18b81f94480308f9b2675da3934d6",
+          "scripts/governance_local.mjs": "57808a1136539a1b2287661efe4f5d31df64445f94b2dad2450260f1450d53d3",
+          "indexer/syncer.ts": "c4536c042bd656399d3c62f710be4caa28c06184a1fafdc0f1316d55ca7ace94",
+          "indexer/storage.ts": "d3d929eb92fd3ff8a8990bdb80f93e90d6c13219d72602675b60b4e45a98bbd6",
+          "indexer/rpc.ts": "6a27c9cea3991f98bae2d2ab0a02dc66128c97eee3d137c06f7d4e72c4befa17",
+          "indexer/types.ts": "947a469749ca970c4425338c62b16a4096c857be4efd83d803abf18c05260265",
+          "indexer/api/server.ts": "64f7b37fa7fc7664e3aeae501f52e33b479ea3bfb206012cdd76ad96621d292e",
+          "indexer/projection/projector.ts": "63fe800d543bc3d2f33605b844656b0cf31dc71162fc1271feac0be84d3a3dfa",
+          "indexer/projection/chain.ts": "35a4fb83ef7201dc3778c4e4298b9264d54cd8049b6d39ebf7d792b132f765bb",
+          "tests/indexer/storage.test.ts": "b690a2726d84e5da7966c5637b747ee45003090356fdc66f7f62cf5fd63df77b",
+          "tests/indexer/checkpoint-storage.test.ts": "ec6bc274ca9b623767435787a6471d6a27409376f14d49b55c7b51c1e02b3727",
+          "tests/indexer/projection-storage.test.ts": "4ec0139ff498b7dfaa4a416b70cabdb6b5bdfcd13e41b202bc59ff816ea1d7f5",
+          "tests/api/server.test.mjs": "b98ae171f840579f1ab840642f430899dde2325f3b2a1ee28c531586ec0a06eb",
+          "tests/indexer/be06-db.test.mjs": "b9252ddbd18b13b9699ae364f0d88f96b689a653686c1c54a384328de74fa22a",
+          "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+          "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+          "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+          "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+          "database/tests/001_initial_checks.sql": "45dc35c92822b48067f9c98b54e30717f28e50001d80ded86e419bd5128c8f6e",
+          "package.json": "5fd33c1a3bf385d5ae05279def3a9601e7f5cad46b319838c5b573db319714ca",
+          "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+          "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+          "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9"
+        },
+        "binaryHashes": {
+          "initdb": "515186eed81a1f2741bdcbfeb080af093a59a27fb2896237b04dd6c48bae349d",
+          "pg_ctl": "6beab6014ea28dcc78b8c6a43ec9e3e20536e13a175d75151107410ac866c481",
+          "postgres": "de0a4a7646c51f032e0088ae6fe9d0833fa280b78d4455681574a32937b32838"
+        }
+      },
+      "cleanup": {
+        "status": "PASS",
+        "clusterStopped": true,
+        "temporaryFilesRemoved": true,
+        "errors": []
+      }
+    },
+    "deploymentCLI": {
+      "status": "PASS",
+      "commands": [
+        {
+          "args": [
+            "scripts/deploy_local.mjs",
+            "--rpc",
+            "http://127.0.0.1:43661",
+            "--output",
+            "/tmp/tv4-sc05-delivery-final-yO4Ar3/manifest.json"
+          ],
+          "exitCode": 0,
+          "stdoutSha256": "a40e696e5a7a9d330949b965510033f416d9990a00b457ee4297a62494fecc60",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/check_roles.mjs",
+            "--rpc",
+            "http://127.0.0.1:43661",
+            "--manifest",
+            "/tmp/tv4-sc05-delivery-final-yO4Ar3/manifest.json"
+          ],
+          "exitCode": 0,
+          "stdoutSha256": "f9c2febfc09a9d9d93b1d599b6e9d8f942353de04212a1042518dad664ac9e2b",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/export_local_handoff.mjs",
+            "--rpc",
+            "http://127.0.0.1:43661",
+            "--manifest",
+            "/tmp/tv4-sc05-delivery-final-yO4Ar3/manifest.json",
+            "--output",
+            "/tmp/tv4-sc05-delivery-final-yO4Ar3/handoff"
+          ],
+          "exitCode": 0,
+          "stdoutSha256": "8cd631d6c45964bc3cbdd4f7b09e3f95b08eaee5bb21e3d61ac3e600806abea4",
+          "stderr": ""
+        }
+      ],
+      "preRenounce": {
+        "stage": "bootstrap",
+        "height": "11",
+        "blockHash": "0x803a0daa5b559716ea26de1663b85fe60c57040d2eec31d234317f319aa58b45",
+        "timestamp": "1792938410",
+        "chainId": "31337",
+        "sourceCommit": "2ca6a30e306c6c0a784b0cd59e3b0bfffbb9c373",
+        "config": {
+          "proposalThreshold": "50000000000000000000",
+          "quorumNumerator": "20",
+          "quorumDenominator": "100",
+          "votingDelay": "60",
+          "votingPeriod": "300",
+          "minDelay": "120",
+          "clockMode": "mode=timestamp",
+          "govSupply": "1000000000000000000000",
+          "budSupply": "20000000000000000000000",
+          "treasurySeed": "10000000000000000000000"
+        },
+        "identities": {
+          "GOV": {
+            "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+            "deploymentBlock": "1",
+            "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+            "runtimeSha256": "b4335ef0b627c9ef43a0675543e7aa2306823b6d8cd96148d5d6070482d4ca33",
+            "normalizedRuntimeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+            "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b"
+          },
+          "BUD": {
+            "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+            "deploymentBlock": "2",
+            "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+            "runtimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "normalizedRuntimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8"
+          },
+          "Treasury": {
+            "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+            "deploymentBlock": "3",
+            "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+            "runtimeSha256": "e2f42f862585834650b2df672e4ea56db6a377cd48a0d0e0310d7e84ca56f5a6",
+            "normalizedRuntimeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+            "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b"
+          },
+          "Timelock": {
+            "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+            "deploymentBlock": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+            "runtimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "normalizedRuntimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa"
+          },
+          "Governor": {
+            "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "deploymentBlock": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+            "runtimeSha256": "5d6d7ba79fc7d417d88fa079a78e5f678db9b8cabf9dd988d9b3d2e145d2d1ad",
+            "normalizedRuntimeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+            "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+          }
+        },
+        "roles": {
+          "Treasury": {
+            "fromBlock": "3",
+            "toBlock": "11",
+            "eventCount": 3,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0x7434c6f201a551bfd17336985361933e0c4935b520dac8a49d937b325f7d5c0a",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          },
+          "Timelock": {
+            "fromBlock": "4",
+            "toBlock": "11",
+            "eventCount": 5,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          }
+        },
+        "operations": {
+          "policy": "No operation event through initial funding; later direct Governor batch actions reconciled with canonical receipts and pinned Timelock state",
+          "fromBlock": "4",
+          "toBlock": "11",
+          "blockHash": "0x803a0daa5b559716ea26de1663b85fe60c57040d2eec31d234317f319aa58b45",
+          "bootstrapThrough": "11",
+          "eventCount": 0,
+          "operations": []
+        },
+        "canonicalEvidence": {
+          "fromBlock": "1",
+          "blocks": 11,
+          "receipts": 10
+        }
+      },
+      "preFunding": {
+        "stage": "final",
+        "height": "13",
+        "blockHash": "0x92f9294ddd9d5fd77f089fd9e7ef33fbad738f4388a76f1a3a4cb258d7ee3f76",
+        "timestamp": "1792938411",
+        "chainId": "31337",
+        "sourceCommit": "2ca6a30e306c6c0a784b0cd59e3b0bfffbb9c373",
+        "config": {
+          "proposalThreshold": "50000000000000000000",
+          "quorumNumerator": "20",
+          "quorumDenominator": "100",
+          "votingDelay": "60",
+          "votingPeriod": "300",
+          "minDelay": "120",
+          "clockMode": "mode=timestamp",
+          "govSupply": "1000000000000000000000",
+          "budSupply": "20000000000000000000000",
+          "treasurySeed": "10000000000000000000000"
+        },
+        "identities": {
+          "GOV": {
+            "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+            "deploymentBlock": "1",
+            "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+            "runtimeSha256": "b4335ef0b627c9ef43a0675543e7aa2306823b6d8cd96148d5d6070482d4ca33",
+            "normalizedRuntimeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+            "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b"
+          },
+          "BUD": {
+            "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+            "deploymentBlock": "2",
+            "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+            "runtimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "normalizedRuntimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8"
+          },
+          "Treasury": {
+            "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+            "deploymentBlock": "3",
+            "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+            "runtimeSha256": "e2f42f862585834650b2df672e4ea56db6a377cd48a0d0e0310d7e84ca56f5a6",
+            "normalizedRuntimeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+            "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b"
+          },
+          "Timelock": {
+            "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+            "deploymentBlock": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+            "runtimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "normalizedRuntimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa"
+          },
+          "Governor": {
+            "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "deploymentBlock": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+            "runtimeSha256": "5d6d7ba79fc7d417d88fa079a78e5f678db9b8cabf9dd988d9b3d2e145d2d1ad",
+            "normalizedRuntimeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+            "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+          }
+        },
+        "roles": {
+          "Treasury": {
+            "fromBlock": "3",
+            "toBlock": "13",
+            "eventCount": 4,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0x7434c6f201a551bfd17336985361933e0c4935b520dac8a49d937b325f7d5c0a",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          },
+          "Timelock": {
+            "fromBlock": "4",
+            "toBlock": "13",
+            "eventCount": 6,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          }
+        },
+        "operations": {
+          "policy": "No operation event through initial funding; later direct Governor batch actions reconciled with canonical receipts and pinned Timelock state",
+          "fromBlock": "4",
+          "toBlock": "13",
+          "blockHash": "0x92f9294ddd9d5fd77f089fd9e7ef33fbad738f4388a76f1a3a4cb258d7ee3f76",
+          "bootstrapThrough": "13",
+          "eventCount": 0,
+          "operations": []
+        },
+        "canonicalEvidence": {
+          "fromBlock": "1",
+          "blocks": 13,
+          "receipts": 12
+        }
+      },
+      "finalAudit": {
+        "stage": "final",
+        "height": "19",
+        "blockHash": "0x6397df47326c4e244af8d9504ed6429d832c80ddae1d45ec3cadae03ed6f9165",
+        "timestamp": "1792938414",
+        "chainId": "31337",
+        "sourceCommit": "2ca6a30e306c6c0a784b0cd59e3b0bfffbb9c373",
+        "config": {
+          "proposalThreshold": "50000000000000000000",
+          "quorumNumerator": "20",
+          "quorumDenominator": "100",
+          "votingDelay": "60",
+          "votingPeriod": "300",
+          "minDelay": "120",
+          "clockMode": "mode=timestamp",
+          "govSupply": "1000000000000000000000",
+          "budSupply": "20000000000000000000000",
+          "treasurySeed": "10000000000000000000000"
+        },
+        "identities": {
+          "GOV": {
+            "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+            "deploymentBlock": "1",
+            "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+            "runtimeSha256": "b4335ef0b627c9ef43a0675543e7aa2306823b6d8cd96148d5d6070482d4ca33",
+            "normalizedRuntimeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+            "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b"
+          },
+          "BUD": {
+            "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+            "deploymentBlock": "2",
+            "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+            "runtimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "normalizedRuntimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8"
+          },
+          "Treasury": {
+            "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+            "deploymentBlock": "3",
+            "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+            "runtimeSha256": "e2f42f862585834650b2df672e4ea56db6a377cd48a0d0e0310d7e84ca56f5a6",
+            "normalizedRuntimeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+            "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b"
+          },
+          "Timelock": {
+            "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+            "deploymentBlock": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+            "runtimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "normalizedRuntimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa"
+          },
+          "Governor": {
+            "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "deploymentBlock": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+            "runtimeSha256": "5d6d7ba79fc7d417d88fa079a78e5f678db9b8cabf9dd988d9b3d2e145d2d1ad",
+            "normalizedRuntimeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+            "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+          }
+        },
+        "roles": {
+          "Treasury": {
+            "fromBlock": "3",
+            "toBlock": "19",
+            "eventCount": 4,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0x7434c6f201a551bfd17336985361933e0c4935b520dac8a49d937b325f7d5c0a",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          },
+          "Timelock": {
+            "fromBlock": "4",
+            "toBlock": "19",
+            "eventCount": 6,
+            "roles": [
+              {
+                "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              },
+              {
+                "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+                "adminRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "holders": [
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d"
+                ],
+                "checkedCandidates": [
+                  "0x0000000000000000000000000000000000000000",
+                  "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                  "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
+                  "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                  "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+                  "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+                  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+                  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+                  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+                  "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+                ]
+              }
+            ]
+          }
+        },
+        "operations": {
+          "policy": "No operation event through initial funding; later direct Governor batch actions reconciled with canonical receipts and pinned Timelock state",
+          "fromBlock": "4",
+          "toBlock": "19",
+          "blockHash": "0x6397df47326c4e244af8d9504ed6429d832c80ddae1d45ec3cadae03ed6f9165",
+          "bootstrapThrough": "19",
+          "eventCount": 0,
+          "operations": []
+        },
+        "canonicalEvidence": {
+          "fromBlock": "1",
+          "blocks": 19,
+          "receipts": 17
+        }
+      },
+      "cleanup": {
+        "ownedAnvilStopped": true,
+        "exitCode": 0,
+        "signal": null
+      }
+    },
+    "governance": {
+      "result": "passed",
+      "assertions": [
+        "role checker rejects a manifest pointing Treasury at an EOA",
+        "final roles audited from complete grant/revoke history at fixed H and unchanged after calls",
+        "deployer and outsider cannot regain roles, directly spend/schedule/execute or change delay",
+        "canonical single Treasury action whitelist enforced on-chain",
+        "Pending/Active/deadline/ETA boundaries verified with exact mined transaction timestamps",
+        "snapshot weights survive token transfer/delegate changes and cannot be double counted",
+        "low quorum, tie and abstain-only defeated; For+Abstain contributes quorum",
+        "creator-only Pending cancellation, late cancellation denied",
+        "operationId uses actual OZ5.4 right-padded Governor address XOR descriptionHash salt",
+        "permissionless EOA queue/execute through Governor with exact real event ordering",
+        "early execution, operation replay and distinct proposals sharing request are denied",
+        "oversubscribed execution leaves Queued/Ready/unpaid and original ETA; same-operation retry succeeds",
+        "same-H Transfer ledger equals actual balances and successful BudgetDisbursed totals without double counting",
+        "BE02 decodes actual mined governance/token/timelock/treasury receipts"
+      ],
+      "ledger": {
+        "totalIn": "13000000000000000000000",
+        "totalOut": "13000000000000000000000",
+        "payoutTotal": "13000000000000000000000",
+        "paidRequestIds": [
+          "0xe667a6d27fbe476b3edd9c78f237f349952e3d4535d0aeac3fe6be56540de972",
+          "0x9c2b996e06e531b40c90d9283f854184de5fad55aa694d0ee9385080cf55aa3f"
+        ],
+        "finalBalances": {
+          "Treasury": "0",
+          "recipient": "7000000000000000000000",
+          "recipient2": "6000000000000000000000",
+          "funding": "7000000000000000000000"
+        }
+      },
+      "finalOperations": {
+        "policy": "No operation event through initial funding; later direct Governor batch actions reconciled with canonical receipts and pinned Timelock state",
+        "fromBlock": "4",
+        "toBlock": "109",
+        "blockHash": "0x41de3f807fd6a03b612c9ebb914b80b004718bc41b0deb8a2d6f8d7e37716afa",
+        "bootstrapThrough": "19",
+        "eventCount": 10,
+        "operations": [
+          {
+            "operationId": "0xf5d732900a80443bdeb74d255fbdc746ec7d996e147c146756a16c8a2e54c8c5",
+            "proposalId": "55614320256308678518598229047654869366262968677891527819583750460492743641175",
+            "requestId": "0xe667a6d27fbe476b3edd9c78f237f349952e3d4535d0aeac3fe6be56540de972",
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "amount": "7000000000000000000000",
+            "eta": "1800000495",
+            "timestamp": "1",
+            "state": "Done",
+            "schedules": 1,
+            "queueBlock": "86",
+            "queueTransaction": "0x92adf0de59380c614ec2242bc34981fc6d8a8bc25ed8ed4cbc8b018aa8b9f64f",
+            "executionTransaction": "0x111065d9f4b33c6c56602ae4172c044190d0debd1e10cacedcf1164ca2c4560b"
+          },
+          {
+            "operationId": "0xcd504c88c08a8ffb3b15e2c50d35f502c20d6245d9cf37706350a6492e77fba1",
+            "proposalId": "39190121157526988117258239633940464701985384404318547109577629780992415656696",
+            "requestId": "0xe667a6d27fbe476b3edd9c78f237f349952e3d4535d0aeac3fe6be56540de972",
+            "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+            "amount": "2000000000000000000000",
+            "eta": "1800000495",
+            "timestamp": "1800000495",
+            "state": "Ready",
+            "schedules": 1,
+            "queueBlock": "87",
+            "queueTransaction": "0x9b60d4ec57f5af9a2203340d68a475948b36037fef0347b24a3c298aeb5e2815"
+          },
+          {
+            "operationId": "0xd96fe0545d98d226207e8c9c8bbe2b0d93af458013c83d910b944c3d0fecb141",
+            "proposalId": "89946422557370766448413718898053055923080893124589522008472205705953199577065",
+            "requestId": "0x9c2b996e06e531b40c90d9283f854184de5fad55aa694d0ee9385080cf55aa3f",
+            "recipient": "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
+            "amount": "6000000000000000000000",
+            "eta": "1800000495",
+            "timestamp": "1",
+            "state": "Done",
+            "schedules": 1,
+            "queueBlock": "88",
+            "queueTransaction": "0x0b5c2b33e5fd19bbe10d64faa50b69b599db89f098b9c1f9e372cda032f9728a",
+            "executionTransaction": "0xf8fd5b0abdf0956737f16acb50133f623ed7019018d00da70f511d60e61c354d"
+          },
+          {
+            "operationId": "0xc66c5466a9949ea2080f2e68e63e19174cba8bf1fb1765a69b686672973fce7a",
+            "proposalId": "77532195381456044567567465587921112567729333369614151727548473903132494626784",
+            "requestId": "0xea4da1c77e61d28dd2fc02302fd2ddb185241d8e467733e9af265d812f084e15",
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "amount": "1000000000000000000",
+            "eta": "1800000495",
+            "timestamp": "1800000495",
+            "state": "Ready",
+            "schedules": 1,
+            "queueBlock": "89",
+            "queueTransaction": "0xec1af86a403c0f39f8cd19f0205d3c84266c8a4b4526d53cca28b0a9f07b3ed0"
+          }
+        ]
+      }
+    },
+    "recovery": {
+      "status": "PASS",
+      "interrupted": {
+        "summaryStatus": 503,
+        "cursorStatus": 409
+      },
+      "recovery": {
+        "status": "raw_synced_with_decode_issues",
+        "chainId": "31337",
+        "deploymentId": "1",
+        "checkpoint": {
+          "number": "76",
+          "hash": "0x973735c2f4c7ee55cf31e5d0f7997439a12a05e2c1cf8dcb74048bb5f9c5030b"
+        },
+        "decodeComplete": false,
+        "unknownTopics": 16,
+        "decodeErrors": 0,
+        "issues": [
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "sc01-itreasury-v1",
+            "blockNumber": "3",
+            "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "1",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "2",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-governor",
+            "blockNumber": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "1",
+            "abiVersion": "oz-5.4.0-governor",
+            "blockNumber": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "2",
+            "abiVersion": "oz-5.4.0-governor",
+            "blockNumber": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "3",
+            "abiVersion": "oz-5.4.0-governor",
+            "blockNumber": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "4",
+            "abiVersion": "oz-5.4.0-governor",
+            "blockNumber": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "sc01-itreasury-v1",
+            "blockNumber": "6",
+            "transactionHash": "0x02425ca9835afc761e4247c69e57b0e1ae3ff5d9215af517a5b86547e3fb3dbe"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "sc01-itreasury-v1",
+            "blockNumber": "7",
+            "transactionHash": "0x7383b9a06330af924f35ce930e7dfc845c230fb71dc3b699a8fabc8c48182e04"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "8",
+            "transactionHash": "0xe10f48ac358bcecad7579a50b58c9f0a4a80e31c8d685b345be369328be4143f"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "9",
+            "transactionHash": "0x950c49cb3a4a41fa6597d7e46b6193b706feaee61bde4c499ad4c9bb1b7a12a4"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "10",
+            "transactionHash": "0xab9d36ede93df20e0a7310581e1a3cb8de79f101a4d2dcc601a23cc995c8066b"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "sc01-itreasury-v1",
+            "blockNumber": "12",
+            "transactionHash": "0x93de49702ab1ddae09e7348b78eda63ae569f0d9d4a76bea97807df9cf0c4ac0"
+          },
+          {
+            "code": "UNKNOWN_TOPIC",
+            "logIndex": "0",
+            "abiVersion": "oz-5.4.0-timelock",
+            "blockNumber": "13",
+            "transactionHash": "0x8b7fbf0511926fe8d75cac115e306354343a400d414b52587a615b652dc1dd1b"
+          }
+        ],
+        "committedBatches": 1,
+        "head": "78",
+        "safeBlock": "76",
+        "reorg": {
+          "from": "75",
+          "ancestor": "73",
+          "replayFrom": "74"
+        }
+      },
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "1",
+        "asOfBlock": "76",
+        "asOfBlockHash": "0x973735c2f4c7ee55cf31e5d0f7997439a12a05e2c1cf8dcb74048bb5f9c5030b",
+        "asOfTimestamp": "1800000994",
+        "snapshotRevision": "583909bb-b549-449f-ac8b-ac4c4aab20c7",
+        "dataKind": "chain"
+      },
+      "oldRevision": "58b1706a-b8c2-401e-9534-06665f5dd4e2",
+      "orphanTransaction": "0x9f6b152ed1af7736f5b1ddd1d8965d8542026fc3b1b069bb960fa80108815aca",
+      "replacementTransaction": "0xf4d85f568b137429e007763456d266690ef301d60625332a4d92c55189d5ded7",
+      "orphanRows": 0,
+      "replacementRows": 1,
+      "oldCursorAfterStatus": 409,
+      "balance": "1002000000000000000000",
+      "freshness": {
+        "stale": {
+          "status": "lagging",
+          "headBlock": "78",
+          "confirmedBlock": "76",
+          "indexedBlock": "76",
+          "lagBlocks": "0",
+          "lagSeconds": "31",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T14:24:50.526Z"
+        },
+        "fresh": {
+          "status": "synced",
+          "headBlock": "78",
+          "confirmedBlock": "76",
+          "indexedBlock": "76",
+          "lagBlocks": "0",
+          "lagSeconds": "0",
+          "confirmations": "2",
+          "lastIndexedAt": "2026-10-25T14:25:21.559Z"
+        }
+      }
+    },
+    "benchmark": {
+      "status": "PASS",
+      "scope": "Real unforked owned Anvil, deployed production contracts, genuine transactions, BE03/BE04/BE05, loopback HTTP. Not testnet, remote-client, or browser performance.",
+      "datasetCounts": {
+        "proposals": "100",
+        "votes": "1000",
+        "succeeded": "100",
+        "transfers": "1",
+        "raw_proposals": "100",
+        "raw_votes": "1000"
+      },
+      "load": {
+        "status": "PASS",
+        "concurrency": 10,
+        "durationMs": 60000,
+        "startedAt": "2026-10-25T14:27:53.157Z",
+        "rawSampleColumns": [
+          "worker",
+          "sequence",
+          "endpoint",
+          "proposalId",
+          "startOffsetMs",
+          "latencyMs",
+          "httpStatus",
+          "ok"
+        ],
+        "errors": [],
+        "workers": [
+          {
+            "worker": 1,
+            "requests": 807,
+            "startOffsetMs": 0.597806000005221,
+            "finishedOffsetMs": 60007.34099199998
+          },
+          {
+            "worker": 7,
+            "requests": 823,
+            "startOffsetMs": 2.714334999996936,
+            "finishedOffsetMs": 60021.23716299998
+          },
+          {
+            "worker": 5,
+            "requests": 816,
+            "startOffsetMs": 2.075303999998141,
+            "finishedOffsetMs": 60030.34850600001
+          },
+          {
+            "worker": 8,
+            "requests": 811,
+            "startOffsetMs": 2.9757640000025276,
+            "finishedOffsetMs": 60033.269165000005
+          },
+          {
+            "worker": 4,
+            "requests": 805,
+            "startOffsetMs": 1.740564000006998,
+            "finishedOffsetMs": 60036.739222000004
+          },
+          {
+            "worker": 2,
+            "requests": 812,
+            "startOffsetMs": 1.0494489999837242,
+            "finishedOffsetMs": 60037.315091
+          },
+          {
+            "worker": 0,
+            "requests": 804,
+            "startOffsetMs": 0.20482399998581968,
+            "finishedOffsetMs": 60038.28015199999
+          },
+          {
+            "worker": 3,
+            "requests": 817,
+            "startOffsetMs": 1.4404869999852963,
+            "finishedOffsetMs": 60038.89083299998
+          },
+          {
+            "worker": 9,
+            "requests": 810,
+            "startOffsetMs": 3.2577569999848492,
+            "finishedOffsetMs": 60042.44088099999
+          },
+          {
+            "worker": 6,
+            "requests": 811,
+            "startOffsetMs": 2.4653939999989234,
+            "finishedOffsetMs": 60044.10991999999
+          }
+        ],
+        "cpuUsageAtStart": {
+          "user": 30877543,
+          "system": 2448235
+        },
+        "resourceUsageAtStart": {
+          "userCPUTime": 30877569,
+          "systemCPUTime": 2448237,
+          "maxRSS": 341084,
+          "sharedMemorySize": 0,
+          "unsharedDataSize": 0,
+          "unsharedStackSize": 0,
+          "minorPageFault": 92409,
+          "majorPageFault": 0,
+          "swappedOut": 0,
+          "fsRead": 0,
+          "fsWrite": 0,
+          "ipcSent": 0,
+          "ipcReceived": 0,
+          "signalsCount": 0,
+          "voluntaryContextSwitches": 27522,
+          "involuntaryContextSwitches": 8750
+        },
+        "completedAt": "2026-10-25T14:28:53.202Z",
+        "elapsedIncludingDrainMs": 60044.146378000005,
+        "cpuUsage": {
+          "user": 38740979,
+          "system": 6471126
+        },
+        "resourceUsageAtEnd": {
+          "userCPUTime": 69618593,
+          "systemCPUTime": 8919370,
+          "maxRSS": 352116,
+          "sharedMemorySize": 0,
+          "unsharedDataSize": 0,
+          "unsharedStackSize": 0,
+          "minorPageFault": 95490,
+          "majorPageFault": 0,
+          "swappedOut": 0,
+          "fsRead": 0,
+          "fsWrite": 0,
+          "ipcSent": 0,
+          "ipcReceived": 0,
+          "signalsCount": 0,
+          "voluntaryContextSwitches": 31813,
+          "involuntaryContextSwitches": 38667
+        },
+        "httpStatuses": {
+          "200": 8116
+        },
+        "successfulRequests": 8116,
+        "errorRequests": 0,
+        "global": {
+          "count": 8116,
+          "p95Ms": 121.39956299998448,
+          "maxMs": 861.9225919999881
+        },
+        "allResponsesIncludingErrors": {
+          "count": 8116,
+          "p95Ms": 121.39956299998448,
+          "maxMs": 861.9225919999881
+        },
+        "endpoints": {
+          "list": {
+            "count": 3253,
+            "p95Ms": 128.21317999999155,
+            "maxMs": 856.9245159999991,
+            "errors": 0
+          },
+          "summary": {
+            "count": 1622,
+            "p95Ms": 79.76668800000334,
+            "maxMs": 287.1508820000163,
+            "errors": 0
+          },
+          "detail": {
+            "count": 1621,
+            "p95Ms": 116.98211000001174,
+            "maxMs": 850.2580430000089,
+            "errors": 0
+          },
+          "votes": {
+            "count": 1620,
+            "p95Ms": 132.0769309999887,
+            "maxMs": 861.9225919999881,
+            "errors": 0
+          }
+        },
+        "successfulRequestsPerSecond": 135.26666666666668
+      },
+      "sourceHashes": {
+        "scripts/benchmark_api.mjs": "d1b5eb01dddb2845b1402ab8cd3fa0bb5272c297d77eeff0a9cdb6d473c78513",
+        "scripts/governance_local.mjs": "57808a1136539a1b2287661efe4f5d31df64445f94b2dad2450260f1450d53d3",
+        "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+        "indexer/api/server.ts": "64f7b37fa7fc7664e3aeae501f52e33b479ea3bfb206012cdd76ad96621d292e",
+        "indexer/syncer.ts": "c4536c042bd656399d3c62f710be4caa28c06184a1fafdc0f1316d55ca7ace94",
+        "indexer/projection/projector.ts": "63fe800d543bc3d2f33605b844656b0cf31dc71162fc1271feac0be84d3a3dfa",
+        "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+        "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+        "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+        "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+        "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911"
+      },
+      "rawEvidence": "tv4-20261025-final/benchmark.json",
+      "rawEvidenceSha256": "9ecb53efd55499c4e338fe72c5275aa6ff5645c4549f7044e691fb3f205f6aa2",
+      "cleanup": {
+        "status": "PASS",
+        "errors": [],
+        "callerDatabaseDropped": false
+      }
+    }
+  },
+  "priorFailedAttempt": {
+    "status": "FAIL",
+    "suites": {
+      "be01-sql": {
+        "status": "PASS",
+        "durationMs": 1292
+      },
+      "be02-storage": {
+        "status": "PASS",
+        "tests": {
+          "tests": 21,
+          "pass": 21,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 23257
+      },
+      "be03-checkpoint-crash": {
+        "status": "PASS",
+        "tests": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 22895
+      },
+      "be04-projection": {
+        "status": "PASS",
+        "tests": {
+          "tests": 10,
+          "pass": 10,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 16973
+      },
+      "be05-api": {
+        "status": "FAIL",
+        "error": "be05-api exited 1",
+        "durationMs": 3789
+      },
+      "be06-two-db": {
+        "status": "PASS",
+        "tests": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "durationMs": 2354
+      },
+      "governance-storage": {
+        "status": "PASS",
+        "durationMs": 23706
+      },
+      "live-api-be06": {
+        "status": "PASS",
+        "evidence": "live.json",
+        "durationMs": 37003
+      },
+      "api-benchmark": {
+        "status": "PASS",
+        "evidence": "benchmark.json",
+        "durationMs": 213667
+      }
+    },
+    "source": "/tmp/tv4-final-acceptance-20261025/report.json",
+    "note": "Preserved failure, not relabeled; cursor alias acceptance fixed before final native run"
+  },
+  "limits": [
+    "Automatic reorg recovery limited to 64 blocks; deeper changes remain fail-closed and require explicit BE06 rebuild",
+    "Freshness sample and benchmark are local measurements, not production SLA",
+    "Direct Governor batch operations only in local operation audit; no nested contract-wallet relay support claimed",
+    "No testnet signer/gas/network acceptance, extension-wallet acceptance, independent peer approval, or acceptance from another member machine",
+    "Runtime source fingerprints are from the actual runners; documentation updated afterward",
+    "User AD-064 file and README link excluded from TV4 publication"
+  ],
+  "publication": {
+    "branch": "feature/tv4-operation",
+    "pullRequest": 21,
+    "base": "Dev",
+    "publishedCodeCommit": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+    "ciStatus": "PASS",
+    "ciEvents": [
+      "push",
+      "pull_request"
+    ],
+    "jobsPerRun": 8,
+    "evidence": "tv4-20261025-final/publication.json",
+    "note": "Later metadata-only seal is not the benchmark source commit; no self-merge/approval"
+  }
+}

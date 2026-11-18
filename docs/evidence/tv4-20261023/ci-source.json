@@ -1,0 +1,277 @@
+{
+  "run": {
+    "id": 39899337940,
+    "head_sha": "228077a6f18944fb7fc6852c65f217db8a368024",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940",
+    "created_at": "2026-10-23T04:15:15Z",
+    "updated_at": "2026-10-23T04:16:57Z"
+  },
+  "jobs": [
+    {
+      "id": 120237015737,
+      "name": "BE01 fixtures and PostgreSQL constraints",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940/job/120237015737",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout BE01 schema and fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check offline API fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check migration and constraints in isolated PostgreSQL",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record BE01 scope and versions",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload BE01 evidence",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout BE01 schema and fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120237015951,
+      "name": "Frontend lint and production build",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940/job/120237015951",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout integrated frontend and canonical BE01 fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked frontend dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck and build production frontend",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record frontend scope and versions",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload frontend build and evidence",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout integrated frontend and canonical BE01 fixtures",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120237016164,
+      "name": "BE02 TypeScript and isolated PostgreSQL storage",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940/job/120237016164",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout BE02 implementation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck BE02 source and tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build BE02",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check BE02 synthetic RPC and decoder behavior",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check BE02 storage and host CLI against isolated PostgreSQL",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record BE02 scope, exact revision and tool versions",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload BE02 evidence",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout BE02 implementation",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 120237016233,
+      "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+      "conclusion": "success",
+      "html_url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39899337940/job/120237016233",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout with pinned submodules",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Python",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned Foundry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js for live receipt verification",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked smoke dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build, format, tests and ABI fixture",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify smoke interruption cleans owned processes and temporary files",
+          "conclusion": "success"
+        },
+        {
+          "name": "Exercise Treasury transactions and BE02 live receipt decoding",
+          "conclusion": "success"
+        },
+        {
+          "name": "Exercise final roles, live governance ingestion, restart and raw replay",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record scope of checks",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload check evidence",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js for live receipt verification",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Install pinned Foundry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Python",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout with pinned submodules",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 12478465976,
+      "name": "tv4-checks-228077a6f18944fb7fc6852c65f217db8a368024",
+      "size_in_bytes": 61639,
+      "expired": false
+    },
+    {
+      "id": 12478396076,
+      "name": "tv4-frontend-228077a6f18944fb7fc6852c65f217db8a368024",
+      "size_in_bytes": 112088,
+      "expired": false
+    },
+    {
+      "id": 12478048224,
+      "name": "tv4-be01-228077a6f18944fb7fc6852c65f217db8a368024",
+      "size_in_bytes": 2019,
+      "expired": false
+    },
+    {
+      "id": 12478033389,
+      "name": "tv4-be02-228077a6f18944fb7fc6852c65f217db8a368024",
+      "size_in_bytes": 6253,
+      "expired": false
+    }
+  ],
+  "scope": "GitHub runner Docker acceptance plus build/security/process suites for implementation commit; not wallet/API/testnet/other-machine acceptance"
+}

@@ -42,10 +42,7 @@ jobs:
         with:
           node-version: '24.15.0'
           cache: npm
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.8.5
-          cache: false
+      - uses: ./.github/actions/install-foundry
       - uses: actions/setup-python@v7.0.0
         with:
           python-version: '3.12'

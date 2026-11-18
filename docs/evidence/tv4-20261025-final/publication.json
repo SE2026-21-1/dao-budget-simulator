@@ -1,0 +1,62 @@
+{
+  "format": "dao-budget-tv4-publication-v1",
+  "status": "PUBLISHED_CODE_CI_PASS",
+  "branch": "feature/tv4-operation",
+  "publishedCodeCommit": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+  "transport": "SSH git push, no force, origin unchanged",
+  "ciRuns": [
+    {
+      "id": 40208371328,
+      "event": "pull_request",
+      "headSha": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+      "conclusion": "success",
+      "successfulJobs": 8,
+      "totalJobs": 8,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40208371328"
+    },
+    {
+      "id": 40208367182,
+      "event": "push",
+      "headSha": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+      "conclusion": "success",
+      "successfulJobs": 8,
+      "totalJobs": 8,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/40208367182"
+    }
+  ],
+  "ciEvidence": "ci-fa498d6.json",
+  "pullRequest": {
+    "number": 21,
+    "state": "open",
+    "head": "fa498d63b892e53da445fc129b8a79b91cbdee9d",
+    "base": "Dev",
+    "merged": false,
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21"
+  },
+  "secretScan": {
+    "scanner": "gitleaks 8.30.1",
+    "rawExitCode": 1,
+    "findings": 550,
+    "categories": {
+      "public-file-sha256": 164,
+      "public-evm-address": 386
+    },
+    "confirmedCredentials": 0,
+    "unreviewed": 0,
+    "evidence": "gitleaks-triage.json"
+  },
+  "externalGates": {
+    "newPRBodyOrIssueCommentsPosted": false,
+    "newReviewRequestsSent": false,
+    "reason": "No usable GitHub API token: environment token absent, stored gh host configuration has no oauth_token, gh executable unavailable, authenticated browser relay unavailable. SSH git authentication does not grant API authorization.",
+    "testnetAccepted": false,
+    "extensionWalletAccepted": false,
+    "otherMemberMachineAccepted": false,
+    "peerApproved": false
+  },
+  "preservedUserChanges": [
+    "docs/AD-064-architecture-review.md",
+    "README AD-064 link hunk"
+  ],
+  "scope": "CI above applies to the exact code commit; subsequent metadata-only seal records it without claiming the benchmark ran at that later commit. No merge/approval or release declaration."
+}

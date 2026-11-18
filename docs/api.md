@@ -106,23 +106,29 @@ và `stateSource: "contract"`; fixture vẫn dùng `synthetic`.
 
 | Trường đồng bộ | Ý nghĩa |
 |---|---|
-| `status` | `synced`, `lagging` hoặc `not_ready`; BE05 báo `lagging` khi checkpoint quá 30 giây, raw chưa tới confirmed block hoặc publication chưa tới raw checkpoint |
+| `status` | `synced`, `lagging` hoặc `not_ready`; BE05 (001–004) dùng tuổi checkpoint; BE07 (005) dùng `lastCheckedAt` từ xác minh RPC. Cả hai báo `lagging` nếu raw chưa tới confirmed block hoặc publication chưa tới raw checkpoint |
 | `headBlock` | Tip được BE03 ghi nhận ở lần sync gần nhất; không phải phép thăm dò RPC trực tiếp |
 | `confirmedBlock` | Block cao nhất đủ K xác nhận, quy ước `max(headBlock-K, 0)`; testnet demo K=2 |
 | `indexedBlock` | Checkpoint đã commit, không phải block đang xử lý dở |
 | `lagBlocks` | `max(confirmedBlock-indexedBlock, 0)`; không tính K block đang chờ xác nhận |
-| `lagSeconds` | Với schema 001–004: chuỗi số nguyên không âm, lớn nhất giữa tuổi checkpoint (`updated_at`) và chênh lệch timestamp của observed head (hoặc raw H nếu thiếu head) so với publication. Null nếu chưa có raw checkpoint |
+| `lagSeconds` | Với 001–004: chuỗi số giây lớn nhất giữa tuổi checkpoint (`updated_at`) và chênh timestamp observed head (hoặc raw H) với publication; null khi chưa có checkpoint. Với 005: tuổi của lần RPC xác minh canonical `lastCheckedAt` và publication lag; null nếu chưa xác minh. Không ép null thành zero |
 | `confirmations` | K cấu hình, chuỗi số nguyên |
-| `lastIndexedAt` | Lần cập nhật checkpoint gần nhất; null nếu chưa từng có. BE05 không xác minh RPC khi không commit block |
+| `lastIndexedAt` | Lần cập nhật raw checkpoint gần nhất; với BE07, `lastRpcCheckAt` riêng mới là lần xác minh canonical RPC. Null nếu chưa có checkpoint |
 
-Mốc H là mốc dữ liệu đang xem; sync mô tả checkpoint pipeline gần nhất, có thể
+Mốc H là mốc dữ liệu đang xem; sync mô tả pipeline/publication gần nhất, có thể
 mới hơn H. API không probe RPC và không biết RPC hiện tại còn truy cập được hay
-không. Tuổi của một H lịch sử không phải độ trễ pipeline. Với schema 001–004,
-checkpoint quá 30 giây hoặc chênh lệch timestamp quá 30 giây báo `lagging` dù
-`lagBlocks="0"`; health vẫn trả HTTP 200 `degraded` nếu publication sẵn sàng.
-Timestamp chênh lệch âm do clock skew được chặn ở 0. Khi chưa có checkpoint,
-H/hash/timestamp, indexedBlock và các độ trễ không biết được là null; không giả
-mạo H bằng zero. Health degraded không tự chứng minh RPC đang down.
+không. `lagSeconds` là chỉ báo freshness, không phải phép đo event delay tại H.
+Với 001–004, checkpoint cũ quá 30 giây hoặc timestamp delay quá 30 giây
+báo `lagging` dù `lagBlocks="0"`; kiểm tra synced sau **checkpoint thật** mới.
+Với 005, worker phải kiểm RPC canonical thành công rồi ghi `lastCheckedAt`;
+checkpoint mới không thay thế xác minh này. Chênh lệch âm do clock skew chặn ở
+zero. Health HTTP 200 `degraded` khi publication còn dùng được nhưng stale;
+recovery/replaying/rebuild_required đóng publication HTTP 503, cursor cũ 409.
+Frontend kiểm health mỗi 5 giây và tải lại trang đầu khi cursor 409;
+`--worker` với `toBlock:"latest"` là chế độ continuous sync→project/recovery.
+`--watch` chỉ là chế độ cũ (poll 100–60000 ms, mặc định 5000 ms), không thay BE07.
+Không checkpoint thì H/hash/timestamp/indexedBlock/lagSeconds chưa biết đều null;
+không giả mạo H bằng zero. Health degraded không tự chứng minh RPC đang down.
 
 List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cùng `cursor`:
 
@@ -141,6 +147,8 @@ List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cù
 - Server phải xác thực cursor trước khi dùng; bản triển khai có thể dùng HMAC
   hoặc token lưu phía server. Base64url trong fixture là token minh họa **chưa ký**,
   không phải cơ chế tin cậy để sao chép vào production.
+  BE05 dùng HMAC-SHA256; cả payload lẫn signature phải là base64url canonical.
+  Chuỗi đổi unused padding bits dù giải mã ra cùng signature bytes vẫn bị từ chối.
 - Cursor malformed/hết hạn/không xác thực trả 400 `INVALID_CURSOR`.
   Thay H, deployment, endpoint, filter hoặc limit trả 400 `CURSOR_CONTEXT_MISMATCH`.
   Hash bị reorg hoặc revision bị rebuild thay thế trả 409 `SNAPSHOT_INVALIDATED`;
@@ -183,7 +191,7 @@ Ví dụ: `/api/proposals?chainId=31337&deploymentId=synthetic-local-v1&limit=20
 
 | Query thêm | Quy tắc |
 |---|---|
-| `state` | Tùy chọn, đúng một trong Pending/Active/Succeeded/Defeated/Queued/Executed/Canceled; phân biệt hoa thường |
+| `state` | Tùy chọn, đúng một trong Pending/Active/Succeeded/Defeated/Queued/Executed/Canceled; phân biệt hoa thường. `state=` rỗng trả 400 `INVALID_ARGUMENT`, không bỏ qua bộ lọc |
 | `proposalId` | Tùy chọn, tìm chính xác ID canonical decimal uint256; không tìm một phần chuỗi |
 | `limit`, `cursor` | Phân trang như mục 2 |
 
@@ -380,11 +388,13 @@ Hash input/proposalId của 45 proposal và operationId/salt vẫn giữ nguyên
 
 ## 7. Chạy API BE05
 
-Chạy migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
-và có publication BE04:
+Áp dụng migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
+và có publication BE04. Nếu chạy worker/recovery BE07, áp dụng tiếp migration
+005 trước khi khởi động worker/API (xem [BE07](be07.md)):
 
 ```sh
 psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/004_be05_api.sql
+psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/005_be07.sql
 npm ci
 export API_CURSOR_SECRET="$(openssl rand -hex 32)"
 npm run api

@@ -1,0 +1,17 @@
+{
+  "label": "clean-node",
+  "cwd": "/tmp/tv4-clean-228077a",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=node@24.15.0",
+    "--",
+    "sh",
+    "-c",
+    "npm run typecheck && npm run build && npm run test:be02 && node scripts/check_be01.mjs && npm run lint --prefix frontend && npm run build --prefix frontend"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 38.415,
+  "log": "clean-node.txt"
+}

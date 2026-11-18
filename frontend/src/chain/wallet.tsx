@@ -167,10 +167,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       if (typeof address !== "string" || !isAddress(address)) throw new Error("Ví không trả địa chỉ hợp lệ.");
       const nextChain = parseWalletChain(await provider.request({ method: "eth_chainId" }));
       if (generation !== sessionGeneration.current) return;
-      clearReads();
-      // Wallet events are newer than the responses to these outstanding requests.
-      if (accountVersion === accountEvents.current) setAccount(address);
-      if (chainVersion === chainEvents.current) setChainId(nextChain);
+      // Only accepted responses that change selection may invalidate GOV reads.
+      // Newer events may already have refreshed the current account/network.
+      const nextAccount = accountVersion === accountEvents.current ? address : activeSelection.current.account;
+      const acceptedChain = chainVersion === chainEvents.current ? nextChain : activeSelection.current.chainId;
+      if (nextAccount !== activeSelection.current.account || acceptedChain !== activeSelection.current.chainId) {
+        clearReads();
+        activeSelection.current = { account: nextAccount, chainId: acceptedChain };
+        setAccount(nextAccount); setChainId(acceptedChain);
+      }
     } catch (cause) { if (generation === sessionGeneration.current) setError(walletErrorMessage(cause, "Không kết nối được ví.")); }
     finally { setBusy(false); }
   };
@@ -195,8 +200,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     try {
       await switchWalletNetwork(provider, { chainId: deployment.chainId, name: deployment.chain.name, rpcUrl: deployment.rpcUrl });
       if (generation !== sessionGeneration.current) return;
-      clearReads();
-      if (chainVersion === chainEvents.current) setChainId(deployment.chainId);
+      if (chainVersion === chainEvents.current && deployment.chainId !== activeSelection.current.chainId) {
+        clearReads();
+        activeSelection.current = { ...activeSelection.current, chainId: deployment.chainId };
+        setChainId(deployment.chainId);
+      }
     } catch (cause) { if (generation === sessionGeneration.current) setError(walletErrorMessage(cause, "Không chuyển được mạng. Kiểm tra RPC và xác nhận trong tiện ích ví.")); }
     finally { setBusy(false); }
   };

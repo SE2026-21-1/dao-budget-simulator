@@ -121,6 +121,91 @@ describe("wallet session lifecycle", () => {
     expect(wallet.chainId).toBe(1);
   });
 
+  it("preserves GOV reads loaded by newer events while connect is pending", async () => {
+    const provider = injected([]);
+    await mount(provider);
+    const accounts = deferred<Address[]>();
+    const chain = deferred<Hex>();
+    provider.request.mockImplementation(({ method }) => {
+      if (method === "eth_requestAccounts") return accounts.promise;
+      if (method === "eth_chainId") return chain.promise;
+      throw new Error(`Unexpected request: ${method}`);
+    });
+    let connecting: Promise<void>;
+    await act(async () => { connecting = wallet.connect(); accounts.resolve([accountA]); });
+    await act(async () => { provider.emit("accountsChanged", [accountB]); provider.emit("chainChanged", "0x7a69"); });
+    expect(wallet.balance).toBe(2n);
+    expect(wallet.delegatee).toBe(accountB);
+    expect(wallet.votingPower).toBe(2n);
+    await act(async () => { chain.resolve("0x7a69"); await connecting; });
+    expect(wallet.account).toBe(accountB);
+    expect(wallet.chainId).toBe(31337);
+    expect(wallet.balance).toBe(2n);
+    expect(wallet.delegatee).toBe(accountB);
+    expect(wallet.votingPower).toBe(2n);
+  });
+
+  it("preserves GOV reads loaded by a newer chain event while switching is pending", async () => {
+    const provider = injected([accountA]);
+    await mount(provider);
+    await act(async () => { provider.emit("chainChanged", "0x1"); });
+    expect(wallet.balance).toBeNull();
+    const switched = deferred<Hex>();
+    provider.request.mockImplementation(async ({ method }) => {
+      if (method === "wallet_switchEthereumChain") return switched.promise;
+      if (method === "eth_chainId") return "0x7a69";
+      throw new Error(`Unexpected request: ${method}`);
+    });
+    let switching: Promise<void>;
+    await act(async () => { switching = wallet.switchNetwork(); });
+    await act(async () => { provider.emit("chainChanged", "0x7a69"); });
+    expect(wallet.balance).toBe(1n);
+    expect(wallet.delegatee).toBe(accountA);
+    expect(wallet.votingPower).toBe(1n);
+    await act(async () => { switched.resolve("0x"); await switching; });
+    expect(wallet.chainId).toBe(31337);
+    expect(wallet.balance).toBe(1n);
+    expect(wallet.delegatee).toBe(accountA);
+    expect(wallet.votingPower).toBe(1n);
+  });
+
+  it.each(["connect", "switchNetwork"] as const)("preserves zero GOV reads when %s completes without a selection change", async (action) => {
+    const provider = injected([accountA]);
+    state.rpc.readContract.mockImplementation(async ({ functionName }) => functionName === "delegates" ? accountA : 0n);
+    await mount(provider);
+    provider.request.mockImplementation(async ({ method }) => {
+      if (method === "eth_requestAccounts") return [accountA];
+      if (method === "wallet_switchEthereumChain") return "0x";
+      if (method === "eth_chainId") return "0x7a69";
+      throw new Error(`Unexpected request: ${method}`);
+    });
+    await act(async () => { await wallet[action](); });
+    expect(wallet.balance).toBe(0n);
+    expect(wallet.delegatee).toBe(accountA);
+    expect(wallet.votingPower).toBe(0n);
+  });
+
+  it("applies a current connect chain response while retaining a newer account event", async () => {
+    const provider = injected([accountA]);
+    await mount(provider);
+    await act(async () => { provider.emit("chainChanged", "0x1"); });
+    const chain = deferred<Hex>();
+    provider.request.mockImplementation(async ({ method }) => {
+      if (method === "eth_requestAccounts") return [accountA];
+      if (method === "eth_chainId") return chain.promise;
+      throw new Error(`Unexpected request: ${method}`);
+    });
+    let connecting: Promise<void>;
+    await act(async () => { connecting = wallet.connect(); });
+    await act(async () => { provider.emit("accountsChanged", [accountB]); });
+    await act(async () => { chain.resolve("0x7a69"); await connecting; });
+    expect(wallet.account).toBe(accountB);
+    expect(wallet.chainId).toBe(31337);
+    expect(wallet.balance).toBe(2n);
+    expect(wallet.delegatee).toBe(accountB);
+    expect(wallet.votingPower).toBe(2n);
+  });
+
   it("never sends through another provider when selection changes during deployment checks", async () => {
     const first = injected([accountA]);
     const second = injected([accountA]);

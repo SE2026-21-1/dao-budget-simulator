@@ -5,6 +5,8 @@ COPY frontend/package.json frontend/package-lock.json ./frontend/
 RUN npm ci --prefix frontend
 COPY frontend ./frontend
 COPY fixtures/api ./fixtures/api
+COPY fixtures/sc01/disbursement-v1.json ./fixtures/sc01/disbursement-v1.json
+COPY shared/abi/TimelockController.json ./shared/abi/TimelockController.json
 # The deployed bundle refuses local fixture defaults if runtime configuration is absent.
 ENV VITE_CONTAINER_RUNTIME=1
 RUN npm run build --prefix frontend

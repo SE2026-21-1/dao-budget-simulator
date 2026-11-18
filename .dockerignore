@@ -19,6 +19,7 @@
 !deploy/migrate.mjs
 !deploy/preflight.mjs
 !deploy/smoke.mjs
+!deploy/worker-health.mjs
 !scripts/
 !scripts/cd/
 !scripts/cd/container-frontend.mjs
@@ -48,3 +49,8 @@
 !fixtures/api/
 !fixtures/api/**/
 !fixtures/api/**/*.json
+!fixtures/sc01/
+!fixtures/sc01/disbursement-v1.json
+!shared/
+!shared/abi/
+!shared/abi/TimelockController.json

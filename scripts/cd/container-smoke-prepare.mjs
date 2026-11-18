@@ -9,7 +9,10 @@ assert.ok(directory, 'Owned temporary smoke directory is required');
 const manifest = JSON.parse(await readFile(join(directory, 'deployment.json'), 'utf8'));
 assert.equal(manifest.chainId, '31337');
 const { config, governanceToken } = parseBe06Manifest(manifest, 'http://anvil:8545', manifest.roleCheck.height, '1');
-const serializable = JSON.parse(JSON.stringify({ ...config, toBlock: 'latest', confirmations: 0 },
+// Match the existing live integration runner: raw indexing covers four roles,
+// not GOV (which is registered separately for API historical reconciliation).
+const start = config.contracts.reduce((min, contract) => contract.deploymentBlock < min ? contract.deploymentBlock : min, config.contracts[0].deploymentBlock);
+const serializable = JSON.parse(JSON.stringify({ ...config, fromBlock: start, toBlock: 'latest', confirmations: 0 },
   (_key, value) => typeof value === 'bigint' ? value.toString() : value));
 await writeFile(join(directory, 'indexer.json'), JSON.stringify(serializable), { mode: 0o644 });
 const keys = { governor: 'Governor', timelock: 'Timelock', treasury: 'Treasury', budget_token: 'BUD' };
@@ -34,7 +37,7 @@ const sql = value => "'" + String(value).replaceAll("'", "''") + "'";
 const statements = [
   'BEGIN;',
   `INSERT INTO deployments (chain_id,deployment_name,deployment_block,abi_version,governance_config,confirmation_depth)
-   VALUES (31337,'container-smoke',${sql(config.fromBlock)},'container-smoke-v1',${sql(JSON.stringify(manifest.config))}::jsonb,0)
+   VALUES (31337,'container-smoke',${sql(start)},'container-smoke-v1',${sql(JSON.stringify(manifest.config))}::jsonb,0)
    RETURNING deployment_id AS registered_id \\gset`,
   ...[...config.contracts, { role: 'governance_token', ...governanceToken }].map(contract =>
     `INSERT INTO deployment_contracts (deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)

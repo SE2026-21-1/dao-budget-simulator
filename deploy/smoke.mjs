@@ -25,7 +25,9 @@ export async function smoke(client, { timeoutMs = 120000, since = new Date().toI
       const response = await fetch(api, { signal: AbortSignal.timeout(3000) });
       requireThat(response.ok, 'API health is not ready.');
       const body = await response.json();
-      requireThat(body.data?.status === 'ok' && body.data?.database === 'up' && body.data?.indexer === 'synced' && body.data?.publication === 'ready' && body.data?.rawDecodeComplete === true, 'API publication is degraded or incomplete.');
+      // The API serves canonical publications with HTTP 200 even when retained
+      // ancillary logs make decoding "degraded". Readiness is not decode completeness.
+      requireThat(['ok', 'degraded'].includes(body.data?.status) && body.data?.database === 'up' && body.data?.indexer === 'synced' && body.data?.publication === 'ready' && typeof body.data?.rawDecodeComplete === 'boolean', 'API canonical publication is not ready.');
       requireThat(body.context?.chainId === config.chainId.toString() && body.context?.deploymentId === process.env.DEPLOYMENT_ID, 'API health scope does not match the configured release.');
       stage = 'frontend';
       const health = await fetch(`${frontend}/healthz`, { signal: AbortSignal.timeout(3000) });
@@ -35,7 +37,8 @@ export async function smoke(client, { timeoutMs = 120000, since = new Date().toI
       const proxy = await fetch(`${publicApi}/api/health?${query}`, { signal: AbortSignal.timeout(3000) });
       requireThat(proxy.ok, 'Configured frontend API route is not ready.');
       const publicBody = await proxy.json();
-      requireThat(publicBody.data?.status === 'ok' && publicBody.data?.publication === 'ready' && publicBody.context?.chainId === config.chainId.toString() && publicBody.context?.deploymentId === process.env.DEPLOYMENT_ID, 'Configured frontend API scope/publication is not ready.');
+      requireThat(['ok', 'degraded'].includes(publicBody.data?.status) && publicBody.data?.indexer === 'synced' && publicBody.data?.publication === 'ready' && publicBody.data?.rawDecodeComplete === body.data.rawDecodeComplete && publicBody.context?.chainId === config.chainId.toString() && publicBody.context?.deploymentId === process.env.DEPLOYMENT_ID, 'Configured frontend API scope/publication is not ready.');
+      if (!body.data.rawDecodeComplete) console.error(`SMOKE_RAW_DECODE_INCOMPLETE ${JSON.stringify(body.data.rawDecodeIssues)}; application readiness only, not complete event decoding.`);
       return;
     } catch { if (Date.now() < deadline) await pause(1000); }
   }

@@ -75,6 +75,17 @@ const config = JSON.parse(await readFile(path, 'utf8'));
 config.deploymentId = process.argv[3];
 await writeFile(path, JSON.stringify(config), { mode: 0o644 });
 JS
+# An earlier non-indexed GOV block must not make the API prefix permanently incomplete.
+"${compose[@]}" exec -T postgres psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+  -c "UPDATE deployments SET deployment_block=0 WHERE deployment_id=$registered_id"
+boundary_status=0
+"${compose[@]}" run --rm --no-deps -T -v "$state:/run/release:ro" --entrypoint node indexer /app/deploy/preflight.mjs \
+  --manifest /run/release/manifest.json > "$state/boundary.log" 2>&1 || boundary_status=$?
+if [[ $boundary_status != 1 ]] || ! grep -q 'four-role raw ingestion boundary' "$state/boundary.log"; then
+  echo 'Misaligned deployment prefix must fail preflight before rollout' >&2; exit 1
+fi
+"${compose[@]}" exec -T postgres psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+  -c "UPDATE deployments SET deployment_block=(SELECT min(deployment_block) FROM deployment_contracts WHERE deployment_id=$registered_id AND contract_role <> 'governance_token') WHERE deployment_id=$registered_id"
 "${compose[@]}" run --rm --no-deps -T -v "$state:/run/release:ro" --entrypoint node indexer /app/deploy/preflight.mjs --manifest /run/release/manifest.json
 # Startup must fail without a mounted public config and must reject fixture mode.
 negative_status=0
@@ -95,6 +106,7 @@ check_live() {
   address=$("${compose[@]}" port frontend 8080)
   [[ $address =~ ^127\.0\.0\.1:[0-9]+$ ]] || { echo 'Unexpected frontend bind' >&2; return 1; }
   node scripts/cd/container-smoke-check.mjs "http://$address"
+  "${compose[@]}" run --rm --no-deps -T --entrypoint node indexer /app/deploy/smoke.mjs --timeout-ms 30000
   local proof
   proof=$("${compose[@]}" exec -T postgres psql -X -At -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT deployment_name FROM deployments WHERE deployment_id=$registered_id")
   [[ $proof == container-smoke ]]

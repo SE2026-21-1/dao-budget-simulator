@@ -8,8 +8,10 @@ export async function runtimeConfig(client) {
   requireThat(!/REPLACE_WITH|CHANGE_ME|CHANGEME/i.test(config.rpcUrl), 'Replace the example RPC endpoint before deployment.');
   requireThat(config.toBlock === 'latest', 'Continuous worker requires toBlock=latest.');
   requireThat(config.contracts.length === 4, 'Deployment requires all four supported contract roles.');
-  const deployment = (await client.query('SELECT deployment_name FROM deployments WHERE deployment_id=$1', [config.deploymentId])).rows[0];
+  const deployment = (await client.query('SELECT deployment_name,deployment_block::text FROM deployments WHERE deployment_id=$1', [config.deploymentId])).rows[0];
   requireThat(deployment && process.env.CHAIN_ID === config.chainId.toString() && process.env.DEPLOYMENT_ID === deployment.deployment_name, 'Public CHAIN_ID/DEPLOYMENT_ID must match the verified deployment chain/name (not its numeric SQL ID).');
+  const rawStart = config.contracts.reduce((min, contract) => contract.deploymentBlock < min ? contract.deploymentBlock : min, config.contracts[0].deploymentBlock);
+  requireThat(deployment.deployment_block === rawStart.toString(), 'Deployment block must match the four-role raw ingestion boundary, not the earlier GOV deployment.');
   requireThat(Buffer.byteLength(process.env.API_CURSOR_SECRET ?? '') >= 32, 'API_CURSOR_SECRET must contain at least 32 bytes.');
   const frontend = JSON.parse(await readFile(process.env.FRONTEND_CONFIG ?? '/run/dao/frontend.json', 'utf8'));
   requireThat(typeof frontend.VITE_CHAIN_ID === 'string' && frontend.VITE_CHAIN_ID === config.chainId.toString() && config.chainId <= BigInt(Number.MAX_SAFE_INTEGER) && frontend.VITE_DEPLOYMENT_ID === deployment.deployment_name, 'Frontend chain/deployment name must match verified database metadata.');

@@ -1,9 +1,7 @@
 name: BE08 backend acceptance and performance
 
 on:
-  push:
-    branches: [Dev, 'feature/tv2-be08']
-  pull_request:
+  workflow_call:
   workflow_dispatch:
 
 permissions:

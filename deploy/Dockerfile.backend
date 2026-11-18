@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1
+FROM node:24.15.0-bookworm-slim AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY tsconfig.json tsconfig.build.json ./
+COPY indexer ./indexer
+RUN npm run build
+
+FROM node:24.15.0-bookworm-slim AS dependencies
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+FROM node:24.15.0-bookworm-slim AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY package.json ./
+COPY --from=build /app/dist ./dist
+COPY database/migrations ./database/migrations
+COPY deploy/common.mjs deploy/control.mjs deploy/migrate.mjs deploy/preflight.mjs deploy/smoke.mjs deploy/worker-health.mjs ./deploy/
+USER node
+STOPSIGNAL SIGTERM
+
+FROM runtime AS api
+EXPOSE 3000
+CMD ["node", "dist/indexer/api/main.js"]
+
+FROM runtime AS indexer
+CMD ["node", "dist/indexer/cli.js", "--config", "/run/dao/indexer.json", "--worker"]

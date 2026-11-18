@@ -10,7 +10,7 @@ const addresses = {
 
 // Config reads import.meta.env at module initialization; reset/re-import is
 // intentional here so each case exercises that loading boundary.
-afterEach(() => { vi.unstubAllEnvs(); vi.resetModules(); });
+afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); vi.resetModules(); });
 
 describe("deployment mode", () => {
   it.each(["", "fixture"])("ignores stale deployment settings with fixture selection %s", async (source) => {
@@ -66,5 +66,24 @@ describe("deployment mode", () => {
     expect(config.apiScope).toBeNull();
     expect(config.deployment).toBeNull();
     expect(config.configurationError).toContain("VITE_CHAIN_ID");
+  });
+
+  it("uses public runtime configuration instead of baked fixture settings", async () => {
+    vi.stubEnv("VITE_CONTAINER_RUNTIME", "1");
+    vi.stubEnv("VITE_DATA_SOURCE", "fixture");
+    vi.stubGlobal("__DAO_PUBLIC_CONFIG__", {
+      VITE_API_BASE_URL: "/backend", VITE_CHAIN_ID: "31337",
+      VITE_DEPLOYMENT_ID: "1", VITE_DATA_SOURCE: "live",
+    });
+    const config = await import("./config");
+    expect(config.apiBaseUrl).toBe("/backend");
+    expect(config.apiScope).toEqual({ chainId: 31337, deploymentId: "1" });
+    expect(config.configurationError).toBeNull();
+  });
+
+  it("fails closed when the deployed runtime script is missing", async () => {
+    vi.stubEnv("VITE_CONTAINER_RUNTIME", "1");
+    vi.stubGlobal("__DAO_PUBLIC_CONFIG__", undefined);
+    await expect(import("./config")).rejects.toThrow("Missing live public runtime configuration");
   });
 });

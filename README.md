@@ -23,6 +23,9 @@ Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
 [runbook BE07](docs/be07.md), [BE08 trên Dev](docs/be08.md) và
 [bàn giao TV4](docs/tv4-work-summary.md).
 
+Chuẩn bị CI/CD ứng dụng: [Docker Compose, GHCR và deploy thủ công](docs/cicd.md).
+Chưa có server đích; không xác nhận CD end-to-end hoặc tự deploy smart contracts.
+
 ## Thành viên và tài liệu
 
 | Thành viên | Phụ trách | Hướng dẫn |
@@ -245,6 +248,12 @@ Workflow cấu hình tám job; artifact giữ 14 ngày. Browser/EIP-1193 accepta
 Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nhật PR.
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
 Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
+
+Các lệnh `npm run test:be02`, `npm run test:be03`, `npm run test:be06` dùng
+`node --import tsx --test`, như BE04/BE07/BE08, thay vì IPC server của CLI
+`tsx --test`. Chúng chạy được khi Unix sockets bị hạn chế nhưng TCP loopback
+vẫn được phép; giữ nguyên test files, assertions và dependency
+([#47](https://github.com/SE2026-21-1/dao-budget-simulator/issues/47)).
 
 [CI bản triển khai `7a0ab33`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/39539691342)
 đã chạy thành công cả ba job; [metadata và log SQL](docs/evidence/tv4-ci-7a0ab33.json).

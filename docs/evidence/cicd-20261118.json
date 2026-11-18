@@ -1,0 +1,57 @@
+{
+  "scope": "TV4 CI/CD preparation, no target server or live deployment",
+  "repository": "SE2026-21-1/dao-budget-simulator",
+  "date": "2026-11-18",
+  "baseline": {
+    "Dev": "43acfbdec3470f9a94c70d5a2700722cba6d3852",
+    "frontendIntegration": "faf10c7da67f53f1d918b5150c862e21af1b0d44",
+    "dependencyPr": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21",
+    "defaultBranch": "main",
+    "applicationIntegrationBranch": "feature/tv4-operation",
+    "trustedPublicationBranch": "Dev"
+  },
+  "observedPermissions": {
+    "githubAccount": "dung0611",
+    "repositoryPush": true,
+    "repositoryAdmin": false,
+    "repositoryMaintain": false,
+    "branchProtected": { "main": false, "Dev": false, "feature/tv4-operation": false },
+    "rulesets": [],
+    "actionsPolicyApiStatus": 403,
+    "ghcrPackageListStatus": 403,
+    "ghcrPackageListError": "You need at least read:packages scope to list packages."
+  },
+  "localDocker": {
+    "client": "29.8.1",
+    "compose": "5.5.1",
+    "daemonAccess": "permission denied on /var/run/docker.sock",
+    "sudo": "password required; no elevation performed",
+    "rootlessProbe": "failed: newuidmap unavailable"
+  },
+  "localVerification": {
+    "node": "24.15.0",
+    "releaseRegressionTests": { "passed": 4, "failed": 0 },
+    "operationRegressionTests": { "passed": 4, "failed": 0 },
+    "frontendConfigurationTests": { "passed": 7, "failed": 0 },
+    "frontendLint": "exit 0; 8 existing wallet.tsx warnings",
+    "frontendContainerModeBuild": "passed; Vite chunk-size warning",
+    "backendCompiledBuild": "passed",
+    "compiledOperationalImports": "passed",
+    "actionlint": "1.7.11, all three changed workflows passed; shellcheck disabled (not installed)",
+    "composeProductionSyntax": "passed using example placeholders and synthetic digest references only",
+    "composeSmokeSyntax": "passed",
+    "shellAndHelperSyntax": "passed",
+    "browser": "Built container-mode bundle served by exact Node frontend runtime outside Docker; public chain/deployment config loaded; unavailable upstream displayed API_UNAVAILABLE with message, no fixture fallback",
+    "realUnreleasedSha": "43acfbdec3470f9a94c70d5a2700722cba6d3852 rejected: no complete unexpired release manifest",
+    "invalidSha": "not-a-sha rejected before network",
+    "successfulPublishedReleaseVerification": "pending trusted Dev release with complete manifest and GHCR digests",
+    "localImageBuildAndComposeSmoke": "not run: Docker daemon access denied"
+  },
+  "acceptance": {
+    "ghcrPublicationVerified": false,
+    "targetServerDeployVerified": false,
+    "targetServerSmokeVerified": false,
+    "targetServerRollbackVerified": false,
+    "cdEndToEnd": false
+  }
+}

@@ -1,0 +1,39 @@
+Script started on 2026-10-24 19:08:51+07:00 [COMMAND="npm ci --prefix frontend && npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend" <not executed on terminal>]
+
+added 87 packages in 42s
+
+> frontend@0.0.0 lint
+> oxlint
+
+src/pages/CreateProposalPage.tsx:28:5: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+src/components/ProposalActions.tsx:20:5: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+src/chain/wallet.tsx:21:14: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:22:10: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:126:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:132:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:137:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:141:23: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:146:23: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:95:26: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+src/components/TreasurySection.tsx:24:5: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+
+> frontend@0.0.0 test
+> vitest run
+
+[?25l
+ RUN  v4.1.12 /home/ptdung/solidity-projects/dao-budget-simulator/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  19:09:35
+   Duration  1.96s (transform 356ms, setup 0ms, import 1.25s, tests 130ms, environment 0ms)
+
+[?25h
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+src/data/api.ts(31,15): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+src/data/api.ts(31,47): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+
+Script done on 2026-10-24 19:09:51+07:00 [COMMAND_EXIT_CODE="2"]

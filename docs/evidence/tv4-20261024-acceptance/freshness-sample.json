@@ -1,0 +1,38 @@
+{
+  "scope": "One confirmed deposit through a500ms local acceptance driver; not production BE07 worker/SLA acceptance",
+  "transactionHash": "0x814f6413af3e505da4954f92f28ba86cae7d10a9e27577934de806b7725a97b9",
+  "confirmedObservedAt": "2026-10-24T12:26:49.558870+00:00",
+  "apiObservedAt": "2026-10-24T12:26:49.933269+00:00",
+  "confirmedToApiMs": 374.39,
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "be06-2ee1062475e87e9b19504aaf",
+    "asOfBlock": "50",
+    "asOfBlockHash": "0x1ee89a59f65b5a2d26a0e1aab46aa3e395ee0a478251db1e2e9c60d2914bc2c2",
+    "asOfTimestamp": "1800001571",
+    "snapshotRevision": "18f8d2c2-02f9-43e7-a048-d6f3210de0f1",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "52",
+      "confirmedBlock": "50",
+      "indexedBlock": "50",
+      "lagBlocks": "0",
+      "lagSeconds": null,
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-24T12:26:49.685Z"
+    }
+  },
+  "treasury": {
+    "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+    "token": {
+      "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+      "symbol": "BUD",
+      "decimals": 18
+    },
+    "balance": "9010000000000000000000",
+    "totalIn": "10010000000000000000000",
+    "totalOut": "1000000000000000000000"
+  },
+  "status": "PASS"
+}

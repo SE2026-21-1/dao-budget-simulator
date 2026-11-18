@@ -1,0 +1,396 @@
+{
+  "status": "PASS",
+  "sourceCommit": "d2617d09694cefd53aa18d23c34335852406102d",
+  "checkout": "/tmp/dao-tv4-clean-f96k050f/checkout",
+  "sameMachine": true,
+  "sourceOverlay": false,
+  "reusedProjectNodeModulesOutCache": false,
+  "freshNpmCache": true,
+  "toolchainCompilerAlreadyInstalled": true,
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "commands": [
+    {
+      "name": "clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-local",
+        "--recurse-submodules",
+        "/home/ptdung/solidity-projects/dao-budget-simulator",
+        "/tmp/dao-tv4-clean-f96k050f/checkout"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f",
+      "exitCode": 0,
+      "durationSeconds": 49.805,
+      "log": "clone.log"
+    },
+    {
+      "name": "node",
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 0.009,
+      "log": "node.log"
+    },
+    {
+      "name": "forge",
+      "argv": [
+        "forge",
+        "--version"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 0.02,
+      "log": "forge.log"
+    },
+    {
+      "name": "postgres",
+      "argv": [
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin/postgres",
+        "--version"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 0.02,
+      "log": "postgres.log"
+    },
+    {
+      "name": "root-install",
+      "argv": [
+        "npm",
+        "ci",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 7.468,
+      "log": "root-install.log"
+    },
+    {
+      "name": "frontend-install",
+      "argv": [
+        "npm",
+        "ci",
+        "--prefix",
+        "frontend",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 34.551,
+      "log": "frontend-install.log"
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 9.23,
+      "log": "typecheck.log"
+    },
+    {
+      "name": "backend-build",
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 6.403,
+      "log": "backend-build.log"
+    },
+    {
+      "name": "contracts",
+      "argv": [
+        "bash",
+        "scripts/ci.sh"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 108.491,
+      "log": "contracts.log"
+    },
+    {
+      "name": "be02",
+      "argv": [
+        "npm",
+        "run",
+        "test:be02"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 10.306,
+      "log": "be02.log"
+    },
+    {
+      "name": "be03",
+      "argv": [
+        "npm",
+        "run",
+        "test:be03"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 2.579,
+      "log": "be03.log"
+    },
+    {
+      "name": "be04",
+      "argv": [
+        "npm",
+        "run",
+        "test:be04"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 2.241,
+      "log": "be04.log"
+    },
+    {
+      "name": "be06",
+      "argv": [
+        "npm",
+        "run",
+        "test:be06"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 1.671,
+      "log": "be06.log"
+    },
+    {
+      "name": "interruption",
+      "argv": [
+        "node",
+        "--test",
+        "tests/smoke/interruption.test.mjs"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 26.762,
+      "log": "interruption.log"
+    },
+    {
+      "name": "fixtures",
+      "argv": [
+        "node",
+        "scripts/check_be01.mjs"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 0.744,
+      "log": "fixtures.log"
+    },
+    {
+      "name": "frontend-lint",
+      "argv": [
+        "npm",
+        "run",
+        "lint",
+        "--prefix",
+        "frontend"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 0.607,
+      "log": "frontend-lint.log"
+    },
+    {
+      "name": "frontend-tests",
+      "argv": [
+        "npm",
+        "run",
+        "test",
+        "--prefix",
+        "frontend"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 3.654,
+      "log": "frontend-tests.log"
+    },
+    {
+      "name": "frontend-build",
+      "argv": [
+        "npm",
+        "run",
+        "build",
+        "--prefix",
+        "frontend"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 16.253,
+      "log": "frontend-build.log"
+    },
+    {
+      "name": "treasury",
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "scripts/smoke_treasury.mjs",
+        "--output",
+        "/home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261024-acceptance/clean/treasury.json"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 2.691,
+      "log": "treasury.log"
+    },
+    {
+      "name": "native-benchmark",
+      "argv": [
+        "npm",
+        "run",
+        "test:tv4:native",
+        "--",
+        "--postgres-bin",
+        "/tmp/dao-tv4-pg18-runtime/node_modules/@embedded-postgres/linux-x64/native/bin",
+        "--output",
+        "/home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261024-acceptance/clean/native",
+        "--benchmark"
+      ],
+      "cwd": "/tmp/dao-tv4-clean-f96k050f/checkout",
+      "exitCode": 0,
+      "durationSeconds": 302.673,
+      "log": "native-benchmark.log"
+    }
+  ],
+  "initialAbsent": {
+    "node_modules": true,
+    "frontend/node_modules": true,
+    "out": true,
+    "cache": true,
+    ".env": true
+  },
+  "clonedCommit": "d2617d09694cefd53aa18d23c34335852406102d",
+  "nativeSuites": {
+    "be01-sql": {
+      "status": "PASS",
+      "durationMs": 571
+    },
+    "be02-storage": {
+      "status": "PASS",
+      "tests": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 7789
+    },
+    "be03-checkpoint-crash": {
+      "status": "PASS",
+      "tests": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 8870
+    },
+    "be04-projection": {
+      "status": "PASS",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 9337
+    },
+    "be05-api": {
+      "status": "PASS",
+      "tests": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 4034
+    },
+    "be06-two-db": {
+      "status": "PASS",
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 2135
+    },
+    "governance-storage": {
+      "status": "PASS",
+      "durationMs": 21060
+    },
+    "live-api-be06": {
+      "status": "PASS",
+      "evidence": "live.json",
+      "durationMs": 31176
+    },
+    "api-benchmark": {
+      "status": "PASS",
+      "evidence": "benchmark.json",
+      "durationMs": 212662
+    }
+  },
+  "benchmark": {
+    "status": "PASS",
+    "concurrency": 10,
+    "durationMs": 60000,
+    "successfulRequests": 8636,
+    "errorRequests": 0,
+    "global": {
+      "count": 8636,
+      "p95Ms": 127.60182499999064,
+      "maxMs": 570.8249139999971
+    },
+    "endpoints": {
+      "list": {
+        "count": 3461,
+        "p95Ms": 139.07878900002106,
+        "maxMs": 570.8249139999971,
+        "errors": 0
+      },
+      "summary": {
+        "count": 1729,
+        "p95Ms": 82.98365499998908,
+        "maxMs": 532.471600000019,
+        "errors": 0
+      },
+      "detail": {
+        "count": 1725,
+        "p95Ms": 125.42696300000534,
+        "maxMs": 554.9461820000142,
+        "errors": 0
+      },
+      "votes": {
+        "count": 1721,
+        "p95Ms": 133.57137399999192,
+        "maxMs": 563.0648909999873,
+        "errors": 0
+      }
+    }
+  }
+}

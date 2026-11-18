@@ -1,0 +1,10 @@
+{
+  "label": "contracts",
+  "command": [
+    "bash",
+    "scripts/ci.sh"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 145.996,
+  "log": "contracts.txt"
+}

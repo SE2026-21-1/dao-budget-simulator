@@ -1,0 +1,53 @@
+{"kind":"qa05-disposition","counts":{"reachableCases":{"PASS":188,"FAIL":0,"SKIP":0,"N/A":0,"BLOCKED":0},"preconditions":{"PASS":0,"FAIL":0,"SKIP":0,"N/A":10,"BLOCKED":0},"total":{"PASS":188,"FAIL":0,"SKIP":0,"N/A":10,"BLOCKED":0}},"output":"/tmp/tv4-qa05-disposition-20261114.json"}
+
+> frontend@0.0.0 test
+> vitest run src/chain/wallet.test.tsx src/chain/config.test.ts src/data/useProposalFixtures.test.tsx src/components/TreasurySection.test.tsx src/pages/ProposalDetailPage.test.tsx
+
+
+ RUN  v4.1.12 /tmp/dao-tv4-final-20261114/frontend
+
+
+ Test Files  5 passed (5)
+      Tests  49 passed (49)
+   Start at  20:35:13
+   Duration  8.14s (transform 2.40s, setup 0ms, import 7.71s, tests 6.78s, environment 5.46s)
+
+
+> frontend@0.0.0 lint
+> oxlint
+
+src/chain/wallet.tsx:18:14: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:19:10: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:207:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:217:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:242:17: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:246:23: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:251:23: warning react(only-export-components): Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+src/chain/wallet.tsx:155:26: warning react(set-state-in-effect): Calling setState synchronously within an effect can trigger cascading renders help: Effects should synchronize React with external systems. Calling setState synchronously inside an effect starts another render and is usually unnecessary. Derive the value during render, initialize state directly, or update it from the event that caused the change. Use an effect only when synchronizing with an external system.
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 546 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                              0.52 kB │ gzip:   0.32 kB
+dist/assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2     10.25 kB
+dist/assets/inter-greek-ext-wght-normal-DlzME5K_.woff2      11.23 kB
+dist/assets/inter-cyrillic-wght-normal-DqGufNeO.woff2       18.74 kB
+dist/assets/inter-greek-wght-normal-CkhJZR-_.woff2          18.99 kB
+dist/assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2   25.96 kB
+dist/assets/inter-latin-wght-normal-Dx4kXJAl.woff2          48.25 kB
+dist/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2      85.06 kB
+dist/assets/index-B3X_CqH-.css                              70.82 kB │ gzip:  14.23 kB
+dist/assets/ccip-BcZr489e.js                                 2.83 kB │ gzip:   1.30 kB
+dist/assets/index-DkjF77yc.js                              662.20 kB │ gzip: 191.83 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.98s

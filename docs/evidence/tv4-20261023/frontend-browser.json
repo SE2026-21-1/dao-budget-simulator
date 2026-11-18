@@ -1,0 +1,14 @@
+{
+  "scope": "Actual Chromium production fixture UI only; not wallet/API/chain E2E",
+  "runtime": { "node": "24.15.0", "vite": "8.3.4" },
+  "paginationRows": [20, 20, 5],
+  "executedFilterCount": 7,
+  "productionIgnoresFixtureErrorInjection": true,
+  "createProposalDisabled": true,
+  "layouts": [
+    { "width": 390, "horizontalOverflow": false },
+    { "width": 1366, "horizontalOverflow": false }
+  ],
+  "browserErrors": [],
+  "limitation": "Form remains disabled and data are synthetic BE01 fixtures. TC01/TC13 wallet acceptance remains blocked by issues #18/#19."
+}

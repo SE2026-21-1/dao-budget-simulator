@@ -1,10 +1,333 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
-Ngày đối chiếu: 21/10/2026. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md), [SC01](contracts.md), [BE01 database](database.md), [BE01 API](api.md), [review SC03 TV4](sc03-review.md) và [BE02](indexer.md). Đây là **kế hoạch nghiệm thu**, không phải báo cáo toàn hệ thống đã đạt.
+Ngày đối chiếu ban đầu: 21/10/2026; kết quả tích hợp cập nhật 24/10 ở mục0. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md), [SC01](contracts.md), [database](database.md), [API](api.md), [review SC03](sc03-review.md) và [indexer](indexer.md). Không tự nâng proof cục bộ thành nghiệm thu toàn hệ thống.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
-## 1. Ranh giới bằng chứng hiện tại
+## Nghiệm thu tích hợp mới — 13/11/2026
+
+Đọc cùng [báo cáo/raw mới](evidence/tv4-20261113-acceptance.md); không đổi attribution
+các mục lịch sử bên dưới. TV3 đã publish `15b62b5`, tích hợp chọn lọc tại `c31f797`;
+PR49 đã merge vào nhánh TV4 `4296c87`, không yêu cầu merge lại.
+
+- **NFR02–04 local:** full native tại `b7ff654` PASS: 188 unit, 76 DB/API,
+  202 Foundry, SQL/reorg503/cursor409/crash/deep-fork/rebuild cùng H/hash.
+  Benchmark vẫn 100 proposal/1000 vote, 10 client, cùng assertions:
+  11.407 success/0 error, p95=198,801668ms; 10 idle +10 load samples PASS
+  (load max17.680,628ms), outage31,250s và recovery có giao dịch mới PASS.
+  Baseline instrumented `312104f` cũng PASS nhưng load max27.306,266ms;
+  không tái hiện được timeout trong lượt baseline này. Trace chỉ ra 300 RPC
+  tuần tự/vòng, có 100 quorum trùng snapshot; fix TV2 giữ mọi oracle, cache
+  trong một H và tối đa4 proposal đồng thời. Không kết luận host-only hoặc
+  nguyên nhân duy nhất của FAIL cũ. Raw FAIL12/11/p95 diagnostic/outage NOT_RUN
+  vẫn giữ nguyên; không nâng số cũ thành PASS.
+- **Consumer/Swiss UI:** source ghép mới `da2237f` có 102/102 frontend tests,
+  không skip khi bật API live và SC06 live; lint exit0/8warnings, typecheck/build
+  exit0. Blank API vẫn fixture read-only, explicit `VITE_DATA_SOURCE=fixture`
+  cũng khóa giao dịch; lỗi API thật không fallback. SC06 v2 được sinh thật
+  tại `da2237f`, 32/32 mutations PASS; v1/SHA/checksum lịch sử không bị sửa.
+  Current default là v3 canonical recursive tại `7fb2958`:32SC06+28bootstrap/
+  Sepolia+2FE canonical-SC06 live PASS; dependency regression1PASS. CI cacc7f6
+  bắt artifact mismatch do v2 chỉ init top-level submodules; đã thêm fail-fast
+  recursive-pin guard và sinh v3 thật, không rehash v1/v2 hoặc bỏ oracle.
+  [Correction/raw/source](evidence/tv4-20261113-canonical.json); final-head CI
+  phải xét riêng sau correction.
+- **TC01/13 và local TC03/14 smoke:** browser runtime `2b9100b` thực hiện
+  propose→A/B For700→queue→execute1000BUD, receipt→CLI worker→API→UI cùng
+  deployment; ExecutedH43, DefeatedH49, CanceledH55, Treasury9000BUD.
+  6 routes×390/1366 không overflow; keyboard skip-link/Enter tới main-content,
+  Console không có page exception; Network/aborted requests và controlled
+  409/503 được giữ trong raw. Fault injection giữ hash, khóa Cancel Pending,
+  canonical refresh đánh giá lại quyền. Adapter Anvil không là extension,
+  không thay mọi keyboard/error/reset variant hoặc receiver/testnet acceptance.
+- **TC10:** lượt API `764ba4e` giữ attribution lịch sử. Lượt NEW `03b8696`
+  bổ sung bốn independent hashed/zero×both-winner receipt/API/UI branches:
+  hai detail+Treasury mỗi branch cùng H/hash/revision, exact winner payout,
+  loserQueued/Ready, bấm Execute thật bị preflight paid-request chặn trước ví.
+  Không có wallet send hay BUD mutation sau UI denial. Shared sync/project,
+  không nhận CLI-worker hoặc extension proof từ các lượt này.
+- **QA05 reachable:** `3d539f1` chạy184cases/958scenario receipts/422live UI
+  checkpoints/13text vectors PASS; TC05/06/07/08/14 per-vector reset/receipt/
+  API/UI gaps nêu ngày11/11 đã được bổ sung. [Source/raw/failures/limits](evidence/tv4-20261113-qa05-live.md).
+  Ten `TC06/{actor}/execute/Ready(single)` preconditions hiện là **N/A — production-unreachable**,
+  không phải PASS, theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+  tại `94d5367c8d60326b9b9f7de09265be531743f3b8` (chỉ SC10, SC06 v3, Ready(single)).
+  Actors: A, B, C, D, funding, deployer, caller, recipient, outsider, recipient2.
+  Sau valid audited bootstrap, Governor sole proposer chỉ scheduleBatch; single vẫn Unset.
+  Giả định contracts/dependencies nguyên bản, audited role graph, không stale bootstrap
+  operation/impersonation/extra grants/open proposer/storage injection. Role-first single-Unset
+  vẫn là reachable control riêng; Ready(batch), ETA/replay/mutation/rollback/bootstrap negatives giữ nguyên.
+  Counts độc lập PASS/FAIL/SKIP/N/A/BLOCKED: matrix184/0/0/0/0; TC10 riêng4/0/0/0/0;
+  preconditions0/0/0/10/0; tổng disposition188/0/0/10/0, không là một run mới hay198PASS.
+  [Disposition version 14/11](evidence/tv4-20261114-qa05-disposition.json) sinh bằng
+  `node scripts/check_qa05_disposition.mjs --output <NEW-file>` từ immutable index/raw;
+  không chạy lại browser campaign. Full #7/#16 vẫn theo applicable peer/receiver/integration
+  gates, không còn chờ quyết định Ready(single). #17 bounded Done giữ nguyên.
+- **Receiver #36/#40/#42:** tiếp nhận scope TV3 đã báo, chỉ còn redacted raw
+  compare/normalized exports/manifest/verify, API restart/checkpoint và
+  shutdown/owned PID/ports để TV4 tự đối chiếu. Không yêu cầu repeat smoke/rebuild
+  đã đủ evidence; archived H24 không chứng minh endpoint máy nhận còn sống.
+- **Testnet #20:** [đường Sepolia riêng](sepolia-deployment.md), 11155111/
+  PublicNode/K2, giữ local Anvil31337 guard; canonical28bootstrap/Sepolia tests
+  và actual17tx state-fork PASS tại `7fb2958`. TV1 đã [approve đúng delta](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037)
+  trên `94d5367`; không yêu cầu re-review SC/SC06/remote không đổi.
+  Chưa owner-selected integrated revision, public9-address map,6custody confirmations,
+  native gas/funder/fee/budget/broadcast permission hoặc real-time Executed+Defeated: **BLOCKED**.
+
+**Cập nhật tích hợp 14/11:** PR50 đã merge `46287df95f58fc53fb13224848a3d3cbe4639438`
+vào Dev. Merge giữ lịch sử `090ce6c` đưa đúng Dev này vào candidate PR21;
+không gán CI cũ của base87738d3 cho candidate mới. Consumer fix gốc TV2 `e065179`
+được tiếp nhận có attribution bằng `aadd59c`; PR51 không tự merge vào nhánh TV3.
+TV3 còn review current integrated consumer/config; TV2 cần acknowledge SnapshotInfo
+thread. Receiver/extension/testnet/release là gate riêng, không ngăn riêng source
+sau khi đủ scoped reviews và exact-head/integration CI. Project#1 active; #2 closed giữ nguyên.
+
+## Handoff máy nhận và tích hợp consumer TV3 — 11/11/2026
+
+TV4 tiếp nhận ba comment mới của TV3 trên **`4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`**,
+không còn ghi “chưa có log máy nhận”. [Bản ghi có provenance/giới hạn](evidence/tv4-20261111-receiving-handoff.json).
+Đây là **peer-reported evidence**; TV3 giữ raw riêng, TV4 chưa tải/đối chiếu bytes của ba checksum.
+Không gán kết quả nhánh TV3 cho PR21 hoặc Dev.
+
+| Requirement → TC | Test/evidence → SHA | Kết luận hiện hành và owner còn lại |
+|---|---|---|
+| NFR05, TC11/12 → #40 | [WSL receiving preflight/serve/status/verify/status](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-6790113124); reopened terminal,5/5 LIVE, worker restart/digest stable;4cba99a | **PASS phạm vi TV3 báo cáo**, full **PARTIAL/In review**. TV3 ghi Ctrl-C/shutdown/exit và owned PID/ports sau dừng; TV2 hỗ trợ lifecycle, TV4 kiểm raw trước chốt. |
+| FR12/16, TC11/13 → #36 | [Windows FE↔WSL API](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-6790123841);4GET200/RPC31337/CORS204/api.live1PASS0SKIP;4cba99a | **PASS transport/live-test**, full **PARTIAL**. TV3 sửa process-scoped deployment ID, khởi động Vite mới và ghi Browser/SnapshotInfo/keyboard; chưa có UI hoặc extension PASS mới. [Lệnh an toàn](../frontend/README.md#windows-nhận-run-be09--sửa-deployment-id-mà-không-ghi-envlocal). |
+| NFR05/FR14, TC12 → #42 | [Clean clone/new-empty-DB rebuild/export/export/compare](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378);4exit0/equal0mismatch;4cba99a | **PASS phạm vi peer báo cáo**, full **PARTIAL/In review**. TV3 cung cấp redacted manifest/verify/compare/logs, API restart/checkpoint; TV2/TV4 đối chiếu raw/cùng H/hash. Không rebuild vào DB phục vụ. |
+
+Cả ba cùng deployment **`be09-local-20261111T071940Z-0210c9c44501`**, chain31337,
+H24/hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd`,
+revision `440c6ec1-f436-4f48-958f-07f68a80a99e`. Khi publication tiến, dùng context
+canonical mới; không ép UI về H24. TV4 không có SSH host hay endpoint máy nhận
+truy cập được trong phiên; không tự sửa `.env.local`, dừng Vite hay teardown run của TV3.
+
+**Phần TV4 làm độc lập:** source integration **`cd4d8fd6372c1af0bd5d8b67bee5e42a33ac89a6`**
+ghép preflight/outcome và emitter/expected-proposal-ID từ committed TV3 với
+snapshot/session guard661e22b; không thay config.ts, ABI/contracts/backend hoặc
+Swiss Fintech staged/unstaged. Frontend **65/65 PASS**, lint8warnings/build PASS.
+Source **`96593b3a5af4eff77e6d4291169f219fb641bf6c`** sửa thêm overflow ID sau receipt:
+browser390 đo635px trước sửa →390px sau sửa bằng class `proposal-full-id` hiện có;
+build lại PASS. [Evidence/raw mới](evidence/tv4-20261111-tv3-integration.json).
+
+Lượt browser mới trên Anvil do TV4 sở hữu: Execute receipt thật H25, trạng thái/
+Timelock/paid tại receipt khớp; API **transport fixture**409→503 giữ receipt/nút khóa,
+canonicalH25/rev2 hiệnExecuted. Propose1weiBUD có receipt thật H26 và ID đúng payload
+đã hash; không coi fixture API đã index proposal mới. Không là PostgreSQL/worker,
+extension, WSL nhận hoặc testnet acceptance. TV3 review/retest delta + ghép
+Swiss Fintech còn cần; #9/#19/#41/#43 không tự đóng. Review TV1/TV2 scope không đổi
+giữ nguyên; Dev87738d3 chưa chứa source mới, #18/#47 không được chốt bằng candidate CI.
+
+Các mục tiếp theo lưu lịch sử các lượt trước trong cùng ngày, có SHA/phạm vi
+riêng; mục handoff ở trên là trạng thái hiện hành khi hai mô tả khác nhau.
+
+## P1 TV3 — khóa ký từ snapshot bị invalidated/recovery — 11/11/2026
+
+Đã nhận [review COMMENT của TV3](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5854487680) trên105f2ba; **không còn trạng thái “TV3 chưa gửi review”**. Finding P1 thuộc candidate PR21 được TV4 sửa tại source **`661e22bb633d8fa57cc0ec626b3b154c20771594`**. [Evidence/giới hạn](evidence/tv4-20261111-snapshot-guard.json), [raw](evidence/tv4-20261111-snapshot-guard-raw.tar.gz); các nhận định peer pending bên dưới là lịch sử trước review này.
+
+FR12/FR16, TC11/TC13: snapshot hợp lệ →409/503 thu hồi AbortSignal của quyền ký nhưng giữ H/hash/revision/receipt; retry/generic error không mở lại quyền cũ; canonical success tạo lease mới và đọc lại eligibility theo H/hash/revision. `assertWritable` và wallet provider dispatch kiểm signal sau async RPC, không chỉ disable UI. Create/Treasury summary-context read cũng ràng buộc session; `not_ready` khóa ký.
+
+**PASS phạm vi hồi quy mới:** frontend47/47, lint/build PASS (8warnings và bundle warning giữ nguyên). Chromium1366/390: Execute thật trên Anvil nhận receipt `0xc234105250f3ac5f214ab468e2d8aa4183c11aba6878889ab36c46b15fbaa4d2`, BUD Treasury9.000/recipient1.000; HTTP transport fixture sau receipt trả409→503, giữ snapshotH25/rev1 và hash, nútExecute khóa/không thêmsend; reloadH26/hashmới/rev2 hiệnExecuted/bỏExecute, receipt vẫn còn, không overflow. API ở lượt browser là **controlled transport fixture**, không PostgreSQL/worker publication; adapter Anvil không là extension wallet.
+
+**PARTIAL/BLOCKED giữ lại:** TV3 review/retest delta trên HEAD mới và tổ hợp Swiss Fintech + guard, giữ `verifyGovernanceOutcome`/receipt/proposal-ID verification và EIP-1193/EIP-6963; fixture/live config không đổi, không sửa staged/unstaged của TV3. #9/#19/#41 không đóng từ47tests hoặc browser fixture; còn integrated390/1366/keyboard/live/extension/receiver, authorized Dev integration và testnet. Không yêu cầu TV1/TV2 làm lại scope không đổi; TV2 giữ API409/503 contract/recovery gate.
+
+## Tiếp nhận TV1 và chốt phương án testnet — 11/11/2026
+
+[TV1 mapping mới](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6787401495) tại `d8f8743`: contract mapping COMPLETE, tự chạy15/15 tests mới; đối chiếu archive/checksum/bốn TC10 rows. Full202 là lượt TV4, không ghi thành full-suite run mới của TV1. [TV1 SC02](https://github.com/SE2026-21-1/dao-budget-simulator/issues/8#issuecomment-6787396657) xác nhận contract/ABI/handoff PASS; read/delegate consumer còn TV3. Không còn chờ TV1 re-review các phần này; full #7/#16 vẫn PARTIAL, bounded #17 giữ Done.
+
+**TV4 chọn Ethereum Sepolia cho campaign testnet theo yêu cầu người dùng:** chainId **11155111**, RPC công khai **https://ethereum-sepolia-rpc.publicnode.com**, K=2; giữ Solidity0.8.37/EVM Osaka, voting60/300s và timelock120s. Đây là quyết định cấu hình của TV4, **không phải peer deployment approval hoặc nghiệm thu testnet**. [Preflight/raw responses và giới hạn](evidence/tv4-20261111-testnet-preflight.json).
+
+Probe read-only: RPC200/chainId0xaa36a7, H12109576/hash `0x73db8db5e03b0adb74e93aa13b6614464e76926ff3c2e896088f643092e74c33`; `eth_call` CLZ(1)=255. Không broadcast hoặc dùng signer, không chứng minh full compiled-contract compatibility. RPC dự phòng `sepolia.drpc.org` trả400/code35 (free plan không phục vụ chain), không chọn làm fallback. [Ethereum.org hiện khuyến nghị Sepolia cho application](https://ethereum.org/developers/docs/networks/); [Sepolia có lịch Glamsterdam06/10/2026](https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement), nên phải estimate gas trên fork thực, không chép gas fixed từ Anvil Osaka.
+
+**#20 vẫn BLOCKED triển khai/nghiệm thu**: chưa có signer owner/address-role mapping/secure signing và số dư gas; chưa có signed testnet deployment/check-roles path được TV1 review, manifest/roles trước renounce, revision triển khai được nhóm chấp nhận, receipts Executed/Defeated chờ thời gian thật và máy nhận độc lập. `deploy_local.mjs` chỉ cho empty loopback Anvil31337; không gỡ guards để chạy remote. TV1 giữ review path testnet mới, TV2 hỗ trợ RPC/indexer/receiver, TV3 giữ extension/consumer, TV4 triển khai/lưu bằng chứng khi prerequisites có thật. Không mở lại review local đã chốt hoặc ghi nhóm đã approve thay người khác.
+
+## Bổ sung nghiệm thu QA05 — 11/11/2026, sau handoff peer
+
+Source mới **`b7a74ce4f5a7336a992b39310fb9d569831176d3`**, base `97ec39e`; chỉ thêm tests/runner TV4, không sửa contract/backend/frontend/ABI. [Evidence mới](evidence/tv4-20261111-qa05-variants.json), [raw](evidence/tv4-20261111-qa05-variants-raw.tar.gz). `scripts/ci.sh` **202/202 PASS**, attack **21/21** gồm **15 ca mới**; typecheck/build chạy lại đúng Node24.15.0 PASS. Bốn ca TC10 có **receipt Anvil thật**; Foundry chỉ là execution/log assertions, không phải transaction receipts. Workflow bổ sung runner TC10/upload report; CI phải đọc đúng HEAD mới, không mượn CI của base.
+
+### Biến thể QA05: đã có, bổ sung, thực sự còn thiếu
+
+| TC / requirement | Test → evidence → source SHA | Kết luận và phần còn thiếu |
+|---|---|---|
+| TC05 / FR02/05/06, BR01/02, INV04 | `testSnapshotUsesFinalCheckpointAtSAndRejectsRewritesAtSPlusOne`, concurrent snapshots, Governor unit; peer105 receipts ở ff484fb | **PARTIAL** full acceptance. Không viết lại test snapshot đã có. Còn F0 độc lập late-delegate D0 và từng transfer/delegate/approved-transferFrom; receipt/API/UI từng vector. |
+| TC06 / FR07–09, BR04/07, INV02 | `testFinalRolesRejectOtherwiseValidOperationsIncludingFormerDeployer`, integration role graph; peer105 ff484fb | Contract-level peer **PASS** giữ nguyên. **PARTIAL** ma trận: actor × schedule/scheduleBatch delay0/120 × Ready execute/executeBatch cần reset/raw receipt/API/UI; không dùng operation hỏng thay denial quyền. |
+| TC07 / FR07/08/12, BR03/05/07, INV01/02 | `testExecutionFailsAtEtaMinusOneAndSucceedsExactlyAtEta`, integration replay/description; ba `testCanceledProposalRejects*WithExactStateAndNoMutation` mới, b7a74ce | **PASS** contract rows cụ thể; full **PARTIAL**. Còn wrong-description queue/execute reset riêng và receipt/API/UI E−1/E/replay; canceled không phải Failed. |
+| TC08 / FR03, BR03/04/06, INV02 | Governor82, invalid payload receipts peer105 ff484fb | **PARTIAL**; không thêm duplicate whitelist/threshold unit. Còn per-vector reset/raw receipt, UI title/body/Unicode và threshold49/50/checkpoint theo §3; không suy contract validate text length. |
+| TC10 / FR03/08/09/13, BR03/05, INV01 | Hai execution-order integration tests đã có; runner mới `scripts/check_qa05_request_orders.mjs`, hashed/zero × P1/P2 trước, b7a74ce | **PASS receipt-level 4/4**: từng row deploy từ block0/quỹ10.000; P1/P2 khác proposal/operation IDs; loser `RequestAlreadyPaid(requestId)` dù đủ tiền, receipt0/log0, giữ Queued/Ready/ETA và balances. Winner receipt1 đúng một Transfer/BudgetDisbursed. **PARTIAL** full TC10: API linkage/ledger/UI bốn rows chưa chạy. |
+| TC14 / FR10, BR06, INV02 | `testCreator*`/`testNoncreator*`:2actor×6mốc S−1/S/S+1/D/D+1/ETA; ba terminal canceled-action tests, b7a74ce | **PASS contract15/15 mới**: mỗi entrypoint `setUp` riêng; exact error/caller/bitmap, denial log0, không đổi balances/paid/ETA/operation/tallies/voter flags. Same-proposal creator-cancel hoặc execute là positive control. Full **PARTIAL**: receipt/API canceled history/UI; reset riêng Queued-Waiting/Defeated/Executed và former-deployer × boundary. |
+
+Runner TC10 seed10.000BUD, reset về block0 sau từng row. Handler Foundry có control payment1BUD trước proposal đang kiểm: baseline **9.999**, sau payment1.000 là **8.999 BUD**; không giả là F0 untouched10.000. Bốn TC10 branches có manifest/deployment/H/hash riêng (đều H29, hash khác), **không gộp thành một canonical ledger** hoặc gán API revision chưa tồn tại.
+
+TC10 API optional campaign (new transactions, not a rewrite/rerun requirement for
+the accepted historical receipt evidence):
+`TV4_TC10_PG_BIN=<PostgreSQL18-bin> node scripts/check_qa05_request_api_native.mjs --output <new-directory>`.
+Use Node24 with dependencies and built contracts available. The driver owns a
+fresh loopback cluster and four empty databases, never the serving DB. Direct
+`node --import tsx scripts/check_qa05_request_orders.mjs --output <new.json> --api`
+requires `TV4_TC10_ISOLATED=1` and `TV4_TC10_DATABASE_URLS` JSON containing four
+distinct owned empty loopback databases named `tv4_tc10_*`. No schema is dropped.
+The API path uses real shared `sync`/`project` ingestion and an actual loopback
+HTTP server, **not CLI-worker proof**. Detail/votes/outgoing transfers/summary
+must retain each branch's H/hash/revision, unique winner linkage and losing
+Queued/Ready/ETA. The report retains raw responses, receipts, manifest and source
+hashes. Browser/UI, extension wallet and full QA05 acceptance remain outside
+this mode; only an actual successful campaign report establishes API PASS.
+
+Observed NEW run 13/11/2026 at source
+`764ba4e4eb518fd803ea28d4bbb779f06cb7eba6`: **4/4 API PASS**, exit0,
+after the parent performance campaign completed. [Manifest/raw linkage](evidence/tv4-20261113-tc10-api.json)
+and [full raw archive](evidence/tv4-20261113-tc10-api-raw.tar.gz)
+retain separate H29/hash/revision for all four deployments. Each database has
+2 proposals, 4 votes, 1 disbursement, 0 raw events for the rejected transaction;
+one outgoing API Transfer links only the winner. Treasury ends 9.000/8.000 BUD
+according to execution order. Both detail/vote endpoints and treasury/summary
+share that branch's publication context. Earlier receipt-only history remains
+unchanged. This closes the four NEW rows' API gap only: UI and full QA05 are
+still **PARTIAL**, and shared sync/project is not CLI-worker evidence.
+
+### Requirement → TC/INV → test → evidence → SHA → kết luận hiện hành
+
+Bảng này thay các nhãn “chưa có code” trong bảng lịch sử §6. PASS chỉ phạm vi ghi rõ; PARTIAL chưa đủ toàn requirement; BLOCKED thiếu môi trường/handoff. [Evidence10/11](evidence/tv4-20261110-project2.json) và [peer11/11](evidence/tv4-20261111-peer-acceptance.json) giữ SHA nguồn cũ, không tính là lượt chạy mới.
+
+| Requirement | TC/INV → test | Evidence / SHA | Kết luận / dependency |
+|---|---|---|---|
+| FR01/04/11/12, NFR06 | TC01/12/13; frontend chain/data tests, SnapshotInfo trên Dashboard/List/Detail | source96593b3 consumer integration/browser + peer4cba99a Windows live; xem mục hiện hành trên | **PARTIAL**; TV3 đã review105f2ba, còn retest delta/integrated visual/keyboard/extension, không chờ review lần đầu. |
+| FR02/05/06, BR01/02 | TC02–05, INV04; Governor82/token/attack21 | b7a74ce raw Foundry202; peer ff484fb | Contract assertions **PASS**; full **PARTIAL** reset/UI variants. |
+| FR03, BR03/04 | TC01/08/10, INV01/02; payload/threshold/request-orders | b7a74ce4TC10; ff484fb105receipts/SC06 | **PARTIAL** form/title/body/request generation/per-vector E2E, không thiếu validator on-chain. |
+| FR07/08, BR07 | TC01/06/07/10, INV01/02; integration40/attack21/runner | b7a74ce202tests và4receipt rows | Exact boundary/role/request cases **PASS**; full **PARTIAL** API/UI/reset. |
+| FR09, BR05 | TC09/10/12, INV03; insufficient-funds retry/Transfer ledger | b7a74ce4TC10; ff484fb native/peer105 | **PARTIAL** toàn requirement; không cộng Transfer+BudgetDisbursed; API/UI rows mới chưa chạy. |
+| FR10, BR06 | TC14/13; 15 cancellation/terminal tests mới, Governor state tests | b7a74ce contracts; ff484fb peer | **PARTIAL**: contract rows PASS; thiếu receipt/API/UI history và reset còn nêu trên. |
+| FR13, NFR01 | TC01/09–12, INV01–04; decoder/storage/projection/SC06 | [TV2 mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362), ff484fb; b7a74ce mới chỉ contract receipts | **PARTIAL** full pipeline; review backend đã nhận, không lấy counts làm full acceptance. |
+| FR14/15/16, NFR03/04 | TC11/12; recovery DB/API cursor, BE06 same-H rebuild/freshness | Dev87738d3 proof cũ; fix9ad0aea/ff484fb native+TV2review | Candidate **PASS**, toàn requirement **PARTIAL**: #18 còn tích hợp/CI và503/409/orphan-replay/rebuild cùngH/hash tại revision tích hợp. Chưa có revision đó. |
+| NFR02 | Q-PERF native BE08 100proposals/1000votes/10clients/60s | ff484fb [10/11](evidence/tv4-20261110-project2.json); Dev benchmark riêng | **PASS local** dataset/lượt cũ; không đo mới hoặc testnet SLA. |
+| NFR05 | Q-CLONE/restart/checkpoint/rebuild | TV3 receiving4cba99a [#42](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378), #40worker restart/digest | **PARTIAL**: clean other-machine clone + new-DB equal được peer báo cáo; raw review/API restart/checkpoint và shutdown còn thiếu. |
+| NFR07 | Q-CI/202contracts/SC01/safety negatives | Unit65 trêncd4d8fd, mobile fix96593b3; CI phải đọc đúng docs/source HEAD của PR21 | **PARTIAL**: local proof không cấp CI cho commit mới; TV3 review/tích hợp còn mở, không mở lại QA06 bounded. |
+| NFR08 | TC06/14/Q-CONFIG/final-role audit từng row | b7a74ce4/4; SC06ff484fb; Sepolia config/preflight105f2ba | **PARTIAL local**, **BLOCKED testnet** funded signer/secure signing, reviewed remote deploy/check-roles, manifests và real-time receipts #20; network/RPC đã được TV4 chọn. |
+| INV01–04 bounded | GovernanceInvariant, seed0x20261021/100×50 | ff484fb peer [#17](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6766961290); b7a74ce regression PASS | **PASS bounded đã chốt**, không mở rộng arbitrary strategies/signatures/ERC1271/API/UI/reorg. |
+
+PR48 đã merge vào frontend4cba99a, không vào Dev/PR21. Receiving WSL/Windows/rebuild đã có peer report mới ở mục hiện hành trên; #40/#36/#42 giữ PARTIAL theo các output còn thiếu, không nói chưa có bất kỳ bằng chứng máy nhận nào. #19/#41 extension; #20 signer/path deploy/receipts testnet; #44 nhóm trưởng ghép báo cáo/demo cùng revision. Không gửi request trùng hay yêu cầu TV1/TV2 review lại scope đã xác nhận.
+
+## Lịch sử đối chiếu trước handoff — 11/11/2026
+
+Candidate PR #21: `ff484fbe95519cf2079e3dabda43e456a2c55fe6`, source fixes `9ad0aeaffd8c2a6135c05a2151148e792c84022c`; Dev vẫn là `87738d3f792c3a283a52b5c18c306809d6cfcfd4`. [Evidence source-bound](evidence/tv4-20261110-project2.json) giữ kết quả local/CI riêng; candidate CI không chứng minh đã tích hợp vào Dev. Các bảng từ 09/11 trở về trước bên dưới là lịch sử, không phải danh sách blocker hiện hành.
+
+| Phạm vi | Kết luận peer đã nhận trên `ff484fb` | Phần TV4 còn phải nghiệm thu |
+|---|---|---|
+| QA05 / #16 | [TV1 contract-level PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/16#issuecomment-6766948722): attack 6/6, integration 40/40, Governor 82/82; peer đã kiểm trace/negative controls và archive 105 receipts, không phải lượt chạy mới của TV4 | Full TC05–08/TC10/TC14 vẫn PARTIAL: actor × state × boundary × reset/order và raw receipt/API/UI từng biến thể. Không còn chờ peer contract-level |
+| QA06 / #17 | [TV1 bounded INV01–INV04 PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/17#issuecomment-6766961290); issue đã chốt Done bounded | Không mở lại bounded acceptance; signatures/ERC1271, arbitrary strategies/configurations/recipients, reorg/API/UI ngoài phạm vi này |
+| SC06 / #43 | [TV1 APPROVED SC/SC06](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5839457863); [TV2 provenance/consumer backend đã kiểm độc lập](https://github.com/SE2026-21-1/dao-budget-simulator/issues/43#issuecomment-6768507329): 32 source hashes, 12 event fragments, ancestry/coordinates và raw BUD ledger | Còn TV3 consumer và nghiệm thu tích hợp; không còn chờ TV1 re-review hoặc TV2 event/fixture provenance |
+| Backend / #18 | [TV2 recovery/API/ABI review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5837339166), [xác nhận gate tích hợp](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-6768538381); không phải approval toàn PR | Revision tích hợp chứa fix, CI chính revision đó, recovery gate trước RPC, health/data503, cursor409, replay bỏ orphan và rebuild equal cùng H/hash. WSL/ví/testnet không chặn riêng backend |
+| Mapping / #7 và portability / #47 | [TV2 FR13–16/NFR02–04 mapping](https://github.com/SE2026-21-1/dao-budget-simulator/issues/7#issuecomment-6768510362); [review ba npm commands](https://github.com/SE2026-21-1/dao-budget-simulator/issues/47#issuecomment-6768513592), không đổi assertion/skip/dependency | Mapping không đồng nghĩa mọi TC PASS; #47 giữ mở đến khi hoàn tất gate tích hợp PR #21 |
+| FE, môi trường và release | Fixture/adapter/Linux nguồn đã có evidence theo SHA gốc | TV3 review wallet/consumer; #40 receiving foreground lifecycle; #19/#41 extension full workflow; #20 network/RPC/Osaka/funded signer; #42 clone/restart/rebuild máy nhận; #44 tổng hợp release. Không suy các gate này đạt từ local/CI |
+
+### Lịch sử đối chiếu 09/11/2026
+
+**Đối chiếu lịch sử 09/11:** [bảng TV4 theo issue/SHA](evidence/tv4-20261109-status.md) chấp nhận backend TC11/TC12/NFR02–04 và hồi quy freshness #37 **trên Dev `87738d3`**, sau lượt local TV4 và đối chiếu raw CI riêng của TV2; hai số p95/H/hash không được gộp. Bảng 06/11 phía dưới giữ nguyên trạng thái lịch sử lúc TV4 chưa tải artifact CI; TV2 đã kiểm raw ngày 09/11. PR #21 head `7518337` từng CI đỏ SC06 vì VT-064 cá nhân được nhập sai phạm vi; bản tách nội dung cá nhân phải chờ CI đúng SHA và peer. Chưa nghiệm thu toàn bộ TC01–TC14/INV01–04, ví extension, máy khác, peer review hoặc testnet; giữ gate release mở.
+
+## Đối chiếu mới — 06/11/2026 (Dev `87738d3`, PR #21 chưa merge)
+
+BE08 đã merge vào Dev qua #30, BE05 freshness qua #38, SC06 qua #39.
+Bảng 02/11 phía dưới là **lịch sử** của nhánh VT-064; không suy ra thiếu
+BE07/BE08 hoặc wallet trên các nhánh bàn giao. Dev chưa có wallet/API consumer
+của PR #21; nhánh TV3 `681289b` có live suite mới nhưng chưa merge.
+[Evidence TV4 06/11](evidence/tv4-20261106-acceptance.md) ghi riêng lệnh
+thực chạy, source SHA, report và giới hạn. Tất cả kết quả phải đọc cùng reset
+R0/R1/R2 và cùng deployment/H/hash/revision; CI không thay giao dịch ví thật.
+
+| Tiêu chí | Nhánh và kết quả code/review | Điều kiện nghiệm thu còn lại |
+|---|---|---|
+| TC11–12 / NFR02–04 (#18) | Dev `87738d3`: native BE08 **PASS**, storage21/checkpoint16/projection10/API6/BE06 DB1/BE07 DB18, reorg/replay/gate503/cursor409/rebuild equal; 20.986 HTTP thành công/0 lỗi, p95 212,461ms tính lại từ [raw archive](evidence/tv4-20261106-be08-raw.tar.gz); freshness20/20, p95 27.884,382ms, max 28.443,131ms. CI 41973419072/41973418947 success đúng SHA, artifact13391310183 cần GitHub auth tải raw | Peer TV2 và review freshness margin 1,557s ở mẫu chậm nhất; không lấy số local gán cho CI |
+| Freshness (#37) | Dev native API6/6 gồm 001–004 no checkpoint lagSeconds:null, stale31s → lagging → cập nhật thật synced; 001–005 ưu tiên RPC `lastCheckedAt`, recent checkpoint không fake synced khi null; BE07 DB18/18 gồm SQL-lock heartbeat | Review TV2; không ép null thành 0 hoặc nới assertion |
+| SC06, roles, INV (#43) | Dev canonical fixture 28/28 PASS. PR #21 getter/Transfer oracle, regenerated canonical Anvil fixture từ source `8245c9c`, **31/31 PASS** (coupled quorum/seed từ chối đúng reason); invariant seed `0x20261021`, 100×50/5.000 calls/5 execute successes, 4/4 PASS | TV1/TV2/TV3 peer; oracle bounded, không suy ra mọi strategy hoặc extension/testnet |
+| FE/API (#36/#40/#41) | TV3 `681289b` unit49 PASS/1 live SKIP không cấu hình; build PASS. **Lượt live mới** bốn biến `BE05_LIVE_*` trên API/RPC H79 native PR #21 PASS 1/1, 0 SKIP sau RPC sync thật; browser 1366/390 Executed/Defeated, health lagging→synced, Tab skip link, không overflow. Lượt thứ hai PR #21 `1fec861` browser EIP-1193 Anvil unlocked account tạo proposal `1.000000000000000001 BUD`, receipt thành công H82, indexer `sync/project` H82, API200 và UI hiện amount/description/tx nguyên bản trên cùng deployment; [raw mới](evidence/tv4-20261106-wallet-raw.tar.gz) | **Không có extension wallet** ký propose/vote/queue/execute/cancel trọn vòng trên cùng proposal; service/manifest tạm đã teardown, TV3/peer cần quyền truy cập deployment thực. Evidence đầu [archive](evidence/tv4-20261106-ui-raw.tar.gz). |
+| Testnet/release (#20/#42/#44) | CI và clone cùng máy chỉ là local proof | Chốt mạng/signer/gas, clone máy người khác, peer reviews và demo testnet thời gian thật |
+
+## Đối chiếu theo HEAD và worktree — 02/11/2026
+
+Base của lượt kiểm chứng TC12: `0e9828ed109acfa13d7b41d8059fc6afee14f0f9`, branch `personal/23001850-vt-064-bulk-import`; TC02/TC10 và runner browser đã commit, [CI 9/9](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41424374702) đúng base này. Flag native `--tc12` được chạy dưới dạng **diff local so với base**; CI của base không bao gồm flag này, phải đối chiếu CI theo commit chứa runner sau khi push. `PASS` chỉ có nghĩa đã chứng minh ca local được ghi; `PARTIAL` chưa đủ toàn bộ biến thể/reset/peer approval; `BLOCKED` thiếu điều kiện không thể tạo từ local. [Evidence E2E trước đó](evidence/tv4-20261102-0328eea.md) và [TC12 tại base `0e9828e`](evidence/tv4-20261102-0e9828e-tc12.md); các bảng ngày 21–30/10 bên dưới giữ nguyên tính lịch sử.
+
+| Ca | Trạng thái acceptance | Bằng chứng ở revision này / phần chưa đạt |
+|---|---|---|
+| TC01 | PARTIAL | `live.json` H67/hash: A+B For700, payment Executed, Treasury 1.000 BUD sau hai khoản chi; Chromium H76/hash hiện receipt/payment/ledger và không cộng đôi Transfer. Chưa tạo/ký proposal bằng ví extension và chưa reset F0 cho riêng ca này. |
+| TC02 | PARTIAL | `live.json` low-quorum For100<200, Defeated/queue revert; `tests/integration/TimelockGovernance.t.sol::testAgainstVotesDoNotSupplyQuorumForFailedProposal` thêm For100/Against200/quorum200/không chi; unit `testForPlusAbstainReachesQuorum` có For100+Abstain100. Chưa có đủ ba biến thể độc lập trên browser/UI. |
+| TC03 | PARTIAL | `tests/unit/BudgetGovernor.t.sol::testTieDefeated`/`testLossDespiteQuorumDefeated` trong Foundry 187/187 local và CI của `0e9828e`; chưa có trace reset và UI cho cả hòa/thua ở revision mới. |
+| TC04 | PARTIAL | Driver TC12 local ở base `0e9828e`+runner mới kiểm các mốc S/S+1/D/D+1/E−1/E cùng H/hash reference/rebuild; live phase snapshot/deadline và unit vote biên. Thiếu reset riêng và receipt/UI mọi mốc S−1/S/S+1/D/D+1. |
+| TC05 | PARTIAL | `tests/attacks/GovernanceAttacks.t.sol` snapshot transfer/delegate/transferFrom và invariant 100×50; thiếu actor×biên độc lập + UI. |
+| TC06 | PARTIAL | `governance-storage.json`, `tests/integration/TimelockGovernance.t.sol` role graph/deployer/direct Treasury/Timelock và positive qua Governor. Chưa peer review/testnet. |
+| TC07 | PARTIAL | Integration ETA−1/E, replay và tampered-description; `live.json` một receipt chi thật. Chưa đủ UI negative/reset riêng. |
+| TC08 | PARTIAL | `tests/unit/BudgetGovernor.t.sol`, integration payload/role bypass, Foundry; chưa đủ vector form/description policy và browser input độc lập. |
+| TC09 | PARTIAL | `live.json` underfunded revert → topup 3.000 → retry **cùng operation** execute 11.000, SQL/API/chain cùng H67/hash; read-only UI ở H76. Chưa có ví extension ký/receipt/UI sau transaction. |
+| TC10 | PARTIAL | Regression đã commit tại `0e9828e` đảo thứ tự P2 trước P1, dù đủ 8.000 BUD vẫn chỉ một Transfer và BudgetDisbursed; live zero requestId và duplicate revert, API/ledger H67. Chưa raw receipt/API cả hai thứ tự qua hai fixture độc lập. |
+| TC11 | PARTIAL | Native TV4 local reorg API503/cursor409, replay orphan0/replacement1; BE07 native clean checkout kiểm crash/retry/deep fork theo report riêng. Chưa nghiệm thu tổ hợp đầy đủ fail-injection và môi trường khác. |
+| TC12 | PARTIAL | [Lượt mới](evidence/tv4-20261102-0e9828e-tc12.md): 7 cặp database mới, normalized+chain compare `equal` tại S/S+1/D/D+1/E−1/E/H49, H49 đủ tám trạng thái, API H49/hash 8 detail, treasury/BUD khớp; driver giữ nguyên, runner `--tc12` là diff tại lúc chạy, CI base chưa gồm diff này. `live.json` trước đó kiểm mismatch exit2 và replay/reorg, không giả định hai lượt là một transaction/reorg campaign; còn peer, máy khác, testnet. |
+| TC13 | BLOCKED | Chromium đã thử local read-only 1366/390 và EIP-1193 adapter tới account Anvil unlocked ký proposal thật, receipt `0xb4fa5ad3…aba82b`, worker/API/UI H82 hash canonical, amount BigInt giữ 18 chữ số phần lẻ, description không đổi; xem [lượt 06/11](evidence/tv4-20261106-acceptance.md). Cần ví extension thật, account được cấp GOV/BUD, người dùng xác nhận giao dịch, đủ vote/queue/execute/cancel cùng proposal, form/keyboard/error variants và peer approval. |
+| TC14 | PARTIAL | Integration role/deployer/creator cancel negative và `live.json` Canceled; còn reset actor×state/boundary, UI và peer approval. |
+| INV01 | PARTIAL | `tests/invariant/GovernanceInvariant.t.sol` ghost paid requests + campaign 100×50, successful execute trong chuỗi cuối; live duplicate request revert. Oracle bounded, không chứng minh arbitrary strategy. |
+| INV02 | PARTIAL | Handler role/operation/time/oracle, positive Governor→Timelock→Treasury; local role audit và attack tests. Universe hữu hạn, peer review chưa có. |
+| INV03 | PARTIAL | Ghost Transfer ledger, `live.json` SQL/API/BUD balanceOf(H67), H76 browser RPC balance; không cộng BudgetDisbursed lần hai. Boundaries khác và testnet chưa nghiệm thu. |
+| INV04 | PARTIAL | Handler ghost snapshot weights + transfer/delegate và regression attack, 100×50; thống kê chuỗi cuối không phải tổng 100 runs, không có ERC1271/signature campaign. |
+
+NFR02: benchmark local mới trên 100 proposal/1.000 vote, 10 clients/60s, 5.947 thành công/0 lỗi, p95 179,998ms; xem [evidence lượt E2E](evidence/tv4-20261102-0328eea.md); chưa phải đo testnet. NFR05: clone sạch cùng máy tại `0328eea`, không phải nghiệm thu máy thành viên khác hay clone code vừa sửa. NFR07: [CI 9/9 tại committed `0e9828e`](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/41424374702); không nhận CI này cho runner `--tc12` thêm sau base. NFR08: audit role/manifest local; thiếu testnet, review secret và xác nhận network/compiler.
+
+## Cập nhật sửa lỗi local — 25/10/2026
+
+[Evidence](evidence/tv4-20261025-recovery.json), [runbook và giới hạn](tv4-work-summary.md):
+TC11 đã kiểm interrupted reorg→API503/cursor409→ancestor/replay→publication mới,
+orphan bị loại, cursor cũ vẫn409. Tự phục hồi giới hạn64block; sâu hơn fail-closed
+và BE06 rebuild rõ ràng. NFR04 có retry đọc3attempt và permanent/mutation không retry.
+NFR03 có browser pause32,694s→warning tự hiện→resume tự mất, deposit đã đủK được
+quan sát sau3101ms ở sample local; không nâng thành SLA mọi event/mọi môi trường.
+Lượt hoàn tất: backend build/typecheck và165tests,54DBtests,185Foundrytests,
+frontend6tests/build PASS. SC05 có14ca Anvil kiểm gate trước renounce/funding và
+CLI deploy→check→export thật; cursor alias base64url bị từ chối bằng regression.
+Benchmark local100proposal/1000vote,10client/60s:8116success/0error,p95121,400ms.
+Xem [bằng chứng cuối](evidence/tv4-20261025-final.json) và
+[raw benchmark](evidence/tv4-20261025-final/benchmark.json).
+Testnet, extension, peer approval và máy khác vẫn chưa nghiệm thu; CI công bố ghi
+riêng trong bàn giao GitHub. Mục24/10 bên dưới giữ nguyên kết quả tại source lịch sử.
+
+## 0. Trạng thái nghiệm thu cập nhật — 24/10/2026
+
+Các cột trạng thái/nhãn “chưa” trong bảng lịch sử 21–23/10 được đọc theo
+ngày và source đã ghi; bảng dưới cùng [report 24/10](evidence/tv4-20261024-acceptance/report.md)
+là trạng thái **tại 24/10**, không phải kết luận hiện tại sau BE07. Setup/kỳ
+vọng TC/Q/INV vẫn giữ nguyên, không giảm tiêu chí để khớp dữ liệu đã chạy.
+
+| Evidence mới | Phạm vi đã quan sát | Giới hạn |
+|---|---|---|
+| E-TV4-24-C | [contracts](evidence/tv4-20261024-acceptance/contracts.txt):147PASS, seed0x20261021, hai campaign100×50; [backend](evidence/tv4-20261024-acceptance/backend.txt):64+22+27+5 unit/model/CLI và8process PASS | Bounded oracle; không cộng nhiều run làm coverage mới |
+| E-TV4-24-DB | [native](evidence/tv4-20261024-acceptance/native/report.json):BE01 SQL,51DBtests,real governance/storage vàliveAPI/BE06 PASS | Native18.4 không là Docker; source hashes ghi theo lần chạy |
+| E-TV4-24-R | [live](evidence/tv4-20261024-acceptance/native/live.json):hai target H67/post-H/mismatch; [TC12](evidence/tv4-20261024-acceptance/tc12-complete/report.json):đúng tám proposal H49 và sáu boundary, mỗi case hai DB mới, normalized/chain compare equal | Recovery/historical-RPC failure và cursor sau reorg chưa nghiệm thu |
+| E-TV4-24-UI | [browser](evidence/tv4-20261024-acceptance/browser.json):12checks,4route×390/1366,UI→chain→API→UI,receipt/network/refusal/HTML-safe/cancel/deposit | EIP-1193 forward tới Anvil thật; chưa wallet extension/testnet |
+| E-TV4-24-P | [benchmark](evidence/tv4-20261024-acceptance/benchmark.json):100proposal/1000vote thật,10×100GOV,10client/60s,8133success/0error,p95133,652ms | NFR02 local/mix đã ghi; không thay AD-064753user/testnet |
+| E-TV4-24-X | [reorg](evidence/tv4-20261024-acceptance/reorg.json):hash mismatch dừng ingestion nhưng API200/hash orphan; [freshness](evidence/tv4-20261024-acceptance/freshness-sample.json):một sample374,39ms | TC11/NFR03/NFR04 toàn hệ thống chưa đạt; BE07 chưa bàn giao |
+| E-TV4-24-CLONE | [clean](evidence/tv4-20261024-acceptance/clean/report.json):candidate d2617d0, không overlay/cache dự án;330tests/build/smoke/native `--benchmark` PASS,8636success/0error,p95127,602ms | Cùng máy, compiler/toolchain sẵn; không thay independent-machine approval |
+| E-TV4-24-SECRET | [Gitleaks triage](evidence/tv4-20261024-acceptance/gitleaks-triage.json):49commit,283finding redacted, toàn public digest/address/placeholder,0credential xác nhận | Raw exit1 được giữ; pattern scan không bảo đảm mọi secret |
+
+| TC | Trạng thái mới và căn cứ |
+|---|---|
+| TC01 | PASS local UI A400+B300 For, chi1000BUD, quỹ9000; E-TV4-24-UI/DB |
+| TC02 | Contract negatives và live low-quorum/projection/API PASS cục bộ; không tự coi mọi UI variant hoàn tất |
+| TC03 | Unit và projection quorum/tie/abstain/result PASS; phạm vi theo E-TV4-24-C/DB |
+| TC04 | Unit/smoke vàliveAPI tạiS/D/empty-block boundaries PASS; không suy toàn bộ reset/UI variants |
+| TC05 | Snapshot/transfer/delegate/approved-transferFrom negatives và bounded oracle PASS; cần peer review phạm vi |
+| TC06 | Final-role, former-deployer và valid-operation bypass negatives PASS qua attack/smoke; không phải testnet |
+| TC07 | ETA−1/ETA, early UI guard, execute/replay negatives PASS cục bộ |
+| TC08 | Whitelist/calldata/native-value/threshold và frontend uint256/precision tests PASS; description policy vẫn cần nhóm review |
+| TC09 | Live insufficient funds→fund→same-operation retry, SQL/API ledger PASS |
+| TC10 | Shared/zero request, duplicate revert và linkage model/live PASS; không cộng Transfer+BudgetDisbursed |
+| TC11 | **KHÔNG ĐẠT** reorg rollback/invalidation;16DB crash/checkpoint tests PASS chỉ chứng minh phần atomic/resume |
+| TC12 | PASS tám proposal H49 cùng H/hash, Pending quorum=null, Queued Waiting/Ready, totals9000/10000/1000; S/S+1/D/D+1/E−1/E dùng từng cặp DB mới và normalized/chain compare equal. Historical-RPC failure/cursor sau reorg chưa chốt |
+| TC13 | PASS12browser checks bằng transport local và6behavior tests; extension/video/đủ mọi variant chưa nghiệm thu |
+| TC14 | Contract role/creator-Pending negatives và UI noncreator-disabled/creator-cancel PASS; approval/testnet còn thiếu |
+
+INV01–INV04 có governance oracle và successful execute trong sequence, không
+prank Timelock để chi; đây vẫn là bounded local evidence. NFR02 đạt trên máy
+đã ghi. NFR03 chỉ có sample acceptance-driver; NFR04 còn BE07/backoff/reorg.
+NFR05 có clone sạch candidate cùng máy E-TV4-24-CLONE, còn máy thành viên khác; NFR06 có ảnh/keyboard local,
+không chứng nhận mọi trình duyệt. NFR07 chưa chốt vì peer review và lỗi reorg
+còn mở; [CI revision24f576e](evidence/tv4-20261024-acceptance/publication.json) đạt8/8job sau SSH push, không lấy baseline thay thế. NFR08 local role audit và history secret-scan/triage có proof, testnet chưa có.
+
+## 1. Ranh giới bằng chứng theo phiên bản
 
 | Mã bằng chứng | Nguồn thực sự / điều đã quan sát | Không được suy ra |
 |---|---|---|
@@ -25,10 +348,11 @@ TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer
 | E-RAWSQL-22 | 22/10, [governance-storage.json](evidence/tv4-20261022/governance-storage.json): canonicalH109,108 headers/61 raw/45 decoded/16 unknown/0 decode errors lưu native PostgreSQL18.4 cô lập; exact headers/raw/payload/RPC, SQL BUD ledger13000in/13000out và2 paid requests khớp chain cùngH. Trigger lỗi header thứ hai rollback batch, giữ prior committed batches; scanner/CLI rerun idempotent; DB trống thứ hai raw replay cùng semantic digest `dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086`. | Không checkpoint/resume/reorg/K-confirmations/projection/state rebuild/FR15. CLI restart/rebuild exit2 kỳ vọng vì unknown init topics; GOV registry chưa hỗ trợ, dùng ABI cung cấp. |
 | E-UI-22 | 22/10, [frontend-browser.json](evidence/tv4-20261022/frontend-browser.json):11 scenarios Chromium150 thật trên canonical root `fixtures/api`:20/20/5, exact ID/whitespace, filter7Executed/7Active, detail`61,000000000000000001 BUD`, empty/notfound, disabled form, loading3dynamic chunks/recovery, dev error/retry/disable, production bỏ qua injection; keyboard skip/Tab/Enter,4screens390/1366 không horizontal overflow;3PNG kèm báo cáo. | Browser fixture proof, không HTTP API/projection/wallet/form submit/UI→chain→API hoặc mọi variant TC13. |
 | E-CANDIDATE-22 | Frontend snapshot nguồn `47f91d50b7a9104c027dbf05e7a862ddb69d31d0`, không git merge/commit/push; baseHEAD vẫn `5fbf615`, candidate chưa commit, source hashes tại [work summary](tv4-work-summary.md). Node24.15.0 lint0warnings/build đạt. Clean candidate clone baseline rồi overlay source, không copy node_modules/out/cache: clean installs, frontend lint/build, `scripts/ci.sh`142/142, fuzz256/invariant100×50 seed `0x20261021` đạt. | Cùng máy, compiler global sẵn; không independent other-machine acceptance. Native SQL mới khác Docker runner cấu hình workflow; không claim GitHub CI run mới22/10. Foundry lints hiện hữu không suppress. |
+| E-TV4-23 | [Evidence23/10](evidence/tv4-20261023/verification.json):147 Foundry tests đạt,0fail/skip; seed0x20261021 và hai campaign100×50. Năm attack regression mới kiểm final checkpoint đúngS, exact role error khi operation hợp lệ, ETA−1/ETA, canceled-request reuse và queued budget retry/cancel. Tám process tests kiểm SIGINT/SIGTERM, signal lặp, escalation/reap/closed RPC và staged evidence; Node24.15.0/PG18.4 thật chạy63+21backend tests, smoke SQL rollback/restart/raw replay cùngH; frontend lint/build và browser production fixture đạt. | Bounded oracle không chứng minh arbitrary-strategy liveness. Native PG không phải Docker; raw replay không là checkpoint/reorg/projection rebuild. Browser fixture không là ví/API E2E. Testnet, independent other-machine acceptance và peer approval mới vẫn chờ [#18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18)/[#19](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19)/[#20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20). |
 
-SC04 đã tích hợp; không còn bị chặn local vì thiếu Governor hoặc phải giả Timelock. Mốc22/10 bổ sung raw PostgreSQL thật và browser fixture, không thay receipt/source21/10. Projection/HTTP API, checkpoint/K-confirmations/reorg/projection rebuild, E2E ví→chain→API và testnet vẫn thiếu; wallet/form thật chưa có. SQL/CI lịch sử, native SQL mới và Docker workflow cấu hình phải đọc riêng.
+SC04 và các bàn giao BE03–BE06/wallet đã có trên nhánh tích hợp24/10. Proof21–23/10 bên trên giữ đúng nguồn lịch sử; trạng thái hiện tại và hạn chế release nằm ở mục0. Không dùng raw replay thay reconstruction, fixture thay chain, hoặc CI của source cũ thay CI revision mới.
 
-Quy ước: **BẰNG CHỨNG CỤC BỘ** không tự nâng TC/FR/NFR toàn hệ thống thành PASS. Các script/test kể ở E-SC04-L/E-SC04-ROLE/E-GOV-INV đã tồn tại và chạy; đường E2E dưới đây ghi dự kiến là chưa có. Unit nguồn TV1 được TV4 chạy lại82 ca nhưng vẫn là unit fixture giữ bootstrap; final-role evidence phải lấy smoke/attack/invariant TV4.
+Quy ước: BẰNG CHỨNG CỤC BỘ không tự nâng TC/FR/NFR toàn hệ thống thành PASS. Các setup/kỳ vọng dưới đây là tiêu chí đầy đủ; nhãn trạng thái cũ phải đọc cùng mục0. Unit nguồn, final-role smoke, bounded invariant, browser và testnet là các phạm vi riêng.
 
 ## 2. Fixture độc lập, clock, reset và cấu hình
 
@@ -149,6 +473,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R0+R1/F0; request chung=`keccak256(UTF8("tv4:TC10"))`; P1 chi1000U→R, P2 chi2000U→R2, descriptions khác nguyên bytes nên proposalId khác; cả hai A+B For700U và queue đúng delay, quỹ10000U. Nhánh khác reset rồi dùng bytes32(0), không mặc định cấm zero.
 - **Hành động/kỳ vọng:** execute P1 trước => quỹ9000U/R1000U, paid=true, P1 Executed. Execute P2 sau ETA revert vì request đã trả dù đủ9000U, P2 vẫn Queued/operation chưa done, R2=0, chỉ một Transfer/BudgetDisbursed thành công cho request. Reset rồi đảo thứ tự: P2 thành công2000U, P1 bị chặn => quỹ8000U/R2=2000U/R0. Phân biệt uniqueness proposalId với thanh toán requestId; không vô tình kiểm hai lần cùng operation thay cho TC10.
 - **Test/evidence:** E-SC04-L có proposalId/operationId khác nhau cùngrequest:7000 trả,2000 bị RequestAlreadyPaid dù quỹ còn3000. Attack regression còn refill để loại lý do thiếu tiền; invariant bao gồm request0. **CỤC BỘ TC10**, chưa chạy raw-receipt cả hai thứ tự với bytes32zero/reset từng biến thể; linkage/dedup API chưa có, không đánh toàn bộ PASS.
+- **Bổ sung regression local (worktree sau `0328eea`, chưa có commit/CI GitHub mới):** `tests/integration/TimelockGovernance.t.sol::testSecondProposalWithSharedRequestPaysFirstAndBlocksFirstProposal` chạy nhánh đảo thứ tự trên fixture `setUp` riêng. P2 trả 2000U trước, P1 revert `RequestAlreadyPaid` dù còn 8000U; P1 giữ Queued/Ready, quỹ/R/R2 và đúng một BUD Transfer/BudgetDisbursed được kiểm tra từ logs. `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/integration/TimelockGovernance.t.sol -vv`: **40/40** local sau thêm TC02; `bash scripts/ci.sh` cùng env **187/187** local. Chưa có raw receipt của cả hai thứ tự trên Anvil hoặc đối chiếu API tại cùng H, nên TC10 vẫn **CỤC BỘ**.
 
 ### TC11 — Crash/restart, RPC lỗi và reorg
 
@@ -156,7 +481,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R1/F0+G(TC11,1000,R) trên chain local riêng; K=2, database sạch, headers mọi block kể cả rỗng; fix batch range/checkpoint trước batch và cửa sổ hash W đã chốt trong run config. Quỹ chain sau G9000U/R1000U. Thêm nhánh snapshot chain trước G để tạo reorg canonical thay thế không có chi.
 - **Hành động:** ngắt worker (i) sau raw logs trước projections, (ii) sau projections trước checkpoint/COMMIT, (iii) sau COMMIT trước acknowledge; restart cùng DB, scan lại batch. Tiêm lỗi RPC trước/giữa batch và decode lỗi. Reorg trong W bằng local fork/revert rồi mine nhánh thay; restart kiểm checkpoint hash, rollback đến common ancestor A rồi quét lại. Ca riêng vượt W phải không tìm được ancestor và yêu cầu rebuild.
 - **Kỳ vọng:** trước COMMIT batch rollback cả checkpoint/projection; sau COMMIT replay không trùng/mất. Key chainId+txHash+logIndex duy nhất, lưu blockHash/raw topics/data và kiểm conflict khác payload/hash, không DO NOTHING che reorg. Checkpoint không vượt dữ liệu đã commit hoặc head−2, kể cả block không event. RPC retry có backoff theo config ghi trong evidence, không hot-loop/advance giả. Nhánh bị thay không còn log/vote/payout/count; revision/cursor cũ bị invalid; số dư rebuilt trên nhánh thay=10000U/R0 nếu chi bị orphan. Vượt W: health not_ready/rebuild_required, ngừng phục vụ dữ liệu mới như canonical, không đoán checkpoint hay tiếp tục advance.
-- **Test/evidence:** E-BE02-C giữ synthetic RPC/storage/CLI proof lịch sử. E-RAWSQL-22 chứng minh scan nửa đầu chain thật, trigger SQL lỗi header thứ hai rollback batch và giữ prior committed batches; CLI quét phần còn lại hữu hạn, full scanner rerun và CLI fresh-process rerun idempotent. Không phải kill-point worker/checkpoint resume. **BỊ CHẶN** ba kill-points projection/checkpoint/ack, RPC retry/backoff runtime, reorg trong/vượtW, K-confirmations/API invalidation; evidence `docs/evidence/TC11/` cho các variant đó vẫn dự kiến. Chưa nghiệm thu TC11.
+- **Test/evidence24/10:** E-TV4-24-DB có16 PostgreSQL crash/checkpoint tests, kill trước/sau COMMIT, K/resume/redecode; live chain storage giữ raw/idempotence. E-TV4-24-X tái hiện reorg thật: CLI exit1 CHECKPOINT_HASH_MISMATCH và DB giữ nguyên, nhưng API vẫn200 với publication hash orphan. **CHƯA NGHIỆM THU TC11:** thiếu BE07 rollback/replay/window/backoff và invalidation; không sửa hash/xóa DB để báo PASS.
 
 ### TC12 — DB trống và rebuild cùng H
 
@@ -164,14 +489,14 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R1/F0 mới; chốt H là block có timestamp `t0+1000`, rồi mine thêm2 block để H đủK. Tạo8 proposal A sở hữu, mỗi khoản1000U→R, nhãn/request/description riêng: Executed tạo t0 và chạy G (chi duy nhất1000U); Queued Waiting tạo t0+100, queue t0+950 (ETA=t0+1070); Queued Ready tạo t0+200, queue t0+700 (ETA=t0+820); Succeeded tạo t0+500, chưa queue; Defeated tạo t0+510; Active tạo t0+800; Canceled tạo t0+900 và A cancel t0+901; Pending tạo t0+950. Với Executed/Queued/Succeeded, A/B For tại snapshot+1/+2 (700U); Defeated chỉ D For100U; Active chỉ A For400U trước H; Pending/Canceled không phiếu. S/D từng P lấy create+60/+360 và assert contract; thực hiện các giao dịch theo thứ tự timestamp tăng, không warp ngược. Tại H: quỹ9000U/R1000U/F10000U, chỉ request Executed paid; các proposal khác không giữ chỗ. Ghi H number/hash/timestamp canonical từ DB cũ, freeze cả hai DB tại H (không dùng latest); block rỗng làm chuyển state theo clock.
 - **Hành động:** export canonical projection ở H từ DB đang có, tạo **DB mới trống riêng** và chạy rebuild từ manifest/ABI/address/deployment blocks đến H, không đọc DB cũ hoặc seed metadata riêng. So sorted values của proposal (IDs/description bytes/calldata/proposer/recipient/amount/S/D), votes/support/weight, operation/salt/predecessor/ETA/status, requests đã paid, raw canonical logs, Transfer ledger và tổng số. So Governor.state/quorum(snapshot)/proposal fields, Timelock readiness, GOV past votes/supply và BUD.balanceOf bằng eth_call block H/hash.
 - **Kỳ vọng:** hai tập có cùng nội dung, không chỉ count/hash tự khai; balance9000U và totalIn10000U,totalOut1000U khi chỉ có chi nêu trên; state tính bằng clock(H), **không** chỉ event cuối, không dùng Date.now/latest. Tại H trước/tại snapshot quorum chưa tra quá khứ phải xử lý rõ; kiểm thêm H ở S/S+1/D/D+1/E−1/E bằng các ca con reset độc lập. Revision mới có thể khác nhưng không làm khác business data; cursor cũ invalid theo hợp đồng. RPC thiếu historical state phải báo DATA_NOT_READY, không fallback latest. DB cũ giữ nguyên cho đến so sánh đạt.
-- **Test/evidence:** E-RAWSQL-22 raw replay vào DB trống thứ hai cùng semantic digest tại canonicalH109, SQL ledger13000in/13000out khớp chain. Không phải FR15 projection/state reconstruction hoặc bộ8 trạng thái F0 của TC12. CLI restart/rebuild exit2 kỳ vọng vì unknown init/access topics giữ raw, không phải rebuild thành công. **BỊ CHẶN** projection/historical same-H DB/API, boundary S/S+1/D/D+1/E−1/E và historical-RPC failure variants; H9000 fixture BE01 vẫn giả. Chưa nghiệm thu TC12.
+- **Test/evidence24/10:** E-TV4-24-R có hai target H67/hash,post-H exclusion/mismatch probe và [driver TC12](evidence/tv4-20261024-acceptance/run-tc12.mjs) đã chạy đúng tám proposal H49=t0+1000,10vote/3operation/2Transfer/1disbursement; toàn bộ normalized values/chain compare equal, API đủ tám proposal, totals10000/1000/9000 và Pending quorum=null. Sáu case S/S+1/D/D+1/E−1/E cũng dùng reference+target DB mới riêng trên lịch sử chain được ghim hash, không warp ngược. [Kết quả7case](evidence/tv4-20261024-acceptance/tc12-complete/report.json). Lần đầu harness khai sai prefix1 thay vì firstBlock2 bị API503 đúng, FAIL được giữ riêng; sửa harness, không nới readiness. Historical-RPC failure và cursor invalidation sau reorg vẫn chưa nghiệm thu theo TC11.
 
 ### TC13 — Ví, form, receipt, HTML và mạng
 
 - **Map:** FR01–FR05, FR07–FR08, FR10–FR12, FR16; BR03–BR04, BR06–BR07; NFR01, NFR03, NFR06. **Owner:** TV3 wallet/component tests; TV2 API error/data tests; TV4 browser E2E/acceptance.
 - **Setup/reset:** R2/F0 từng nhánh, chưa nối ví, chain config lấy manifest thật, API snapshot H/hash đủ K; ví A400 past votes và Treasury10000U/R0. Form chưa submit, giữ requestId đã sinh. HTML mô tả dùng text `<img src=x onerror="window.__tv4_xss=1">`; không nạp secret vào browser logs.
 - **Hành động/kỳ vọng:** xem public bốn màn hình không ví; nối đúng mạng hiển thị address/chain, balance/delegate/current/snapshot voting power; sai mạng chặn gửi tx tới địa chỉ mạng khác và yêu cầu switch (ghi wallet request log không có sendTransaction sai mạng). Từ chối ký giữ nguyên title/body/amount/recipient/description/requestId và hiển thị user rejected; pending wallet→submitted txHash→confirming→success chỉ sau receipt status1. Receipt status0 là revert + lý do dễ hiểu, không success; cập nhật sync state sau receipt, dùng contract state trước action nếu API trễ. HTML không tạo DOM handler/script hoặc thay sentinel, vẫn hiển thị text an toàn. Propose/vote/queue/execute/cancel trên UI phải đi chain thật theo điều kiện TC khác, lịch sử có transaction và testnet simulation banner. Title 4/5/120/121 và body19/20/2000/2001 kiểm biên theo quy tắc ký tự đã chốt, recipient/amount sai không được gửi như hợp lệ.
-- **Test/evidence:** E-UI-22 là browser thật11 scenarios trên fixture canonical, không mock render: public read/ID/filter/detail/empty/notfound, disabled form, loading/error/recovery, dev-only injection, keyboard skip/Tab/Enter và responsive390/1366. Không ví/HTTP API/chain. **CÒN CHẶN** connect/switch/wrong-network send guard, reject/pending/status0/1 receipts, giữ form/requestId, HTML sentinel, validation/Unicode và propose/vote/queue/execute/cancel thật; form vẫn disabled. `docs/evidence/TC13/` wallet/network/receipt/video E2E còn dự kiến; chưa nghiệm thu TC13.
+- **Test/evidence24/10:** E-TV4-24-UI chạy12checks trên API/Anvil thật:connect,wrong network/refusal giữ form,HTML-safe,propose/vote/queue/execute/cancel/deposit,receipt cancellation/repricing/account-switch vàstatus qua refresh. Bốn route390/1366,skip-link/Enter đã quan sát. EIP-1193 injected không là ví extension; chưa chốt video/hardware wallet và mọi negative/reset variant TC13.
 
 ### TC14 — Attack deployer và quyền hủy Pending
 
@@ -214,9 +539,9 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 | Q-CI — NFR07; NFR01; module owners + TV4 | Build/format/typecheck/tests đúng module, safety negatives, governance invariant≥100×50 có successful execute, peer review và không lỗi bypass/double-pay mở. | E-TV4-CI-21 đã chạy contracts/Treasury invariant+smoke, BE01 và BE02 thật. Frontend chưa tích hợp; governance/INV02/INV04 và peer approval còn thiếu: **CHƯA NGHIỆM THU NFR07**. |
 | Q-CONFIG — NFR08; BR04/BR06/BR07; TV1 ABI/constructor, TV4 deployment | Kiểm `.env.example` khớp cấu hình thật, không secret/khóa ví/RPC secret trong tracked files/history/evidence/log. Quét bằng công cụ/lệnh ghi rõ, review env và URL đã che, không đưa giá trị secret vào report. Xác minh manifest §2, check-roles holder+zero+deployer và minDelay/token links; cố ý manifest/config sai trong fixture riêng phải exit nonzero. Testnet xác nhận EVM/compiler tương thích, địa chỉ/code/chainId/deploymentBlock thật; demo ít nhất một Executed và một Defeated, chờ timestamp thật, có txHash/explorer/receipt và số dư. | R0 cho malformed config, local/testnet manifest tách nhau; `docs/evidence/deployment/` **dự kiến**; **CHƯA NGHIỆM THU** manifest/roles/deploy governance/testnet/secrets scan chứng minh đầy đủ. SC02 smoke chỉ token local. |
 
-## 6. Traceability đầy đủ FR/BR/NFR → TC/INV → evidence
+## 6. Traceability lịch sử FR/BR/NFR → TC/INV → evidence
 
-Các mã E chỉ là nguồn cục bộ ở §1. Mọi acceptance dưới đây **chưa đạt toàn bộ**; lý do/evidence còn thiếu nằm tại TC/Q tương ứng, không được chuyển PASS vì có tên bài test.
+Bảng dưới giữ lịch sử giai đoạn đầu (nhãn “chưa Governor/API” không còn là trạng thái code). Dùng bảng requirement/source/kết luận đầu tài liệu cho nghiệm thu hiện hành; setup/tiêu chí §2–5 vẫn áp dụng, không giảm assertion.
 
 | Requirement | Coverage có tiêu chí thực thi | Evidence hiện tại / còn thiếu |
 |---|---|---|
@@ -267,9 +592,9 @@ TV4 chỉ đổi trạng thái một TC/INV/Q thành **ĐẠT** khi có actual e
 | TV1 + TV4 | GOV/BUD/Treasury đã tích hợp. Còn constructor/role graph Governor–Timelock, ABI/errors/cancel, timestamp/quorum và boundary S/D/E; không tự suy ra từ ITreasury hoặc địa chỉ mock. |
 | TV1 + TV2 + TV3 | Description JSON v1, đếm Unicode code point hay quy tắc khác cho5–120/20–2000; CSPRNG requestId trước propose và giữ khi retry; xử lý NUL/UTF-8 hỏng mà không đổi bytes/hash; zero requestId không tự cấm. Giữ description nguyên bytes cho queue/execute/rebuild. |
 | TV1 + TV2 | Operation salt/predecessor từ Governor tích hợp và receipt thật, không dùng salt tự chọn của BE01 hay mặc định descriptionHash; quy tắc nối BudgetDisbursed↔Transfer để không double count. |
-| TV2 + TV4 | BE02 đã có finite reader/decoder/raw storage và PR #12. Còn checkpoint/K-confirmations/resume/reorg/projections/API/rebuild, hash window/backoff/cursor và historical same-H proof; TC11/TC12/freshness/performance vẫn bị chặn. |
-| TV2 + TV3 | API/schema BE01 còn chờ review; tích hợp fixture chung trước rồi HTTP thật, asOfBlock/hash/revision và sync warnings; UI hiện mock riêng chưa là BE01 integration. |
-| TV3 + TV4 | Frontend thực/lockfile/runner/module commands; bật wallet, form create thật và browser E2E; thống nhất boundary text và width/keyboard evidence. Không tạo framework chỉ để có đường test. |
-| TV4 + TV1 | Manifest/check-roles governance và testnet Osaka/RPC/faucet; E-TV4-CI-21 có Docker18.4 và local native SQL đã chạy riêng. Còn clean-clone/demo trên máy thành viên khác và peer approval. |
+| TV2 + TV4 | BE03–BE06 checkpoint/projection/API/rebuild và benchmark đã được kiểm local; còn BE07 rollback/window/retry/backoff, API/cursor invalidation sau reorg và production freshness. E-TV4-24-X là lỗi tái hiện, không phải giả định. |
+| TV2 + TV3 | API consumer đã tích hợp, ghim H/hash/revision và dùng deployment_name thật; cần peer review DTO/cursor/health và không suy lagSeconds=null thành SLA đã đạt. |
+| TV3 + TV4 | Wallet/form/EIP-1193 local đã chạy; cần extension thực và đủ keyboard/video/negative/reset variants. Ba receipt/account bugs đã tái hiện và sửa trước/sau. |
+| TV4 + TV1 | Cần peer review SC05/deployment và mạng/RPC/signer/gas testnet; clone cùng máy không thay kiểm chứng máy thành viên khác. Không tự approval hoặc dùng time-warp trên testnet. |
 
 Các tham số nghiệp vụ, TC01–TC14, INV01–INV04 và chỉ tiêu NFR trong requirements **không phải quyết định mở** để tùy ý giảm phạm vi. Khi đổi cấu hình demo được nhóm duyệt, cập nhật nhất quán requirements/config/deploy/test/evidence, không thêm shim hoặc báo đạt bằng dữ liệu giả.

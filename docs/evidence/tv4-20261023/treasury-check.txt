@@ -1,0 +1,1 @@
+PASS: Treasury local transactions and live BE02 receipt decoding. Evidence: /home/ptdung/solidity-projects/dao-budget-simulator/docs/evidence/tv4-20261023/treasury-smoke.json

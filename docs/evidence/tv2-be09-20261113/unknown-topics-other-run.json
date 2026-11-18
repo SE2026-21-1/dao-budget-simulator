@@ -1,0 +1,87 @@
+{
+  "source": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+  "run": "20261113T094548Z-dd60c70023dc",
+  "count": 16,
+  "groups": [
+    {
+      "role": "timelock",
+      "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+      "topic": "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+      "event": "RoleGranted(bytes32,address,address)",
+      "count": 5,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "treasury",
+      "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+      "topic": "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b",
+      "event": "RoleRevoked(bytes32,address,address)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "timelock",
+      "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+      "topic": "0xf6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b",
+      "event": "RoleRevoked(bytes32,address,address)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "treasury",
+      "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+      "topic": "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
+      "event": "RoleGranted(bytes32,address,address)",
+      "count": 3,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "timelock",
+      "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+      "topic": "0x11c24f4ead16507c69ac467fbd5e4eed5fb5c699626d2cc6d66421df253886d5",
+      "event": "MinDelayChange(uint256,uint256)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "governor",
+      "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "topic": "0xc565b045403dc03c2eea82b81a0465edad9e2e7fc4d97e11421c209da93d7a93",
+      "event": "VotingDelaySet(uint256,uint256)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "governor",
+      "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "topic": "0x7e3f7f0708a84de9203036abaa450dccc85ad5ff52f78c170f3edb55cf5e8828",
+      "event": "VotingPeriodSet(uint256,uint256)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "governor",
+      "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "topic": "0xccb45da8d5717e6c4544694297c4ba5cf151d455c9bb0ed4fc7a38411bc05461",
+      "event": "ProposalThresholdSet(uint256,uint256)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "governor",
+      "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "topic": "0x0553476bf02ef2726e8ce5ced78d63e26e602e4a2257b1f559418e24b4633997",
+      "event": "QuorumNumeratorUpdated(uint256,uint256)",
+      "count": 1,
+      "canonicalAncillary": true
+    },
+    {
+      "role": "governor",
+      "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "topic": "0x08f74ea46ef7894f65eabfb5e6e695de773a000b47c529ab559178069b226401",
+      "event": "TimelockChange(address,address)",
+      "count": 1,
+      "canonicalAncillary": true
+    }
+  ]
+}

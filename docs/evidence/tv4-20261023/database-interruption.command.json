@@ -1,0 +1,10 @@
+{
+  "label": "database-interruption",
+  "command": [
+    "python3",
+    "/tmp/tv4-database-interruption.py"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 36.625,
+  "log": "database-interruption.txt"
+}

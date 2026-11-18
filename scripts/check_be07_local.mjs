@@ -14,15 +14,15 @@ const env={...process.env,BE07_TEST_DATABASE_URL:connect('be07_test'),BE07_COMPA
   BE03_TEST_ISOLATED:'1',BE03_TEST_DATABASE_URL:connect('be03_test','be03_test'),BE04_TEST_ISOLATED:'1',BE04_TEST_DATABASE_URL:connect('be04_test'),
   BE05_TEST_ISOLATED:'1',BE05_TEST_DATABASE_URL:connect('tv4_be05_be07'),BE06_TEST_ISOLATED:'1',
   BE06_TEST_REFERENCE_DATABASE_URL:connect('be06_test_reference'),BE06_TEST_TARGET_DATABASE_URL:connect('be06_test_target')};
-// Bind every run to the actual uncommitted implementation and its new files.
-const changed=execFileSync('git',['ls-files','--modified','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(Boolean)
-  .filter(p=>!p.startsWith('docs/evidence/')&&!p.startsWith('reports/')).sort();
+// Bind every run to staged and unstaged changes plus new files, not only the index-to-worktree diff.
+const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);
+const tracked=execFileSync('git',['diff','HEAD','--name-only','--diff-filter=ACMR','-z','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**'],{encoding:'utf8'}).split('\0').filter(Boolean);
+const changed=[...new Set([...tracked,...untracked])].filter(p=>!p.startsWith('docs/evidence/')&&!p.startsWith('reports/')).sort();
 const files={};
 for(const path of changed) files[path]=createHash('sha256').update(await readFile(path)).digest('hex');
-const trackedPatch=execFileSync('git',['diff','--binary','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**']);
+const trackedPatch=execFileSync('git',['diff','HEAD','--binary','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**']);
 const patchParts=[trackedPatch];
-const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>p&&changed.includes(p));
-for(const path of untracked){try{patchParts.push(execFileSync('git',['diff','--no-index','--binary','--','/dev/null',path]));}catch(e){if(e.status!==1)throw e;patchParts.push(e.stdout);}}
+for(const path of untracked.filter(p=>changed.includes(p))){try{patchParts.push(execFileSync('git',['diff','--no-index','--binary','--','/dev/null',path]));}catch(e){if(e.status!==1)throw e;patchParts.push(e.stdout);}}
 const patch=Buffer.concat(patchParts);
 await writeFile(resolve(output,'source.patch'),patch,{flag:'wx'});
 await writeFile(resolve(output,'tested-source.json'),JSON.stringify({baseCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),

@@ -1,0 +1,134 @@
+{
+  "result": "rebuilt",
+  "manifest": {
+    "format": "dao-budget-local-governance-v1",
+    "sha256": "0cd616008ebbe7e2ed72f7ce85331caee73b67daec4d28c0e0ebf6cc65cac0cc",
+    "sourceCommit": "d2617d09694cefd53aa18d23c34335852406102d"
+  },
+  "scope": {
+    "chainId": "31337",
+    "contracts": [
+      {
+        "role": "budget_token",
+        "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+        "deploymentBlock": "2",
+        "abiVersion": "oz-5.4.0-erc20"
+      },
+      {
+        "role": "governor",
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "deploymentBlock": "5",
+        "abiVersion": "oz-5.4.0-governor"
+      },
+      {
+        "role": "timelock",
+        "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+        "deploymentBlock": "4",
+        "abiVersion": "oz-5.4.0-timelock"
+      },
+      {
+        "role": "treasury",
+        "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+        "deploymentBlock": "3",
+        "abiVersion": "sc01-itreasury-v1"
+      }
+    ]
+  },
+  "target": {
+    "deploymentId": "1",
+    "deploymentName": "be06-live-anvil"
+  },
+  "confirmations": 2,
+  "requestedBlock": "67",
+  "blockHash": "0xbc32028e2a38e0be34144f0d403f597e628a0c8e1c9b6551c5b3595ce9f0c53c",
+  "chainHeadBefore": "69",
+  "safeBlockBefore": "67",
+  "chainHeadAfter": "69",
+  "safeBlockAfter": "67",
+  "rawCheckpoint": {
+    "block": "67",
+    "hash": "0xbc32028e2a38e0be34144f0d403f597e628a0c8e1c9b6551c5b3595ce9f0c53c"
+  },
+  "projection": {
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "1",
+      "asOfBlock": "67",
+      "asOfBlockHash": "0xbc32028e2a38e0be34144f0d403f597e628a0c8e1c9b6551c5b3595ce9f0c53c",
+      "asOfTimestamp": "1800000971",
+      "snapshotRevision": "30f24bca-1c0f-43a7-9492-9661b490ace8",
+      "dataKind": "chain"
+    },
+    "counts": {
+      "proposals": 6,
+      "votes": 9,
+      "operations": 3,
+      "transfers": 4,
+      "disbursements": 2
+    },
+    "treasury": {
+      "totalIn": "13000000000000000000000",
+      "totalOut": "12000000000000000000000",
+      "balance": "1000000000000000000000"
+    },
+    "ignoredAncillaryEvents": 16,
+    "rawDecodeIssues": 16
+  },
+  "chainMetadata": {
+    "atBlock": "67",
+    "blockHash": "0xbc32028e2a38e0be34144f0d403f597e628a0c8e1c9b6551c5b3595ce9f0c53c",
+    "blockTimestamp": "1800000971",
+    "contractCodeHashes": {
+      "governor": {
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "deploymentBlock": "5",
+        "codeHash": "0x7fef8332adceeb894db1c89b42d98161ace1f7e55c9f643b66b6afd7b1047570"
+      },
+      "timelock": {
+        "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+        "deploymentBlock": "4",
+        "codeHash": "0xdbbc87018530b06f594bd3f0400a2fc31de7413378ebbc98e032144e4e624b34"
+      },
+      "treasury": {
+        "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+        "deploymentBlock": "3",
+        "codeHash": "0x06bd8e7561f9ea140630420fbc9f2f5c89ca719c0c6578381b0c530ecc8c5619"
+      },
+      "budget_token": {
+        "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+        "deploymentBlock": "2",
+        "codeHash": "0x84fb5b3e9eac29c95b4ef1a08835480f494b367bdb3e8d67e279500b4e61eabd"
+      },
+      "governance_token": {
+        "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+        "deploymentBlock": "1",
+        "codeHash": "0x1645750b8080945d25a3680050e5d87a0ab5ac9154c6ec5228e0e99c729c8490"
+      }
+    },
+    "governanceToken": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+    "governanceConfig": {
+      "proposalThreshold": "50000000000000000000",
+      "quorumNumerator": "20",
+      "quorumDenominator": "100",
+      "votingDelay": "60",
+      "votingPeriod": "300",
+      "minDelay": "120",
+      "clockMode": "mode=timestamp",
+      "govSupply": "1000000000000000000000",
+      "budSupply": "20000000000000000000000"
+    },
+    "treasuryBalance": "1000000000000000000000",
+    "links": {
+      "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "governanceToken": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+      "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+      "treasury": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+      "budgetToken": "0x9baab117304f7d6517048e371025db8f89a8dbe5"
+    }
+  },
+  "decodeWarnings": {
+    "complete": false,
+    "unknownTopics": 16,
+    "decodeErrors": 0
+  }
+}

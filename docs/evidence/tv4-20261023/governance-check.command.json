@@ -1,0 +1,15 @@
+{
+  "label": "governance-check",
+  "command": [
+    "/home/ptdung/.npm/_npx/1c56de6e9acc34f8/node_modules/node/bin/node",
+    "--import",
+    "tsx",
+    "scripts/smoke_governance.mjs",
+    "--output",
+    "docs/evidence/tv4-20261023/governance-storage.json",
+    "--database"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 30.236,
+  "log": "governance-check.txt"
+}

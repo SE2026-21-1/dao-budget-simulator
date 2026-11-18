@@ -1,0 +1,224 @@
+{
+  "date": "2026-11-11",
+  "runner": "Phan Thanh Dũng / 23001850 / TV4 / dung0611",
+  "sourceCommit": "b7a74ce4f5a7336a992b39310fb9d569831176d3",
+  "baseCommit": "97ec39e829152a0afaeb63d185cbe64ffb4e671d",
+  "observedDev": "87738d3f792c3a283a52b5c18c306809d6cfcfd4",
+  "scope": "New TC14 contract boundary/actor/reset checks and TC10 independent real-receipt variants. Production contracts/backend/frontend/ABIs unchanged. No full QA05 or system acceptance.",
+  "verification": [
+    {
+      "command": "FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh",
+      "result": "PASS",
+      "tests": 202,
+      "fail": 0,
+      "skip": 0,
+      "attackTests": 21,
+      "newAttackTests": 15,
+      "integrationTests": 40,
+      "governorTests": 82,
+      "notes": "fmt/build/SC01 checker passed; warnings retained; seed/config unchanged. This regression run does not reopen bounded QA06 acceptance."
+    },
+    {
+      "command": "PATH=<Node24.15.0/bin>:<Foundry1.8.5/bin>:$PATH node scripts/check_qa05_request_orders.mjs --output /tmp/dao-tv4-qa05-results-20261111/request-orders.json",
+      "result": "PASS",
+      "node": "v24.15.0",
+      "cases": 4,
+      "governanceReceipts": 40,
+      "successfulGovernanceReceipts": 36,
+      "revertedGovernanceReceipts": 4,
+      "notes": "Four separate reset branches, NOT 40 simultaneously canonical receipts; deployment receipts retained in each manifest."
+    },
+    {
+      "command": "PATH=<Node24.15.0/bin>:$PATH npm run typecheck && PATH=<Node24.15.0/bin>:$PATH npm run build",
+      "result": "PASS",
+      "notes": "Initial captured types.txt used default Node22.23.3; repeated explicitly with pinned Node24.15.0 and passed. No pinned-run raw stdout claimed in archive."
+    }
+  ],
+  "rawArchive": {
+    "path": "tv4-20261111-qa05-variants-raw.tar.gz",
+    "sha256": "81f94ba6f99b67b73e98a2441f8289ca7ef79a7c81c57be2bc11f548ba5a4bbb",
+    "files": [
+      "contracts.txt",
+      "types.txt (initial Node22 run only)",
+      "request-orders.json"
+    ]
+  },
+  "sourceHashes": {
+    "scripts/check_qa05_request_orders.mjs": "456c35665b8b2874961af96a090c7ac2372f3371fd35dc36ea37315c632d5a09",
+    "scripts/governance_local.mjs": "3348adf0a9780ffa676f99dcb6c72e7f2044dc28ef03349f3ea139f89515b168",
+    "scripts/governance_operations.mjs": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+    "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577"
+  },
+  "cases": [
+    {
+      "requestKind": "hashed",
+      "winner": 1,
+      "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+      "reset": "empty block 0, fresh deployment/seed/final-role audit; evm_revert only after H/hash evidence retained",
+      "chainId": "31337",
+      "head": {
+        "number": "29",
+        "hash": "0x4057029383fbb5bdee437caf9906987307f00a663ec571330b33c1dd09a848e8",
+        "timestamp": "1800000496"
+      },
+      "expectedBalances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "actualBalances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "balanceOrder": [
+        "Treasury",
+        "R1",
+        "R2",
+        "funding"
+      ],
+      "winnerTx": "0x64fa8eca6397cf5e32a1948dae4e4ff8dfd2afa38252ef2a1341b49ccee9273f",
+      "rejectedTx": "0x3839bf1f3c2554a6825a0dd6c9e5a00c55ffa196f5e13d3db3c1b71bc53498fa",
+      "error": {
+        "name": "RequestAlreadyPaid",
+        "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+        "data": "0x321801a6c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58"
+      },
+      "result": "PASS",
+      "apiUi": "NOT RUN: no published API snapshot/revision or UI claimed for this chain branch"
+    },
+    {
+      "requestKind": "hashed",
+      "winner": 2,
+      "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+      "reset": "empty block 0, fresh deployment/seed/final-role audit; evm_revert only after H/hash evidence retained",
+      "chainId": "31337",
+      "head": {
+        "number": "29",
+        "hash": "0x3bf34f4b62b5e4e9f813ff48a1375d65a19f7c9f84c983d9d0efa59a9f1da252",
+        "timestamp": "1800000509"
+      },
+      "expectedBalances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "actualBalances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "balanceOrder": [
+        "Treasury",
+        "R1",
+        "R2",
+        "funding"
+      ],
+      "winnerTx": "0xc90dc0623bf342c60eb0340dffa398a5214073549c1d84d55b30a4e37f26bc3b",
+      "rejectedTx": "0x13fea95282969a89927641509970a7c334af4791bd80de33c0e22fff50aab037",
+      "error": {
+        "name": "RequestAlreadyPaid",
+        "requestId": "0xc872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58",
+        "data": "0x321801a6c872b0d40ca17bd4dd3b26ede3b4568901a7935874a6953d27321adedde6fa58"
+      },
+      "result": "PASS",
+      "apiUi": "NOT RUN: no published API snapshot/revision or UI claimed for this chain branch"
+    },
+    {
+      "requestKind": "zero",
+      "winner": 1,
+      "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "reset": "empty block 0, fresh deployment/seed/final-role audit; evm_revert only after H/hash evidence retained",
+      "chainId": "31337",
+      "head": {
+        "number": "29",
+        "hash": "0xb5eecb928b9db8536bc4e699d45958e982fa73cf087c005a58944520699952bc",
+        "timestamp": "1800000516"
+      },
+      "expectedBalances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "actualBalances": [
+        "9000000000000000000000",
+        "1000000000000000000000",
+        "0",
+        "10000000000000000000000"
+      ],
+      "balanceOrder": [
+        "Treasury",
+        "R1",
+        "R2",
+        "funding"
+      ],
+      "winnerTx": "0x3b44a96bc09ddfa78b9f493bf834970dea59b35be1237f1e6a3cf1c75532b4e5",
+      "rejectedTx": "0x8728c7a751ce378adceb8d989a4bcea4230acf9288374498ced07e818548b2be",
+      "error": {
+        "name": "RequestAlreadyPaid",
+        "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "data": "0x321801a60000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "result": "PASS",
+      "apiUi": "NOT RUN: no published API snapshot/revision or UI claimed for this chain branch"
+    },
+    {
+      "requestKind": "zero",
+      "winner": 2,
+      "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "reset": "empty block 0, fresh deployment/seed/final-role audit; evm_revert only after H/hash evidence retained",
+      "chainId": "31337",
+      "head": {
+        "number": "29",
+        "hash": "0xaa8f4904b2664c5ab19ef72cab63de0ac8fdb18a8dc3fdbad4ab2f35afaa2cca",
+        "timestamp": "1800000522"
+      },
+      "expectedBalances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "actualBalances": [
+        "8000000000000000000000",
+        "0",
+        "2000000000000000000000",
+        "10000000000000000000000"
+      ],
+      "balanceOrder": [
+        "Treasury",
+        "R1",
+        "R2",
+        "funding"
+      ],
+      "winnerTx": "0x68a96286e8214348d8ea8d05747e745b601f899a4fe7329b5077b11ca31c5318",
+      "rejectedTx": "0xd654c8dd8d64e18f3e817b43cd08cc3ef662bf032ebd68a21c908ed5f4a2f538",
+      "error": {
+        "name": "RequestAlreadyPaid",
+        "requestId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "data": "0x321801a60000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "result": "PASS",
+      "apiUi": "NOT RUN: no published API snapshot/revision or UI claimed for this chain branch"
+    }
+  ],
+  "notRun": [
+    "New API/UI published snapshot or revision for these variants",
+    "Native PostgreSQL/reorg/rebuild/benchmark rerun",
+    "Frontend/extension wallet/receiving WSL/independent machine/testnet"
+  ],
+  "remaining": {
+    "qa05": "PARTIAL: per-vector TC05/06/08 reset receipts; TC07 wrong-description reset receipts/UI; TC14 raw receipt/API history/UI boundary variants; API/UI of all four TC10 rows; see test-plan.",
+    "pr21": "TV3 wallet/consumer review pending. Existing TV1/TV2 reviews remain scoped to ff484fb; only new TV4 tests/runner/workflow need incremental review. No merge authorization.",
+    "backend": "Dev still87738d3: #18/#47 integration and exact post-integration CI proof still missing.",
+    "environment": "TV3 receiving lifecycle #40/#36 and extension #19/#41; TV2 supports receiver #42; group/TV1 testnet#20; lead release#44."
+  },
+  "releaseAccepted": false
+}

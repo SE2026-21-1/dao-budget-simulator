@@ -30,7 +30,9 @@ export async function runtimeConfig(client) {
     const token = (await client.query("SELECT contract_address FROM deployment_contracts WHERE deployment_id=$1 AND contract_role='governance_token'", [config.deploymentId])).rows[0];
     requireThat(token?.contract_address === frontend.VITE_GOV_TOKEN_ADDRESS.toLowerCase(), 'Frontend governance token differs from verified database metadata.');
   }
-  await client.query('BEGIN READ ONLY');
+  // The existing verifier takes FOR SHARE row locks; PostgreSQL forbids those
+  // in a READ ONLY transaction. No metadata writes are issued here.
+  await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ');
   try { await verifyMetadata(client, config, true); await client.query('COMMIT'); }
   catch (error) { await client.query('ROLLBACK'); throw error; }
   const rpc = async (method, params) => {

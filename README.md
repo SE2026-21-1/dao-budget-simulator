@@ -23,6 +23,9 @@ Xem [trạng thái nghiệm thu TV4](docs/test-plan.md),
 [runbook BE07](docs/be07.md), [BE08 trên Dev](docs/be08.md) và
 [bàn giao TV4](docs/tv4-work-summary.md).
 
+Chuẩn bị CI/CD ứng dụng: [Docker Compose, GHCR và deploy thủ công](docs/cicd.md).
+Chưa có server đích; không xác nhận CD end-to-end hoặc tự deploy smart contracts.
+
 ## Thành viên và tài liệu
 
 | Thành viên | Phụ trách | Hướng dẫn |

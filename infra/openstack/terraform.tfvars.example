@@ -1,0 +1,18 @@
+# Documentation only. Copy outside Git and replace every REPLACE_* value.
+project_id   = "9dcc4173a3ba466b8836759c8c367618"
+image_id     = "REPLACE_WITH_APPROVED_UBUNTU_24_04_X86_64_IMAGE_UUID"
+image_name   = "ubuntu24.04"
+flavor_id    = "REPLACE_WITH_EXISTING_4CPU_8192MIB_100GIB_FLAVOR_UUID"
+network_id   = "e933779a-b348-4112-b3b3-f116c924833b"
+subnet_id    = "774abbe6-6e75-4d81-a899-4f53005e0e23"
+router_id    = "07b1cf0c-6e53-4a08-941d-398ffbffeeb1"
+keypair_name = "private-cloud-key"
+# Documentation-only TEST-NET address, NOT a real administrative source.
+admin_cidr = "192.0.2.10/32"
+
+vcpus = 4
+ram_mb = 8192
+
+# No Cinder service exists in the inspected cloud. Leave this disabled.
+boot_from_volume = false
+boot_volume_type = null

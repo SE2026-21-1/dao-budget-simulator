@@ -55,7 +55,15 @@ backup_hash=$(sha256sum "$state/before.dump" | cut -d ' ' -f1)
 # Reapplying a fully tracked migration set must preserve schema and existing data.
 "${compose[@]}" run --rm --no-deps -T -v "$state:/run/release:ro" --entrypoint node indexer /app/deploy/migrate.mjs \
   --approve --manifest /run/release/manifest.json --backup /run/release/before.dump --backup-sha256 "$backup_hash"
-"${compose[@]}" exec -T postgres psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" < "$state/metadata.sql"
+registered_id=$("${compose[@]}" exec -T postgres psql -X -qAt -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" < "$state/metadata.sql")
+[[ $registered_id =~ ^[1-9][0-9]*$ ]] || { echo 'Registration did not return a numeric deployment ID' >&2; exit 1; }
+node --input-type=module - "$state/indexer.json" "$registered_id" <<'JS'
+import { readFile, writeFile } from 'node:fs/promises';
+const path = process.argv[2];
+const config = JSON.parse(await readFile(path, 'utf8'));
+config.deploymentId = process.argv[3];
+await writeFile(path, JSON.stringify(config), { mode: 0o644 });
+JS
 "${compose[@]}" run --rm --no-deps -T -v "$state:/run/release:ro" --entrypoint node indexer /app/deploy/preflight.mjs --manifest /run/release/manifest.json
 # Startup must fail without a mounted public config and must reject fixture mode.
 negative_status=0
@@ -77,7 +85,7 @@ check_live() {
   [[ $address =~ ^127\.0\.0\.1:[0-9]+$ ]] || { echo 'Unexpected frontend bind' >&2; return 1; }
   node scripts/cd/container-smoke-check.mjs "http://$address"
   local proof
-  proof=$("${compose[@]}" exec -T postgres psql -X -At -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT deployment_name FROM deployments WHERE deployment_id=1")
+  proof=$("${compose[@]}" exec -T postgres psql -X -At -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT deployment_name FROM deployments WHERE deployment_id=$registered_id")
   [[ $proof == container-smoke ]]
 }
 check_live
@@ -96,7 +104,7 @@ check_live
 # A living container is insufficient: stale canonical validation must fail readiness.
 "${compose[@]}" stop indexer
 "${compose[@]}" exec -T postgres psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
-  -c "UPDATE deployments SET indexer_state=jsonb_set(indexer_state,'{lastCheckedAt}','\"2000-01-01T00:00:00Z\"'::jsonb) WHERE deployment_id=1"
+  -c "UPDATE deployments SET indexer_state=jsonb_set(indexer_state,'{lastCheckedAt}','\"2000-01-01T00:00:00Z\"'::jsonb) WHERE deployment_id=$registered_id"
 stale_status=0
 "${compose[@]}" run --rm --no-deps --entrypoint node indexer /app/deploy/worker-health.mjs || stale_status=$?
 [[ $stale_status == 1 ]] || { echo 'Stale worker heartbeat must fail readiness' >&2; exit 1; }

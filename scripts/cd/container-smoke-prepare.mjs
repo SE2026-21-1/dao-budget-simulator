@@ -33,11 +33,13 @@ await writeFile(join(directory, 'manifest.json'), JSON.stringify({
 const sql = value => "'" + String(value).replaceAll("'", "''") + "'";
 const statements = [
   'BEGIN;',
-  `INSERT INTO deployments (deployment_id,chain_id,deployment_name,deployment_block,abi_version,governance_config,confirmation_depth)
-   VALUES (1,31337,'container-smoke',${sql(config.fromBlock)},'container-smoke-v1',${sql(JSON.stringify(manifest.config))}::jsonb,0);`,
+  `INSERT INTO deployments (chain_id,deployment_name,deployment_block,abi_version,governance_config,confirmation_depth)
+   VALUES (31337,'container-smoke',${sql(config.fromBlock)},'container-smoke-v1',${sql(JSON.stringify(manifest.config))}::jsonb,0)
+   RETURNING deployment_id AS registered_id \\gset`,
   ...[...config.contracts, { role: 'governance_token', ...governanceToken }].map(contract =>
     `INSERT INTO deployment_contracts (deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
-     VALUES (1,31337,${sql(contract.role)},${sql(contract.address)},${sql(contract.deploymentBlock)},${sql(contract.abiVersion)});`),
+     VALUES (:registered_id,31337,${sql(contract.role)},${sql(contract.address)},${sql(contract.deploymentBlock)},${sql(contract.abiVersion)});`),
   'COMMIT;',
+  '\\echo :registered_id',
 ];
 await writeFile(join(directory, 'metadata.sql'), statements.join('\n'), { mode: 0o600 });

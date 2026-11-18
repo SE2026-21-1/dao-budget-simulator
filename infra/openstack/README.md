@@ -29,6 +29,22 @@ an exact name and ID, plus trusted Glance properties `os_distro=ubuntu`,
 provenance and publish accurate metadata. Flavor checks fail closed on CPU/RAM
 and, for the default non-Cinder path, root disk must equal 100 GiB.
 
+The follow-up survey still found no server or suitable flavor. Seven existing
+unassociated floating IPs were found, but none was allocated, attached or selected
+for staging. The management host has an existing route to the private subnet
+through router `192.168.248.204`, so a new floating IP is not required merely to
+attempt SSH from this host.
+
+The active identity has the project `admin` role. This is a technical capability,
+not explicit authorization to create global flavors or change shared quota.
+An administrator must confirm the application's target project and provision a
+4-vCPU / 8192-MiB flavor and real disk capacity (or a suitable Cinder service).
+Quota is not the limiting evidence; changing quota alone cannot supply RAM/disk.
+Ubuntu 22.04 is now acceptable only after image-specific runbook/tool acceptance.
+The existing image has no `os_distro`, `os_version` or `architecture` properties;
+neither its provenance nor Docker/Compose execution on that image was verified.
+The image guard therefore remains fail-closed rather than relabeling it as tested.
+
 ## Operator preparation
 
 - Use externally managed `OS_*` credentials or `OS_CLOUD` / `clouds.yaml` outside
@@ -84,6 +100,11 @@ terraform -chdir=infra/openstack validate -no-color
 All three checks passed. The generated `.terraform.lock.hcl` pins provider
 checksums; initialization created no cloud resources. Repeat these checks after
 changes. Never commit `.terraform/`, real tfvars, state or saved plans.
+
+The `TV4 OpenStack validation` workflow repeats formatting, locked provider
+initialization and schema validation without cloud credentials. It cannot plan,
+apply or attest to VM/network/runtime readiness. A passing workflow is a code
+review gate, not infrastructure acceptance.
 
 **An inventory-only negative plan was executed and rejected (exit 1).** It used
 the actual Ubuntu 22.04 image and `m1.lab` flavor to exercise both postconditions:

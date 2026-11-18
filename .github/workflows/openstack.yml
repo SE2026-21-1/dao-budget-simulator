@@ -1,0 +1,38 @@
+name: TV4 OpenStack validation
+
+on:
+  pull_request:
+    paths: ['infra/openstack/**', '.github/workflows/openstack.yml']
+  push:
+    branches: [Dev, 'feature/tv4-openstack-*']
+    paths: ['infra/openstack/**', '.github/workflows/openstack.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tv4-openstack-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Terraform format and offline schema validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: infra/openstack
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: '1.15.8'
+          terraform_wrapper: false
+      - run: terraform fmt -check -diff
+      - run: terraform init -backend=false -input=false -lockfile=readonly
+      - run: terraform validate -no-color
+      - name: Record validation boundary
+        run: echo 'Formatting and provider schema only. No cloud credentials, plan, apply or staging acceptance.' >> "$GITHUB_STEP_SUMMARY"

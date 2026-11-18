@@ -31,8 +31,8 @@ jobs:
         with:
           terraform_version: '1.15.8'
           terraform_wrapper: false
-      - run: terraform fmt -check -diff
+      - run: terraform fmt -check -diff -recursive
       - run: terraform init -backend=false -input=false -lockfile=readonly
       - run: terraform validate -no-color
       - name: Record validation boundary
-        run: echo 'Formatting and provider schema only. No cloud credentials, plan, apply or staging acceptance.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'Formatting and provider schema only. No real cloud plan, apply or staging acceptance.' >> "$GITHUB_STEP_SUMMARY"

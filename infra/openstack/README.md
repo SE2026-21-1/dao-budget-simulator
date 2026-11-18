@@ -1,131 +1,136 @@
-# OpenStack staging — review only
+# OpenStack staging — guarded single-VM module
 
-One Ubuntu **24.04 x86_64** VM; default minimum **4 vCPU / 8192 MiB**, exactly
-**100 GiB** root disk. Terraform **1.15.8**, OpenStack provider **3.2.0**, pinned
-exactly. Only new resources are one VM, one private port, one security group and
-two rules. Existing image, flavor, project, network, IPv4 subnet, router and
-keypair are looked up, never created or modified. No floating IP, public
-application ports, new router interface, DNS, TLS, application deployment or
-contract deployment is included.
+Terraform **1.15.8** and OpenStack provider **3.2.0** are pinned. The only new
+resources are one VM, one private port, one dedicated security group and two
+rules. Existing project, image, flavor, private network, IPv4 subnet, router and
+keypair are looked up, never created or modified. No floating IP, shared-network
+changes, application ingress, DNS/TLS, cloud-init or application deployment.
 
-## Current hard blockers (2026-11-18)
+## Profiles and verified images
 
-Authenticated project: `admin`, `9dcc4173a3ba466b8836759c8c367618`; inventory
-reported no servers, including the all-project server list. Only image:
-`ubuntu-22.04` (`73655619-91f2-41a9-82eb-e08047517710`). Only flavor: `m1.lab`
-(`ad704641-b42d-4931-8d8d-09f4cc76fb8f`, 1 CPU / 1024 MiB / 10 GiB).
-**Neither is an acceptable substitute.** No block-storage/Cinder service exists.
-Hypervisor inventory reports 4 CPU, 7833 MiB total / 7321 MiB free RAM,
-97 GiB local disk / 16 GiB least available disk. The workstation has only about
-14 GiB free. These cannot satisfy the approved specification; stop before any
-resource creation. A cloud administrator must provide an approved image,
-existing suitable flavor and sufficient actual capacity/quota, not just change
-an ID or lower a requirement.
+`profile` defaults to **standard**. Nullable `vcpus`, `ram_mb` and `root_disk_gb`
+overrides use these defaults; explicit overrides cannot lower the profile floor:
 
-Example inputs include the known existing network/subnet/router/keypair IDs,
-but deliberately **no runnable image/flavor substitute**. Image lookup requires
-an exact name and ID, plus trusted Glance properties `os_distro=ubuntu`,
-`os_version=24.04`, `architecture=x86_64`; an administrator must verify the image
-provenance and publish accurate metadata. Flavor checks fail closed on CPU/RAM
-and, for the default non-Cinder path, root disk must equal 100 GiB.
+| Profile | Minimum vCPU | Minimum RAM (MiB) | Root disk (GiB) |
+| --- | --- | --- | --- |
+| `standard` | 4 | 8192 | Default 100; minimum 100 |
+| `demo` | 2 | 4096 | Default 40; selectable whole GiB from 30 through 40 |
 
-The follow-up survey still found no server or suitable flavor. Seven existing
-unassociated floating IPs were found, but none was allocated, attached or selected
-for staging. The management host has an existing route to the private subnet
-through router `192.168.248.204`, so a new floating IP is not required merely to
-attempt SSH from this host.
+An existing flavor must meet the CPU/RAM minimum. With `boot_from_volume=false`
+(default), its local root disk must meet `root_disk_gb`, and demo flavor disks
+cannot exceed 40 GiB. A selected 30-GiB demo minimum can therefore use a 40-GiB
+flavor; choose a 30-GiB flavor for a 30-GiB local root. A 1-GiB flavor is always
+rejected. Selecting demo does not waive capacity, image or project validation.
+Only after Cinder service, backend capacity, quota and volume type are verified
+may `boot_from_volume=true` be used; its boot volume uses the exact resolved
+`root_disk_gb` and is deleted with the VM. `boot_volume_type=null` uses the cloud
+default. Local root storage is not a durable backup.
 
-The active identity has the project `admin` role. This is a technical capability,
-not explicit authorization to create global flavors or change shared quota.
-An administrator must confirm the application's target project and provision a
-4-vCPU / 8192-MiB flavor and real disk capacity (or a suitable Cinder service).
-Quota is not the limiting evidence; changing quota alone cannot supply RAM/disk.
-Ubuntu 22.04 is now acceptable only after image-specific runbook/tool acceptance.
-The existing image has no `os_distro`, `os_version` or `architecture` properties;
-neither its provenance nor Docker/Compose execution on that image was verified.
-The image guard therefore remains fail-closed rather than relabeling it as tested.
+`ubuntu_version` explicitly selects **24.04** (default) or **22.04** LTS.
+Set the exact `image_name` and `image_id` separately; there is no fallback lookup.
+The image must have trusted, verified Glance properties `os_distro=ubuntu`,
+`os_version` equal to the selected release, and `architecture=x86_64`.
+Its minimum disk/RAM must fit the selected root/flavor. Missing, mismatched or
+unverified metadata is not permission to relabel an image: verify provenance and
+image-specific deployment-tool acceptance first. This module does not modify
+image properties or claim that the current Ubuntu 22.04 image is verified.
 
-## Operator preparation
+## Current actual blockers (2026-11-18)
 
-- Use externally managed `OS_*` credentials or `OS_CLOUD` / `clouds.yaml` outside
-  Git. The provider targets `project_id`; verify authenticated project/region
-  independently before planning. Never include tokens, passwords, private keys,
-  real tfvars, state, backend credentials, logs or plan artifacts in a PR.
-- Verify the existing router actually has an interface on the selected subnet,
-  DHCP/image network support, DNS and required outbound routing. Router lookup
-  proves existence/ownership only; it does not prove connectivity. Do not
-  modify shared routing to make a plan pass.
-- Choose a real trusted IPv4 admin source CIDR (/24 or narrower; /32 preferred),
-  reachable over existing VPN/bastion/private routing. The example TEST-NET
-  address is documentation, not access configuration. Only TCP/22 ingress is
-  allowed. Default security-group rules are removed; explicit IPv4 egress is
-  allowed for maintenance and later GHCR pulls. No IPv6 ingress/egress or
-  application ingress is added; the port does not inherit the default group.
-- With no Cinder, use `boot_from_volume=false` and an existing flavor with a
-  100 GiB local root disk. Local root storage is not durable backup. Only after
-  a block-storage service, capacity/quota and an existing volume type are
-  independently verified may `boot_from_volume=true` be selected. The boot
-  volume is 100 GiB; `boot_volume_type=null` uses the service default, otherwise
-  supply an existing type. Boot volume deletion follows VM termination.
-- No cloud-init is supplied: infrastructure review must not silently install
-  software or run mutable internet scripts. The application deployment
-  runbook is currently in [PR #55](https://github.com/SE2026-21-1/dao-budget-simulator/pull/55)
-  rather than Dev; infrastructure has no dependency on merging its mixed history.
-  After clean application integration, use Docker Engine, Compose >=2.24.4,
-  Node 24.15.0 and the existing `/srv/dao` layout.
-  Verify SSH host keys through an independent console. Docker access is
-  root-equivalent. Runtime secrets and GHCR credentials stay outside Terraform.
-  DNS/HTTPS and application release acceptance remain separate gates.
+The initial survey found only `admin` and `service`; neither is an application
+target, and plans targeting either project name are rejected. The authorized
+dedicated project `dao-staging-se2026-t16`
+(`2543a96aa9c54be1abf6abbcad52e10e`) has since been created, with the existing
+operator assigned `member` and its project-scoped identity verified. It has
+**no networks**. The old network/subnet/router IDs belong to `admin`, not this
+project; they are intentionally absent from the example. Planning remains
+blocked until approved project-owned networking exists (or a separately
+reviewed sharing design is explicitly authorized; this root does not implement
+that design or modify shared networks).
+The surveyed flavor `m1.lab` is 1 vCPU / 1024 MiB / 10 GiB and remains unusable.
+The existing `ubuntu-22.04` image lacks the required metadata; provenance and
+Docker/Compose execution on it have not been verified. No Cinder service was found.
 
-## Backend/state handling and final review commands
+Nova compute `ptdung` (`192.168.1.2`) is **DOWN**, with last reported heartbeat
+`2026-11-17T17:29`; scheduler/conductor are up. The prior 7321-MiB figure is
+reported Placement/Nova schedulable RAM (7833 total minus 512 reserved), **not
+physical free memory**; the 16-GiB Nova least-available disk figure is also stale
+while compute is down. Placement reports no usage, but this does not prove live
+headroom: the host survey found only 1176 MiB available memory with 8583 MiB swap
+used, and 13.1 GiB available on the inspected root filesystem. The actual Nova
+instance-storage filesystem/backend path remains unknown until authorized
+administrator inspection of the compute configuration and mounts. Host `df`
+alone does not prove Nova backend capacity. The standard 8192-MiB request even
+exceeds reported Placement memory; demo fits that scheduler inventory but not
+the surveyed live headroom. Recover compute and verify fresh Placement/Nova
+capacity, actual storage backend and project quota before creation. Do not
+force admission through quota increases or allocation-ratio/overcommit changes.
+The user authorizes private flavor creation only if
+actual compute capacity suffices, and a demo at 2 vCPU / 4096 MiB / 30–40 GiB;
+this is not authorization to bypass those checks. Flavor/project provisioning
+is a separate administrator action, not part of this Terraform module.
 
-No backend is configured: this standalone root uses Terraform's local backend.
-Before a future shared deployment, agree on an encrypted, access-controlled,
-locking remote backend and a reviewed state-migration procedure. Do not point
-this root at someone else's backend, import personal resources, or print state.
-The metadata-only scan under the project (depth 5) found no `.terraform`,
-`terraform.tfstate*` or `*backend*.tf` paths; the parent additionally scanned the
-project, private-cloud-backups and Documents (depth 4) and found no state
-metadata. No state contents or credentials were opened. This does not establish
-that no state exists elsewhere.
+## Project-scoped operator preparation
 
-Executed by TV4 on 2026-11-18 from the isolated Dev-based checkout:
+- Separate administrator provisioning credentials from Terraform credentials.
+  Use a dedicated staging-project-scoped `OS_*` environment or `OS_CLOUD` /
+  external `clouds.yaml` for Terraform, matching `project_id` and the reviewed
+  region. Do not run this root with the administrator's project scope or merely
+  change an ID while retaining that scope. The provider pins `tenant_id`, and the
+  project lookup rejects names `admin` and `service` (case/whitespace normalized);
+  this guard does not replace independent token-scope verification.
+- Use only the target project's existing approved private network/router.
+  Verify the router interface serves the subnet, DHCP/image networking, DNS and
+  outbound routing. Lookup proves existence/ownership, not connectivity. Do not
+  modify shared routing to make the plan pass. Use existing VPN/bastion/private
+  routing; this root never allocates or associates a floating IP.
+- Set a trusted IPv4 `admin_cidr`, /24 or narrower (/32 preferred). The example
+  TEST-NET address is not a real access configuration. Only TCP/22 ingress and
+  IPv4 egress for maintenance/GHCR pulls are allowed. Default security-group
+  rules are removed; the port does not inherit the default group.
+- Verify SSH host keys independently. Runtime secrets, private keys and GHCR
+  credentials stay outside Terraform. Docker/Compose and release acceptance
+  remain separate gates; infrastructure validation is not application readiness.
+
+## Backend/state precautions and offline checks
+
+No backend is configured; this standalone root uses the local backend. Before a
+shared deployment, agree on an encrypted, access-controlled, locking remote
+backend and reviewed state-migration procedure. Preserve existing state and
+backend ownership. Do not point this root at another person's backend, import
+personal resources or print state. Earlier metadata-only searches found no
+state in their surveyed paths; that does not establish no state exists elsewhere.
+Never commit credentials, `.terraform/`, real tfvars, state, logs or plan artifacts.
+
+The following checks passed locally for this profile/image change. They do not
+contact the cloud or create resources:
 
 ```bash
-terraform -chdir=infra/openstack fmt -check -diff
-terraform -chdir=infra/openstack init -backend=false -input=false
+terraform -chdir=infra/openstack fmt -check -diff -recursive
+terraform -chdir=infra/openstack init -backend=false -input=false -lockfile=readonly
 terraform -chdir=infra/openstack validate -no-color
 ```
 
-All three checks passed. The generated `.terraform.lock.hcl` pins provider
-checksums; initialization created no cloud resources. Repeat these checks after
-changes. Never commit `.terraform/`, real tfvars, state or saved plans.
+An actual project-scoped demo plan was also executed with the current inventory
+and exited 1: it rejected the 1-vCPU/1-GiB/10-GiB flavor, unverified image metadata,
+and old admin-owned network/router. Its partial security-group proposal is not
+an applicable plan; no apply or saved plan was used.
 
-The `TV4 OpenStack validation` workflow repeats formatting, locked provider
-initialization and schema validation without cloud credentials. It cannot plan,
-apply or attest to VM/network/runtime readiness. A passing workflow is a code
-review gate, not infrastructure acceptance.
+Offline provider-mocking tests were attempted but not retained: provider 3.2.0
+declares these returned lookup fields Optional rather than Computed, so Terraform
+mocks leave the guard inputs null. No mock PASS is claimed and production guards
+were not weakened to accommodate mocks. Real plan rejection is the observed proof.
+CI format/schema checks do not attest to capacity or VM/network/runtime readiness.
 
-**An inventory-only negative plan was executed and rejected (exit 1).** It used
-the actual Ubuntu 22.04 image and `m1.lab` flavor to exercise both postconditions:
-the image was not verified Ubuntu 24.04 x86_64, and flavor values were
-1 vCPU / 1024 MiB / 10 GiB rather than 4 / 8192 / 100. Terraform displayed a
-partial proposal for a port, security group and two rules before reporting both
-errors; this is **not an applicable plan**. No `-out` file or apply was used.
-The workstation's `10.1.199.104/32` was only a negative-plan input, not approved
-staging ingress or evidence of a reachable route. The exact command and broader
-operational findings are in [the handoff](../../docs/evidence/tv4-staging-20261118.md).
-After those blockers are resolved, copy `terraform.tfvars.example` to a protected file
-outside the repository, replace the placeholders and admin CIDR, and use:
+After all actual blockers are resolved, copy `terraform.tfvars.example` to a
+protected file outside Git, replace every placeholder and the admin CIDR, then:
 
 ```bash
-# /secure/dao-staging.tfvars is operator-created, chmod 600, outside Git.
+# Operator-created, chmod 600; no saved plan or state import.
 terraform -chdir=infra/openstack plan -input=false -no-color \
   -var-file=/secure/dao-staging.tfvars
 ```
 
-This plan has no `-out` file; treat its terminal output as sensitive too. Review
-that exactly one server and only the resources listed above would be created.
-Do not apply until the target project, capacity, plan and creation authority have
-been confirmed. Infrastructure validation or a future successful plan is not
-server readiness or application acceptance.
+Treat terminal output as sensitive. Review exactly one server and only the
+resources listed above. Do not apply until target-project authorization,
+fresh actual capacity, image verification and the complete plan are accepted.

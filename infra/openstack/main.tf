@@ -1,5 +1,18 @@
+locals {
+  minimum_vcpus  = coalesce(var.vcpus, var.profile == "demo" ? 2 : 4)
+  minimum_ram_mb = coalesce(var.ram_mb, var.profile == "demo" ? 4096 : 8192)
+  root_disk_gb   = coalesce(var.root_disk_gb, var.profile == "demo" ? 40 : 100)
+}
+
 data "openstack_identity_project_v3" "existing" {
   project_id = var.project_id
+
+  lifecycle {
+    postcondition {
+      condition     = !contains(["admin", "service"], lower(trimspace(self.name)))
+      error_message = "Use a dedicated staging project, never the admin or service project. Authenticate Terraform separately with that project's scoped credentials."
+    }
+  }
 }
 
 data "openstack_images_image_v2" "ubuntu" {
@@ -10,11 +23,11 @@ data "openstack_images_image_v2" "ubuntu" {
       condition = (
         self.id == var.image_id &&
         lookup(self.properties, "os_distro", "") == "ubuntu" &&
-        lookup(self.properties, "os_version", "") == "24.04" &&
+        lookup(self.properties, "os_version", "") == var.ubuntu_version &&
         lookup(self.properties, "architecture", "") == "x86_64" &&
-        self.min_disk_gb <= 100
+        self.min_disk_gb <= local.root_disk_gb
       )
-      error_message = "Image ID must match a verified Ubuntu 24.04 x86_64 image with explicit os_distro/os_version/architecture metadata and minimum disk <=100 GiB."
+      error_message = "Image must match the requested ID and selected Ubuntu LTS version, with verified os_distro=ubuntu, os_version and architecture=x86_64 metadata, and fit the requested root disk. Missing metadata is not verification."
     }
   }
 }
@@ -25,10 +38,12 @@ data "openstack_compute_flavor_v2" "existing" {
   lifecycle {
     postcondition {
       condition = (
-        self.vcpus >= var.vcpus && self.ram >= var.ram_mb &&
-        (var.boot_from_volume || self.disk == 100)
+        self.vcpus >= local.minimum_vcpus && self.ram >= local.minimum_ram_mb &&
+        (var.boot_from_volume || (
+          self.disk >= local.root_disk_gb && (var.profile != "demo" || self.disk <= 40)
+        ))
       )
-      error_message = "Existing flavor must meet CPU/RAM requirements and, without Cinder, provide exactly 100 GiB root disk. Do not substitute m1.lab."
+      error_message = "Existing flavor must meet the selected profile CPU/RAM minimum and, without Cinder, the requested local root minimum (demo at most 40 GiB). A 1-vCPU/1-GiB flavor is never acceptable."
     }
   }
 }
@@ -104,7 +119,7 @@ resource "openstack_compute_instance_v2" "staging" {
       uuid                  = data.openstack_images_image_v2.ubuntu.id
       source_type           = "image"
       destination_type      = "volume"
-      volume_size           = 100
+      volume_size           = local.root_disk_gb
       volume_type           = var.boot_volume_type
       boot_index            = 0
       delete_on_termination = true

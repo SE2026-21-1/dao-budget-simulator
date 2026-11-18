@@ -1,0 +1,47 @@
+# Standalone disposable topology. Never combine with a production project name.
+services:
+  postgres:
+    extends: {file: compose.yml, service: postgres}
+    restart: 'no'
+  api:
+    extends: {file: compose.yml, service: api}
+    restart: 'no'
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+      target: api
+  indexer:
+    extends: {file: compose.yml, service: indexer}
+    restart: 'no'
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+      target: indexer
+  frontend:
+    extends: {file: compose.yml, service: frontend}
+    restart: 'no'
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.frontend
+      target: frontend
+    ports: !override
+      - '127.0.0.1::8080'
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:v1.8.5
+    entrypoint: [anvil]
+    command: [--host, 0.0.0.0, --chain-id, '31337', --silent]
+    ports:
+      - '127.0.0.1::8545'
+    networks: [rpc-egress]
+    healthcheck:
+      test: [CMD, cast, chain-id, --rpc-url, 'http://127.0.0.1:8545']
+      interval: 2s
+      timeout: 5s
+      retries: 30
+volumes:
+  postgres-data:
+networks:
+  database:
+    internal: true
+  rpc-egress: {}
+  frontend-ingress: {}

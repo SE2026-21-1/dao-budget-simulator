@@ -1,0 +1,126 @@
+services:
+  postgres:
+    image: postgres:18.4-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB}
+    volumes:
+      # PostgreSQL 18 uses a versioned PGDATA below this parent directory.
+      - postgres-data:/var/lib/postgresql
+    networks: [database]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    stop_grace_period: 30s
+
+  api:
+    image: ${API_IMAGE:?Set digest-pinned API_IMAGE from verified release.env}
+    restart: unless-stopped
+    init: true
+    user: node
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@postgres:5432/${POSTGRES_DB:?}
+      API_CURSOR_SECRET: ${API_CURSOR_SECRET:?Set stable random API_CURSOR_SECRET}
+      API_HOST: 0.0.0.0
+      API_PORT: '3000'
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS:-}
+      CHAIN_ID: ${CHAIN_ID:?Set CHAIN_ID}
+      DEPLOYMENT_ID: ${DEPLOYMENT_ID:?Set DEPLOYMENT_ID}
+    volumes:
+      - type: bind
+        source: ${DEPLOY_SHARED_DIR:-/srv/dao/shared}/indexer.json
+        target: /run/dao/indexer.json
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [database]
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health?'+new URLSearchParams({chainId:process.env.CHAIN_ID,deploymentId:process.env.DEPLOYMENT_ID})).then(async r=>{const b=await r.json();if(!r.ok||b.data?.database!=='up'||b.data?.publication!=='ready')process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      start_period: 30s
+      retries: 24
+    stop_grace_period: 15s
+
+  indexer:
+    image: ${INDEXER_IMAGE:?Set digest-pinned INDEXER_IMAGE from verified release.env}
+    restart: unless-stopped
+    init: true
+    user: node
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@postgres:5432/${POSTGRES_DB:?}
+      RPC_URL: ${RPC_URL:?Set private server-side RPC_URL}
+      CHAIN_ID: ${CHAIN_ID:?Set CHAIN_ID}
+      DEPLOYMENT_ID: ${DEPLOYMENT_ID:?Set DEPLOYMENT_ID}
+      API_CURSOR_SECRET: ${API_CURSOR_SECRET:?Set stable random API_CURSOR_SECRET}
+    volumes:
+      - type: bind
+        source: ${DEPLOY_SHARED_DIR:-/srv/dao/shared}/indexer.json
+        target: /run/dao/indexer.json
+        read_only: true
+        bind: {create_host_path: false}
+      - type: bind
+        source: ${DEPLOY_SHARED_DIR:-/srv/dao/shared}/frontend.json
+        target: /run/dao/frontend.json
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [database, rpc-egress]
+    depends_on:
+      postgres: {condition: service_healthy}
+    # BE07 lastCheckedAt is updated only after canonical validation. A ready raw
+    # checkpoint must also be published; this is not a guarantee of future RPC availability.
+    healthcheck:
+      test: [CMD, node, /app/deploy/worker-health.mjs]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 3
+    stop_grace_period: 15s
+
+  frontend:
+    image: ${FRONTEND_IMAGE:?Set digest-pinned FRONTEND_IMAGE from verified release.env}
+    restart: unless-stopped
+    init: true
+    user: node
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      PUBLIC_CONFIG_FILE: /run/dao/frontend.json
+      API_UPSTREAM: http://api:3000
+    volumes:
+      - type: bind
+        source: ${DEPLOY_SHARED_DIR:-/srv/dao/shared}/frontend.json
+        target: /run/dao/frontend.json
+        read_only: true
+        bind: {create_host_path: false}
+    ports:
+      - '127.0.0.1:${FRONTEND_PORT:-8080}:8080'
+    networks: [database, frontend-ingress]
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    stop_grace_period: 15s
+
+volumes:
+  postgres-data:
+networks:
+  database:
+    internal: true
+  rpc-egress: {}
+  frontend-ingress: {}

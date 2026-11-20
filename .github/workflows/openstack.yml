@@ -34,5 +34,7 @@ jobs:
       - run: terraform fmt -check -diff -recursive
       - run: terraform init -backend=false -input=false -lockfile=readonly
       - run: terraform validate -no-color
+      - name: Exercise boot capacity positive and negative plans
+        run: python3 tests/test_boot_capacity.py
       - name: Record validation boundary
-        run: echo 'Formatting and provider schema only. No real cloud plan, apply or staging acceptance.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'Format/schema and real-provider plans against a synthetic loopback cloud only. No real cloud apply or staging acceptance.' >> "$GITHUB_STEP_SUMMARY"

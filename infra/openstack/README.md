@@ -30,10 +30,16 @@ default. Local root storage is not a durable backup.
 Set the exact `image_name` and `image_id` separately; there is no fallback lookup.
 The image must have trusted, verified Glance properties `os_distro=ubuntu`,
 `os_version` equal to the selected release, and `architecture=x86_64`.
-Its minimum disk/RAM must fit the selected root/flavor. Missing, mismatched or
+Its minimum disk/RAM must fit the actual boot disk and selected flavor RAM.
+Missing, mismatched or
 unverified metadata is not permission to relabel an image: verify provenance and
 image-specific deployment-tool acceptance first. This module does not modify
 image properties or claim that the current Ubuntu 22.04 image is verified.
+For local boot, image minimum disk is compared with the flavor's actual disk:
+a demo minimum of 30 GiB with a 40-GiB flavor accepts a 35-GiB image minimum.
+For volume boot, it is compared with the exact requested volume size, so a
+30-GiB volume rejects that same image. Standard supports exactly 100 GiB
+as well as larger disks; demo local disks remain capped at 40 GiB.
 
 ## Current actual blockers (2026-11-18)
 
@@ -116,11 +122,20 @@ and exited 1: it rejected the 1-vCPU/1-GiB/10-GiB flavor, unverified image metad
 and old admin-owned network/router. Its partial security-group proposal is not
 an applicable plan; no apply or saved plan was used.
 
-Offline provider-mocking tests were attempted but not retained: provider 3.2.0
-declares these returned lookup fields Optional rather than Computed, so Terraform
-mocks leave the guard inputs null. No mock PASS is claimed and production guards
-were not weakened to accommodate mocks. Real plan rejection is the observed proof.
-CI format/schema checks do not attest to capacity or VM/network/runtime readiness.
+Provider 3.2.0 declares several lookup outputs Optional rather than Computed,
+so Terraform `override_data` leaves those fields null. Regression tests instead
+run the real pinned provider against an isolated synthetic HTTP cloud:
+
+```bash
+cd infra/openstack
+python3 tests/test_boot_capacity.py
+```
+
+The plans cover 35-on-40-GiB local boot with a 30-GiB floor, over-capacity
+rejection, exact-size volume boot and exactly 100-GiB standard boot.
+Only synthetic loopback authentication/lookups are allowed; no real credentials,
+apply, saved plan or state mutation. These tests do not establish real capacity,
+image provenance, connectivity or VM/runtime readiness.
 
 After all actual blockers are resolved, copy `terraform.tfvars.example` to a
 protected file outside Git, replace every placeholder and the admin CIDR, then:

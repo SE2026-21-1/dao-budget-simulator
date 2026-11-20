@@ -25,9 +25,9 @@ data "openstack_images_image_v2" "ubuntu" {
         lookup(self.properties, "os_distro", "") == "ubuntu" &&
         lookup(self.properties, "os_version", "") == var.ubuntu_version &&
         lookup(self.properties, "architecture", "") == "x86_64" &&
-        self.min_disk_gb <= local.root_disk_gb
+        self.min_disk_gb <= (var.boot_from_volume ? local.root_disk_gb : data.openstack_compute_flavor_v2.existing.disk)
       )
-      error_message = "Image must match the requested ID and selected Ubuntu LTS version, with verified os_distro=ubuntu, os_version and architecture=x86_64 metadata, and fit the requested root disk. Missing metadata is not verification."
+      error_message = "Image must match the requested ID and selected Ubuntu LTS version, with verified os_distro=ubuntu, os_version and architecture=x86_64 metadata, and fit the actual flavor root disk or provisioned boot volume. Missing metadata is not verification."
     }
   }
 }

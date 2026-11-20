@@ -48,7 +48,7 @@ runs:
       run: |
         set -euo pipefail
         image=ghcr.io/foundry-rs/foundry@sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043
-        # Public GHCR and public attestations need no registry login or API token.
+        # Verify the pinned public bundle without an unauthenticated API download.
         # Isolate credentials locally to this step, not the primary installer.
         auth_dir=$(mktemp -d "$RUNNER_TEMP/foundry-public.XXXXXX")
         container=
@@ -57,16 +57,10 @@ runs:
         mkdir -p "$DOCKER_CONFIG" "$GH_CONFIG_DIR"
         printf '{"auths":{}}\n' > "$DOCKER_CONFIG/config.json"
         unset GH_TOKEN GITHUB_TOKEN GH_ENTERPRISE_TOKEN GITHUB_ENTERPRISE_TOKEN
-        curl --fail --silent --show-error --location --proto '=https' \
-          --header 'Accept: application/vnd.github+json' \
-          --header 'X-GitHub-Api-Version: 2022-11-28' \
-          "https://api.github.com/repos/foundry-rs/foundry/attestations/${image##*@}" \
-          | jq -ce '.attestations | if length == 0 then error("No public attestations") else .[].bundle // error("Missing attestation bundle") end' \
-          > "$auth_dir/bundles.jsonl"
         gh attestation verify "oci://$image" \
           --repo foundry-rs/foundry \
           --signer-workflow foundry-rs/foundry/.github/workflows/docker-publish.yml \
-          --bundle "$auth_dir/bundles.jsonl" \
+          --bundle "${{ github.action_path }}/foundry-1.8.5.intoto.jsonl" \
           --format json > "$RUNNER_TEMP/foundry-attestation.json"
         docker pull "$image"
         container=$(docker create "$image")

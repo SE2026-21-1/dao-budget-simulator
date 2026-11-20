@@ -99,8 +99,8 @@ CI (`ci.yml`, `be08.yml`) dùng helper chung
 `.github/actions/install-foundry`, giữ Foundry **1.8.5**. Khi upstream installer
 lỗi (như [BE08 run 44259413059](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44259413059)
 HTTP403 tại `foundryup/releases/latest/download` trước khi chạy test), helper thử
-tối đa ba lần rồi dùng image Foundry chính thức khóa digest. Fallback tải bundle
-attestation từ API public **không token**, xác minh chữ ký đúng repo
+tối đa ba lần rồi dùng image Foundry chính thức khóa digest. Fallback dùng bundle
+public có chữ ký được lưu tại `.github/actions/install-foundry/foundry-1.8.5.intoto.jsonl`, xác minh đúng repo
 `foundry-rs/foundry` và workflow `docker-publish.yml` trước khi trích binary.
 GHCR public được đọc anonymous bằng Docker config riêng của bước fallback;
 không `docker login`, không thêm PAT, `packages` hay `attestations` permissions.
@@ -111,9 +111,14 @@ bỏ qua release installer mà không phá môi trường runner, rồi chạy a
 extraction, kiểm phiên bản và toàn bộ `scripts/ci.sh` không sửa gate.
 Job chỉ có `contents: read`, upload attestation/versions/contract log để kiểm
 chứng; chưa coi việc thêm workflow là bằng chứng đã chạy CI thành công.
-Fallback cần Docker, GitHub CLI, curl và jq trên runner; xác minh lỗi thì dừng.
+Fallback cần Docker và GitHub CLI trên runner; xác minh lỗi thì dừng.
 Không bỏ pin/attestation, tăng quyền hay rerun mù để che lỗi; kiểm log cài đặt
 trước, chỉ coi acceptance đạt khi các bước test thật đã chạy.
+Bundle lấy từ endpoint attestation chính thức cho digest được pin; mỗi lần chạy
+vẫn kiểm chữ ký, subject digest và signer workflow, không tin file chỉ vì nằm trong Git.
+Không tải bundle qua API anonymous lúc cài đặt, tránh HTTP403 đã ghi nhận tại
+[run 44673582838](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44673582838).
+Khi đổi digest phải cập nhật bundle chính thức và kiểm forced-fallback CI tương ứng.
 
 Các lệnh `npm run test:be02`, `npm run test:be03`, `npm run test:be06` dùng
 `node --import tsx --test`, như BE04/BE07/BE08, thay vì IPC server của CLI

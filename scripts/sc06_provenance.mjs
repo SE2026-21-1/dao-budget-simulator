@@ -8,6 +8,7 @@ import { ContractFactory, ZeroHash } from 'ethers';
 const root = fileURLToPath(new URL('../', import.meta.url));
 export const generationFiles = [
   'scripts/generate_sc06_chain.mjs', 'scripts/check_sc06_chain.mjs', 'scripts/sc06_provenance.mjs',
+  'scripts/verify_sc06_versions.mjs',
   'tests/sc06-chain.test.mjs', 'indexer/decoder.ts', 'indexer/abi-registry.ts',
   'scripts/receipt.mjs', 'scripts/smoke_lifecycle.mjs',
   ...execFileSync('git', ['ls-files', 'indexer'], { cwd: root, encoding: 'utf8' }).trim().split('\n'),

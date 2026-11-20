@@ -43,10 +43,14 @@ unforked chain 31337 còn rỗng. Manifest này chưa tự đăng ký metadata A
 
 Loader kiểm tra chain/deployment, H/hash/revision, tính đầy đủ của phân trang và
 không trùng ID. Số tiền và ID giữ dạng chuỗi/BigInt, không làm mất wei.
-Fixture không cho phép ký. Phản hồi API 409/503 thu hồi phiên ghi, kể cả giao dịch
-đang chờ kiểm tra RPC; chỉ một lần tải canonical thành công mới cấp lại phiên.
+Fixture không cho phép ký. Phản hồi API 409/503 thu hồi phiên ghi ngay cả khi body
+là HTML/rỗng, kể cả giao dịch đang chờ kiểm tra RPC; chỉ một lần tải canonical
+thành công mới cấp lại phiên.
 Đổi ví/tài khoản/mạng thu hồi phiên ký cũ; sự kiện lặp cùng tài khoản/mạng không
 xóa GOV reads hợp lệ. Receipt phải khớp contract, calldata/event và kết quả on-chain.
+Nạp BUD và self-delegate chỉ báo thành công khi receipt khớp token/tài khoản đã
+gửi và có Transfer đúng người nhận/số tiền hoặc DelegateChanged đúng delegatee;
+hash đã mined nhưng thiếu/sai sự kiện vẫn được giữ và hiển thị lỗi.
 
 ## Container và kiểm tra
 

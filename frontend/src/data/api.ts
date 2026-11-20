@@ -67,9 +67,15 @@ async function request(path: string, query: URLSearchParams, signal?: AbortSigna
 
 async function get(path: string, query: URLSearchParams, signal?: AbortSignal): Promise<unknown> {
   const response = await request(path, query, signal);
-  const body = await response.json() as { error?: { code?: string; message?: string } };
-  if (!response.ok) throw new ApiError(response.status, body.error?.code ?? `HTTP_${response.status}`, body.error?.message ?? "Không tải được dữ liệu.");
-  return body;
+  if (!response.ok) {
+    let body: unknown;
+    try { body = await response.json(); } catch { /* HTTP status remains authoritative for non-JSON proxy errors. */ }
+    const error = body && typeof body === "object" && "error" in body ? body.error : undefined;
+    const code = error && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : `HTTP_${response.status}`;
+    const message = error && typeof error === "object" && "message" in error && typeof error.message === "string" ? error.message : "Không tải được dữ liệu.";
+    throw new ApiError(response.status, code, message);
+  }
+  return response.json();
 }
 
 function assertScope(context: Pick<FixtureContext, "chainId" | "deploymentId" | "dataKind">) {

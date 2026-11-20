@@ -18,7 +18,7 @@ vi.mock("../chain/config", () => ({
   },
 }));
 
-import { loadProposals } from "./api";
+import { ApiError, loadProposals } from "./api";
 
 const context = { ...page1.context, chainId: "31337", deploymentId: "test-deployment", dataKind: "chain" };
 const pages = [page1, page2, page3].map((page, index) => ({
@@ -80,5 +80,14 @@ describe("BE05 proposal pagination", () => {
   it("surfaces API failure without selecting synthetic fixtures", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => jsonResponse({ error: { code: "PUBLICATION_UNAVAILABLE", message: "Chưa có snapshot" } }, 503)));
     await expect(loadProposals()).rejects.toMatchObject({ status: 503, code: "PUBLICATION_UNAVAILABLE" });
+  });
+
+  it.each([409, 503])("preserves HTTP %s independently of an unusable error body", async (status) => {
+    for (const body of ["<html>Proxy unavailable</html>", "", "{", "null", "[]", '{"error":{"code":7,"message":{}}}']) {
+      vi.stubGlobal("fetch", vi.fn(async () => new Response(body, { status })));
+      const error = await loadProposals().catch((cause: unknown) => cause);
+      expect(error).toBeInstanceOf(ApiError);
+      expect(error).toMatchObject({ status, code: `HTTP_${status}`, message: `HTTP_${status}: Không tải được dữ liệu.` });
+    }
   });
 });

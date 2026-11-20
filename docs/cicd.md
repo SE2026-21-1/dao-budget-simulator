@@ -96,6 +96,8 @@ bash /srv/dao/releases/CURRENT_SHA/deploy/deploy.sh rollback
 
 Dùng manifest/digest release trước, không tag trôi. Chỉ tự khôi phục image khi migration set và fingerprint schema thực tế tương thích với trạng thái đã lưu. Schema đã đổi/chưa có bằng chứng tương thích: **dừng**, operator quyết định forward-fix hoặc restore đã thử nghiệm, không tự chạy SQL downgrade. Rollback image không phục hồi schema/dữ liệu; tuyệt đối giữ PostgreSQL volume. Release cũ phải còn artifact provenance và quyền pull image.
 
+`previous` chỉ tiến cùng bước activate sau khi rollout/smoke thành công; activate lỗi phải khôi phục con trỏ `previous` cũ. Deploy hoặc rollback thất bại và tự khôi phục image không được ghi đè lịch sử: nếu đang chạy B, trước đó A, cả `current=B` và `previous=A` được giữ để lần rollback tiếp theo vẫn chọn A. Regression trong `deploy/operations.test.mjs` chạy shell/trap/session thực với Docker boundary cô lập, kiểm cả lỗi partial `compose up`, lỗi smoke và rollback lại thành công.
+
 ## Bằng chứng và giới hạn
 
 Không nhập các thư mục evidence lịch sử từ nhánh nguồn. Kết quả của PR nguồn không được gán cho revision sạch. CI của PR sạch cần chạy toàn bộ suite Dev, BE08 và container/release gates; ghi link run và SHA thực tế khi có. Chưa chạy local build/test/lint/smoke trong lúc tái tạo các phần độc lập; chỉ main integration chạy kiểm tra cuối khi mọi thay đổi đã hợp nhất.

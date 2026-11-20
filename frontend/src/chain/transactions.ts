@@ -3,7 +3,7 @@ import governorAbiJson from "../abi/BudgetGovernor.json";
 import treasuryAbiJson from "../abi/Treasury.json";
 import type { Proposal, FixtureContext } from "../data/proposals";
 import { deployment } from "./config";
-import { publicClient } from "./wallet";
+import { publicClient, tokenAbi } from "./wallet";
 import type { WalletSession } from "./wallet";
 
 export const governorAbi = governorAbiJson as Abi;
@@ -72,6 +72,34 @@ export async function waitForReceipt(hash: Hash, client = publicClient): Promise
   if (changedAction) throw new Error("Giao dịch đã bị hủy hoặc thay bằng thao tác khác trong ví.");
   if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
   return receipt;
+}
+
+export function receiptHasEvent(receipt: { logs: readonly { address: Address; data: Hex; topics: readonly Hex[] }[] }, emitter: Address, abi: Abi, name: string, matches: (args: Record<string, unknown>) => boolean) {
+  return receipt.logs.some((log) => {
+    if (log.address.toLowerCase() !== emitter.toLowerCase()) return false;
+    try {
+      const event = decodeEventLog({ abi, data: log.data, topics: log.topics as [Hex, ...Hex[]] });
+      return event.eventName === name && event.args !== undefined && !Array.isArray(event.args) && matches(event.args as unknown as Record<string, unknown>);
+    } catch { return false; }
+  });
+}
+
+type TokenIntent = { token: Address; account: Address } & (
+  { kind: "transfer"; recipient: Address; amount: bigint } | { kind: "delegate"; delegatee: Address }
+);
+
+export function verifyTokenOutcome(receipt: Pick<TransactionReceipt, "status" | "to" | "from" | "logs">, intent: TokenIntent) {
+  if (receipt.status !== "success") throw new Error("Giao dịch đã lên chain nhưng bị revert.");
+  if (receipt.to?.toLowerCase() !== intent.token.toLowerCase() || receipt.from.toLowerCase() !== intent.account.toLowerCase())
+    throw new Error("Receipt không thuộc token và tài khoản đã gửi.");
+  const matches = intent.kind === "transfer"
+    ? receiptHasEvent(receipt, intent.token, tokenAbi, "Transfer", (args) =>
+      String(args.from).toLowerCase() === intent.account.toLowerCase() && String(args.to).toLowerCase() === intent.recipient.toLowerCase() && args.value === intent.amount)
+    : receiptHasEvent(receipt, intent.token, tokenAbi, "DelegateChanged", (args) =>
+      String(args.delegator).toLowerCase() === intent.account.toLowerCase() && String(args.toDelegate).toLowerCase() === intent.delegatee.toLowerCase());
+  if (!matches) throw new Error(intent.kind === "transfer"
+    ? "Receipt thiếu Transfer khớp token, ví, người nhận và số BUD."
+    : "Receipt thiếu DelegateChanged khớp token, ví và delegatee.");
 }
 
 export async function assertCanPropose(account: Address): Promise<void> {

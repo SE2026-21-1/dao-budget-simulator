@@ -156,7 +156,6 @@ IFS= read -r -t 90 -u "$OUT" ready || fail 'Database advisory lock or release pr
 [[ "$ready" =~ ^READY\ ([a-f0-9]{64})$ ]] || fail 'Database/configuration/RPC/schema preflight did not approve this release.'
 SCHEMA=${BASH_REMATCH[1]}
 if [[ "$MODE" = rollback ]]; then [[ "$SCHEMA" = "$(value previous schemaFingerprint)" ]] || fail 'Live database schema differs from the recorded rollback schema.'; fi
-if [[ -f "$ROOT/current/manifest.json" ]]; then node "$STATE" previous "$ROOT"; fi
 since=$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)
 CHANGED=1
 COMPOSE_DEADLINE=180 compose up -d --no-deps --pull never api indexer frontend

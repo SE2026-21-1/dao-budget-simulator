@@ -13,6 +13,8 @@ const tokenAbi = parseAbi([
   "function getPastVotes(address account,uint256 timepoint) view returns (uint256)",
   "function delegate(address delegatee)",
   "function transfer(address to,uint256 value) returns (bool)",
+  "event Transfer(address indexed from, address indexed to, uint256 value)",
+  "event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate)",
 ]);
 
 export const publicClient = deployment ? createPublicClient({ chain: deployment.chain, transport: http(deployment.rpcUrl) }) : null;

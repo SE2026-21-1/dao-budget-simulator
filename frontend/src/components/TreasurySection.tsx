@@ -3,7 +3,7 @@ import { isAddress } from "viem";
 import { deployment, transactionUrl } from "../chain/config";
 import { useWallet, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { useTransaction } from "../chain/useTransaction";
-import { assertWritable, parseBUD, verifyDeployment } from "../chain/transactions";
+import { assertWritable, parseBUD, verifyDeployment, verifyTokenOutcome } from "../chain/transactions";
 import { formatBUD, formatCompactBUD } from "../data/formatBUD";
 import { loadTreasurySnapshot, type Summary, type Transfer } from "../data/api";
 import type { FixtureContext } from "../data/proposals";
@@ -55,11 +55,12 @@ export default function TreasurySection({ context, snapshotSignal, onConfirmed, 
       if (!deployment || !summary || !isAddress(summary.treasury.address) || summary.treasury.address.toLowerCase() !== deployment.treasury.toLowerCase()) throw new Error("Treasury API không khớp deployment.");
       const parsed = parseBUD(amount);
       const treasuryAddress = deployment.treasury;
+      const intent = { kind: "transfer" as const, token: deployment.budToken, account: wallet.account!, recipient: treasuryAddress, amount: parsed };
       await transaction.run(async () => {
         const session = walletSession(wallet.account!, AbortSignal.any([snapshotSignal, loaded!.signal!]));
         await verifyDeployment();
         return sendTokenTransaction(session, "transfer", [treasuryAddress, parsed]);
-      }, onConfirmed);
+      }, onConfirmed, (receipt) => verifyTokenOutcome(receipt, intent));
     } catch (cause) { setDepositError(cause instanceof Error ? cause.message : "Không gửi được BUD."); }
   };
 

@@ -95,6 +95,26 @@ Workflow chạy khi push vào `main`, `Dev`, `feature/**` hoặc mở/cập nh�
 Lần đầu cần mạng để tải công cụ, compiler, dependency và image PostgreSQL.
 Không cần RPC ngoài hoặc private key; Docker local cần quyền daemon hợp lệ.
 
+CI (`ci.yml`, `be08.yml`) dùng helper chung
+`.github/actions/install-foundry`, giữ Foundry **1.8.5**. Khi upstream installer
+lỗi (như [BE08 run 44259413059](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44259413059)
+HTTP403 tại `foundryup/releases/latest/download` trước khi chạy test), helper thử
+tối đa ba lần rồi dùng image Foundry chính thức khóa digest. Fallback tải bundle
+attestation từ API public **không token**, xác minh chữ ký đúng repo
+`foundry-rs/foundry` và workflow `docker-publish.yml` trước khi trích binary.
+GHCR public được đọc anonymous bằng Docker config riêng của bước fallback;
+không `docker login`, không thêm PAT, `packages` hay `attestations` permissions.
+Cả `forge`, `cast`, `anvil` phải có dòng đầu chính xác `Version: 1.8.5`
+(có tên tool ở trước); `1.8.50` và nightly bị từ chối.
+Workflow riêng `verify-foundry-fallback.yml` dùng `force-fallback: 'true'`,
+bỏ qua release installer mà không phá môi trường runner, rồi chạy attestation,
+extraction, kiểm phiên bản và toàn bộ `scripts/ci.sh` không sửa gate.
+Job chỉ có `contents: read`, upload attestation/versions/contract log để kiểm
+chứng; chưa coi việc thêm workflow là bằng chứng đã chạy CI thành công.
+Fallback cần Docker, GitHub CLI, curl và jq trên runner; xác minh lỗi thì dừng.
+Không bỏ pin/attestation, tăng quyền hay rerun mù để che lỗi; kiểm log cài đặt
+trước, chỉ coi acceptance đạt khi các bước test thật đã chạy.
+
 Các lệnh `npm run test:be02`, `npm run test:be03`, `npm run test:be06` dùng
 `node --import tsx --test`, như BE04/BE07/BE08, thay vì IPC server của CLI
 `tsx --test`. Chúng chạy được khi Unix sockets bị hạn chế nhưng TCP loopback

@@ -27,6 +27,7 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v7.0.0
         with:
@@ -46,6 +47,10 @@ jobs:
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
       - name: Verify bootstrap authority and recursive dependency provenance
         run: node --test tests/smoke/bootstrap.test.mjs tests/smoke/dependency-provenance.test.mjs
+      - name: Verify historical SC06 provenance and fresh integration quorum mutations
+        shell: bash
+        run: |
+          node --import tsx scripts/check_sc06_chain.mjs 2>&1 | tee reports/sc06-versions.log
       - name: Verify interrupted smoke cleans owned processes and files
         run: node --import tsx --test tests/smoke/interruption.test.mjs
       - name: Exercise Treasury transactions and BE02 live receipt decoding

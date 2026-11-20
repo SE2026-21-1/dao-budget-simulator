@@ -224,8 +224,8 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
         break;
       }
     }
-    if (!ancestor && expected.number - first + 1n > window)
-      throw new IndexerError('REORG_WINDOW_EXCEEDED', 'No common ancestor within reorgWindow; publication disabled. Rebuild in a new database.');
+    if (!ancestor)
+      throw new IndexerError('REBUILD_REQUIRED', 'No trusted ancestor within reorgWindow; preserve indexed evidence and rebuild in a new database.');
     if (ancestor && (await readHeader(rpc, ancestor.number)).hash !== ancestor.hash)
       throw new IndexerError('REORG_UNSTABLE', 'Canonical ancestor changed during recovery; publication remains disabled.');
     await this.rewind(config, expected, ancestor);

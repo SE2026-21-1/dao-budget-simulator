@@ -10,9 +10,9 @@ import type { FixtureContext, ProposalCollection } from "../data/proposals";
 import { ApiError, type Summary } from "../data/api";
 import type * as Api from "../data/api";
 import type * as Viem from "viem";
-import type { Hex } from "viem";
+import { encodeAbiParameters, encodeEventTopics, parseAbiParameters, type Address, type Hex } from "viem";
 import type * as Wallet from "../chain/wallet";
-import { WalletProvider } from "../chain/wallet";
+import { tokenAbi, WalletProvider } from "../chain/wallet";
 import type * as Transactions from "../chain/transactions";
 import { deferred } from "../test/deferred";
 
@@ -64,6 +64,17 @@ const summary: Summary = {
 };
 const collection: ProposalCollection = { context, proposals: [], totalCount: 0, pageSizes: [0] };
 
+function transferLog(from = state.account, to = state.deployment.treasury, amount = 2n * 10n ** 18n, address = state.deployment.budToken) {
+  return {
+    address,
+    topics: encodeEventTopics({ abi: tokenAbi, eventName: "Transfer", args: { from: from as Address, to: to as Address } }),
+    data: encodeAbiParameters(parseAbiParameters("uint256"), [amount]),
+  };
+}
+const depositReceipt = () => ({
+  transactionHash: state.hash, status: "success", from: state.account, to: state.deployment.budToken, logs: [transferLog()],
+});
+
 function button(label: string) {
   return [...container.querySelectorAll("button")].find((element) => element.textContent === label)!;
 }
@@ -87,7 +98,7 @@ beforeEach(() => {
   state.rpc.getBytecode.mockReset().mockResolvedValue("0x6000");
   state.rpc.getChainId.mockReset().mockResolvedValue(31337);
   state.verifyDeployment.mockReset().mockResolvedValue(undefined);
-  state.waitForReceipt.mockReset().mockResolvedValue({ transactionHash: state.hash, status: "success", logs: [] });
+  state.waitForReceipt.mockReset().mockResolvedValue(depositReceipt());
   state.loadSummary.mockReset().mockResolvedValue(summary);
   state.loadTransfers.mockReset().mockResolvedValue([]);
   state.loadProposals.mockReset().mockResolvedValue(collection);
@@ -101,6 +112,27 @@ afterEach(async () => {
 });
 
 describe("Treasury receipt lifecycle", () => {
+  it.each(["missing", "emitter", "sender", "recipient", "amount", "target", "transaction sender", "malformed"] as const)(
+    "does not report a successful deposit for a mined receipt with the wrong %s outcome", async (mismatch) => {
+      const receipt = depositReceipt();
+      if (mismatch === "missing") receipt.logs = [];
+      if (mismatch === "emitter") receipt.logs = [transferLog(state.account, state.deployment.treasury, 2n * 10n ** 18n, state.deployment.govToken)];
+      if (mismatch === "sender") receipt.logs = [transferLog(state.deployment.governor)];
+      if (mismatch === "recipient") receipt.logs = [transferLog(state.account, state.deployment.governor)];
+      if (mismatch === "amount") receipt.logs = [transferLog(state.account, state.deployment.treasury, 1n)];
+      if (mismatch === "target") receipt.to = state.deployment.govToken;
+      if (mismatch === "transaction sender") receipt.from = state.deployment.governor;
+      if (mismatch === "malformed") receipt.logs[0].data = "0x";
+      state.waitForReceipt.mockResolvedValueOnce(receipt);
+      await act(async () => { root.render(<TreasurySection context={context} snapshotSignal={new AbortController().signal} onConfirmed={vi.fn()} onSnapshotError={vi.fn()} />); });
+      await deposit();
+      expect(container.textContent).not.toContain("Giao dịch đã được xác nhận.");
+      expect(container.textContent).toContain("Receipt");
+      expect(container.textContent).toContain(state.hash);
+      expect(container.querySelector<HTMLInputElement>("#deposit-amount")!.value).toBe("2");
+    },
+  );
+
   it("keeps a confirmed deposit visible when the automatic proposal refresh fails, then recovers", async () => {
     state.loadProposals.mockResolvedValueOnce(collection).mockRejectedValueOnce(new Error("Publication unavailable"));
     await act(async () => { root.render(<MemoryRouter><DashboardPage /></MemoryRouter>); });

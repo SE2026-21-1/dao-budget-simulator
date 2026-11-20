@@ -2,6 +2,7 @@ import { useId } from "react";
 import { useWallet, formatGOV, sendTokenTransaction, walletSession } from "../chain/wallet";
 import { deployment } from "../chain/config";
 import { useTransaction } from "../chain/useTransaction";
+import { verifyTokenOutcome } from "../chain/transactions";
 import TransactionStatus from "./TransactionStatus";
 
 export default function WalletPanel() {
@@ -22,7 +23,11 @@ export default function WalletPanel() {
         <p className="wallet-meta">Voting power: {formatGOV(wallet.votingPower)}</p>
         <p className="wallet-meta">Delegate: {wallet.delegatee ? `${wallet.delegatee.slice(0, 7)}…${wallet.delegatee.slice(-5)}` : "—"}</p>
         <button type="button" className="button-secondary" disabled={transaction.busy || wallet.delegatee?.toLowerCase() === wallet.account.toLowerCase()}
-          onClick={() => void transaction.run(() => sendTokenTransaction(walletSession(wallet.account!), "delegate", [wallet.account!]), wallet.refresh)}>
+          onClick={() => {
+            const account = wallet.account!;
+            const intent = { kind: "delegate" as const, token: deployment!.govToken, account, delegatee: account };
+            void transaction.run(() => sendTokenTransaction(walletSession(account), "delegate", [account]), wallet.refresh, (receipt) => verifyTokenOutcome(receipt, intent));
+          }}>
           Self-delegate
         </button>
       </>}

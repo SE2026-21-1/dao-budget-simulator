@@ -12,7 +12,9 @@ import { deferred } from "../test/deferred";
 
 const api = vi.hoisted(() => ({ loadProposals: vi.fn() }));
 vi.mock("./api", async (original) => ({ ...await original<typeof Api>(), ...api }));
-vi.mock("../chain/config", () => ({ apiBaseUrl: "http://api.local" }));
+vi.mock("../chain/config", () => ({
+  apiBaseUrl: "http://api.local", apiScope: { chainId: 31337, deploymentId: "lifecycle" }, configurationError: null,
+}));
 
 let root: Root;
 let container: HTMLDivElement;
@@ -58,6 +60,31 @@ describe("published snapshot refresh", () => {
     expect(snapshotSignal).not.toBe(old);
     expect(snapshotSignal?.aborted).toBe(false);
     expect(container.querySelector("output")!.textContent).toBe("block:11");
+  });
+
+  it.each([
+    [409, "<html>Snapshot invalidated</html>"],
+    [409, ""],
+    [503, "<html>Service unavailable</html>"],
+    [503, ""],
+  ] as const)("revokes writes but retains the displayed snapshot after non-JSON HTTP %s (%s)", async (status, body) => {
+    const actualApi = await vi.importActual<typeof Api>("./api");
+    const old = collection("10", "7");
+    api.loadProposals.mockResolvedValueOnce(old).mockImplementationOnce(actualApi.loadProposals).mockResolvedValueOnce(collection("11", "8"));
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(body, { status })));
+    await act(async () => { root.render(<MemoryRouter><Probe /></MemoryRouter>); });
+    const revoked = snapshotSignal;
+    await refresh();
+    expect(revoked?.aborted).toBe(true);
+    expect(snapshotSignal).toBe(revoked);
+    expect(container.querySelector("output")!.textContent).toBe("block:10");
+    expect(container.querySelector('[data-testid="snapshot"]')!.textContent).toBe(`${old.context.asOfBlockHash}:7`);
+    expect(container.querySelector('[data-testid="writable"]')!.textContent).toBe("blocked");
+    expect(container.querySelector('[role="alert"]')!.textContent).toBe(`HTTP_${status}: Không tải được dữ liệu.`);
+    await refresh();
+    expect(container.querySelector("output")!.textContent).toBe("block:11");
+    expect(snapshotSignal).not.toBe(revoked);
+    expect(snapshotSignal?.aborted).toBe(false);
   });
   it("retains the last snapshot on refresh failure and recovers with a fresh request", async () => {
     api.loadProposals.mockResolvedValueOnce(collection("10")).mockRejectedValueOnce(new Error("API unavailable"));

@@ -82,7 +82,7 @@ try {
     return result;
   }, manifest, { root });
   const head = toQuantity(BigInt(audit.height));
-  const f = { kind: 'sc06-canonical-local-receipts-v1', manifest, roleAudit: audit,
+  const f = { kind: 'sc06-canonical-local-receipts-v2', manifest, roleAudit: audit,
     scope: 'Real local Anvil receipts; one continuous history, no snapshot/revert. Offline archived chain after generator exits. Not SC05 deployment-preflight or testnet acceptance.',
     head: { number: head, hash: audit.blockHash }, blocks: [], receipts: [], transactions: [], proposals, calls: auditCalls, balances: {}, expectedDecoded: [], runtimeCode: {},
     generation: { sourceCommit, node: process.version, sourceHashes } };
@@ -108,7 +108,11 @@ try {
     await call('Timelock', 'getTimestamp', [p.operationId]);
     await call('Treasury', 'paidRequests', [p.requestId]);
     const snapshot = await one('Governor', 'proposalSnapshot', [p.proposalId], head);
-    if (BigInt(audit.timestamp) > snapshot) await call('Governor', 'quorum', [snapshot]);
+    if (BigInt(audit.timestamp) > snapshot) {
+      await call('GOV', 'getPastTotalSupply', [snapshot]);
+      await call('Governor', 'quorumNumerator(uint256)', [snapshot]);
+      await call('Governor', 'quorum', [snapshot]);
+    }
   }
   for (const [name, account] of Object.entries({ treasury: address('Treasury'), recipient, funding })) f.balances[name] = (await call('BUD', 'balanceOf', [account])).toString();
   await call('BUD', 'decimals'); await call('BUD', 'totalSupply');

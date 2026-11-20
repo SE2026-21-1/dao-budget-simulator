@@ -1,6 +1,6 @@
-import { decodeEventLog, encodeAbiParameters, keccak256, parseAbi, parseAbiParameters, stringToHex, toHex, type Abi, type Address, type Hex } from "viem";
+import { encodeAbiParameters, keccak256, parseAbi, parseAbiParameters, stringToHex, toHex, type Address, type Hex } from "viem";
 import type { Proposal } from "../data/proposals";
-import { governorAbi, originalActions, treasuryAbi } from "./transactions";
+import { governorAbi, originalActions, receiptHasEvent as hasEvent, treasuryAbi } from "./transactions";
 
 export type GovernanceAction = "vote" | "queue" | "execute" | "cancel";
 export type ActionReceipt = {
@@ -77,16 +77,6 @@ export async function preflightGovernanceAction(
   if (!spender) throw new Error("Timelock thiếu quyền giải ngân Treasury.");
   if (paid) throw new Error("Request ID đã được Treasury thanh toán.");
   return { functionName: "execute" as const, args: actions };
-}
-
-function hasEvent(receipt: ActionReceipt, emitter: Address, abi: Abi, name: string, matches: (args: Record<string, unknown>) => boolean) {
-  return receipt.logs.some((log) => {
-    if (log.address.toLowerCase() !== emitter.toLowerCase()) return false;
-    try {
-      const event = decodeEventLog({ abi, data: log.data, topics: log.topics as [Hex, ...Hex[]] });
-      return event.eventName === name && event.args !== undefined && !Array.isArray(event.args) && matches(event.args as unknown as Record<string, unknown>);
-    } catch { return false; }
-  });
 }
 
 export async function verifyGovernanceOutcome(

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, symlink, rename, realpath, copyFile, unlink } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, symlink, rename, realpath, readlink, copyFile, unlink } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { readManifest, requireThat, safeFailure } from './common.mjs';
 
@@ -17,8 +17,6 @@ try {
     const value = ({ sha: manifest.sha, migrationSet: manifest.migrationSet, releaseDir: state.releaseDir, schemaFingerprint: state.schemaFingerprint })[key];
     requireThat(typeof value === 'string' && !/[\r\n]/.test(value), 'Invalid recorded deployment state.');
     console.log(value);
-  } else if (command === 'previous') {
-    await point('previous', await realpath(`${root}/current`));
   } else if (command === 'activate') {
     const [releaseDir, schemaFingerprint] = args;
     requireThat(/^[a-f0-9]{64}$/.test(schemaFingerprint ?? ''), 'Invalid deployment schema fingerprint.');
@@ -27,6 +25,26 @@ try {
     await mkdir(snapshot, { recursive: true, mode: 0o700 });
     await copyFile(`${releaseDir}/manifest.json`, `${snapshot}/manifest.json`);
     await writeFile(`${snapshot}/state.json`, JSON.stringify({ releaseDir: await realpath(releaseDir), schemaFingerprint, activatedAt: new Date().toISOString() }) + '\n', { mode: 0o600 });
-    await point('current', snapshot);
+    const current = await realpath(`${root}/current`).catch((error) => {
+      if (error.code === 'ENOENT') return null;
+      throw error;
+    });
+    let previous;
+    if (current) {
+      previous = await readlink(`${root}/previous`).catch((error) => {
+        if (error.code === 'ENOENT') return null;
+        throw error;
+      });
+      await point('previous', current);
+    }
+    try { await point('current', snapshot); }
+    catch (error) {
+      // Failed activation must not consume the last successful rollback target.
+      if (current) {
+        if (previous !== null) await point('previous', previous);
+        else await unlink(`${root}/previous`);
+      }
+      throw error;
+    }
   } else requireThat(false, 'Unknown state operation.');
 } catch (error) { safeFailure('Release state')(error); }

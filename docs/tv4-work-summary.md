@@ -12,7 +12,7 @@ thành phần chưa được triển khai.
 
 PR [#58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58) đã merge vào `Dev` qua merge commit `6766e5ee2d8c466542687cbeb09677c4d11e5463` từ head `227a0c9b4967ca5c78ca609600fa8e2845891418`. TV1 và TV2 đều APPROVED đúng head, review threads đã resolve; GitHub trả `reviewDecision=APPROVED` và các check CI thành công. PR #59 đã merge trước đó tại `3a1221d`.
 
-PR [#57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57) vẫn OPEN, `CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`. Head hiện tại xóa Terraform/OpenStack scaffolding; disk-capacity fix ở commit cha `91f5b23` không còn trong diff. Không merge PR không có thay đổi hữu ích hoặc apply cloud resources.
+PR [#57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57) còn OPEN/`CHANGES_REQUESTED`; không thuộc phạm vi CI/container hiện tại và không tích hợp.
 PR [#60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60) gửi hai regression TC10 đảo thứ tự execute/bytes32(0) từ commit `32c6e7c64dc9a481d499ab3f350127278f5e373b`, target `Dev`. Foundry/governance, các checks BE01, BE02, BE04–BE08, PostgreSQL, frontend và Container/Compose đều PASS trên head `9d1d05f305bd5ed51c8bbdc670523a9eb1dbac45` trong [run PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924767566) và [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924760670); publish job được skip theo release condition. Vẫn chờ TV1 review/approval; review chưa có và issue #7/#16 vẫn mở, không dùng PR này để nhận full acceptance.
 
 Lượt này chỉ merge PR #58; PR #60 chưa merge. Không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
@@ -49,13 +49,13 @@ harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạ
 ## Kiểm chứng sau merge — `Dev` `6766e5ee2d8c466542687cbeb09677c4d11e5463`
 
 - Trước khi thêm hai ca TC10 mới, `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh` đạt **180/180**, không lỗi/skip; `SC01 OK`. Sau khi thêm, `forge fmt --check tests/integration/TimelockGovernance.t.sol` và toàn bộ integration file đạt **40/40** trong worktree candidate cô lập.
-- Node24.15.0: `npm run typecheck`, `npm run build` và suites `test:be02`, `test:be03`, `test:be04`, `test:be06`, `test:be07`, `test:be08` đều **PASS**. Deployment/release operations `node --test deploy/operations.test.mjs scripts/cd/release.test.mjs`: **10/10 PASS**.
+- Node24.15.0: `npm run typecheck`, `npm run build` and suites `test:be02`, `test:be03`, `test:be04`, `test:be06`, `test:be07`, `test:be08` passed before the deployment removal. Current release tests `node --test scripts/cd/release.test.mjs`: **4/4 PASS**. Server rollout workflow/tests were removed; Docker Compose smoke remains a CI-only gate and has not yet run on this revision.
 - Frontend: lint exit0 với 8 warning hiện hữu; Vitest **127 PASS / 1 opt-in live SKIP**; build PASS, chunk 753.81 kB có cảnh báo kích thước.
 - [Post-merge TV4 CI](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740231): **10 jobs success**, publish job skipped theo điều kiện release. [Forced Foundry fallback](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740366): success. Cả hai trên SHA `6766e5e`.
 - Chrome headless đã render UI local fixture ở 1280×900; đây chỉ là kiểm tra hiển thị offline, không dùng API thật hoặc extension wallet.
 - Local `npm run test:api` dừng tại isolation guard vì không có `BE05_TEST_ISOLATED=1`/URL database mới; phân loại **BLOCKED/NOT RUN**, không phải test assertion failure. Máy không có PostgreSQL binaries hoặc Docker daemon. Không đặt biến giả để vượt guard; các job PostgreSQL/API thực tế đã PASS trong GitHub CI.
 
-**Gate còn mở:** #56 thiếu VM/Docker quyền root, capacity/network/image phù hợp hoặc URL staging; PR #57 hiện không giữ lại infrastructure code. Local Compose/Terraform apply và giao dịch testnet không chạy. #19/#41 cần ví extension thật, #20 thiếu signer/gas/broadcast được ủy quyền và receipt testnet, #36/#40/#42 cần evidence từ môi trường nhận tương ứng; #44 chưa release-ready. Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.
+**Gate còn mở:** #19/#41 cần ví extension thật, #20 thiếu signer/gas/broadcast được ủy quyền và receipt testnet, #36/#40/#42 cần evidence từ môi trường nhận tương ứng; #44 chưa release-ready. CI/Compose smoke không thay thế live/testnet acceptance.
 
 
 ## 1. Tình trạng push và tích hợp

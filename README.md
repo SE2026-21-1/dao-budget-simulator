@@ -136,18 +136,12 @@ Bổ sung ngày **22/10** đã được chạy local trên Node 24.15.0; xem
 Workflow bốn job mới chưa được push/chạy GitHub trong đợt này; kết quả CI ba job
 ở trên là lịch sử, không phải bằng chứng cho frontend hoặc raw replay mới.
 
-## Staging ứng dụng bằng Docker Compose
+## Kiểm tra container và phát hành image
 
-Runbook chung: [CI/CD, GHCR, migration, deploy và rollback](docs/cicd.md).
-`deploy/compose.yml` giữ PostgreSQL/API/indexer nội bộ và frontend loopback;
-`deploy/compose.smoke.yml` dành riêng cho smoke Anvil cô lập. Không dùng env mẫu
-hoặc manifest smoke để báo staging Sepolia thành công; không xóa volume đang dùng.
-
-Phần này được tái hiện trên nhánh sạch từ Dev, không merge lịch sử PR #21/#55
-chứa bài cá nhân. Hạ tầng được review riêng ở PR #57; blocker VM/quyền/handoff
-theo dõi tại [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56).
-Chỉ xác nhận CD end-to-end sau release đã xác minh, deploy, smoke và rollback
-trên chính máy đích. Chưa có URL staging được nghiệm thu.
+Runbook CI: [CI và phát hành container](docs/cicd.md).
+`deploy/compose.yml` và `deploy/compose.smoke.yml` phục vụ build/smoke cô lập,
+không chứng minh deployment server hoặc testnet. CI phát hành image GHCR sau
+khi các gate trên `Dev` thành công; không có workflow SSH tới server.
 
 ## Unit test SC02
 

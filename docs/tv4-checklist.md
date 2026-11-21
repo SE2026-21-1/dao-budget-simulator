@@ -28,15 +28,13 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   `e7eb2bae638b45b9eeec532adf0b431871c6d02c` ([PR run 44931330317](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931330317),
   [push run 44931324667](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931324667));
   release publication skipped by condition. TC11 remains open.
-- PR #57 còn OPEN/`CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`;
-  head đã xóa Terraform/OpenStack scaffolding, nên không còn disk-capacity fix
-  `91f5b23` trong diff. Không merge PR hiện không mang infrastructure code.
 - QA01 #6, QA04 #7 và QA05 #16 vẫn OPEN/PARTIAL; CI và test hiện có không thay
   các acceptance còn thiếu. QA02 #14, QA03 #15, QA06 #17, BE05 #37, QA11 #45
-  và IPC #47 đã CLOSED. QA07–QA10, staging #56 và release #44 vẫn phụ thuộc
-  môi trường nhận, ví extension, signer được ủy quyền hoặc người phụ trách nhóm.
-- Không tích hợp PR #21/#55 hoặc nhánh personal/individual. Các mục dưới đây
-  giữ nguyên phạm vi/history, không tự nâng fixture/CI thành nghiệm thu live.
+  và IPC #47 đã CLOSED.
+- QA07–QA10, release #44 vẫn phụ thuộc môi trường nhận, ví extension, signer được
+  ủy quyền hoặc người phụ trách nhóm.
+- Không tích hợp PR #21 hoặc nhánh personal/individual. Các mục dưới đây giữ
+  nguyên phạm vi/history, không tự nâng fixture/CI thành nghiệm thu live.
 
 
 ## Nền tảng hiện có

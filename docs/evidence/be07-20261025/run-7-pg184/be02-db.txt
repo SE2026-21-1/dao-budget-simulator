@@ -1,0 +1,31 @@
+▶ PostgreSQL storage (real isolated PostgreSQL)
+  ✔ writes complete headers including empty block, exact uint256, original JSON and scoped raw columns (13.466668ms)
+  ✔ identical and concurrent retries do not duplicate events or blocks (15.598048ms)
+  ✔ detects changed block hash, parent hash and timestamp with the same block key (22.649744ms)
+  ✔ detects raw/decode content conflicts rather than suppressing the chain dedup key (47.003869ms)
+  ✔ same chain dedup key cannot be silently copied to another deployment (7.078408ms)
+  ✔ unknown topics and decoder errors retain raw data and NULL decode columns (7.743131ms)
+  ✔ missing deployment or chain mismatch fails before inserting any data (2.79919ms)
+  ✔ numeric metadata with an explicit zero scale still matches its exact integer configuration (6.048459ms)
+  ✔ detects disconnected stored neighbors on either boundary across separate runs (12.607422ms)
+  ✔ detects conflicting canonical coordinates even when the transaction dedup key differs (14.884142ms)
+  ✔ detects inverse transaction/log ordering against logs saved by a previous run (12.652515ms)
+  ✔ rejects a stored transaction appearing in a different connected block with a new log index (5.146058ms)
+  ✔ every requested contract role/address/deploymentBlock/ABI must match existing metadata (10.502771ms)
+  ✔ later event conflict rolls back newly inserted headers and earlier events, preserving prior batch (6.718399ms)
+  ✔ database errors roll back inserted headers and raw events (5.593576ms)
+  ✔ rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches (8.590453ms)
+  ✔ BE01 foreign keys reject a log linked to another deployment contract or block hash (12.591314ms)
+  ✔ does not advance checkpoints or create projections or overwrite deployment metadata (11.137222ms)
+  ✔ actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates (967.544086ms)
+  ✔ actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields (474.121722ms)
+  ✔ actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back (449.569285ms)
+✔ PostgreSQL storage (real isolated PostgreSQL) (2173.778446ms)
+ℹ tests 21
+ℹ suites 1
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2568.335024

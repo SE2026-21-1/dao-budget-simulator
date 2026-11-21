@@ -1,0 +1,121 @@
+{
+  "status": "PASS",
+  "implementationCommit": "e4c3ce4300dfb3e90a4e933508b2a403887aaaee",
+  "branch": "feature/tv2-be06",
+  "recordedAt": "2026-10-24",
+  "runtime": {
+    "node": "v24.15.0",
+    "typescript": "5.9.3",
+    "tsx": "4.23.15",
+    "postgres": "18.6",
+    "foundry": "1.8.5",
+    "solc": "0.8.37+commit.f401782d",
+    "evm": "osaka"
+  },
+  "sourceBinding": {
+    "files": 33,
+    "sha256Matches": 33,
+    "mismatches": []
+  },
+  "commands": [
+    {
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run build",
+      "result": "PASS"
+    },
+    {
+      "command": "forge build",
+      "result": "PASS",
+      "notes": "Solc 0.8.37 compiled; upstream compiler/lint warnings only."
+    },
+    {
+      "command": "npm run test:be02",
+      "passed": 64,
+      "failed": 0
+    },
+    {
+      "command": "npm run test:be03",
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "command": "npm run test:be04",
+      "passed": 27,
+      "failed": 0
+    },
+    {
+      "command": "npm run test:be06",
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "command": "BE02 real PostgreSQL storage suite",
+      "passed": 21,
+      "failed": 0,
+      "postgres": "18.6 isolated loopback cluster"
+    },
+    {
+      "command": "BE03 checkpoint/crash/restart PostgreSQL suite",
+      "passed": 16,
+      "failed": 0,
+      "postgres": "18.6 isolated loopback cluster"
+    },
+    {
+      "command": "BE04 projection PostgreSQL suite",
+      "passed": 10,
+      "failed": 0,
+      "postgres": "18.6 isolated loopback cluster"
+    },
+    {
+      "command": "BE05 API PostgreSQL suite",
+      "passed": 3,
+      "failed": 0,
+      "postgres": "18.6 isolated loopback cluster"
+    },
+    {
+      "command": "npm run test:be06:db",
+      "passed": 1,
+      "failed": 0,
+      "postgres": "18.6 isolated loopback reference/target databases"
+    },
+    {
+      "command": "scripts/check_be04_live.mjs --be06",
+      "result": "PASS",
+      "details": "See live.json; exact implementation commit, two targets, mismatch exit 2, post-H exclusion."
+    }
+  ],
+  "environmentLimits": {
+    "dockerWrappers": "BLOCKED: Docker unavailable; equivalent DB tests ran directly on isolated local PostgreSQL.",
+    "powershellWrappers": "BLOCKED: PowerShell unavailable; relevant BE03 database suite ran directly on isolated local PostgreSQL."
+  },
+  "live": {
+    "chainId": "31337",
+    "H": "67",
+    "hash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7",
+    "K": 2,
+    "compareBeforeAdvance": "equal",
+    "compareAfterAdvance": "equal",
+    "mismatchProbeExitCode": 2,
+    "postHTransferBlock": 70,
+    "headAfterAdvance": 73,
+    "normalizedSha256": "4edc995cd4ea206c893b0b55ffb22d8878504ce4e4478e64f1118c4944a97f81"
+  },
+  "acceptance": {
+    "tv4IndependentFr15RebuildCompare": "PENDING",
+    "tv1OnChainCrossCheckConfirmation": "PENDING",
+    "peerReview": "NOT CLAIMED"
+  },
+  "sourceTree": {
+    "sha": "02c0b57f04743359fe2b7f86bc4fd6df254918f1",
+    "localRegressionCommit": "77b2d819aef2540d6e22ffd0df37da4f1c577312",
+    "localRegressionTree": "7ba189849004f24ba17b4d5dd3b1a7873a02e4b4",
+    "differencesSinceLocalRegression": [
+      ".github/workflows/ci.yml"
+    ],
+    "runtimeImplementationCodeUnchanged": true,
+    "liveRunMatchesImplementationCommit": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "label": "pg-start",
+  "command": [
+    "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+    "start",
+    "-w",
+    "-t",
+    "30",
+    "-D",
+    "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UJmEnN\\data",
+    "-l",
+    "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UJmEnN\\postgres.log",
+    "-o",
+    "-h 127.0.0.1 -p 57945"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "pg-start.txt"
+}

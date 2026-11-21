@@ -1,0 +1,10 @@
+{"phase":"created","H":"24","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact snapshot","H":"28","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Active block","H":"31","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact deadline","H":"41","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty result block","H":"44","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"queued Waiting","H":"48","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Ready block","H":"51","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"executed plus zero requestId duplicate revert","H":"55","counts":{"proposals":5,"votes":7,"operations":2,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"underfunded execute reverted","H":"63","counts":{"proposals":6,"votes":9,"operations":3,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"funded retry succeeds","H":"67","counts":{"proposals":6,"votes":9,"operations":3,"transfers":4,"disbursements":2},"balance":"1000000000000000000000"}

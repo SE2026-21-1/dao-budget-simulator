@@ -1,0 +1,109 @@
+Unable to find image 'postgres:18.4' locally
+18.4: Pulling from library/postgres
+26c307b5e35a: Pulling fs layer
+5db2b7edf527: Pulling fs layer
+130549402290: Pulling fs layer
+8241f4a14319: Pulling fs layer
+a4dcdc0137d7: Pulling fs layer
+d1052e262c2e: Pulling fs layer
+39762d0b4bb2: Pulling fs layer
+38639b9be6a6: Pulling fs layer
+4e6c52c74256: Pulling fs layer
+f51baa0c6c0d: Pulling fs layer
+88bb22edda9b: Pulling fs layer
+f7d54729e84b: Pulling fs layer
+f90dd111f2e5: Pulling fs layer
+d1052e262c2e: Waiting
+39762d0b4bb2: Waiting
+38639b9be6a6: Waiting
+4e6c52c74256: Waiting
+8241f4a14319: Waiting
+f51baa0c6c0d: Waiting
+88bb22edda9b: Waiting
+f7d54729e84b: Waiting
+a4dcdc0137d7: Waiting
+f90dd111f2e5: Waiting
+5db2b7edf527: Verifying Checksum
+5db2b7edf527: Download complete
+130549402290: Verifying Checksum
+130549402290: Download complete
+26c307b5e35a: Download complete
+8241f4a14319: Verifying Checksum
+8241f4a14319: Download complete
+a4dcdc0137d7: Verifying Checksum
+a4dcdc0137d7: Download complete
+d1052e262c2e: Verifying Checksum
+d1052e262c2e: Download complete
+39762d0b4bb2: Verifying Checksum
+39762d0b4bb2: Download complete
+38639b9be6a6: Verifying Checksum
+38639b9be6a6: Download complete
+f51baa0c6c0d: Verifying Checksum
+f51baa0c6c0d: Download complete
+f7d54729e84b: Download complete
+88bb22edda9b: Verifying Checksum
+88bb22edda9b: Download complete
+f90dd111f2e5: Download complete
+26c307b5e35a: Pull complete
+4e6c52c74256: Download complete
+5db2b7edf527: Pull complete
+130549402290: Pull complete
+8241f4a14319: Pull complete
+a4dcdc0137d7: Pull complete
+d1052e262c2e: Pull complete
+39762d0b4bb2: Pull complete
+38639b9be6a6: Pull complete
+4e6c52c74256: Pull complete
+f51baa0c6c0d: Pull complete
+88bb22edda9b: Pull complete
+f7d54729e84b: Pull complete
+f90dd111f2e5: Pull complete
+Digest: sha256:a02db8cac496f15b094798a38254f14d6e00741f709360e5e00bb6668ea31636
+Status: Downloaded newer image for postgres:18.4
+BE01 temporary container: 49b408e0d6b744d0e393991b1ce3cf1ea9446a9c19d1edf95fa16c6e6a211617 (postgres:18.4; no network or published ports)
+PostgreSQL image ID: sha256:4b87d5343a0e499eea33b6c19ec152a3ed4a0d1a453eadd26ff415a406821a6e
+                                                      version                                                       
+--------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 18.4 (Debian 18.4-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+BEGIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE DOMAIN
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMIT
+BEGIN
+CREATE FUNCTION
+psql:/checks/tests/001_initial_checks.sql:252: NOTICE:  BE01 checks passed: exact uint256, invalid domains, description bytes, zero/self transfer, raw dedup, scopes/FKs, payout link and checkpoint
+DO
+ROLLBACK
+PASS: BE01 migration and database constraints on isolated PostgreSQL.

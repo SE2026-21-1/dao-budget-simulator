@@ -1,0 +1,23 @@
+[stdout] The files belonging to this database system will be owned by user "cuongdz".
+[stdout] This user must also own the server process.
+[stdout] 
+[stdout] The database cluster will be initialized with locale "C".
+[stdout] The default text search configuration will be set to "english".
+[stdout] 
+[stdout] Data page checksums are enabled.
+[stdout] 
+[stdout] creating directory /tmp/dao-tv4-native-6Paodi/data ... ok
+[stdout] creating subdirectories ... ok
+[stdout] selecting dynamic shared memory implementation ... posix
+[stdout] selecting default "max_connections" ... 100
+[stdout] selecting default "shared_buffers" ... 128MB
+[stdout] selecting default time zone ... Etc/UTC
+[stdout] creating configuration files ... ok
+[stdout] running bootstrap script ... ok
+[stdout] performing post-bootstrap initialization ... ok
+[stdout] syncing data to disk ... ok
+[stdout] 
+[stdout] Success. You can now start the database server using:
+[stdout] 
+[stdout]     /home/cuongdz/.local/share/be08-tools/pg184/usr/lib/postgresql/18/bin/pg_ctl -D /tmp/dao-tv4-native-6Paodi/data -l logfile start
+[stdout] 

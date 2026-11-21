@@ -1,0 +1,152 @@
+forge Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+cast Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+anvil Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+Compiling 60 files with Solc 0.8.37
+Solc 0.8.37 finished in 10.20s
+Compiler run successful with warnings:
+Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:126:5:
+    |
+126 |     function at(Trace224 storage self, uint32 pos) internal view returns (Checkpoint224 memory) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:329:5:
+    |
+329 |     function at(Trace208 storage self, uint32 pos) internal view returns (Checkpoint208 memory) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (6335): "at" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol:532:5:
+    |
+532 |     function at(Trace160 storage self, uint32 pos) internal view returns (Checkpoint160 memory) {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+  --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:92:29:
+   |
+92 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, signature);
+   |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:119:29:
+    |
+119 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, r, vs);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:161:29:
+    |
+161 |         (address recovered, RecoverError error, bytes32 errorArg) = tryRecover(hash, v, r, s);
+    |                             ^^^^^^^^^^^^^^^^^^
+
+Warning (6335): "error" will be promoted to keyword in the future and will not be allowed as an identifier anymore.
+   --> lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol:169:26:
+    |
+169 |     function _throwError(RecoverError error, bytes32 errorArg) private pure {
+    |                          ^^^^^^^^^^^^^^^^^^
+
+No files changed, compilation skipped
+
+Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest
+[PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)
+[PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 58.81ms (56.52ms CPU time)
+
+Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest
+[PASS] testApproveAndTransferFrom() (gas: 164697)
+[PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)
+[PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86240, ~: 86628)
+[PASS] testMetadataAndInitialSupply() (gas: 53852)
+[PASS] testNoPublicMint() (gas: 45672)
+[PASS] testTransferAboveBalanceReverts() (gas: 51581)
+[PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)
+[PASS] testTransferHasNoFee() (gas: 84330)
+[PASS] testZeroInitialHolderReverts() (gas: 4012)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 99.58ms (62.57ms CPU time)
+
+Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest
+[PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)
+[PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)
+[PASS] testCurrentTimepointLookupReverts() (gas: 20959)
+[PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)
+[PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)
+[PASS] testFutureTimepointLookupReverts() (gas: 20922)
+[PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13948, ~: 14089)
+[PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 214956, ~: 215126)
+[PASS] testMetadataAndInitialDistribution() (gas: 83285)
+[PASS] testNoPublicMint() (gas: 45653)
+[PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)
+[PASS] testPastVotesAndPastSupply() (gas: 146978)
+[PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)
+[PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)
+[PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 281.06ms (348.28ms CPU time)
+
+Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest
+[PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)
+[PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)
+[PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)
+[PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)
+[PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)
+[PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)
+[PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)
+[PASS] testConstructorRejectsZeroAdmin() (gas: 6350)
+[PASS] testConstructorRejectsZeroToken() (gas: 6273)
+[PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)
+[PASS] testDuplicateRequestReverts() (gas: 139952)
+[PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)
+[PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)
+[PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)
+[PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)
+[PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 187990, ~: 187861)
+[PASS] testGrantAndRevokeSpendingRole() (gas: 237073)
+[PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)
+[PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)
+[PASS] testNativeValueRejected() (gas: 56431)
+[PASS] testOrdinaryWalletCannotPay() (gas: 60949)
+[PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)
+[PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)
+[PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)
+[PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)
+[PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)
+[PASS] testTreasuryRecipientReverts() (gas: 39549)
+[PASS] testZeroAmountReverts() (gas: 41310)
+[PASS] testZeroRecipientReverts() (gas: 38984)
+[PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)
+Suite result: ok. 30 passed; 0 failed; 0 skipped; finished in 341.47ms (310.03ms CPU time)
+
+Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest
+[PASS]
+TreasuryAccountingInvariantTest invariants:
+[PASS] invariant_accountingMatchesSuccessfulPaymentOracle
+[PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs
+[PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay
+ TreasuryAccountingInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)
+
+╭---------------------------+--------------+-------+---------+----------╮
+| Contract                  | Selector     | Calls | Reverts | Discards |
++=======================================================================+
+| TreasuryAccountingHandler | changeRole   | 1254  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | fund         | 1291  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | pay          | 1234  | 0       | 0        |
+|---------------------------+--------------+-------+---------+----------|
+| TreasuryAccountingHandler | payAvailable | 1221  | 0       | 0        |
+╰---------------------------+--------------+-------+---------+----------╯
+
+[PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 19.61s (19.59s CPU time)
+
+Ran 5 test suites in 19.69s (20.39s CPU time): 58 tests passed, 0 failed, 0 skipped (58 total tests)
+SC01 OK: compiler ABI, calldata, descriptionHash and proposalId agree

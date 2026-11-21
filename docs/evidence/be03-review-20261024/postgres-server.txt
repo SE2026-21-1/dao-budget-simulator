@@ -1,0 +1,46 @@
+﻿2026-10-24 09:40:15.388 +07 [6440] LOG:  starting PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35227, 64-bit
+2026-10-24 09:40:15.390 +07 [6440] LOG:  listening on IPv4 address "127.0.0.1", port 55198
+2026-10-24 09:40:15.482 +07 [19684] LOG:  database system was shut down at 2026-10-24 09:40:14 +07
+2026-10-24 09:40:15.491 +07 [6440] LOG:  database system is ready to accept connections
+2026-10-24 09:40:17.348 +07 [18736] ERROR:  value for domain evm_hex_data violates check constraint "evm_hex_data_check"
+2026-10-24 09:40:17.348 +07 [18736] CONTEXT:  unnamed portal parameter $11 = '...'
+2026-10-24 09:40:17.348 +07 [18736] STATEMENT:  
+	  INSERT INTO raw_events (
+	    deployment_id, chain_id, contract_role, contract_address,
+	    block_number, block_hash, transaction_hash, transaction_index, log_index,
+	    topics, data, removed, event_name, decoded_payload, rpc_log
+	  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::evm_hash32[], $11, FALSE, $12, $13::jsonb, $14::jsonb)
+	  ON CONFLICT (chain_id, transaction_hash, log_index) DO UPDATE
+	    SET log_index = raw_events.log_index
+	    WHERE raw_events.deployment_id = EXCLUDED.deployment_id
+	      AND raw_events.chain_id = EXCLUDED.chain_id
+	      AND raw_events.contract_role = EXCLUDED.contract_role
+	      AND raw_events.contract_address = EXCLUDED.contract_address
+	      AND raw_events.block_number = EXCLUDED.block_number
+	      AND raw_events.block_hash = EXCLUDED.block_hash
+	      AND raw_events.transaction_hash = EXCLUDED.transaction_hash
+	      AND raw_events.transaction_index = EXCLUDED.transaction_index
+	      AND raw_events.log_index = EXCLUDED.log_index
+	      AND raw_events.topics = EXCLUDED.topics
+	      AND raw_events.data = EXCLUDED.data
+	      AND raw_events.removed = EXCLUDED.removed
+	      AND raw_events.event_name IS NOT DISTINCT FROM EXCLUDED.event_name
+	      AND raw_events.decoded_payload IS NOT DISTINCT FROM EXCLUDED.decoded_payload
+	      AND raw_events.rpc_log = EXCLUDED.rpc_log
+	  RETURNING (xmax = 0) AS inserted
+2026-10-24 09:40:17.391 +07 [18736] ERROR:  test deferred COMMIT failure
+2026-10-24 09:40:17.391 +07 [18736] CONTEXT:  PL/pgSQL function be03_test_commit_failure() line 2 at RAISE
+2026-10-24 09:40:17.391 +07 [18736] STATEMENT:  COMMIT
+2026-10-24 09:40:17.392 +07 [18736] WARNING:  there is no transaction in progress
+2026-10-24 09:40:18.551 +07 [8436] LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2026-10-24 09:40:18.551 +07 [8436] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-24 09:40:20.262 +07 [15264] LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2026-10-24 09:40:21.476 +07 [6440] LOG:  received fast shutdown request
+2026-10-24 09:40:21.478 +07 [6440] LOG:  aborting any active transactions
+2026-10-24 09:40:21.487 +07 [6440] LOG:  background worker "logical replication launcher" (PID 3672) exited with exit code 1
+2026-10-24 09:40:21.487 +07 [25380] LOG:  shutting down
+2026-10-24 09:40:21.488 +07 [25380] LOG:  checkpoint starting: shutdown immediate
+2026-10-24 09:40:21.806 +07 [25380] LOG:  checkpoint complete: wrote 1129 buffers (6.9%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.079 s, sync=0.229 s, total=0.319 s; sync files=387, longest=0.002 s, average=0.001 s; distance=5558 kB, estimate=5558 kB; lsn=0/1D5EA40, redo lsn=0/1D5EA40
+2026-10-24 09:40:22.020 +07 [6440] LOG:  database system is shut down

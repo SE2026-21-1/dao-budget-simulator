@@ -1,0 +1,57 @@
+name: Verify public Foundry fallback
+
+on:
+  push:
+    branches: [main, Dev, 'feature/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-oci-fallback:
+    name: Anonymous attestation, extraction and contract gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      FOUNDRY_PROFILE: ci
+      FOUNDRY_FUZZ_SEED: '0x20261021'
+    steps:
+      - name: Checkout with pinned submodules
+        uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Check exact-version regression
+        run: python3 tests/test_install_foundry_versions.py
+      - name: Install from the real public OCI fallback
+        id: foundry
+        uses: ./.github/actions/install-foundry
+        with:
+          force-fallback: 'true'
+      - name: Record real fallback and installed versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ '${{ steps.foundry.outputs.installation-source }}' == oci ]]
+          mkdir -p reports/foundry-fallback
+          cp "$RUNNER_TEMP/foundry-attestation.json" reports/foundry-fallback/attestation.json
+          bash .github/actions/install-foundry/verify-versions.sh | tee reports/foundry-fallback/versions.txt
+          printf '%s\n' '${{ github.sha }}' > reports/foundry-fallback/commit.txt
+      - name: Run unchanged format, build, contract tests and ABI fixture gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ci.sh 2>&1 | tee reports/foundry-fallback/contracts.log
+      - name: Upload fallback evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: foundry-public-fallback-${{ github.sha }}
+          path: reports/foundry-fallback/
+          retention-days: 14

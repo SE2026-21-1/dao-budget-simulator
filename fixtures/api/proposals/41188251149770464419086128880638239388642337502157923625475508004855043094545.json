@@ -1,0 +1,72 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "synthetic-local-v1",
+    "snapshotRevision": "fixture-v2",
+    "asOfBlock": "9000",
+    "asOfBlockHash": "0x9562774e9bebd3dcd93fe6e685ee9c0e39cdeed4b727854968ac5a935d189af7",
+    "asOfTimestamp": "1792300000",
+    "dataKind": "synthetic",
+    "sync": {
+      "status": "synced",
+      "headBlock": "9002",
+      "confirmedBlock": "9000",
+      "indexedBlock": "9000",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-18T03:46:40.000Z"
+    }
+  },
+  "data": {
+    "proposalId": "41188251149770464419086128880638239388642337502157923625475508004855043094545",
+    "requestId": "0x0101010101010101010101010101010101010101010101010101010101010101",
+    "proposer": "0x8888888888888888888888888888888888888888",
+    "recipient": "0x2222222222222222222222222222222222222222",
+    "amount": "1000000000000000000000",
+    "description": "{\"version\":1,\"title\":\"Demo chi ngan sach\",\"body\":\"De xuat chi 1000 BUD cho hoat dong DAO.\"}",
+    "descriptionHash": "0xba0c4c61001e9366c859ea2e73077299660674c7dd4ff7aa92d93fb9449911aa",
+    "title": "Demo chi ngan sach",
+    "body": "De xuat chi 1000 BUD cho hoat dong DAO.",
+    "targets": [
+      "0x1111111111111111111111111111111111111111"
+    ],
+    "values": [
+      "0"
+    ],
+    "calldatas": [
+      "0x6664ac910101010101010101010101010101010101010101010101010101010101010101000000000000000000000000222222222222222222222222222222222222222200000000000000000000000000000000000000000000003635c9adc5dea00000"
+    ],
+    "snapshot": "1792299000",
+    "deadline": "1792299300",
+    "state": "Executed",
+    "stateSource": "synthetic",
+    "votes": {
+      "against": "300000000000000000000",
+      "for": "400000000000000000000",
+      "abstain": "100000000000000000000",
+      "quorum": "200000000000000000000"
+    },
+    "operation": {
+      "operationId": "0xf5d673301bfef5088b10f8fb45d95ae15e7198dfbab234439ec654fdf593fc40",
+      "queuedAt": "1792299580",
+      "eta": "1792299700",
+      "status": "Done",
+      "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "salt": "0x5f6cc7095a7f91f7e48f33c72948e186c047659a4d897180916aa81fe67d8d1a"
+    },
+    "created": {
+      "transactionHash": "0xd2db7e70db587a9540421f6864932a42865b4b45b9124de2eb7a3c47db55d46e",
+      "transactionIndex": "0",
+      "blockNumber": "8938",
+      "blockHash": "0x73b055604c4277a95057a071793b6cf2d4a18a696d2f3da6e6cbd9de74715d95",
+      "logIndex": "0"
+    },
+    "transactions": {
+      "created": "0xd2db7e70db587a9540421f6864932a42865b4b45b9124de2eb7a3c47db55d46e",
+      "queued": "0x3a41fefb344c05114b41206e9213c9c66846248df11b0377ce999fa8643e3961",
+      "executed": "0x4c14efe7841cd9d227985af8bf936a8594e97ae56382669eb17891f30fcf15cb",
+      "canceled": null
+    }
+  }
+}

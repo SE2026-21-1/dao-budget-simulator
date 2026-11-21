@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: propose payment
+    at tx (file:///home/cuongdz/projects/dao-be04-audit/audit-checkout/scripts/check_be04_live.mjs:116:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///home/cuongdz/projects/dao-be04-audit/audit-checkout/scripts/check_be04_live.mjs:146:5 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: null,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

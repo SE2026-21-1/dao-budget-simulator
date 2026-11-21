@@ -1,0 +1,28 @@
+{
+  "baseCommit": "2adcbfac24fa34da9f76673a2404ef71dd3cb804",
+  "branch": "feature/tv2-be08",
+  "worktree": "D:/dao-budget-simulator-be08",
+  "files": {
+    ".gitattributes": "35c22e056dec266da8871bb4964c40a759a966ac7f89907712c4c7fedb18b8d0",
+    ".github/workflows/be08.yml": "f584fae5c066a452fafa8143d145744f51fbe720705e903f198d36ba614f8c2a",
+    "docs/be08.md": "082f7df9e5464ff23b09ab6dc0cd574b90e40eb25666e578d79906659cb9af19",
+    "indexer/api/server.ts": "c6057bbe660ee6e4c5acc94ea162811cb63e421b017a7db6229fa23cb2e4fbb9",
+    "package.json": "989ecd079de7ea098305ff02a793c088458a9f3bb02064b0c3a6ed3e8203dc69",
+    "scripts/be08_measurement.mjs": "1244efa23b475246f4ed59a0e33196cc452c3baf6f77c807bcf43191d7d98930",
+    "scripts/be08_worker_probe.mjs": "f4fd7b1ef98df6e955d7e6fdde7eb69954af54ac847812430ccb7371f7edf76a",
+    "scripts/benchmark_api.mjs": "13b5f039707cc8dab9755ec7f3e57a44aa64f20348a5841b2b59f45ce17e8327",
+    "scripts/check_be04_live.mjs": "7658912ff7c420f46a991dcdf178c73db64bd857795bb78c646f9812690a97c9",
+    "scripts/check_be08_native.mjs": "67ddcc8039a6733370c293cac6c9494b6ccee239c5f204b266dfa9a0b08d02e2",
+    "scripts/smoke_lifecycle.mjs": "1e5fc195de37d782d7488999c3d3d4a7049845504e8840dc4fa760cfac1fb19a",
+    "tests/api/server.test.mjs": "3773449fc94d9830c10ebe8c8a5f6bb668222ccb73c9495beedb567569d77ede",
+    "tests/indexer/be08-measurement.test.mjs": "d8b49c3d30c6cbfc2133cac1d3381ef91106a8b2a313a447f028f1d3c31435ad"
+  },
+  "patchSha256": "1ba258fb132e3ffa1de980d3e934a8b947fad0b698709a8721cc5262ed8632ea",
+  "patch": "run-6-service-final/source.patch",
+  "stagedDiffEmpty": true,
+  "remoteWrites": false,
+  "remoteBe08CI": "NOT_RUN",
+  "finalPerformance": "run-4-final/benchmark.json",
+  "finalFunctional": "run-6-service-final/report.json",
+  "independentAudit": "final-audit.json"
+}

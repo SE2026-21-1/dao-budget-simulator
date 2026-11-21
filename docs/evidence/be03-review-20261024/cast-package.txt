@@ -1,0 +1,22 @@
+﻿node.exe : npm notice
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice 📦  @foundry-rs/cast-win32-amd64@1.7.1
+npm notice Tarball Contents
+npm notice 49.2MB bin/cast.exe
+npm notice 716B package.json
+npm notice Tarball Details
+npm notice name: @foundry-rs/cast-win32-amd64
+npm notice version: 1.7.1
+npm notice filename: foundry-rs-cast-win32-amd64-1.7.1.tgz
+npm notice package size: 22.8 MB
+npm notice unpacked size: 49.2 MB
+npm notice shasum: 86adace708e0cc2c6ca9c229566f5c3b535e2a5f
+npm notice integrity: sha512-vWsLwripv+wCM[...]ckA6iMvrCGCUQ==
+npm notice total files: 2
+npm notice
+foundry-rs-cast-win32-amd64-1.7.1.tgz

@@ -1,0 +1,77 @@
+name: Install pinned Foundry
+# Retry the verified release on 5xx, then verify the official OCI image if
+# GitHub Releases remains unavailable. Never run an unverified fallback.
+description: Install verified Foundry 1.8.5 with bounded retries and OCI fallback
+inputs:
+  force-fallback:
+    description: Skip release downloads and exercise the verified public OCI fallback
+    required: false
+    default: 'false'
+outputs:
+  installation-source:
+    description: Installation source (release or oci)
+    value: ${{ steps.fallback.outcome == 'success' && 'oci' || 'release' }}
+runs:
+  using: composite
+  steps:
+    - id: first
+      if: inputs.force-fallback != 'true'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.first.outcome == 'failure'
+      shell: bash
+      run: sleep 20
+    - id: second
+      if: steps.first.outcome == 'failure'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - if: steps.second.outcome == 'failure'
+      shell: bash
+      run: sleep 60
+    - id: third
+      if: steps.second.outcome == 'failure'
+      continue-on-error: true
+      uses: foundry-rs/foundry-toolchain@v1
+      with:
+        version: v1.8.5
+        cache: false
+    - name: Verify and extract pinned official image
+      id: fallback
+      if: inputs.force-fallback == 'true' || steps.third.outcome == 'failure'
+      shell: bash
+      run: |
+        set -euo pipefail
+        image=ghcr.io/foundry-rs/foundry@sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043
+        # Verify the pinned public bundle without an unauthenticated API download.
+        # Isolate credentials locally to this step, not the primary installer.
+        auth_dir=$(mktemp -d "$RUNNER_TEMP/foundry-public.XXXXXX")
+        container=
+        trap 'if [[ -n "$container" ]]; then docker rm -f "$container" >/dev/null 2>&1 || true; fi; rm -rf "$auth_dir"' EXIT
+        export DOCKER_CONFIG="$auth_dir/docker" GH_CONFIG_DIR="$auth_dir/gh"
+        mkdir -p "$DOCKER_CONFIG" "$GH_CONFIG_DIR"
+        printf '{"auths":{}}\n' > "$DOCKER_CONFIG/config.json"
+        unset GH_TOKEN GITHUB_TOKEN GH_ENTERPRISE_TOKEN GITHUB_ENTERPRISE_TOKEN
+        gh attestation verify "oci://$image" \
+          --repo foundry-rs/foundry \
+          --signer-workflow foundry-rs/foundry/.github/workflows/docker-publish.yml \
+          --bundle "${{ github.action_path }}/foundry-1.8.5.intoto.jsonl" \
+          --format json > "$RUNNER_TEMP/foundry-attestation.json"
+        docker pull "$image"
+        container=$(docker create "$image")
+        bin_dir="$RUNNER_TEMP/foundry-verified"
+        mkdir -p "$bin_dir"
+        for tool in forge cast anvil; do
+          docker cp "$container:/usr/local/bin/$tool" "$bin_dir/$tool"
+          chmod +x "$bin_dir/$tool"
+        done
+        echo "$bin_dir" >> "$GITHUB_PATH"
+    - name: Verify installed versions
+      shell: bash
+      run: |
+        bash "${{ github.action_path }}/verify-versions.sh"

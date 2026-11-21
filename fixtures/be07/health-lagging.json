@@ -1,0 +1,40 @@
+{
+  "context": {
+    "chainId": "31337",
+    "deploymentId": "be04-live",
+    "asOfBlock": "70",
+    "asOfBlockHash": "0x60db526c8068539f47585635409d57e7926e5ad10bd8070b9d34fd4dafa55269",
+    "asOfTimestamp": "1800000537",
+    "snapshotRevision": "b1c50b2c-eb79-4458-a4af-31a91c1c94ed",
+    "dataKind": "chain",
+    "sync": {
+      "status": "lagging",
+      "headBlock": "72",
+      "confirmedBlock": "70",
+      "indexedBlock": "70",
+      "publicationBlock": "70",
+      "lagBlocks": "0",
+      "lagSeconds": "31",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-10-25T15:39:22.769Z",
+      "lastRpcCheckAt": "2026-10-25T15:39:22.777104+00:00",
+      "recoveryStatus": "ready"
+    }
+  },
+  "data": {
+    "status": "degraded",
+    "database": "up",
+    "indexer": "lagging",
+    "publication": "ready",
+    "recoveryStatus": "ready",
+    "projectionStatus": "current",
+    "publicationBlock": "70",
+    "projectionLagBlocks": "0",
+    "rawDecodeComplete": false,
+    "rawDecodeIssues": {
+      "unknownTopics": 16,
+      "decodeErrors": 0
+    },
+    "ignoredAncillaryEvents": 16
+  }
+}

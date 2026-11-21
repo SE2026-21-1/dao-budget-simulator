@@ -1,0 +1,7 @@
+Command: node scripts/check_be01.mjs
+Exit code: 0
+
+BE01 OK: 123 JSON files, 45 hash-valid proposals, pages 20/20/5, seven clock-correct states, votes/operations/transfers/summary/cursors consistent.
+Timeline OK: 105 timestamp-ordered blocks, 190 distinct source logs; block-wide log positions, transaction order and create/vote/queue/execute/cancel times checked directly from JSON.
+Regression OK: duplicate block/logIndex (LOG_POSITION_COLLISION), shifted snapshot (SNAPSHOT_TIMESTAMP_MISMATCH), reversed transaction order and reversed emission order (LOG_TRANSACTION_ORDER) rejected using in-memory copies; tracked fixtures untouched.
+Offline synthetic contract checks only; PostgreSQL migration, deployed contracts, RPC, indexer and HTTP server are separate checks.

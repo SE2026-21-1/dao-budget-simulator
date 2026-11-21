@@ -1,0 +1,20 @@
+thon/3.12.15/x64/lib
+2026-10-24T07:00:16.6946331Z ##[endgroup]
+2026-10-24T07:00:21.1928351Z node:internal/modules/run_main:107
+2026-10-24T07:00:21.1928884Z     triggerUncaughtException(
+2026-10-24T07:00:21.1929426Z     ^
+2026-10-24T07:00:21.1929565Z 
+2026-10-24T07:00:21.1929791Z AssertionError [ERR_ASSERTION]: propose payment
+2026-10-24T07:00:21.1930492Z     at tx (file:///home/runner/work/dao-budget-simulator/dao-budget-simulator/scripts/check_be04_live.mjs:116:12)
+2026-10-24T07:00:21.1931258Z     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-10-24T07:00:21.1932056Z     at async file:///home/runner/work/dao-budget-simulator/dao-budget-simulator/scripts/check_be04_live.mjs:146:5 {
+2026-10-24T07:00:21.1932635Z   generatedMessage: false,
+2026-10-24T07:00:21.1932892Z   code: 'ERR_ASSERTION',
+2026-10-24T07:00:21.1933126Z   actual: null,
+2026-10-24T07:00:21.1933335Z   expected: true,
+2026-10-24T07:00:21.1933574Z   operator: '==',
+2026-10-24T07:00:21.1933786Z   diff: 'simple'
+2026-10-24T07:00:21.1933992Z }
+2026-10-24T07:00:21.1934091Z 
+2026-10-24T07:00:21.1934182Z Node.js v24.15.0
+2026-10-24T07:00:21.2160789Z The files belonging to this database system will be owned by user "post

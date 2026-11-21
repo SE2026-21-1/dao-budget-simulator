@@ -1,0 +1,5 @@
+PASS rejection: remote host
+PASS rejection: URL options
+PASS rejection: missing isolation
+PASS rejection: populated database unchanged
+PASS rejection: database not owned by connecting role

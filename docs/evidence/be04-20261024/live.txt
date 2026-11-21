@@ -1,0 +1,3 @@
+{"phase":"created","H":"24","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact snapshot","H":"28","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Active block","H":"31","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}

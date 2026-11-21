@@ -1,0 +1,17 @@
+{
+  "label": "pg-stop",
+  "command": [
+    "C:\\Program Files\\PostgreSQL\\18\\bin\\pg_ctl.exe",
+    "stop",
+    "-w",
+    "-t",
+    "30",
+    "-m",
+    "fast",
+    "-D",
+    "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-UI7x0n\\data"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "pg-stop.txt"
+}

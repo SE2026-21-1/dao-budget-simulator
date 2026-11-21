@@ -1,0 +1,15 @@
+{
+  "label": "execute-confirmed",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "indexer/cli.ts",
+    "--config",
+    "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+    "--sync"
+  ],
+  "exitCode": 2,
+  "signal": null,
+  "log": "execute-confirmed.txt"
+}

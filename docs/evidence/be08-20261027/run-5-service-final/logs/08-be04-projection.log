@@ -1,0 +1,77 @@
+[stdout] TAP version 13
+[stdout] # Subtest: BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic)
+[stdout]     # Subtest: no raw checkpoint cannot publish a fake empty snapshot
+[stdout]     ok 1 - no raw checkpoint cannot publish a fake empty snapshot
+[stdout]       ---
+[stdout]       duration_ms: 11.054321
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: empty blocks update Pending -> Active -> Succeeded; quorum is null through exact snapshot
+[stdout]     ok 2 - empty blocks update Pending -> Active -> Succeeded; quorum is null through exact snapshot
+[stdout]       ---
+[stdout]       duration_ms: 136.033979
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: full lifecycle and replay produce stable rows, exact ledger and WithParams
+[stdout]     ok 3 - full lifecycle and replay produce stable rows, exact ledger and WithParams
+[stdout]       ---
+[stdout]       duration_ms: 71.894708
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: RPC state/balance mismatch preserves old publication while raw checkpoint advances
+[stdout]     ok 4 - RPC state/balance mismatch preserves old publication while raw checkpoint advances
+[stdout]       ---
+[stdout]       duration_ms: 57.350537
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: SQL failure after replacement begins rolls back all tables and projection checkpoint
+[stdout]     ok 5 - SQL failure after replacement begins rolls back all tables and projection checkpoint
+[stdout]       ---
+[stdout]       duration_ms: 30.017203
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: unknown log and raw decode tampering block publication without changing raw identity
+[stdout]     ok 6 - unknown log and raw decode tampering block publication without changing raw identity
+[stdout]       ---
+[stdout]       duration_ms: 48.516771
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: BE04 recovery: --redecode repairs a payload tampered after a successful decode
+[stdout]     ok 7 - BE04 recovery: --redecode repairs a payload tampered after a successful decode
+[stdout]       ---
+[stdout]       duration_ms: 22.264949
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: BE03 recovery: redecode restores unknown and malformed classifications from raw bytes
+[stdout]     ok 8 - BE03 recovery: redecode restores unknown and malformed classifications from raw bytes
+[stdout]       ---
+[stdout]       duration_ms: 35.988372
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication
+[stdout]     ok 9 - RPC unavailable, wrong chain and changed canonical hash cannot overwrite a publication
+[stdout]       ---
+[stdout]       duration_ms: 29.21633
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: real child CLI --sync-project and idle --project publish the same H/hash/revision
+[stdout]     ok 10 - real child CLI --sync-project and idle --project publish the same H/hash/revision
+[stdout]       ---
+[stdout]       duration_ms: 8163.721045
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     1..10
+[stdout] ok 1 - BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synthetic)
+[stdout]   ---
+[stdout]   duration_ms: 8658.693978
+[stdout]   type: 'suite'
+[stdout]   ...
+[stdout] 1..1
+[stdout] # tests 10
+[stdout] # suites 1
+[stdout] # pass 10
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 11913.648722

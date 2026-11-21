@@ -1,0 +1,5 @@
+** -text
+*.log -whitespace
+**/*.log -whitespace
+*.patch -whitespace
+**/*.patch -whitespace

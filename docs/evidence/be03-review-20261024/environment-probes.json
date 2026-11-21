@@ -1,0 +1,69 @@
+{
+  "commands": [
+    {
+      "command": "wsl --list --verbose",
+      "exitCode": 1,
+      "output": "wsl.exe : The Windows Subsystem for Linux is not installed. You \r\ncan install by running 'wsl.exe --install'.\r\nAt line:8 char:11\r\n+ $output = & wsl --list --verbose 2>&1\r\n+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (The Wind...stall'.:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n\r\n\r\nFor more information please visit https://aka.ms/wslinstall"
+    }
+  ],
+  "toolsOnPath": [
+    {
+      "name": "forge",
+      "found": false,
+      "path": null
+    },
+    {
+      "name": "cast",
+      "found": false,
+      "path": null
+    },
+    {
+      "name": "anvil",
+      "found": false,
+      "path": null
+    },
+    {
+      "name": "docker",
+      "found": false,
+      "path": null
+    },
+    {
+      "name": "wsl",
+      "found": true,
+      "path": "C:\\Windows\\system32\\wsl.exe"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "out/GovernanceToken.sol/GovernanceToken.json",
+      "exists": false,
+      "provenanceVerified": false
+    },
+    {
+      "path": "out/BudgetToken.sol/BudgetToken.json",
+      "exists": false,
+      "provenanceVerified": false
+    },
+    {
+      "path": "out/Treasury.sol/Treasury.json",
+      "exists": false,
+      "provenanceVerified": false
+    },
+    {
+      "path": "out/TimelockController.sol/TimelockController.json",
+      "exists": false,
+      "provenanceVerified": false
+    },
+    {
+      "path": "out/BudgetGovernor.sol/BudgetGovernor.json",
+      "exists": false,
+      "provenanceVerified": false
+    }
+  ],
+  "repoRunner": {
+    "workflow": ".github/workflows/ci.yml",
+    "host": "ubuntu-24.04",
+    "dispatcherInvoked": false,
+    "reason": "No local WSL installation or Docker executable. Remote workflow requires a published checkout; this uncommitted candidate was not uploaded or dispatched."
+  }
+}

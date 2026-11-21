@@ -1,0 +1,104 @@
+# SC06 v1 — receipt/log local thật, một lịch sử canonical
+
+`chain.json` lấy từ Anvil riêng do `scripts/generate_sc06_chain.mjs` sở hữu.
+Không snapshot, không evm_revert, không ghép receipt lịch sử TV4. Generator đã dừng
+Anvil sau khi đối chiếu RPC; đây là archive offline, không phải địa chỉ live/testnet.
+
+## Nội dung
+
+| Field | Nội dung |
+|---|---|
+| manifest | Manifest TV4: chainId 31337, addresses, deployment blocks/receipts, source/compiler/dependency/ABI hashes, cấu hình, accounts công khai |
+| roleAudit | Checker TV4 cùng H/hash; không thay operation preflight trước renounce |
+| blocks | Toàn bộ header RPC từ genesis đến H, parent hashes, timestamps và transaction hashes |
+| receipts / transactions | Toàn bộ RPC receipts/transactions, gồm deployment/seed và campaign; raw topics/data/emitter/tx/log coordinates |
+| proposals | Chuỗi description nguyên bản, request/amount/calldata/hashes/salt/ID, transaction links; proposal thứ hai bị cancel |
+| calls | Raw eth_call input/output tại H: hashProposal, hashOperationBatch, state, timestamp, paidRequests, BUD decimals/supply/balances |
+| expectedDecoded | Kết quả từ decoder TV2 thật; unknown topics giữ rõ trạng thái, không đổi thành business event |
+| generation | Commit nguồn cố định, Node version, hash các script/decoder/projection/test tồn tại tại commit đó |
+| verification / balances | Kết quả live RPC và số dư base units, không cộng đôi dòng tiền |
+
+Một proposal nhận 400+300 For, queue qua caller không GOV và execute qua outsider
+không GOV đúng ETA; chi 1.000 BUD. Proposal thứ hai creator cancel khi Pending.
+operationId thứ hai chỉ là hash tính trước để kiểm Unset: không chứng minh có operation đã schedule.
+
+Kết quả chạy lại trên Dev sau SC05 và BE05 ngày 05/11/2026: H=26/hash
+`0x5dbf98291a6cc51c5142405a06dcc5b456ba119211dc279227a440ca6efe0f4d`; 27 headers kể cả genesis,
+24 receipts, 42 logs; decoder TV2 nhận 14 decoded + 16 unknown topics (role/init); 12 log GOV
+không thuộc registry TV2 vẫn giữ raw và được full compiler ABI kiểm tra.
+Tất cả 42 raw logs phải round-trip ABI đúng. Không có decode_error.
+Treasury=9.000, recipient=1.000, funding=10.000 BUD; totalSupply=20.000 BUD.
+Một Transfer chi và một BudgetDisbursed liên kết cùng tx chỉ tính là một khoản chi.
+
+## Tái lập và kiểm
+
+Cần Node **24.15.0** theo `.nvmrc`, npm dependency theo lock, Foundry 1.8.5.
+Node 24.15.0 và Foundry 1.8.5 được dùng khi tạo lại fixture trên nhánh tích hợp từ Dev.
+Thiết lập PATH trỏ Node 24.15.0 đã cài trên máy, sau đó:
+
+```bash
+npm ci --ignore-scripts
+forge build
+node --import tsx scripts/check_sc06_chain.mjs
+node --import tsx tests/sc06-chain.test.mjs
+# Tạo run MỚI, thư mục output phải chưa tồn tại; giữ fixtures hiện có:
+node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-new-run
+```
+
+Nguồn tạo fixture hiện tại: **`5ba9371f735982c5ca7148a3cf4af07068525029`** (Dev có SC05, BE05 và source SC06).
+Để tái lập từ revision chính xác mà không đổi branch đang làm việc:
+
+```bash
+git worktree add --detach /tmp/sc06-source 5ba9371f735982c5ca7148a3cf4af07068525029
+cd /tmp/sc06-source
+git submodule update --init --recursive
+npm ci --ignore-scripts
+forge build
+node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-reproduced
+node --import tsx scripts/check_sc06_chain.mjs /tmp/sc06-reproduced/chain.json
+```
+
+Không yêu cầu tx/block hash giống giữa các lần Anvil chạy: timestamp mine có thể khác;
+cần cùng source/config và các bất biến projection/ledger. Cần checkout có Git history/submodules,
+không chỉ tải ZIP source. Checker yêu cầu source revision là ancestor HEAD và các file được kiểm
+khớp blob ở revision đó lẫn working tree; không sửa source rồi dùng archive cũ để nhận PASS.
+
+Generator tái sử dụng TV4 deployGovernance/checkGovernanceRoles, waitForReceipt và
+smoke lifecycle nguyên bản. Chỉ sở hữu Anvil loopback mới, không nhận key/RPC ngoài.
+Generator từ chối output tồn tại. Cần quyền listen loopback; sandbox mặc định chặn
+EPERM nên live run được cấp quyền chạy ngoài sandbox. Không mở RPC ra Internet.
+
+Trước khi xuất, checker so toàn bộ blocks/receipts/transactions với RPC, getLogs
+toàn dải và eth_call cùng H, kiểm H/hash cuối. Offline checker kiểm liên kết/hash/
+ABI/decode/ledger; không xác minh Merkle inclusion proof và không thay RPC độc lập.
+`liveRpcVerified: true` ghi lại kết quả lúc tạo, không có nghĩa RPC còn đang chạy.
+Source/ABI đổi phải regenerate run mới hoặc checkout đúng provenance, không sửa receipt bằng tay.
+
+Checker giờ đưa raw logs của **chính chain.json** qua TV2 classify/buildModel/evaluate;
+không dùng fixture BE03. Assert proposal/calldata/description, phiếu A=400/B=300,
+operationId/ETA/execution, một disbursement, ledger 10.000−1.000=9.000 và Canceled
+không có operation; evaluate tại timestamp H, đối chiếu state/quorum eth_call tại H.
+
+Provenance checker đối chiếu sourceHashes với Git blobs và working tree, gồm source
+compiler trong submodule theo gitlink ở revision. Artifact/ABI hashes, compiler metadata,
+deployment transaction/constructor và runtime (normalize immutables) được kiểm. Role holders
+replay từ canonical logs được so với audit và pinned hasRole/getRoleAdmin calls; audit phải
+cùng chainId/source revision/H/hash. Kết quả live còn đối chiếu runtime và mọi pinned call với RPC.
+
+Test cuối: **28/28 passed** (2 bản dương, 26 bản âm), gồm source hash 0/mất hash,
+revision không tồn tại/không chứa generator, manifest hash, audit H/hash/holder,
+ABI version/address/runtime, tx/log sai block, ngoài các mutation amount/description/
+Unicode/hash/salt/raw data/index/ledger ban đầu. Offline consistency không phải blockchain
+inclusion proof; role calls lưu trong archive được xác minh live lúc tạo, không có state proof.
+
+## Giới hạn bàn giao
+
+Không có private key/secret trong fixture. Không có database/API/UI wallet hay testnet acceptance.
+Ví dụ ethers/arrays được kiểm qua encoding và eth_call thực; chưa có xác nhận độc lập từ TV3.
+TV2 cần review ABI version/expected decode; nhãn awaiting-sc06 chưa đổi. TV4 cần review
+provenance và operation-preflight SC05: deployment helper hiện renounce trước role audit,
+chưa operation audit. Campaign sạch này không chứng minh deployment script đạt gate SC05.
+Source commit đã cố định trước khi sinh data; commit fixture riêng sau source commit, không
+hash fixture trong generation.sourceHashes, tránh vòng tròn source/checksum/fixture.
+TV4 cần review source commit và commit fixture bàn giao; không đổi sourceCommit sang commit
+fixture để tạo ấn tượng fixture đã tồn tại tại thời điểm tạo nguồn.

@@ -1,0 +1,14 @@
+{
+  "status": "FAIL",
+  "error": {
+    "message": "be03-postgres-regression: exit 1; ",
+    "stack": "AssertionError [ERR_ASSERTION]: be03-postgres-regression: exit 1; \n    at run (file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:47:10)\n    at async file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:134:3"
+  },
+  "cleanup": {
+    "postgres": {
+      "stopped": true,
+      "retainedCluster": "C:\\Users\\Cuongdz\\AppData\\Local\\Temp\\dao-be03-live-HnmuPl\\data"
+    }
+  }
+}
+

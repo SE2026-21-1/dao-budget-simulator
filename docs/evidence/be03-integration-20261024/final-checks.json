@@ -1,0 +1,6 @@
+{
+  "gitDiffCheckExit": 0,
+  "gitDiffCheckOutput": "",
+  "newSourceDocTrailingWhitespace": [],
+  "nodeSyntaxChecks": "exit 0 for scripts/governance_local.mjs, run-integration.mjs, check-provenance-guards.mjs"
+}

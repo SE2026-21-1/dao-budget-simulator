@@ -1,0 +1,6 @@
+{
+  "command": "npm run test:be03:db",
+  "executionContext": "require_escalated",
+  "exitCode": 0,
+  "log": "be03-db-escalated.txt"
+}

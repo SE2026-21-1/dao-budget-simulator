@@ -1,0 +1,36 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> dao-budget-simulator@0.0.0 test:be04
+> node --import tsx --test tests/indexer/projection.test.ts
+
+✔ raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay (18.915496ms)
+✔ successful lifecycle links same-tx operation/request/Transfer and counts one payment (16.166951ms)
+✔ unrelated BUD, self and zero transfers do not change treasury totals (2.646112ms)
+✔ timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active (2.748937ms)
+✔ quorum/result 0/100/0 -> Defeated (2.368315ms)
+✔ quorum/result 0/100/100 -> Succeeded (2.211528ms)
+✔ quorum/result 200/200/0 -> Defeated (2.465961ms)
+✔ quorum/result 300/200/100 -> Defeated (1.896865ms)
+✔ ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable (4.327793ms)
+✔ Pending cancellation and direct Timelock cancellation are represented (9.444544ms)
+✔ reject inconsistent projection: wrong ID (6.224548ms)
+✔ reject inconsistent projection: wrong description (6.804851ms)
+✔ reject inconsistent projection: wrong salt (6.106469ms)
+✔ reject inconsistent projection: wrong ETA (7.098943ms)
+✔ reject inconsistent projection: wrong executed calldata (6.145378ms)
+✔ reject inconsistent projection: missing transfer (6.175784ms)
+✔ reject inconsistent projection: missing payment (6.998793ms)
+✔ reject inconsistent projection: wrong transaction (9.343601ms)
+✔ reject inconsistent projection: ambiguous transfer (8.789688ms)
+✔ reject inconsistent projection: duplicate vote (6.168664ms)
+✔ reject inconsistent projection: unlinked outflow (6.982869ms)
+✔ malformed/unknown business log cannot be silently skipped (1.267347ms)
+✔ replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events (22.438789ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 519.768575

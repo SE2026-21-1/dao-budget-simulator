@@ -1,0 +1,208 @@
+{
+  "recordedAt": "2026-10-24 02:32:13 UTC",
+  "branch": "feature/tv2-be03",
+  "baseSha": "1a4c262f387fa7480020da17dde5d608a5193eaf",
+  "initialBranch": "feature/tv2-be02",
+  "initialSha": "4c568d6af1c5ca1a6ca203e61bd5558b5b4d6ed7",
+  "remote": "https://github.com/SE2026-21-1/dao-budget-simulator.git",
+  "initialWorkingTree": "clean",
+  "be02IsAncestorOfFetchedDev": true,
+  "candidate": "Uncommitted working tree over baseSha, no commit/push/PR/merge/comment",
+  "environment": {
+    "os": "Windows",
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "postgres": "18.4"
+  },
+  "checks": [
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.txt"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "be02",
+      "command": "npm run test:be02",
+      "exitCode": 0,
+      "log": "be02.txt"
+    },
+    {
+      "name": "be03",
+      "command": "npm run test:be03",
+      "exitCode": 0,
+      "log": "be03.txt"
+    },
+    {
+      "name": "be01-fixtures",
+      "command": "node scripts/check_be01.mjs",
+      "exitCode": 0,
+      "log": "be01-fixtures.txt"
+    },
+    {
+      "name": "be02-db",
+      "command": "npm run test:be02:db",
+      "exitCode": 0,
+      "log": "be02-db.txt"
+    },
+    {
+      "name": "be03-db",
+      "command": "npm run test:be03:db",
+      "exitCode": 0,
+      "log": "be03-db.txt"
+    },
+    {
+      "command": "git diff --check; additionally git diff --no-index --check on all untracked files",
+      "exitCode": 0,
+      "log": "whitespace.txt"
+    }
+  ],
+  "counts": {
+    "be02": {
+      "pass": 64,
+      "fail": 0,
+      "skip": 0
+    },
+    "be02Database": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    },
+    "be03": {
+      "pass": 22,
+      "fail": 0,
+      "skip": 0
+    },
+    "be03Database": {
+      "pass": 16,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "crashEvidence": [
+    {
+      "crashEvidence": "beforeCommit",
+      "beforeRestart": {
+        "blocks": 0,
+        "events": 0,
+        "checkpoint": null
+      },
+      "afterRestart": {
+        "blocks": 2,
+        "events": 1,
+        "checkpoint": "101"
+      },
+      "sql": {
+        "block_number": "101",
+        "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+        "header_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+        "events": 1
+      }
+    },
+    {
+      "crashEvidence": "afterCommit",
+      "beforeRestart": {
+        "blocks": 2,
+        "events": 1,
+        "checkpoint": "101"
+      },
+      "afterRestart": {
+        "blocks": 2,
+        "events": 1,
+        "checkpoint": "101"
+      },
+      "sql": {
+        "block_number": "101",
+        "block_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+        "header_hash": "0x0000000000000000000000000000000000000000000000000000000000000065",
+        "events": 1
+      }
+    }
+  ],
+  "withParams": {
+    "regression": "withparams-regression.json",
+    "source": "Synthetic compiler ABI vector, not a receipt",
+    "postgresRecovery": "PASS, raw identity preserved with all six fields"
+  },
+  "integration": {
+    "status": "SKIP",
+    "reason": "Windows Application Control blocked Forge even outside sandbox; build/deploy unavailable",
+    "details": "integration-blocked.txt",
+    "newAnvilNodeStarted": false,
+    "newTransactionsSent": false,
+    "savedReceipts": "Existing TV4 evidence on Dev inspected; not a fresh integration or live instance claim"
+  },
+  "policy": {
+    "checkpoint": "Raw collection, scoped by chain/deployment and full source fingerprint; NULL distinct from 0",
+    "confirmations": "K following blocks; H <= head-K; default numeric 2",
+    "commit": "headers/raw/decode labels/checkpoint in one transaction; advisory chain lock and expected checkpoint CAS",
+    "decode": "Raw checkpoint advances with durable UNKNOWN_TOPIC/DECODE_ERROR; exit 2 and issues persist across idle restart; explicit --redecode",
+    "reorg": "Hash verification on every invocation; mismatch stops without mutation. No BE07 rollback"
+  },
+  "cleanup": {
+    "postgres": "Each runner reported server stopped in finally, UUID data/logs retained in TEMP",
+    "crashChildren": "Killed and awaited; actual CLI restarts awaited; IPC disconnect guard",
+    "rpc": "Test server teardown",
+    "anvil": "No node started",
+    "existingDatabaseUsed": false
+  },
+  "limitations": [
+    "No fresh Anvil deployment/proposal/vote/queue/execute/WithParams integration",
+    "No BE03 Linux runner executed",
+    "TV1 ABI/contract peer review and TV4 toolchain/manifest/K acceptance pending",
+    "Projection/API/rebuild/compare/reorg rollback/benchmark outside this task"
+  ],
+  "sourceHashes": {
+    "indexer/abi-registry.ts": "77f9a9ebe8f28e89eda4b40c3eebf57ed5d948cdbced19984fca22ab92fee08e",
+    "indexer/cli.ts": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+    "indexer/config.ts": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+    "indexer/syncer.ts": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+    "indexer/types.ts": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "package.json": "8708d771335df917c6d5ffc235aa016f9260d866ef5155917c60f647b25c0106",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "tests/indexer/decoder.test.ts": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+    "tests/indexer/syncer.test.ts": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+    "tests/indexer/checkpoint-storage.test.ts": "6e962f642d0943e6206b0a6520a89b88b2d5cb8a11a906f0fe4a76c8540fcfdb",
+    "tests/indexer/crash-worker.ts": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+    "scripts/check_be03_database.ps1": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+    "docs/evidence/be03-20261024/be02-db.txt": "7cd24274de21ec8af1e766c2d9e477aef2f3d94f4fee3fb305cce40c62aa9761",
+    "docs/evidence/be03-20261024/be03-db.txt": "83974fad8a9ac8f488316b39436169342b07f6a65952c3e90841e86131a57d4a"
+  },
+  "preserved": {
+    "unchangedFromBase": [
+      "database/migrations/001_initial.sql",
+      "package-lock.json",
+      "fixtures/api",
+      "fixtures/sc01",
+      "contracts",
+      "lib"
+    ],
+    "evidence": "git diff --exit-code -- <listed paths>: exit 0"
+  },
+  "finalPostgresCluster": {
+    "be03": "%TEMP%/dao-be03-pg-b31ca3bbabe748b6b966a973c18e6e8a",
+    "stopped": true,
+    "log": "be03-db.txt"
+  },
+  "latestReview": {
+    "recordedAt": "2026-10-24T02:50:09.640Z",
+    "verification": "../be03-review-20261024/verification.json",
+    "review": "../be03-review-20261024/review.md",
+    "handoff": "READY_FOR_SOURCE_REVIEW",
+    "integrationStatus": "BLOCKED",
+    "note": "Original checks/counts/integration below are the earlier run; latest evidence is in linked verification."
+  }
+}

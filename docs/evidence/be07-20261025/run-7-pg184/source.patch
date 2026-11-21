@@ -1,0 +1,2004 @@
+diff --git a/.env.example b/.env.example
+index 0831f10..a4f139f 100644
+--- a/.env.example
++++ b/.env.example
+@@ -14,3 +14,9 @@ API_CORS_ORIGINS=
+ BE06_MANIFEST_PATH=/absolute/path/to/verified-handoff.json
+ BE06_REFERENCE_DATABASE_URL=postgresql://be06_readonly@127.0.0.1:5432/dao_reference
+ BE06_TARGET_DATABASE_URL=postgresql://be06_rebuild@127.0.0.1:5432/dao_rebuild_new
++
++# BE07: apply migration 005, then run --worker with toBlock=latest.
++# reorgWindow=128 and pollIntervalMs=1000 live in the indexer JSON config.
++# Native isolated tests: optional path when pg_config is unavailable.
++# BE07_PG_BIN=/usr/lib/postgresql/18/bin
++# BE07_EVIDENCE_DIR=reports/be07-local
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 36c61e1..c16990c 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -295,6 +295,52 @@ jobs:
+           path: reports/be06-live*
+           retention-days: 14
+ 
++  be07-recovery:
++    name: BE07 recovery, RPC failures and native database regressions
++    runs-on: ubuntu-24.04
++    timeout-minutes: 15
++    services:
++      postgres:
++        image: postgres:18.4
++        env:
++          POSTGRES_USER: be04_test
++          POSTGRES_PASSWORD: be04_test
++          POSTGRES_DB: postgres
++        ports:
++          - 5432:5432
++        options: >-
++          --health-cmd "pg_isready -U be04_test -d postgres"
++          --health-interval 5s
++          --health-timeout 3s
++          --health-retries 20
++    env:
++      PG_ADMIN_URL: postgresql://be04_test:be04_test@127.0.0.1:5432/postgres
++      BE07_TEST_ISOLATED: '1'
++      BE07_EVIDENCE_DIR: reports/be07
++    steps:
++      - uses: actions/checkout@v7.0.1
++        with:
++          submodules: recursive
++          persist-credentials: false
++      - uses: actions/setup-node@v7.1.0
++        with:
++          node-version: '24.15.0'
++          cache: npm
++      - run: npm ci
++      - uses: foundry-rs/foundry-toolchain@v1
++        with:
++          version: v1.8.5
++          cache: false
++      - run: forge build
++      - name: Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare
++        run: node scripts/check_be07_local.mjs
++      - uses: actions/upload-artifact@v7.0.2
++        if: always()
++        with:
++          name: be07-recovery-${{ github.sha }}
++          path: reports/be07/
++          retention-days: 14
++
+   frontend:
+     name: Frontend lint and production build
+     runs-on: ubuntu-24.04
+diff --git a/.gitignore b/.gitignore
+index 6335e4b..04adfb6 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -34,7 +34,7 @@ replay_pid*
+ !.env.example
+ 
+ # Node/TypeScript generated files
+-/node_modules/
++/node_modules
+ /dist/
+ /coverage/
+ /indexer/config/local*.json
+diff --git a/README.md b/README.md
+index 13293c5..62770a7 100644
+--- a/README.md
++++ b/README.md
+@@ -476,3 +476,7 @@ publication BE04 đúng cùng H/hash; target không được là database API đ
+ Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06.md) và
+ [bằng chứng nghiệm thu](docs/evidence/be06-20261024/summary.md). Reorg/retry tự
+ động thuộc BE07, benchmark thuộc BE08.
++
++## BE07 recovery và worker
++
++Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.
+diff --git a/docs/api.md b/docs/api.md
+index 1287ae4..6e7a7e6 100644
+--- a/docs/api.md
++++ b/docs/api.md
+@@ -421,3 +421,21 @@ Health trả 200 `ok`/`degraded` khi database và publication sẵn sàng, 503 k
+ database/publication chưa phục vụ được. Response tách tình trạng DB, raw
+ indexer, publication và cảnh báo raw decode. BE05 không thăm dò RPC head; lag
+ theo giây chưa quan sát được là null. Health không gọi RPC.
++
++
++## 8. BE07 — recovery và freshness của API runtime
++
++[BE07](be07.md) bổ sung migration 005 và heartbeat canonical cho API. Enum
++`sync.status` và error code BE05 giữ nguyên. Runtime thêm `recoveryStatus`
++(unverified/ready/recovering/replaying/rebuild_required), `lastRpcCheckAt` và
++`publicationBlock`. `lagSeconds` là chuỗi số tuổi quan sát theo wall clock,
++null khi chưa có quan sát; `lagBlocks` so confirmed với publication đang phục vụ.
++Quá 30000 ms chưa xác minh canonical, kể cả chain không có event, trạng thái là
++lagging và health degraded. Cache snapshot/cursor dùng trạng thái hiện tại.
++
++Recovering/replaying/rebuild_required chặn publication: health 503 với
++`data.recoveryStatus`, endpoint dữ liệu 503 DATA_NOT_READY, cursor cũ 409
++SNAPSHOT_INVALIDATED. Revision đổi ngay khi xác nhận mismatch, trước khi xóa
++suffix. Chỉ publication BE04 đã đối chiếu lại tại H/hash mới mở gate.
++Các giới hạn BE05 về lagSeconds=null/không ghi lần kiểm tra RPC trong các mục
++trước chỉ mô tả nền BE05; runtime có migration 005 dùng semantics BE07 này.
+diff --git a/docs/be06.md b/docs/be06.md
+index b2d616b..c3b4e33 100644
+--- a/docs/be06.md
++++ b/docs/be06.md
+@@ -109,3 +109,5 @@ Không coi raw replay hoặc gọi `--project` trong cùng database là FR15.
+ Reorg rollback/retry tự động thuộc BE07; benchmark nghiệm thu thuộc BE08. TV4
+ cần nghiệm thu độc lập FR15 rebuild/compare. TV1 cần xác nhận đối chiếu
+ on-chain; việc chạy local không hoàn tất peer review.
++
++BE07: database rebuild mới áp dụng thêm migration 004/005 và nhận serving gate. Recovery/retry hiện có trong [BE07](be07.md); compare vẫn bỏ runtime timestamps/revision và kiểm tra dữ liệu tại cùng H/hash.
+diff --git a/docs/indexer.md b/docs/indexer.md
+index 22c49c0..c219521 100644
+--- a/docs/indexer.md
++++ b/docs/indexer.md
+@@ -375,3 +375,5 @@ export lại, chèn metadata `deployments`/`deployment_contracts` với bốn de
+ BE02, lấy **deployment_id thực từ INSERT ... RETURNING** để cấu hình scanner.
+ Bundle không phát minh `deploymentId`. ABI/role audit local không thay nghiệm
+ thu SC06 chính thức, peer review indexed fields/IDs/salt hay production consumer.
++
++BE07 bổ sung [recovery, RPC retry và worker polling](be07.md). Áp dụng migration 005 sau 001–004; dùng `--worker` để kiểm tra cả khi idle và tự replay sau reorg.
+diff --git a/indexer/api/server.ts b/indexer/api/server.ts
+index 0c75c22..b6af9f1 100644
+--- a/indexer/api/server.ts
++++ b/indexer/api/server.ts
+@@ -157,7 +157,7 @@ async function readHealth(pool: Pool, scope: Scope): Promise<{ status: number; b
+     const body = {
+       context: context ?? found.notReadyContext,
+       data: { status, database: 'up', indexer: available ? (lag ? 'lagging' : 'synced') : 'not_ready',
+-        publication: available ? 'ready' : 'not_ready', projectionStatus: !available ? 'not_ready' : projectionLag > 0n ? 'lagging' : 'current',
++        publication: available ? 'ready' : 'not_ready', recoveryStatus: sync.recoveryStatus, projectionStatus: !available ? 'not_ready' : projectionLag > 0n ? 'lagging' : 'current',
+         publicationBlock: found.publication?.h ?? null, projectionLagBlocks: available ? projectionLag.toString() : null,
+         rawDecodeComplete: unresolved === 0n,
+         rawDecodeIssues: { unknownTopics: sqlCount(db.rows[0].unknown_topics), decodeErrors: sqlCount(db.rows[0].decode_errors) },
+@@ -187,6 +187,7 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
+       p.source_scope AS projection_scope, p.ignored_ancillary_events,
+       c.block_number::text AS raw_h, c.block_hash AS raw_hash, c.observed_head_block::text AS raw_head,
+       c.confirmation_depth, c.sync_status, c.source_scope AS raw_scope, c.updated_at,
++      to_jsonb(d)->'indexer_state' AS recovery_state,
+       (SELECT count(*)::text FROM indexed_blocks ib WHERE ib.deployment_id=d.deployment_id
+         AND ib.block_number BETWEEN (SELECT deployment_block FROM deployments WHERE deployment_id=d.deployment_id)
+         AND COALESCE(p.block_number,0)) AS projection_header_count,
+@@ -208,16 +209,11 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
+     !!raw && BigInt(row.raw_header_count) === BigInt(raw.h) - BigInt(row.deployment_block) + 1n;
+   const metadataReady = publication ? await servingMetadataReady(client, String(row.deployment_id), String(row.chain_id),
+     publication.h, row.governance_config as Json) : false;
+-  const ready = !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
++  const recovery = row.recovery_state as Json | null;
++  const ready = (!recovery || recovery.phase === 'ready') && !!publication && !!raw && raw.status !== 'rebuild_required' && raw.sourceScope === publication.scope &&
+     publication.revision === String(row.deployment_revision) && BigInt(raw.h) >= BigInt(publication.h) && row.projection_timestamp !== null &&
+     prefixComplete && metadataReady;
+-  const confirmed = raw ? (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
+-  const indexed = raw?.h ?? null;
+-  const lagBlocks = confirmed === null || indexed === null ? null : (confirmed > BigInt(indexed) ? confirmed - BigInt(indexed) : 0n);
+-  const sync: Json = { status: !raw || !publication || raw.status === 'rebuild_required' ? 'not_ready' : lagBlocks === 0n ? 'synced' : 'lagging',
+-    headBlock: raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null, indexedBlock: indexed,
+-    lagBlocks: lagBlocks?.toString() ?? null, lagSeconds: null,
+-    confirmations: raw ? String(raw.confirmations) : null, lastIndexedAt: raw?.updatedAt ?? null };
++  const sync = freshness(raw, publication?.h ?? null, recovery);
+   const context: Context | null = ready && publication ? { chainId: String(row.chain_id), deploymentId: String(row.deployment_name),
+     asOfBlock: publication.h, asOfBlockHash: publication.hash, asOfTimestamp: publication.timestamp,
+     snapshotRevision: publication.revision, dataKind: 'chain', sync } : null;
+@@ -234,13 +230,21 @@ async function scopeAndPublication(client: PoolClient, scope: Scope, requireRead
+   return state;
+ }
+ 
+-function buildSync(raw: ScopeState['raw']): Json {
+-  if (!raw) return { status: 'not_ready', headBlock: null, confirmedBlock: null, indexedBlock: null, lagBlocks: null, lagSeconds: null, confirmations: null, lastIndexedAt: null };
+-  const confirmed = BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n;
+-  const lag = confirmed > BigInt(raw.h) ? confirmed - BigInt(raw.h) : 0n;
+-  return { status: raw.status === 'rebuild_required' ? 'not_ready' : lag === 0n ? 'synced' : 'lagging',
+-    headBlock: raw.head, confirmedBlock: confirmed.toString(), indexedBlock: raw.h,
+-    lagBlocks: lag.toString(), lagSeconds: null, confirmations: String(raw.confirmations), lastIndexedAt: raw.updatedAt };
++export function freshness(raw: ScopeState['raw'], publication: string | null, recovery: Json | null, now = Date.now()): Json {
++  const confirmed = recovery?.confirmed !== undefined ? BigInt(String(recovery.confirmed)) : raw ?
++    (BigInt(raw.head) > BigInt(raw.confirmations) ? BigInt(raw.head) - BigInt(raw.confirmations) : 0n) : null;
++  const lag = confirmed === null || publication === null ? null : confirmed > BigInt(publication) ? confirmed - BigInt(publication) : 0n;
++  const checked = recovery?.lastCheckedAt ? Date.parse(String(recovery.lastCheckedAt)) : NaN;
++  const since = lag && recovery?.lagSince ? Date.parse(String(recovery.lagSince)) : lag && recovery?.lastPublishedAt ? Date.parse(String(recovery.lastPublishedAt)) : now;
++  const age = Number.isFinite(checked) ? Math.max(0, now - checked, now - since) : null;
++  const blocked = !raw || publication === null || raw.status === 'rebuild_required' ||
++    (!!recovery && recovery.phase !== 'ready');
++  return { status: blocked ? 'not_ready' : lag === 0n && age !== null && age <= 30000 ? 'synced' : 'lagging',
++    headBlock: recovery?.head ?? raw?.head ?? null, confirmedBlock: confirmed?.toString() ?? null,
++    indexedBlock: raw?.h ?? null, publicationBlock: publication, lagBlocks: lag?.toString() ?? null,
++    lagSeconds: age === null ? null : Math.floor(age / 1000).toString(), confirmations: raw ? String(raw.confirmations) : null,
++    lastIndexedAt: raw?.updatedAt ?? null, lastRpcCheckAt: recovery?.lastCheckedAt ?? null,
++    recoveryStatus: raw?.status === 'rebuild_required' ? 'rebuild_required' : recovery?.phase ?? 'unverified' };
+ }
+ 
+ function requireGovernance(value: Json): { config: Json } {
+@@ -388,7 +392,7 @@ async function materialize(client: PoolClient, scopeState: ScopeState, ttlSecond
+       proposalThreshold: String(governance.proposalThreshold), votingDelay: String(governance.votingDelay), votingPeriod: String(governance.votingPeriod),
+       timelockDelay: String(governance.minDelay), quorumNumerator: String(governance.quorumNumerator),
+       quorumDenominator: String(governance.quorumDenominator), totalSupply: String(governance.govSupply) }, recentActivity: [] };
+-  const sync = buildSync(scopeState.raw);
++  const sync = scopeState.sync;
+   const expiry = Math.floor(Date.now() / 1000) + ttlSeconds;
+   const inserted = await client.query(`INSERT INTO api_read_snapshots
+       (deployment_id,chain_id,block_number,block_hash,block_timestamp,snapshot_revision,source_scope,summary,sync,expires_at)
+@@ -557,14 +561,14 @@ async function page(pool: Pool, snapshot: Snapshot, endpoint: string, filters: J
+   try {
+     await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+     const stillValid = await client.query(`SELECT s.invalidated_at,s.expires_at,d.snapshot_revision::text,s.source_scope::text AS snapshot_scope,
+-        p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,ib.block_hash
++        p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,to_jsonb(d)->'indexer_state' AS recovery_state,ib.block_hash
+       FROM api_read_snapshots s JOIN deployments d USING (deployment_id)
+         JOIN checkpoints c USING (deployment_id) LEFT JOIN indexed_blocks ib
+           ON ib.deployment_id=s.deployment_id AND ib.block_number=s.block_number
+         LEFT JOIN projection_checkpoints p ON p.deployment_id=s.deployment_id
+         WHERE s.snapshot_id=$1 AND d.deployment_name=$2 AND d.chain_id=$3`, [snapshot.id, scope.deploymentId, scope.chainId]);
+     const validity = stillValid.rows[0];
+-    if (!validity || validity.invalidated_at || new Date(validity.expires_at).getTime() <= Date.now() || validity.sync_status === 'rebuild_required' ||
++    if (!validity || validity.invalidated_at || new Date(validity.expires_at).getTime() <= Date.now() || validity.sync_status === 'rebuild_required' || (validity.recovery_state && validity.recovery_state.phase !== 'ready') ||
+         String(validity.snapshot_scope) !== snapshot.sourceScope || String(validity.projection_scope) !== snapshot.sourceScope || String(validity.raw_scope) !== snapshot.sourceScope ||
+         String(validity.snapshot_revision) !== snapshot.context.snapshotRevision || String(validity.block_hash).toLowerCase() !== snapshot.context.asOfBlockHash.toLowerCase())
+       throw new ApiError(409, 'SNAPSHOT_INVALIDATED', 'Snapshot đã hết hạn hoặc bị invalidated.', {}, false, snapshot.context);
+@@ -623,6 +627,7 @@ async function page(pool: Pool, snapshot: Snapshot, endpoint: string, filters: J
+         b: snapshot.context.asOfBlockHash.toLowerCase(), r: snapshot.context.snapshotRevision, s: snapshot.sourceScope,
+         e: endpoint, f: filters, l: limit, k: key, x: snapshot.expiresAt }, secret);
+     }
++    snapshot.context.sync = (await scopeAndPublication(client, scope, false)).sync;
+     await client.query('COMMIT');
+     return { context: snapshot.context, data: selected.map((row) => row.payload), pagination: { limit, totalCount: sqlCount(count.rows[0].total), nextCursor } };
+   } catch (error) {
+@@ -699,14 +704,14 @@ export function createApiServer(options: ServerOptions): Server {
+         try {
+           await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+           const snapshotCheck = await client.query(`SELECT s.invalidated_at,s.expires_at,d.snapshot_revision::text,s.source_scope::text AS snapshot_scope,
+-              p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,ib.block_hash
++              p.source_scope::text AS projection_scope,c.source_scope::text AS raw_scope,c.sync_status,to_jsonb(d)->'indexer_state' AS recovery_state,ib.block_hash
+             FROM api_read_snapshots s JOIN deployments d USING (deployment_id)
+               JOIN checkpoints c USING (deployment_id) LEFT JOIN indexed_blocks ib
+                 ON ib.deployment_id=s.deployment_id AND ib.block_number=s.block_number
+               LEFT JOIN projection_checkpoints p ON p.deployment_id=s.deployment_id
+               WHERE s.snapshot_id=$1 AND d.deployment_name=$2 AND d.chain_id=$3`, [snapshot.id, scope.deploymentId, scope.chainId]);
+           const meta = snapshotCheck.rows[0];
+-          if (!meta || meta.invalidated_at || new Date(meta.expires_at).getTime() <= Date.now() || meta.sync_status === 'rebuild_required' ||
++          if (!meta || meta.invalidated_at || new Date(meta.expires_at).getTime() <= Date.now() || meta.sync_status === 'rebuild_required' || (meta.recovery_state && meta.recovery_state.phase !== 'ready') ||
+               String(meta.snapshot_scope) !== snapshot.sourceScope || String(meta.projection_scope) !== snapshot.sourceScope || String(meta.raw_scope) !== snapshot.sourceScope ||
+               String(meta.snapshot_revision) !== snapshot.context.snapshotRevision || String(meta.block_hash).toLowerCase() !== snapshot.context.asOfBlockHash.toLowerCase())
+             throw new ApiError(409, 'SNAPSHOT_INVALIDATED', 'Snapshot đã hết hạn hoặc bị invalidated.', {}, false, snapshot.context);
+diff --git a/indexer/be06/rebuild.ts b/indexer/be06/rebuild.ts
+index 4605c12..26d7986 100644
+--- a/indexer/be06/rebuild.ts
++++ b/indexer/be06/rebuild.ts
+@@ -230,7 +230,7 @@ export async function readChainMetadata(config: LoadedManifest['config'], rpc: R
+ async function applyMigrations(pool: Pool): Promise<void> {
+   const client = await pool.connect();
+   try {
+-    for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql']) {
++    for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql', '005_be07.sql']) {
+       const sql = await readFile(new URL(`../../database/migrations/${migration}`, import.meta.url), 'utf8');
+       await client.query(sql);
+     }
+diff --git a/indexer/cli.ts b/indexer/cli.ts
+index 8ec09ee..d58cabe 100644
+--- a/indexer/cli.ts
++++ b/indexer/cli.ts
+@@ -1,3 +1,4 @@
++import { worker } from './worker.js';
+ import { pathToFileURL } from 'node:url';
+ import pg from 'pg';
+ import { loadConfig } from './config.js';
+@@ -10,16 +11,24 @@ import { project } from './projection/projector.js';
+ 
+ export async function main(args = process.argv.slice(2)): Promise<number> {
+   if (args.length === 1 && ['--help', '-h'].includes(args[0]!)) {
+-    process.stdout.write('Usage: npm run indexer -- --config <file.json> [--sync|--redecode|--project|--sync-project]\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint.\n');
++    process.stdout.write('Usage: npm run indexer -- --config <file.json> [--sync|--redecode|--project|--sync-project|--worker]\nSet RPC_URL and DATABASE_URL in the environment. Exit: 0 complete, 1 failure, 2 raw logs saved with decode issues. --project reconciles BE04 at the BE03 checkpoint.\n');
+     return 0;
+   }
+   let pool: pg.Pool | undefined;
+   try {
+-    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project'].includes(args[2]!))) || args[0] !== '--config' || !args[1]) throw new IndexerError('INVALID_ARGUMENT', 'Use --config <file.json> [--sync|--redecode|--project|--sync-project] (or --help).');
++    if ((args.length !== 2 && !(args.length === 3 && ['--sync', '--redecode', '--project', '--sync-project', '--worker'].includes(args[2]!))) || args[0] !== '--config' || !args[1]) throw new IndexerError('INVALID_ARGUMENT', 'Use --config <file.json> [--sync|--redecode|--project|--sync-project|--worker] (or --help).');
+     const config = await loadConfig(args[1]);
+     const connectionString = process.env.DATABASE_URL;
+     if (!connectionString) throw new IndexerError('INVALID_CONFIG', 'Set DATABASE_URL to the intended migrated PostgreSQL database.');
+     pool = new pg.Pool({ connectionString, max: 1, connectionTimeoutMillis: 10_000 });
++    if (args[2] === '--worker') {
++      const controller = new AbortController();
++      const stop = () => controller.abort();
++      process.once('SIGINT', stop); process.once('SIGTERM', stop);
++      try { await worker(config, pool, controller.signal, value => process.stdout.write(JSON.stringify(value) + '\n')); }
++      finally { process.removeListener('SIGINT', stop); process.removeListener('SIGTERM', stop); }
++      return 0;
++    }
+     if (args[2] === '--project') {
+       const report = await project(config,new HttpRpc(config.rpcUrl),pool);
+       process.stdout.write(JSON.stringify({ type: 'projection_result', ...report }) + '\n');
+diff --git a/indexer/config.ts b/indexer/config.ts
+index 4580998..2945210 100644
+--- a/indexer/config.ts
++++ b/indexer/config.ts
+@@ -75,7 +75,12 @@ export function parseConfig(value: unknown, env: NodeJS.ProcessEnv = process.env
+   if (typeof confirmations !== 'number' || !Number.isInteger(confirmations) || confirmations < 0 || confirmations > 2_147_483_647) {
+     throw new IndexerError('INVALID_CONFIG', 'confirmations must be an integer number in [0, 2147483647].');
+   }
+-  return { rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts, confirmations };
++  const reorgWindow = input.reorgWindow ?? 128;
++  const pollIntervalMs = input.pollIntervalMs ?? 1000;
++  if (!Number.isInteger(reorgWindow) || typeof reorgWindow !== 'number' || reorgWindow < 1 || reorgWindow > 10000 ||
++      !Number.isInteger(pollIntervalMs) || typeof pollIntervalMs !== 'number' || pollIntervalMs < 100 || pollIntervalMs > 10000)
++    throw new IndexerError('INVALID_CONFIG', 'reorgWindow must be 1..10000; pollIntervalMs must be 100..10000.');
++  return { reorgWindow, pollIntervalMs, rpcUrl: rpcUrl as string, chainId, deploymentId: deploymentId.toString(), fromBlock, toBlock, batchSize, contracts, confirmations };
+ }
+ 
+ export async function loadConfig(path: string, env: NodeJS.ProcessEnv = process.env): Promise<IndexerConfig> {
+diff --git a/indexer/config/example.json b/indexer/config/example.json
+index 05b913d..21ca75c 100644
+--- a/indexer/config/example.json
++++ b/indexer/config/example.json
+@@ -7,9 +7,31 @@
+   "batchSize": "5",
+   "confirmations": 2,
+   "contracts": [
+-    { "role": "budget_token", "address": "0x4444444444444444444444444444444444444444", "deploymentBlock": "100", "abiVersion": "oz-5.4.0-erc20" },
+-    { "role": "treasury", "address": "0x1111111111111111111111111111111111111111", "deploymentBlock": "101", "abiVersion": "sc01-itreasury-v1" },
+-    { "role": "timelock", "address": "0x3333333333333333333333333333333333333333", "deploymentBlock": "102", "abiVersion": "oz-5.4.0-timelock" },
+-    { "role": "governor", "address": "0x2222222222222222222222222222222222222222", "deploymentBlock": "103", "abiVersion": "oz-5.4.0-governor" }
+-  ]
++    {
++      "role": "budget_token",
++      "address": "0x4444444444444444444444444444444444444444",
++      "deploymentBlock": "100",
++      "abiVersion": "oz-5.4.0-erc20"
++    },
++    {
++      "role": "treasury",
++      "address": "0x1111111111111111111111111111111111111111",
++      "deploymentBlock": "101",
++      "abiVersion": "sc01-itreasury-v1"
++    },
++    {
++      "role": "timelock",
++      "address": "0x3333333333333333333333333333333333333333",
++      "deploymentBlock": "102",
++      "abiVersion": "oz-5.4.0-timelock"
++    },
++    {
++      "role": "governor",
++      "address": "0x2222222222222222222222222222222222222222",
++      "deploymentBlock": "103",
++      "abiVersion": "oz-5.4.0-governor"
++    }
++  ],
++  "reorgWindow": 128,
++  "pollIntervalMs": 1000
+ }
+diff --git a/indexer/projection/projector.ts b/indexer/projection/projector.ts
+index aedac0b..15727e1 100644
+--- a/indexer/projection/projector.ts
++++ b/indexer/projection/projector.ts
+@@ -1,8 +1,12 @@
+ import type { Pool, PoolClient } from 'pg';
++import { PostgresStorage } from '../storage.js';
++import { readHeader } from '../reader.js';
++import { quantity } from '../rpc.js';
++import { runtime } from '../recovery.js';
+ import { IndexerError } from '../errors.js';
+ import type { RpcTransport } from '../rpc.js';
+ import { checkpoint, verifyMetadata } from '../storage.js';
+-import { scopeHash } from '../scope.js';
++import { confirmationDepth, scopeHash } from '../scope.js';
+ import type { IndexerConfig, JsonObject, NormalizedLog } from '../types.js';
+ import { canonical, reconcile } from './chain.js';
+ import { buildModel, classify, requireProjection, type Evaluated, type Model, type SourceEvent } from './model.js';
+@@ -27,6 +31,32 @@ export interface ProjectionReport {
+  * Full replay is intentional for the BE04 MVP; no external metadata/previous projection is used.
+  */
+ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
++  try { return await projectTransaction(config, rpc, pool); }
++  catch (error) {
++    // The failed publication transaction has released its lock/connection first.
++    const state = (await pool.query("SELECT to_jsonb(d)->'indexer_state' AS s FROM deployments d WHERE deployment_id=$1", [config.deploymentId])).rows[0]?.s;
++    if (state && state.phase !== 'rebuild_required' && quantity(await rpc.call('eth_chainId', []), 'chainId') === config.chainId) {
++      const storage = new PostgresStorage(pool);
++      const cp = await storage.loadCheckpoint(config);
++      let header;
++      if (cp) {
++        try { header = await readHeader(rpc, cp.number); }
++        catch (verifyError) {
++          if (!(verifyError instanceof IndexerError) || verifyError.code !== 'RPC_INVALID_DATA') throw verifyError;
++          await storage.recoverShorterChain(config, rpc, cp);
++          throw new IndexerError('REORG_RETRY', 'Shorter fork detected during projection; recovery persisted.');
++        }
++      }
++      if (cp && header?.hash !== cp.hash) {
++        await storage.recoverCheckpoint(config, rpc, cp);
++        throw new IndexerError('REORG_RETRY', 'Reorg detected during projection; recovery persisted.');
++      }
++    }
++    throw error;
++  }
++}
++
++async function projectTransaction(config: IndexerConfig, rpc: RpcTransport, pool: Pool): Promise<ProjectionReport> {
+   const client = await pool.connect();
+   try {
+     await client.query('BEGIN');
+@@ -51,7 +81,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
+     const status = (
+       await client.query('SELECT sync_status FROM checkpoints WHERE deployment_id=$1', [config.deploymentId])
+     ).rows[0];
+-    requireProjection(status.sync_status !== 'rebuild_required', 'Raw checkpoint requires rebuild.');
++    const recovery = await runtime(client, config.deploymentId);
++    requireProjection(status.sync_status !== 'rebuild_required' && recovery?.phase !== 'rebuild_required' && recovery?.phase !== 'recovering', 'Recovery gate blocks publication.');
+     const old = (
+       await client.query('SELECT block_number::text FROM projection_checkpoints WHERE deployment_id=$1', [
+         config.deploymentId,
+@@ -123,6 +154,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
+     const model = buildModel(events, treasury, governor);
+     const evaluated = await reconcile(config, rpc, cp.hash, BigInt(header.block_timestamp), model);
+     await canonical(config, rpc, cp.number, cp.hash);
++    if (recovery && quantity(await rpc.call('eth_blockNumber', []), 'head') < cp.number + BigInt(confirmationDepth(config)))
++      throw new IndexerError('RPC_UNAVAILABLE', 'Projection H no longer has K following blocks; wait for confirmed head.');
+     await publish(client, config, model, evaluated);
+     await client.query(
+       `INSERT INTO projection_checkpoints
+@@ -132,6 +165,8 @@ export async function project(config: IndexerConfig, rpc: RpcTransport, pool: Po
+       snapshot_revision=EXCLUDED.snapshot_revision,ignored_ancillary_events=EXCLUDED.ignored_ancillary_events,published_at=CURRENT_TIMESTAMP`,
+       [config.deploymentId, cp.number.toString(), cp.hash, scopeHash(config), meta.snapshot_revision, ignored],
+     );
++    if (recovery) await client.query(`UPDATE deployments SET indexer_state=indexer_state ||
++      jsonb_build_object('phase','ready','lastPublishedAt',clock_timestamp()) WHERE deployment_id=$1`, [config.deploymentId]);
+     await client.query('COMMIT');
+     return {
+       context: {
+diff --git a/indexer/rpc.ts b/indexer/rpc.ts
+index 7b0c3a2..06af68e 100644
+--- a/indexer/rpc.ts
++++ b/indexer/rpc.ts
+@@ -5,35 +5,80 @@ export interface RpcTransport {
+   call(method: string, params: unknown[]): Promise<unknown>;
+ }
+ 
++export class RpcError extends IndexerError {
++  constructor(code: string, message: string, public readonly retryable: boolean) { super(code, message); }
++}
++export interface RpcOptions {
++  maxAttempts?: number; baseDelayMs?: number; maxDelayMs?: number; signal?: AbortSignal;
++  random?: () => number;
++}
+ export class HttpRpc implements RpcTransport {
+   private id = 0;
+-  constructor(private readonly url: string, private readonly timeoutMs = 30_000) {}
+-
++  constructor(private readonly url: string, private readonly timeoutMs = 5000, private readonly options: RpcOptions = {}) {
++    try { if (!['http:', 'https:'].includes(new URL(url).protocol)) throw new Error(); }
++    catch { throw new IndexerError('INVALID_CONFIG', 'RPC requires an HTTP(S) URL.'); }
++    if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 30000 ||
++        !Number.isInteger(options.maxAttempts ?? 4) || (options.maxAttempts ?? 4) < 1 || (options.maxAttempts ?? 4) > 10 ||
++        !Number.isFinite(options.baseDelayMs ?? 250) || (options.baseDelayMs ?? 250) < 0 ||
++        !Number.isFinite(options.maxDelayMs ?? 2000) || (options.maxDelayMs ?? 2000) < 0)
++      throw new IndexerError('INVALID_CONFIG', 'Invalid bounded RPC retry/timeout configuration.');
++  }
+   async call(method: string, params: unknown[]): Promise<unknown> {
++    const attempts = this.options.maxAttempts ?? 4;
++    for (let attempt = 0; ; attempt++) {
++      if (this.options.signal?.aborted) throw new IndexerError('STOPPED', 'RPC stopped.');
++      try { return await this.request(method, params); }
++      catch (e) {
++        if (this.options.signal?.aborted) throw new IndexerError('STOPPED', 'RPC stopped.');
++        if (!(e instanceof RpcError) || !e.retryable || attempt + 1 >= attempts) throw e;
++        const cap = Math.min(this.options.maxDelayMs ?? 2000, (this.options.baseDelayMs ?? 250) * 2 ** attempt);
++        const delay = cap * (0.5 + 0.5 * (this.options.random ?? Math.random)());
++        try { await pause(delay, this.options.signal); }
++        catch { throw new IndexerError('STOPPED', 'RPC stopped during backoff.'); }
++      }
++    }
++  }
++  private async request(method: string, params: unknown[]): Promise<unknown> {
+     const id = ++this.id;
++    const signals = [AbortSignal.timeout(this.timeoutMs), ...(this.options.signal ? [this.options.signal] : [])];
+     let response: Response;
++    let body: Record<string, unknown>;
+     try {
+       response = await fetch(this.url, {
+         method: 'POST', headers: { 'content-type': 'application/json' },
+-        body: JSON.stringify({ jsonrpc: '2.0', id, method, params }),
+-        signal: AbortSignal.timeout(this.timeoutMs),
++        body: JSON.stringify({ jsonrpc: '2.0', id, method, params }), signal: AbortSignal.any(signals),
+       });
+-    } catch {
+-      throw new IndexerError('RPC_UNAVAILABLE', `${method}: RPC transport failed or timed out.`);
++      if (!response.ok) {
++        await response.body?.cancel();
++        const temporary = response.status === 408 || response.status === 429 || response.status >= 500;
++        throw new RpcError(temporary ? 'RPC_UNAVAILABLE' : 'RPC_HTTP_ERROR', `${method}: RPC HTTP status ${response.status}.`, temporary);
++      }
++      try { body = rpcObject(await response.json(), 'RPC response'); }
++      catch {
++        if (signals.some(s => s.aborted)) throw new RpcError('RPC_UNAVAILABLE', `${method}: RPC timed out.`, true);
++        throw new RpcError('RPC_INVALID_RESPONSE', `${method}: invalid JSON response.`, false);
++      }
++    } catch (e) {
++      if (e instanceof IndexerError) throw e;
++      throw new RpcError('RPC_UNAVAILABLE', `${method}: RPC transport failed or timed out.`, true);
+     }
+-    if (!response.ok) throw new IndexerError('RPC_HTTP_ERROR', `${method}: RPC HTTP status ${response.status}.`);
+-    let body: Record<string, unknown>;
+-    try { body = rpcObject(await response.json(), 'RPC response'); }
+-    catch { throw new IndexerError('RPC_INVALID_RESPONSE', `${method}: RPC response is not a JSON object.`); }
+-    if (body.id !== id || body.jsonrpc !== '2.0') {
+-      throw new IndexerError('RPC_INVALID_RESPONSE', `${method}: RPC response ID/version mismatch.`);
++    if (body.id !== id || body.jsonrpc !== '2.0')
++      throw new RpcError('RPC_INVALID_RESPONSE', `${method}: RPC response ID/version mismatch.`, false);
++    if (body.error !== undefined) {
++      const code = typeof body.error === 'object' && body.error !== null ? (body.error as Record<string, unknown>).code : null;
++      const temporary = code === -32005 || code === -32016 || code === -32603;
++      throw new RpcError(temporary ? 'RPC_UNAVAILABLE' : 'RPC_ERROR', `${method}: provider JSON-RPC error code ${typeof code === 'number' ? code : 'invalid'}.`, temporary);
+     }
+-    if (body.error !== undefined) throw new IndexerError('RPC_ERROR', `${method}: provider returned a JSON-RPC error.`);
+-    if (!Object.hasOwn(body, 'result')) throw new IndexerError('RPC_INVALID_RESPONSE', `${method}: missing RPC result.`);
++    if (!Object.hasOwn(body, 'result')) throw new RpcError('RPC_INVALID_RESPONSE', `${method}: missing RPC result.`, false);
+     return body.result;
+   }
+ }
+ 
++export async function pause(ms: number, signal?: AbortSignal): Promise<void> {
++  const { setTimeout } = await import('node:timers/promises');
++  await setTimeout(ms, undefined, signal ? { signal } : {});
++}
++
+ export function rpcObject(value: unknown, field: string): Record<string, unknown> {
+   if (!value || typeof value !== 'object' || Array.isArray(value)) {
+     throw new IndexerError('RPC_INVALID_DATA', `${field} must be an object.`);
+diff --git a/indexer/storage.ts b/indexer/storage.ts
+index 2f6e0c4..9226b6a 100644
+--- a/indexer/storage.ts
++++ b/indexer/storage.ts
+@@ -1,16 +1,21 @@
+ import type { Pool, PoolClient } from 'pg';
+ import { isDeepStrictEqual } from 'node:util';
++import { runtime, recover, sameCheckpoint } from './recovery.js';
++import { quantity, type RpcTransport } from './rpc.js';
++import { readHeader } from './reader.js';
++import { IndexerError } from './errors.js';
+ import { decodeLog } from './decoder.js';
+ import { confirmationDepth, firstBlock, scopeHash, sourceKey } from './scope.js';
+ import type { BatchStorage, Checkpoint, DecodeIssue, IndexerConfig, LogBatch, NormalizedLog, SyncStorage, WriteResult } from './types.js';
+ 
+-type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR' | 'CHECKPOINT_CONFLICT';
++type StorageCode = 'STORAGE_METADATA_MISMATCH' | 'STORAGE_INVALID_BATCH' | 'STORAGE_CONFLICT' | 'STORAGE_DATABASE_ERROR' | 'CHECKPOINT_CONFLICT' | 'REBUILD_REQUIRED';
+ 
+ export class StorageError extends Error {
+   constructor(
+     public readonly code: StorageCode,
+     message: string,
+     public readonly details: Record<string, string> = {},
++    public readonly retryable = false,
+   ) {
+     super(message);
+     this.name = 'StorageError';
+@@ -149,6 +154,9 @@ export async function checkpoint(client: PoolClient, config: IndexerConfig): Pro
+ interface Progress { expected: Checkpoint | null; head: bigint }
+ export interface TransactionHooks {
+   /** Test dependency injection only; production CLI never configures hooks. */
++  recoveryMarked?: () => Promise<void>;
++  beforeRollbackCommit?: () => Promise<void>;
++  afterRollbackCommit?: () => Promise<void>;
+   beforeCommit?: () => Promise<void>;
+   afterCommit?: () => Promise<void>;
+ }
+@@ -172,12 +180,48 @@ async function verifyStoredBoundaries(client: PoolClient, config: IndexerConfig,
+ export class PostgresStorage implements BatchStorage, SyncStorage {
+   constructor(private readonly pool: Pool, private readonly hooks: TransactionHooks = {}) {}
+ 
++  async recoveryPending(config: IndexerConfig): Promise<boolean> {
++    const c = await this.pool.connect();
++    try { return (await runtime(c, config.deploymentId))?.phase === 'recovering'; } finally { c.release(); }
++  }
++  async recoverShorterChain(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint): Promise<Checkpoint | null> {
++    const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
++    if (head >= expected.number) throw new IndexerError('RPC_INVALID_DATA', 'RPC omitted a checkpoint below its advertised head.');
++    const header = await readHeader(rpc, head);
++    const stored = await this.pool.query('SELECT block_hash FROM indexed_blocks WHERE deployment_id=$1 AND block_number=$2', [config.deploymentId, head.toString()]);
++    if (!stored.rowCount || stored.rows[0].block_hash === header.hash)
++      throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC is behind the saved checkpoint without proof of a fork; preserve data and retry.');
++    return recover(this.pool, config, rpc, expected, this.hooks);
++  }
++  async recoverCheckpoint(config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint): Promise<Checkpoint | null> {
++    return recover(this.pool, config, rpc, expected, this.hooks);
++  }
++
++  async observe(config: IndexerConfig, head: bigint, expected: Checkpoint | null): Promise<void> {
++    const c = await this.pool.connect();
++    try {
++      await c.query('BEGIN');
++      await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
++      if (!sameCheckpoint(await checkpoint(c, config), expected)) throw new StorageError('CHECKPOINT_CONFLICT', 'Stale RPC observation.', {}, true);
++      if (await runtime(c, config.deploymentId)) {
++        await c.query(`UPDATE deployments SET indexer_state=indexer_state || jsonb_build_object(
++          'lastCheckedAt',clock_timestamp(),'head',$2::text,'confirmed',GREATEST(0,$2::numeric-$3)::text,
++          'lagSince',CASE WHEN $4::numeric IS NULL OR $4::numeric < $2::numeric-$3 THEN
++            COALESCE(indexer_state->'lagSince',to_jsonb(clock_timestamp())) ELSE NULL END)
++          WHERE deployment_id=$1`, [config.deploymentId, head.toString(), confirmationDepth(config), expected?.number.toString() ?? null]);
++      }
++      await c.query('COMMIT');
++    } catch (e) { await c.query('ROLLBACK'); throw e; } finally { c.release(); }
++  }
++
+   async loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null> {
+     const client = await this.pool.connect();
+     try {
+       await client.query('BEGIN');
+       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+       await verifyMetadata(client, config, true);
++      const state = await runtime(client, config.deploymentId);
++      if (state?.phase === 'rebuild_required') throw new StorageError('REBUILD_REQUIRED', 'REBUILD_REQUIRED: use BE06 with a new database.');
+       const result = await checkpoint(client, config);
+       await client.query('COMMIT');
+       return result;
+@@ -220,11 +264,14 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
+       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+       // Lock metadata until COMMIT; never seed or overwrite user deployment data.
+       await verifyMetadata(client, config, !!progress);
++      const state = await runtime(client, config.deploymentId);
++      if (state?.phase === 'recovering' || state?.phase === 'rebuild_required')
++        throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery gate blocks ingestion; restart sync.', {}, true);
+       if (progress) {
+         const current = await checkpoint(client, config);
+         if (current?.number !== progress.expected?.number || current?.hash !== progress.expected?.hash
+             || batch.fromBlock !== (current ? current.number + 1n : firstBlock(config))) {
+-          throw new StorageError('CHECKPOINT_CONFLICT', 'Stale writer or noncontiguous checkpoint batch; restart and verify RPC hash.');
++          throw new StorageError('CHECKPOINT_CONFLICT', 'Stale writer or noncontiguous checkpoint batch; restart and verify RPC hash.', {}, true);
+         }
+         if (progress.head < batch.toBlock + BigInt(confirmationDepth(config))) invalid('Batch exceeds confirmed head.');
+         const expectedSources = config.contracts.filter((c) => c.deploymentBlock <= batch.toBlock).map(sourceKey).sort();
+@@ -336,6 +383,9 @@ export class PostgresStorage implements BatchStorage, SyncStorage {
+       await client.query('BEGIN');
+       await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
+       await verifyMetadata(client, config, true);
++      const state = await runtime(client, config.deploymentId);
++      if (state?.phase === 'recovering' || state?.phase === 'rebuild_required')
++        throw new StorageError('CHECKPOINT_CONFLICT', 'Recovery gate blocks re-decode.');
+       const rawCheckpoint = await checkpoint(client, config);
+       const rows = await client.query(`SELECT *, topics::text[] AS topics FROM raw_events WHERE deployment_id = $1
+         AND ($2::numeric IS NULL OR block_number <= $2)
+diff --git a/indexer/syncer.ts b/indexer/syncer.ts
+index 345e2b9..1ce1a23 100644
+--- a/indexer/syncer.ts
++++ b/indexer/syncer.ts
+@@ -17,7 +17,7 @@ export interface SyncReport {
+   decodeErrors: number;
+   issues: DecodeIssue[];
+   committedBatches: number;
+-  error?: { code: string; message: string };
++  error?: { code: string; message: string; retryable?: boolean };
+ }
+ 
+ export class SyncError extends Error {
+@@ -29,18 +29,30 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
+   onBatch?: (batch: { type: 'batch_committed'; fromBlock: string; toBlock: string }) => void): Promise<SyncReport> {
+   const report: SyncReport = { status: 'failed', chainId: config.chainId.toString(), deploymentId: config.deploymentId,
+     checkpoint: null, decodeComplete: false, unknownTopics: 0, decodeErrors: 0, issues: [], committedBatches: 0 };
++  let cp: Checkpoint | null = null;
+   try {
+     const k = confirmationDepth(config);
+     if (config.fromBlock > firstBlock(config)) throw new IndexerError('INVALID_CONFIG', 'BE03 cannot skip source deployment blocks.');
+     if (quantity(await rpc.call('eth_chainId', []), 'eth_chainId') !== config.chainId) {
+       throw new IndexerError('CHAIN_ID_MISMATCH', 'RPC chain differs from configuration.');
+     }
+-    let cp: Checkpoint | null = await storage.loadCheckpoint(config);
++    cp = await storage.loadCheckpoint(config);
+     let previous;
+     if (cp) {
+       report.checkpoint = { number: cp.number.toString(), hash: cp.hash };
+-      previous = await readHeader(rpc, cp.number); // Must run before checking for new/safe blocks.
+-      if (previous.hash !== cp.hash) throw new IndexerError('CHECKPOINT_HASH_MISMATCH', 'RPC checkpoint hash differs; stopped without modifying stored data. Investigate before BE07 rollback.');
++      try { previous = await readHeader(rpc, cp.number); } // Check even when idle.
++      catch (error) {
++        if (!(error instanceof IndexerError) || error.code !== 'RPC_INVALID_DATA' || !storage.recoverShorterChain) throw error;
++        cp = await storage.recoverShorterChain(config, rpc, cp);
++        previous = cp ? await readHeader(rpc, cp.number) : undefined;
++      }
++      report.checkpoint = cp ? { number: cp.number.toString(), hash: cp.hash } : null;
++      if (cp && (previous?.hash !== cp.hash || await storage.recoveryPending?.(config))) {
++        if (!storage.recoverCheckpoint) throw new IndexerError('CHECKPOINT_HASH_MISMATCH', 'RPC checkpoint hash differs; recovery storage is required.');
++        cp = await storage.recoverCheckpoint(config, rpc, cp);
++        previous = cp ? await readHeader(rpc, cp.number) : undefined;
++        report.checkpoint = cp ? { number: cp.number.toString(), hash: cp.hash } : null;
++      }
+     }
+     const head = quantity(await rpc.call('eth_blockNumber', []), 'eth_blockNumber');
+     if (cp && head < cp.number) throw new IndexerError('CHECKPOINT_HEAD_BEHIND', 'RPC head is below verified checkpoint.');
+@@ -51,6 +63,10 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
+     const from = cp ? cp.number + 1n : firstBlock(config);
+     if (to !== null && from <= to) {
+       for (const [start, end] of blockRanges(from, to, config.batchSize)) {
++        if (cp && (await readHeader(rpc, cp.number)).hash !== cp.hash) {
++          await storage.recoverCheckpoint?.(config, rpc, cp);
++          throw new IndexerError('REORG_RETRY', 'Checkpoint changed during catch-up; recovery persisted. Run sync again.');
++        }
+         const { batch } = await readBatch(config, rpc, start, end, previous);
+         await storage.writeCheckpointBatch(config, batch, cp, head);
+         const last = batch.blocks.at(-1)!;
+@@ -61,12 +77,25 @@ export async function sync(config: IndexerConfig, rpc: RpcTransport, storage: Sy
+         onBatch?.({ type: 'batch_committed', fromBlock: start.toString(), toBlock: end.toString() });
+       }
+     }
++    if (cp && (await readHeader(rpc, cp.number)).hash !== cp.hash) {
++      await storage.recoverCheckpoint?.(config, rpc, cp);
++      throw new IndexerError('REORG_RETRY', 'Checkpoint changed after ingestion; recovery persisted. Run sync again.');
++    }
++    await storage.observe?.(config, head, cp);
+     Object.assign(report, await storage.decodeIssues(config, cp?.number));
+     report.decodeComplete = report.unknownTopics + report.decodeErrors === 0;
+     report.status = report.decodeComplete ? 'raw_synced' : 'raw_synced_with_decode_issues';
+     return report;
+   } catch (error) {
+-    report.error = error instanceof StorageError ? { code: error.code, message: error.message } : publicError(error);
++    if (cp && error instanceof IndexerError && ['BLOCK_CHANGED','BLOCK_MISMATCH','LOG_BLOCK_MISMATCH','REMOVED_LOG'].includes(error.code)) {
++      try {
++        if ((await readHeader(rpc, cp.number)).hash !== cp.hash && storage.recoverCheckpoint) {
++          await storage.recoverCheckpoint(config, rpc, cp);
++          error = new IndexerError('REORG_RETRY', 'Fork detected during batch read; recovery persisted.');
++        }
++      } catch (recoveryError) { error = recoveryError; }
++    }
++    report.error = error instanceof StorageError ? { code: error.code, message: error.message, retryable: error.retryable } : publicError(error);
+     throw new SyncError(report);
+   }
+ }
+diff --git a/indexer/types.ts b/indexer/types.ts
+index a920233..569e4f1 100644
+--- a/indexer/types.ts
++++ b/indexer/types.ts
+@@ -19,6 +19,8 @@ export interface IndexerConfig {
+   contracts: ContractConfig[];
+   /** Number of following blocks required; BE03 defaults to 2. */
+   confirmations?: number;
++  reorgWindow?: number;
++  pollIntervalMs?: number;
+ }
+ 
+ export interface BlockHeader {
+@@ -73,6 +75,10 @@ export interface DecodeIssue {
+ }
+ 
+ export interface SyncStorage {
++  recoveryPending?(config: IndexerConfig): Promise<boolean>;
++  recoverShorterChain?(config: IndexerConfig, rpc: import('./rpc.js').RpcTransport, expected: Checkpoint): Promise<Checkpoint | null>;
++  recoverCheckpoint?(config: IndexerConfig, rpc: import('./rpc.js').RpcTransport, expected: Checkpoint): Promise<Checkpoint | null>;
++  observe?(config: IndexerConfig, head: bigint, expected: Checkpoint | null): Promise<void>;
+   loadCheckpoint(config: IndexerConfig): Promise<Checkpoint | null>;
+   writeCheckpointBatch(config: IndexerConfig, batch: LogBatch, expected: Checkpoint | null, head: bigint): Promise<WriteResult>;
+   decodeIssues(config: IndexerConfig, at?: bigint): Promise<{ unknownTopics: number; decodeErrors: number; issues?: DecodeIssue[] }>;
+diff --git a/package.json b/package.json
+index bb23628..1b10367 100644
+--- a/package.json
++++ b/package.json
+@@ -3,7 +3,9 @@
+   "version": "0.0.0",
+   "private": true,
+   "type": "module",
+-  "engines": { "node": ">=24" },
++  "engines": {
++    "node": ">=24"
++  },
+   "scripts": {
+     "build": "tsc -p tsconfig.build.json",
+     "typecheck": "tsc --noEmit",
+@@ -23,7 +25,11 @@
+     "test:be04:live": "bash scripts/check_be04_database.sh --live --output reports/be04-live.json",
+     "test:be06": "tsx --test tests/indexer/be06.test.ts",
+     "test:be06:db": "node --import tsx --test tests/indexer/be06-db.test.mjs",
+-    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs"
++    "test:be06:live": "node --import tsx scripts/check_be04_live.mjs",
++    "test:be07": "node --import tsx --test tests/indexer/be07.test.ts",
++    "test:be07:db": "node --import tsx --test tests/indexer/be07-db.test.mjs",
++    "test:be07:live": "node --import tsx scripts/check_be04_live.mjs",
++    "test:be07:native": "node scripts/check_be07_native.mjs"
+   },
+   "dependencies": {
+     "ethers": "6.17.0",
+diff --git a/scripts/check_be04_live.mjs b/scripts/check_be04_live.mjs
+index fe52c1b..e12de2b 100644
+--- a/scripts/check_be04_live.mjs
++++ b/scripts/check_be04_live.mjs
+@@ -6,7 +6,7 @@ import { createHash, randomBytes } from 'node:crypto';
+ import { once } from 'node:events';
+ import { mkdir, readFile, writeFile } from 'node:fs/promises';
+ import { createServer } from 'node:net';
+-import { fileURLToPath } from 'node:url';
++import { pathToFileURL, fileURLToPath } from 'node:url';
+ import { dirname, resolve } from 'node:path';
+ import { Interface, ZeroHash, id, toQuantity } from 'ethers';
+ import pg from 'pg';
+@@ -14,24 +14,31 @@ import { deployGovernance } from './governance_local.mjs';
+ import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
+ import { parseConfig } from '../indexer/config.ts';
+ import { HttpRpc } from '../indexer/rpc.ts';
+-import { PostgresStorage } from '../indexer/storage.ts';
+-import { sync } from '../indexer/syncer.ts';
+-import { project } from '../indexer/projection/projector.ts';
+-import { createApiServer } from '../indexer/api/server.ts';
++import { PostgresStorage as CurrentPostgresStorage } from '../indexer/storage.ts';
++import { sync as Currentsync } from '../indexer/syncer.ts';
++import { project as Currentproject } from '../indexer/projection/projector.ts';
++import { createApiServer as CurrentcreateApiServer } from '../indexer/api/server.ts';
+ import { assertEmptyDatabase } from '../indexer/be06/rebuild.ts';
+ 
++// Baseline mode loads immutable c41a9ab modules from a detached local worktree.
++const baselineRoot = process.env.BE07_BASELINE_ROOT;
++const PostgresStorage = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/storage.ts')))).PostgresStorage : CurrentPostgresStorage;
++const sync = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/syncer.ts')))).sync : Currentsync;
++const project = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/projection/projector.ts')))).project : Currentproject;
++const createApiServer = baselineRoot ? (await import(pathToFileURL(resolve(baselineRoot,'indexer/api/server.ts')))).createApiServer : CurrentcreateApiServer;
+ const args = process.argv.slice(2);
+ const flags = args.slice(2);
+-const withApi = flags.includes('--api');
++const withBe07 = flags.includes('--be07');
++const withApi = flags.includes('--api') || withBe07;
+ const withBe06 = flags.includes('--be06');
+-assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06'].includes(flag))
++assert.ok(args.length >= 2 && args[0] === '--output' && flags.every((flag) => ['--api', '--be06', '--be07'].includes(flag))
+   && new Set(flags).size === flags.length,
+   'Usage: node --import tsx scripts/check_be04_live.mjs --output <report.json> [--api] [--be06]');
+ assert.equal(process.env.BE04_LIVE_ISOLATED, '1', 'Use a new caller-owned isolated database.');
+ const url = new URL(process.env.BE04_LIVE_DATABASE_URL);
+ assert.equal(url.hostname, '127.0.0.1');
+ assert.equal(url.username, 'be04_test');
+-assert.equal(url.pathname, '/be04_live');
++assert.equal(url.pathname, baselineRoot ? '/be04_live_baseline' : '/be04_live');
+ if (withBe06) assert.equal(process.env.BE06_LIVE_ISOLATED, '1', 'Use two new caller-owned isolated BE06 target databases.');
+ const root = fileURLToPath(new URL('../', import.meta.url));
+ const output = resolve(args[1]);
+@@ -78,7 +85,7 @@ try {
+   report.runtime.postgres = (await pool.query('SELECT version() AS version')).rows[0].version;
+   report.runtime.tsx = JSON.parse(await readFile(new URL('../node_modules/tsx/package.json', import.meta.url), 'utf8')).version;
+   report.runtime.typescript = JSON.parse(await readFile(new URL('../node_modules/typescript/package.json', import.meta.url), 'utf8')).version;
+-  for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : [])])
++  for (const name of ['001_initial', '002_be03', '003_be04', ...(withApi ? ['004_be05_api'] : []), ...(withBe07 && !baselineRoot ? ['005_be07'] : [])])
+     await pool.query(await readFile(new URL(`../database/migrations/${name}.sql`, import.meta.url), 'utf8'));
+   const reserve = createServer();
+   await new Promise((done, reject) => {
+@@ -135,6 +142,8 @@ try {
+   );
+   const { manifest, abis } = await deployGovernance(rpc, { root, accounts });
+   report.manifest = manifest;
++  const reorgSnapshot = withBe07 ? await rpc('evm_snapshot', []) : null;
++  const reorgAncestor = withBe07 ? await rpc('eth_getBlockByNumber', ['latest', false]) : null;
+   const abi = Object.fromEntries(Object.entries(abis).map(([k, v]) => [k, new Interface(v)]));
+   const address = Object.fromEntries(Object.entries(manifest.contracts).map(([k, v]) => [k, v.address]));
+   const tx = async (label, from, name, method, values = [], at, success = true) => {
+@@ -630,6 +639,11 @@ try {
+           'proposal detail description/hash and votes read from the live projection'] };
+     } finally { await new Promise((done) => api.close(done)); }
+   }
++  if (withBe07) {
++    const { checkBe07Live } = await import('./check_be07_live.mjs');
++    report.be07 = await checkBe07Live({pool,config,rpc,transport,storage,project,sync,tx,accounts,address,manifest,
++      reorgSnapshot,reorgAncestor,apiGet:phaseApiGet,baselineRoot,stable,call,abi});
++  }
+   if (withBe06) {
+     const atBlock = finalProjection.context.asOfBlock;
+     const manifestInput = {
+@@ -819,6 +833,11 @@ try {
+     'database/migrations/004_be05_api.sql',
+     'database/migrations/003_be04.sql',
+     'indexer/storage.ts',
++    'indexer/recovery.ts',
++    'indexer/worker.ts',
++    'indexer/rpc.ts',
++    'database/migrations/005_be07.sql',
++    'scripts/check_be07_live.mjs',
+     'indexer/cli.ts',
+     'indexer/api/main.ts',
+     'scripts/check_be04_live.mjs',
+diff --git a/tests/api/server.test.mjs b/tests/api/server.test.mjs
+index 355d513..c1a90eb 100644
+--- a/tests/api/server.test.mjs
++++ b/tests/api/server.test.mjs
+@@ -61,7 +61,7 @@ async function seed() {
+     (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public')::int AS relations,
+     (SELECT count(*) FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace WHERE n.nspname='public')::int AS types`);
+   assert.deepEqual(objects.rows[0], { relations: 0, types: 0 }, 'Refusing a nonempty database.');
+-  for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql']) {
++  for (const migration of ['001_initial.sql', '002_be03.sql', '003_be04.sql', '004_be05_api.sql', '005_be07.sql']) {
+     await pool.query(await readFile(new URL(`../../database/migrations/${migration}`, import.meta.url), 'utf8'));
+   }
+   const governance = { proposalThreshold: '50000000000000000000', govSupply: '1000000000000000000000',
+@@ -71,6 +71,7 @@ async function seed() {
+     [chain, deploymentName, JSON.stringify(governance)]);
+   deploymentId = dep.rows[0].deployment_id;
+   snapshotRevision = dep.rows[0].snapshot_revision;
++  await pool.query(`UPDATE deployments SET indexer_state=jsonb_build_object('phase','ready','lastCheckedAt',clock_timestamp(),'head','3','confirmed','3') WHERE deployment_id=$1`,[deploymentId]);
+   const contracts = [
+     ['governor', governor, 'oz-5.4.0-governor'], ['timelock', timelock, 'oz-5.4.0-timelock'],
+     ['treasury', treasury, 'sc01-itreasury-v1'], ['budget_token', bud, 'oz-5.4.0-erc20'],
+@@ -182,7 +183,7 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
+   assert.equal(summary.status, 200, JSON.stringify(summary.body));
+   assert.equal(summary.body.context.dataKind, 'chain');
+   assert.equal(summary.body.context.asOfBlock, '3');
+-  assert.equal(summary.body.context.sync.lagSeconds, null, 'A persisted observed head does not measure current wall-clock pipeline lag.');
++  assert.ok(BigInt(summary.body.context.sync.lagSeconds) < 30n, 'BE07 reports elapsed time since the canonical RPC check.');
+   assert.equal(summary.body.data.treasury.totalIn, '1000000000000000000000');
+   assert.equal(summary.body.data.treasury.totalOut, '100000000000000000000');
+   assert.equal(summary.body.data.treasury.balance, '900000000000000000000');
+diff --git a/tests/indexer/reader.test.ts b/tests/indexer/reader.test.ts
+index 334603b..001d353 100644
+--- a/tests/indexer/reader.test.ts
++++ b/tests/indexer/reader.test.ts
+@@ -171,7 +171,7 @@ test('RPC HTTP failures redact URL paths and body; prior batches remain explicit
+   t.after(() => server.close());
+   await assert.rejects(scan(config(), new HttpRpc(url), new RecordingStorage()), (error: unknown) => {
+     assert.ok(error instanceof ScanError);
+-    assert.equal(error.report.error?.code, 'RPC_HTTP_ERROR');
++    assert.equal(error.report.error?.code, 'RPC_UNAVAILABLE');
+     assert.doesNotMatch(JSON.stringify(error.report), /rpc-secret|secret body/);
+     return true;
+   });
+diff --git a/tests/indexer/syncer.test.ts b/tests/indexer/syncer.test.ts
+index 8749afb..6907172 100644
+--- a/tests/indexer/syncer.test.ts
++++ b/tests/indexer/syncer.test.ts
+@@ -87,7 +87,7 @@ test('restart with no new block still verifies hash; then continues from H+1', a
+   rpc.head = 105n; rpc.calls = [];
+   const idle = await sync(c, rpc, db);
+   assert.equal(idle.committedBatches, 0);
+-  assert.deepEqual(rpc.calls.map((c) => c.method), ['eth_chainId', 'eth_getBlockByNumber', 'eth_blockNumber']);
++  assert.deepEqual(rpc.calls.map((c) => c.method), ['eth_chainId', 'eth_getBlockByNumber', 'eth_blockNumber', 'eth_getBlockByNumber']);
+   rpc.head = 107n;
+   await sync(c, rpc, db);
+   assert.equal(db.batches.at(-1)!.fromBlock, 104n);
+diff --git a/.nvmrc b/.nvmrc
+new file mode 100755
+index 0000000..5bf4400
+--- /dev/null
++++ b/.nvmrc
+@@ -0,0 +1 @@
++24.15.0
+diff --git a/database/migrations/005_be07.sql b/database/migrations/005_be07.sql
+new file mode 100755
+index 0000000..fd0319e
+--- /dev/null
++++ b/database/migrations/005_be07.sql
+@@ -0,0 +1,8 @@
++-- Durable recovery gate and RPC observations; no header pruning (BE03 prefix invariant).
++BEGIN;
++ALTER TABLE deployments ADD COLUMN indexer_state JSONB NOT NULL DEFAULT '{"phase":"unverified"}'::jsonb
++  CHECK (jsonb_typeof(indexer_state)='object' AND indexer_state->>'phase' IN
++    ('unverified','ready','recovering','replaying','rebuild_required'));
++COMMENT ON COLUMN deployments.indexer_state IS
++  'BE07 recovery gate, canonical validation heartbeat and lag observation. Updated under BE02 chain advisory lock.';
++COMMIT;
+diff --git a/docs/be07.md b/docs/be07.md
+new file mode 100755
+index 0000000..0436452
+--- /dev/null
++++ b/docs/be07.md
+@@ -0,0 +1,158 @@
++# BE07 — Reorg, RPC và freshness
++
++BE07 thực hiện FR14/NFR03/NFR04/TC11 trên nền BE06 `c41a9ab`. Fetch ngày
++25/10/2026 xác nhận `origin/feature/tv2-be06=c41a9ab`,
++`origin/feature/tv4-operation=3b6869d`, `origin/Dev=1451779` chưa chứa BE06.
++Worktree `feature/tv2-be07` được tạo từ BE06; thay đổi `.gitignore` chưa commit
++trong checkout `docs/add-requirements` được giữ nguyên. Không commit/push/PR.
++Không có AGENTS.md trong repository hoặc các thư mục cha của checkout.
++
++Đã đọc [issue #18](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18)
++và `docs/evidence/tv4-20261024-acceptance/reorg.json`,
++`docs/tv4-handoff-20261024.md` trực tiếp từ ref TV4. Evidence TV4 là bằng chứng
++kế thừa, không phải lần test BE07. [Evidence mới](evidence/be07-20261025/report.md)
++bao gồm tái hiện bug bằng module nguyên bản từ detached worktree BE06 và kết quả
++kiểm thử implementation mới, mỗi lần chạy có command/exit code riêng.
++
++## Chạy worker
++
++Dùng Node **24.15.0**, Foundry **1.8.5**, Solc **0.8.37**, Osaka và lockfile repo.
++PostgreSQL 18; CI dùng 18.4, môi trường native lần này là 18.6, được ghi riêng
++trong runtime.json. Không tự nạp `.env`. Không truyền URL có credential vào log.
++DB triển khai hiện có phải áp dụng migration 005 một lần, sau 001–004:
++
++```bash
++npm ci
++npm run typecheck
++npm run build
++psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/005_be07.sql
++node --import tsx indexer/cli.ts --config indexer/config/local.json --worker
++```
++
++JSON dùng đúng metadata deployment đã xác minh BE03/BE06:
++`toBlock: "latest"`, `confirmations: 2`, `reorgWindow: 128`,
++`pollIntervalMs: 1000`. Cửa sổ 1–10000 block, polling 100–10000 ms; K vẫn theo
++BE03, mặc định 2. Không thêm RPC key/private key vào file cấu hình.
++SIGINT/SIGTERM abort HTTP, đọc response và backoff, chờ transaction đang ghi rồi
++đóng pool. Lệnh catch-up `--sync`/`--sync-project` vẫn dùng được; vận hành liên tục
++và tự replay ở lượt tiếp theo khi có fork giữa batch cần `--worker`.
++
++005 đặt phase ban đầu `unverified`. API từ chối dữ liệu cho đến khi sync và BE04
++projection đối chiếu thành công. DB BE06 mới được rebuild cũng có migration
++004/005; DB cũ chưa có 005 chỉ tương thích các lệnh BE02–BE06 trước đây, không
++được coi là đã bật recovery/freshness BE07. Thiếu heartbeat không được báo synced.
++
++## Recovery và nhất quán
++
++Khi RPC có head thấp hơn H, chỉ rollback nếu header tại head thấp hơn thực sự
++lệch hash đã lưu; RPC chỉ bị chậm được retry mà không xóa dữ liệu.
++
++Indexer kiểm tra hash H khi startup, trước mỗi batch và sau ingestion, kể cả
++idle. Reader vẫn kiểm tra parent/header/log và đọc lại hash cuối batch. Projector
++kiểm tra chain/hash trước và sau historical eth_call tại EIP-1898 canonical hash,
++đồng thời yêu cầu H còn đủ K trước publication. Nếu fork xuất hiện khi project,
++transaction projection được rollback trước khi bắt đầu recovery.
++
++Khi có hash mismatch xác thực, transaction đầu tiên lưu `recovering`, đổi
++`deployments.snapshot_revision` và invalidate snapshots. API ngừng phục vụ
++publication cũ ngay sau COMMIT này. Sau đó tìm header cao nhất còn khớp trong
++`[H-reorgWindow,H]`. RPC lỗi khi tìm tổ tiên không xóa dữ liệu; gate vẫn đóng và
++restart tiếp tục. **Giữ toàn bộ prefix header**: giới hạn chỉ áp dụng cho tìm tổ
++tiên; không prune header để tránh phá invariant BE03/BE05/BE06.
++
++Rollback dùng cùng `be02-chain:<chainId>` advisory transaction lock với ingestion,
++redecode và projection, kiểm tra checkpoint/revision/phase dưới khóa trước khi
++xóa. Writer cũ bị từ chối. Xóa bảng dẫn xuất của đúng deployment theo FK order,
++xóa publication, hạ checkpoint về tổ tiên, xóa raw events và header sau tổ tiên;
++metadata deployment/contract và các deployment khác được giữ nguyên. Projection
++MVP là latest-only, nên dựng lại toàn model BE04 từ raw prefix + suffix canonical,
++không cố giữ các hàng dẫn xuất có liên kết tới event orphan.
++
++Phase `replaying` tồn tại qua crash; ingestion canonical được phép, API vẫn 503.
++Chỉ BE04 đối chiếu xong **cùng H/hash** mới commit bảng dẫn xuất, publication và
++phase `ready` cùng transaction. Crash trước rollback COMMIT giữ nguyên suffix;
++crash sau COMMIT khởi động từ tổ tiên; restart/replay nhiều lần không tính đôi
++Transfer/BudgetDisbursed. Revision dùng như fence cho concurrent recovery: một
++recovery cũ không thể xóa dữ liệu của recovery mới.
++
++Không tìm được tổ tiên trong cửa sổ: lưu `rebuild_required`, giữ dữ liệu để chẩn
++đoán, không tự mở gate. Dùng [BE06](be06.md) rebuild **database mới**, compare tại
++canonical H/hash rồi chuyển cấu hình DB khi vận hành đã xác minh. Không DROP,
++TRUNCATE hoặc xóa metadata database đang sử dụng để giả lập recovery.
++
++## RPC và freshness
++
++HttpRpc mặc định timeout 5 s/request, tối đa 4 attempt. Exponential backoff
++250 ms, 500 ms, 1000 ms, cap 2000 ms, jitter 50–100% cap; mỗi lần gọi có giới hạn.
++Worker tiếp tục polling khi RPC mất kết nối; khoảng thời gian thử lại không
++được ghi như lần kiểm tra canonical thành công. Lỗi network, timeout, HTTP
++408/429/5xx, JSON-RPC -32005/-32016/-32603 là tạm thời. HTTP 4xx khác,
++-32601/-32602/-32000, response sai ID/version/JSON và dữ liệu sai định dạng là
++lỗi dừng. Chain/scope/K/config sai không được retry vô hạn. Body provider/URL và
++stack credential không đưa vào báo cáo public.
++
++Mỗi lượt sync thành công ghi `lastCheckedAt`, head và confirmed, cả khi không có
++block/event mới. API tính freshness tại mỗi request, không cache nhãn synced:
++
++- Giữ enum `sync.status = synced | lagging | not_ready` và các error code BE05.
++- Bổ sung `sync.recoveryStatus`, `lastRpcCheckAt`, `publicationBlock`.
++- `lagSeconds` là chuỗi số giây từ lần canonical check thành công, tăng thêm theo
++  thời gian publication đang chậm; null nếu chưa quan sát được. Đây là tuổi của
++  quan sát/pipeline, không phải khoảng cách giữa đồng hồ chain và wall clock.
++- `lagBlocks` dùng confirmed so với publication phục vụ; `indexedBlock` là raw H.
++- Quá **30000 ms** không kiểm tra thành công thì `lagging`, dù không có event.
++  API vẫn phục vụ snapshot canonical đã biết, health 200/degraded.
++- `recovering`/`replaying`/`rebuild_required`: health 503, indexer not_ready và
++  `recoveryStatus` rõ ràng; endpoint dữ liệu 503 DATA_NOT_READY.
++- Cursor trước recovery trả 409 SNAPSHOT_INVALIDATED cả trong và sau replay;
++  client phải tải lại trang đầu. H/hash orphan được yêu cầu trực tiếp cũng bị từ chối.
++
++Fixture BE01 vẫn là synthetic offline; [fixture BE07](../fixtures/be07/) mô tả
++các field cộng thêm. Frontend trên nền BE06 đang dùng fixture, chưa có consumer
++HTTP phải đổi enum. TV4 khi tích hợp dùng `sync.status` để báo chậm, đọc
++`recoveryStatus` cho trạng thái chi tiết và xử lý 409 theo BE05.
++
++## Nghiệm thu local độc lập
++
++Cài toolchain/pinned submodules, PostgreSQL 18 native và chạy bằng user thường:
++
++```bash
++git submodule update --init --recursive
++npm ci
++forge build
++# Nếu pg_config không có trong PATH, chỉ rõ bin directory:
++export BE07_PG_BIN=/usr/lib/postgresql/18/bin
++export BE07_EVIDENCE_DIR=reports/be07-tv4-$(date -u +%Y%m%dT%H%M%SZ)
++npm run test:be07:native
++```
++
++Native runner tự tạo cluster tạm, random loopback port, DB/role test mới; refuse
++DB đã tồn tại, Anvil mới unforked, dừng cluster/Anvil khi hoàn thành. Không đọc
++DATABASE_URL làm DB test. Cluster tạm được giữ trên đĩa để chẩn đoán nhưng đã
++stop. Không dùng testnet hoặc khóa ký; Anvil chỉ dùng eth_sendTransaction với
++account unlocked local, không log private key.
++
++Nếu đã có **cluster test mới riêng**, có thể dùng orchestrator giống CI:
++
++```bash
++export PG_ADMIN_URL=postgresql://be04_test@127.0.0.1:55437/postgres
++export BE07_TEST_ISOLATED=1
++export BE07_EVIDENCE_DIR=reports/be07-isolated
++node scripts/check_be07_local.mjs
++```
++
++Chỉ chạy unit: `npm run test:be07`. Chạy DB riêng:
++`BE07_TEST_ISOLATED=1 BE07_TEST_DATABASE_URL=postgresql://be04_test@127.0.0.1:55437/be07_test npm run test:be07:db`
++(DB phải rỗng). Live runner dùng `node --import tsx scripts/check_be04_live.mjs
++--output reports/be07-live.json --be07`; cần DB nguồn rỗng tên `be04_live` và DB
++compare rỗng tên `be07_compare`, các biến được native runner tự cấp. Nó tái sử
++dụng deployment/governance/receipt runner BE04 và thêm kịch bản BE07.
++
++Để tái hiện baseline tùy chọn, tạo detached worktree `c41a9ab`, cài dependencies
++tại đó và đặt BE07_BASELINE_ROOT tới worktree này khi chạy native suite. Không
++đổi nội dung baseline. Baseline report phải ghi `REPRODUCED_OLD_BUG`, không gọi
++đó là PASS của FR14. Không cần baseline để chạy acceptance BE07.
++
++CI mới chạy cùng orchestrator, real PostgreSQL 18.4 service + Anvil, upload log.
++CI chưa chạy remote vì thay đổi chưa push. Không coi local test là peer approval
++hoặc SLA testnet/đầy đủ tải lớn; BE08/NFR02 và testnet không thuộc thay đổi này.
+diff --git a/fixtures/be07/README.md b/fixtures/be07/README.md
+new file mode 100755
+index 0000000..62ae842
+--- /dev/null
++++ b/fixtures/be07/README.md
+@@ -0,0 +1,8 @@
++# BE07 API examples
++
++Responses copied from real local Anvil/PostgreSQL run-6 evidence on 2026-10-25.
++These are shape examples, not seeds, live health or synthetic BE01 acceptance.
++Health HTTP: replaying/rebuild_required = 503; lagging = 200/degraded.
++Cursor invalidated HTTP: 409 SNAPSHOT_INVALIDATED.
++The existing sync.status enum is preserved; recoveryStatus/lastRpcCheckAt/
++publicationBlock are additive. lagSeconds is an unsigned decimal string.
+diff --git a/fixtures/be07/cursor-invalidated.json b/fixtures/be07/cursor-invalidated.json
+new file mode 100755
+index 0000000..713bc80
+--- /dev/null
++++ b/fixtures/be07/cursor-invalidated.json
+@@ -0,0 +1,30 @@
++{
++  "context": {
++    "chainId": "31337",
++    "deploymentId": "be04-live",
++    "asOfBlock": "67",
++    "asOfBlockHash": "0x1a7b1b33f516709fc3b079b95fa478362aead72ae35d0fe5dee3eb0c39bc6ed4",
++    "asOfTimestamp": "1800000534",
++    "snapshotRevision": "b1c50b2c-eb79-4458-a4af-31a91c1c94ed",
++    "dataKind": "chain",
++    "sync": {
++      "status": "synced",
++      "headBlock": "69",
++      "confirmedBlock": "67",
++      "indexedBlock": "67",
++      "publicationBlock": "67",
++      "lagBlocks": "0",
++      "lagSeconds": "0",
++      "confirmations": "2",
++      "lastIndexedAt": "2026-10-25T15:39:22.107Z",
++      "lastRpcCheckAt": "2026-10-25T15:39:22.111568+00:00",
++      "recoveryStatus": "ready"
++    }
++  },
++  "error": {
++    "code": "SNAPSHOT_INVALIDATED",
++    "message": "Snapshot revision đã thay đổi.",
++    "details": {},
++    "retryable": false
++  }
++}
+diff --git a/fixtures/be07/health-lagging.json b/fixtures/be07/health-lagging.json
+new file mode 100755
+index 0000000..2557fea
+--- /dev/null
++++ b/fixtures/be07/health-lagging.json
+@@ -0,0 +1,40 @@
++{
++  "context": {
++    "chainId": "31337",
++    "deploymentId": "be04-live",
++    "asOfBlock": "70",
++    "asOfBlockHash": "0x60db526c8068539f47585635409d57e7926e5ad10bd8070b9d34fd4dafa55269",
++    "asOfTimestamp": "1800000537",
++    "snapshotRevision": "b1c50b2c-eb79-4458-a4af-31a91c1c94ed",
++    "dataKind": "chain",
++    "sync": {
++      "status": "lagging",
++      "headBlock": "72",
++      "confirmedBlock": "70",
++      "indexedBlock": "70",
++      "publicationBlock": "70",
++      "lagBlocks": "0",
++      "lagSeconds": "31",
++      "confirmations": "2",
++      "lastIndexedAt": "2026-10-25T15:39:22.769Z",
++      "lastRpcCheckAt": "2026-10-25T15:39:22.777104+00:00",
++      "recoveryStatus": "ready"
++    }
++  },
++  "data": {
++    "status": "degraded",
++    "database": "up",
++    "indexer": "lagging",
++    "publication": "ready",
++    "recoveryStatus": "ready",
++    "projectionStatus": "current",
++    "publicationBlock": "70",
++    "projectionLagBlocks": "0",
++    "rawDecodeComplete": false,
++    "rawDecodeIssues": {
++      "unknownTopics": 16,
++      "decodeErrors": 0
++    },
++    "ignoredAncillaryEvents": 16
++  }
++}
+diff --git a/fixtures/be07/health-rebuild-required.json b/fixtures/be07/health-rebuild-required.json
+new file mode 100755
+index 0000000..b90f391
+--- /dev/null
++++ b/fixtures/be07/health-rebuild-required.json
+@@ -0,0 +1,40 @@
++{
++  "context": {
++    "chainId": "31337",
++    "deploymentId": "be04-live",
++    "snapshotRevision": "812bc69e-0e9b-445b-858e-718b14c182ea",
++    "asOfBlock": null,
++    "asOfBlockHash": null,
++    "asOfTimestamp": null,
++    "dataKind": "chain",
++    "sync": {
++      "status": "not_ready",
++      "headBlock": "72",
++      "confirmedBlock": "70",
++      "indexedBlock": "70",
++      "publicationBlock": "70",
++      "lagBlocks": "0",
++      "lagSeconds": "0",
++      "confirmations": "2",
++      "lastIndexedAt": "2026-10-25T15:39:22.769Z",
++      "lastRpcCheckAt": "2026-10-25T15:39:54.094199+00:00",
++      "recoveryStatus": "rebuild_required"
++    }
++  },
++  "data": {
++    "status": "unavailable",
++    "database": "up",
++    "indexer": "not_ready",
++    "publication": "not_ready",
++    "recoveryStatus": "rebuild_required",
++    "projectionStatus": "not_ready",
++    "publicationBlock": "70",
++    "projectionLagBlocks": null,
++    "rawDecodeComplete": false,
++    "rawDecodeIssues": {
++      "unknownTopics": 16,
++      "decodeErrors": 0
++    },
++    "ignoredAncillaryEvents": 16
++  }
++}
+diff --git a/fixtures/be07/health-replaying.json b/fixtures/be07/health-replaying.json
+new file mode 100755
+index 0000000..43ea499
+--- /dev/null
++++ b/fixtures/be07/health-replaying.json
+@@ -0,0 +1,40 @@
++{
++  "context": {
++    "chainId": "31337",
++    "deploymentId": "be04-live",
++    "snapshotRevision": "b1c50b2c-eb79-4458-a4af-31a91c1c94ed",
++    "asOfBlock": null,
++    "asOfBlockHash": null,
++    "asOfTimestamp": null,
++    "dataKind": "chain",
++    "sync": {
++      "status": "not_ready",
++      "headBlock": "69",
++      "confirmedBlock": "67",
++      "indexedBlock": "67",
++      "publicationBlock": null,
++      "lagBlocks": null,
++      "lagSeconds": "0",
++      "confirmations": "2",
++      "lastIndexedAt": "2026-10-25T15:39:22.107Z",
++      "lastRpcCheckAt": "2026-10-25T15:39:22.111568+00:00",
++      "recoveryStatus": "replaying"
++    }
++  },
++  "data": {
++    "status": "unavailable",
++    "database": "up",
++    "indexer": "not_ready",
++    "publication": "not_ready",
++    "recoveryStatus": "replaying",
++    "projectionStatus": "not_ready",
++    "publicationBlock": null,
++    "projectionLagBlocks": null,
++    "rawDecodeComplete": false,
++    "rawDecodeIssues": {
++      "unknownTopics": 16,
++      "decodeErrors": 0
++    },
++    "ignoredAncillaryEvents": 0
++  }
++}
+diff --git a/indexer/recovery.ts b/indexer/recovery.ts
+new file mode 100755
+index 0000000..0f72900
+--- /dev/null
++++ b/indexer/recovery.ts
+@@ -0,0 +1,93 @@
++import type { Pool, PoolClient } from 'pg';
++import { IndexerError } from './errors.js';
++import { readHeader } from './reader.js';
++import { quantity, type RpcTransport } from './rpc.js';
++import { firstBlock } from './scope.js';
++import { checkpoint, verifyMetadata, type TransactionHooks } from './storage.js';
++import type { Checkpoint, IndexerConfig } from './types.js';
++
++export async function runtime(client: PoolClient, deploymentId: string): Promise<Record<string, unknown> | null> {
++  const r = await client.query('SELECT to_jsonb(d)->\'indexer_state\' AS state FROM deployments d WHERE deployment_id=$1', [deploymentId]);
++  return r.rows[0]?.state ?? null;
++}
++export async function lock(client: PoolClient, config: IndexerConfig): Promise<void> {
++  await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1, 0))', [`be02-chain:${config.chainId}`]);
++}
++export function sameCheckpoint(a: Checkpoint | null, b: Checkpoint | null): boolean {
++  return a?.number === b?.number && a?.hash === b?.hash;
++}
++
++/** Commit the serving gate before doing any RPC search or destructive work. */
++export async function recover(pool: Pool, config: IndexerConfig, rpc: RpcTransport, expected: Checkpoint,
++  hooks: TransactionHooks): Promise<Checkpoint | null> {
++  if (quantity(await rpc.call('eth_chainId', []), 'chainId') !== config.chainId)
++    throw new IndexerError('CHAIN_ID_MISMATCH', 'Recovery RPC chain differs from deployment.');
++  const c = await pool.connect();
++  let revision: string;
++  try {
++    await c.query('BEGIN'); await lock(c, config); await verifyMetadata(c, config, true);
++    const current = await checkpoint(c, config);
++    if (!sameCheckpoint(current, expected)) throw new IndexerError('REORG_RETRY', 'Recovery observed a stale checkpoint; restart.');
++    const state = await runtime(c, config.deploymentId);
++    if (!state) throw new IndexerError('CHECKPOINT_HASH_MISMATCH', 'Apply migration 005 for automatic BE07 recovery.');
++    if (state.phase === 'rebuild_required') throw new IndexerError('REBUILD_REQUIRED', 'Rebuild into a new database using BE06.');
++    if (state.phase !== 'recovering') {
++      await c.query(`UPDATE deployments SET snapshot_revision=gen_random_uuid(),
++        indexer_state=indexer_state || jsonb_build_object('phase','recovering','orphanNumber',$2::text,'orphanHash',$3::text)
++        WHERE deployment_id=$1`, [config.deploymentId, expected.number.toString(), expected.hash]);
++      // Invalidate every revision-bound snapshot, including snapshots below the fork.
++      if ((await c.query("SELECT to_regclass('api_read_snapshots') AS t")).rows[0].t)
++        await c.query('UPDATE api_read_snapshots SET invalidated_at=clock_timestamp() WHERE deployment_id=$1 AND invalidated_at IS NULL', [config.deploymentId]);
++    }
++    revision = (await c.query('SELECT snapshot_revision::text AS r FROM deployments WHERE deployment_id=$1', [config.deploymentId])).rows[0].r;
++    await c.query('COMMIT');
++  } catch (e) { await c.query('ROLLBACK'); throw e; } finally { c.release(); }
++  await hooks.recoveryMarked?.();
++
++  // Retain all prefix headers for BE03/BE05. Only the search depth is bounded.
++  const head = quantity(await rpc.call('eth_blockNumber', []), 'head');
++  const ceiling = head < expected.number ? head : expected.number;
++  const floor = expected.number - BigInt(config.reorgWindow ?? 128);
++  const rows = await pool.query(`SELECT block_number::text AS n,block_hash AS hash FROM indexed_blocks
++    WHERE deployment_id=$1 AND block_number BETWEEN $2 AND $3 ORDER BY block_number DESC`,
++  [config.deploymentId, (floor > firstBlock(config) ? floor : firstBlock(config)).toString(), ceiling.toString()]);
++  let ancestor: Checkpoint | null = null;
++  for (const row of rows.rows) {
++    const h = await readHeader(rpc, BigInt(row.n)); // RPC failure preserves the durable gate and ALL data.
++    if (h.hash === row.hash) { ancestor = { number: h.number, hash: h.hash }; break; }
++  }
++  if (ancestor && (await readHeader(rpc, ancestor.number)).hash !== ancestor.hash)
++    throw new IndexerError('REORG_RETRY', 'Canonical ancestor changed during search; gate remains closed.');
++  if (quantity(await rpc.call('eth_chainId', []), 'chainId') !== config.chainId)
++    throw new IndexerError('CHAIN_ID_MISMATCH', 'RPC chain changed during ancestor search; gate remains closed.');
++  const tx = await pool.connect();
++  try {
++    await tx.query('BEGIN'); await lock(tx, config); await verifyMetadata(tx, config, true);
++    const state = await runtime(tx, config.deploymentId);
++    const generation = (await tx.query('SELECT snapshot_revision::text AS r FROM deployments WHERE deployment_id=$1', [config.deploymentId])).rows[0].r;
++    if (generation !== revision || state?.phase !== 'recovering' || !sameCheckpoint(await checkpoint(tx, config), expected))
++      throw new IndexerError('REORG_RETRY', 'Another recovery completed; restart.');
++    if (!ancestor) {
++      await tx.query(`UPDATE deployments SET indexer_state=indexer_state || '{"phase":"rebuild_required"}'::jsonb WHERE deployment_id=$1`, [config.deploymentId]);
++      await tx.query("UPDATE checkpoints SET sync_status='rebuild_required',last_error_code='REORG_WINDOW_EXCEEDED' WHERE deployment_id=$1", [config.deploymentId]);
++    } else {
++      // Remove the latest-only model in dependency order, then the orphan raw suffix.
++      for (const table of ['disbursements','proposal_states','votes','operations','transfers','proposals','projection_checkpoints']) {
++        if ((await tx.query('SELECT to_regclass($1) AS t', [table])).rows[0].t)
++          await tx.query(`DELETE FROM ${table} WHERE deployment_id=$1`, [config.deploymentId]);
++      }
++      await tx.query(`UPDATE checkpoints SET block_number=$2,block_hash=$3,sync_status='syncing',updated_at=clock_timestamp()
++        WHERE deployment_id=$1`, [config.deploymentId, ancestor.number.toString(), ancestor.hash]);
++      await tx.query('DELETE FROM raw_events WHERE deployment_id=$1 AND block_number>$2', [config.deploymentId, ancestor.number.toString()]);
++      await tx.query('DELETE FROM indexed_blocks WHERE deployment_id=$1 AND block_number>$2', [config.deploymentId, ancestor.number.toString()]);
++      await tx.query(`UPDATE deployments SET indexer_state=indexer_state ||
++        jsonb_build_object('phase','replaying','ancestorNumber',$2::text,'ancestorHash',$3::text) WHERE deployment_id=$1`,
++      [config.deploymentId, ancestor.number.toString(), ancestor.hash]);
++    }
++    await hooks.beforeRollbackCommit?.();
++    await tx.query('COMMIT');
++  } catch (e) { await tx.query('ROLLBACK'); throw e; } finally { tx.release(); }
++  await hooks.afterRollbackCommit?.();
++  if (!ancestor) throw new IndexerError('REBUILD_REQUIRED', 'No trusted ancestor within reorgWindow. Use BE06 to rebuild a new database and compare at canonical H/hash.');
++  return ancestor;
++}
+diff --git a/indexer/worker.ts b/indexer/worker.ts
+new file mode 100755
+index 0000000..1f3c3cd
+--- /dev/null
++++ b/indexer/worker.ts
+@@ -0,0 +1,32 @@
++import type { Pool } from 'pg';
++import { IndexerError, publicError } from './errors.js';
++import { HttpRpc, pause, type RpcTransport } from './rpc.js';
++import { PostgresStorage, StorageError } from './storage.js';
++import { sync, SyncError } from './syncer.js';
++import { project } from './projection/projector.js';
++import type { IndexerConfig } from './types.js';
++
++const transient = new Set(['RPC_UNAVAILABLE','CHECKPOINT_HEAD_BEHIND','REORG_RETRY','BLOCK_CHANGED']);
++/** One serial writer loop; shutdown aborts HTTP, body reads and backoff. */
++export async function worker(config: IndexerConfig, pool: Pool, signal: AbortSignal,
++  emit: (value: unknown) => void, rpc: RpcTransport = new HttpRpc(config.rpcUrl, 5000, { signal })): Promise<void> {
++  if (config.toBlock !== 'latest') throw new IndexerError('INVALID_CONFIG', 'Worker requires toBlock=latest.');
++  const state = (await pool.query("SELECT to_jsonb(d)->'indexer_state' AS state FROM deployments d WHERE deployment_id=$1", [config.deploymentId])).rows[0]?.state;
++  if (!state) throw new IndexerError('INVALID_CONFIG', 'BE07 worker requires migration 005 and existing deployment metadata.');
++  const storage = new PostgresStorage(pool);
++  while (!signal.aborted) {
++    try {
++      await sync(config, rpc, storage);
++      const cp = await storage.loadCheckpoint(config);
++      if (cp) {
++        emit({ type: 'worker_publication', ...(await project(config, rpc, pool)) });
++      }
++    } catch (error) {
++      if (signal.aborted) return;
++      const info = error instanceof SyncError ? error.report.error! : error instanceof StorageError ? {code:error.code,message:error.message,retryable:error.retryable} : publicError(error);
++      emit({ type: 'worker_error', ...info });
++      if (!transient.has(info.code) && !('retryable' in info && info.retryable)) throw error;
++    }
++    try { await pause(config.pollIntervalMs ?? 1000, signal); } catch { if (!signal.aborted) throw new IndexerError('WORKER_FAILED', 'Worker timer failed.'); }
++  }
++}
+diff --git a/scripts/check_be07_live.mjs b/scripts/check_be07_live.mjs
+new file mode 100755
+index 0000000..8bdc588
+--- /dev/null
++++ b/scripts/check_be07_live.mjs
+@@ -0,0 +1,153 @@
++// Invoked by check_be04_live.mjs after its real eight-proposal governance history.
++import assert from 'node:assert/strict';
++import pg from 'pg';
++import { id, toQuantity } from 'ethers';
++import { parseBe06Manifest } from '../indexer/be06/manifest.ts';
++import { rebuildDatabase } from '../indexer/be06/rebuild.ts';
++import { compareDatabases } from '../indexer/be06/compare.ts';
++import { worker } from '../indexer/worker.ts';
++import { HttpRpc } from '../indexer/rpc.ts';
++import { spawn } from 'node:child_process';
++import { createServer } from 'node:http';
++import { once } from 'node:events';
++
++export async function checkBe07Live(x) {
++  const {pool,config,rpc,transport,storage,project,sync,tx,accounts,address,manifest,reorgSnapshot,reorgAncestor,apiGet,baselineRoot,stable,call,abi}=x;
++  const beforeHead=BigInt(await rpc('eth_blockNumber'));
++  const before=(await pool.query('SELECT block_number::text AS h,block_hash AS hash FROM checkpoints WHERE deployment_id=$1',[config.deploymentId])).rows[0];
++  const first=await apiGet('/proposals',new URLSearchParams({chainId:'31337',deploymentId:'be04-live',limit:'1'}));
++  assert.equal(first.status,200);const cursor=first.body.pagination.nextCursor;assert.ok(cursor);
++  const oldModel=await stable();
++  assert.equal(await rpc('evm_revert',[reorgSnapshot]),true);
++  const shallowSnapshot=await rpc('evm_snapshot',[]);
++  // Alternate branch replaces ALL proposal/vote/operation/payment events, at the same head.
++  await tx('BE07 alternate canonical deposit',accounts.funding,'BUD','transfer',[address.Treasury,7n*10n**18n]);
++  let canonicalProposal;
++  if (!baselineRoot) {
++    const description='BE07 canonical proposal replacement';
++    const args=[[address.Treasury],['0'],[abi.Treasury.encodeFunctionData('disburse',[id('be07:new-request'),accounts.recipient,11n*10n**18n])],description];
++    canonicalProposal=String((await call('Governor','hashProposal',[...args.slice(0,3),id(description)]))[0]);
++    await tx('BE07 canonical propose',accounts.A,'Governor','propose',args);
++    const snapshot=BigInt((await call('Governor','proposalSnapshot',[canonicalProposal]))[0]);
++    const deadline=BigInt((await call('Governor','proposalDeadline',[canonicalProposal]))[0]);
++    await tx('BE07 canonical vote',accounts.A,'Governor','castVote',[canonicalProposal,1],snapshot+1n);
++    await tx('BE07 canonical queue',accounts.caller,'Governor','queue',[...args.slice(0,3),id(description)],deadline+1n);
++    const queuedAt=BigInt((await rpc('eth_getBlockByNumber',['latest',false])).timestamp);
++    await tx('BE07 canonical execute',accounts.caller,'Governor','execute',[...args.slice(0,3),id(description)],queuedAt+120n);
++  }
++  const branchHead=BigInt(await rpc('eth_blockNumber'));
++  await rpc('anvil_mine',[toQuantity(beforeHead-branchHead),'0x1']);
++  assert.equal(BigInt(await rpc('eth_blockNumber')),beforeHead);
++  const newHeader=await rpc('eth_getBlockByNumber',[toQuantity(BigInt(before.h)),false]);
++  assert.notEqual(newHeader.hash,before.hash);
++  config.toBlock=BigInt(before.h);
++  const result={before:{...before,head:String(beforeHead)},ancestor:{h:String(BigInt(reorgAncestor.number)),hash:reorgAncestor.hash},
++    canonical:{h:before.h,hash:newHeader.hash,head:String(beforeHead)},mode:baselineRoot?'baseline':'BE07'};
++  if(baselineRoot){
++    let failure;try{await sync(config,transport,storage);}catch(e){failure=e.report;}
++    assert.equal(failure.error.code,'CHECKPOINT_HASH_MISMATCH');
++    const orphanApi=await apiGet('/summary');
++    assert.equal(orphanApi.status,200);assert.equal(orphanApi.body.context.asOfBlockHash,before.hash);
++    assert.equal(orphanApi.body.context.sync.status,'synced');assert.deepEqual(await stable(),oldModel);
++    return {...result,status:'REPRODUCED_OLD_BUG',failure,orphanApi};
++  }
++  await sync(config,transport,storage);
++  const gateHealth=await apiGet('/health'),gateData=await apiGet('/summary');
++  assert.equal(gateHealth.status,503);assert.equal(gateHealth.body.data.recoveryStatus,'replaying');
++  assert.equal(gateData.status,503);
++  const cursorQuery=new URLSearchParams({chainId:'31337',deploymentId:'be04-live',limit:'1',cursor});
++  const duringCursor=await apiGet('/proposals',cursorQuery);assert.equal(duringCursor.status,409);assert.equal(duringCursor.body.error.code,'SNAPSHOT_INVALIDATED');
++  result.publicationCrashes=[];
++  for(const boundary of ['beforePublicationCommit','afterPublicationCommit']){
++    const child=spawn(process.execPath,['--import','tsx','tests/indexer/be07-publication-worker.mjs'],{
++      env:{...process.env,BE07_TEST_DATABASE_URL:pool.options.connectionString,
++        BE07_CRASH_CONFIG:JSON.stringify(config,(_k,v)=>typeof v==='bigint'?String(v):v),BE07_CRASH_BOUNDARY:boundary},
++      stdio:['ignore','pipe','pipe','ipc']});
++    let stderr='';child.stderr.on('data',c=>stderr+=c);const exited=once(child,'exit');let timer;
++    try{
++      const message=await Promise.race([once(child,'message'),exited.then(()=>{throw new Error(stderr||'publication child exited before boundary');}),
++        new Promise((_r,reject)=>{timer=setTimeout(()=>reject(new Error('publication boundary timeout')),15000);})]);
++      assert.equal(message[0].boundary,boundary);
++      const visible=(await pool.query("SELECT indexer_state->>'phase' AS phase FROM deployments WHERE deployment_id=$1",[config.deploymentId])).rows[0].phase;
++      const published=(await pool.query('SELECT block_hash FROM projection_checkpoints WHERE deployment_id=$1',[config.deploymentId])).rows;
++      assert.equal(visible,boundary==='beforePublicationCommit'?'replaying':'ready');
++      assert.equal(published.length,boundary==='beforePublicationCommit'?0:1);
++      child.kill('SIGKILL');await exited;
++      assert.equal((await apiGet('/summary')).status,boundary==='beforePublicationCommit'?503:200);
++      result.publicationCrashes.push({boundary,signal:'SIGKILL',visiblePhase:visible,publication:published});
++    }finally{
++      clearTimeout(timer);if(child.exitCode===null&&child.signalCode===null){child.kill('SIGKILL');await exited;}
++    }
++  }
++  const projection=await project(config,transport,pool);assert.equal(projection.context.asOfBlockHash,newHeader.hash);
++  assert.deepEqual(projection.counts,{proposals:1,votes:1,operations:1,transfers:3,disbursements:1});
++  assert.equal(projection.treasury.balance,String(9996n*10n**18n));
++  const canonicalIds=(await pool.query('SELECT proposal_id::text AS id FROM proposals WHERE deployment_id=$1',[config.deploymentId])).rows.map(r=>r.id);
++  assert.deepEqual(canonicalIds,[canonicalProposal]);
++  const recovered=await apiGet('/summary');assert.equal(recovered.status,200);assert.equal(recovered.body.context.asOfBlockHash,newHeader.hash);
++  const oldCursor=await apiGet('/proposals',cursorQuery);assert.equal(oldCursor.status,409);assert.equal(oldCursor.body.error.code,'SNAPSHOT_INVALIDATED');
++  const restored=await stable();for(let i=0;i<3;i++){await sync(config,transport,storage);await project(config,transport,pool);assert.deepEqual(await stable(),restored);}
++  const state=(await pool.query('SELECT indexer_state FROM deployments WHERE deployment_id=$1',[config.deploymentId])).rows[0].indexer_state;
++  assert.equal(state.ancestorNumber,result.ancestor.h);assert.equal(state.ancestorHash,result.ancestor.hash);
++  const targetUrl=new URL(process.env.BE07_COMPARE_DATABASE_URL);assert.equal(process.env.BE07_TEST_ISOLATED,'1');
++  assert.equal(targetUrl.hostname,'127.0.0.1');assert.equal(targetUrl.pathname,'/be07_compare');
++  const target=new pg.Pool({connectionString:targetUrl.href,max:4});
++  try {
++    const input={format:manifest.format,sourceCommit:manifest.sourceCommit,chainId:manifest.chainId,
++      scanFromBlock:manifest.scanFromBlock,confirmations:2,batchSize:'7',contracts:{
++        ...Object.fromEntries([['governor','Governor'],['timelock','Timelock'],['treasury','Treasury'],['budget_token','BUD']].map(([role,k])=>[role,manifest.contracts[k]])),
++        GOV:manifest.contracts.GOV}};
++    const loaded=parseBe06Manifest(input,config.rpcUrl,before.h,config.deploymentId);
++    result.rebuild=await rebuildDatabase({manifest:loaded,atBlock:before.h,rpc:transport,referencePool:pool,targetPool:target});
++    result.compare=await compareDatabases({config:loaded.config,atBlock:before.h,rpc:transport,referencePool:pool,rebuildPool:target});
++    assert.equal(result.compare.result,'equal');
++  } finally {await target.end();}
++  // Real >30 s RPC outage: keep API and worker running, including the no-event case.
++  let offline=false,requests=0;
++  const proxy=createServer(async(req,res)=>{
++    let raw='';for await(const c of req)raw+=c;requests++;
++    if(offline){res.writeHead(503);res.end();return;}
++    const b=JSON.parse(raw);
++    try{res.end(JSON.stringify({jsonrpc:'2.0',id:b.id,result:await rpc(b.method,b.params)}));}
++    catch{res.writeHead(503);res.end();}
++  });
++  proxy.listen(0,'127.0.0.1');await once(proxy,'listening');
++  const controller=new AbortController(),events=[];config.toBlock='latest';config.pollIntervalMs=200;
++  const proxyRpc=new HttpRpc(`http://127.0.0.1:${proxy.address().port}`,100,{signal:controller.signal,maxAttempts:2,baseDelayMs:10});
++  const running=worker(config,pool,controller.signal,e=>events.push({type:e.type,...(e.code?{code:e.code}:{})}),proxyRpc);
++  try{
++    for(let i=0;i<100&&!events.some(e=>e.type==='worker_publication');i++)await new Promise(r=>setTimeout(r,50));
++    assert.ok(events.some(e=>e.type==='worker_publication'));
++    const receipt=await tx('BE07 worker eligible deposit',accounts.funding,'BUD','transfer',[address.Treasury,2n*10n**18n]);
++    await rpc('anvil_mine',['0x2','0x0']);const eligibleAt=Date.now();let eventVisible;
++    for(let i=0;i<200;i++){
++      eventVisible=await apiGet('/summary');
++      if(eventVisible.body.context && BigInt(eventVisible.body.context.asOfBlock)>=BigInt(receipt.blockNumber) && eventVisible.body.context.sync.status==='synced')break;
++      await new Promise(r=>setTimeout(r,50));
++    }
++    const elapsedMs=Date.now()-eligibleAt;
++    assert.equal(eventVisible.body.context.sync.status,'synced');assert.ok(BigInt(eventVisible.body.context.asOfBlock)>=BigInt(receipt.blockNumber));assert.ok(elapsedMs<30000);
++    assert.equal(eventVisible.body.data.treasury.balance,String(9998n*10n**18n));
++    result.normalRpcFreshness={eligibleBlock:String(BigInt(receipt.blockNumber)),elapsedMs,eventVisible};
++    offline=true;
++    const start=Date.now();await new Promise(r=>setTimeout(r,31050));
++    const staleHealth=await apiGet('/health'),staleSummary=await apiGet('/summary');
++    assert.equal(staleHealth.status,200);assert.equal(staleHealth.body.data.indexer,'lagging');
++    assert.equal(staleSummary.body.context.sync.status,'lagging');assert.ok(BigInt(staleSummary.body.context.sync.lagSeconds)>=30n);
++    offline=false;
++    let fresh;for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,100));fresh=await apiGet('/health');if(fresh.body.context?.sync.status==='synced')break;}
++    assert.equal(fresh.body.context.sync.status,'synced');
++    result.outage={durationMs:Date.now()-start,requests,staleHealth,staleSummary,fresh,events};
++  }finally{controller.abort();await running;proxy.closeAllConnections();await new Promise(r=>proxy.close(r));}
++  // Deep fork: retain diagnosis data, close API publication, require BE06.
++  assert.equal(await rpc('evm_revert',[shallowSnapshot]),true);
++  await tx('BE07 deep alternate deposit',accounts.funding,'BUD','transfer',[address.Treasury,9n*10n**18n]);
++  await rpc('anvil_mine',[toQuantity(beforeHead-BigInt(await rpc('eth_blockNumber'))),'0x2']);
++  config.reorgWindow=1;
++  await assert.rejects(sync(config,transport,storage),e=>e.report.error.code==='REBUILD_REQUIRED');
++  const deepHealth=await apiGet('/health'),deepData=await apiGet('/summary');
++  assert.equal(deepHealth.status,503);assert.equal(deepHealth.body.data.recoveryStatus,'rebuild_required');assert.equal(deepData.status,503);
++  return {...result,status:'PASS',recoveryState:state,projection,gateHealth,gateData,duringCursor,recovered,oldCursor,deepHealth,deepData,
++    checks:['same height real reorg removed proposal/vote/operation/transfer/disbursement orphan history','three replay cycles preserve exact model',
++      'fresh BE06 database equals recovered database at H/hash','real 31 second RPC outage and idle worker freshness recovery','deep fork requires rebuild; API rejects orphan publication']};
++}
+diff --git a/scripts/check_be07_local.mjs b/scripts/check_be07_local.mjs
+new file mode 100755
+index 0000000..c4712bc
+--- /dev/null
++++ b/scripts/check_be07_local.mjs
+@@ -0,0 +1,57 @@
++// Local/CI test orchestrator. Caller provisions a NEW disposable PostgreSQL cluster.
++import assert from 'node:assert/strict';
++import { createHash } from 'node:crypto';
++import { spawn, execFileSync } from 'node:child_process';
++import { readFile, mkdir, writeFile } from 'node:fs/promises';
++import { resolve } from 'node:path';
++import pg from 'pg';
++assert.equal(process.env.BE07_TEST_ISOLATED,'1','Explicit disposable cluster opt-in required.');
++const output=resolve(process.env.BE07_EVIDENCE_DIR??'reports/be07');await mkdir(output,{recursive:true});
++const admin=new URL(process.env.PG_ADMIN_URL);assert.equal(admin.hostname,'127.0.0.1');assert.equal(admin.pathname,'/postgres');
++const connect=(name,role='be04_test')=>{const u=new URL(admin);u.username=role;u.pathname='/'+name;return u.href;};
++const env={...process.env,BE07_TEST_DATABASE_URL:connect('be07_test'),BE07_COMPARE_DATABASE_URL:connect('be07_compare'),
++  BE04_LIVE_ISOLATED:'1',BE04_LIVE_DATABASE_URL:connect('be04_live'),BE02_TEST_ISOLATED:'1',BE02_TEST_DATABASE_URL:connect('be02_test','be02_test'),
++  BE03_TEST_ISOLATED:'1',BE03_TEST_DATABASE_URL:connect('be03_test','be03_test'),BE04_TEST_ISOLATED:'1',BE04_TEST_DATABASE_URL:connect('be04_test'),
++  BE05_TEST_ISOLATED:'1',BE05_TEST_DATABASE_URL:connect('tv4_be05_be07'),BE06_TEST_ISOLATED:'1',
++  BE06_TEST_REFERENCE_DATABASE_URL:connect('be06_test_reference'),BE06_TEST_TARGET_DATABASE_URL:connect('be06_test_target')};
++// Bind every run to the actual uncommitted implementation and its new files.
++const changed=execFileSync('git',['ls-files','--modified','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(Boolean)
++  .filter(p=>!p.startsWith('docs/evidence/')&&!p.startsWith('reports/')).sort();
++const files={};
++for(const path of changed) files[path]=createHash('sha256').update(await readFile(path)).digest('hex');
++const trackedPatch=execFileSync('git',['diff','--binary','--','.',':(exclude)docs/evidence/**',':(exclude)reports/**']);
++const patchParts=[trackedPatch];
++const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p=>p&&changed.includes(p));
++for(const path of untracked){try{patchParts.push(execFileSync('git',['diff','--no-index','--binary','--','/dev/null',path]));}catch(e){if(e.status!==1)throw e;patchParts.push(e.stdout);}}
++const patch=Buffer.concat(patchParts);
++await writeFile(resolve(output,'source.patch'),patch,{flag:'wx'});
++await writeFile(resolve(output,'tested-source.json'),JSON.stringify({baseCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
++  files,patchSha256:createHash('sha256').update(patch).digest('hex')},null,2)+'\n',{flag:'wx'});
++const c=new pg.Client({connectionString:admin.href});await c.connect();
++const databases=[['be07_test','be04_test'],['be07_compare','be04_test'],['be04_live','be04_test'],['be04_live_baseline','be04_test'],['be04_test','be04_test'],['be02_test','be02_test'],['be03_test','be03_test'],['tv4_be05_be07','be04_test'],['be06_test_reference','be04_test'],['be06_test_target','be04_test']];
++try{
++  for(const [name] of databases)assert.equal((await c.query('SELECT 1 FROM pg_database WHERE datname=$1',[name])).rowCount,0,`Refuse existing database ${name}`);
++  for(const name of ['be04_test','be02_test','be03_test'])if(!(await c.query('SELECT 1 FROM pg_roles WHERE rolname=$1',[name])).rowCount){
++    const sql=(await c.query("SELECT format('CREATE ROLE %I LOGIN PASSWORD %L',$1::text,$2::text) AS sql",[name,admin.password||null])).rows[0].sql;
++    await c.query(sql);
++  }
++  for(const [name,role]of databases)await c.query(`CREATE DATABASE ${name} OWNER ${role} TEMPLATE template0 ENCODING 'UTF8'`);
++}finally{await c.end();}
++const commands=[];
++async function run(label,command,args,extra={}){
++  const start=new Date();let log='';
++  const child=spawn(command,args,{env:{...env,...extra},stdio:['ignore','pipe','pipe']});
++  child.stdout.on('data',s=>log+=s);child.stderr.on('data',s=>log+=s);
++  const exitCode=await new Promise((r,j)=>{child.once('error',j);child.once('exit',r);});
++  await writeFile(resolve(output,label+'.txt'),log,{flag:'wx'});
++  commands.push({label,command:command===process.execPath?'node':command,args,exitCode,start:start.toISOString(),end:new Date().toISOString()});
++  await writeFile(resolve(output,'commands.json'),JSON.stringify(commands,null,2)+'\n');
++  console.log(`${label}: exit ${exitCode}`);return exitCode;
++}
++await run('typecheck','npm',['run','typecheck']);await run('build','npm',['run','build']);
++await run('unit',process.execPath,['--import','tsx','--test','tests/indexer/config.test.ts','tests/indexer/decoder.test.ts','tests/indexer/reader.test.ts','tests/indexer/cli.test.ts','tests/indexer/syncer.test.ts','tests/indexer/projection.test.ts','tests/indexer/be04-live-receipt.test.mjs','tests/indexer/be06.test.ts','tests/indexer/be07.test.ts']);
++for(const [label,file]of [['be02-db','tests/indexer/storage.test.ts'],['be03-db','tests/indexer/checkpoint-storage.test.ts'],['be04-db','tests/indexer/projection-storage.test.ts'],['api-db','tests/api/server.test.mjs'],['be06-db','tests/indexer/be06-db.test.mjs'],['be07-db','tests/indexer/be07-db.test.mjs']])
++  await run(label,process.execPath,['--import','tsx','--test',file]);
++if(process.env.BE07_BASELINE_ROOT)await run('baseline-live',process.execPath,['--import','tsx','scripts/check_be04_live.mjs','--output',resolve(output,'baseline-live.json'),'--be07'],{BE04_LIVE_DATABASE_URL:connect('be04_live_baseline')});
++await run('be07-live',process.execPath,['--import','tsx','scripts/check_be04_live.mjs','--output',resolve(output,'be07-live.json'),'--be07'],{BE07_BASELINE_ROOT:''});
++process.exitCode=commands.every(c=>c.exitCode===0)?0:1;
+diff --git a/scripts/check_be07_native.mjs b/scripts/check_be07_native.mjs
+new file mode 100755
+index 0000000..fe471a5
+--- /dev/null
++++ b/scripts/check_be07_native.mjs
+@@ -0,0 +1,31 @@
++// Fresh native cluster lifecycle. No Docker, sudo, existing DB, testnet or signer.
++import { spawn, execFileSync } from 'node:child_process';
++import { createServer } from 'node:net';
++import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
++import { tmpdir } from 'node:os';
++import { join, resolve } from 'node:path';
++const bin=process.env.BE07_PG_BIN??execFileSync('pg_config',['--bindir'],{encoding:'utf8'}).trim();
++const dir=await mkdtemp(join(tmpdir(),'dao-be07-native-'));
++const output=resolve(process.env.BE07_EVIDENCE_DIR??join('reports',`be07-${Date.now()}`));await mkdir(output,{recursive:true});
++const reserve=createServer();await new Promise((r,j)=>{reserve.once('error',j);reserve.listen(0,'127.0.0.1',r);});
++const port=reserve.address().port;await new Promise(r=>reserve.close(r));
++const env={...process.env,BE07_TEST_ISOLATED:'1',PG_ADMIN_URL:`postgresql://be04_test@127.0.0.1:${port}/postgres`,BE07_EVIDENCE_DIR:output};
++let started=false;
++try {
++  const init=execFileSync(join(bin,'initdb'),['-D',join(dir,'data'),'--auth=trust','--no-locale','--encoding=UTF8','-U','be04_test'],{encoding:'utf8'});
++  await writeFile(join(output,'initdb.txt'),init,{flag:'wx'});
++  const start=execFileSync(join(bin,'pg_ctl'),['-D',join(dir,'data'),'-l',join(dir,'postgres.log'),'-o',`-h 127.0.0.1 -p ${port} -k ${dir}`,'start'],{encoding:'utf8'});started=true;
++  await writeFile(join(output,'pg-start.txt'),start,{flag:'wx'});
++  await writeFile(join(output,'runtime.json'),JSON.stringify({node:process.version,
++    postgres:execFileSync(join(bin,'postgres'),['--version'],{encoding:'utf8'}).trim(),
++    forge:execFileSync(process.env.FORGE_BIN??'forge',['--version'],{encoding:'utf8'}).trim(),
++    anvil:execFileSync(process.env.ANVIL_BIN??'anvil',['--version'],{encoding:'utf8'}).trim(),
++    baseCommit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cluster:dir,port},null,2)+'\n',{flag:'wx'});
++  const child=spawn(process.execPath,['scripts/check_be07_local.mjs'],{env,stdio:'inherit'});
++  const stop=()=>child.kill('SIGTERM');process.once('SIGINT',stop);process.once('SIGTERM',stop);
++  process.exitCode=await new Promise((r,j)=>{child.once('error',j);child.once('exit',code=>r(code??1));});
++  process.removeListener('SIGINT',stop);process.removeListener('SIGTERM',stop);
++} finally {
++  if(started){const stopped=execFileSync(join(bin,'pg_ctl'),['-D',join(dir,'data'),'stop','-m','fast'],{encoding:'utf8'});await writeFile(join(output,'pg-stop.txt'),stopped,{flag:'wx'});}
++}
++console.log(`Evidence: ${output}`);
+diff --git a/tests/indexer/be07-crash-worker.ts b/tests/indexer/be07-crash-worker.ts
+new file mode 100755
+index 0000000..65bb256
+--- /dev/null
++++ b/tests/indexer/be07-crash-worker.ts
+@@ -0,0 +1,13 @@
++import pg from 'pg';
++import { parseConfig } from '../../indexer/config.js';
++import { HttpRpc } from '../../indexer/rpc.js';
++import { PostgresStorage, type TransactionHooks } from '../../indexer/storage.js';
++import { sync } from '../../indexer/syncer.js';
++const config=parseConfig(JSON.parse(process.env.BE07_CRASH_CONFIG!),{});
++const pool=new pg.Pool({connectionString:process.env.BE07_TEST_DATABASE_URL,max:1});
++const boundary=process.env.BE07_CRASH_BOUNDARY as keyof TransactionHooks;
++try {
++  await sync(config,new HttpRpc(config.rpcUrl),new PostgresStorage(pool,{[boundary]:async()=>{
++    process.send?.({boundary});await new Promise(()=>{});
++  }}));
++} finally {await pool.end();}
+diff --git a/tests/indexer/be07-db.test.mjs b/tests/indexer/be07-db.test.mjs
+new file mode 100755
+index 0000000..b014ae0
+--- /dev/null
++++ b/tests/indexer/be07-db.test.mjs
+@@ -0,0 +1,133 @@
++import assert from 'node:assert/strict';
++import { before, after, test } from 'node:test';
++import { readFile } from 'node:fs/promises';
++import pg from 'pg';
++import { sync } from '../../indexer/syncer.ts';
++import { PostgresStorage } from '../../indexer/storage.ts';
++import { FixtureRpc, config, hash, rpcLog } from './helpers.ts';
++import { readBatch } from '../../indexer/reader.ts';
++const url=new URL(process.env.BE07_TEST_DATABASE_URL);
++assert.equal(process.env.BE07_TEST_ISOLATED,'1');assert.equal(url.hostname,'127.0.0.1');assert.equal(url.pathname,'/be07_test');
++const pool=new pg.Pool({connectionString:url.href,max:8});let seq=0;
++before(async()=>{
++  assert.equal((await pool.query("SELECT 1 FROM pg_tables WHERE schemaname='public'")).rowCount,0);
++  for(const file of ['001_initial','002_be03','003_be04','004_be05_api','005_be07'])
++    await pool.query(await readFile(new URL(`../../database/migrations/${file}.sql`,import.meta.url),'utf8'));
++});
++after(()=>pool.end());
++async function fixture(window=128){
++  const chain=50000+seq++;
++  const id=(await pool.query(`INSERT INTO deployments(chain_id,deployment_name,deployment_block,abi_version,confirmation_depth,governance_config)
++    VALUES($1,$2,100,'test',2,'{}'::jsonb) RETURNING deployment_id::text`,[chain,`be07-${chain}`])).rows[0].deployment_id;
++  const c={...config(),chainId:BigInt(chain),deploymentId:id,fromBlock:100n,toBlock:'latest',reorgWindow:window};
++  for(const x of c.contracts) await pool.query(`INSERT INTO deployment_contracts(deployment_id,chain_id,contract_role,contract_address,deployment_block,abi_version)
++    VALUES($1,$2,$3,$4,$5,$6)`,[id,chain,x.role,x.address,String(x.deploymentBlock),x.abiVersion]);
++  const rpc=new FixtureRpc();rpc.chainId='0x'+BigInt(chain).toString(16);
++  let fork=1000n,changed=false;
++  rpc.override=(m,p)=>{
++    if(m==='eth_blockNumber')return '0x69';
++    if(m==='eth_getBlockByNumber'&&changed){const n=BigInt(p[0]);return {number:p[0],hash:hash(n>=fork?n+1000n:n),parentHash:hash(n-1n>=fork?n-1n+1000n:n-1n),timestamp:'0x'+(1700000000n+n).toString(16),transactions:[0n,1n,2n].map(t=>hash(10000n+n*10n+t))};}
++  };
++  rpc.logs=[rpcLog(103n)];
++  const storage=new PostgresStorage(pool);await sync(c,rpc,storage);
++  const branch=(at=102n)=>{fork=at;changed=true;rpc.logs=[{...rpcLog(102n),blockHash:hash(1102)}];};
++  return {c,rpc,storage,branch};
++}
++async function rows(c){return (await pool.query('SELECT block_number::text,block_hash FROM raw_events WHERE deployment_id=$1 ORDER BY block_number',[c.deploymentId])).rows;}
++async function phase(c){return (await pool.query('SELECT indexer_state FROM deployments WHERE deployment_id=$1',[c.deploymentId])).rows[0].indexer_state.phase;}
++test('same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated',async()=>{
++  const f=await fixture(),other=await fixture();const otherRows=await rows(other.c);f.branch();
++  await sync(f.c,f.rpc,f.storage);
++  assert.deepEqual(await rows(f.c),[{block_number:'102',block_hash:hash(1102)}]);
++  assert.equal((await f.storage.loadCheckpoint(f.c)).hash,hash(1103));
++  assert.equal(await phase(f.c),'replaying');
++  for(let n=0;n<3;n++)await sync(f.c,f.rpc,f.storage);
++  assert.equal((await rows(f.c)).length,1);assert.deepEqual(await rows(other.c),otherRows);
++});
++test('deep reorg outside window requires BE06; does not destroy diagnosis data or metadata',async()=>{
++  const f=await fixture(1),old=await rows(f.c);f.branch(101n);
++  await assert.rejects(sync(f.c,f.rpc,f.storage),e=>e.report.error.code==='REBUILD_REQUIRED');
++  assert.equal(await phase(f.c),'rebuild_required');assert.deepEqual(await rows(f.c),old);
++  await assert.rejects(sync(f.c,f.rpc,f.storage),e=>e.report.error.code==='REBUILD_REQUIRED');
++});
++for(const boundary of ['recoveryMarked','beforeRollbackCommit','afterRollbackCommit'])test(`recovery crash boundary ${boundary} resumes with a fresh storage instance`,async()=>{
++  const f=await fixture();f.branch();let fired=false;
++  const broken=new PostgresStorage(pool,{[boundary]:async()=>{fired=true;throw new Error('simulated process interruption');}});
++  await assert.rejects(sync(f.c,f.rpc,broken));assert.equal(fired,true);
++  assert.equal(await phase(f.c),boundary==='afterRollbackCommit'?'replaying':'recovering');
++  await sync(f.c,f.rpc,new PostgresStorage(pool));
++  assert.deepEqual(await rows(f.c),[{block_number:'102',block_hash:hash(1102)}]);
++});
++test('RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes',async()=>{
++  const f=await fixture();const old=await rows(f.c);const saved=f.rpc.override;
++  f.rpc.override=(m,p)=>{if(m==='eth_getBlockByNumber')throw new Error('offline');return saved(m,p);};
++  await assert.rejects(sync(f.c,f.rpc,f.storage));assert.deepEqual(await rows(f.c),old);assert.equal(await phase(f.c),'unverified');
++  f.rpc.override=saved;f.branch();let down=true;
++  const storage=new PostgresStorage(pool,{recoveryMarked:async()=>{if(down){down=false;throw new Error('offline after gate');}}});
++  await assert.rejects(sync(f.c,f.rpc,storage));assert.equal(await phase(f.c),'recovering');assert.deepEqual(await rows(f.c),old);
++  await sync(f.c,f.rpc,f.storage);assert.equal((await rows(f.c)).length,1);
++});
++test('recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data',async()=>{
++  const f=await fixture();const oldCp=await f.storage.loadCheckpoint(f.c);
++  const stale=(await readBatch(f.c,f.rpc,104n,104n)).batch;
++  let release;const gate=new Promise(r=>release=r);let marked;const seen=new Promise(r=>marked=r);
++  const first=new PostgresStorage(pool,{recoveryMarked:async()=>{marked();await gate;}});f.branch();
++  const running=sync(f.c,f.rpc,first);await seen;
++  await assert.rejects(f.storage.writeCheckpointBatch(f.c,stale,oldCp,106n),e=>e.code==='CHECKPOINT_CONFLICT');
++  await sync(f.c,f.rpc,f.storage);release();await assert.rejects(running);
++  assert.equal((await rows(f.c)).length,1);
++});
++test('a fork between committed catch-up batches persists recovery and replays on the next invocation',async()=>{
++  const f=await fixture();const saved=f.rpc.override;let fired=false;
++  f.rpc.override=(m,p)=>m==='eth_blockNumber'?(fired?'0x69':'0x6b'):saved(m,p);
++  await assert.rejects(sync(f.c,f.rpc,f.storage,()=>{if(!fired){fired=true;f.branch();}}));
++  await sync(f.c,f.rpc,f.storage);
++  assert.equal((await f.storage.loadCheckpoint(f.c)).hash,hash(1103));
++});
++
++for(const boundary of ['recoveryMarked','beforeRollbackCommit','afterRollbackCommit'])test(`SIGKILL at ${boundary}: PostgreSQL reconnect and recovery restart`,{timeout:15000},async()=>{
++  const {spawn}=await import('node:child_process');const {once}=await import('node:events');
++  const {serveRpc}=await import('./helpers.ts');
++  const f=await fixture();f.branch();
++  const served=await serveRpc(b=>f.rpc.call(b.method,b.params));
++  const cfg={...f.c,rpcUrl:served.url};
++  const child=spawn(process.execPath,['--import','tsx','tests/indexer/be07-crash-worker.ts'],{env:{...process.env,
++    BE07_CRASH_CONFIG:JSON.stringify(cfg,(_k,v)=>typeof v==='bigint'?String(v):v),BE07_CRASH_BOUNDARY:boundary},stdio:['ignore','pipe','pipe','ipc']});
++  let stderr='';child.stderr.on('data',c=>stderr+=c);const exited=once(child,'exit');
++  try {
++    const message=await Promise.race([once(child,'message'),exited.then(()=>{throw new Error(stderr||'worker exited before hook');})]);
++    assert.equal(message[0].boundary,boundary);child.kill('SIGKILL');await exited;
++    await sync(f.c,f.rpc,new PostgresStorage(pool));
++    assert.equal((await rows(f.c)).length,1);assert.equal((await f.storage.loadCheckpoint(f.c)).hash,hash(1103));
++  } finally {if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');served.server.closeAllConnections();await new Promise(r=>served.server.close(r));}
++});
++
++test('worker exits on wrong chain and rebuild_required instead of retrying forever',async()=>{
++  const {worker}=await import('../../indexer/worker.ts');
++  const f=await fixture();f.rpc.chainId='0x1';const events=[];f.rpc.calls=[];
++  await assert.rejects(worker(f.c,pool,new AbortController().signal,e=>events.push(e),f.rpc));
++  assert.equal(events[0].code,'CHAIN_ID_MISMATCH');assert.equal(f.rpc.calls.filter(x=>x.method==='eth_chainId').length,1);
++  f.rpc.chainId='0x'+f.c.chainId.toString(16);await pool.query(`UPDATE deployments SET indexer_state='{"phase":"rebuild_required"}'::jsonb WHERE deployment_id=$1`,[f.c.deploymentId]);
++  events.length=0;await assert.rejects(worker(f.c,pool,new AbortController().signal,e=>events.push(e),f.rpc));assert.equal(events[0].code,'REBUILD_REQUIRED');
++});
++
++test('shorter canonical branch recovers only with a lower-height hash mismatch; behind RPC alone preserves data',async()=>{
++  const f=await fixture();const saved=f.rpc.override;let head=102n;
++  f.rpc.override=(m,p)=>m==='eth_blockNumber'?'0x'+head.toString(16):m==='eth_getBlockByNumber'&&BigInt(p[0])>head?null:saved(m,p);
++  const old=await rows(f.c);
++  await assert.rejects(sync(f.c,f.rpc,f.storage),e=>e.report.error.code==='CHECKPOINT_HEAD_BEHIND');
++  assert.deepEqual(await rows(f.c),old);assert.equal(await phase(f.c),'unverified');
++  f.branch(101n);await sync(f.c,f.rpc,f.storage);
++  assert.equal((await f.storage.loadCheckpoint(f.c)).number,100n);assert.equal((await rows(f.c)).length,0);
++  head=104n;await sync(f.c,f.rpc,f.storage);assert.deepEqual(await rows(f.c),[{block_number:'102',block_hash:hash(1102)}]);
++});
++
++test('wrong RPC chain during recovery never rolls back data',async()=>{
++  const f=await fixture();const cp=await f.storage.loadCheckpoint(f.c);const old=await rows(f.c);f.branch();f.rpc.chainId='0x1';
++  await assert.rejects(f.storage.recoverCheckpoint(f.c,f.rpc,cp),e=>e.code==='CHAIN_ID_MISMATCH');
++  assert.deepEqual(await rows(f.c),old);assert.equal(await phase(f.c),'unverified');
++  f.rpc.chainId='0x'+f.c.chainId.toString(16);
++  const storage=new PostgresStorage(pool,{recoveryMarked:async()=>{f.rpc.chainId='0x1';}});
++  await assert.rejects(sync(f.c,f.rpc,storage),e=>e.report.error.code==='CHAIN_ID_MISMATCH');
++  assert.deepEqual(await rows(f.c),old);assert.equal(await phase(f.c),'recovering');
++});
+diff --git a/tests/indexer/be07-publication-worker.mjs b/tests/indexer/be07-publication-worker.mjs
+new file mode 100755
+index 0000000..bd17efb
+--- /dev/null
++++ b/tests/indexer/be07-publication-worker.mjs
+@@ -0,0 +1,25 @@
++// Real PostgreSQL/RPC publication with a pause at COMMIT, solely for SIGKILL tests.
++import pg from 'pg';
++import { parseConfig } from '../../indexer/config.ts';
++import { HttpRpc } from '../../indexer/rpc.ts';
++import { project } from '../../indexer/projection/projector.ts';
++const config=parseConfig(JSON.parse(process.env.BE07_CRASH_CONFIG),{});
++const pool=new pg.Pool({connectionString:process.env.BE07_TEST_DATABASE_URL,max:1});
++const boundary=process.env.BE07_CRASH_BOUNDARY;
++const pause=async()=>{process.send({boundary});await new Promise(()=>{});};
++// Every query reaches the actual client. No SQL result or RPC response is mocked.
++const facade={
++  query:(...args)=>pool.query(...args),
++  connect:async()=>{
++    const c=await pool.connect();let publishing=false;
++    return {release:()=>c.release(),query:async(...args)=>{
++      if(typeof args[0]==='string'&&args[0].includes('INSERT INTO projection_checkpoints'))publishing=true;
++      const commit=publishing&&args[0]==='COMMIT';
++      if(commit&&boundary==='beforePublicationCommit')await pause();
++      const result=await c.query(...args);
++      if(commit&&boundary==='afterPublicationCommit')await pause();
++      return result;
++    }};
++  },
++};
++try{await project(config,new HttpRpc(config.rpcUrl),facade);}finally{await pool.end();}
+diff --git a/tests/indexer/be07.test.ts b/tests/indexer/be07.test.ts
+new file mode 100755
+index 0000000..4dc5ab1
+--- /dev/null
++++ b/tests/indexer/be07.test.ts
+@@ -0,0 +1,92 @@
++import assert from 'node:assert/strict';
++import { createServer } from 'node:http';
++import { once } from 'node:events';
++import { test } from 'node:test';
++import { HttpRpc, RpcError } from '../../indexer/rpc.js';
++import { freshness } from '../../indexer/api/server.js';
++import { parseConfig } from '../../indexer/config.js';
++import { configInput } from './helpers.js';
++
++for (const failure of [429, 500, 503, 'network', 'timeout', -32005] as const) {
++  test(`RPC retries ${failure}, then recovers (real HTTP)`, async () => {
++    let attempts = 0;
++    const server = createServer(async (req, res) => {
++      let bytes = ''; for await (const c of req) bytes += c;
++      const { id } = JSON.parse(bytes); attempts++;
++      if (attempts < 3) {
++        if (failure === 'network') { req.socket.destroy(); return; }
++        if (failure === 'timeout') return;
++        if (failure < 0) { res.end(JSON.stringify({ jsonrpc: '2.0', id, error: { code: failure } })); return; }
++        res.writeHead(failure); res.end('secret provider body'); return;
++      }
++      res.end(JSON.stringify({ jsonrpc: '2.0', id, result: '0x7a69' }));
++    });
++    server.listen(0, '127.0.0.1'); await once(server, 'listening');
++    try {
++      const rpc = new HttpRpc(`http://127.0.0.1:${(server.address() as {port:number}).port}`, failure === 'timeout' ? 40 : 1000,
++        { baseDelayMs: 2, maxDelayMs: 8, random: () => 0 });
++      assert.equal(await rpc.call('eth_chainId', []), '0x7a69'); assert.equal(attempts, 3);
++    } finally { server.closeAllConnections(); await new Promise<void>(r => server.close(() => r())); }
++  });
++}
++for (const code of [-32601, -32602, -32000, 401, 403]) {
++  test(`RPC permanent ${code} is attempted once`, async () => {
++    let attempts = 0;
++    const server = createServer(async (req, res) => {
++      let bytes = ''; for await (const c of req) bytes += c;
++      const { id } = JSON.parse(bytes); attempts++;
++      if (code > 0) res.writeHead(code);
++      res.end(JSON.stringify({ jsonrpc: '2.0', id, error: { code, message: 'secret' } }));
++    });
++    server.listen(0,'127.0.0.1'); await once(server,'listening');
++    try { await assert.rejects(new HttpRpc(`http://127.0.0.1:${(server.address() as {port:number}).port}`).call('eth_call', []),
++      e => e instanceof RpcError && !e.retryable && !e.message.includes('secret')); assert.equal(attempts,1);
++    } finally { server.closeAllConnections(); await new Promise<void>(r => server.close(() => r())); }
++  });
++}
++test('RPC retries are bounded, exponential, jittered and interruptible', async () => {
++  let attempts=0, randomCalls=0;
++  const server=createServer((_q,res)=>{ attempts++;res.writeHead(503);res.end(); });
++  server.listen(0,'127.0.0.1'); await once(server,'listening');
++  const url=`http://127.0.0.1:${(server.address() as {port:number}).port}`;
++  try {
++    const start=Date.now();
++    await assert.rejects(new HttpRpc(url,1000,{maxAttempts:3,baseDelayMs:20,maxDelayMs:100,random:()=>{randomCalls++;return 1;}}).call('eth_chainId',[]));
++    assert.equal(attempts,3);assert.equal(randomCalls,2);assert.ok(Date.now()-start>=55);
++    const c=new AbortController(); setTimeout(()=>c.abort(),30);
++    await assert.rejects(new HttpRpc(url,1000,{signal:c.signal,baseDelayMs:2000}).call('eth_chainId',[]), /stopped/);
++    assert.equal(attempts,4);
++  } finally { server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r())); }
++});
++test('freshness changes after 30 seconds with zero new events; recovery gates are explicit',()=>{
++  const now=Date.now();
++  const raw={h:'10',hash:'x',head:'12',confirmations:2,status:'ready',sourceScope:'s',updatedAt:new Date(now).toISOString()};
++  const state={phase:'ready',lastCheckedAt:new Date(now).toISOString(),head:'12',confirmed:'10'};
++  assert.equal(freshness(raw,'10',state,now+30000).status,'synced');
++  assert.equal(freshness(raw,'10',state,now+30001).status,'lagging');
++  assert.equal(freshness(raw,'10',state,now+31000).lagSeconds,'31');
++  for(const phase of ['recovering','replaying','rebuild_required'])
++    assert.equal(freshness(raw,'10',{...state,phase}).status,'not_ready');
++  assert.equal(freshness(raw,'10',null).status,'lagging');
++});
++test('recovery config validates bounded window and polling interval',()=>{
++  for(const reorgWindow of [0,-1,0.5,'128',10001]) assert.throws(()=>parseConfig({...configInput(),reorgWindow},{}));
++  for(const pollIntervalMs of [0,-1,10,10001,'1000']) assert.throws(()=>parseConfig({...configInput(),pollIntervalMs},{}));
++  assert.equal(parseConfig(configInput(),{}).reorgWindow,128);
++});
++
++test('invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response',async()=>{
++  let requests=0,mode='json';
++  const server=createServer(async(req,res)=>{
++    let raw='';for await(const chunk of req)raw+=chunk;const b=JSON.parse(raw);requests++;
++    if(mode==='stall')return;
++    res.end(mode==='json'?'invalid-json':JSON.stringify({jsonrpc:'2.0',id:b.id+1,result:'0x0'}));
++  });
++  server.listen(0,'127.0.0.1');await once(server,'listening');
++  const url=`http://127.0.0.1:${(server.address() as {port:number}).port}`;
++  try{
++    for(mode of ['json','id'])await assert.rejects(new HttpRpc(url).call('eth_chainId',[]),e=>e instanceof RpcError&&!e.retryable);
++    assert.equal(requests,2);mode='stall';const c=new AbortController();setTimeout(()=>c.abort(),30);
++    await assert.rejects(new HttpRpc(url,5000,{signal:c.signal}).call('eth_chainId',[]),/stopped/);assert.equal(requests,3);
++  }finally{server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));}
++});

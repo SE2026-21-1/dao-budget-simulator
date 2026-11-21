@@ -40,21 +40,37 @@ function outageTrace(counts = [4, 4, 4], gapMs = 150) {
   })));
 }
 
+test('outage accounting groups interleaved retries from bounded projection fan-out', () => {
+  const attempts = [];
+  let monotonicMs = 0;
+  for (const round of [[1, 2, 3, 4], [3, 1, 4, 2], [2, 4, 1, 3], [3, 2, 1, 4]]) {
+    for (const id of round) attempts.push({
+      id, method: 'eth_call', params: [{ to: `0x${id}` }, 'latest'],
+      monotonicMs: monotonicMs += 150, httpStatus: 503,
+    });
+  }
+  const calls = summarizeOutageCalls(attempts);
+  assert.deepEqual(calls.map(({ id, attempts: count }) => ({ id, attempts: count })),
+    [1, 2, 3, 4].map(id => ({ id, attempts: 4 })));
+});
+
 test('outage accounting accepts two exhausted calls before one worker error without stdout timing', () => {
-  // The failing CI recorded 4 eth_call attempts followed by 4 eth_chainId
-  // attempts before its first worker_error; that event's count was 8.
+  // One worker_error can follow multiple exhausted logical RPC calls; it is not
+  // itself a boundary between the requests recorded by the HTTP proxy.
   const calls = summarizeOutageCalls(outageTrace());
   assert.deepEqual(calls.map(({ method, attempts }) => ({ method, attempts })), [
     { method: 'eth_call', attempts: 4 }, { method: 'eth_chainId', attempts: 4 },
     { method: 'eth_chainId', attempts: 4 },
   ]);
-  assert.deepEqual(summarizeOutageCalls(outageTrace([2, 4, 1])).map(c => c.attempts), [2, 4, 1]);
+  assert.deepEqual(summarizeOutageCalls(outageTrace([2, 4, 1]),
+    { startedAtMs: 0, endedAtMs: 1200, boundaryWindowMs: 300 }).map(c => c.attempts), [2, 4, 1]);
 });
 
 test('outage accounting still rejects an over-budget call, missing retries and absent backoff', () => {
   for (const counts of [[5, 4, 4], [4, 5, 4], [4, 4, 5]])
     assert.throws(() => summarizeOutageCalls(outageTrace(counts)), /must remain bounded/);
-  assert.throws(() => summarizeOutageCalls(outageTrace([4, 3, 4])), /exhaust four attempts/);
+  assert.throws(() => summarizeOutageCalls(outageTrace([4, 3, 4]),
+    { startedAtMs: 0, endedAtMs: 4000, boundaryWindowMs: 300 }), /exhaust four attempts/);
   assert.throws(() => summarizeOutageCalls(outageTrace([4, 4, 4], 0)), /positive backoff/);
 });
 

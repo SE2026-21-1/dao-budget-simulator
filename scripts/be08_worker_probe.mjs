@@ -133,15 +133,16 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     assert.equal(state.normalWorkerErrors.length, 0, 'Normal RPC measurements must not silently include transient RPC failures');
     offline = true; result.startedAt = new Date().toISOString(); const started = performance.now();
     await sleep(31_250);
-    result.offlineDurationMs = performance.now() - started;
     result.staleHealth = await get(base, '/health'); result.staleSummary = await get(base, '/summary');
     assert.equal(result.staleHealth.data.indexer, 'lagging');
     assert.equal(result.staleSummary.context.sync.status, 'lagging');
     assert.ok(BigInt(result.staleSummary.context.sync.lagSeconds) >= 30n);
     const failures = state.workerEvents.filter(e => e.offline && e.type === 'worker_error');
     assert.ok(failures.length >= 5, 'Several exhausted RPC attempts must be observable');
-    result.retryAccounting = 'Per logical JSON-RPC call ID; worker_error boundaries are not call boundaries';
-    result.retryCycles = summarizeOutageCalls(attempts);
+    result.retryAccounting = 'Retries are grouped by logical RPC call ID; bounded projection calls may interleave';
+    const outageEnded = performance.now();
+    result.offlineDurationMs = outageEnded - started;
+    result.retryCycles = summarizeOutageCalls(attempts, { startedAtMs: started, endedAtMs: outageEnded });
     assert.ok(result.retryCycles.length >= 5, 'Several bounded RPC calls must be observable');
     offline = false; result.restoredAt = new Date().toISOString(); const restored = performance.now();
     await waitFor(async () => {

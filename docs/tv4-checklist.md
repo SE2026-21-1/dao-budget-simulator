@@ -18,6 +18,13 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   và [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924760670);
   publish job skip theo release condition. Chưa có peer review/approval từ reviewer
   được yêu cầu; không merge hoặc tự approve. #7/#16 tiếp tục OPEN/PARTIAL.
+- BE08 push workflow [44929254569](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929254569)
+  reported a `rpc_outage` test-oracle failure on `826657a`; the PR-event run
+  [44929259785](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929259785)
+  passed at the same SHA. The artifact shows valid interleaving from the
+  projection's bounded four-reader fan-out, not reuse of a completed RPC ID.
+  Grouping retries by ID and the interleaving regression pass locally
+  (`npm run test:be08`, **11/11**); follow-up CI is pending. TC11 remains open.
 - PR #57 còn OPEN/`CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`;
   head đã xóa Terraform/OpenStack scaffolding, nên không còn disk-capacity fix
   `91f5b23` trong diff. Không merge PR hiện không mang infrastructure code.

@@ -17,6 +17,12 @@ PR [#60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60) gửi hai 
 
 Lượt này chỉ merge PR #58; PR #60 chưa merge. Không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
 
+### BE08 retry assertion correction — 22/11/2026
+
+Push workflow [44929254569](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929254569) failed at `rpc_outage` on head `826657ad43e032009ab799dba215ccf331ba9771`; the PR-event run [44929259785](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929259785) passed on the same SHA. The failure artifact recorded interleaved retries for distinct `eth_call` IDs. This is valid bounded fan-out: `indexer/projection/chain.ts` checks proposals with at most four concurrent readers. The test helper incorrectly treated attempts as contiguous and mistook an in-flight retry for reuse after completion; `HttpRpc` allocates each logical call ID before awaiting.
+
+Updated `scripts/be08_rpc_outage.mjs` to group by logical call ID, preserve method/params and backoff checks, and reject attempts beyond four. Added an interleaving regression in `tests/indexer/be08-rpc-outage.test.mjs`. Local `npm run test:be08` passed **11/11**; replaying the actual CI artifact summarized 18 logical calls (17 with four attempts, one boundary call with one). Follow-up CI for this correction is pending; this does not close full TC11/reorg acceptance.
+
 | Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
 | --- | --- |
 | #58 legacy reorg 001–004 xóa toàn prefix khi không có ancestor | Trả `REBUILD_REQUIRED`, giữ header/raw/checkpoint/publication, invalidates snapshot cũ. Suite PostgreSQL 18.4 riêng **19/19 PASS**, gồm whole-prefix replacement nằm trong cửa sổ và restart giữ evidence; cluster đã dừng. |

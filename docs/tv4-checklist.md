@@ -5,6 +5,22 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Trạng thái sau xử lý review — 20/11/2026
+
+Đã sửa và kiểm chứng các finding source của PR #57/#58/#59; xem
+[kết quả theo SHA và giới hạn](tv4-work-summary.md#xử-lý-review-kỹ-thuật--20112026).
+Các mục lịch sử bên dưới không phải trạng thái của bản tích hợp mới.
+
+- Source fixes: legacy whole-prefix recovery, SC06 versioned provenance/quorum,
+  disk-capacity guard và forced OCI fallback; thêm recovery-error lease,
+  token-receipt outcome và rollback-history regressions.
+- Giữ PR **In review**, không tự approve/merge hoặc đóng issue nghiệm thu
+  tích hợp từ source/CI riêng. Không gửi request nhờ thành viên khác trong lượt này.
+- Giữ staging #56, extension #19/#41, testnet #20 và release #44 **Blocked**
+  khi chưa có quyền/tài nguyên/signer/evidence thực tế. Receiver #36/#40/#42
+  không được thay bằng production preview fixture trên máy nguồn.
+
+
 ## Nền tảng hiện có
 
 - [x] Pin Foundry 1.8.5, compiler và dependency qua submodule/lockfile.

@@ -6,6 +6,7 @@ import { sync } from '../../indexer/syncer.ts';
 import { PostgresStorage } from '../../indexer/storage.ts';
 import { FixtureRpc, config, hash, rpcLog } from './helpers.ts';
 import { readBatch } from '../../indexer/reader.ts';
+import { project } from '../../indexer/projection/projector.ts';
 const url=new URL(process.env.BE07_TEST_DATABASE_URL);
 assert.equal(process.env.BE07_TEST_ISOLATED,'1');assert.equal(url.hostname,'127.0.0.1');assert.equal(url.pathname,'/be07_test');
 const pool=new pg.Pool({connectionString:url.href,max:8});let seq=0;
@@ -142,6 +143,31 @@ test('confirmed mismatch closes recovery gate even when the next chain RPC fails
   const old=await rows(f.c);
   await assert.rejects(sync(f.c,f.rpc,f.storage),e=>e.report.error.code==='RPC_UNAVAILABLE');
   assert.equal(await phase(f.c),'recovering');assert.deepEqual(await rows(f.c),old);
+});
+
+test('projection persists the recovery gate before RPC loss after a verified hash mismatch',async()=>{
+  const {IndexerError}=await import('../../indexer/errors.ts');
+  const f=await fixture(),old=await rows(f.c),cp=await f.storage.loadCheckpoint(f.c);
+  await pool.query(`UPDATE deployments SET indexer_state=indexer_state || '{"phase":"ready"}'::jsonb WHERE deployment_id=$1`,[f.c.deploymentId]);
+  await pool.query(`INSERT INTO projection_checkpoints
+    (deployment_id,block_number,block_hash,source_scope,snapshot_revision,ignored_ancillary_events)
+    SELECT c.deployment_id,c.block_number,c.block_hash,c.source_scope,d.snapshot_revision,0
+    FROM checkpoints c JOIN deployments d USING(deployment_id) WHERE c.deployment_id=$1`,[f.c.deploymentId]);
+  const revision=(await pool.query('SELECT snapshot_revision::text FROM deployments WHERE deployment_id=$1',[f.c.deploymentId])).rows[0].snapshot_revision;
+  f.branch();const original=f.rpc.override;let observed=false;
+  f.rpc.override=(m,p)=>{
+    if(observed)throw new IndexerError('RPC_UNAVAILABLE','offline immediately after projection mismatch');
+    const value=original(m,p);
+    if(m==='eth_getBlockByNumber'&&BigInt(p[0])===cp.number)observed=true;
+    return value;
+  };
+  await assert.rejects(project(f.c,f.rpc,pool),e=>e.code==='RPC_UNAVAILABLE');
+  assert.equal(observed,true);assert.equal(await phase(f.c),'recovering');
+  assert.notEqual((await pool.query('SELECT snapshot_revision::text FROM deployments WHERE deployment_id=$1',[f.c.deploymentId])).rows[0].snapshot_revision,revision);
+  assert.deepEqual(await rows(f.c),old);
+  assert.equal((await pool.query('SELECT 1 FROM projection_checkpoints WHERE deployment_id=$1',[f.c.deploymentId])).rowCount,1);
+  f.rpc.override=original;await sync(f.c,f.rpc,f.storage);
+  assert.equal(await phase(f.c),'replaying');assert.deepEqual(await rows(f.c),[{block_number:'102',block_hash:hash(1102)}]);
 });
 
 test('heartbeat keeps RPC observation time when waiting for the chain writer lock',async()=>{

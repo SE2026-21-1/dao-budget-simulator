@@ -27,6 +27,7 @@ jobs:
         with:
           submodules: recursive
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v7.0.0
         with:
@@ -44,6 +45,14 @@ jobs:
         run: |
           mkdir -p reports
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
+      - name: Verify bootstrap authority and recursive dependency provenance
+        run: node --test tests/smoke/bootstrap.test.mjs tests/smoke/dependency-provenance.test.mjs
+      - name: Verify historical SC06 provenance and fresh integration quorum mutations
+        shell: bash
+        run: |
+          node --import tsx scripts/check_sc06_chain.mjs 2>&1 | tee reports/sc06-versions.log
+      - name: Verify interrupted smoke cleans owned processes and files
+        run: node --import tsx --test tests/smoke/interruption.test.mjs
       - name: Exercise Treasury transactions and BE02 live receipt decoding
         shell: bash
         run: |
@@ -375,3 +384,94 @@ jobs:
             reports/
             frontend/dist/
           retention-days: 14
+
+  be08-release-gate:
+    uses: ./.github/workflows/be08.yml
+
+  containers:
+    name: Container build, release validation and Compose smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - uses: ./.github/actions/install-foundry
+      - run: npm ci && forge build
+      - name: Verify release rejection cases
+        run: node --test scripts/cd/release.test.mjs deploy/operations.test.mjs
+      - name: Build all application images without deployment secrets
+        run: |
+          docker build --file deploy/Dockerfile.frontend --tag dao-frontend:${GITHUB_SHA} .
+          docker build --file deploy/Dockerfile.backend --target api --tag dao-api:${GITHUB_SHA} .
+          docker build --file deploy/Dockerfile.backend --target indexer --tag dao-indexer:${GITHUB_SHA} .
+      - name: Smoke real services and preserve PostgreSQL data across recreation
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: bash scripts/cd/container-smoke.sh
+      - name: Save the exact tested image set
+        if: github.event_name == 'push' && github.ref == 'refs/heads/Dev'
+        run: docker save dao-frontend:${GITHUB_SHA} dao-api:${GITHUB_SHA} dao-indexer:${GITHUB_SHA} | gzip > images.tar.gz
+      - uses: actions/upload-artifact@v7.0.2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/Dev'
+        with:
+          name: tested-images-${{ github.sha }}
+          path: images.tar.gz
+          retention-days: 2
+          if-no-files-found: error
+
+  publish:
+    name: Publish tested release image set
+    needs: [contracts, be01, be02, be04, be05-api, be06-rebuild-compare, be07-recovery, frontend, be08-release-gate, containers]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/Dev'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - uses: actions/download-artifact@v8
+        with:
+          name: tested-images-${{ github.sha }}
+      - name: Authenticate package publishing
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "${GITHUB_ACTOR}" --password-stdin
+      - name: Push all three tested images and record immutable digests
+        run: |
+          set -euo pipefail
+          gzip -dc images.tar.gz | docker load
+          prefix="ghcr.io/${GITHUB_REPOSITORY,,}"
+          for service in frontend api indexer; do
+            image="$prefix/$service"
+            docker tag "dao-$service:${GITHUB_SHA}" "$image:${GITHUB_SHA}"
+            docker push "$image:${GITHUB_SHA}"
+            ref="$(docker image inspect "$image:${GITHUB_SHA}" --format '{{index .RepoDigests 0}}')"
+            case "$ref" in "$image"@sha256:*) ;; *) echo 'Unexpected published image reference' >&2; exit 1;; esac
+            printf '%s_IMAGE=%s\n' "${service^^}" "$ref" >> "$GITHUB_ENV"
+          done
+      - name: Create complete manifest only after all image pushes succeed
+        run: node scripts/cd/release.mjs create --sha "$GITHUB_SHA" --run-id "$GITHUB_RUN_ID" --manifest manifest.json
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: release-${{ github.sha }}
+          path: manifest.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Record immutable release
+        run: |
+          printf 'Release `%s` (CI run `%s`):\n' "$GITHUB_SHA" "$GITHUB_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
+          cat manifest.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Clear registry credentials
+        if: always()
+        run: docker logout ghcr.io

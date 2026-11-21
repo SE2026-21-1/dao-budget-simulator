@@ -246,3 +246,62 @@ Kiểm lại offline: `node --import tsx scripts/check_sc06_chain.mjs` đạt
 SC05 `forge test --match-path tests/integration/TimelockGovernance.t.sol -vv`
 đạt 38/38 trên mã ghép. ABI/fixture không thay thế review độc lập TV2/TV3,
 operation preflight TV4, hay nghiệm thu testnet.
+
+## Kiểm tra theo phiên bản sau tích hợp — 20/11/2026
+
+Archive `fixtures/chain/sc06-v1/chain.json` giữ nguyên bytes và revision
+`5ba9371f735982c5ca7148a3cf4af07068525029`; không sửa checksum/sourceCommit
+để khớp source mới. Các kết quả chạy ở trên là lịch sử, không phải kết quả
+cho revision tích hợp hiện tại.
+
+Sau khi **commit nguồn tích hợp** (gồm generator/checker/tests và mọi `indexer/`),
+khởi tạo dependency theo gitlink và cài dependency theo lock:
+
+```bash
+git submodule update --init --recursive
+npm ci --ignore-scripts
+node --import tsx scripts/check_sc06_chain.mjs
+```
+
+Không truyền path: checker chạy `verify_sc06_versions.mjs`. Gate cần đầy đủ Git
+history (CI checkout `fetch-depth: 0`), Node/Foundry đã ghim và quyền loopback.
+Nó tạo clone local tạm tại **revision trong archive**, lấy submodule từ repository
+local của caller theo đúng gitlink, `npm ci`, build và dùng checker nguyên bản ở
+revision đó để kiểm archive. Sau bản dương, sửa riêng source `indexer/api/server.ts`
+trong clone tạm và yêu cầu checker từ chối `working source differs`; không đổi hash.
+Clone, dependency config và mutation này không chạm checkout/index/branch của caller.
+
+Tiếp theo build source hiện tại, sinh **một campaign Anvil mới** vào thư mục tạm,
+kiểm strict source/hash/RPC trước khi xuất, kiểm offline và chạy toàn bộ
+`tests/sc06-chain.test.mjs` với `SC06_FIXTURE` trỏ run mới. Temporary clone/run
+được cleanup bằng smoke lifecycle hiện có; không ghi đè archive. CI lưu stdout
+trong `reports/sc06-versions.log`. Revision lịch sử không có trong Git local là lỗi
+rõ ràng, không tự đổi revision hay bỏ provenance.
+
+Fixture mới dùng `sc06-canonical-local-receipts-v2`: tại proposal snapshot đã qua,
+ngoài Governor.quorum còn lưu GOV.getPastTotalSupply và
+Governor.quorumNumerator(uint256), tất cả eth_call tại cùng H. Checker dựng lại
+past supply từ GOV Transfer mint/burn theo timestamp, numerator từ lịch sử
+QuorumNumeratorUpdated, kiểm denominator với pinned config, rồi tính
+`pastSupply * numerator / denominator` bằng BigInt. So sánh kết quả với cả ba
+historical calls; không dùng trạng thái Executed/Canceled để suy ra quorum.
+V1 vẫn có đủ log để kiểm độc lập trong projection, không bổ sung call giả vào archive.
+Regression bắt isolated Governor.quorum **200 → 1001 GOV** trong projection
+archive và **full canonical checker** của run mới, cùng mutations historical
+supply/numerator và provenance/hash cũ.
+
+Muốn giữ riêng một run để điều tra (output phải chưa tồn tại):
+
+```bash
+forge build
+node --import tsx scripts/generate_sc06_chain.mjs /tmp/sc06-current-run
+node --import tsx scripts/check_sc06_chain.mjs /tmp/sc06-current-run/chain.json
+SC06_FIXTURE=/tmp/sc06-current-run/chain.json node --import tsx --test tests/sc06-chain.test.mjs
+```
+
+Checker với path explicit vẫn kiểm source ở revision được ghi **và working tree**;
+đưa archive v1 vào checker ở source mới vẫn phải bị từ chối, không phải compatibility
+waiver. Test không có `SC06_FIXTURE` tự tạo run mới từ source đã commit; không âm thầm
+dùng archive cũ làm positive cho source mới. Đây là technical verification local,
+không thay approval, operation-preflight hoặc testnet acceptance. Chưa ghi nhận
+kết quả chạy cho thay đổi này tại mục tài liệu này.

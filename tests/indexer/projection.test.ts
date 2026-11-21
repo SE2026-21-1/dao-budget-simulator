@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
-import { ZeroHash } from 'ethers';
+import { Interface, ZeroHash } from 'ethers';
+import { reconcile } from '../../indexer/projection/chain.js';
 import { buildModel, classify, evaluate } from '../../indexer/projection/model.js';
-import { Scenario, addresses, actor, recipient } from './projection-fixture.js';
+import { Scenario, addresses, actor, recipient, projectionConfig } from './projection-fixture.js';
 import { hash } from './helpers.js';
 import type { NormalizedLog } from '../../indexer/types.js';
 
@@ -78,6 +79,17 @@ for (const [against, yes, abstain, expected] of [
     assert.equal(evaluate(p, 1361n, 200n).state, expected);
   });
 }
+test('Against votes cannot fill quorum even when For beats Against', () => {
+  const s = new Scenario();
+  s.propose();
+  const p = build(s).proposals[0]!;
+  p.votes = [100n, 150n, 0n];
+  const quorum = 200n;
+  assert.ok(p.votes[1] > p.votes[0]);
+  assert.ok(p.votes[0] + p.votes[1] >= quorum);
+  assert.ok(p.votes[1] + p.votes[2] < quorum);
+  assert.equal(evaluate(p, 1361n, quorum).state, 'Defeated');
+});
 test('ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable', () => {
   const s = new Scenario();
   const p = s.propose();
@@ -215,3 +227,72 @@ test('replay original BE03 real receipt bytes offline: 16 explicitly recognized 
   assert.equal(m.votes.length, 2);
   assert.equal(m.operations[0]!.id, '0xfa24ed8ec99ae3f79805209615f15e6e30398d317f7d73dc1f2bb6e37885e482');
 });
+
+function reconciliationFixture() {
+  const s = new Scenario();
+  s.fund();
+  for (let i = 0; i < 100; i++) s.vote(s.propose(ZeroHash, `Reconciliation ${i}`));
+  const model = build(s);
+  const abi = new Interface([
+    'function CLOCK_MODE() view returns(string)', 'function clock() view returns(uint48)',
+    'function timelock() view returns(address)', 'function treasury() view returns(address)',
+    'function budgetToken() view returns(address)', 'function balanceOf(address) view returns(uint256)',
+    'function quorum(uint256) view returns(uint256)',
+    'function proposalVotes(uint256) view returns(uint256,uint256,uint256)',
+    'function state(uint256) view returns(uint8)',
+  ]);
+  const calls: { name: string; args: readonly unknown[]; pin: unknown }[] = [];
+  let active = 0, peak = 0;
+  let expectedHash = hash(20), badVotes = false, badState = false, badQuorum = false;
+  const rpc = { async call(method: string, params: unknown[]): Promise<unknown> {
+    assert.equal(method, 'eth_call');
+    const request = params[0] as { data: string };
+    const parsed = abi.parseTransaction(request)!;
+    assert.deepEqual(params[1], { blockHash: expectedHash, requireCanonical: true });
+    calls.push({ name: parsed.name, args: [...parsed.args], pin: params[1] });
+    active++; peak = Math.max(peak, active);
+    try {
+      await new Promise<void>(resolve => setImmediate(resolve));
+      const values: Record<string, unknown[]> = {
+        CLOCK_MODE: ['mode=timestamp'], clock: [2000n], timelock: [addresses.timelock],
+        treasury: [addresses.treasury], budgetToken: [addresses.budget_token], balanceOf: [model.balance],
+        quorum: [badQuorum ? 1001n : 200n], proposalVotes: [0n, badVotes ? 699n : 700n, 0n],
+        state: [badState ? 3n : 4n],
+      };
+      return abi.encodeFunctionResult(parsed.fragment, values[parsed.name]!);
+    } finally { active--; }
+  } };
+  return { model, rpc, calls, active: () => active, peak: () => peak,
+    pin: (value: string) => { expectedHash = value; },
+    mutate: (kind: string) => { badVotes = kind === 'votes'; badState = kind === 'state'; badQuorum = kind === 'quorum'; } };
+}
+
+test('100-proposal reconciliation bounds concurrent canonical reads and shares only same-H snapshot quorum', async () => {
+  const f = reconciliationFixture();
+  const values = await reconcile(projectionConfig(), f.rpc, hash(20), 2000n, f.model);
+  assert.equal(values.size, 100);
+  assert.deepEqual([...values.keys()], f.model.proposals.map(p => p.id));
+  assert.ok([...values.values()].every(v => v.state === 'Succeeded' && v.quorum === 200n));
+  assert.ok(f.peak() > 1 && f.peak() <= 4);
+  assert.equal(f.calls.filter(c => c.name === 'quorum').length, 1);
+  assert.equal(f.calls.filter(c => c.name === 'proposalVotes').length, 100);
+  assert.equal(f.calls.filter(c => c.name === 'state').length, 100);
+  assert.equal(f.active(), 0);
+  // A new canonical hash must do fresh calls, even for the same snapshot.
+  f.calls.length = 0; f.pin(hash(21));
+  f.model.proposals[0]!.snapshot = '1061';
+  await reconcile(projectionConfig(), f.rpc, hash(21), 2000n, f.model);
+  assert.deepEqual(f.calls.filter(c => c.name === 'quorum').map(c => String(c.args[0])).sort(), ['1060', '1061']);
+});
+
+for (const kind of ['votes', 'state', 'quorum']) {
+  test(`concurrent reconciliation rejects ${kind} mismatch and drains in-flight RPC before throwing`, async () => {
+    const f = reconciliationFixture(); f.mutate(kind);
+    await assert.rejects(reconcile(projectionConfig(), f.rpc, hash(20), 2000n, f.model), { code: 'PROJECTION_INCOMPLETE' });
+    assert.equal(f.active(), 0);
+    const count = f.calls.length;
+    await new Promise<void>(resolve => setImmediate(resolve));
+    assert.equal(f.calls.length, count, 'no late RPC after transaction may have rolled back');
+    assert.ok(f.calls.filter(c => c.name === 'proposalVotes').length < 100, 'stop scheduling new proposals after failure');
+  });
+}

@@ -8,6 +8,49 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Xử lý review kỹ thuật — 20/11/2026
+
+Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58)
+`ea2ce3ec91441803b52aa2f36b4c94e720a7a503`; installer riêng
+[PR #59](https://github.com/SE2026-21-1/dao-budget-simulator/pull/59)
+`48fa4124c60dccd8b5c57d7d145878c08f7c977b`; hạ tầng
+[PR #57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57)
+`91f5b239af8e424cd44147b02e89ea91f12b662e`.
+Giữ nguyên checkout cá nhân đang dirty; không merge Dev, self-approve hoặc gửi
+request nhờ thành viên khác. Đây là khắc phục source và evidence, không ký thay peer.
+
+| Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
+| --- | --- |
+| #58 legacy reorg 001–004 xóa toàn prefix khi không có ancestor | Trả `REBUILD_REQUIRED`, giữ header/raw/checkpoint/publication, invalidates snapshot cũ. Suite PostgreSQL 18.4 riêng **19/19 PASS**, gồm whole-prefix replacement nằm trong cửa sổ và restart giữ evidence; cluster đã dừng. |
+| #58 SC06 provenance source mới | Archive v1 giữ byte gốc, kiểm tại source lịch sử `5ba9371f735982c5ca7148a3cf4af07068525029` trong clone riêng; source bị thay bị từ chối. Sinh v2 bằng Anvil thật tại source tích hợp, kiểm live/offline và **32/32 positive/negative PASS**. |
+| #58 oracle quorum độc lập | Replay GOV mint/burn và quorum-update theo timestamp, đối chiếu historical supply/numerator/call; full canonical checker từ chối mutation riêng 200→1.001 GOV. Không thay checksum lịch sử hoặc dùng kết quả `quorum()` làm chính oracle. |
+| #59 OCI/token/version | Public registry và attestation bundle không cần login/token hay thêm quyền; giữ pin digest và signer repo/workflow. Local version regressions **2/2 PASS**, từ chối 1.8.50. [Forced fallback CI thật](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44672742183) **SUCCESS**, gồm attestation/extraction/cả ba version và contract gates. |
+| #57 image minimum disk | So với disk flavor thật khi local boot, hoặc size volume chính xác. **5/5 real-provider synthetic HTTP plan regressions PASS**, fmt/validate PASS; [CI đúng SHA](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44673183743) SUCCESS. Không phải cloud plan/apply thật. |
+| HTTP 409/503 không JSON giữ lease ký cũ | Giữ HTTP status trong `ApiError` dù body HTML/rỗng; consumer giữ dữ liệu hiển thị nhưng thu hồi quyền ký. |
+| Deposit/delegate báo thành công từ receipt không liên quan | Kiểm token target, sender, emitter và outcome amount/recipient/delegatee trước success; regression sai/thiếu event và receipt không liên quan. |
+| Failed rollout/rollback làm mất previous release | Chỉ tiến history khi activation thành công, restore khi cutover lỗi. Shell regression failed deploy/rollback rồi retry A; **6/6 operation tests PASS**, shell syntax PASS. |
+
+Frontend trên Node24.15.0: **127 PASS / 1 opt-in live SKIP**, lint exit0 còn
+8 React warning, TypeScript/Vite build PASS còn chunk warning >500kB.
+Backend typecheck PASS. Chromium production preview fixture tại 390px:
+scrollWidth=viewport=390, không console error, nạp quỹ disabled.
+Browser này không dùng live API, ví extension hoặc staging.
+
+Các lượt lỗi được giữ đúng nghĩa: binary PostgreSQL npm không có `createdb`,
+đã tạo database qua `pg`; Terraform `override_data` không điền được Optional-only
+outputs nên thay bằng real-provider/synthetic-HTTP tests, không đổi guard cho mock;
+harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạy mới đạt
+6/6. Không tính lượt lỗi hoặc frontend live SKIP thành PASS.
+
+**Gate còn mở:** source đã push không đồng nghĩa đã merge/được peer approve;
+CI ứng dụng mới phải đọc đúng final HEAD. #56 chưa có VM/Docker quyền root,
+capacity/network/image phù hợp hoặc URL staging; không force-up compute, đổi
+quota/overcommit hoặc xóa guest khác. #19/#41 cần ví extension thật,
+#20 thiếu owner-authorized signer/gas/broadcast và receipt testnet thời gian thật,
+#36/#40/#42 cần evidence môi trường nhận tương ứng; #44 chưa release-ready.
+Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.
+
+
 ## 1. Tình trạng push và tích hợp
 
 Các thay đổi kỹ thuật đã được commit và push lên GitHub:

@@ -13,8 +13,9 @@ thành phần chưa được triển khai.
 PR [#58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58) đã merge vào `Dev` qua merge commit `6766e5ee2d8c466542687cbeb09677c4d11e5463` từ head `227a0c9b4967ca5c78ca609600fa8e2845891418`. TV1 và TV2 đều APPROVED đúng head, review threads đã resolve; GitHub trả `reviewDecision=APPROVED` và các check CI thành công. PR #59 đã merge trước đó tại `3a1221d`.
 
 PR [#57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57) vẫn OPEN, `CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`. Head hiện tại xóa Terraform/OpenStack scaffolding; disk-capacity fix ở commit cha `91f5b23` không còn trong diff. Không merge PR không có thay đổi hữu ích hoặc apply cloud resources.
+PR [#60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60) gửi hai regression TC10 đảo thứ tự execute/bytes32(0) từ commit `32c6e7c64dc9a481d499ab3f350127278f5e373b`, target `Dev`; đang chờ TV1 review và CI mới. Issue #7/#16 vẫn mở, không dùng PR này để nhận full acceptance.
 
-Chỉ merge PR #58; không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
+Lượt này chỉ merge PR #58; PR #60 chưa merge. Không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
 
 | Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
 | --- | --- |

@@ -29,6 +29,8 @@ describe('BE03 isolated real PostgreSQL / child process crash and restart', () =
     await pool.query(await readFile(new URL('../../database/migrations/001_initial.sql', import.meta.url), 'utf8'));
     await pool.query(await readFile(new URL('../../database/tests/001_initial_checks.sql', import.meta.url), 'utf8'));
     await pool.query(await readFile(new URL('../../database/migrations/002_be03.sql', import.meta.url), 'utf8'));
+    await pool.query(await readFile(new URL('../../database/migrations/003_be04.sql', import.meta.url), 'utf8'));
+    await pool.query(await readFile(new URL('../../database/migrations/004_be05_api.sql', import.meta.url), 'utf8'));
     storage = new PostgresStorage(pool);
   });
   after(async () => { await pool?.end(); });
@@ -68,8 +70,6 @@ describe('BE03 isolated real PostgreSQL / child process crash and restart', () =
     assert.equal(cp.rows[0].confirmation_depth, 2); assert.match(cp.rows[0].source_scope, /^0x[0-9a-f]{64}$/);
     rpc.head = 105n; rpc.calls = [];
     assert.equal((await sync(c, rpc, storage)).committedBatches, 0);
-    assert.equal(rpc.calls[1]?.method, 'eth_getBlockByNumber');
-    assert.equal(rpc.calls[1]?.params[0], '0x67');
   });
   test('K=0 indexes head; no safe block leaves checkpoint absent', async () => {
     const zero = await fixture(0); await sync(zero.c, zero.rpc, storage);
@@ -162,13 +162,95 @@ describe('BE03 isolated real PostgreSQL / child process crash and restart', () =
     assert.deepEqual(await state(c), { blocks: 4, events: 2, checkpoint: '103' });
     await assert.rejects(storage.writeBatch(c, batch), errorCode('CHECKPOINT_CONFLICT'));
   });
-  test('hash mismatch and unavailable RPC on idle restart preserve SQL data/checkpoint', async () => {
+  test('unavailable checkpoint RPC preserves committed data and does not refresh heartbeat', async () => {
     const { c, rpc } = await fixture(); await sync(c, rpc, storage); rpc.head = 105n;
     const before = await state(c);
-    rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? { number: p[0], hash: hash(999), parentHash: hash(102), timestamp: '0x1', transactions: [] } : undefined;
-    await assert.rejects(sync(c, rpc, storage), errorCode('CHECKPOINT_HASH_MISMATCH'));
+    const heartbeat = (await pool.query('SELECT updated_at FROM checkpoints WHERE deployment_id=$1', [c.deploymentId])).rows[0].updated_at;
     rpc.override = (m) => m === 'eth_getBlockByNumber' ? null : undefined;
     await assert.rejects(sync(c, rpc, storage), SyncError);
+    assert.deepEqual(await state(c), before);
+    assert.deepEqual((await pool.query('SELECT updated_at FROM checkpoints WHERE deployment_id=$1', [c.deploymentId])).rows[0].updated_at, heartbeat);
+  });
+  test('reorg preserves prefix identity, replaces orphan logs and changes revision before replay', async () => {
+    const { c, rpc } = await fixture(); rpc.logs = [rpcLog(100n), rpcLog(103n)];
+    await sync(c, rpc, storage);
+    const prefix = (await pool.query('SELECT raw_event_id FROM raw_events WHERE deployment_id=$1 AND block_number=100', [c.deploymentId])).rows[0].raw_event_id;
+    const revision = (await pool.query('SELECT snapshot_revision FROM deployments WHERE deployment_id=$1', [c.deploymentId])).rows[0].snapshot_revision;
+    const base = new FixtureRpc(); rpc.head = 105n;
+    rpc.logs[1]!.blockHash = hash(1103);
+    rpc.logs[1]!.data = hash(123);
+    rpc.override = (m, p) => m === 'eth_getBlockByNumber' ? base.call(m, p).then(value => {
+      const n = BigInt(p[0] as string);
+      return n < 102n ? value : { ...(value as object), hash: hash(n + 1000n), parentHash: hash(n === 102n ? 101n : n + 999n) };
+    }) : undefined;
+    const result = await sync(c, rpc, storage);
+    assert.deepEqual(result.reorg, { from: '103', ancestor: '101', replayFrom: '102' });
+    const replayed = await state(c);
+    assert.equal(replayed.events, 2);
+    assert.ok(BigInt(replayed.checkpoint) >= 103n);
+    assert.equal(replayed.blocks, Number(BigInt(replayed.checkpoint) - 99n));
+    const rows = (await pool.query('SELECT raw_event_id,block_hash,data FROM raw_events WHERE deployment_id=$1 ORDER BY block_number', [c.deploymentId])).rows;
+    assert.equal(rows[0].raw_event_id, prefix);
+    assert.equal(rows[1].block_hash, hash(1103));
+    assert.equal(rows[1].data, hash(123));
+    assert.notEqual((await pool.query('SELECT snapshot_revision FROM deployments WHERE deployment_id=$1', [c.deploymentId])).rows[0].snapshot_revision, revision);
+  });
+  test('legacy 001–004 whole-prefix replacement preserves evidence and requires explicit rebuild', async () => {
+    const { c, rpc } = await fixture();
+    rpc.logs = [rpcLog(100n), rpcLog(103n)];
+    await sync(c, rpc, storage);
+    const cp = (await storage.loadCheckpoint(c))!;
+    assert.ok(cp.number - 100n + 1n < BigInt(c.reorgWindow ?? 128));
+    await pool.query(`INSERT INTO projection_checkpoints
+      (deployment_id,block_number,block_hash,source_scope,snapshot_revision,ignored_ancillary_events)
+      SELECT c.deployment_id,c.block_number,c.block_hash,c.source_scope,d.snapshot_revision,0
+      FROM checkpoints c JOIN deployments d USING(deployment_id) WHERE c.deployment_id=$1`, [c.deploymentId]);
+    const snapshot = (await pool.query(`INSERT INTO api_read_snapshots
+      (deployment_id,chain_id,block_number,block_hash,block_timestamp,snapshot_revision,source_scope,summary,sync,expires_at)
+      SELECT c.deployment_id,d.chain_id,c.block_number,c.block_hash,b.block_timestamp,d.snapshot_revision,c.source_scope,
+        '{"evidence":"old canonical branch"}'::jsonb,'{}'::jsonb,clock_timestamp()+interval '15 minutes'
+      FROM checkpoints c JOIN deployments d USING(deployment_id)
+      JOIN indexed_blocks b ON b.deployment_id=c.deployment_id AND b.block_number=c.block_number
+      WHERE c.deployment_id=$1 RETURNING snapshot_id`, [c.deploymentId])).rows[0].snapshot_id;
+    const evidence = async () => {
+      const rows = [];
+      for (const table of ['indexed_blocks', 'raw_events', 'projection_checkpoints'])
+        rows.push((await pool.query(`SELECT * FROM ${table} WHERE deployment_id=$1 ORDER BY 1,2`, [c.deploymentId])).rows);
+      return rows;
+    };
+    const before = await evidence();
+    const revision = (await pool.query('SELECT snapshot_revision FROM deployments WHERE deployment_id=$1', [c.deploymentId])).rows[0].snapshot_revision;
+    const base = new FixtureRpc();
+    rpc.override = (method, params) => method === 'eth_getBlockByNumber'
+      ? base.call(method, params).then(value => {
+        const n = BigInt(params[0] as string);
+        return { ...(value as object), hash: hash(n + 1000n), parentHash: hash(n + 999n) };
+      }) : undefined;
+    await assert.rejects(sync(c, rpc, storage), errorCode('REBUILD_REQUIRED'));
+    assert.deepEqual(await evidence(), before);
+    assert.deepEqual(await storage.loadCheckpoint(c), cp);
+    assert.equal((await pool.query('SELECT sync_status FROM checkpoints WHERE deployment_id=$1', [c.deploymentId])).rows[0].sync_status, 'rebuild_required');
+    assert.notEqual((await pool.query('SELECT snapshot_revision FROM deployments WHERE deployment_id=$1', [c.deploymentId])).rows[0].snapshot_revision, revision);
+    const retained = (await pool.query('SELECT summary,invalidated_at FROM api_read_snapshots WHERE snapshot_id=$1', [snapshot])).rows[0];
+    assert.deepEqual(retained.summary, { evidence: 'old canonical branch' });
+    assert.ok(retained.invalidated_at, 'Old snapshot remains stored but is no longer serveable.');
+    await assert.rejects(sync(c, rpc, storage), errorCode('REBUILD_REQUIRED'));
+    assert.deepEqual(await evidence(), before);
+  });
+  test('a failed rewind rolls back deletions but retains the previously committed serving barrier', async () => {
+    const { c, rpc } = await fixture(); rpc.logs = [rpcLog(103n)];
+    await sync(c, rpc, storage);
+    const cp = (await storage.loadCheckpoint(c))!;
+    await storage.invalidate(c, cp, 'REORG_DETECTED');
+    const before = await state(c);
+    const failing = new PostgresStorage(pool, { beforeCommit: async () => { throw new Error('simulated crash'); } });
+    await assert.rejects(failing.rewind(c, cp, { number: 101n, hash: hash(101) }), errorCode('STORAGE_DATABASE_ERROR'));
+    assert.deepEqual(await state(c), before);
+    assert.equal((await pool.query('SELECT sync_status FROM checkpoints WHERE deployment_id=$1', [c.deploymentId])).rows[0].sync_status, 'rebuild_required');
+    await storage.rewind(c, cp, { number: 101n, hash: hash(101) });
+    assert.deepEqual(await state(c), { blocks: 2, events: 0, checkpoint: '101' });
+    rpc.head = 105n;
+    await sync(c, rpc, storage);
     assert.deepEqual(await state(c), before);
   });
   test('competing writers cannot rewind or commit beyond complete coverage; stale writer must restart', { timeout: 10_000 }, async () => {

@@ -183,7 +183,7 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
   assert.equal(summary.status, 200, JSON.stringify(summary.body));
   assert.equal(summary.body.context.dataKind, 'chain');
   assert.equal(summary.body.context.asOfBlock, '3');
-  assert.ok(BigInt(summary.body.context.sync.lagSeconds) < 30n, 'BE07 reports elapsed time since the canonical RPC check.');
+  assert.match(summary.body.context.sync.lagSeconds, /^(0|[1-9][0-9]*)$/, 'Freshness is a nonnegative decimal-string measurement.');
   assert.equal(summary.body.data.treasury.totalIn, '1000000000000000000000');
   assert.equal(summary.body.data.treasury.totalOut, '100000000000000000000');
   assert.equal(summary.body.data.treasury.balance, '900000000000000000000');
@@ -252,6 +252,7 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
   assert.deepEqual(emptyList.body.data, []);
   assert.equal(emptyList.body.pagination.totalCount, 0);
   assert.equal((await get('/proposals?state=Failed')).body.error.code, 'INVALID_ARGUMENT');
+  assert.equal((await get('/proposals?state=')).body.error.code, 'INVALID_ARGUMENT');
   assert.equal((await get('/summary?chainId=31337&chainId=31337&deploymentId=be05-http-integration')).status, 400);
   assert.equal((await get('/summary', { unsupported: '1' })).status, 400);
   await pool.query("UPDATE deployment_contracts SET abi_version='unverified' WHERE deployment_id=$1 AND contract_role='governance_token'", [deploymentId]);
@@ -272,6 +273,58 @@ test('six endpoints, exact data types, validation, and financial semantics', asy
   for (const [table, expected] of Object.entries(businessBefore)) {
     const actual = (await pool.query(`SELECT to_jsonb(t) AS row FROM ${table} t WHERE deployment_id=$1 ORDER BY to_jsonb(t)::text`, [deploymentId])).rows;
     assert.deepEqual(actual, expected, `GET requests must not modify BE02–BE04 table ${table}.`);
+  }
+});
+
+test('verified heartbeat crosses the stale boundary and recovers without changing fixed-H data or cursors', async (t) => {
+  const original = (await pool.query('SELECT updated_at::text FROM checkpoints WHERE deployment_id=$1', [deploymentId])).rows[0].updated_at;
+  const state = (await pool.query('SELECT indexer_state FROM deployments WHERE deployment_id=$1', [deploymentId])).rows[0].indexer_state;
+  const now = Date.now();
+  t.mock.timers.enable({ apis: ['Date'], now });
+  try {
+    await pool.query(`UPDATE deployments SET indexer_state=jsonb_set(indexer_state,'{lastCheckedAt}',
+      to_jsonb(to_timestamp($2::numeric/1000)),true) WHERE deployment_id=$1`, [deploymentId, String(now)]);
+    const summary = await get('/summary');
+    const first = await get('/proposals', { limit: '20' });
+    assert.equal(summary.body.context.sync.status, 'synced');
+    assert.equal(summary.body.context.sync.lagSeconds, '0');
+    t.mock.timers.tick(30_000);
+    const boundary = await get('/health');
+    assert.equal(boundary.body.context.sync.status, 'synced');
+    assert.equal(boundary.body.context.sync.lagSeconds, '30');
+    t.mock.timers.tick(1);
+    const stale = await get('/health');
+    assert.equal(stale.status, 200, 'Paused verified data remains readable, with an explicit warning.');
+    assert.equal(stale.body.context.sync.status, 'lagging');
+    assert.equal(stale.body.data.indexer, 'lagging');
+    assert.equal(stale.body.data.status, 'degraded');
+    assert.equal(stale.body.context.sync.lagBlocks, '0');
+    t.mock.timers.tick(999);
+    const pinned = await get('/summary', { asOfBlock: '3', asOfBlockHash: hash(3) });
+    assert.equal(pinned.body.context.sync.status, 'lagging');
+    assert.equal(pinned.body.context.sync.lagSeconds, '31');
+    assert.deepEqual(pinned.body.data, summary.body.data);
+    const next = await get('/proposals', { limit: '20', cursor: first.body.pagination.nextCursor });
+    assert.equal(next.status, 200);
+    assert.equal(next.body.context.asOfBlock, '3');
+    assert.equal(next.body.context.sync.status, 'lagging');
+    assert.equal(next.body.data.length, 20);
+    await pool.query(`UPDATE deployments SET indexer_state=jsonb_set(indexer_state,'{lastCheckedAt}',
+      to_jsonb(to_timestamp($2::numeric/1000)),true) WHERE deployment_id=$1`, [deploymentId, String(Date.now())]);
+    const recovered = await get('/health');
+    assert.equal(recovered.body.context.sync.status, 'synced');
+    assert.equal(recovered.body.data.indexer, 'synced');
+    assert.equal(recovered.body.context.sync.lagSeconds, '0');
+
+    // A stale SQL checkpoint timestamp is not a successful RPC observation.
+    await pool.query("UPDATE checkpoints SET updated_at=clock_timestamp()-interval '1 day' WHERE deployment_id=$1", [deploymentId]);
+    const independent = await get('/health');
+    assert.equal(independent.body.context.sync.status, 'synced');
+    assert.equal(independent.body.context.sync.lagSeconds, '0');
+  } finally {
+    t.mock.timers.reset();
+    await pool.query('UPDATE checkpoints SET observed_head_block=3,updated_at=$2::timestamptz WHERE deployment_id=$1', [deploymentId, original]);
+    await pool.query('UPDATE deployments SET indexer_state=$2::jsonb WHERE deployment_id=$1', [deploymentId, JSON.stringify(state)]);
   }
 });
 
@@ -311,19 +364,17 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
   const firstIds = first.body.data.map((x) => x.proposalId);
   assert.equal(new Set(firstIds).size, 20);
   assert.deepEqual(firstIds, proposalIds.slice().reverse().slice(0, 20));
-  const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-  const signed=first.body.pagination.nextCursor;
-  const alias=signed.slice(0,-1)+alphabet[alphabet.indexOf(signed.at(-1))+1];
-  assert.deepEqual(Buffer.from(alias.split('.')[1],'base64url'),Buffer.from(signed.split('.')[1],'base64url'));
-  assert.equal((await get('/proposals',{limit:'20',cursor:alias})).body.error.code,'INVALID_CURSOR','noncanonical signature padding is rejected');
-  // Change a signature byte; changing the final base64url character can change only unused padding bits.
-  const [payload, signature] = first.body.pagination.nextCursor.split('.');
-  const tamperedSignature = Buffer.from(signature, 'base64url');
-  tamperedSignature[0] ^= 1;
-  const tampered = `${payload}.${tamperedSignature.toString('base64url')}`;
-  const rejected = await get('/proposals', { limit: '20', cursor: tampered });
-  assert.equal(rejected.status, 400, JSON.stringify(rejected.body));
-  assert.equal(rejected.body.error.code, 'INVALID_CURSOR');
+  const [cursorPayload, cursorSignature] = first.body.pagination.nextCursor.split('.');
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  // SHA256's 43rd base64url character has two unused bits. An alias decodes to
+  // identical signature bytes, but must not bypass the canonical cursor boundary.
+  const aliasSignature = cursorSignature.slice(0, -1) + alphabet[alphabet.indexOf(cursorSignature.at(-1)) ^ 1];
+  assert.deepEqual(Buffer.from(aliasSignature, 'base64url'), Buffer.from(cursorSignature, 'base64url'));
+  const alias = await get('/proposals', { limit: '20', cursor: `${cursorPayload}.${aliasSignature}` });
+  assert.equal(alias.status, 400);
+  assert.equal(alias.body.error.code, 'INVALID_CURSOR');
+  const changedSignature = (cursorSignature.startsWith('A') ? 'B' : 'A') + cursorSignature.slice(1);
+  assert.equal((await get('/proposals', { limit: '20', cursor: `${cursorPayload}.${changedSignature}` })).body.error.code, 'INVALID_CURSOR');
   assert.equal((await get('/proposals', { limit: '10', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
   assert.equal((await get('/proposals', { state: 'Pending', limit: '20', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
   assert.equal((await get('/treasury/transfers', { limit: '20', cursor: first.body.pagination.nextCursor })).body.error.code, 'CURSOR_CONTEXT_MISMATCH');
@@ -347,7 +398,7 @@ test('numeric keyset pages are complete, filters bind cursors, and old H survive
   const lagging = await get('/health');
   assert.equal(lagging.status, 200);
   assert.equal(lagging.body.data.status, 'degraded');
-  assert.equal(lagging.body.data.indexer, 'lagging', 'Raw checkpoint ahead of publication must not report synced, even with an earlier heartbeat.');
+  assert.equal(lagging.body.data.indexer, 'lagging');
   assert.equal(lagging.body.data.projectionStatus, 'lagging');
   assert.equal(lagging.body.data.projectionLagBlocks, '1');
 

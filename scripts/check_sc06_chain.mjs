@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { AbiCoder, Interface, ZeroHash, id, keccak256, toBeHex } from 'ethers';
+import { AbiCoder, Interface, ZeroAddress, ZeroHash, id, keccak256, toBeHex } from 'ethers';
 import { decodeLog } from '../indexer/decoder.ts';
 import { classify, buildModel, evaluate } from '../indexer/projection/model.ts';
 import { checkProvenance } from './sc06_provenance.mjs';
@@ -30,7 +30,7 @@ export function decodedEvents(f) {
 }
 
 export async function checkFixture(f, rpc) {
-  assert.equal(f.kind, 'sc06-canonical-local-receipts-v1');
+  assert.ok(['sc06-canonical-local-receipts-v1', 'sc06-canonical-local-receipts-v2'].includes(f.kind), 'unsupported SC06 fixture version');
   assert.equal(f.manifest.chainId, '31337');
   const abi = await interfaces(), coder = AbiCoder.defaultAbiCoder();
   await checkProvenance(f, abi, rpc);
@@ -218,6 +218,51 @@ export async function checkFixture(f, rpc) {
     unknownTopics: f.expectedDecoded.filter(e => e.status === 'unknown_topic').length,
     disbursements: 1, outgoingBaseUnits: outgoing.toString(), projection, liveRpcVerified: Boolean(rpc) };
 }
+
+function pinnedCall(f, abi, name, method, args = []) {
+  const data = abi[name].encodeFunctionData(method, args);
+  const calls = f.calls.filter(c => c.to.toLowerCase() === f.manifest.contracts[name].address.toLowerCase() && c.data === data);
+  assert.equal(calls.length, 1, `missing/duplicate pinned call ${name}.${method}`);
+  assert.equal(calls[0].block, f.head.number);
+  return abi[name].decodeFunctionResult(method, calls[0].result)[0];
+}
+
+// Reconstruct timestamp checkpoints independently of Governor.quorum's saved result.
+// v1 has complete mint/burn and quorum-update logs; v2 additionally pins the
+// historical token supply and numerator calls and verifies them against that replay.
+function historicalQuorum(f, abi, snapshot) {
+  const blocks = new Map(f.blocks.map(b => [b.number, b]));
+  let supply = 0n, numerator = 0n, initialized = false;
+  for (const receipt of f.receipts) for (const log of receipt.logs) {
+    const block = blocks.get(log.blockNumber);
+    assert.ok(block, 'historical quorum log missing block');
+    if (BigInt(block.timestamp) > BigInt(snapshot)) continue;
+    if (log.address.toLowerCase() === f.manifest.contracts.GOV.address.toLowerCase()) {
+      const event = abi.GOV.parseLog(log);
+      if (event?.name !== 'Transfer') continue;
+      if (event.args.from === ZeroAddress) supply += event.args.value;
+      if (event.args.to === ZeroAddress) supply -= event.args.value;
+      assert.ok(supply >= 0n, 'negative historical GOV supply');
+    } else if (log.address.toLowerCase() === f.manifest.contracts.Governor.address.toLowerCase()) {
+      const event = abi.Governor.parseLog(log);
+      if (event?.name !== 'QuorumNumeratorUpdated') continue;
+      assert.equal(event.args.oldQuorumNumerator, numerator, 'quorum configuration history mismatch');
+      numerator = event.args.newQuorumNumerator;
+      initialized = true;
+    }
+  }
+  assert.ok(initialized, 'missing historical quorum configuration');
+  const denominator = pinnedCall(f, abi, 'Governor', 'quorumDenominator');
+  assert.equal(denominator.toString(), f.manifest.config.quorumDenominator);
+  assert.ok(denominator > 0n && numerator <= denominator, 'invalid quorum fraction');
+  if (f.kind === 'sc06-canonical-local-receipts-v2') {
+    assert.equal(pinnedCall(f, abi, 'GOV', 'getPastTotalSupply', [snapshot]), supply, 'historical GOV supply mismatch');
+    assert.equal(pinnedCall(f, abi, 'Governor', 'quorumNumerator(uint256)', [snapshot]), numerator, 'historical quorum numerator mismatch');
+  }
+  const expected = supply * numerator / denominator;
+  assert.equal(pinnedCall(f, abi, 'Governor', 'quorum', [snapshot]), expected, 'historical quorum mismatch');
+  return expected;
+}
 export async function projectFixture(f) {
   const abi = await interfaces(), events = [];
   const address = name => f.manifest.contracts[name].address.toLowerCase();
@@ -252,12 +297,7 @@ export async function projectFixture(f) {
     assert.equal(p.requestId, expected.requestId); assert.equal(p.amount, expected.amount);
     assert.deepEqual(p.calldatas, [expected.calldata]);
     let quorum = null;
-    if (clock > BigInt(p.snapshot)) {
-      const data = abi.Governor.encodeFunctionData('quorum', [p.snapshot]);
-      const call = f.calls.find(c => c.to.toLowerCase() === address('Governor') && c.data === data);
-      assert.ok(call); assert.equal(call.block, f.head.number);
-      quorum = abi.Governor.decodeFunctionResult('quorum', call.result)[0];
-    }
+    if (clock > BigInt(p.snapshot)) quorum = historicalQuorum(f, abi, p.snapshot);
     const evaluated = evaluate(p, clock, quorum);
     const stateCall = f.calls.find(c => c.to.toLowerCase() === address('Governor') && c.data === abi.Governor.encodeFunctionData('state', [p.id]));
     assert.ok(stateCall); assert.equal(stateCall.block, f.head.number);
@@ -284,5 +324,6 @@ export async function projectFixture(f) {
     operations: 1, disbursements: 1, totalOut: model.totalOut.toString(), balance: model.balance.toString(), states, ancillary };
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  console.log(await checkFixture(JSON.parse(await readFile(process.argv[2] ?? 'fixtures/chain/sc06-v1/chain.json'))));
+  if (process.argv[2]) console.log(await checkFixture(JSON.parse(await readFile(process.argv[2]))));
+  else await (await import('./verify_sc06_versions.mjs')).verifyVersions();
 }

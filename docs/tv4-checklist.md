@@ -13,6 +13,11 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 - Post-merge TV4 CI tại [run 44922740231](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740231):
   10 jobs thành công; publish job được skip theo điều kiện release. [Foundry fallback](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740366)
   thành công trên cùng SHA.
+- PR #60 có local integration **40/40 PASS** và CI trên head
+  `9d1d05f305bd5ed51c8bbdc670523a9eb1dbac45` đã PASS trong [run PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924767566)
+  và [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924760670);
+  publish job skip theo release condition. Chưa có peer review/approval từ reviewer
+  được yêu cầu; không merge hoặc tự approve. #7/#16 tiếp tục OPEN/PARTIAL.
 - PR #57 còn OPEN/`CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`;
   head đã xóa Terraform/OpenStack scaffolding, nên không còn disk-capacity fix
   `91f5b23` trong diff. Không merge PR hiện không mang infrastructure code.

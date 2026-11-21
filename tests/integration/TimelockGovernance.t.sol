@@ -696,6 +696,49 @@ contract TimelockGovernanceTest is Test {
         assertEq(bud.balanceOf(otherRecipient), 0);
     }
 
+    function testSecondProposalCanWinSharedRequestWhenExecutedFirst() public {
+        Payment memory first = _create(REQUEST, recipient, 1_000 ether, "First shared request");
+        Payment memory second = _create(REQUEST, otherRecipient, 2_000 ether, "Second shared request");
+        _approveBoth(first, second);
+
+        _execute(second);
+        vm.expectRevert(abi.encodeWithSelector(Treasury.RequestAlreadyPaid.selector, REQUEST));
+        _execute(first);
+
+        _state(first, IGovernor.ProposalState.Queued);
+        _state(second, IGovernor.ProposalState.Executed);
+        assertTrue(timelock.isOperationReady(first.operation));
+        assertFalse(timelock.isOperationDone(first.operation));
+        assertTrue(timelock.isOperationDone(second.operation));
+        assertTrue(treasury.paidRequests(REQUEST));
+        assertEq(bud.balanceOf(address(treasury)), 8_000 ether);
+        assertEq(bud.balanceOf(recipient), 0);
+        assertEq(bud.balanceOf(otherRecipient), 2_000 ether);
+    }
+
+    function testZeroRequestIdCanBePaidOnlyOnceAcrossProposals() public {
+        Payment memory first = _create(bytes32(0), recipient, 1_000 ether, "First zero request");
+        Payment memory second = _create(bytes32(0), otherRecipient, 2_000 ether, "Second zero request");
+        assertTrue(first.id != second.id);
+        assertTrue(first.operation != second.operation);
+        _approveBoth(first, second);
+
+        _execute(first);
+        vm.expectRevert(abi.encodeWithSelector(Treasury.RequestAlreadyPaid.selector, bytes32(0)));
+        _execute(second);
+
+        _state(first, IGovernor.ProposalState.Executed);
+        _state(second, IGovernor.ProposalState.Queued);
+        assertTrue(timelock.isOperationDone(first.operation));
+        assertTrue(timelock.isOperationReady(second.operation));
+        assertFalse(timelock.isOperationDone(second.operation));
+        assertTrue(treasury.paidRequests(bytes32(0)));
+        assertEq(bud.balanceOf(address(treasury)), 9_000 ether);
+        assertEq(bud.balanceOf(recipient), 1_000 ether);
+        assertEq(bud.balanceOf(otherRecipient), 0);
+        assertEq(bud.totalSupply(), 20_000 ether);
+    }
+
     function testConcurrentProposalsDoNotReserveBudgetAndRetryAfterTopup() public {
         bytes32 secondRequest = keccak256("SC05-second-request");
         Payment memory first = _create(REQUEST, recipient, 7_000 ether, "First competing payment");

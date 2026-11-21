@@ -5,20 +5,23 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Trạng thái sau xử lý review — 20/11/2026
+## Trạng thái tích hợp — 21/11/2026
 
-Đã sửa và kiểm chứng các finding source của PR #57/#58/#59; xem
-[kết quả theo SHA và giới hạn](tv4-work-summary.md#xử-lý-review-kỹ-thuật--20112026).
-Các mục lịch sử bên dưới không phải trạng thái của bản tích hợp mới.
-
-- Source fixes: legacy whole-prefix recovery, SC06 versioned provenance/quorum,
-  disk-capacity guard và forced OCI fallback; thêm recovery-error lease,
-  token-receipt outcome và rollback-history regressions.
-- Giữ PR **In review**, không tự approve/merge hoặc đóng issue nghiệm thu
-  tích hợp từ source/CI riêng. Không gửi request nhờ thành viên khác trong lượt này.
-- Giữ staging #56, extension #19/#41, testnet #20 và release #44 **Blocked**
-  khi chưa có quyền/tài nguyên/signer/evidence thực tế. Receiver #36/#40/#42
-  không được thay bằng production preview fixture trên máy nguồn.
+- PR #59 đã merge vào `Dev` tại `3a1221d`; PR #58 đã merge tại
+  `6766e5ee2d8c466542687cbeb09677c4d11e5463`. PR #58 được TV1/TV2 approve
+  đúng head, review threads đã resolve; merge chỉ qua GitHub, không push trực tiếp.
+- Post-merge TV4 CI tại [run 44922740231](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740231):
+  10 jobs thành công; publish job được skip theo điều kiện release. [Foundry fallback](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740366)
+  thành công trên cùng SHA.
+- PR #57 còn OPEN/`CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`;
+  head đã xóa Terraform/OpenStack scaffolding, nên không còn disk-capacity fix
+  `91f5b23` trong diff. Không merge PR hiện không mang infrastructure code.
+- QA01 #6, QA04 #7 và QA05 #16 vẫn OPEN/PARTIAL; CI và test hiện có không thay
+  các acceptance còn thiếu. QA02 #14, QA03 #15, QA06 #17, BE05 #37, QA11 #45
+  và IPC #47 đã CLOSED. QA07–QA10, staging #56 và release #44 vẫn phụ thuộc
+  môi trường nhận, ví extension, signer được ủy quyền hoặc người phụ trách nhóm.
+- Không tích hợp PR #21/#55 hoặc nhánh personal/individual. Các mục dưới đây
+  giữ nguyên phạm vi/history, không tự nâng fixture/CI thành nghiệm thu live.
 
 
 ## Nền tảng hiện có

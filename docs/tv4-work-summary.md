@@ -8,16 +8,13 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Xử lý review kỹ thuật — 20/11/2026
+## Tích hợp và review — 21/11/2026
 
-Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58)
-`ea2ce3ec91441803b52aa2f36b4c94e720a7a503`; installer riêng
-[PR #59](https://github.com/SE2026-21-1/dao-budget-simulator/pull/59)
-`48fa4124c60dccd8b5c57d7d145878c08f7c977b`; hạ tầng
-[PR #57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57)
-`91f5b239af8e424cd44147b02e89ea91f12b662e`.
-Giữ nguyên checkout cá nhân đang dirty; không merge Dev, self-approve hoặc gửi
-request nhờ thành viên khác. Đây là khắc phục source và evidence, không ký thay peer.
+PR [#58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58) đã merge vào `Dev` qua merge commit `6766e5ee2d8c466542687cbeb09677c4d11e5463` từ head `227a0c9b4967ca5c78ca609600fa8e2845891418`. TV1 và TV2 đều APPROVED đúng head, review threads đã resolve; GitHub trả `reviewDecision=APPROVED` và các check CI thành công. PR #59 đã merge trước đó tại `3a1221d`.
+
+PR [#57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57) vẫn OPEN, `CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`. Head hiện tại xóa Terraform/OpenStack scaffolding; disk-capacity fix ở commit cha `91f5b23` không còn trong diff. Không merge PR không có thay đổi hữu ích hoặc apply cloud resources.
+
+Chỉ merge PR #58; không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
 
 | Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
 | --- | --- |
@@ -42,13 +39,16 @@ outputs nên thay bằng real-provider/synthetic-HTTP tests, không đổi guard
 harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạy mới đạt
 6/6. Không tính lượt lỗi hoặc frontend live SKIP thành PASS.
 
-**Gate còn mở:** source đã push không đồng nghĩa đã merge/được peer approve;
-CI ứng dụng mới phải đọc đúng final HEAD. #56 chưa có VM/Docker quyền root,
-capacity/network/image phù hợp hoặc URL staging; không force-up compute, đổi
-quota/overcommit hoặc xóa guest khác. #19/#41 cần ví extension thật,
-#20 thiếu owner-authorized signer/gas/broadcast và receipt testnet thời gian thật,
-#36/#40/#42 cần evidence môi trường nhận tương ứng; #44 chưa release-ready.
-Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.
+## Kiểm chứng sau merge — `Dev` `6766e5ee2d8c466542687cbeb09677c4d11e5463`
+
+- Trước khi thêm hai ca TC10 mới, `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh` đạt **180/180**, không lỗi/skip; `SC01 OK`. Sau khi thêm, `forge fmt --check tests/integration/TimelockGovernance.t.sol` và toàn bộ integration file đạt **40/40** trong worktree candidate cô lập.
+- Node24.15.0: `npm run typecheck`, `npm run build` và suites `test:be02`, `test:be03`, `test:be04`, `test:be06`, `test:be07`, `test:be08` đều **PASS**. Deployment/release operations `node --test deploy/operations.test.mjs scripts/cd/release.test.mjs`: **10/10 PASS**.
+- Frontend: lint exit0 với 8 warning hiện hữu; Vitest **127 PASS / 1 opt-in live SKIP**; build PASS, chunk 753.81 kB có cảnh báo kích thước.
+- [Post-merge TV4 CI](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740231): **10 jobs success**, publish job skipped theo điều kiện release. [Forced Foundry fallback](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740366): success. Cả hai trên SHA `6766e5e`.
+- Chrome headless đã render UI local fixture ở 1280×900; đây chỉ là kiểm tra hiển thị offline, không dùng API thật hoặc extension wallet.
+- Local `npm run test:api` dừng tại isolation guard vì không có `BE05_TEST_ISOLATED=1`/URL database mới; phân loại **BLOCKED/NOT RUN**, không phải test assertion failure. Máy không có PostgreSQL binaries hoặc Docker daemon. Không đặt biến giả để vượt guard; các job PostgreSQL/API thực tế đã PASS trong GitHub CI.
+
+**Gate còn mở:** #56 thiếu VM/Docker quyền root, capacity/network/image phù hợp hoặc URL staging; PR #57 hiện không giữ lại infrastructure code. Local Compose/Terraform apply và giao dịch testnet không chạy. #19/#41 cần ví extension thật, #20 thiếu signer/gas/broadcast được ủy quyền và receipt testnet, #36/#40/#42 cần evidence từ môi trường nhận tương ứng; #44 chưa release-ready. Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.
 
 
 ## 1. Tình trạng push và tích hợp

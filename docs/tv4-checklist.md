@@ -24,7 +24,10 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   passed at the same SHA. The artifact shows valid interleaving from the
   projection's bounded four-reader fan-out, not reuse of a completed RPC ID.
   Grouping retries by ID and the interleaving regression pass locally
-  (`npm run test:be08`, **11/11**); follow-up CI is pending. TC11 remains open.
+  (`npm run test:be08`, **11/11**); push and PR CI both pass on fix commit
+  `e7eb2bae638b45b9eeec532adf0b431871c6d02c` ([PR run 44931330317](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931330317),
+  [push run 44931324667](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931324667));
+  release publication skipped by condition. TC11 remains open.
 - PR #57 còn OPEN/`CHANGES_REQUESTED`, head `618a50741f9843194c0ce9ba4c21437ad230f2a8`;
   head đã xóa Terraform/OpenStack scaffolding, nên không còn disk-capacity fix
   `91f5b23` trong diff. Không merge PR hiện không mang infrastructure code.

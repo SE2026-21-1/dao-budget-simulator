@@ -110,35 +110,59 @@ build lại và kiểm tra HTTPS/CORS cho origin mới. Chain/deployment ID, RPC
 địa chỉ contract phải đến từ cùng deployment đã xác minh; không đưa private key,
 database URL, API cursor secret hoặc RPC secret vào bất kỳ biến `VITE_*` nào.
 
-### Trạng thái triển khai ngày 23/11/2026
+### Triển khai public đã kiểm chứng ngày 23/11/2026
 
-- URL public đã kiểm chứng: https://dao-budget-simulator.netlify.app/
+- URL chính: https://dao-budget-simulator.xyz/
+- URL hosting: https://dao-budget-simulator.netlify.app/
 - Project ID: `bc26ae0b-88f3-4892-972f-5204cf7c574c`, team `dung0611`,
-  gói **Free**, auto top-up tắt, không có payment method tại thời điểm triển khai.
-- Source deploy: `2fd0be825fee6f8f73c29e8ae305c670020b24aa`, từ Dev
-  `6766e5ee2d8c466542687cbeb09677c4d11e5463`; nhánh riêng
-  `deploy/static-hosting-20261123-162223`, không merge vào Dev.
-- Production deploy ID: `6b0409d7264e38cba59f36bd`; permalink:
-  https://6b0409d7264e38cba59f36bd--dao-budget-simulator.netlify.app/
+  gói **Free**, auto top-up tắt; không mua hoặc nâng cấp dịch vụ.
+- Source ứng dụng được chuẩn bị tại `2fd0be825fee6f8f73c29e8ae305c670020b24aa`,
+  từ Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`.
+- Lần build từ repository đã nghiệm thu: source
+  `952742afc6a7c421a2a9afc0c0ab40a27c5089a5`, production deploy
+  `6b04531e63d8d2912824dd82`, build `6b04531e63d8d2912824dd80`;
+  Netlify báo `ready`, không có build error.
+- Repository hosting: https://github.com/dung0611/dao-budget-simulator,
+  production branch **`deploy/static-hosting-20261123-162223`**.
+  Nhánh này chứa source đầy đủ và `netlify.toml` dùng đường dẫn tương đối.
+  `main` của repo hosting chỉ chứa artifact và cấu hình sinh từ máy local;
+  không sửa `main` và không dùng nó để build cloud.
+- Bản chuẩn bị/handoff cũng được giữ trên nhánh cùng tên ở repository tổ chức.
+  Không merge vào Dev hoặc sửa các nhánh `personal/*`, `individual/*`.
 - Dữ liệu fixture có banner, giao dịch bị khóa. Không có API/RPC/testnet live.
 - Node 24.15.0, frontend lockfile install, lint, 127 tests pass/1 opt-in live test
   skipped và production build đã chạy. Còn 8 React lint warnings và cảnh báo bundle lớn.
-- Browser public: cả sáu route, direct load/refresh, favicon, JS/CSS,
-  `/runtime-config.js` hoạt động; không HTTP 4xx/5xx, console error hoặc request
-  failure trong lượt kiểm tra. Mobile 390px không tràn ngang. Chứng chỉ
-  `*.netlify.app` hợp lệ, TLS 1.3. Netlify có chèn badge/telemetry của nền tảng.
-- Đã dừng local preview; kiểm chứng website public dùng Netlify, không gọi
-  API/RPC trên laptop. Chưa thực hiện thử nghiệm tắt vật lý laptop.
+- Browser trên custom domain: cả sáu route, direct load/refresh, favicon,
+  JS/CSS và `/runtime-config.js` hoạt động; không HTTP 4xx/5xx, console error
+  hoặc request failure trong lượt kiểm tra. Mobile 390px không tràn ngang.
+  Netlify có chèn badge/telemetry của nền tảng.
+- Local preview đã dừng; website public dùng Netlify, không gọi API/RPC trên
+  laptop. Chưa thực hiện thử nghiệm tắt vật lý laptop.
 
-**Cập nhật hiện là thủ công**, chưa có auto-deploy Git. Thử build trực tiếp từ
-repository đã thất bại tại `preparing repo` / `Host key verification failed`;
-kết nối Git chưa đủ quyền đã được gỡ, không ảnh hưởng production upload.
-Để bật auto-deploy, quản trị viên repository/organization cần cấp Netlify Git
-integration cho repository, liên kết project và chọn đúng nhánh triển khai trên.
-Tài khoản GitHub đang dùng có quyền push nhưng không có quyền admin/maintain.
-Không coi việc chỉ khai báo repo URL là đã thiết lập auto-deploy.
+**Git deployment:** Netlify đã có deploy key và webhook GitHub active cho repo
+hosting. Production branch là nhánh source trên, không phải `main`.
+Push lên nhánh này sẽ kích hoạt build theo `netlify.toml` rồi publish khi thành công.
+Push lên Dev của repo tổ chức không tự đồng bộ sang repo hosting.
+Lần kết nối ban đầu tới repo tổ chức thiếu quyền đã được gỡ; lỗi clone lịch sử
+không phải trạng thái build của kết nối mới.
 
-Từ checkout của nhánh triển khai, cập nhật thủ công sau khi lấy source mong muốn:
+Để lấy thay đổi Dev mới mà không sửa nhánh chung, từ checkout nhánh triển khai
+của repo hosting, thêm remote tổ chức một lần rồi cập nhật:
+
+```sh
+git remote add upstream https://github.com/SE2026-21-1/dao-budget-simulator.git
+git fetch upstream Dev
+git merge upstream/Dev
+git push origin HEAD
+```
+
+Xử lý conflict và kiểm tra thay đổi trước khi push; không force-push. Theo dõi
+source commit và kết quả build tại
+https://app.netlify.com/projects/dao-budget-simulator/deploys.
+Rollback chọn một deploy thành công trước đó rồi **Publish deploy**; khóa auto
+publishing nếu cần giữ bản rollback qua các push tiếp theo.
+
+Khi cần deploy thủ công từ source đã chọn, không dùng artifact/container cũ:
 
 ```sh
 nvm use
@@ -149,27 +173,21 @@ VITE_CONTAINER_RUNTIME=0 VITE_DATA_SOURCE=fixture VITE_API_BASE_URL='' npm run b
 npx --yes netlify-cli@27.20.1 deploy --site bc26ae0b-88f3-4892-972f-5204cf7c574c --prod --no-build --dir frontend/dist
 ```
 
-Đăng nhập Netlify bằng `netlify login` trước khi deploy; không đưa token vào
-source hoặc cuộc trò chuyện. Rollback chọn một deploy thành công trước đó ở
-https://app.netlify.com/projects/dao-budget-simulator/deploys rồi **Publish deploy**.
+Đăng nhập bằng Netlify CLI trước; không đưa token vào source hoặc cuộc trò chuyện.
 
-**Custom domain chưa nghiệm thu**: đã thêm apex `dao-budget-simulator.xyz` và
-alias `www.dao-budget-simulator.xyz` vào project, bật automatic TLS provisioning,
-nhưng chưa có chứng chỉ custom domain. Registrar báo `client hold`, DNS public
-NXDOMAIN; yêu cầu cấp chứng chỉ trả HTTP 422. Cần P.A Việt Nam kiểm tra nguyên
-nhân và hoàn tất kích hoạt/gỡ hold; đây không chỉ là chờ propagation.
-Nameserver ghi trong registry: `ns1.pavietnam.vn`, `ns2.pavietnam.vn`,
-`nsbak.pavietnam.net`. Trợ lý không sửa nameserver hoặc DNS tại P.A; các bản ghi
-do chủ tài khoản nhập, nếu có, chưa được xác minh ở lượt bàn giao này. Giữ nguyên
-MX/TXT email và các bản ghi không liên quan.
-
-Giá trị DNS theo [Netlify external DNS](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/),
-TTL chọn 300 giây:
+**DNS và HTTPS đã hoạt động:** registry không còn `client hold` sau khi chủ
+thể hoàn tất thủ tục tại P.A. Authoritative DNS P.A trả đúng các bản ghi dưới.
+Nameserver giữ `ns1.pavietnam.vn`, `ns2.pavietnam.vn`, `nsbak.pavietnam.net`;
+trợ lý không sửa nameserver, MX/TXT email hoặc bản ghi không liên quan tại P.A.
 
 | Host | Loại | Giá trị | TTL |
 | --- | --- | --- | --- |
 | `@` | A | `75.2.60.5` | `300` |
 | `www` | CNAME | `dao-budget-simulator.netlify.app` | `300` |
 
-Netlify chưa yêu cầu TXT xác minh riêng. Sau khi registrar gỡ hold và bản ghi
-phân giải đúng, kiểm tra lại chứng chỉ và HTTPS custom domain trước khi báo thành công.
+Giá trị theo [Netlify external DNS](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/).
+Netlify không yêu cầu TXT xác minh riêng trong lần kết nối này. Chứng chỉ đã
+`issued` cho apex và `www`, hết hạn `2027-02-21T09:47:58Z`; browser xác nhận
+TLS 1.3, issuer `YE1`. Force HTTPS bật; HTTP apex và HTTPS `www` đều redirect
+301 về `https://dao-budget-simulator.xyz/`. Netlify quản lý gia hạn chứng chỉ.
+

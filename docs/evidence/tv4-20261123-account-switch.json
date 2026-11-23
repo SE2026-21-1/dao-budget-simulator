@@ -1,0 +1,151 @@
+{
+  "format": "tv4-account-switch-scoped-review-v1",
+  "status": "PARTIAL_NOT_ACCEPTED",
+  "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "manifestSha256": "5acefc8305aabb6fb4a2a699294058b8180282366a55067ce46dc8c231c30ee7",
+  "actors": {
+    "A": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+    "B": "0x275e9be541965faadc5a6e0497a89ffbe3104b7e"
+  },
+  "observed": {
+    "eligibleA": {
+      "votingPower": "300000000000000000000",
+      "actualExtensionDelegation": {
+        "hash": "0xf9f74e3e6abd70b258e8ed6f967c7a896f54d40e72cc92159b726fb454ccdfaf",
+        "receipt": {
+          "type": "0x2",
+          "status": "0x1",
+          "cumulativeGasUsed": "0x1759c",
+          "logs": [
+            {
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "topics": [
+                "0x3134e8a2e6d97e929a7e54011ea5485d7d196dd5f0ba4d4ef95803e8e3fc257f",
+                "0x000000000000000000000000d1839f6d670c75d2490d6d479f91e695cfdb94a5",
+                "0x0000000000000000000000000000000000000000000000000000000000000000",
+                "0x000000000000000000000000d1839f6d670c75d2490d6d479f91e695cfdb94a5"
+              ],
+              "data": "0x",
+              "blockHash": "0x469fe1b257ed20ba8a5c8b5d6fe7a7969e88f8260c407511a5e9d3258238c183",
+              "blockNumber": "0x38",
+              "blockTimestamp": "0x6b49df0b",
+              "transactionHash": "0xf9f74e3e6abd70b258e8ed6f967c7a896f54d40e72cc92159b726fb454ccdfaf",
+              "transactionIndex": "0x0",
+              "logIndex": "0x0",
+              "removed": false
+            },
+            {
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "topics": [
+                "0xdec2bacdd2f05b59de34da9b523dff8be42e5e38e818c82fdb0bae774387a724",
+                "0x000000000000000000000000d1839f6d670c75d2490d6d479f91e695cfdb94a5"
+              ],
+              "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001043561a8829300000",
+              "blockHash": "0x469fe1b257ed20ba8a5c8b5d6fe7a7969e88f8260c407511a5e9d3258238c183",
+              "blockNumber": "0x38",
+              "blockTimestamp": "0x6b49df0b",
+              "transactionHash": "0xf9f74e3e6abd70b258e8ed6f967c7a896f54d40e72cc92159b726fb454ccdfaf",
+              "transactionIndex": "0x0",
+              "logIndex": "0x1",
+              "removed": false
+            }
+          ],
+          "logsBloom": "0x00000000000000000000000000000000000020000000000000000000000000000000000000000200000010400000000000020000000000000000000000000000040000000000000000000000000000000000000000000000000000020000000000000000020400000040000000000800000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000100000000000000000000000000000000000000000000000000",
+          "transactionHash": "0xf9f74e3e6abd70b258e8ed6f967c7a896f54d40e72cc92159b726fb454ccdfaf",
+          "transactionIndex": "0x0",
+          "blockHash": "0x469fe1b257ed20ba8a5c8b5d6fe7a7969e88f8260c407511a5e9d3258238c183",
+          "blockNumber": "0x38",
+          "gasUsed": "0x1759c",
+          "effectiveGasPrice": "0x3ba5a6aa",
+          "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+          "to": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+          "contractAddress": null,
+          "blockTimestamp": 1800003339
+        }
+      },
+      "draftPrepared": true
+    },
+    "globalImportedBButSiteStillA": "Observed. Global account selection/import is not proof that eth_accounts changed for the site. No product defect concluded.",
+    "realPermissionRevocation": {
+      "status": "PASS_SCOPED",
+      "actualEvents": [
+        {
+          "at": "2026-11-23T09:25:33.729Z",
+          "accounts": []
+        }
+      ],
+      "draftRequestId": "0x9ad49ed5139bdff1fe456e206b0122261d53cb2c0074876e3c53f4f96f65409e",
+      "oldSigningDisabled": true,
+      "nonceBeforeA": "0x4",
+      "ethSendRequests": 0
+    }
+  },
+  "notVerified": [
+    "Successful same-session site authorization A→B and accountsChanged(B)",
+    "B0 displayed with the original draft retained after that complete transition",
+    "B0 preflight rejection/no eth_sendTransaction and both post-transition nonces"
+  ],
+  "environmentLimits": [
+    "Native account picker/dashboard became inaccessible to the driver; DOM.focus non-focusable during unlock transition and later no accessible controls",
+    "Both headless Chromium141 and authenticated rootless Xvfb/headed Chromium attempted; assertion deadlines unchanged",
+    "No MetaMask security/scuttling disabled, no controller/app state edited, no signer impersonated, no product changes to force PASS"
+  ],
+  "minimalNextEvidence": {
+    "operator": "TV3 with a disposable two-account extension on a new owned Dev6766e5e stack",
+    "action": "Prepare a valid A draft; explicitly switch the site-authorized account to zero-vote B (not only global wallet selection); capture events/UI/no-send/nonce/draft identity",
+    "requiredFiles": [
+      "browser+extension identity/version and public handoff/manifest/source",
+      "accountsChanged(B), unchanged requestId, visible B balance/power0 and UI rejection",
+      "method log with zero eth_sendTransaction attempts and public A/B nonces before/after",
+      "screenshots with no password/seed/private-key/import form"
+    ],
+    "notRequired": "No repeat of accepted historical bundle checksums, BE06 rebuild or completed full governance campaign"
+  },
+  "attemptReports": [
+    {
+      "name": "account-funding.json",
+      "sha256": "6b88ef89b32e44e685cf4bc5167701ff09efc5d5b7956b500a022c46ef779af6",
+      "status": null
+    },
+    {
+      "name": "account-permission-switch-final.json",
+      "sha256": "85b011e61c7cd33d96569d8823c3274b00cd74981c44c464f97dce44b46a5983",
+      "status": "FAIL"
+    },
+    {
+      "name": "account-permission-switch-headed.json",
+      "sha256": "ed4e9ccf4a1ec808c6bef9ce2bd425ebb5d51b34085a04db1a1b37f2e2955f67",
+      "status": "FAIL"
+    },
+    {
+      "name": "account-permission-switch.json",
+      "sha256": "0402b2d999884f8780e2a73130ecd7adf682a270335723f24491e692391f1053",
+      "status": "FAIL"
+    },
+    {
+      "name": "account-switch-partial-driver.json",
+      "sha256": "6a4dbf6b3e4984022ab8c51221c9e41ef4ed41ffedc28d6f550c7f08ebcd7671",
+      "status": "RUNNING"
+    },
+    {
+      "name": "account-switch-report.json",
+      "sha256": "b308fc177cc4ca6e69de295600b278202f9ac3516a402dc9c2b30a06e335325e",
+      "status": "FAIL"
+    },
+    {
+      "name": "picker-attempt1.json",
+      "sha256": "8d880db68458243510a0e85476f38e2199fabe1ddadb079ce1956c2be6419b9f",
+      "status": "FAIL"
+    },
+    {
+      "name": "picker-attempt2.json",
+      "sha256": "9bbea4322d32671f921d6b2eaee78b3b763a0b058066e51d1f72fe615681fa1f",
+      "status": "FAIL"
+    },
+    {
+      "name": "picker-report.json",
+      "sha256": "0f0e79379e8d975df7cc5498df0e1f3eae20e683dbd8b5ce0d134bee95150e45",
+      "status": "FAIL"
+    }
+  ]
+}

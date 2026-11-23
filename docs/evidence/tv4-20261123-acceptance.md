@@ -59,6 +59,85 @@ Treasury1000 BUD/recipient11000 BUD/paid=true, Governor Executed/Timelock Done; 
 
 TV3 manual browser1366×768/390×844 tại sourcee8e443c, run20261121T164230Z-1d31cb975ecc được tiếp nhận đúng scope TV3, không thành TV4 rerun. Historical503 DATA_NOT_READY/reload200 giữ là observation; chưa đủ kết luận root cause, fix hoặc current blocker. #36/#41 còn extension/governance manual acceptance.
 
+### Chạy mới trên source đã được duyệt — #36/#41
+
+[Approved-source UI evidence](tv4-20261123-approved-ui.json): product **Dev
+`6766e5ee2d8c466542687cbeb09677c4d11e5463`**, tooling tách riêng bằng
+`--project-root /tmp/dao-tv4-approved-e2e-20261123`. Lệnh browser runner exit0
+trong75,82s; main tooling SHA256 `2e17c4a479eff7f66bd6f0a056919a455469bcd1b2e324ec99c59c45243f7c1e`,
+keyboard helper `19aeec782b4b5db62e7486682c1f8e42bd20dc2cdd37265f6901e1ef45384dff`.
+
+Keyboard-only Tab/Shift-Tab/Enter/Space, skip-link→main, form/review/back giữ
+dữ liệu, visible focus và focused control trong viewport, không horizontal
+overflow đều PASS ở1366×900/390×844. Đây là viewport emulation, không physical
+mobile hoặc screen-reader certification. Một lần probe trước dùng nhầm desktop
+navigation ẩn trên mobile đã FAIL; sửa selector QA sang navigation đang hiển thị,
+không sửa UI hoặc nới assertion; giữ failed report riêng.
+
+E2E cùng proposal mới `79483937909651101352431138791574239270037473408428744582316426606884033144043`,
+request `0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba`:
+propose/vote/queue, execute receipt0 thiếu quỹ, nạp2.000 rồi retry receipt1;
+SQL/API/contract/UI khớp publication H44/hash
+`0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f`,
+Governor7/operationDone/paid, Treasury1.000/recipient11.000. Recovery503,
+cursor409, loading/error/retry và cleanup cũng PASS; browserErrors=[].
+**Driver vẫn là adapter NOT MetaMask.** Không chuyển kết quả thành extension PASS.
+
+Đã chốt baseline/fresh local deployment K2 cho TV3 ở
+[#41 comment7095168108](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7095168108).
+`--serve` bàn giao stack không inject ví và giữ services đến Ctrl-C; startup/stop
+không phải acceptance. [Historical #19 bundle review](tv4-20261123-wallet-review.md)
+đã tiếp nhận bytes đúng phạm vi. Git diff cho thấy frontend e8e443c khác Dev6766e5e;
+không gán TV3 manual browser cũ cho source sạch mới.
+
+### Extension thật và live views trên cùng Dev6766e5e
+
+[Real-extension report](tv4-20261123-real-extension.json) là **lượt chạy mới
+TV4 trực tiếp**, không phải offline review #19 hoặc adapter: official MetaMask
+13.58.0.0 unpacked, Chromium141, extensionID
+`knjoiknioniilpkdjegomanfllgblipj`, ZIP SHA256
+`35d1594d25e8eb0fc51f9a08ffcc3c8bf18965ce2e7d9026e3022a530a57f215`.
+Không phải Chrome Web Store/user profile hoặc TV3 human acceptance.
+
+Wrong-network khóa ký, từ chối **popup ký proposal thật**/nonce không đổi/draft
+requestId giữ nguyên, confirmed-not-indexed, và execute thiếu quỹ **receipt0**
+rồi nạp2.000/retry receipt1 đều đã quan sát. Cùng proposal
+`80473439291238266157620742991282647983838392855857342276874399640497195595742`,
+request `0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4`;
+propose/vote từ ví extension đầu, queue/execute từ ví extension thứ hai do driver
+VM mất giữa chừng. Hai signer khác nhau là scope công khai, không giả một session.
+
+Reconciled H52/hash `0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66`,
+revision `ae1ae7f2-48f8-4847-af12-b20988a382c9`; operation
+`0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c` Done,
+Governor7/paid, Treasury1.000 BUD/recipient11.000. Execute
+`0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c`.
+SQL query của cluster riêng xác nhận đúng một disbursement nối đúng raw event,
+request/proposal/operation/amount/transaction/blockHash. Checkpoint có thể tiến
+sau H52 khi chuẩn bị account-switch case; không ép checkpoint hiện tại thành52.
+
+[Live views + frontend API test](tv4-20261123-live-views.json): mười render
+Tổng quan/Đề xuất/Tạo đề xuất/Treasury/Governance ở1366×900 và390×844,
+actual scoped API200, không horizontal overflow, browserErrors=[]; exit0.
+`api.live.test.ts` chạy trên Dev với đủ bốn `BE05_LIVE_*`: **1 PASS/0 fail/0 skip**,
+exit0, sáu endpoint cùng pinned H/hash/revision và RPC canonical hash.
+
+Giữ các failed setup reports: DOM/AX readiness, selector nút retry khi UI đang
+DATA_NOT_READY và mất VM driver. Chỉ sửa QA orchestration, không đổi source
+sản phẩm, timeout assertion, tải BE08 hoặc chain state để làm UI trông đã xong.
+Lượt thật có một503 DATA_NOT_READY rồi dùng nút retry và nhận200; đây là observation
+của lượt mới, không chứng minh root cause/fix của503 Incognito lịch sử TV3.
+
+**#19 account-switch chưa đủ evidence:** [partial review](tv4-20261123-account-switch.json).
+Đã có A300 valid control, ví B0 thật và revoke permissions phát accountsChanged([])
+khóa ký A. Chưa hoàn tất site-authorized B cùng draft/no-send/post-nonce; native
+driver không truy cập được control ở cả headless và display riêng. Không gọi là
+product bug hoặc full TC13 PASS. [Runbook tối thiểu](../qa07-e2e.md#account-switch-phần-evidence-tối-thiểu-còn-thiếu-của-19)
+chỉ yêu cầu TV3 bổ sung case này; TV2 review raw H52 mới cho #41, không rerun cả
+campaign governance hoặc bundle lịch sử. Các service TV4 đã dừng/cleanup exit0.
+
+
+
 ## Bundle máy nhận #40/#42
 
 [Toàn bộ offline validation](tv4-20261123-bundles.md), [machine-readable inventory](tv4-20261123-bundles.json).
@@ -92,3 +171,21 @@ Demo/submission checklist:
 [Raw archive](tv4-20261123-raw.tar.gz), SHA256 **`75dfae1be68cb14651ca1f2d0eee35c1b9d0f39263eb3382987f1ddef7ad67f0`**: final browser report/14 PNG+DOM/logs, native BE08 reports/logs/patch/source hashes, actual downloaded Dev/corrected-push CI ZIP, narrow check logs và read-only Sepolia reports. Archive không chứa DB/keystore/env/private key. Bounded evidence-only pattern scan52text files không có match, không phải whole-history security guarantee.
 
 Các kết quả thất bại khi điều tra không được che: Compose thiếu image/env inputs fail interpolation trước khi cấu hình bằng synthetic digests; assertion kiểm artifact PR như exact HEAD bị từ chối vì đó là merge-refb4b505d, sau đó dùng đúng push artifact5c89997; historical Dev tail thiếu same-ID trace không được gọi verified. Một patch probe sai line anchors được sửa ngay trước chạy final tests, không là bug sản phẩm. Những việc này không bị biến thành PASS của test chưa chạy.
+
+### Raw mới cho source Dev đã được duyệt
+
+[Current UI archive](tv4-20261123-current-ui.tar.gz), SHA256
+**`f2ae8cf26fcddbeb57d89dd8bbabc8e9401a0d49e3712e1887719cbf2f2247d7`**;
+[index lệnh/exit/source/cleanup](tv4-20261123-current-ui-index.json).
+161 payload files và `MANIFEST.json`: approved adapter/keyboard,10live views,
+actual MetaMask receipts/API/SQL/worker H52, decoded mined InsufficientBudget,
+failed setup/account reports và source snapshots không chứa secrets.
+
+Không chứa browser profile, password/key/seed, DB cluster hoặc Xauthority cookie.
+Đã dừng stack/cluster riêng exit0, kiểm PID/loopback ports và xóa private fixtures;
+không dừng process người dùng. Endpoint archived không còn sống. Snapshot source
+616acd chứa template URL localhost trust-auth nên bản copy không nằm trong archive;
+giữ source hash và raw reports nguyên bản. Label signer legacy của parent616acd
+không phải attestation; actual extension actors nằm trong W. Final2e17c4a đã sửa
+label `--serve` và có startup/stop proof riêng, không giả thêm wallet acceptance.
+

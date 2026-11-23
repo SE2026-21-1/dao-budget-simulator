@@ -223,25 +223,28 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 - **Q** = [browser harness](qa07-e2e.md), product source `5c89997` và source hashes trong raw report. Một proposal 11.000 BUD, A=400 For, thiếu quỹ/retry sau nạp 2.000; không phải exact TC01 1.000 BUD/A+B700 hoặc ví MetaMask.
 - **R** = [hai bundle TV3 đã TV4 kiểm độc lập](evidence/tv4-20261123-bundles.md): #42 source `4cba99a`, #40 source `e8e443c`; không chuyển evidence đó thành lượt chạy Dev hiện tại.
 - **S** = [Sepolia probe](evidence/tv4-20261123-sepolia.json) và [remote helpers/13 tests/probe cuối](evidence/tv4-20261123-sepolia-remote.json), source chung `5c89997` + file hashes riêng; không có testnet deployment.
+- **U** = [approved-source UI/E2E](evidence/tv4-20261123-approved-ui.json), product Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`, tooling SHA256 `2e17c4a4…7c1e`, keyboard helper `19aeec78…4dff`: full adapter lifecycle, actual reorg503/cursor409, form keyboard/focus1366/390. Không phải MetaMask.
+- **V** = [mười live views và frontend live API test](evidence/tv4-20261123-live-views.json), cùng Dev6766e5e: năm views×hai viewport, actual API200/no overflow/no browserErrors; `api.live.test.ts`1PASS/0skip, sáu endpoint cùng H/hash/revision.
+- **W** = [fresh actual MetaMask run](evidence/tv4-20261123-real-extension.json), cùng Dev6766e5e, official stable unpacked13.58.0.0/Chromium141: propose/vote/queue/receipt0 execute/topup/receipt1 retry cùng proposal, SQL/API/contract/UI H52/hash6be070…ba66. Hai actor extension do driver reset, không một session giả, không Chrome Web Store/TV3 human/testnet acceptance. [#19 historical bundle](evidence/tv4-20261123-wallet-review.md) giữ riêng, không gộp sourcee8e443c vào W.
 
 | Requirement | TC / INV → test hiện có | Evidence / SHA | Kết luận đúng phạm vi |
 |---|---|---|---|
-| FR01 | TC13 → `frontend/src/chain/wallet.test.tsx`, Q wrong-network | Q / `5c89997`+hash | Adapter khóa ký sai mạng; extension permission/network còn mở. |
+| FR01 | TC13 → `frontend/src/chain/wallet.test.tsx`, U/W wrong-network | U/W / Dev6766e5e+tool hashes | Actual MetaMask wrong-network khóa ký; add-network/permission renewal đã chạy, không thay mọi account/session variant. |
 | FR02 | TC01/04/05/13, INV04 → token/Governor tests, wallet suite | C/Q; bounded INV lịch sử §4 | GOV/delegate/votes có source/tests; không nhận toàn bộ extension/snapshot variants. |
-| FR03 | TC01/08/10/13 → Governor unit, Q browser form/propose | C/Q / `5c89997`+hash | Propose thật/IDs/description có receipt; không full actor/reset inventory. |
+| FR03 | TC01/08/10/13 → Governor unit, U/W browser form/propose | C/U/W | Actual MetaMask propose/IDs/description có receipt; không full actor/reset inventory. |
 | FR04 | TC01/12, Q-READ → API suite, `api.test.ts`, R receiver | B/R/Q | API/chain-backed detail đạt phạm vi; không claim 45 proposal browser campaign mới. |
-| FR05 | TC01–05/13, INV04 → Governor unit/integration, Q castVote | C/Q | Một proposal browser vote thật; extension và mọi support/actor UI variants còn mở. |
+| FR05 | TC01–05/13, INV04 → Governor unit/integration, U/W castVote | C/U/W | Actual MetaMask400 For cùng proposal; mọi support/actor UI variants chưa full. |
 | FR06 | TC02/03/04/12, INV02/04 → Governor tests, BE04 reconciliation | B/C/Q | Contract/quorum tests và 400 For outcome có evidence; không full UI tie/defeat matrix. |
-| FR07 | TC01/06/07/14, INV02 → Timelock integration, Q queue | C/Q | Operation/ETA, receipt và API linkage cùng proposal đạt local adapter. |
-| FR08 | TC01/06–10, INV01–03 → Timelock integration, Q execute | C/Q | Revert/retry/Done/paid/balances local đạt; không testnet/extension PASS. |
-| FR09 | TC01/09/11/12, INV03 → BE04/BE07, Q funding/ledger | B/Q | Receipt→SQL→API ledger cùng H/hash có evidence; không cộng hai event thành hai chi. |
+| FR07 | TC01/06/07/14, INV02 → Timelock integration, U/W queue | C/U/W | Actual MetaMask queue; operation/ETA/receipt và API linkage cùng proposal đạt local. |
+| FR08 | TC01/06–10, INV01–03 → Timelock integration, U/W execute | C/U/W | Actual extension receipt0/retry receipt1/Done/paid/balances đạt local, không testnet PASS. |
+| FR09 | TC01/09/11/12, INV03 → BE04/BE07, U/W funding/ledger | B/U/W | Receipt→SQL→API ledger cùng H/hash; đúng một disbursement, không cộng hai event thành hai chi. |
 | FR10 | TC14/13 → Governor unit/integration, `governanceActions.test.ts` | C; bounded historical attacks | Pending-only contract coverage giữ; chưa browser cancel campaign mới. |
-| FR11 | TC01/09/11/12 → API suite, Q rendered detail, R browser TV3 | B/Q/R | Live display đúng snapshot trong scope; không toàn dashboard/actor inventory. |
-| FR12 | TC07/09/13 → `transactions.test.ts`, Q refusal/revert/receipt | Q / source hashes | Refusal adapter, real receipt0/1 và retained tx; popup extension chưa chạy. |
+| FR11 | TC01/09/11/12 → API suite, U/V/W rendered views, R historical TV3 | B/U/V/W/R | Năm live views390/1366 đúng scope hiện tại; không chuyển source/render lịch sử thành Dev rerun. |
+| FR12 | TC07/09/13 → `transactions.test.ts`, U/W refusal/revert/receipt | U/W / Dev6766e5e+tool hashes | Popup ký MetaMask Cancel thật giữ draft/nonce; receipt0 thiếu quỹ rồi receipt1 retry; không Governor.cancel campaign. |
 | FR13 | TC01/09–12, INV03 → storage/projection/live reconciliation | B/Q | Raw/dedup/linkage đạt backend; 16 unknown ancillary topics giữ nguyên. |
-| FR14 | TC11 → BE03/BE07 DB/live, Q real reorg | B/Q | Recovery gate, K2, rollback/replay, 503/409 có evidence. |
+| FR14 | TC11 → BE03/BE07 DB/live, U real reorg | B/U | Recovery gate, K2, rollback/replay, 503/409 có fresh Dev evidence. |
 | FR15 | TC12 → BE06 two-DB/live, R normalized exports | B / `6766e5e`; R / `4cba99a` | Backend same-H/hash equal; receiver API restart vẫn thiếu để đóng #42. |
-| FR16 | TC01/11–13 → `tests/api/server.test.mjs`, Q actual API | B/Q/R | Read API/backend technical acceptance; không tự thay UI/extension acceptance. |
+| FR16 | TC01/11–13 → `tests/api/server.test.mjs`, `api.live.test.ts`, U/V/W API | B/U/V/W/R | Sáu endpoint cùng pinned H/hash/revision có live1PASS/0skip; không thay toàn bộ acceptance variants. |
 | BR01 | TC01/04/05/12, INV04 → token/Governor/attack tests | C; §4 bounded evidence | Giữ bounded model và snapshot tests, không mở lại invariant không có regression. |
 | BR02 | TC02–05, INV02/04 → Governor unit/integration | C/Q | Contract outcome có coverage; không dùng một 400 For run thay toàn bộ tie/abstain variants. |
 | BR03 | TC01/07–10/14, INV01–03 → TC10 integration | C / `32c6e7c` giữ trong `5c89997` | Reverse-order và zero-ID protection 40/40 integration; raw/UI TC10 variants chưa full. |
@@ -254,7 +257,7 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 | NFR03 | TC11/13,Q-FRESH → BE08 real CLI samples | B | 20/20 dưới30s; Q không là performance benchmark. |
 | NFR04 | TC11/12,Q-RECOVER → BE07/BE06 + corrected BE08 | B/C/Q | Backend recovery/rebuild đủ evidence; historical tail limit tách corrected gate. |
 | NFR05 | Q-CLONE → separate worktree/install, R receiving machine | R/Q | Cùng-máy local khác independent receiver; #40 lifecycle/#42 API restart còn mở. |
-| NFR06 | TC13,Q-UI → TV3 manual 1366/390 + Q screenshots | R/Q | Scope manual/adapter chấp nhận; không full extension/keyboard accessibility certification. |
+| NFR06 | TC13,Q-UI → V live views, U keyboard, W real wallet, R historical TV3 | U/V/W/R / sources riêng |1366/390 và visible-focus/form traversal đạt scope đã đo; không physical-mobile/screen-reader hoặc mọi keyboard vote variant. |
 | NFR07 | Contract/invariant/backend/frontend CI, safety negatives | B/C và exact-head PR checks | Có CI thực; peer/backend-delivery review và remaining acceptance không thay bằng CI xanh. |
 | NFR08 | TC06/14,Q-CONFIG → deploy/check-roles, S | C/S | Local audit/probe có; testnet manifest/authorized secure signing chưa có. |
 

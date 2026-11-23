@@ -14,8 +14,16 @@ các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi
   typecheck/build/4release PASS; native release gate PASS, cluster đã cleanup.
 - [x] Tự kiểm đúng Dev6766e5e artifact và corrected exact-push CI5c89997.
   #18 backend TC11/TC12/NFR02–04 đã nghiệm thu/đóng, không chờ MetaMask/testnet.
-- [x] QA07 browser adapter full same-proposal/revert/retry/publication/Hhash,
-  confirmed-not-indexed, wrongnetwork/rejection/loading/retry và actual503/409 PASS.
+- [x] Fresh Dev6766e5e QA07 adapter full same-proposal/revert/retry/Hhash,
+  actual503/409, confirmed-not-indexed/loading/retry và cleanup PASS.
+- [x] #36 keyboard-only form/review/back/skip/nav focus1366/390;10live renders
+  trên năm views, actual API200, no horizontal overflow/browserErrors.
+- [x] `api.live.test.ts` với đủ env trên approved source:1PASS/0fail/0skip,
+  sáu endpoint pinned H/hash/revision, không lấy frontend CI skip làm live PASS.
+- [x] #19 actual official-unpacked MetaMask wrong-network, popup-signature refusal,
+  receipt0 insufficient-budget/retry1 và full same-proposal lifecycle local đã chạy.
+  Hai actor sau driver reset; không user/Web Store/mobile-extension/testnet acceptance.
+- [x] #19 consolidated ZIP/ảnh lịch sử đã được TV4 kiểm bytes và review đúng source.
 - [x] Kiểm bytes ZIP mới #40/#42; BE06 manifest/exports/compare accepted đúng source
   lịch sử,4exit0 không được gọi independently verified từ logs thiếu exitcode.
 - [x] Remote Sepolia common helpers tái tạo file-only không ancestry cá nhân;
@@ -24,7 +32,8 @@ các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi
 - [ ] TV2 re-review BE08/delivery candidate; TV3 review harness/extension workflow;
   TV1 review newly recreated remote helpers, không lấy old contract approval thay.
 - [ ] #40 final receiver PID/port/Windows outputs và #42 API restart máy TV3.
-- [ ] #19/#36/#41 extension/manual governance acceptance, không thay bằng adapter.
+- [ ] #19 hoàn tất account-switch site A→B/no-stale-send; #41 TV2 review raw
+  receipt/worker/SQL/API/UI H52 mới và TV3 đối chiếu scope. Không thay bằng adapter.
 - [ ] #20 owner-approved SHA/map/custodians/gas/broadcast, manifest/roles và
   Executed/Defeated bằng thời gian thật.
 - [ ] #7/#44 full submission/demo gates; chưa promote Dev→main/tag/release.

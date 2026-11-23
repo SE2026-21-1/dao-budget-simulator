@@ -2,9 +2,9 @@
 
 ## Phạm vi và điều kiện
 
-Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/lifecycle của repo, không thay product code, không thêm package script. Chạy bằng Node 24+, PostgreSQL **18.4**, Forge/Anvil **1.8.5**, production artifacts từ `forge build` (Solidity 0.8.37, Osaka, optimizer 200), submodule đúng revision. Cài dependency root/frontend bằng lockfile trước khi chạy. Cần Chrome và Playwright bên ngoài hoặc trong môi trường QA; không thay `package.json` của dự án.
+Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/lifecycle của repo, không thay product code, không thêm package script. Chạy bằng Node **24.15.0**, PostgreSQL **18.4**, Forge/Anvil **1.8.5**, production artifacts từ `forge build` (Solidity 0.8.37, Osaka, optimizer 200), submodule đúng revision. Cài dependency root/frontend bằng lockfile trước khi chạy. Cần Chrome và Playwright bên ngoài hoặc trong môi trường QA; không thay `package.json` của dự án.
 
-**Đây là adapter EIP-1193 với tài khoản Anvil unlocked do runner sở hữu, KHÔNG phải MetaMask.** Adapter công bố tên có chữ NOT MetaMask, chỉ gửi từ tài khoản A trên chain mới 31337 và đặt gas 8.000.000. Từ chối code 4001 và `chainChanged` sai mạng là fault injection ở adapter; không được ghi thành đã kiểm thử popup/extension thật. Không sử dụng ví người dùng, ký bên ngoài, fork hay RPC/DB caller.
+**Chế độ tự động dùng adapter EIP-1193 với tài khoản Anvil unlocked do runner sở hữu, KHÔNG phải MetaMask.** Adapter công bố tên có chữ NOT MetaMask, chỉ gửi từ tài khoản A trên chain mới 31337 và đặt gas 8.000.000. Từ chối code 4001 và `chainChanged` sai mạng là fault injection ở adapter; không được ghi thành đã kiểm thử popup/extension thật. Không sử dụng ví người dùng, ký bên ngoài, fork hay RPC/DB caller. Chế độ `--serve` dưới đây không inject adapter hoặc tự thực hiện workflow.
 
 ## Lệnh chạy duy nhất sau khi chuẩn bị xong
 
@@ -23,9 +23,54 @@ node --import tsx scripts/check_qa07_e2e.mjs \
 
 Output phải chưa tồn tại. Runner tự tạo cluster PG trust chỉ bind numeric loopback, port tạm, schema mới, Anvil unforked, worker CLI thật, API và Vite. Không dừng process có sẵn. Chỉ cleanup child/temp do chính runner tạo; giữ evidence kể cả khi lỗi. Không chạy BE08/broad suite từ lệnh này. Chưa có package script `test:tv4:native`; không suy diễn rằng lệnh đó tồn tại.
 
+## Source đã được duyệt và bàn giao ví thật
+
+Tooling QA và source sản phẩm có thể nằm ở hai checkout khác nhau. `--project-root`
+chọn **toàn bộ** contract artifacts, helper deployment/receipt/lifecycle, worker,
+API và frontend từ checkout sản phẩm; không chỉ đổi thư mục Vite. Chuẩn bị recursive
+submodules, root/frontend `npm ci` và `forge build` tại checkout đó trước khi chạy.
+`manifest.sourceCommit` và `sourceHashes` phải thuộc source sản phẩm;
+`qaHarness.sha256`/`keyboardSha256` ghi riêng bytes tooling. Không gọi cả PR60 đã
+được duyệt chỉ vì dùng baseline Dev đã có review.
+
+Baseline TV4 đã xác nhận cho run mới #41: **Dev
+`6766e5ee2d8c466542687cbeb09677c4d11e5463`**, local unforked31337, K2.
+Checkout tách riêng, không checkout/reset nhánh personal hoặc đưa #21/#55 vào ancestry.
+
+```sh
+# Chạy từ checkout tooling có dependencies; hai output phải là thư mục mới.
+node --import tsx scripts/check_qa07_e2e.mjs \
+  --postgres-bin /absolute/pg18.4/bin --output /tmp/qa07-reviewed-auto-NEW \
+  --project-root /absolute/reviewed-checkout
+node --import tsx scripts/check_qa07_e2e.mjs \
+  --postgres-bin /absolute/pg18.4/bin --output /tmp/qa07-reviewed-wallet-NEW \
+  --project-root /absolute/reviewed-checkout --serve
+```
+
+`--serve` tạo stack mới và in `QA07_SERVE_READY`; `handoff.json`/`manifest.json`
+chỉ chứa metadata công khai, addresses và endpoint **của lượt đang sống**. Dùng
+chúng để thêm network/nối ví disposable; không dùng port/manifest archived.
+Startup là `SERVING_NOT_ACCEPTANCE`, không phải MetaMask/E2E PASS. Ctrl-C ở đúng
+process runner sẽ giữ report/logs và cleanup các child/cluster do nó sở hữu;
+`SERVE_STOPPED` cũng không phải acceptance. Không dừng service của người khác.
+
+Runner này cần POSIX/Linux; TV3 có thể dùng WSL/Linux hoặc receiver BE09 Windows
+đã có, nhưng phải chứng minh revision/manifest của receiver. Ví extension thật
+do operator kiểm soát; không gửi seed/key/password vào stdout, archive, issue
+hoặc chat. Với MetaMask13.58, nếu thêm custom chain xong gặp4100, kiểm quyền
+account **trên chain hiện hành** và xác nhận lại permissions qua ví; không sửa
+provider trả kết quả giả, impersonate signer hoặc gọi đó là product fix.
+
+
 ## Chứng cứ cần kiểm tra
 
 `report.json` chứa lệnh/env công khai, phiên bản runtime, SHA-256 source, manifest/artifact provenance, requestId/proposalId/operationId/txHash, raw receipts, SQL/API/contract balance tại cùng H/hash; `worker.stdout.log` là output CLI thật. File `*.png` và `*.txt` là screenshot + nội dung DOM thực sau từng bước, không phải dữ liệu fixture hay chèn trạng thái giao diện.
+
+Trước workflow, `keyboard` ghi traversal **chỉ Tab/Shift-Tab/Enter/Space** ở
+1366×900 và390×844: skip link→main, form/review/back giữ dữ liệu, navigation,
+focus-visible có outline/shadow và focused control trong viewport, không
+horizontal overflow. Đây là keyboard desktop/mobile-emulation, không physical
+mobile hoặc screen-reader certification.
 
 Một proposal duy nhất do form browser tạo, cùng deployment xuyên suốt:
 
@@ -81,3 +126,77 @@ TC01 exact A+B700/chi1.000/Treasury9.000 là ca reset riêng, không được l�
 không pause/reorg worker đang phục vụ người khác. `report.json` và 14 ảnh của
 lượt adapter là baseline tái lập, **không đánh tick** các mục extension chưa chạy.
 
+
+## Account switch: phần evidence tối thiểu còn thiếu của #19
+
+[TV4 đã chạy, không nhận PASS toàn case](evidence/tv4-20261123-account-switch.json):
+A300 đủ điều kiện; nhập ví test B0 thật; MetaMask vẫn cấp account A cho site dù
+global wallet đang B. Revoke permissions thật đã phát `accountsChanged([])` và
+khóa ký A. Driver gặp lỗi focus/không còn control truy cập được khi hoàn tất
+B, kể cả trên display Xvfb riêng; không sửa MetaMask/app state hoặc tăng timeout.
+
+TV3 chỉ cần hoàn tất **case account** trên stack mới của approved source, không
+chạy lại cả campaign governance hoặc các bundle lịch sử:
+
+1. Lấy `handoff.json` mới từ `--serve`; kiểm đúng31337/K2/manifest/source. A và B
+   là hai account disposable do operator giữ; B không có GOV/votes.
+2. Nếu A là account extension mới, chuyển400 GOV từ **unlocked Anvil fixture A**
+   sang public address của extension A, rồi Self-delegate qua ví thật. Chỉ dùng
+   RPC loopback thuộc runner đang sống, không dùng caller RPC/testnet:
+
+   ```sh
+   test "$(cast chain-id --rpc-url "$OWNED_RPC")" = 31337
+   cast send "$GOV" 'transfer(address,uint256)' "$EXTENSION_A" \
+     400000000000000000000 --from "$ANVIL_FIXTURE_A" --unlocked --rpc-url "$OWNED_RPC"
+   cast rpc anvil_mine 0x2 0x1 --rpc-url "$OWNED_RPC"
+   ```
+
+3. A có đủ voting power, đúng network/deployment: tạo **draft**1 BUD, mở review,
+   lưu requestId/fields và A/B nonce; chưa gửi proposal. Ghi provider methods và
+   events bằng observer pass-through, không chế tạo response hoặc emit event giả.
+4. Đổi **site-authorized account** sang B qua UI permission/account chooser.
+   Nếu MetaMask ghim site ở A, revoke quyền của **site demo sở hữu** rồi connect B;
+   global selection B một mình không phải `accountsChanged(B)`.
+5. Lưu event B thật, UI address/balance/power0 và draft giữ requestId/fields.
+   Thử gửi: B0 phải bị chặn trước signature; không có `eth_sendTransaction`,
+   không đổi nonce A/B, không có txHash/receipt để bịa. Chụp UI/error thật.
+6. Giao JSON methods/events, public nonce reads, ảnh, source/manifest và
+   browser/extension version cho TV4; TV2 chỉ reconcile backend nếu có thay đổi
+   chain. Không gửi key/seed/password, screenshot credential hoặc browser profile.
+
+Observer chỉ gắn trên **site demo**, đúng provider MetaMask app đang chọn
+(profile chỉ có MetaMask có thể dùng `window.ethereum`). Nếu nhiều extension,
+không lấy log của một provider khác rồi gọi đó là no-send của provider đã chọn.
+Mẫu DevTools sau chỉ quan sát, giữ nguyên args/result/error của ví thật:
+
+```js
+const tv4Evidence = [];
+const provider = window.ethereum;
+const originalRequest = provider.request.bind(provider);
+const tracked = new Set(["eth_accounts", "eth_chainId", "eth_sendTransaction"]);
+provider.on("accountsChanged", accounts =>
+  tv4Evidence.push({ at: new Date().toISOString(), event: "accountsChanged", accounts }));
+provider.request = async args => {
+  const entry = tracked.has(args.method)
+    ? { at: new Date().toISOString(), method: args.method, params: args.params } : null;
+  if (entry) tv4Evidence.push(entry);
+  try {
+    const result = await originalRequest(args);
+    if (entry) entry.result = result;
+    return result;
+  } catch (error) {
+    if (entry) entry.error = { code: error.code, message: error.message };
+    throw error;
+  }
+};
+// Sau thao tác thật, xuất JSON từ DevTools; không gọi emit/set app state.
+copy(JSON.stringify(tv4Evidence, null, 2));
+```
+
+Gắn observer trước valid control của A; giữ log cả các bước, đánh dấu thời điểm
+switch để đếm request gửi sau đó. Không dùng logger để giả rejection/chain/account
+hoặc sửa DOM/control, không dùng nó chứng minh extension identity thay version/ID.
+
+A400 For/11.000 BUD/revert/retry của [lượt extension đã hoàn tất](evidence/tv4-20261123-real-extension.json)
+vẫn là proof riêng; case này không được thay proposal/request đã thực thi để
+gọi là retry, không dùng profile/port archived sau cleanup.

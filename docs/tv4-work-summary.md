@@ -22,9 +22,21 @@ là đầu mối hiện hành; các mục21/11 trở về trước bên dưới 
 - [Backend #18 đã TV4 nghiệm thu và đóng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-7093896813):
   Dev6766e5e, raw artifact/digest/26source hashes/recovery/rebuild/performance
   đã đối chiếu; corrected gate bổ sung lifecycle tail không làm đổi backend product.
-- Browser harness mới chạy cùng proposal11.000BUD→vote→queue→revert thiếuquỹ→
-  funding2.000→retryexecute→worker/API/UI cùngH44/hash, có503/409 thật.
-  **Adapter Anvil, không MetaMask**; [runbook/extension checklist](qa07-e2e.md).
+- [Fresh approved-source UI](evidence/tv4-20261123-approved-ui.json) chạy product
+  Dev6766e5e qua `--project-root`: keyboard/focus1366/390, full adapter workflow,
+  receipt0/retry1 và actual503/409 PASS; không gán tooling candidate thành product.
+- [MetaMask thật](evidence/tv4-20261123-real-extension.json) đã chạy riêng trên
+  cùng Dev: wrong-network, từ chối popup ký giữ draft/nonce, propose/vote/queue,
+  receipt0 thiếu quỹ rồi nạp2.000/retry receipt1, SQL/API/UI canonical H52.
+  Hai actor extension do driver reset; official unpacked, không user/Web Store
+  hoặc testnet. [Live views](evidence/tv4-20261123-live-views.json)10render,
+  frontend live API1PASS/0skip; [runbook](qa07-e2e.md) có mode bàn giao không inject ví.
+- [#19 consolidated ZIP](evidence/tv4-20261123-wallet-review.md) đã kiểm độc lập,
+  tiếp nhận happy-path lịch sử có giới hạn, không còn blocker thiếu ZIP/ảnh.
+- [Account-switch gap](evidence/tv4-20261123-account-switch.json) giữ PARTIAL:
+  actual revoke đã khóa signer cũ; site-authorized B/no-send cùng draft chưa đủ.
+  Runbook có fixture/observer/evidence checklist tối thiểu cho TV3, không yêu cầu
+  lặp lại governance đã chạy hoặc gọi UI automation failure là product bug.
 - [#40/#42 ZIP đã kiểm bytes](evidence/tv4-20261123-bundles.md): không còn blocker
   thiếu exports/checksums. Giữ thiếu APIrestart máyTV3 và final receiver/Windows
   lifecycle outputs, không đòi chạy lại campaign đủ evidence.

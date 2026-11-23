@@ -11,27 +11,36 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Interface, toQuantity } from 'ethers';
 import pg from 'pg';
-import { createRpc, deployGovernance } from './governance_local.mjs';
-import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
-import { waitForReceipt } from './receipt.mjs';
-import { createApiServer } from '../indexer/api/server.ts';
+import { verifyKeyboard } from './qa07_keyboard.mjs';
 
 const args = process.argv.slice(2);
-assert.ok(args.length === 4 && args[0] === '--postgres-bin' && args[2] === '--output',
-  'node --import tsx scripts/check_qa07_e2e.mjs --postgres-bin /absolute/bin --output /new/evidence');
+assert.ok(args[0] === '--postgres-bin' && args[2] === '--output',
+  'node --import tsx scripts/check_qa07_e2e.mjs --postgres-bin /absolute/bin --output /new/evidence [--project-root /reviewed/checkout] [--serve]');
+const serve = args.at(-1) === '--serve';
+const options = serve ? args.slice(0, -1) : args;
+assert.ok(options.length === 4 || (options.length === 6 && options[4] === '--project-root'), 'Unexpected QA07 options');
 assert.equal(process.getuid() === 0, false, 'Use an unprivileged user.');
 assert.ok(Number(process.versions.node.split('.')[0]) >= 24);
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = options[4] === '--project-root' ? resolve(options[5]) : fileURLToPath(new URL('../', import.meta.url));
+const fromProject = path => import(pathToFileURL(join(root, path)).href);
+const { createRpc, deployGovernance } = await fromProject('scripts/governance_local.mjs');
+const { createSmokeLifecycle } = await fromProject('scripts/smoke_lifecycle.mjs');
+const { waitForReceipt } = await fromProject('scripts/receipt.mjs');
+const { createApiServer } = await fromProject('indexer/api/server.ts');
 const output = resolve(args[3]);
 await mkdir(output, { mode: 0o700 }); // Refuse to overwrite evidence.
 const scope = createSmokeLifecycle();
-const report = { format: 'qa07-browser-e2e-v1', status: 'RUNNING', startedAt: new Date().toISOString(),
+const report = { format: 'qa07-browser-e2e-v2', status: 'RUNNING', startedAt: new Date().toISOString(),
   scope: 'Owned unforked Anvil + fresh PostgreSQL + actual CLI worker + HTTP API + Vite + real headless Chrome. EIP-1193 unlocked Anvil adapter, NOT MetaMask, NOT testnet or extension acceptance.',
   command: [process.execPath, '--import', 'tsx', ...process.argv.slice(1)],
   runtime: { node: process.version, executable: process.execPath }, sourceHashes: {}, commands: [],
   browserTransactions: [], publications: [], checks: [], screenshots: [], browserErrors: [],
   extensionOnly: ['MetaMask extension popup permission/signature rejection', 'MetaMask add/switch network and account events', 'External signing, public testnet and explorer confirmation'],
   ownership: { postgres: 'fresh cluster; numeric loopback; no caller DATABASE_URL', anvil: 'fresh spawned process; no fork; no caller RPC_URL', signing: 'only owned unlocked local account A' } };
+report.projectRoot = root;
+report.qaHarness = { path: fileURLToPath(import.meta.url),
+  sha256: createHash('sha256').update(await readFile(fileURLToPath(import.meta.url))).digest('hex'),
+  keyboardSha256: createHash('sha256').update(await readFile(new URL('./qa07_keyboard.mjs', import.meta.url))).digest('hex') };
 let pool, browser, api, proxy, uiProxy, releaseRecovery, releaseUi, worker;
 const logs = new Map();
 const sleep = ms => new Promise(done => setTimeout(done, ms));
@@ -66,7 +75,7 @@ async function hashes(directory) {
 }
 try {
   for (const directory of ['contracts', 'indexer', 'database/migrations', 'frontend/src', 'frontend/public']) await hashes(directory);
-  for (const path of ['scripts/check_qa07_e2e.mjs', 'scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs', 'package-lock.json', 'frontend/package-lock.json', 'foundry.toml', 'foundry.lock'])
+  for (const path of ['scripts/governance_local.mjs', 'scripts/smoke_lifecycle.mjs', 'package-lock.json', 'frontend/package-lock.json', 'foundry.toml', 'foundry.lock'])
     report.sourceHashes[path] = createHash('sha256').update(await readFile(join(root, path))).digest('hex');
   const directory = await scope.temporaryDirectory('/tmp/dao-qa07-owned-');
   const pgBin = resolve(args[1]);
@@ -172,11 +181,32 @@ try {
   await publish('bootstrap');
   const vite = start('vite', process.execPath, ['frontend/node_modules/vite/bin/vite.js', 'frontend', '--host', '127.0.0.1', '--port', String(vitePort), '--strictPort'], {
     VITE_API_BASE_URL: `http://127.0.0.1:${uiProxy.address().port}`, VITE_CHAIN_ID: '31337', VITE_DEPLOYMENT_ID: 'qa07-e2e', VITE_RPC_URL: rpcUrl,
-    VITE_CHAIN_NAME: 'QA07 owned Anvil (NOT MetaMask)', VITE_GOVERNOR_ADDRESS: addresses.Governor, VITE_TREASURY_ADDRESS: addresses.Treasury,
+    VITE_CHAIN_NAME: serve ? 'QA07 isolated Local Anvil' : 'QA07 owned Anvil (NOT MetaMask)', VITE_GOVERNOR_ADDRESS: addresses.Governor, VITE_TREASURY_ADDRESS: addresses.Treasury,
     VITE_GOV_TOKEN_ADDRESS: addresses.GOV, VITE_BUD_TOKEN_ADDRESS: addresses.BUD, VITE_TIMELOCK_ADDRESS: addresses.Timelock,
   });
   const uiBase = `http://127.0.0.1:${vitePort}`;
   await until('Vite', async () => { assert.equal(vite.exitCode, null, logs.get('vite').stderr); try { return (await fetch(uiBase)).ok; } catch { return false; } });
+  if (serve) {
+    report.scope = 'Owned isolated reviewed-source handoff for manual real-extension acceptance; startup is not wallet/E2E PASS.';
+    report.ownership.signing = 'No wallet injected in --serve; the external operator controls signing. Unlocked fixture accounts are used only for setup.';
+    report.publicHandoff = { format: 'qa07-public-handoff-v1', sourceCommit: manifest.sourceCommit,
+      chainId: '31337', deploymentId: 'qa07-e2e', confirmations: 2, frontendUrl: uiBase,
+      apiUrl: `http://127.0.0.1:${uiProxy.address().port}`, rpcUrl, contracts: addresses,
+      accounts, manifestSha256: createHash('sha256').update(JSON.stringify(manifest, null, 2) + '\n').digest('hex') };
+    await writeFile(join(output, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', { mode: 0o600 });
+    await writeFile(join(output, 'handoff.json'), JSON.stringify(report.publicHandoff, null, 2) + '\n', { mode: 0o600 });
+    report.status = 'SERVING_NOT_ACCEPTANCE';
+    console.log(JSON.stringify({ type: 'QA07_SERVE_READY', ...report.publicHandoff }));
+    scope.dispose();
+    report.stopSignal = await new Promise(done => {
+      const handlers = Object.fromEntries(['SIGINT', 'SIGTERM'].map(signal => [signal, () => {
+        for (const [name, handler] of Object.entries(handlers)) process.removeListener(name, handler);
+        done(signal);
+      }]));
+      for (const [signal, handler] of Object.entries(handlers)) process.once(signal, handler);
+    });
+    report.status = 'SERVE_STOPPED';
+  } else {
   const driver = await import(pathToFileURL(resolve(process.env.QA07_PLAYWRIGHT_MODULE ?? 'node_modules/playwright/index.mjs')).href);
   report.runtime.playwright = JSON.parse(await readFile(new URL('./package.json', pathToFileURL(resolve(process.env.QA07_PLAYWRIGHT_MODULE ?? 'node_modules/playwright/index.mjs'))), 'utf8')).version;
   browser = await driver.chromium.launch({ executablePath: process.env.QA07_CHROME_BIN ?? '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] });
@@ -210,6 +240,9 @@ try {
     const announce = () => window.dispatchEvent(new CustomEvent('eip6963:announceProvider', { detail: { info: { uuid: 'qa07-owned-anvil', name: 'QA07 unlocked EIP-1193 adapter (NOT MetaMask)' }, provider } }));
     window.addEventListener('eip6963:requestProvider', announce);
   }, { account: accounts.A });
+  for (const width of [1366, 390])
+    await verifyKeyboard(page, { uiBase, width, recipient: accounts.recipient, report, screenshot });
+  await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto(`${uiBase}/proposals/new`);
   await page.getByRole('button', { name: 'Kết nối ví', exact: true }).first().click();
   await page.getByText('Đã kết nối', { exact: true }).waitFor();
@@ -337,6 +370,7 @@ try {
   report.checks.push('desktop 1366x900 and mobile 390x844 screenshots captured from real rendered pages');
   assert.deepEqual(report.browserErrors, []);
   report.status = 'PASS';
+  }
 } catch (error) { report.status = 'FAIL'; report.error = error.stack; process.exitCode = 1; }
 finally {
   releaseRecovery?.(); releaseUi?.();

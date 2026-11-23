@@ -32,8 +32,10 @@ là đầu mối hiện hành; các mục21/11 trở về trước bên dưới 
   đã review,13local tests và publicread-only probe PASS; không nhập original
   #21/#55/personal ancestry. Owner/SHA/map/signers/budget/authorization và current
   TV1 delta review còn thiếu;0broadcast, không testnetPASS.
-- Bỏ SSH rollout không bỏ contract Sepolia scope. Không provisioning/cloud deletion,
-  không đổi workspace cá nhân hoặc database/process đang phục vụ.
+- Bỏ SSH rollout không bỏ contract Sepolia scope. Sau yêu cầu xóa staging mới,
+  đã xóa project `dao-staging-se2026-t16` và default SG, xác minh không còn;
+  public network/image/flavor dùng chung giữ nguyên. [Retirement evidence](evidence/tv4-staging-retirement-20261123.json).
+  Không provisioning, không đổi workspace cá nhân hoặc database/process đang phục vụ.
 - [Ma trận FR/BR/NFR hiện hành](test-plan.md#6-traceability-đầy-đủ-frbrnfr--tcinv--evidence)
   giữ10Ready(single) N/A và bounded invariant đã chốt. #7/#36/#40/#41/#42/#44
   còn scope riêng; không promote main hoặc tạo release cuối.

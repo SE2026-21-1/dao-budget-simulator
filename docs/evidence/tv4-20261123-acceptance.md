@@ -72,7 +72,7 @@ TV3 manual browser1366×768/390×844 tại sourcee8e443c, run20261121T164230Z-1d
 
 Owner do nhóm xác định phải cung cấp accepted revision,9public addresses,6signer custodians/exclusive secure custody, actual-map estimates/native balances/fee caps/total budget/funder và explicit authorization. TV1 review candidate delta + hậu deployment runtime/roles/history; sau đó Executed/Defeated real-time receipts mới là nghiệm thu testnet. Local/fork/CLZ probe không thay thế.
 
-Bỏ SSH server rollout giữ trong #60, GHCR/Compose CI còn. Không chạy Terraform/OpenStack provisioning, không kiểm/xóa cloud inventory hoặc dừng process người khác. #56 giữ mở theo quyết định scope chưa merge và inventory lịch sử không được xác nhận hiện tại.
+Bỏ SSH server rollout giữ trong #60, GHCR/Compose CI còn. **Bổ sung sau yêu cầu xóa staging của người dùng:** đã kiểm inventory hiện tại và xóa project `dao-staging-se2026-t16` (`2543a96aa9c54be1abf6abbcad52e10e`) cùng security group mặc định; hai lệnh exit0. Kiểm lại project/SG theo ID đều not found, project list chỉ còn admin/service, role member staging đã mất; network public/image Ubuntu/flavor dùng chung không đổi. Trước xóa không có VM/network/subnet/router/port/FIP thuộc staging. [Evidence retirement](tv4-staging-retirement-20261123.json). #56 chuyển sang **retired / scope withdrawn**, không phải deployment PASS. Không provisioning hoặc dừng database/process người khác; Sepolia và source cá nhân giữ nguyên.
 
 ## #7/#44 — bản nộp chuẩn bị, release chưa đủ điều kiện
 

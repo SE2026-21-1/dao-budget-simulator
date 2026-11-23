@@ -1,0 +1,60 @@
+{
+  "format": "tv4-staging-retirement-v1",
+  "date": "2026-11-23",
+  "authorization": "User explicitly requested permanent removal of staging resources shown in OpenStack",
+  "status": "RETIRED_AND_VERIFIED",
+  "project": {
+    "name": "dao-staging-se2026-t16",
+    "id": "2543a96aa9c54be1abf6abbcad52e10e"
+  },
+  "inventoryBefore": {
+    "servers": 0,
+    "networks": 0,
+    "subnets": 0,
+    "routers": 0,
+    "ports": 0,
+    "floatingIPs": 0,
+    "securityGroups": ["4bac61ac-82c3-40b4-a064-484f318869ec"],
+    "roleAssignments": ["member: existing admin@Default on staging project only"],
+    "projectOwnedImages": 0,
+    "privateFlavors": 0,
+    "operatorApplicationCredentials": 0,
+    "volumeService": "No Cinder service in current catalog; not claimed as an executed volume-list check"
+  },
+  "deletions": [
+    {
+      "command": "openstack security group delete 4bac61ac-82c3-40b4-a064-484f318869ec",
+      "exitCode": 0
+    },
+    {
+      "command": "openstack project delete 2543a96aa9c54be1abf6abbcad52e10e",
+      "exitCode": 0
+    }
+  ],
+  "verificationAfter": {
+    "projectShow": {"exitCode": 1, "message": "No Project found for 2543a96aa9c54be1abf6abbcad52e10e", "expectedAbsence": true},
+    "securityGroupShow": {"exitCode": 1, "message": "No SecurityGroup found for 4bac61ac-82c3-40b4-a064-484f318869ec", "expectedAbsence": true},
+    "projectList": {"exitCode": 0, "remainingNames": ["admin", "service"], "stagingAbsent": true},
+    "operatorRoleAssignmentList": {"exitCode": 0, "stagingMemberRemoved": true, "existingAdminAndSystemRolesPreserved": true},
+    "publicNetwork": {
+      "id": "4b670660-11a4-4f98-bfb9-616230f0121b",
+      "name": "public",
+      "ownerProjectId": "9dcc4173a3ba466b8836759c8c367618",
+      "external": true,
+      "unchangedBeforeAfter": true
+    },
+    "publicUbuntuImage": {"id": "73655619-91f2-41a9-82eb-e08047517710", "unchangedBeforeAfter": true},
+    "publicFlavor": {"id": "ad704641-b42d-4931-8d8d-09f4cc76fb8f", "name": "m1.lab", "unchangedBeforeAfter": true}
+  },
+  "repositoryDisposition": {
+    "terraformPR57": "Already closed unmerged with empty diff; Terraform scaffold absent from active shared candidate",
+    "sshServerRollout": "Already removed in PR60; no merge or review bypass performed",
+    "preserved": ["Common GHCR and isolated Compose CI", "Local governance and Sepolia paths", "Personal/individual/VT-063/VT-064 branches and dirty workspace", "Historical evidence and Git history"]
+  },
+  "limits": [
+    "Not a staging deployment acceptance: deployment scope is withdrawn and retired",
+    "Shared OpenStack infrastructure, credentials, operator account, public network, image and flavor were not deleted",
+    "No serving database or unrelated process was stopped",
+    "Old archived openrc endpoint timed out; current existing Kolla credentials worked without modification or secret disclosure"
+  ]
+}

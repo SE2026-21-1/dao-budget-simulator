@@ -1,12 +1,14 @@
 # DAO Budget Simulator
 
 Mô phỏng quản lý ngân sách DAO: proposal → voting → queue → timelock → giải ngân BUD.
-Chỉ dùng local/testnet, không dùng tiền thật. Nhánh TV4 đã tích hợp GOV/BUD,
-Treasury, BudgetGovernor, BE02 đọc log RPC/lưu PostgreSQL và frontend TV3 `47f91d5`.
-Có deploy/seed/manifest/check-roles, xuất ABI bàn giao, invariant và smoke governance
-→ PostgreSQL/restart/raw replay thật. Frontend vẫn dùng fixture BE01 chung;
-BE05 HTTP API đọc PostgreSQL đã có, nhưng frontend/wallet chưa tích hợp API và
-chưa có demo UI→chain→API end-to-end.
+Chỉ dùng local/testnet, không dùng tiền thật. Source chung đã có GOV/BUD,
+Treasury, Governor/Timelock, worker/recovery, PostgreSQL projection/read API và UI ví.
+Không cấu hình API thì UI dùng fixture read-only; lỗi live API không fallback.
+TV4 đã chạy [browser governance cùng proposal bằng adapter Anvil](docs/qa07-e2e.md),
+không phải MetaMask Extension. [Nghiệm thu theo SHA và giới hạn](docs/evidence/tv4-20261123-acceptance.md)
+tách backend, evidence máy nhận lịch sử, E2E adapter, testnet và release.
+[Sepolia preparation](docs/sepolia-deployment.md) chỉ probe read-only khi chưa đủ
+owner/signers/gas/broadcast authorization. Chưa promote `Dev`→`main` hoặc chốt release.
 
 ## Trạng thái các task TV1
 
@@ -16,12 +18,12 @@ chưa có demo UI→chain→API end-to-end.
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã merge `f57fcfd` qua PR #13; có unit/security tests |
-| SC05 — Timelock và quyền sau deploy | TV1 có test tích hợp final roles/ETA/retry và tài liệu bàn giao; chờ peer review, deployment/testnet riêng |
+| SC05 — Timelock và quyền sau deploy | Final-role integration/audit đã có; TV1 review TC10 ở #60 chỉ thuộc contract, không thay backend/deployment/testnet approval |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | Có script contract local; E2E frontend/wallet/API còn chờ tích hợp consumer |
+| SC08 — Tích hợp local | Có browser adapter propose→vote→queue→execute/retry→worker/API/UI cùng proposal; MetaMask Extension chưa nghiệm thu |
 | SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
-| SC10 — Testnet và bàn giao | Chưa thực hiện |
+| SC10 — Testnet và bàn giao | Có probe Sepolia read-only; chưa broadcast/deployment hoặc Executed/Defeated testnet |
 
 ## Môi trường Foundry — TV4 Operation
 
@@ -29,7 +31,7 @@ Cấu hình, thư viện và dữ liệu tích hợp SC01 được đồng bộ 
 commit `9a406fedfbac6c54237712a536b0700fdad9bb73`. Interface `ITreasury`, ABI chia sẻ,
 fixture tổng hợp và script kiểm tra fixture được giữ làm chuẩn tích hợp.
 Test selector TV1 đã được thay bằng bộ kiểm tra tương thích ABI dành cho TV4.
-GOV/BUD/Treasury đã tích hợp từ `Dev` tại `1f40748`; BudgetGovernor từ `f57fcfd`. TimelockController dùng dependency OpenZeppelin đã khóa; SC05 chưa được bàn giao riêng.
+GOV/BUD/Treasury đã tích hợp từ `Dev` tại `1f40748`; BudgetGovernor từ `f57fcfd`; SC05 từ `21e53e1`. TimelockController dùng dependency OpenZeppelin đã khóa; deployment/testnet acceptance là gate riêng.
 
 | Thành phần | Phiên bản |
 | --- | --- |

@@ -1,0 +1,74 @@
+{
+  "kind": "clean-file-only-recreation-and-new-local-tests",
+  "originalSharedSource": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+  "originalScopeReview": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037",
+  "noOriginalBranchHistoryImported": true,
+  "noPersonalFilesOrContentImported": true,
+  "files": {
+    "scripts/check_roles_sepolia.mjs": {
+      "originalSha256": "a290d1becf5c8d0433463de96c73f44f1bc9333a01b0e2dde6e03b2e85aaf5c9",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    },
+    "scripts/deploy_sepolia.mjs": {
+      "originalSha256": "1f40eb41b1634f682208d3da071b2e41fe0b05e0438a5df54c247e629ea4cf8c",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    },
+    "scripts/sepolia_cli.mjs": {
+      "originalSha256": "732032be012d7492afb6768d8c21740a3e44ada10067a02e6c4cecc6caf2c082",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    },
+    "scripts/governance_sepolia.mjs": {
+      "originalSha256": "0891dd14c2d0b8cafb80d2662439b952bd2f91863bcfe01dccf881d8d68b8c4d",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    },
+    "scripts/preflight_sepolia.mjs": {
+      "originalSha256": "079019bf119bccbe0e7d6c714e6061020aa7ff040f9937a671af2e13ec099676",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    },
+    "tests/smoke/sepolia.test.mjs": {
+      "originalSha256": "733c870d94b94ae988781cb90cee0212536ff4f51b1c9d4186e6c316f51999e9",
+      "source": "94d5367c8d60326b9b9f7de09265be531743f3b8",
+      "scope": "shared Sepolia deployment/signing/role audit tests only"
+    }
+  },
+  "verification": {
+    "command": "node --test tests/smoke/sepolia.test.mjs",
+    "exitCode": 0,
+    "pass": 13,
+    "fail": 0,
+    "skipped": 0,
+    "scope": "Synthetic owned Anvil identity adapter and ephemeral encrypted-keystore signing only; not Sepolia deployment"
+  },
+  "readOnlyProbe": {
+    "status": "READ_ONLY_PREFLIGHT_PASS",
+    "startedAt": "2026-11-23T07:05:21.380Z",
+    "finishedAt": "2026-11-23T07:05:23.043Z",
+    "chain": {
+      "observedHead": "12194121",
+      "height": "12194119",
+      "hash": "0x4ce3024c8a019f2e6dc600453aa9fd6d2350571f437813ac4be7993c12167296",
+      "timestamp": "1795417488",
+      "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+      "clzResult": "255"
+    },
+    "broadcasts": 0,
+    "broadcastAuthorized": false,
+    "remainingGates": [
+      "Owner-approved exact deployment revision and nine distinct public role addresses",
+      "Six dedicated secure signer custodians, exclusive use, signer path and explicit broadcast authorization",
+      "Actual-address gas estimates, native balances, per-transaction fee caps and total gas budget",
+      "Independent delta review of the recreated clean shared remote deployment and role-audit helpers",
+      "Canonical deployment manifest, runtime/roles/history audit and real-time Executed/Defeated receipts"
+    ]
+  },
+  "readOnlyExitCode": 0,
+  "probeSha256": "3a33dad4c5f7a3d07a8bc64e6b44084376ad61b29268ebcb0b1f062761924964",
+  "rawFinalReportSha256": "a18537b6f17fa94d6f433e202c88e0423b643afc32af47084bb59ffdfbe90ac1",
+  "approval": "Historical review retained as attribution, not approval of this new integrated candidate",
+  "broadcastStatus": "BLOCKED: owner-approved revision/map/six custodians/budget/explicit permission plus current peer delta review"
+}

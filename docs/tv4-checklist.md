@@ -5,6 +5,31 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Kết luận hiện hành — 23/11/2026
+
+Nguồn quyết định: [báo cáo TV4 theo SHA/evidence](evidence/tv4-20261123-acceptance.md);
+các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi lịch sử.
+
+- [x] #60 giữ TC10 và exact three-file BE08 #61 tại5c89997;14BE08/40integration/
+  typecheck/build/4release PASS; native release gate PASS, cluster đã cleanup.
+- [x] Tự kiểm đúng Dev6766e5e artifact và corrected exact-push CI5c89997.
+  #18 backend TC11/TC12/NFR02–04 đã nghiệm thu/đóng, không chờ MetaMask/testnet.
+- [x] QA07 browser adapter full same-proposal/revert/retry/publication/Hhash,
+  confirmed-not-indexed, wrongnetwork/rejection/loading/retry và actual503/409 PASS.
+- [x] Kiểm bytes ZIP mới #40/#42; BE06 manifest/exports/compare accepted đúng source
+  lịch sử,4exit0 không được gọi independently verified từ logs thiếu exitcode.
+- [x] Remote Sepolia common helpers tái tạo file-only không ancestry cá nhân;
+ 13local tests/read-only probe PASS,0broadcast.
+- [x] Giữ10 Ready(single) N/A và bounded invariant đã chốt, không ép thành PASS.
+- [ ] TV2 re-review BE08/delivery candidate; TV3 review harness/extension workflow;
+  TV1 review newly recreated remote helpers, không lấy old contract approval thay.
+- [ ] #40 final receiver PID/port/Windows outputs và #42 API restart máy TV3.
+- [ ] #19/#36/#41 extension/manual governance acceptance, không thay bằng adapter.
+- [ ] #20 owner-approved SHA/map/custodians/gas/broadcast, manifest/roles và
+  Executed/Defeated bằng thời gian thật.
+- [ ] #7/#44 full submission/demo gates; chưa promote Dev→main/tag/release.
+
+
 ## Trạng thái tích hợp — 21/11/2026
 
 - PR #59 đã merge vào `Dev` tại `3a1221d`; PR #58 đã merge tại

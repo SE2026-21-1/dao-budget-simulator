@@ -1,6 +1,6 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
-Ngày đối chiếu: 21/10/2026. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md), [SC01](contracts.md), [BE01 database](database.md), [BE01 API](api.md), [review SC03 TV4](sc03-review.md) và [BE02](indexer.md). Đây là **kế hoạch nghiệm thu**, không phải báo cáo toàn hệ thống đã đạt.
+Ngày đối chiếu hiện hành: **23/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
@@ -216,41 +216,49 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 
 ## 6. Traceability đầy đủ FR/BR/NFR → TC/INV → evidence
 
-Các mã E chỉ là nguồn cục bộ ở §1. Mọi acceptance dưới đây **chưa đạt toàn bộ**; lý do/evidence còn thiếu nằm tại TC/Q tương ứng, không được chuyển PASS vì có tên bài test.
+### Revision và nguồn evidence hiện hành
 
-| Requirement | Coverage có tiêu chí thực thi | Evidence hiện tại / còn thiếu |
-|---|---|---|
-| FR01 | TC13, Q-UI: public read, address/network, chặn gửi sai mạng | Thiếu wallet/browser E2E thật. |
-| FR02 | TC01/TC04/TC05/TC13, INV04: balance/delegate/current/past votes, past checkpoint | E-SC02-H khác E-SC02-C; thiếu Governor/UI snapshot integration. |
-| FR03 | TC01/TC08/TC10/TC13: threshold past50, một action, text/requestId/description/hash nguyên bản, ProposalCreated | E-SC01 chỉ encode/fixture; thiếu propose thật và validator âm. |
-| FR04 | TC01/TC12, Q-READ/Q-UI:45→20/20/5, filter/ID/detail đủ trường cùng H | E-BE01-C offline; thiếu HTTP/chain/UI. |
-| FR05 | TC01–TC05/TC13, INV04: ba support, một phiếu, snapshot/time windows | Token có proof riêng; thiếu Governor VoteCast/receipt. |
-| FR06 | TC02/TC03/TC04/TC12, INV02/INV04:100 For fail,100+100 Abstain pass,200 hòa200 fail, sau deadline | E-BE01 mô phỏng; thiếu contract outcomes. |
-| FR07 | TC01–TC04/TC06/TC07/TC14, INV02: queue public qua Governor, state/quorum, operationId/ETA | Thiếu queue receipts/timelock. |
-| FR08 | TC01/TC06–TC10, INV01–INV03: ETA, đúng recipient/amount, replay | E-SC03-C/E-TV4-21 Treasury đạt cục bộ; thiếu Governor/Timelock execute. |
-| FR09 | TC01/TC09/TC11/TC12, INV03, Q-READ: ledger cùng H, thiếu tiền/retry | E-SC03-C có receipt/balance/ledger; thiếu projection/API, reorg/rebuild cùng H. |
-| FR10 | TC14/TC13: creator Pending only, Canceled history và mọi operation bị chặn | Thiếu cancel contract/UI/API proof. |
-| FR11 | TC01/TC09/TC11/TC12, Q-READ/Q-UI: totals cùng H, không revert/double count,4 màn hình/banner | Thiếu chain→API→UI proof. |
-| FR12 | TC07/TC09/TC13: wallet stages, receipt0/1, refusal giữ form, HTML-safe, sync/error | Thiếu wallet/receipt/browser proof. |
-| FR13 | TC01/TC09–TC12, INV03: deploy blocks/raw/hash/dedup/linkage | E-BE02-C/E-TV4-CI-21 có scanner/raw storage/CLI synthetic; E-SC03-C decode receipt thật. Chưa full pipeline/projection. |
-| FR14 | TC11, Q-FRESH/Q-RECOVER: K=2, batch atomic, restart hash/reorg/window | Chưa worker/runtime proof. |
-| FR15 | TC12, Q-RECOVER/Q-CLONE: DB mới từ chain, same-H data/state/balance | Chưa rebuild command/exports/historical calls. |
-| FR16 | TC01/TC11–TC13, Q-READ/Q-PERF: read endpoints/health/structured validation/pagination/asOfBlock, không ký | E-BE01 spec/fixture offline; thiếu HTTP server/tests. |
-| BR01 | TC01/TC04/TC05/TC12, INV04: delegated snapshot, transfer/delegate sau S bất biến | E-SC02-C token-only; thiếu proposal thật. |
-| BR02 | TC02–TC05, INV02/INV04: For+Abstain quorum, For>Against, một vote, ba support | Chưa Governor runtime. |
-| BR03 | TC01/TC07–TC10/TC14, INV01–INV03: đúng khoản chi, không double-pay | E-SC03-C/E-TV4-21 có Treasury-only; thiếu governance/payload acceptance. |
-| BR04 | TC06/TC08/TC14, INV02,Q-CONFIG: whitelist/native0/quyền | Có Treasury role negatives cục bộ; thiếu Governor whitelist và role graph cuối. |
-| BR05 | TC01/TC09/TC10, INV03: balance hiện tại, atomic retry | E-SC03-C có thiếu tiền/retry cùng request; thiếu retry Governor operation và API. |
-| BR06 | TC08/TC14, Q-CONFIG: creator Pending-only, không change role/params qua proposal, redeploy khi đổi config | Chưa cancel/role attack trace. |
-| BR07 | TC01/TC02/TC06/TC07, INV02: success không tự chi, queue+execute public Governor, ETA | Chưa Governor/Timelock integration. |
-| NFR01 | TC01–TC10/TC14, INV01–INV04, Q-CONFIG: on-chain safeguards, DB không quyền ký/override | Chưa full negative/invariant proof. |
-| NFR02 | Q-PERF:100proposal/1000vote,10clients/60s,p95<1s,cấu hình máy/cách đo | Chưa API/load results. |
-| NFR03 | TC11/TC13,Q-FRESH: K=2, đủ xác nhận→commit≤30s, UI cảnh báo>30s | Fixture health không phải latency runtime. |
-| NFR04 | TC11/TC12,Q-RECOVER: retry/backoff/atomic checkpoint/reorg/rebuild | Chưa worker/recovery/rebuild. |
-| NFR05 | Q-CLONE: clone sạch/versions/lockfile/README/demo/tests | E-SC01-H không phải clone sạch; thiếu clean-clone run. |
-| NFR06 | TC13,Q-UI: tiếng Việt,390/1366,labels/loading/empty/error/keyboard | Chưa browser visual/keyboard proof tích hợp. |
-| NFR07 | Safety negatives, CI đúng module, governance invariant≥100×50 không vacuous | E-TV4-CI-21 và Treasury-only invariant đã chạy; thiếu governance/frontend/peer approval, chưa nghiệm thu đầy đủ. |
-| NFR08 | TC06/TC14,Q-CONFIG/Q-CLONE: no secrets/env.example/manifest/roles exit code | Chưa whole-system deployment/scan; token smoke không đủ. |
+- **B** = [backend artifact đã TV4 kiểm bytes](evidence/tv4-20261123-backend.json), Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`, [CI 44922735121](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922735121). Đây là offline review CI lịch sử; giữ thiếu same-ID tail lifecycle của ID9398, không biến thành bug sản phẩm.
+- **C** = TC10/final-role integration 40/40, BE08 14/14, typecheck/build và release 4/4 thực chạy trên candidate `5c899976ac4de97434737493815e7ccbdcd13984`; ba file BE08 đúng `42518f7` (#61). [Báo cáo lệnh và release gate](evidence/tv4-20261123-acceptance.md).
+- **Q** = [browser harness](qa07-e2e.md), product source `5c89997` và source hashes trong raw report. Một proposal 11.000 BUD, A=400 For, thiếu quỹ/retry sau nạp 2.000; không phải exact TC01 1.000 BUD/A+B700 hoặc ví MetaMask.
+- **R** = [hai bundle TV3 đã TV4 kiểm độc lập](evidence/tv4-20261123-bundles.md): #42 source `4cba99a`, #40 source `e8e443c`; không chuyển evidence đó thành lượt chạy Dev hiện tại.
+- **S** = [Sepolia probe](evidence/tv4-20261123-sepolia.json) và [remote helpers/13 tests/probe cuối](evidence/tv4-20261123-sepolia-remote.json), source chung `5c89997` + file hashes riêng; không có testnet deployment.
+
+| Requirement | TC / INV → test hiện có | Evidence / SHA | Kết luận đúng phạm vi |
+|---|---|---|---|
+| FR01 | TC13 → `frontend/src/chain/wallet.test.tsx`, Q wrong-network | Q / `5c89997`+hash | Adapter khóa ký sai mạng; extension permission/network còn mở. |
+| FR02 | TC01/04/05/13, INV04 → token/Governor tests, wallet suite | C/Q; bounded INV lịch sử §4 | GOV/delegate/votes có source/tests; không nhận toàn bộ extension/snapshot variants. |
+| FR03 | TC01/08/10/13 → Governor unit, Q browser form/propose | C/Q / `5c89997`+hash | Propose thật/IDs/description có receipt; không full actor/reset inventory. |
+| FR04 | TC01/12, Q-READ → API suite, `api.test.ts`, R receiver | B/R/Q | API/chain-backed detail đạt phạm vi; không claim 45 proposal browser campaign mới. |
+| FR05 | TC01–05/13, INV04 → Governor unit/integration, Q castVote | C/Q | Một proposal browser vote thật; extension và mọi support/actor UI variants còn mở. |
+| FR06 | TC02/03/04/12, INV02/04 → Governor tests, BE04 reconciliation | B/C/Q | Contract/quorum tests và 400 For outcome có evidence; không full UI tie/defeat matrix. |
+| FR07 | TC01/06/07/14, INV02 → Timelock integration, Q queue | C/Q | Operation/ETA, receipt và API linkage cùng proposal đạt local adapter. |
+| FR08 | TC01/06–10, INV01–03 → Timelock integration, Q execute | C/Q | Revert/retry/Done/paid/balances local đạt; không testnet/extension PASS. |
+| FR09 | TC01/09/11/12, INV03 → BE04/BE07, Q funding/ledger | B/Q | Receipt→SQL→API ledger cùng H/hash có evidence; không cộng hai event thành hai chi. |
+| FR10 | TC14/13 → Governor unit/integration, `governanceActions.test.ts` | C; bounded historical attacks | Pending-only contract coverage giữ; chưa browser cancel campaign mới. |
+| FR11 | TC01/09/11/12 → API suite, Q rendered detail, R browser TV3 | B/Q/R | Live display đúng snapshot trong scope; không toàn dashboard/actor inventory. |
+| FR12 | TC07/09/13 → `transactions.test.ts`, Q refusal/revert/receipt | Q / source hashes | Refusal adapter, real receipt0/1 và retained tx; popup extension chưa chạy. |
+| FR13 | TC01/09–12, INV03 → storage/projection/live reconciliation | B/Q | Raw/dedup/linkage đạt backend; 16 unknown ancillary topics giữ nguyên. |
+| FR14 | TC11 → BE03/BE07 DB/live, Q real reorg | B/Q | Recovery gate, K2, rollback/replay, 503/409 có evidence. |
+| FR15 | TC12 → BE06 two-DB/live, R normalized exports | B / `6766e5e`; R / `4cba99a` | Backend same-H/hash equal; receiver API restart vẫn thiếu để đóng #42. |
+| FR16 | TC01/11–13 → `tests/api/server.test.mjs`, Q actual API | B/Q/R | Read API/backend technical acceptance; không tự thay UI/extension acceptance. |
+| BR01 | TC01/04/05/12, INV04 → token/Governor/attack tests | C; §4 bounded evidence | Giữ bounded model và snapshot tests, không mở lại invariant không có regression. |
+| BR02 | TC02–05, INV02/04 → Governor unit/integration | C/Q | Contract outcome có coverage; không dùng một 400 For run thay toàn bộ tie/abstain variants. |
+| BR03 | TC01/07–10/14, INV01–03 → TC10 integration | C / `32c6e7c` giữ trong `5c89997` | Reverse-order và zero-ID protection 40/40 integration; raw/UI TC10 variants chưa full. |
+| BR04 | TC06/08/14, INV02 → Governor/access-control/bootstrap tests | C/B | Whitelist/final-role guards có tests; chỉ TV1 contract approval, không delivery approval. |
+| BR05 | TC01/09/10, INV03 → integration retry, Q underfunded execute | C/Q | Cùng operation sau revert nhận funding rồi execute; không trạng thái Failed giả. |
+| BR06 | TC08/14 → Governor unit/final-role integration | C | Contract Pending-only/no role change giữ; browser cancel chưa thuộc Q. |
+| BR07 | TC01/02/06/07, INV02 → queue/execute ETA integration | C/Q | Browser gửi Governor rồi Timelock/Treasury; không impersonation quyền đặc biệt. |
+| NFR01 | TC01–10/14, INV01–04 → contract/attack/bounded suites | C, §4 và TV1 scoped review #60 | Bounded/safety evidence giữ nguyên; không nâng thành security assurance vô hạn. |
+| NFR02 | Q-PERF → `benchmark_api.mjs`, 100 proposals/1000 votes | B / `6766e5e` | 29.724 HTTP200/0 lỗi, recomputed p95 29,271 ms; 10 clients/60s. |
+| NFR03 | TC11/13,Q-FRESH → BE08 real CLI samples | B | 20/20 dưới30s; Q không là performance benchmark. |
+| NFR04 | TC11/12,Q-RECOVER → BE07/BE06 + corrected BE08 | B/C/Q | Backend recovery/rebuild đủ evidence; historical tail limit tách corrected gate. |
+| NFR05 | Q-CLONE → separate worktree/install, R receiving machine | R/Q | Cùng-máy local khác independent receiver; #40 lifecycle/#42 API restart còn mở. |
+| NFR06 | TC13,Q-UI → TV3 manual 1366/390 + Q screenshots | R/Q | Scope manual/adapter chấp nhận; không full extension/keyboard accessibility certification. |
+| NFR07 | Contract/invariant/backend/frontend CI, safety negatives | B/C và exact-head PR checks | Có CI thực; peer/backend-delivery review và remaining acceptance không thay bằng CI xanh. |
+| NFR08 | TC06/14,Q-CONFIG → deploy/check-roles, S | C/S | Local audit/probe có; testnet manifest/authorized secure signing chưa có. |
+
+**Disposition giữ nguyên:** mười `TC06/{A,B,C,D,funding,deployer,caller,recipient,outsider,recipient2}/execute/Ready(single)` là **N/A — production-unreachable**, không phải PASS, theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037). Governor chỉ scheduleBatch trong audited role graph; single ID vẫn Unset. Giữ Ready(batch), ETA, replay và bootstrap negatives; không nhập source/evidence cá nhân của #21 hoặc gán campaign đó cho source sạch.
 
 ## 7. Gói evidence và điều kiện đóng acceptance
 

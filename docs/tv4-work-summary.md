@@ -8,6 +8,37 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Trạng thái hiện hành — 23/11/2026
+
+[Báo cáo nghiệm thu, raw archive, lệnh/exit/SHA và giới hạn](evidence/tv4-20261123-acceptance.md)
+là đầu mối hiện hành; các mục21/11 trở về trước bên dưới là lịch sử.
+
+- Tích hợp #61 vào #60 bằng `5c899976ac4de97434737493815e7ccbdcd13984`:
+  giữ TC10, thay ba file BE08 bằng same-ID lifecycle oracle, không miễn trừ5giây.
+  Local14BE08/40Timelock/4release, typecheck/build PASS; native BE08 release gate
+  cũng PASS,13.080request/0lỗi/p95 299,207ms,20freshness samples dưới30s.
+- Exact push CI5c89997 và PR merge-refb4b505d có22success/2publish skipped.
+  TV2 request-changes chưa tự dismiss; TV1 approval chỉ contract/TC10.
+- [Backend #18 đã TV4 nghiệm thu và đóng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-7093896813):
+  Dev6766e5e, raw artifact/digest/26source hashes/recovery/rebuild/performance
+  đã đối chiếu; corrected gate bổ sung lifecycle tail không làm đổi backend product.
+- Browser harness mới chạy cùng proposal11.000BUD→vote→queue→revert thiếuquỹ→
+  funding2.000→retryexecute→worker/API/UI cùngH44/hash, có503/409 thật.
+  **Adapter Anvil, không MetaMask**; [runbook/extension checklist](qa07-e2e.md).
+- [#40/#42 ZIP đã kiểm bytes](evidence/tv4-20261123-bundles.md): không còn blocker
+  thiếu exports/checksums. Giữ thiếu APIrestart máyTV3 và final receiver/Windows
+  lifecycle outputs, không đòi chạy lại campaign đủ evidence.
+- [Sepolia preparation](sepolia-deployment.md): tái tạo riêng sáu file chung remote
+  đã review,13local tests và publicread-only probe PASS; không nhập original
+  #21/#55/personal ancestry. Owner/SHA/map/signers/budget/authorization và current
+  TV1 delta review còn thiếu;0broadcast, không testnetPASS.
+- Bỏ SSH rollout không bỏ contract Sepolia scope. Không provisioning/cloud deletion,
+  không đổi workspace cá nhân hoặc database/process đang phục vụ.
+- [Ma trận FR/BR/NFR hiện hành](test-plan.md#6-traceability-đầy-đủ-frbrnfr--tcinv--evidence)
+  giữ10Ready(single) N/A và bounded invariant đã chốt. #7/#36/#40/#41/#42/#44
+  còn scope riêng; không promote main hoặc tạo release cuối.
+
+
 ## Tích hợp và review — 21/11/2026
 
 PR [#58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58) đã merge vào `Dev` qua merge commit `6766e5ee2d8c466542687cbeb09677c4d11e5463` từ head `227a0c9b4967ca5c78ca609600fa8e2845891418`. TV1 và TV2 đều APPROVED đúng head, review threads đã resolve; GitHub trả `reviewDecision=APPROVED` và các check CI thành công. PR #59 đã merge trước đó tại `3a1221d`.

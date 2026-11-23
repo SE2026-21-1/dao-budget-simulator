@@ -1,0 +1,51 @@
+{
+  "format": "dao-budget-sepolia-readonly-v1",
+  "status": "READ_ONLY_PREFLIGHT_PASS",
+  "startedAt": "2026-11-23T06:51:51.019Z",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "chainId": "11155111",
+  "confirmations": 2,
+  "broadcasts": 0,
+  "broadcastAuthorized": false,
+  "scope": "Public Sepolia RPC capability and local compiler provenance only; not deployment, role audit, gas-budget or testnet acceptance.",
+  "governance": {
+    "proposalThreshold": "50000000000000000000",
+    "quorumNumerator": "20",
+    "quorumDenominator": "100",
+    "votingDelay": "60",
+    "votingPeriod": "300",
+    "minDelay": "120",
+    "clockMode": "mode=timestamp",
+    "govSupply": "1000000000000000000000",
+    "budSupply": "20000000000000000000000",
+    "treasurySeed": "10000000000000000000000"
+  },
+  "chain": {
+    "observedHead": "12194057",
+    "height": "12194055",
+    "hash": "0xa985ab86ad1d314de39f6dfb80c2f7498aacb494a89e4a2ed0e828532164851e",
+    "timestamp": "1795416684",
+    "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+    "clzResult": "255"
+  },
+  "remainingGates": [
+    "Owner-approved exact deployment revision and nine distinct public role addresses",
+    "Six dedicated secure signer custodians, exclusive use, signer path and explicit broadcast authorization",
+    "Actual-address gas estimates, native balances, per-transaction fee caps and total gas budget",
+    "Clean shared remote deploy/check-roles implementation and peer review (historical PR21 helpers are not in this checkout)",
+    "Canonical deployment manifest, runtime/roles/history audit and real-time Executed/Defeated receipts"
+  ],
+  "finishedAt": "2026-11-23T06:51:54.236Z",
+  "testedCheckout": "5c899976ac4de97434737493815e7ccbdcd13984",
+  "scriptSha256": "2ecfdb290f32e2e1ffa19bf7f9b2f70b628afbc47e5bce1a7208e482456f9f2b",
+  "rawReportSha256": "5237a2ca22af0a98cd3752828f63a53c2b3baa6a1d749eb592828df4156b536a",
+  "command": "node scripts/check_sepolia_readonly.mjs --output /tmp/tv4-current-20261123/sepolia-readonly.json",
+  "exitCode": 0,
+  "runtime": {
+    "node": "24.15.0",
+    "foundry": "1.8.5",
+    "solidity": "0.8.37",
+    "evm": "osaka",
+    "postgres": "not used"
+  }
+}

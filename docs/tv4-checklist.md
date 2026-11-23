@@ -20,6 +20,10 @@ các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi
   trên năm views, actual API200, no horizontal overflow/browserErrors.
 - [x] `api.live.test.ts` với đủ env trên approved source:1PASS/0fail/0skip,
   sáu endpoint pinned H/hash/revision, không lấy frontend CI skip làm live PASS.
+- [x] #36 đã đóng đúng scope browser/live UI; không thay #19/#41/TC13 toàn bộ.
+- [x] TV1 Medium receipt-binding: initial/final hash, block/index/membership và
+  funding0descendants regression đã sửa;21synthetic/14BE08/typecheck/build exit0.
+  Request-changes chưa tự dismiss, chưa có quyền Sepolia broadcast.
 - [x] #19 actual official-unpacked MetaMask wrong-network, popup-signature refusal,
   receipt0 insufficient-budget/retry1 và full same-proposal lifecycle local đã chạy.
   Hai actor sau driver reset; không user/Web Store/mobile-extension/testnet acceptance.

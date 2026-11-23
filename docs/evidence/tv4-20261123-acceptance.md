@@ -189,3 +189,20 @@ giữ source hash và raw reports nguyên bản. Label signer legacy của paren
 không phải attestation; actual extension actors nằm trong W. Final2e17c4a đã sửa
 label `--serve` và có startup/stop proof riêng, không giả thêm wallet acceptance.
 
+
+## Cập nhật cuối: browser issue và review bảo mật remote helpers
+
+- [#36 đã đóng đúng scope browser/live UI](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-7097573123):
+  fresh approved-source evidence, không đóng #19/#41 hoặc NFR06 toàn bộ variants.
+- TV1 review6018122562 tại c0d0b26 là **REQUEST_CHANGES** mới, không phải approval
+  c1ffb9e được mở rộng. Phản ví dụ receipt hash sai/zero-descendant funding được
+  nhận làm ground truth, không chạy lại baseline chỉ để xác nhận lỗi.
+- [Receipt-binding fix](tv4-20261123-sepolia-receipt-fix.json), [raw command exits](tv4-20261123-sepolia-receipt-fix-checks.txt):
+  cả hai receipt phải thuộc submitted hash; reconcile block number/hash/index
+  và canonical transaction membership trước journal K2. End-to-end regression
+  không nhận delegation cũ làm funding với0descendants.
+- 21 Sepolia synthetic/14BE08 tests PASS/0skip; typecheck/build exit0.
+  Không sửa product Solidity/ABI/frontend/indexer hoặc timeout/depth/nonce/role
+  guards;0public broadcast. TV1 phải re-review fix, TV2 BE08/delivery và TV3 QA
+  review vẫn theo scope; không tự dismiss/approve/merge. Source/hashes cũ giữ lịch sử.
+

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { ContractFactory, Interface, Wallet, ZeroHash, getAddress, id, toQuantity } from 'ethers';
+import { ContractFactory, Interface, Wallet, ZeroHash, getAddress, id, isHexString, toQuantity } from 'ethers';
 import { CONFIG, SPECS, auditGovernanceRoles, constructorArgs, loadProject, validateAccounts } from './governance_local.mjs';
 import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 
@@ -39,17 +39,32 @@ export async function confirmedHeight(rpc) {
 }
 
 export async function waitConfirmed(rpc, transactionHash, { timeoutMs = 300000, pollMs = 4000 } = {}) {
+  assert.ok(isHexString(transactionHash, 32), 'Invalid submitted transaction hash');
+  const submittedHash = transactionHash.toLowerCase();
   const receipt = await waitForReceipt(rpc, transactionHash, { timeoutMs, pollIntervalMs: pollMs });
   assertReceiptStatus(receipt, transactionHash, 'Sepolia transaction');
+  assert.equal(receipt.transactionHash?.toLowerCase(), submittedHash, 'Sepolia receipt transaction hash mismatch');
+  assert.ok(isHexString(receipt.blockHash, 32), 'Missing or malformed receipt block hash');
+  const blockHash = receipt.blockHash.toLowerCase();
+  const blockNumber = BigInt(receipt.blockNumber);
+  const transactionIndex = BigInt(receipt.transactionIndex);
   const deadline = Date.now() + timeoutMs;
-  while (BigInt(await rpc('eth_blockNumber')) < BigInt(receipt.blockNumber) + 2n) {
+  while (BigInt(await rpc('eth_blockNumber')) < blockNumber + 2n) {
     assert.ok(Date.now() < deadline, `K=2 timeout for ${transactionHash}; do not resend automatically`);
     await pause(pollMs);
   }
   const canonical = await rpc('eth_getBlockByNumber', [receipt.blockNumber, false]);
   const again = await rpc('eth_getTransactionReceipt', [transactionHash]);
-  assert.equal(canonical?.hash, receipt.blockHash, 'Transaction was reorganized before K=2');
-  assert.equal(again?.blockHash, receipt.blockHash, 'Receipt changed before K=2');
+  assert.equal(canonical?.hash?.toLowerCase(), blockHash, 'Transaction was reorganized before K=2');
+  assert.equal(BigInt(canonical.number), blockNumber, 'Canonical block number mismatch');
+  assert.ok(Array.isArray(canonical.transactions) && transactionIndex >= 0n
+    && transactionIndex < BigInt(canonical.transactions.length), 'Receipt transaction index outside canonical block');
+  assert.equal(canonical.transactions[Number(transactionIndex)]?.toLowerCase(), submittedHash,
+    'Canonical transaction membership mismatch');
+  assert.equal(again?.transactionHash?.toLowerCase(), submittedHash, 'K=2 receipt transaction hash mismatch');
+  assert.equal(again?.blockHash?.toLowerCase(), blockHash, 'Receipt changed before K=2');
+  assert.equal(BigInt(again?.blockNumber), blockNumber, 'Receipt block number changed before K=2');
+  assert.equal(BigInt(again?.transactionIndex), transactionIndex, 'Receipt transaction index changed before K=2');
   assertReceiptStatus(again, transactionHash, 'K=2 transaction');
   return again;
 }

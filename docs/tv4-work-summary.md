@@ -37,6 +37,10 @@ là đầu mối hiện hành; các mục21/11 trở về trước bên dưới 
   actual revoke đã khóa signer cũ; site-authorized B/no-send cùng draft chưa đủ.
   Runbook có fixture/observer/evidence checklist tối thiểu cho TV3, không yêu cầu
   lặp lại governance đã chạy hoặc gọi UI automation failure là product bug.
+- [#36 browser/live UI đã đóng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-7097573123),
+  không đóng #19/#41 theo đó. [TV1 receipt-binding Medium đã sửa/test](evidence/tv4-20261123-sepolia-receipt-fix.json):
+ 21synthetic/14BE08/typecheck/build exit0, funding0descendants không thể mượn receipt
+  cũ để ghiK2. Latest TV1 request-changes vẫn cần independent re-review;0broadcast.
 - [#40/#42 ZIP đã kiểm bytes](evidence/tv4-20261123-bundles.md): không còn blocker
   thiếu exports/checksums. Giữ thiếu APIrestart máyTV3 và final receiver/Windows
   lifecycle outputs, không đòi chạy lại campaign đủ evidence.

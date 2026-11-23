@@ -14,6 +14,14 @@ file hoặc nội dung personal/individual/VT-063/VT-064 của #21/#55.
 Hash/provenance và tests local mới được ghi riêng; approval lịch sử không tự
 thành approval candidate mới. Guard local loopback/unforked31337 giữ nguyên.
 
+**Delta sau review TV1 hiện hành:** [review6018122562](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6018122562)
+request changes tại c0d0b26 vì receipt của transaction khác có thể được nhận K2.
+Candidate đã sửa `waitConfirmed` và regression suite; [lệnh/exit/hash](evidence/tv4-20261123-sepolia-receipt-fix.json):
+21 synthetic Sepolia tests,14BE08, typecheck/build đều exit0. Hai file patched
+không còn byte-identical94d5367; bằng chứng13tests/sáu hashes trước đó là lịch sử.
+TV1 chưa re-approve; đây không phải quyền deployment hoặc chứng nhận public RPC.
+
+
 ## Kiểm tra không cần signer
 
 Node **24.15.0**, Foundry **1.8.5**, Solidity **0.8.37**, Osaka, optimizer 200,
@@ -51,6 +59,14 @@ là deployment/testnet PASS hay đủ gas budget. Không dùng địa chỉ Anvi
   Fork và state overrides không phải bằng chứng deployment testnet.
 - `node --test tests/smoke/sepolia.test.mjs`: role-map/network/K2/nonce/signing/
   journal và fail-closed bootstrap trên chain **synthetic**, không gọi là Sepolia PASS.
+
+Gate K2 chỉ chấp nhận **submitted transaction hash** ở cả receipt đầu và lần đọc
+lại; block number/hash/index phải khớp, và `canonical.transactions[index]` phải
+chính là hash đã gửi. Chỉ sau đó mới ghi `CONFIRMED_K2`/receipt journal.
+Mismatch dừng ở `FAIL_STOP_NO_AUTOMATIC_RETRY`; funding vẫn `SUBMITTED`, không
+gắn receipt delegation cũ thành funding đã đủ xác nhận. Regression end-to-end
+giữ funding ở head với **0 descendants**, không đổi K/timeout/poll để lấy PASS.
+
 
 Sau khi toàn checklist bên dưới được owner xác nhận công khai và TV1 review,
 operator giữ file ngoài Git, mode0600: public accounts map

@@ -88,13 +88,45 @@ test('local loopback and empty-unforked chain31337 guards remain intact', async 
 
 test('K2 uses two descendants and rejects reorganized receipt', async () => {
   assert.equal(await confirmedHeight(async () => '0xa'), '0x8');
-  const receipt = { status: '0x1', blockNumber: '0x8', blockHash: '0xabc', transactionHash: '0xtx' };
+  const hash = `0x${'11'.repeat(32)}`, blockHash = `0x${'33'.repeat(32)}`;
+  const receipt = { status: '0x1', blockNumber: '0x8', blockHash, transactionHash: hash, transactionIndex: '0x0' };
+  const block = { number: '0x8', hash: blockHash, transactions: [hash] };
   const rpc = async method => ({ eth_getTransactionReceipt: receipt, eth_blockNumber: '0xa',
-    eth_getBlockByNumber: { hash: '0xabc' } })[method];
-  assert.deepEqual(await waitConfirmed(rpc, '0xtx'), receipt);
-  await assert.rejects(waitConfirmed(async method => method === 'eth_getBlockByNumber' ? { hash: '0xbad' } : rpc(method), '0xtx'), /reorganized/);
+    eth_getBlockByNumber: block })[method];
+  await assert.rejects(waitConfirmed(async method => method === 'eth_getBlockByNumber'
+    ? { ...block, hash: `0x${'44'.repeat(32)}` } : rpc(method), hash), /reorganized/);
   assert.equal(gasLimit(100001n), 120002n);
 });
+
+for (const [scenario, expected] of [
+  ['wrong initial transaction', /Sepolia receipt transaction hash mismatch/],
+  ['wrong final transaction', /K=2 receipt transaction hash mismatch/],
+  ['changed final block number', /Receipt block number changed/],
+  ['changed final transaction index', /Receipt transaction index changed/],
+  ['wrong canonical block number', /Canonical block number mismatch/],
+  ['wrong canonical transaction', /Canonical transaction membership mismatch/],
+  ['initial transaction index outside block', /Receipt transaction index outside canonical block/],
+]) {
+  test(`K2 rejects inconsistent receipt binding: ${scenario}`, async () => {
+    const hash = `0x${'11'.repeat(32)}`, wrong = `0x${'22'.repeat(32)}`, blockHash = `0x${'33'.repeat(32)}`;
+    let first = { status: '0x1', blockNumber: '0x8', blockHash, transactionHash: hash, transactionIndex: '0x0' };
+    let again = { ...first };
+    const block = { number: '0x8', hash: blockHash, transactions: [hash] };
+    if (scenario === 'wrong initial transaction') first = { ...first, transactionHash: wrong };
+    if (scenario === 'wrong final transaction') again = { ...again, transactionHash: wrong };
+    if (scenario === 'changed final block number') again = { ...again, blockNumber: '0x7' };
+    if (scenario === 'changed final transaction index') again = { ...again, transactionIndex: '0x1' };
+    if (scenario === 'wrong canonical block number') block.number = '0x7';
+    if (scenario === 'wrong canonical transaction') block.transactions = [wrong];
+    if (scenario === 'initial transaction index outside block') first = { ...first, transactionIndex: '0x1' };
+    let reads = 0;
+    const rpc = async method => {
+      if (method === 'eth_getTransactionReceipt') return ++reads === 1 ? first : again;
+      return { eth_blockNumber: '0xa', eth_getBlockByNumber: block }[method];
+    };
+    await assert.rejects(waitConfirmed(rpc, hash), expected);
+  });
+}
 
 test('journal refuses overwrite and CLI rejects unknown or duplicate flags', async t => {
   const dir = await mkdtemp(join(tmpdir(), 'sepolia-journal-'));
@@ -156,6 +188,41 @@ test('synthetic chain exercises full constructors/runtime/ABI, pre-renounce, fin
     assert.equal(manifest.preFundingRoleCheck.stage, 'final');
     assert.equal(manifest.roleCheck.identities.GOV.abiSha256, manifest.provenance.artifacts.GOV.abiSha256);
     assert.ok(manifest.transactions.every(tx => BigInt(tx.gasLimit) >= BigInt(tx.estimate)));
+  });
+});
+
+test('unconfirmed final funding cannot borrow a confirmed receipt or journal false K2 success', async t => {
+  await withChain(t, async state => {
+    const cleanRpc = state.rpc, production = state.transmit;
+    let fundingHash, fundingReceipt, borrowedReceipt, substitutions = 0;
+    state.transmit = async transaction => {
+      if (transaction.from.toLowerCase() !== state.accounts.funding.toLowerCase()) return production(transaction);
+      borrowedReceipt = await cleanRpc('eth_getTransactionReceipt', [state.records.at(-1).hash]);
+      assert.equal(borrowedReceipt.status, '0x1');
+      const { chainId, gasLimit, type, ...request } = transaction;
+      fundingHash = await cleanRpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
+      state.records.push({ transaction, hash: fundingHash });
+      fundingReceipt = await waitForReceipt(cleanRpc, fundingHash, { timeoutMs: 10000 });
+      // Deliberately mine no descendants: the prior delegation, not funding, has K2.
+      return fundingHash;
+    };
+    state.rpc = async (method, params = []) => {
+      if (method === 'eth_getTransactionReceipt' && params[0] === fundingHash && substitutions < 2) {
+        substitutions += 1;
+        return borrowedReceipt;
+      }
+      return cleanRpc(method, params);
+    };
+    await assert.rejects(state.deploy(), /Sepolia receipt transaction hash mismatch/);
+    const head = BigInt(await cleanRpc('eth_blockNumber'));
+    assert.equal(BigInt(fundingReceipt.blockNumber), head, 'Funding must have zero descendants');
+    assert.ok(BigInt(borrowedReceipt.blockNumber) + 2n <= head, 'Borrowed receipt control must genuinely have K2');
+    const last = state.snapshots.at(-1), funding = last.transactions.find(tx => tx.label === 'BUD.transfer');
+    assert.equal(last.status, 'FAIL_STOP_NO_AUTOMATIC_RETRY');
+    assert.equal(funding.transactionHash, fundingHash);
+    assert.equal(funding.status, 'SUBMITTED');
+    assert.equal(last.receipts.some(receipt => receipt.label === 'BUD.transfer'), false);
+    assert.equal(state.records.filter(record => record.transaction.from.toLowerCase() === state.accounts.funding.toLowerCase()).length, 1);
   });
 });
 

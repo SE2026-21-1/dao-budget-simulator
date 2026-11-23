@@ -226,6 +226,7 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 - **U** = [approved-source UI/E2E](evidence/tv4-20261123-approved-ui.json), product Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`, tooling SHA256 `2e17c4a4…7c1e`, keyboard helper `19aeec78…4dff`: full adapter lifecycle, actual reorg503/cursor409, form keyboard/focus1366/390. Không phải MetaMask.
 - **V** = [mười live views và frontend live API test](evidence/tv4-20261123-live-views.json), cùng Dev6766e5e: năm views×hai viewport, actual API200/no overflow/no browserErrors; `api.live.test.ts`1PASS/0skip, sáu endpoint cùng H/hash/revision.
 - **W** = [fresh actual MetaMask run](evidence/tv4-20261123-real-extension.json), cùng Dev6766e5e, official stable unpacked13.58.0.0/Chromium141: propose/vote/queue/receipt0 execute/topup/receipt1 retry cùng proposal, SQL/API/contract/UI H52/hash6be070…ba66. Hai actor extension do driver reset, không một session giả, không Chrome Web Store/TV3 human/testnet acceptance. [#19 historical bundle](evidence/tv4-20261123-wallet-review.md) giữ riêng, không gộp sourcee8e443c vào W.
+- **S2** = [receipt-binding security delta](evidence/tv4-20261123-sepolia-receipt-fix.json), base3166adc + recorded file hashes:21synthetic Sepolia/14BE08/typecheck/build exit0. Bảo vệ submitted hash ở hai reads/block/index/canonical membership; funding0descendants không được journalK2. TV1 re-review còn mở; source13tests/six-file identity trong S là lịch sử, không deployment permission.
 
 | Requirement | TC / INV → test hiện có | Evidence / SHA | Kết luận đúng phạm vi |
 |---|---|---|---|
@@ -259,7 +260,7 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 | NFR05 | Q-CLONE → separate worktree/install, R receiving machine | R/Q | Cùng-máy local khác independent receiver; #40 lifecycle/#42 API restart còn mở. |
 | NFR06 | TC13,Q-UI → V live views, U keyboard, W real wallet, R historical TV3 | U/V/W/R / sources riêng |1366/390 và visible-focus/form traversal đạt scope đã đo; không physical-mobile/screen-reader hoặc mọi keyboard vote variant. |
 | NFR07 | Contract/invariant/backend/frontend CI, safety negatives | B/C và exact-head PR checks | Có CI thực; peer/backend-delivery review và remaining acceptance không thay bằng CI xanh. |
-| NFR08 | TC06/14,Q-CONFIG → deploy/check-roles, S | C/S | Local audit/probe có; testnet manifest/authorized secure signing chưa có. |
+| NFR08 | TC06/14,Q-CONFIG → deploy/check-roles, S/S2 | C/S/S2 | Local audit/probe và receipt-binding regressions có; owner map/custody/budget/broadcast authorization và TV1 current re-review chưa có. |
 
 **Disposition giữ nguyên:** mười `TC06/{A,B,C,D,funding,deployer,caller,recipient,outsider,recipient2}/execute/Ready(single)` là **N/A — production-unreachable**, không phải PASS, theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037). Governor chỉ scheduleBatch trong audited role graph; single ID vẫn Unset. Giữ Ready(batch), ETA, replay và bootstrap negatives; không nhập source/evidence cá nhân của #21 hoặc gán campaign đó cho source sạch.
 

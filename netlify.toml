@@ -1,0 +1,22 @@
+[build]
+  base = "."
+  command = "npm ci --prefix frontend && npm run lint --prefix frontend && npm run test --prefix frontend && npm run build --prefix frontend"
+  publish = "frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "24.15.0"
+  VITE_CONTAINER_RUNTIME = "0"
+  VITE_DATA_SOURCE = "fixture"
+  VITE_API_BASE_URL = ""
+
+# Existing assets, including runtime-config.js, take precedence over this rewrite.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+[[headers]]
+  for = "/runtime-config.js"
+  [headers.values]
+    Cache-Control = "no-cache"

@@ -73,3 +73,39 @@ preflight/receipt và runtime config. Test live trong `src/data/api.live.test.ts
 chỉ chạy khi có đủ biến `BE05_LIVE_*` trỏ đến môi trường thật. Unit test và build
 không chứng minh browser/extension-wallet hoặc deployment E2E; báo kết quả smoke
 thật riêng, không coi dữ liệu fixture là receipt chain.
+
+## Static hosting: Netlify fixture demo
+
+`netlify.toml` ở repository root dành cho bản demo static, không dùng Docker.
+Node **24.15.0**, `npm ci` theo lockfile frontend, lint, tests và production build
+đều được khai báo trong build command; publish **chỉ** `frontend/dist`.
+Không upload repository root hoặc `.env.local`.
+
+Cấu hình đặt `VITE_CONTAINER_RUNTIME=0`, `VITE_DATA_SOURCE=fixture` và
+`VITE_API_BASE_URL` trống. `/runtime-config.js` vẫn được phục vụ như file JavaScript
+tĩnh rỗng; không đặt `globalThis.__DAO_PUBLIC_CONFIG__`. Bundle đọc các biến build,
+hiển thị **Dữ liệu mô phỏng** và khóa giao dịch. Đây không phải dữ liệu testnet.
+Không dùng bundle container yêu cầu server sinh runtime config cho cách triển khai này.
+
+Netlify phục vụ file asset/favicon/runtime có thật trước khi rewrite các route
+khác về `/index.html` với HTTP 200. Vì vậy tải trực tiếp hoặc refresh
+`/proposals/:id`, `/treasury`, `/governance` vẫn mở được ứng dụng.
+
+Kết nối repository với Netlify và chọn nhánh triển khai riêng làm production
+branch; không cần merge cấu hình này vào `Dev`. Push lên nhánh đã kết nối sẽ build
+và deploy tự động. Để cập nhật nguồn, fetch rồi merge `origin/Dev` vào nhánh triển
+khai, xử lý conflict nếu có và push; không merge ngược vào nhánh chung khi chưa
+được chấp thuận. Rollback bằng **Publish deploy** của một deploy thành công trước
+trong Netlify; khóa auto publishing nếu cần giữ bản rollback qua các push mới.
+
+Chỉ dùng gói Free, không bật nâng cấp hoặc auto recharge. Gói Free có giới hạn
+usage; đây không phải cam kết uptime không giới hạn. Kiểm tra URL `netlify.app`
+trước, sau đó thêm custom domain trong Netlify và dùng chính bản ghi DNS mà
+Netlify cung cấp tại DNS provider đang quản lý zone. Giữ nguyên MX/TXT email,
+không tự đổi nameserver. HTTPS custom domain chỉ được nghiệm thu sau khi DNS
+phân giải đúng và chứng chỉ được cấp.
+
+Muốn chuyển sang API thật phải thay cấu hình fixture trên nhánh triển khai,
+build lại và kiểm tra HTTPS/CORS cho origin mới. Chain/deployment ID, RPC và
+địa chỉ contract phải đến từ cùng deployment đã xác minh; không đưa private key,
+database URL, API cursor secret hoặc RPC secret vào bất kỳ biến `VITE_*` nào.

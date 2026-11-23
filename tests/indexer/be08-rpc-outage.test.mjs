@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { once } from 'node:events';
 import { test } from 'node:test';
 import { HttpRpc } from '../../indexer/rpc.ts';
-import { summarizeOutageCalls } from '../../scripts/be08_rpc_outage.mjs';
+import { createOutageRpcRecorder, summarizeOutageCalls } from '../../scripts/be08_rpc_outage.mjs';
 
 test('projection failure and recovery check are separate bounded RPC calls', async () => {
   const requests = [];
@@ -31,56 +31,114 @@ test('projection failure and recovery check are separate bounded RPC calls', asy
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 });
 
+const outageWindow = { startedAtMs: 1000, endedAtMs: 10_000 };
+
+function request(id, monotonicMs, { offline = true, httpStatus = 503, method = 'eth_call',
+  params = [{ to: `0x${id}` }, 'latest'] } = {}) {
+  return { id, method, params, monotonicMs, httpStatus, offline };
+}
+
 function outageTrace(counts = [4, 4, 4], gapMs = 150) {
-  let time = 0;
+  let time = outageWindow.startedAtMs;
   return counts.flatMap((count, index) => Array.from({ length: count }, () => ({
-    id: index + 1, method: index === 0 ? 'eth_call' : 'eth_chainId',
-    params: index === 0 ? [{ to: '0x1' }, 'latest'] : [],
-    monotonicMs: time += gapMs, httpStatus: 503,
+    ...request(index + 1, time += gapMs, {
+      method: index === 0 ? 'eth_call' : 'eth_chainId',
+      params: index === 0 ? [{ to: '0x1' }, 'latest'] : [],
+    }),
   })));
 }
 
 test('outage accounting groups interleaved retries from bounded projection fan-out', () => {
   const attempts = [];
-  let monotonicMs = 0;
+  let monotonicMs = outageWindow.startedAtMs;
   for (const round of [[1, 2, 3, 4], [3, 1, 4, 2], [2, 4, 1, 3], [3, 2, 1, 4]]) {
-    for (const id of round) attempts.push({
-      id, method: 'eth_call', params: [{ to: `0x${id}` }, 'latest'],
-      monotonicMs: monotonicMs += 150, httpStatus: 503,
-    });
+    for (const id of round) attempts.push(request(id, monotonicMs += 150));
   }
-  const calls = summarizeOutageCalls(attempts);
+  const calls = summarizeOutageCalls(attempts, outageWindow);
   assert.deepEqual(calls.map(({ id, attempts: count }) => ({ id, attempts: count })),
     [1, 2, 3, 4].map(id => ({ id, attempts: 4 })));
 });
 
-test('outage accounting accepts two exhausted calls before one worker error without stdout timing', () => {
-  // One worker_error can follow multiple exhausted logical RPC calls; it is not
-  // itself a boundary between the requests recorded by the HTTP proxy.
-  const calls = summarizeOutageCalls(outageTrace());
+test('outage accounting accepts exhausted calls independently of worker stdout timing', () => {
+  const calls = summarizeOutageCalls(outageTrace(), outageWindow);
   assert.deepEqual(calls.map(({ method, attempts }) => ({ method, attempts })), [
     { method: 'eth_call', attempts: 4 }, { method: 'eth_chainId', attempts: 4 },
     { method: 'eth_chainId', attempts: 4 },
   ]);
-  assert.deepEqual(summarizeOutageCalls(outageTrace([2, 4, 1]),
-    { startedAtMs: 0, endedAtMs: 1200, boundaryWindowMs: 300 }).map(c => c.attempts), [2, 4, 1]);
 });
 
-test('outage accounting still rejects an over-budget call, missing retries and absent backoff', () => {
+test('outage recorder preserves same-ID attempts before and after the window', () => {
+  const recorder = createOutageRpcRecorder();
+  recorder.record(request(11, 850, { offline: false }));
+  recorder.record(request(11, 1000));
+  recorder.record(request(11, 1150));
+  recorder.record(request(11, 1300));
+  recorder.record(request(12, 9700));
+  recorder.record(request(12, 9850));
+  recorder.record(request(12, 10_150, { offline: false, httpStatus: 200 }));
+  recorder.record(request(99, 900, { offline: false, httpStatus: 200 }));
+
+  assert.deepEqual(recorder.outageIds, new Set([11, 12]));
+  assert.deepEqual([...recorder.completedOutageIds], [11, 12]);
+  assert.deepEqual(recorder.lifecycleAttempts.map(({ id, monotonicMs }) => [id, monotonicMs]), [
+    [11, 850], [11, 1000], [11, 1150], [11, 1300], [12, 9700], [12, 9850], [12, 10_150],
+  ]);
+  assert.deepEqual(recorder.outageAttempts.map(({ id }) => id), [11, 11, 11, 12, 12]);
+  assert.deepEqual(summarizeOutageCalls(recorder.lifecycleAttempts, outageWindow)
+    .map(({ id, attempts, clippedAtStart, clippedAtEnd }) => ({ id, attempts, clippedAtStart, clippedAtEnd })),
+  [
+    { id: 11, attempts: 3, clippedAtStart: true, clippedAtEnd: false },
+    { id: 12, attempts: 2, clippedAtStart: false, clippedAtEnd: true },
+  ]);
+});
+
+test('partial retries require same-ID attempts proving the call crossed an outage boundary', () => {
+  const clippedAtStart = [
+    request(21, 850, { offline: false }),
+    request(21, 1000),
+    request(21, 1150),
+    request(21, 1300),
+  ];
+  assert.deepEqual(summarizeOutageCalls(clippedAtStart, { startedAtMs: 1000, endedAtMs: 5000 })
+    .map(({ attempts, clippedAtStart: clipped }) => ({ attempts, clipped })), [{ attempts: 3, clipped: true }]);
+
+  const clippedAtEnd = [
+    request(22, 9700),
+    request(22, 9850),
+    request(22, 10_000),
+    request(22, 10_150, { offline: false, httpStatus: 200 }),
+  ];
+  assert.deepEqual(summarizeOutageCalls(clippedAtEnd, outageWindow)
+    .map(({ attempts, clippedAtEnd: clipped }) => ({ attempts, clipped })), [{ attempts: 3, clipped: true }]);
+});
+
+test('calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary', () => {
+  const nearStart = [1000, 1150, 1300].map(time => request(31, time));
+  const nearEnd = [9700, 9850, 10_000].map(time => request(32, time));
+  assert.throws(() => summarizeOutageCalls(nearStart, outageWindow), /same-ID evidence outside/);
+  assert.throws(() => summarizeOutageCalls(nearEnd, outageWindow), /same-ID evidence outside/);
+  assert.throws(() => summarizeOutageCalls([...nearStart, request(99, 900, { offline: false })], outageWindow),
+    /same-ID evidence outside/, 'An unrelated request ID cannot establish a boundary crossing');
+});
+
+test('outage accounting rejects an over-budget call, missing retries, invalid windows and absent backoff', () => {
   for (const counts of [[5, 4, 4], [4, 5, 4], [4, 4, 5]])
-    assert.throws(() => summarizeOutageCalls(outageTrace(counts)), /must remain bounded/);
-  assert.throws(() => summarizeOutageCalls(outageTrace([4, 3, 4]),
-    { startedAtMs: 0, endedAtMs: 4000, boundaryWindowMs: 300 }), /exhaust four attempts/);
-  assert.throws(() => summarizeOutageCalls(outageTrace([4, 4, 4], 0)), /positive backoff/);
+    assert.throws(() => summarizeOutageCalls(outageTrace(counts), outageWindow), /must remain bounded/);
+  assert.throws(() => summarizeOutageCalls(outageTrace([4, 3, 4]), outageWindow), /same-ID evidence outside/);
+  assert.throws(() => summarizeOutageCalls(outageTrace([4, 4, 4], 0), outageWindow), /positive backoff/);
+  assert.throws(() => summarizeOutageCalls(outageTrace(), { startedAtMs: 100, endedAtMs: 99 }),
+    /Both outage window timestamps/);
+  assert.throws(() => summarizeOutageCalls(outageTrace().map(({ offline: _offline, ...attempt }) => attempt),
+    outageWindow), /RPC outage state is required/);
 });
 
 test('outage accounting rejects a reused call ID or changed method/params within a retry', () => {
   const reused = outageTrace(); reused.at(-1).id = 1;
-  assert.throws(() => summarizeOutageCalls(reused), /reuse a completed RPC call ID/);
+  assert.throws(() => summarizeOutageCalls(reused, outageWindow), /reuse a completed RPC call ID/);
   const method = outageTrace(); method[1].method = 'eth_blockNumber';
-  assert.throws(() => summarizeOutageCalls(method), /preserve method/);
+  assert.throws(() => summarizeOutageCalls(method, outageWindow), /preserve method/);
   const params = outageTrace(); params[1].params = [];
-  assert.throws(() => summarizeOutageCalls(params), /preserve params/);
+  assert.throws(() => summarizeOutageCalls(params, outageWindow), /preserve params/);
 });
 
 test('concurrent identical RPC calls have distinct IDs while each retry keeps its ID', async () => {

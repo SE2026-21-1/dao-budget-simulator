@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { ContractFactory, Interface, Wallet, ZeroHash, getAddress, id, isHexString, toQuantity } from 'ethers';
+import { ContractFactory, Interface, Wallet, ZeroHash, getAddress, id, isHexString, keccak256, toQuantity } from 'ethers';
 import { CONFIG, SPECS, auditGovernanceRoles, constructorArgs, loadProject, validateAccounts } from './governance_local.mjs';
 import { assertReceiptStatus, waitForReceipt } from './receipt.mjs';
 
@@ -127,6 +127,16 @@ export async function keystoreSigners(config, accounts) {
   };
 }
 
+/** Persist the locally signed identity before a possibly accepted/lost RPC submission. */
+export async function submitSignedTransaction(rpc, signedRaw, persistSigned) {
+  const expectedHash = keccak256(signedRaw);
+  await persistSigned(expectedHash);
+  const submittedHash = await rpc('eth_sendRawTransaction', [signedRaw]);
+  assert.ok(isHexString(submittedHash, 32) && submittedHash.toLowerCase() === expectedHash,
+    'Submission transaction hash mismatch; preserve journal and reconcile without resending');
+  return expectedHash;
+}
+
 export function gasLimit(estimate) { return (BigInt(estimate) * 120n + 99n) / 100n; }
 
 /** Every transaction is estimated against current state; only the explicit transport signs/sends. */
@@ -168,7 +178,11 @@ export async function deploySepolia(rpc, { root, roleMap, transmit, persist, max
     const record = { label, estimate: String(estimate), gasLimit: String(gas), gasPrice: String(price), transaction, status: 'AWAITING_SIGNER' };
     manifest.transactions.push(record);
     await persist(manifest);
-    const transactionHash = await transmit(transaction);
+    const transactionHash = await transmit(transaction, async expectedHash => {
+      record.transactionHash = expectedHash;
+      record.status = 'SIGNED';
+      await persist(manifest);
+    });
     record.transactionHash = transactionHash;
     expectedNonces.set(lower(from), toQuantity(BigInt(nonce) + 1n));
     record.status = 'SUBMITTED';

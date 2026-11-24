@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createRpc } from './governance_local.mjs';
-import { SEPOLIA, deploySepolia, keystoreSigners, requireSepolia, validateRoleMap } from './governance_sepolia.mjs';
+import { SEPOLIA, deploySepolia, keystoreSigners, requireSepolia, submitSignedTransaction, validateRoleMap } from './governance_sepolia.mjs';
 import { journal, options } from './sepolia_cli.mjs';
 
 try {
@@ -24,7 +24,7 @@ try {
   const sign = await keystoreSigners(JSON.parse(await readFile(args['--keystores'], 'utf8')), accounts);
   const manifest = await deploySepolia(rpc, { root, roleMap, persist,
     maxFeePerGas: args['--max-fee-wei'], maxTotalCost: args['--max-total-cost-wei'],
-    transmit: async transaction => rpc('eth_sendRawTransaction', [await sign(transaction)]) });
+    transmit: async (transaction, persistSigned) => submitSignedTransaction(rpc, await sign(transaction), persistSigned) });
   console.log(JSON.stringify({ status: manifest.status, sourceCommit: source, manifest: args['--output'],
     notice: 'Deployment only; no Executed/Defeated or wallet/API/UI acceptance claimed' }, null, 2));
 } catch (error) {

@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { Interface, Transaction, Wallet, ZeroAddress, ZeroHash, id, toQuantity } from 'ethers';
 import { createRpc, deployGovernance, requireLoopbackRpc } from '../../scripts/governance_local.mjs';
 import { SEPOLIA, confirmedHeight, deploySepolia, gasLimit, keystoreSigners, requireSepolia,
-  validateRoleMap, waitConfirmed } from '../../scripts/governance_sepolia.mjs';
+  submitSignedTransaction, validateRoleMap, waitConfirmed } from '../../scripts/governance_sepolia.mjs';
 import { journal, options } from '../../scripts/sepolia_cli.mjs';
 import { waitForReceipt } from '../../scripts/receipt.mjs';
 import { createSmokeLifecycle } from '../../scripts/smoke_lifecycle.mjs';
@@ -51,13 +51,16 @@ async function withChain(t, run) {
   const unlocked = await transport('eth_accounts');
   const accounts = Object.fromEntries(names.map((name, index) => [name, unlocked[index]]));
   const state = { rpc, transport, accounts, records: [], snapshots: [] };
-  state.transmit = async transaction => {
-    const { chainId, gasLimit, type, ...request } = transaction;
-    const hash = await rpc('eth_sendTransaction', [{ ...request, gas: gasLimit }]);
-    state.records.push({ transaction, hash });
-    await waitForReceipt(rpc, hash, { timeoutMs: 10000 });
-    await rpc('anvil_mine', ['0x2', '0x1']);
-    return hash;
+  state.transmit = async (transaction, persistSigned) => {
+    const { gasLimit, ...request } = transaction;
+    const raw = await rpc('eth_signTransaction', [{ ...request, gas: gasLimit }]);
+    return submitSignedTransaction(async (method, params) => {
+      const hash = await rpc(method, params);
+      state.records.push({ transaction, hash });
+      await waitForReceipt(rpc, hash, { timeoutMs: 10000 });
+      await rpc('anvil_mine', ['0x2', '0x1']);
+      return hash;
+    }, raw, persistSigned);
   };
   state.deploy = overrides => deploySepolia(state.rpc, { root, roleMap: roleMap(accounts), transmit: state.transmit,
     persist: async manifest => state.snapshots.push(structuredClone(manifest)), maxFeePerGas: '1000000000000',
@@ -178,6 +181,39 @@ test('real encrypted JSON keystore signs approved sender and rejects mismatches'
   await assert.rejects(keystoreSigners(config, { ...accounts, deployer: synthetic.A }), /does not match/);
 });
 
+for (const scenario of ['valid uppercase hash', 'different transaction', 'changed signed payload', 'malformed hash', 'response lost', 'journal failure']) {
+  test(`signed submission retains local identity and never resends: ${scenario}`, async () => {
+    const wallet = Wallet.createRandom();
+    const transaction = { to: synthetic.A, chainId: 11155111, nonce: 0, gasLimit: 21000, gasPrice: 1, type: 0 };
+    const original = await wallet.signTransaction(transaction);
+    const raw = scenario === 'changed signed payload'
+      ? await wallet.signTransaction({ ...transaction, value: 1 }) : original;
+    const expectedHash = Transaction.from(raw).hash;
+    let persistedHash, sends = 0;
+    const persistSigned = async hash => {
+      if (scenario === 'journal failure') throw new Error('journal unavailable');
+      persistedHash = hash;
+    };
+    const rpc = async (method, params) => {
+      assert.equal(persistedHash, expectedHash, 'Identity must be durable before any broadcast');
+      assert.equal(method, 'eth_sendRawTransaction');
+      assert.deepEqual(params, [raw]);
+      sends++;
+      if (scenario === 'response lost') throw new Error('response lost after possible acceptance');
+      if (scenario === 'malformed hash') return null;
+      if (scenario === 'changed signed payload') return Transaction.from(original).hash;
+      if (scenario === 'different transaction') return ZeroHash;
+      return `0x${expectedHash.slice(2).toUpperCase()}`;
+    };
+    const send = () => submitSignedTransaction(rpc, raw, persistSigned);
+    if (scenario === 'valid uppercase hash') assert.equal(await send(), expectedHash);
+    else await assert.rejects(send(), scenario === 'journal failure' ? /journal unavailable/
+      : scenario === 'response lost' ? /response lost/ : /Submission transaction hash mismatch/);
+    assert.equal(sends, scenario === 'journal failure' ? 0 : 1);
+    assert.equal(persistedHash, scenario === 'journal failure' ? undefined : expectedHash);
+  });
+}
+
 test('synthetic chain exercises full constructors/runtime/ABI, pre-renounce, final roles and funding', async t => {
   await withChain(t, async state => {
     const manifest = await state.deploy();
@@ -195,8 +231,8 @@ test('unconfirmed final funding cannot borrow a confirmed receipt or journal fal
   await withChain(t, async state => {
     const cleanRpc = state.rpc, production = state.transmit;
     let fundingHash, fundingReceipt, borrowedReceipt, substitutions = 0;
-    state.transmit = async transaction => {
-      if (transaction.from.toLowerCase() !== state.accounts.funding.toLowerCase()) return production(transaction);
+    state.transmit = async (transaction, persistSigned) => {
+      if (transaction.from.toLowerCase() !== state.accounts.funding.toLowerCase()) return production(transaction, persistSigned);
       borrowedReceipt = await cleanRpc('eth_getTransactionReceipt', [state.records.at(-1).hash]);
       assert.equal(borrowedReceipt.status, '0x1');
       const { chainId, gasLimit, type, ...request } = transaction;
@@ -226,6 +262,52 @@ test('unconfirmed final funding cannot borrow a confirmed receipt or journal fal
   });
 });
 
+test('funding submission cannot borrow a delegation hash while its genuine receipt has zero descendants', async t => {
+  await withChain(t, async state => {
+    const production = state.transmit, cleanRpc = state.rpc;
+    const dir = await mkdtemp(join(tmpdir(), 'sepolia-submission-'));
+    t.after(() => rm(dir, { recursive: true, force: true }));
+    const path = join(dir, 'manifest.json'), persist = await journal(path);
+    let fundingHash, fundingReceipt, borrowedHash, borrowedReceipt, sends = 0;
+    state.transmit = async (transaction, persistSigned) => {
+      if (transaction.from.toLowerCase() !== state.accounts.funding.toLowerCase()) return production(transaction, persistSigned);
+      borrowedHash = state.records.at(-1).hash;
+      borrowedReceipt = await cleanRpc('eth_getTransactionReceipt', [borrowedHash]);
+      const { gasLimit, ...request } = transaction;
+      const raw = await cleanRpc('eth_signTransaction', [{ ...request, gas: gasLimit }]);
+      fundingHash = Transaction.from(raw).hash;
+      const rpc = async (method, params) => {
+        assert.equal(method, 'eth_sendRawTransaction');
+        const before = JSON.parse(await readFile(path, 'utf8')).transactions.at(-1);
+        assert.equal(before.transactionHash, fundingHash, 'Signed identity must reach disk before submission');
+        assert.equal(before.status, 'SIGNED');
+        assert.equal(await cleanRpc(method, params), fundingHash);
+        sends++;
+        state.records.push({ transaction, hash: fundingHash });
+        fundingReceipt = await waitForReceipt(cleanRpc, fundingHash, { timeoutMs: 10000 });
+        return borrowedHash; // Only submission is misrouted; receipt/header/audit responses remain genuine.
+      };
+      return submitSignedTransaction(rpc, raw, persistSigned);
+    };
+    await assert.rejects(state.deploy({ persist: async manifest => {
+      state.snapshots.push(structuredClone(manifest));
+      await persist(manifest);
+    } }), /Submission transaction hash mismatch/);
+    const head = BigInt(await state.rpc('eth_blockNumber'));
+    assert.equal(BigInt(fundingReceipt.blockNumber), head, 'Actual funding must have zero descendants');
+    assert.ok(BigInt(borrowedReceipt.blockNumber) + 2n <= head, 'Delegation control must genuinely have K2');
+    const last = state.snapshots.at(-1), funding = last.transactions.find(tx => tx.label === 'BUD.transfer');
+    assert.equal(last.status, 'FAIL_STOP_NO_AUTOMATIC_RETRY');
+    assert.equal(funding.transactionHash, fundingHash);
+    assert.notEqual(funding.transactionHash, borrowedHash);
+    assert.equal(funding.status, 'SIGNED');
+    assert.equal(sends, 1);
+    assert.deepEqual(JSON.parse(await readFile(path, 'utf8')), last);
+    assert.equal(last.receipts.some(receipt => receipt.label === 'BUD.transfer'), false);
+    assert.equal(state.records.filter(record => record.transaction.from.toLowerCase() === state.accounts.funding.toLowerCase()).length, 1);
+  });
+});
+
 for (const scenario of ['unknownHistoricalHolder', 'omittedRoleLogs', 'missingExecutor', 'wrongRuntime', 'nonceRace']) {
   test(`pre-renounce fails closed: ${scenario}; no renounce/funding`, async t => {
     await withChain(t, async state => {
@@ -233,8 +315,8 @@ for (const scenario of ['unknownHistoricalHolder', 'omittedRoleLogs', 'missingEx
       let injected = false;
       let addresses;
       const production = state.transmit;
-      state.transmit = async transaction => {
-        const hash = await production(transaction);
+      state.transmit = async (transaction, persistSigned) => {
+        const hash = await production(transaction, persistSigned);
         if (state.records.length === 10 && !injected) {
           injected = true;
           const receipts = await Promise.all(state.records.slice(0, 5).map(record => state.rpc('eth_getTransactionReceipt', [record.hash])));

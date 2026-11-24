@@ -19,7 +19,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY package.json ./
 COPY --from=build /app/dist ./dist
 COPY database/migrations ./database/migrations
-COPY deploy/common.mjs deploy/control.mjs deploy/migrate.mjs deploy/preflight.mjs deploy/smoke.mjs deploy/worker-health.mjs ./deploy/
+COPY deploy/common.mjs deploy/migrate.mjs deploy/preflight.mjs deploy/smoke.mjs deploy/worker-health.mjs ./deploy/
 USER node
 STOPSIGNAL SIGTERM
 

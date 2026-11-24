@@ -5,6 +5,14 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Phạm vi hiện hành — 24/11/2026
+
+- Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
+  đóng ngày 23/11/2026. Không có yêu cầu cấp VM hay triển khai lại server.
+- CI giữ GHCR/Compose và workflow chỉ xác minh release.
+- Extension #19/#41, Sepolia #20 và release #44 được xét độc lập theo bằng chứng.
+- Các trạng thái lịch sử bên dưới chỉ đúng tại ngày ghi.
+
 ## Trạng thái sau xử lý review — 20/11/2026
 
 Đã sửa và kiểm chứng các finding source của PR #57/#58/#59; xem
@@ -16,7 +24,7 @@ Các mục lịch sử bên dưới không phải trạng thái của bản tíc
   token-receipt outcome và rollback-history regressions.
 - Giữ PR **In review**, không tự approve/merge hoặc đóng issue nghiệm thu
   tích hợp từ source/CI riêng. Không gửi request nhờ thành viên khác trong lượt này.
-- Giữ staging #56, extension #19/#41, testnet #20 và release #44 **Blocked**
+- Extension #19/#41, testnet #20 và release #44 được giữ **Blocked**
   khi chưa có quyền/tài nguyên/signer/evidence thực tế. Receiver #36/#40/#42
   không được thay bằng production preview fixture trên máy nguồn.
 

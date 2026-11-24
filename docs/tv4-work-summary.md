@@ -8,6 +8,13 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Phạm vi hiện hành — 24/11/2026
+
+Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
+đóng ngày 23/11. Đã gỡ workflow deploy/SSH, script rollout/rollback và mẫu env
+server; giữ bước xác minh release và GHCR/Compose CI. Báo cáo kiểm thử lịch sử
+bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
+
 ## Xử lý review kỹ thuật — 20/11/2026
 
 Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58)
@@ -34,7 +41,7 @@ Frontend trên Node24.15.0: **127 PASS / 1 opt-in live SKIP**, lint exit0 còn
 8 React warning, TypeScript/Vite build PASS còn chunk warning >500kB.
 Backend typecheck PASS. Chromium production preview fixture tại 390px:
 scrollWidth=viewport=390, không console error, nạp quỹ disabled.
-Browser này không dùng live API, ví extension hoặc staging.
+Browser này không dùng live API hoặc ví extension.
 
 Các lượt lỗi được giữ đúng nghĩa: binary PostgreSQL npm không có `createdb`,
 đã tạo database qua `pg`; Terraform `override_data` không điền được Optional-only
@@ -43,9 +50,7 @@ harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạ
 6/6. Không tính lượt lỗi hoặc frontend live SKIP thành PASS.
 
 **Gate còn mở:** source đã push không đồng nghĩa đã merge/được peer approve;
-CI ứng dụng mới phải đọc đúng final HEAD. #56 chưa có VM/Docker quyền root,
-capacity/network/image phù hợp hoặc URL staging; không force-up compute, đổi
-quota/overcommit hoặc xóa guest khác. #19/#41 cần ví extension thật,
+CI ứng dụng mới phải đọc đúng final HEAD. #19/#41 cần ví extension thật,
 #20 thiếu owner-authorized signer/gas/broadcast và receipt testnet thời gian thật,
 #36/#40/#42 cần evidence môi trường nhận tương ứng; #44 chưa release-ready.
 Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.

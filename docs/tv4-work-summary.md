@@ -8,7 +8,20 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
+## Phạm vi hiện hành — 24/11/2026
+
+Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
+đóng ngày 23/11. Đã gỡ workflow deploy/SSH, script rollout/rollback và mẫu env
+server; giữ bước xác minh release và GHCR/Compose CI. Báo cáo kiểm thử lịch sử
+bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
+
 ## Trạng thái hiện hành — 24/11/2026
+
+[Đợt đồng bộ Dev896f93e → nhánh PR60](evidence/tv4-20261124-pr60-dev-sync.md)
+tái hiện và giải đúng năm conflict; giữ ba test migration/manifest của Dev cùng
+release gate, workflow verify-only và staging removal. Local7release/operations,
+44deployment,14BE08, typecheck/build/static và BE07native10phases PASS.
+Đây là kết quả working tree merge trước commit; CI exact-SHA phải đọc riêng ở PR60.
 
 Fix chung `033e63d3d70408ee87563e8dc809f67fbde67c72` nối signed raw bytes với
 broadcast/receipt identity, lưu hash bền vững trước send và fail-stop khi RPC trả
@@ -87,6 +100,19 @@ Push workflow [44929254569](https://github.com/SE2026-21-1/dao-budget-simulator/
 
 Updated `scripts/be08_rpc_outage.mjs` to group by logical call ID, preserve method/params and backoff checks, and reject attempts beyond four. Added an interleaving regression in `tests/indexer/be08-rpc-outage.test.mjs`. Local `npm run test:be08` passed **11/11**; replaying the actual CI artifact summarized 18 logical calls (17 with four attempts, one boundary call with one). Push and PR workflows on fix commit `e7eb2bae638b45b9eeec532adf0b431871c6d02c` both PASS: [run PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931330317), [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931324667); release publication skipped by condition. This does not close full TC11/reorg acceptance.
 
+## Xử lý review kỹ thuật — 20/11/2026
+
+Ghi nhận lịch sử, không phải kết quả của revision đồng bộ PR60 mới.
+Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58)
+`ea2ce3ec91441803b52aa2f36b4c94e720a7a503`; installer riêng
+[PR #59](https://github.com/SE2026-21-1/dao-budget-simulator/pull/59)
+`48fa4124c60dccd8b5c57d7d145878c08f7c977b`; hạ tầng
+[PR #57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57)
+`91f5b239af8e424cd44147b02e89ea91f12b662e`.
+Giữ nguyên checkout cá nhân đang dirty; không merge Dev, self-approve hoặc gửi
+request nhờ thành viên khác trong lượt 20/11. Đây là khắc phục source và evidence,
+không ký thay peer.
+
 | Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
 | --- | --- |
 | #58 legacy reorg 001–004 xóa toàn prefix khi không có ancestor | Trả `REBUILD_REQUIRED`, giữ header/raw/checkpoint/publication, invalidates snapshot cũ. Suite PostgreSQL 18.4 riêng **19/19 PASS**, gồm whole-prefix replacement nằm trong cửa sổ và restart giữ evidence; cluster đã dừng. |
@@ -102,7 +128,7 @@ Frontend trên Node24.15.0: **127 PASS / 1 opt-in live SKIP**, lint exit0 còn
 8 React warning, TypeScript/Vite build PASS còn chunk warning >500kB.
 Backend typecheck PASS. Chromium production preview fixture tại 390px:
 scrollWidth=viewport=390, không console error, nạp quỹ disabled.
-Browser này không dùng live API, ví extension hoặc staging.
+Browser này không dùng live API hoặc ví extension.
 
 Các lượt lỗi được giữ đúng nghĩa: binary PostgreSQL npm không có `createdb`,
 đã tạo database qua `pg`; Terraform `override_data` không điền được Optional-only
@@ -120,6 +146,14 @@ harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạ
 - Local `npm run test:api` dừng tại isolation guard vì không có `BE05_TEST_ISOLATED=1`/URL database mới; phân loại **BLOCKED/NOT RUN**, không phải test assertion failure. Máy không có PostgreSQL binaries hoặc Docker daemon. Không đặt biến giả để vượt guard; các job PostgreSQL/API thực tế đã PASS trong GitHub CI.
 
 **Gate còn mở:** #19/#41 cần ví extension thật, #20 thiếu signer/gas/broadcast được ủy quyền và receipt testnet, #36/#40/#42 cần evidence từ môi trường nhận tương ứng; #44 chưa release-ready. CI/Compose smoke không thay thế live/testnet acceptance.
+
+### Điều kiện bàn giao — 20/11/2026 (lịch sử)
+
+**Gate còn mở:** source đã push không đồng nghĩa đã merge/được peer approve;
+CI ứng dụng mới phải đọc đúng final HEAD. #19/#41 cần ví extension thật,
+#20 thiếu owner-authorized signer/gas/broadcast và receipt testnet thời gian thật,
+#36/#40/#42 cần evidence môi trường nhận tương ứng; #44 chưa release-ready.
+Không hạ tiêu chí hoặc đổi các mục đó thành Done từ unit/CI local.
 
 
 ## 1. Tình trạng push và tích hợp

@@ -138,12 +138,19 @@ Bổ sung ngày **22/10** đã được chạy local trên Node 24.15.0; xem
 Workflow bốn job mới chưa được push/chạy GitHub trong đợt này; kết quả CI ba job
 ở trên là lịch sử, không phải bằng chứng cho frontend hoặc raw replay mới.
 
-## Kiểm tra container và phát hành image
+## Container CI và xác minh release
 
-Runbook CI: [CI và phát hành container](docs/cicd.md).
-`deploy/compose.yml` và `deploy/compose.smoke.yml` phục vụ build/smoke cô lập,
-không chứng minh deployment server hoặc testnet. CI phát hành image GHCR sau
-khi các gate trên `Dev` thành công; không có workflow SSH tới server.
+[Hướng dẫn CI và GHCR](docs/cicd.md) mô tả phạm vi container còn dùng.
+`deploy/compose.yml` là cấu hình chung được `deploy/compose.smoke.yml` kế thừa
+để kiểm thử Anvil/PostgreSQL/API/indexer/frontend cô lập trên runner.
+Workflow `verify-release.yml` chỉ xác minh release; không kết nối hoặc deploy server.
+CI chỉ phát hành image GHCR sau khi toàn bộ gate trên `Dev` thành công.
+GHCR, Compose CI và Sepolia (#20) được theo dõi độc lập; không coi CI là nghiệm thu
+server, testnet hoặc release cuối.
+
+[Đồng bộ PR60 với Dev896f93e](docs/evidence/tv4-20261124-pr60-dev-sync.md):
+giữ ba test migration/manifest cùng release tests; source nghiệm thu mới và lịch sử
+được tách theo SHA. Merge PR60 vào Dev vẫn chờ peer review và CI bản tích hợp.
 
 ## Unit test SC02
 
@@ -306,6 +313,10 @@ trên máy này hoặc GitHub. Raw replay không thay projection/state rebuild F
 checkpoint/resume, K-confirmations, reorg hoặc UI/API E2E.
 
 ## Frontend tích hợp — TV3 và nghiệm thu TV4
+
+Phần dưới giữ hướng dẫn và evidence **fixture ngày 22/10**; không mô tả toàn bộ
+UI live hiện hành. Cấu hình API/ví và các route hiện tại ở [frontend README](frontend/README.md);
+luồng nghiệm thu mới và giới hạn ở [QA07](docs/qa07-e2e.md) và [báo cáo TV4](docs/evidence/tv4-20261123-acceptance.md).
 
 Cần Node **24.15.0**. Dữ liệu lấy trực tiếp từ `fixtures/api/` của BE01, không
 giữ bản sao JSON trong frontend và không gọi API giả:

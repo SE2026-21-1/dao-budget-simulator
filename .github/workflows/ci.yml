@@ -403,7 +403,7 @@ jobs:
       - uses: ./.github/actions/install-foundry
       - run: npm ci && forge build
       - name: Verify release rejection cases
-        run: node --test scripts/cd/release.test.mjs
+        run: node --test scripts/cd/release.test.mjs deploy/operations.test.mjs
       - name: Build all application images without deployment secrets
         run: |
           docker build --file deploy/Dockerfile.frontend --tag dao-frontend:${GITHUB_SHA} .

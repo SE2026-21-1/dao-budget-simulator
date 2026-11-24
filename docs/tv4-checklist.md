@@ -5,8 +5,20 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Phạm vi hiện hành — 24/11/2026
+
+- Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
+  đóng ngày 23/11/2026. Không có yêu cầu cấp VM hay triển khai lại server.
+- CI giữ GHCR/Compose và workflow chỉ xác minh release.
+- Extension #19/#41, Sepolia #20 và release #44 được xét độc lập theo bằng chứng.
+- Các trạng thái lịch sử bên dưới chỉ đúng tại ngày và source đã ghi.
+
 ## Kết luận hiện hành — 24/11/2026
 
+- [x] [Đồng bộ PR60 với Dev896f93e](evidence/tv4-20261124-pr60-dev-sync.md):
+  giải năm conflict theo nội dung, giữ verify-only/GHCR/Compose, không phục hồi server.
+  Local7release/migration-manifest,44deployment,14BE08 và BE07native10phases PASS;
+  các kết quả bên dưới giữ source/date cũ. Exact merge-head CI và peer review riêng.
 - [x] Tái hiện submission-identity Medium trước sửa; fix `033e63d3d70408ee87563e8dc809f67fbde67c72`
   lưu keccak signed bytes trước broadcast, reject response sai/mất, không resend.
 - [x] 44bootstrap/provenance/Sepolia (28Sepolia),14BE08,4release và127frontend PASS;
@@ -88,6 +100,21 @@ các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi
   ủy quyền hoặc người phụ trách nhóm.
 - Không tích hợp PR #21 hoặc nhánh personal/individual. Các mục dưới đây giữ
   nguyên phạm vi/history, không tự nâng fixture/CI thành nghiệm thu live.
+
+## Trạng thái sau xử lý review — 20/11/2026
+
+Ghi nhận lịch sử: đã sửa và kiểm chứng các finding source của PR #57/#58/#59;
+xem [kết quả theo SHA và giới hạn](tv4-work-summary.md#xử-lý-review-kỹ-thuật--20112026).
+Các mục này không phải trạng thái của bản tích hợp mới.
+
+- Source fixes: legacy whole-prefix recovery, SC06 versioned provenance/quorum,
+  disk-capacity guard và forced OCI fallback; thêm recovery-error lease,
+  token-receipt outcome và rollback-history regressions.
+- Giữ PR **In review**, không tự approve/merge hoặc đóng issue nghiệm thu
+  tích hợp từ source/CI riêng. Không gửi request nhờ thành viên khác trong lượt này.
+- Extension #19/#41, testnet #20 và release #44 được giữ **Blocked**
+  khi chưa có quyền/tài nguyên/signer/evidence thực tế. Receiver #36/#40/#42
+  không được thay bằng production preview fixture trên máy nguồn.
 
 
 ## Nền tảng hiện có

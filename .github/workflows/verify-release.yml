@@ -1,0 +1,69 @@
+name: TV4 manual release verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Full commit SHA from a successful Dev release
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+  packages: read
+
+concurrency:
+  group: dao-release-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+      - name: Resolve successful trusted release and verify complete manifest
+        env:
+          RELEASE_SHA: ${{ inputs.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$RELEASE_SHA" =~ ^[a-f0-9]{40}$ ]]
+          mkdir verified
+          node scripts/cd/release.mjs download --sha "$RELEASE_SHA" --manifest verified/manifest.json
+          node scripts/cd/release.mjs verify --sha "$RELEASE_SHA" --manifest verified/manifest.json
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ inputs.sha }}
+          path: release-source
+          persist-credentials: false
+      - name: Verify release source schema and Compose syntax
+        env:
+          RELEASE_SHA: ${{ inputs.sha }}
+        run: |
+          node scripts/cd/release.mjs verify-local --sha "$RELEASE_SHA" --manifest verified/manifest.json --migrations release-source/database/migrations
+          docker compose -f release-source/deploy/compose.yml config --no-interpolate --quiet
+      - name: Verify all published images can be pulled without server access
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          while IFS='=' read -r name image; do docker pull "$image"; done < verified/release.env
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: verified-release
+          path: verified/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report verification boundary
+        run: |
+          echo 'SHA, successful Dev push CI, manifest provenance and all three GHCR pulls verified. Verification only. This workflow has no deployment job or server credentials.' >> "$GITHUB_STEP_SUMMARY"
+      - if: always()
+        run: docker logout ghcr.io

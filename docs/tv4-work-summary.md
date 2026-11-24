@@ -17,6 +17,19 @@ bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
 ## Trạng thái hiện hành — 24/11/2026
 
+[Native performance fix và bằng chứng nguyên bản](evidence/be08-native-performance-20261124/report.md):
+PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60
+`7141d731c10d1e64c81cc1736d21ba8dac16e2ea`, cùng patch sáu file và tác giả.
+Frozen topic index tránh lookup/hash lặp; set-based SQL tránh per-row await.
+Giữ full replay/canonical/K/recovery/rollback, timeout30s và tải10clients/100+1000.
+Native PR61 sourcea672fd2:13suites/20freshness PASS,9850HTTP/0lỗi,p95 235,910ms,
+load max16.161,502ms. PR60 code-head7141d73 CI45403269468 SUCCESS/publish SKIP.
+PR61 CI đầu45401658170 chỉ FAIL BE05 owned-clock; follow-up`cba8b6c` đưa đúng
+fix96e4601 đã có trên PR60 sang PR61. Không dùng BE08 PASS để gọi whole CI PASS.
+Native PR60 source7141d73 cũng13suites/20freshness PASS,9830HTTP/0lỗi,
+load max16.082,377ms; PR61 final code-headcba8b6c CI45403578782 SUCCESS.
+Kết quả FAIL sau đây là lịch sử trước tối ưu, không sửa lại dữ liệu cũ.
+
 TV2 yêu cầu kiểm trace cuối vì snapshot bốn503 có thể bỏ attempt thứ năm cùngID.
 Fix PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c`, port ba file bằng
 cherry-pick --no-commit + selective commit `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;

@@ -15,6 +15,15 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 ## Kết luận hiện hành — 24/11/2026
 
+- [x] [Native bottleneck fix và raw proof mới](evidence/be08-native-performance-20261124/report.md):
+  PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60 `7141d731c10d1e64c81cc1736d21ba8dac16e2ea`;
+  topic index + batch publication, không bỏ replay/validation, không đổi30s/10clients/100+1000.
+  Local native PR61 sourcea672fd2:13suites PASS,9850HTTP/0lỗi,20/20freshness,
+  load max16.161,502ms. PR60 source7141d73 CI45403269468 SUCCESS, publish SKIP.
+  PR61 clock follow-up`cba8b6c` port đúng fix96e4601 từ PR60, không relax assertions.
+  Native PR60 source7141d73 cũng13suites/20freshness PASS,9830HTTP/0lỗi,
+  load max16.082,377ms; PR61 final code-headcba8b6c CI45403578782 SUCCESS.
+  Các native FAIL bên dưới giữ source cũ; không phải kết luận của fix performance mới.
 - [x] TV2 late-fifth-attempt BE08: fix PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c`
   chuyển đúng ba file sang PR60 `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;
  18/18 BE08 ở cả hai nhánh,51/51 security+release/operations trên PR60.

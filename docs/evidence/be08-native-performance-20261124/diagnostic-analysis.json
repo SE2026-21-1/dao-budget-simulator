@@ -1,0 +1,216 @@
+{
+  "format": "native-gate-investigation-v1",
+  "historical": [
+    {
+      "path": "/tmp/dao-be08-review-evidence/pr61-native-ready/benchmark.json",
+      "sha256": "869169cf004a6eb9588e8f358a1c9fa000953b3be14227fdf1e6913ce501d61d",
+      "head": "72d08940d63b99ec4d8e4d49f463251d7a0c714c",
+      "status": "FAIL",
+      "failedStage": "http_load",
+      "eventBlock": "1173",
+      "transactionHash": "0x5c5368f84ef1e9efd2deea82ef61aabdd520f269bc6b492aa386b04bef878266",
+      "eligibleAt": "2026-11-24T12:26:43.163Z",
+      "lastApiProbe": {
+        "elapsedMs": 30078.687557999976,
+        "h": "1170",
+        "hash": "0x3cdcd232fc49c8505459cc984c92b104935a3b8f5f348ca22324e04d580274ec",
+        "present": false
+      },
+      "matchingWorkerObservation": {
+        "at": "2026-11-24T12:27:13.401Z",
+        "h": "1173",
+        "hash": "0x03bfc6c06790caea566023d2e07919d62b8122de5d58c0320c11a8367bafff0c",
+        "delayMs": 30238
+      },
+      "oldWorkerObservationsAfterEligibility": [
+        {
+          "at": "2026-11-24T12:26:55.071Z",
+          "h": "1170",
+          "delayMs": 11908
+        }
+      ],
+      "workerErrorCount": 0,
+      "rawHttpCount": 2594,
+      "rawHttpErrors": 0,
+      "sourceHashesMatchDiagnostic": true,
+      "methodMatchesDiagnostic": true,
+      "freshnessConfigMatchesDiagnostic": true
+    },
+    {
+      "path": "/tmp/dao-be08-review-evidence/pr60-native/benchmark.json",
+      "sha256": "c01c9cef2fb6d6bc40eb8c18b18cb5313181f9a8cf44cab90f2ca6a351ef4061",
+      "head": "7221c131f558a6566c715c371e58899acb05dccc",
+      "status": "FAIL",
+      "failedStage": "http_load",
+      "eventBlock": "1185",
+      "transactionHash": "0x79bdb457a64575f87140b281371cc618748e86b7ce2c5ae54fee4c679ebddbbf",
+      "eligibleAt": "2026-11-24T12:37:03.123Z",
+      "lastApiProbe": {
+        "elapsedMs": 30228.330294000043,
+        "h": "1182",
+        "hash": "0x89e20890ffb64cb185bd10bd3235583d219b260bf4b6c9e0d6fa94e042031da4",
+        "present": false
+      },
+      "matchingWorkerObservation": {
+        "at": "2026-11-24T12:37:34.168Z",
+        "h": "1185",
+        "hash": "0x985292b7624bbeb2cb76d29b6cf92d3eae0efedc029875cd0256e39bd7531a68",
+        "delayMs": 31045
+      },
+      "oldWorkerObservationsAfterEligibility": [
+        {
+          "at": "2026-11-24T12:37:17.764Z",
+          "h": "1182",
+          "delayMs": 14641
+        }
+      ],
+      "workerErrorCount": 0,
+      "rawHttpCount": 7284,
+      "rawHttpErrors": 0,
+      "sourceHashesMatchDiagnostic": true,
+      "methodMatchesDiagnostic": true,
+      "freshnessConfigMatchesDiagnostic": true
+    }
+  ],
+  "diagnostic": {
+    "head": "47faa8ee96c910a2ed211b1c14d747a485006aee",
+    "status": "PASS",
+    "acceptanceClaim": false,
+    "reason": "Instrumented measurement; does not replace either original FAIL",
+    "sourceHashes": {
+      "scripts/benchmark_api.mjs": "2a38ca3e175532ef915c6b5af7bd52635d9d84990266e2614843552db3d221a0",
+      "scripts/governance_local.mjs": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+      "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+      "scripts/be08_worker_probe.mjs": "ed2df09cc24be6cfc3a510aed179abc5b5043d22b2898ab9e24f0fa4b1807e70",
+      "scripts/be08_rpc_outage.mjs": "00c3858de3bb5515bc6010cf60a85b9de9d2af76493307322119ccc224318cb0",
+      "scripts/be08_measurement.mjs": "1244efa23b475246f4ed59a0e33196cc452c3baf6f77c807bcf43191d7d98930",
+      "scripts/be08_postgres_identity.mjs": "3b9f29239f98f92e351175fe6a521080cad7766e657bde0a5d1995800ea5ccab",
+      "indexer/worker.ts": "a2206ff5c25fa351c7c5f32ea4c32bc1b7e0252eb6af54fe54d49945b612ee6e",
+      "indexer/cli.ts": "2b695bc873b1d0c3ba118e9a703f2b6783b6cc17e3d5504058580c3df125e2eb",
+      "indexer/recovery.ts": "330b99e7aaaad8d56bfd06ec5ed114360691aca27c4cb95873070eb9a9ba9418",
+      "indexer/rpc.ts": "2a0fa4bb5b4f994a0685550885c56e0633324d395a2f3635a977233df1065084",
+      "indexer/storage.ts": "0b4e6a907942f702e4e0879e26a30cbd9b2fa7e2abc6fc8e9a2a306db6ded220",
+      "indexer/api/server.ts": "935fc5bcb7aedc7408cf8963e720c91a19597f23fad986810cfdb385ddaff1c1",
+      "indexer/syncer.ts": "183a3df6b00afb89ce48d43ce238b21c9c85755a0a03099fdfcbfca6a124abd4",
+      "indexer/projection/projector.ts": "8eb8b10f1b7fd0f2d8316adc2e2b18d98ab74ac2eeaca63b45d3bbc4babd565c",
+      "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+      "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+      "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+      "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+      "database/migrations/005_be07.sql": "490ee96446f4c4a8920f0f3af177a90772cbde50afd2df9de13da0c4f520e57e"
+    },
+    "workload": {
+      "proposals": "100",
+      "votes": "1000",
+      "clients": 10,
+      "requestedDurationMs": 60000,
+      "actualDurationMs": 211257.74003800002,
+      "successfulHttp": 13381,
+      "errors": 0,
+      "p95Ms": 291.6114800000214,
+      "maxLoadFreshnessMs": 23785.06564700004,
+      "maxAttempts": 4
+    },
+    "telemetry": {
+      "hostCpuPercent": {
+        "user": 83.11,
+        "system": 13.37,
+        "softirq": 1.52,
+        "idle": 1.77,
+        "iowait": 0.23,
+        "steal": 0
+      },
+      "cpuPressureSomePercent": 70.41,
+      "mainThreadRunSeconds": 111.333568734,
+      "mainThreadRunqueueWaitSeconds": 93.838172853,
+      "sqlBlockerObservations": 0,
+      "workerNonIdleCpuSamples": 10406,
+      "rawDecodeModelCpuSamples": 5861,
+      "rawDecodeModelPercentOfNonIdleSamples": 56.323275033634445,
+      "loadVoteInsertStatements": 20000,
+      "loadProposalInsertStatements": 2000,
+      "workerRpcCountDuringLoad": 4217,
+      "workerRpcP95Ms": 72.7184910000069,
+      "notes": [
+        "1Hz read-only pg_stat_activity and /proc telemetry; no tuning/privilege changes.",
+        "CPU profile sampling interval10ms; phase attribution sample-based, not exact historical SQL-commit timing."
+      ]
+    },
+    "inventory": [
+      {
+        "name": "benchmark-127081.cpuprofile",
+        "bytes": 1898686,
+        "sha256": "618c629ae7c5d150adf70ca1ea4405da1832e499de05bb30e7f21758557b024e"
+      },
+      {
+        "name": "benchmark-127081.jsonl",
+        "bytes": 3125883,
+        "sha256": "abf4386ed7409f07733604b951b67383db624b9fc977bbe7cbbd1d18dcced397"
+      },
+      {
+        "name": "benchmark-console.txt",
+        "bytes": 185,
+        "sha256": "e0c9eccf099c3a46e27c382b858d3e08bdd18bca046bc23d1f842d6d52190288"
+      },
+      {
+        "name": "benchmark.json",
+        "bytes": 4774530,
+        "sha256": "42a984ec62eb29c007581a3e3a9158e60a76e21e24daa600c2d2792e47fde2ec"
+      },
+      {
+        "name": "database.jsonl",
+        "bytes": 1201088,
+        "sha256": "bd0bda15c7d26b161ff19a8d29840482bd39d3eeaf905501e1912fa3ee05ecfb"
+      },
+      {
+        "name": "execution.json",
+        "bytes": 639,
+        "sha256": "585f7dbe2481d1dcd1e97abd866fe941b3ab52f7f3b0c6d1cc9061f04720937a"
+      },
+      {
+        "name": "postgres.txt",
+        "bytes": 1765,
+        "sha256": "572747c35a807bebc825bfc4473eb5921e306c28729b44c7b46ce3a366129f8b"
+      },
+      {
+        "name": "system.jsonl",
+        "bytes": 2701224,
+        "sha256": "5de93423cba113c212760a65fa6ca0019a523dc47e980d0beee9f276af97cfac"
+      },
+      {
+        "name": "worker-132361.cpuprofile",
+        "bytes": 1812493,
+        "sha256": "e5050ac15d03573a0ff00ce23d36fa4e93a411d613f37ade88332bc3513ef5f0"
+      },
+      {
+        "name": "worker-132361.jsonl",
+        "bytes": 2467304,
+        "sha256": "3d723fed3c99004aa25d91bea4f35eaa9ed27b716b89179f87d6a52b9407b5a8"
+      }
+    ]
+  },
+  "finding": {
+    "provenHistoricalMechanism": "Failed probes still saw old H. Parent observed an unchanged-H publication after eligibility, then the required H after30.238s/31.045s. Worker was alive and eventually published the expected transfer; outage/fifth-attempt finalization had not run.",
+    "profiledBottleneck": "Full raw replay/decode/ABI validation, full row-at-a-time projection rewrites and RPC reconciliation run every serial worker iteration, including unchanged H. Four native logical CPUs saturate under ten API clients; scheduler delay amplifies two serial projection cycles past30s.",
+    "notEstablished": [
+      "No CPU/SQL-wait trace was captured during the original FAILs; exact historical time split is unrecoverable.",
+      "No claim of an always-failing deterministic product bug, nor of a fixed/native acceptance gate from the diagnostic PASS.",
+      "SQL lock blockers were absent in the diagnostic run; not asserted absent at every instant of historical runs."
+    ],
+    "safeFixDirections": [
+      "Reduce redundant full-prefix replay at unchanged canonical H without bypassing scope/revision/raw-integrity/canonical/recovery guards.",
+      "Batch projection inserts in the existing atomic transaction, preserving FK ordering and all reconciliation assertions.",
+      "Investigate repeated API scope/prefix metadata work per request; preserve fresh gating rather than caching stale readiness."
+    ],
+    "unchanged": [
+      "30000ms freshness bound",
+      "10 load clients",
+      "100 proposals / 1000 votes",
+      "60s minimum plus all10 load freshness samples",
+      "4 RPC attempts / backoff",
+      "production source, repository files, environment permissions"
+    ],
+    "productChanges": false
+  }
+}

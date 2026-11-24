@@ -100,6 +100,19 @@ test('independent hand-assembled canonical Transfer vector decodes without fixtu
   });
 });
 
+test('topic lookup is case-insensitive and repeated decodes keep independent payloads', () => {
+  const log = normalize(independent);
+  log.topics[0] = '0x' + log.topics[0]!.slice(2).toUpperCase();
+  const first = decodeLog(log);
+  assert.equal(first.status, 'decoded');
+  if (first.status !== 'decoded') return;
+  first.payload.value = '0';
+  const next = decodeLog(log);
+  assert.equal(next.status, 'decoded');
+  if (next.status === 'decoded') assert.equal(next.payload.value, '1000000000000000000');
+  expectDecodeError({ ...log, data: `${log.data}00` });
+});
+
 test('preserves uint256 above 2^53 including indexed integers and maximum proposal ID', () => {
   const proposal = decodeLog(normalize(vector('ProposalCreated')));
   const scheduled = decodeLog(normalize(vector('CallScheduled')));

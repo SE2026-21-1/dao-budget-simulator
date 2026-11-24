@@ -254,85 +254,79 @@ async function publish(c: PoolClient, config: IndexerConfig, m: Model, states: M
   }
   const treasury = config.contracts.find((x) => x.role === 'treasury')!.address;
   const token = config.contracts.find((x) => x.role === 'budget_token')!.address;
-  for (const p of m.proposals) {
+  // One set-based insert per table, rather than one SQL round trip per row.
+  // JSON strings retain uint256 precision; PostgreSQL still enforces every domain/FK.
+  if (m.proposals.length) {
     await c.query(
       `INSERT INTO proposals (deployment_id,proposal_id,request_id,proposer,treasury_address,recipient,amount,
       description_bytes,description,description_hash,targets,native_values,calldatas,snapshot,deadline,created_event_id,canceled_event_id,executed_event_id)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)`,
-      [
-        d,
-        p.id,
-        p.requestId,
-        p.proposer,
-        treasury,
-        p.recipient,
-        p.amount,
-        Buffer.from(p.description, 'utf8'),
-        p.description,
-        p.descriptionHash,
-        p.targets,
-        p.values,
-        p.calldatas,
-        p.snapshot,
-        p.deadline,
-        p.created.id,
-        p.canceled?.id ?? null,
-        p.executed?.id ?? null,
-      ],
+      SELECT $1,x.proposal_id,x.request_id,x.proposer,$2,x.recipient,x.amount,
+        convert_to(x.description,'UTF8'),x.description,x.description_hash,x.targets,x.native_values,x.calldatas,
+        x.snapshot,x.deadline,x.created_event_id,x.canceled_event_id,x.executed_event_id
+      FROM jsonb_to_recordset($3::jsonb) AS x(proposal_id numeric,request_id text,proposer text,recipient text,amount numeric,
+        description text,description_hash text,targets text[],native_values numeric[],calldatas text[],
+        snapshot numeric,deadline numeric,created_event_id bigint,canceled_event_id bigint,executed_event_id bigint)`,
+      [d, treasury, JSON.stringify(m.proposals.map(p => ({
+        proposal_id: p.id, request_id: p.requestId, proposer: p.proposer, recipient: p.recipient, amount: p.amount,
+        description: p.description, description_hash: p.descriptionHash, targets: p.targets, native_values: p.values,
+        calldatas: p.calldatas, snapshot: p.snapshot, deadline: p.deadline, created_event_id: p.created.id,
+        canceled_event_id: p.canceled?.id ?? null, executed_event_id: p.executed?.id ?? null,
+      })))],
     );
-    const s = states.get(p.id)!;
     await c.query(
       `INSERT INTO proposal_states (deployment_id,proposal_id,state,against_votes,for_votes,abstain_votes,quorum,operation_status)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
-      [d, p.id, s.state, ...p.votes.map((v) => v.toString()), s.quorum?.toString() ?? null, s.operationStatus],
+      SELECT $1,x.proposal_id,x.state,x.against_votes,x.for_votes,x.abstain_votes,x.quorum,x.operation_status
+      FROM jsonb_to_recordset($2::jsonb) AS x(proposal_id numeric,state text,against_votes numeric,for_votes numeric,
+        abstain_votes numeric,quorum numeric,operation_status text)`,
+      [d, JSON.stringify(m.proposals.map(p => {
+        const s = states.get(p.id)!;
+        return { proposal_id: p.id, state: s.state, against_votes: p.votes[0].toString(), for_votes: p.votes[1].toString(),
+          abstain_votes: p.votes[2].toString(), quorum: s.quorum?.toString() ?? null, operation_status: s.operationStatus };
+      }))],
     );
   }
-  for (const v of m.votes)
-    await c.query(
-      `INSERT INTO votes (deployment_id,proposal_id,voter,support,weight,reason,params,source_event_id)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
-      [d, v.proposal.id, v.voter, v.support, v.weight, v.reason, v.params, v.source.id],
-    );
-  for (const o of m.operations)
-    await c.query(
-      `INSERT INTO operations (deployment_id,operation_id,proposal_id,predecessor,salt,queued_at,eta,
-    queued_event_id,scheduled_event_id,executed_event_id,canceled_event_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
-      [
-        d,
-        o.id,
-        o.proposal.id,
-        o.predecessor,
-        o.salt,
-        o.queuedAt,
-        o.eta,
-        o.queued.id,
-        o.scheduled.id,
-        o.executed?.id ?? null,
-        o.canceled?.id ?? null,
-      ],
-    );
+  if (m.votes.length) await c.query(
+    `INSERT INTO votes (deployment_id,proposal_id,voter,support,weight,reason,params,source_event_id)
+    SELECT $1,x.proposal_id,x.voter,x.support,x.weight,x.reason,x.params,x.source_event_id
+    FROM jsonb_to_recordset($2::jsonb) AS x(proposal_id numeric,voter text,support smallint,weight numeric,
+      reason text,params text,source_event_id bigint)`,
+    [d, JSON.stringify(m.votes.map(v => ({
+      proposal_id: v.proposal.id, voter: v.voter, support: v.support, weight: v.weight,
+      reason: v.reason, params: v.params, source_event_id: v.source.id,
+    })))],
+  );
+  if (m.operations.length) await c.query(
+    `INSERT INTO operations (deployment_id,operation_id,proposal_id,predecessor,salt,queued_at,eta,
+      queued_event_id,scheduled_event_id,executed_event_id,canceled_event_id)
+    SELECT $1,x.operation_id,x.proposal_id,x.predecessor,x.salt,x.queued_at,x.eta,
+      x.queued_event_id,x.scheduled_event_id,x.executed_event_id,x.canceled_event_id
+    FROM jsonb_to_recordset($2::jsonb) AS x(operation_id text,proposal_id numeric,predecessor text,salt text,
+      queued_at numeric,eta numeric,queued_event_id bigint,scheduled_event_id bigint,executed_event_id bigint,canceled_event_id bigint)`,
+    [d, JSON.stringify(m.operations.map(o => ({
+      operation_id: o.id, proposal_id: o.proposal.id, predecessor: o.predecessor, salt: o.salt,
+      queued_at: o.queuedAt, eta: o.eta, queued_event_id: o.queued.id, scheduled_event_id: o.scheduled.id,
+      executed_event_id: o.executed?.id ?? null, canceled_event_id: o.canceled?.id ?? null,
+    })))],
+  );
   // Use immutable raw identity to keep public transfer IDs stable across replay.
-  for (const t of m.transfers)
-    await c.query(
-      `INSERT INTO transfers (transfer_id,deployment_id,token_address,treasury_address,
-    from_address,to_address,amount,source_event_id) OVERRIDING SYSTEM VALUE VALUES ($1,$2,$3,$4,$5,$6,$7,$1)`,
-      [t.source.id, d, token, treasury, t.from, t.to, t.amount],
-    );
-  for (const b of m.disbursements)
-    await c.query(
-      `INSERT INTO disbursements (deployment_id,chain_id,treasury_address,request_id,
-    recipient,amount,source_event_id,transfer_id,proposal_id,operation_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-      [
-        d,
-        config.chainId.toString(),
-        treasury,
-        b.proposal.requestId,
-        b.proposal.recipient,
-        b.proposal.amount,
-        b.source.id,
-        b.transfer.source.id,
-        b.proposal.id,
-        b.operation.id,
-      ],
-    );
+  if (m.transfers.length) await c.query(
+    `INSERT INTO transfers (transfer_id,deployment_id,token_address,treasury_address,
+      from_address,to_address,amount,source_event_id) OVERRIDING SYSTEM VALUE
+    SELECT x.source_event_id,$1,$2,$3,x.from_address,x.to_address,x.amount,x.source_event_id
+    FROM jsonb_to_recordset($4::jsonb) AS x(from_address text,to_address text,amount numeric,source_event_id bigint)`,
+    [d, token, treasury, JSON.stringify(m.transfers.map(t => ({
+      from_address: t.from, to_address: t.to, amount: t.amount, source_event_id: t.source.id,
+    })))],
+  );
+  if (m.disbursements.length) await c.query(
+    `INSERT INTO disbursements (deployment_id,chain_id,treasury_address,request_id,
+      recipient,amount,source_event_id,transfer_id,proposal_id,operation_id)
+    SELECT $1,$2,$3,x.request_id,x.recipient,x.amount,x.source_event_id,x.transfer_id,x.proposal_id,x.operation_id
+    FROM jsonb_to_recordset($4::jsonb) AS x(request_id text,recipient text,amount numeric,source_event_id bigint,
+      transfer_id bigint,proposal_id numeric,operation_id text)`,
+    [d, config.chainId.toString(), treasury, JSON.stringify(m.disbursements.map(b => ({
+      request_id: b.proposal.requestId, recipient: b.proposal.recipient, amount: b.proposal.amount,
+      source_event_id: b.source.id, transfer_id: b.transfer.source.id, proposal_id: b.proposal.id, operation_id: b.operation.id,
+    })))],
+  );
 }

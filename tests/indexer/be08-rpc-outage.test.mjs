@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { once } from 'node:events';
+import { once, EventEmitter } from 'node:events';
 import { test } from 'node:test';
+import { PassThrough } from 'node:stream';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { startWorkerProbe } from '../../scripts/be08_worker_probe.mjs';
 import { HttpRpc } from '../../indexer/rpc.ts';
 import { createOutageRpcRecorder, summarizeOutageCalls } from '../../scripts/be08_rpc_outage.mjs';
 
@@ -161,3 +166,59 @@ test('concurrent identical RPC calls have distinct IDs while each retry keeps it
     assert.deepEqual([...counts.values()], [2, 2]);
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 });
+
+// Synthetic worker shutdown, real probe finalization. No retry timers or wall-clock
+// races: the fifth request is released only after the initial snapshot was checked.
+for (const boundary of [false, true]) {
+  for (const lateFifth of [false, true]) {
+    test(`final worker trace ${lateFifth ? 'rejects late fifth attempt' : 'accepts bounded interleaving'}${boundary ? ' across outage boundary' : ''}`, async () => {
+      const recorder = createOutageRpcRecorder();
+      const times = boundary ? [9700, 9850, 10_000, 10_150] : [1000, 1150, 1300, 1450];
+      for (const time of times) {
+        for (const id of [71, 72, 73, 74, 75])
+          recorder.record(request(id, time, { offline: time <= outageWindow.endedAtMs }));
+      }
+      const snapshot = summarizeOutageCalls(recorder.lifecycleAttempts, outageWindow);
+      assert.equal(snapshot.length, 5);
+      const directory = await mkdtemp(join(tmpdir(), 'be08-final-trace-test-'));
+      const child = new EventEmitter();
+      Object.assign(child, { exitCode: null, signalCode: null, stdout: new PassThrough(), stderr: new PassThrough() });
+      child.kill = () => {
+        if (lateFifth) recorder.record(request(71, 10_300, { offline: false, httpStatus: 200 }));
+        // A distinct new request with identical method/params remains legitimate.
+        recorder.record(request(76, 10_450, { offline: false, httpStatus: 200, params: [{ to: '0x71' }, 'latest'] }));
+        child.exitCode = 0;
+        child.emit('close', 0, null);
+      };
+      const report = {};
+      const probe = await startWorkerProbe({
+        scope: { temporaryDirectory: async () => directory, spawn: () => child, throwIfInterrupted() {} },
+        root: directory, dbUrl: 'unused', rpc: async () => 'unused', config: {}, report,
+      });
+      const state = report.freshness;
+      state.idle = state.load = { count: 10 };
+      state.outage = { status: 'AWAITING_FINAL_TRACE', window: outageWindow, retryCycles: snapshot,
+        rpcLifecycle: recorder.lifecycleAttempts, httpAttempts: recorder.outageAttempts };
+      try {
+        if (lateFifth) {
+          await assert.rejects(probe.close(), /must remain bounded/);
+          assert.equal(state.outage.status, 'FAIL');
+          assert.equal(state.status, 'FAIL');
+          assert.equal(state.outage.rpcLifecycle.filter(call => call.id === 71).length, 5);
+          assert.equal(state.outage.retryCycles, undefined, 'Do not retain a stale passing summary');
+          await assert.rejects(probe.close(), /must remain bounded/, 'Repeated close must retain failure');
+        } else {
+          await probe.close();
+          assert.equal(state.outage.status, 'PASS');
+          assert.equal(state.status, 'PASS');
+          assert.deepEqual(state.outage.retryCycles.map(call => [call.id, call.attempts]),
+            [71, 72, 73, 74, 75].map(id => [id, boundary ? 3 : 4]));
+          await probe.close();
+        }
+      } finally {
+        await probe.close().catch(() => {});
+        await rm(directory, { recursive: true, force: true });
+      }
+    });
+  }
+}

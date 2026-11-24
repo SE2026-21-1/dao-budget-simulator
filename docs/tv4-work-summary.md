@@ -17,6 +17,24 @@ bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
 ## Trạng thái hiện hành — 24/11/2026
 
+TV2 yêu cầu kiểm trace cuối vì snapshot bốn503 có thể bỏ attempt thứ năm cùngID.
+Fix PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c`, port ba file bằng
+cherry-pick --no-commit + selective commit `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;
+không nhập nhánh ngoài phạm vi. BE08 synthetic18/18 mỗi nhánh; PR60 security+
+release/operations51/51 sau forge build. Giữ nguyên signed identity/receipt/
+funding0descendants, BE07 clock,verify-release và ba test migration/manifest.
+[Report/log BE08 và scope CI](evidence/be08-late-trace-20261124/report.md)
+ghi PR61 CI45392235901 PASS trên merge7962c6d, nhưng local native **FAIL**
+tại load publication30s trước outage; giữ cả failure packet, không nới timeout.
+
+[H52 worker/SQL extraction](evidence/tv4-20261124-h52/provenance.md) tại
+`7221c131f558a6566c715c371e58899acb05dccc` giữ nguyên bytes và MANIFEST hashes.
+[TV2 đã nhận receipt/API](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7129225892);
+[bàn giao hai raw JSON/checksums](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7131321571)
+không chạy lại chain, không sửa SQLprojectionH58 thànhH52. Chờ worker/SQL peer
+ack và TV4 scoped sign-off; không đóng#41. TV1 security approvalb186844 giữ đúng
+phạm vi, không yêu cầu re-review các security sources không đổi.
+
 [Đợt đồng bộ Dev896f93e → nhánh PR60](evidence/tv4-20261124-pr60-dev-sync.md)
 tái hiện và giải đúng năm conflict; giữ ba test migration/manifest của Dev cùng
 release gate, workflow verify-only và staging removal. Local7release/operations,

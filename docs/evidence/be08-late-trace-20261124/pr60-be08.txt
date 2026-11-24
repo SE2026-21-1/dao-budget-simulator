@@ -1,0 +1,30 @@
+
+> dao-budget-simulator@0.0.0 test:be08
+> node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs tests/indexer/be08-rpc-outage.test.mjs
+
+✔ BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples (738.444466ms)
+✔ BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results (8.752127ms)
+✔ BE08 forwarded CI service validates client loopback while PostgreSQL reports a container address and internal port (5.440136ms)
+✔ BE08 rejects non-loopback or unexpected client ports even when server metadata looks local (8.264742ms)
+✔ BE08 owned native cluster retains exact directory and server binding checks (2.435289ms)
+✔ projection failure and recovery check are separate bounded RPC calls (473.843544ms)
+✔ outage accounting groups interleaved retries from bounded projection fan-out (3.425211ms)
+✔ outage accounting accepts exhausted calls independently of worker stdout timing (3.338179ms)
+✔ outage recorder preserves same-ID attempts before and after the window (7.174812ms)
+✔ partial retries require same-ID attempts proving the call crossed an outage boundary (4.669941ms)
+✔ calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary (6.040372ms)
+✔ outage accounting rejects an over-budget call, missing retries, invalid windows and absent backoff (7.33559ms)
+✔ outage accounting rejects a reused call ID or changed method/params within a retry (14.357446ms)
+✔ concurrent identical RPC calls have distinct IDs while each retry keeps its ID (59.151065ms)
+✔ final worker trace accepts bounded interleaving (29.678181ms)
+✔ final worker trace rejects late fifth attempt (19.838323ms)
+✔ final worker trace accepts bounded interleaving across outage boundary (54.654157ms)
+✔ final worker trace rejects late fifth attempt across outage boundary (24.710197ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3947.793874

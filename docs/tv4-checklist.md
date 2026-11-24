@@ -15,6 +15,16 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 
 ## Kết luận hiện hành — 24/11/2026
 
+- [x] TV2 late-fifth-attempt BE08: fix PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c`
+  chuyển đúng ba file sang PR60 `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;
+ 18/18 BE08 ở cả hai nhánh,51/51 security+release/operations trên PR60.
+  Chốt trace sau worker close + bounded handler drain; không đổi retry/backoff.
+  [Report/log trước–sau và CI](evidence/be08-late-trace-20261124/report.md):
+  PR61 CI45392235901 BE08 PASS; local native PR61 **FAIL** tại normal-load
+  publication30s trước outage, không đổi timeout hay gọi CI thành local PASS.
+- [x] [Hai JSON worker/SQL H52 và provenance](evidence/tv4-20261124-h52/provenance.md)
+  trích nguyên bytes,161manifest hashes khớp; đã bàn giao [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7131321571).
+  TV2 đã nhận receipt/API; chỉ worker/SQL chờ kết luận, #41 giữ Blocked.
 - [x] [Đồng bộ PR60 với Dev896f93e](evidence/tv4-20261124-pr60-dev-sync.md):
   giải năm conflict theo nội dung, giữ verify-only/GHCR/Compose, không phục hồi server.
   Local7release/migration-manifest,44deployment,14BE08 và BE07native10phases PASS;
@@ -25,7 +35,9 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   1live test frontend SKIP. Typecheck/build/lint exit0, warnings giữ nguyên.
 - [x] [Ma trận delta, source fingerprints và giới hạn](evidence/tv4-20261124-submission-identity.md);
   [demo/failure plan](qa07-e2e.md#diễn-tập-integration--release--2411) đã cập nhật.
-- [ ] Final-head CI và TV1 re-review S3; TV2/TV3 scoped requests tiếp tục,
+- [x] [TV1 approve b186844](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460)
+  chỉ signing/receipt/journal/role-audit; nguồn/tests đó không đổi bởi BE08.
+- [ ] TV2 re-review BE08/delivery, TV3 harness/consumer và CI HEAD cuối;
   không tự dismiss/resolve hoặc merge. #20 owner/testnet và #19/#40/#41/#42 vẫn mở.
 - [x] Project#1 qua browser `/dung0611`:4items×2fields (#6/#7/#20/#44),
   đã reload kiểm; giữ In review/Blocked, không Done; Project#2 không đổi.

@@ -1,0 +1,12 @@
+✔ final worker trace accepts bounded interleaving (75.881518ms)
+✔ final worker trace rejects late fifth attempt (20.793865ms)
+✔ final worker trace accepts bounded interleaving across outage boundary (7.448094ms)
+✔ final worker trace rejects late fifth attempt across outage boundary (12.839878ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1013.766542

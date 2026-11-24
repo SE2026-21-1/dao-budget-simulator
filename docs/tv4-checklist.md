@@ -15,8 +15,10 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   [demo/failure plan](qa07-e2e.md#diễn-tập-integration--release--2411) đã cập nhật.
 - [ ] Final-head CI và TV1 re-review S3; TV2/TV3 scoped requests tiếp tục,
   không tự dismiss/resolve hoặc merge. #20 owner/testnet và #19/#40/#41/#42 vẫn mở.
-- [ ] Project chưa đọc/cập nhật được: OAuth thiếu read:project/project; không Done.
-  #56 server retired, #18/#36 accepted không mở lại; release #7/#44 chưa đủ điều kiện.
+- [x] Project#1 qua browser `/dung0611`:4items×2fields (#6/#7/#20/#44),
+  đã reload kiểm; giữ In review/Blocked, không Done; Project#2 không đổi.
+  API thiếu scope không còn chặn kênh browser. #56 retired, #18/#36 không mở lại.
+  BE07 clock fix96e4601: native10phases PASS; pushCI success, PR gate vẫn riêng.
 
 ## Kết luận theo bằng chứng — 23/11/2026
 

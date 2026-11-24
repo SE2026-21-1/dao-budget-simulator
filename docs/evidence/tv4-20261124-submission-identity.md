@@ -71,7 +71,7 @@ Review toàn bộ diff code được tạo: identity trước send, failure orde
 - **CI:** đã đọc baseline Dev và PR60 `9e121c5` completed/success; final-head CI sau push phải được ghi bằng link run ở PR60, không lấy baseline thay thế. Publish ngoài pushDev bị skip theo policy, không có release mới.
 - **Review:** TV1 `nvdungmim` re-review signed-submission/receipt/journal delta; TV2 `daongocuong` giữ request BE08/backend/delivery và #41 same-H reconciliation; TV3 `LangXiTrum2005` giữ request harness/extension/account-switch. Danh tính/phạm vi xác định từ phân công chung, runbook và review threads. Không dismiss/resolve thread thay reviewer. CHANGES_REQUESTED vẫn chặn merge dù local PASS.
 - **Còn mở:** #19 account-switch site-authorized A→B; #41 peer acknowledgement same-proposal pipeline; #40 final receiver lifecycle/transport outputs; #42 API-restart receiver; #20 final approved SHA/nine-address map/six custodians/gas budget/explicit broadcast authorization và actual testnet receipts/roles. #7/#44 giữ PARTIAL/NOT READY.
-- **Project:** [Project nhóm#1](https://github.com/orgs/SE2026-21-1/projects/1) được nhận diện từ tài liệu chung; tài liệu lịch sử ghi Project#2 đã closed. API hôm nay trả `INSUFFICIENT_SCOPES` vì token chỉ có `repo/read:org/gist`, thiếu `read:project` để đọc và `project` để ghi. Public reader trả404. **Chưa xác minh trạng thái hiện tại hoặc cập nhật Project**, không tự mở rộng OAuth scope. Maintainer có quyền Project cần liên kết PR60/#20/#7/#44 và giữ In review/Blocked theo các gate trên, không Done.
+- **Project:** đã cập nhật trực tiếp [Project nhóm#1](https://github.com/orgs/SE2026-21-1/projects/1) bằng **browser relay**, tài khoản `/dung0611` được xác minh qua Profile. API ban đầu thật sự thiếu read:project/project; không thay OAuth scope. Kênh browser đã lưu và reload kiểm lại **4items × 2fields** (`Bằng chứng / SHA`, `Phụ thuộc / cần xác nhận`) cho #6/#7/#20/#44. #6/#7 giữ In review/Kiểm tra một phần; #20/#44 giữ Blocked/Bị chặn. Link PR60/source/test/report và owner/review/receiver/testnet blockers đã đồng bộ; #56 server retired không còn bị nêu như VM/URL gate. Không Done, không sửa Project#2 hoặc hạng mục cá nhân. Các comment trước ghi thiếu quyền API là mốc lịch sử, không còn là blocker cập nhật Project qua browser.
 
 Kịch bản chuẩn bị/thao tác/kỳ vọng và phương án demo lỗi đã cập nhật tại [QA07 — Diễn tập Integration & Release](../qa07-e2e.md#diễn-tập-integration--release--2411). Đây chưa là buổi diễn tập/video nhóm. Không merge/pushDev, promote main, tag, release, provision server hoặc tiêu gas trong lượt này.
 
@@ -129,3 +129,21 @@ và deep-fork rebuild-required đã chạy. Canonical recovery hash
 Cluster dùng một lần đã stop (`server stopped`); runtime/cluster tạm do lượt này
 tạo đã xóa, raw report/log giữ trong output trên. Đây không phải Docker/browser/
 testnet acceptance. PR CI mới sau clock fix vẫn phải chạy, không rerun mù run lỗi cũ.
+
+## CI và Project sau clock fix
+
+Trên `96e46013e435e743e3d3df696255ab4864461bd5`,
+[push TV4 CI45341624946](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45341624946)
+completed/success (10jobs success,1publish skipped);
+[forced fallback45341624883](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45341624883)
+success. Đây là **push CI**, không phải PR merge-ref CI. Lúc đối chiếu, GitHub báo
+PR60 `mergeable_state=dirty` dù base vẫn6766e5e và local
+`git merge-tree --write-tree origin/Dev HEAD` exit0/tree
+`a563a694056dea20593eed02480831f7423f52cd`. Chưa có PR workflow mới cho96e4601;
+không tự kết luận root cause dịch vụ, bypass review hoặc coi push xanh thay PR gate.
+Trạng thái/checks của final documentation HEAD phải tiếp tục được ghi ở PR60.
+
+Project#1 được sửa bằng controls native của GitHub, không script ghi app state.
+Đã reload trang bảng `views/2` và đọc lại từng field/status sau lưu; bốn issue
+vẫn open. Không đổi global view/filter, không self-approve, không chạm Project#2
+hoặc PR cá nhân. Cập nhật Project là theo dõi tiến độ, không là peer acceptance.

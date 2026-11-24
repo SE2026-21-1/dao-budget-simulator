@@ -17,7 +17,10 @@ hash delegation khác funding. Không sửa lại receipt-binding đã được 
 44bootstrap/provenance/Sepolia,14BE08,4release,127frontend PASS;1live SKIP;
 typecheck/build/lint exit0, warnings và Docker-permission limit ghi rõ.
 Đã cập nhật runbook journal/reconciliation và kịch bản demo/failure chung;
-chưa claim browser rerun, testnet, Project update hoặc release acceptance.
+chưa claim browser rerun, testnet hoặc release acceptance. Project#1 đã cập nhật
+qua browser:4items×2fields, reload kiểm, giữ In review/Blocked; Project#2 không đổi.
+Follow-up clock96e4601 giữ boundary assertions, native BE07/PostgreSQL18.4
+10phases PASS; pushCI45341624946 success không thay PR merge-ref gate.
 PR60 tiếp tục qua TV1/TV2/TV3 và final-head CI; không pushDev/bypass review.
 
 ## Trạng thái theo bằng chứng — 23/11/2026

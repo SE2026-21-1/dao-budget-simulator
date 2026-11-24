@@ -59,8 +59,8 @@ Linux x64, Node24.15.0, Foundry1.8.5, artifacts/dependencies sẵn có. Không c
 | `npm --prefix frontend test` | 127PASS/1SKIP, exit0; live test opt-in thiếu môi trường, không phải live PASS |
 | `npm --prefix frontend run lint` | exit0;8warning tại wallet.tsx, không sửa vì ngoài delta |
 | `npm --prefix frontend run build` | exit0; cảnh báo chunk>500kB, không warning-free |
-| Docker runtime/Compose/database campaign local mới | Không chạy: `docker info` bị permission denied tại daemon socket; không đổi quyền hoặc dùng DB đang phục vụ |
-| Browser/extension/backend live acceptance mới; full Foundry/SC06/BE08 benchmark local mới | Không chạy lại các campaign đã đủ evidence chỉ để tăng hoạt động; product/contract không đổi. CI PR60 vẫn giữ các gate chung. |
+| Docker runtime/Compose local mới | Không chạy: `docker info` bị permission denied tại daemon socket; không đổi quyền hoặc dùng DB đang phục vụ. BE07 native bổ sung sau CI được ghi riêng bên dưới. |
+| Browser/extension live acceptance mới; full Foundry/SC06/BE08 benchmark local mới | Không chạy lại các campaign đã đủ evidence chỉ để tăng hoạt động; product/contract không đổi. CI PR60 vẫn giữ các gate chung. |
 
 Review toàn bộ diff code được tạo: identity trước send, failure ordering/journal, no-resend, canonical receipt guards và regressions. Đọc diff chung ba file PR61: same-ID lifecycle/backoff/max-attempt assertions vẫn giữ, không sửa lại. Không tạo self-review/approval; formal TV1/TV2/TV3 vẫn là điều kiện merge. Workflow hiện có đã chạy suite Sepolia trong contracts job, nên không cần thêm gate trùng.
 
@@ -74,3 +74,58 @@ Review toàn bộ diff code được tạo: identity trước send, failure orde
 - **Project:** [Project nhóm#1](https://github.com/orgs/SE2026-21-1/projects/1) được nhận diện từ tài liệu chung; tài liệu lịch sử ghi Project#2 đã closed. API hôm nay trả `INSUFFICIENT_SCOPES` vì token chỉ có `repo/read:org/gist`, thiếu `read:project` để đọc và `project` để ghi. Public reader trả404. **Chưa xác minh trạng thái hiện tại hoặc cập nhật Project**, không tự mở rộng OAuth scope. Maintainer có quyền Project cần liên kết PR60/#20/#7/#44 và giữ In review/Blocked theo các gate trên, không Done.
 
 Kịch bản chuẩn bị/thao tác/kỳ vọng và phương án demo lỗi đã cập nhật tại [QA07 — Diễn tập Integration & Release](../qa07-e2e.md#diễn-tập-integration--release--2411). Đây chưa là buổi diễn tập/video nhóm. Không merge/pushDev, promote main, tag, release, provision server hoặc tiêu gas trong lượt này.
+
+## Follow-up CI: clock của harness BE07
+
+HEAD `d2a3dd841c555979820ccacac07072e607265e1c`:
+[push45339531142](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45339531142)
+success; [PR45339537419](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45339537419)
+failure. Hai forced-fallback workflows success:45339531101/45339537553.
+Tổng bốn run: **21success/1failure/2publishSKIPPED**, không gọi CI xanh.
+Đã đọc actual contract logs của cả push/PR:182Foundry PASS và44bootstrap/
+provenance/Sepolia PASS, gồm funding-response regression; BE08/container cũng PASS.
+
+Failure riêng [job138259591612](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45339537419/job/138259591612):
+unit và sáu DB suites exit0, `be07-live` exit1 sau `empty Active block`.
+Artifact14895207493 được tải và khớp SHA256
+`bae364d45299ac13269a5e16340130625b5eef1c6805a0c98e22dee32be753ac`;
+`be07-live.json/.txt` chỉ rõ `evm_setNextBlockTimestamp` RPC-32602 tại
+`scripts/check_be04_live.mjs:152/359`. Source là PR merge-ref
+`c06735c9d6464f10a7a98fce20f94afaf6209981`, empty patch; không nhầm với HEAD.
+
+Nguyên nhân harness: SQL/API phase có thể tốn hơn một giây thật, nhưng các vote
+sau phase cố đặt lại đúng snapshot+1. Clock auto-mine mặc định có thể tiến vượt
+mốc đó. Bản sửa dùng pattern sẵn có của `benchmark_api.mjs`:
+`anvil_setBlockTimestampInterval(0)` **chỉ trên Anvil do runner vừa tạo**, sau deploy
+và trước snapshot/campaign. Mỗi transaction có mốc explicit còn assert timestamp
+header đúng mốc yêu cầu. Không dùng max(now,requested), bỏ boundary assertion,
+tăng timeout hoặc retry lỗi timestamp; không đổi clock của testnet/chain người khác.
+
+Chuẩn bị native local ban đầu chưa chạy scenario vì package PostgreSQL18.4 thiếu
+SONAME links/loader path; lần kế thiếu utility `createdb` không được bundle.
+Đã dùng thư viện package cùng version, tạo links trong thư mục tạm sở hữu và
+khởi tạo DB bằng pg client trên cluster loopback mới; không sửa hệ thống/lockfile,
+không dùng database đang phục vụ. Không tính các bước preparation lỗi là test PASS.
+
+Sau sửa đã thực chạy **một campaign BE07 native** trên PostgreSQL18.4/Anvil1.8.5,
+Node24.15.0, base`d2a3dd8`+clock patch SHA256
+`b4ce4a5ffab32729ef2a112b596bc14ad44f7f894317a653f4575328c208f561`:
+
+```sh
+BE04_LIVE_ISOLATED=1 \
+BE04_LIVE_DATABASE_URL=postgresql://be04_test@127.0.0.1:33727/be04_live \
+BE07_TEST_ISOLATED=1 \
+BE07_COMPARE_DATABASE_URL=postgresql://be04_test@127.0.0.1:33727/be07_compare \
+BE07_BASELINE_ROOT='' node --import tsx scripts/check_be04_live.mjs \
+  --output /tmp/tv4-be07-clock-evidence.EUHd7p/be07-live.json --be07
+```
+
+**PASS/exit0,67,83s;10phases**, exact snapshot/deadline/ETA và mỗi explicit
+transaction header được assert; underfunded retry giữ nguyên.
+`report.be07.status=PASS`: shallow reorg cùng H67/head69, orphan removal,
+recovery503/cursor409, ba replay cycles, BE06 same-H compare,31s RPC outage/recovery
+và deep-fork rebuild-required đã chạy. Canonical recovery hash
+`0xcf82ea9de901ae34cf3abbb4eb5f092a8d17ecb9d75391dd9103ee0d670bd7bb`.
+Cluster dùng một lần đã stop (`server stopped`); runtime/cluster tạm do lượt này
+tạo đã xóa, raw report/log giữ trong output trên. Đây không phải Docker/browser/
+testnet acceptance. PR CI mới sau clock fix vẫn phải chạy, không rerun mù run lỗi cũ.

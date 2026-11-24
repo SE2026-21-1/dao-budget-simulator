@@ -17,9 +17,13 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
       rpcTimeoutMs: 5000, maxAttempts: 4, baseDelayMs: 250, maxDelayMs: 2000, jitter: '50–100%', poolMax: 1 },
     timing: 'Conservative upper bound: monotonic clock immediately BEFORE mining the second following block, through a complete HTTP body containing this transaction, with SQL publication H/hash equal to API H/hash. Mining acknowledgement is the eligibility upper bound. 25ms polling adds observation delay.',
     scope: 'Owned Anvil, real CLI worker, 100 proposals/1000 votes; no production/testnet SLA. Outage is excluded from normal-RPC samples.' };
-  let offline = false, child, stdout = '', stderr = '', stopping = false, fatal, attemptCount = 0;
+  let offline = false, child, stdout = '', stderr = '', fatal, attemptCount = 0, closePromise;
   const rpcRecorder = createOutageRpcRecorder();
+  const pendingRequests = new Set();
   const proxy = createServer(async (req, res) => {
+    let drained;
+    const pendingRequest = new Promise(resolve => { drained = resolve; });
+    pendingRequests.add(pendingRequest);
     let attempt, recorded = false;
     const finish = httpStatus => {
       if (!attempt || recorded) return;
@@ -45,6 +49,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
         finish(503); res.writeHead(503); res.end();
       }
     } catch { finish(503); res.writeHead(503); res.end(); }
+    finally { pendingRequests.delete(pendingRequest); drained(); }
   });
   proxy.listen(0, '127.0.0.1'); await once(proxy, 'listening');
   const directory = await scope.temporaryDirectory(join(tmpdir(), 'dao-be08-worker-'));
@@ -157,6 +162,7 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     result.retryAccounting = 'Retries group by logical call ID; partial counts require same-ID requests outside the measured outage window';
     const outageEnded = performance.now();
     result.offlineDurationMs = outageEnded - started;
+    result.window = { startedAtMs: started, endedAtMs: outageEnded };
     offline = false; result.restoredAt = new Date().toISOString(); const restored = performance.now();
     await waitFor(async () => {
       result.recoveredHealth = await get(base, '/health');
@@ -166,21 +172,55 @@ export async function startWorkerProbe({ scope, root, dbUrl, rpc, config, pool, 
     result.retryCycles = summarizeOutageCalls(rpcRecorder.lifecycleAttempts,
       { startedAtMs: started, endedAtMs: outageEnded });
     assert.ok(result.retryCycles.length >= 5, 'Several bounded RPC calls must be observable');
-    result.recoveryMs = performance.now() - restored; result.status = 'PASS';
+    result.recoveryMs = performance.now() - restored;
+    result.status = state.status = 'AWAITING_FINAL_TRACE';
     state.normal = metrics(state.samples.filter(s => s.status === 'PASS').map(s => s.elapsedMs));
-    state.status = state.errors.length === 0 && state.idle.count >= 10 && state.load.count >= 10 ? 'PASS' : 'FAIL';
-    assert.equal(state.status, 'PASS');
   }
-  async function close() {
-    if (stopping) return; stopping = true; offline = false;
-    if (child.exitCode === null && child.signalCode === null) child.kill('SIGTERM');
-    const timer = setTimeout(() => child.kill('SIGKILL'), 10_000);
-    try {
-      const [code, signal] = await closed; state.workerExit = { code, signal };
-      assert.equal(code, 0, 'Worker must shut down cleanly'); assert.equal(signal, null);
-    }
-    finally { clearTimeout(timer); proxy.closeAllConnections(); await new Promise(resolve => proxy.close(resolve)); }
-    state.stdout = stdout; state.stderr = stderr;
+  function close() {
+    return closePromise ??= (async () => {
+      offline = false;
+      let timer;
+      const deadline = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          child.kill('SIGKILL');
+          reject(new Error('Worker shutdown/RPC recorder drain exceeded 10000ms'));
+        }, 10_000);
+      });
+      try {
+        if (child.exitCode === null && child.signalCode === null) child.kill('SIGTERM');
+        await Promise.race([(async () => {
+          const [code, signal] = await closed; state.workerExit = { code, signal };
+          assert.equal(code, 0, 'Worker must shut down cleanly'); assert.equal(signal, null);
+          // Worker close seals the producer. Server close seals acceptance; async
+          // upstream handlers may outlive their sockets, so drain those explicitly.
+          const proxyClosed = new Promise((resolve, reject) =>
+            proxy.close(error => error ? reject(error) : resolve()));
+          await Promise.all([proxyClosed, ...pendingRequests]);
+        })(), deadline]);
+        if (state.outage) {
+          const result = state.outage;
+          delete result.retryCycles;
+          result.retryCycles = summarizeOutageCalls(result.rpcLifecycle, result.window);
+          assert.ok(result.retryCycles.length >= 5, 'Several bounded RPC calls must be observable');
+          result.finalizedAt = new Date().toISOString();
+          result.status = 'PASS';
+          state.status = state.errors.length === 0 && state.idle.count >= 10 && state.load.count >= 10 ? 'PASS' : 'FAIL';
+          assert.equal(state.status, 'PASS');
+        }
+      } catch (error) {
+        state.status = 'FAIL';
+        if (state.outage) {
+          state.outage.status = 'FAIL';
+          state.outage.error = error.message;
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+        proxy.closeAllConnections();
+        await new Promise(resolve => proxy.close(resolve));
+        state.stdout = stdout; state.stderr = stderr;
+      }
+    })();
   }
   return { ready, samples, outage, close, check };
 }

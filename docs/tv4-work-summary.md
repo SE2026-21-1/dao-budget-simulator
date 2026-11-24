@@ -8,7 +8,19 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Trạng thái hiện hành — 23/11/2026
+## Trạng thái hiện hành — 24/11/2026
+
+Fix chung `033e63d3d70408ee87563e8dc809f67fbde67c72` nối signed raw bytes với
+broadcast/receipt identity, lưu hash bền vững trước send và fail-stop khi RPC trả
+hash delegation khác funding. Không sửa lại receipt-binding đã được TV1 xác nhận.
+[Báo cáo, regression trước/sau, matrix và source fingerprints](evidence/tv4-20261124-submission-identity.md):
+44bootstrap/provenance/Sepolia,14BE08,4release,127frontend PASS;1live SKIP;
+typecheck/build/lint exit0, warnings và Docker-permission limit ghi rõ.
+Đã cập nhật runbook journal/reconciliation và kịch bản demo/failure chung;
+chưa claim browser rerun, testnet, Project update hoặc release acceptance.
+PR60 tiếp tục qua TV1/TV2/TV3 và final-head CI; không pushDev/bypass review.
+
+## Trạng thái theo bằng chứng — 23/11/2026
 
 [Báo cáo nghiệm thu, raw archive, lệnh/exit/SHA và giới hạn](evidence/tv4-20261123-acceptance.md)
 là đầu mối hiện hành; các mục21/11 trở về trước bên dưới là lịch sử.

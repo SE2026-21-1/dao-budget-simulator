@@ -5,7 +5,20 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Kết luận hiện hành — 23/11/2026
+## Kết luận hiện hành — 24/11/2026
+
+- [x] Tái hiện submission-identity Medium trước sửa; fix `033e63d3d70408ee87563e8dc809f67fbde67c72`
+  lưu keccak signed bytes trước broadcast, reject response sai/mất, không resend.
+- [x] 44bootstrap/provenance/Sepolia (28Sepolia),14BE08,4release và127frontend PASS;
+  1live test frontend SKIP. Typecheck/build/lint exit0, warnings giữ nguyên.
+- [x] [Ma trận delta, source fingerprints và giới hạn](evidence/tv4-20261124-submission-identity.md);
+  [demo/failure plan](qa07-e2e.md#diễn-tập-integration--release--2411) đã cập nhật.
+- [ ] Final-head CI và TV1 re-review S3; TV2/TV3 scoped requests tiếp tục,
+  không tự dismiss/resolve hoặc merge. #20 owner/testnet và #19/#40/#41/#42 vẫn mở.
+- [ ] Project chưa đọc/cập nhật được: OAuth thiếu read:project/project; không Done.
+  #56 server retired, #18/#36 accepted không mở lại; release #7/#44 chưa đủ điều kiện.
+
+## Kết luận theo bằng chứng — 23/11/2026
 
 Nguồn quyết định: [báo cáo TV4 theo SHA/evidence](evidence/tv4-20261123-acceptance.md);
 các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi lịch sử.

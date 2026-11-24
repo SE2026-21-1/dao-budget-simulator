@@ -1,6 +1,6 @@
 # Sepolia — chuẩn bị chung và điều kiện triển khai
 
-## Trạng thái TV4 ngày 23/11/2026
+## Trạng thái TV4 ngày 24/11/2026
 
 Mạng đã chốt tại #20: Sepolia, chainId **11155111**, RPC public
 `https://ethereum-sepolia-rpc.publicnode.com`, **K=2**. Lượt này không được cấp
@@ -14,12 +14,13 @@ file hoặc nội dung personal/individual/VT-063/VT-064 của #21/#55.
 Hash/provenance và tests local mới được ghi riêng; approval lịch sử không tự
 thành approval candidate mới. Guard local loopback/unforked31337 giữ nguyên.
 
-**Delta sau review TV1 hiện hành:** [review6018122562](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6018122562)
-request changes tại c0d0b26 vì receipt của transaction khác có thể được nhận K2.
-Candidate đã sửa `waitConfirmed` và regression suite; [lệnh/exit/hash](evidence/tv4-20261123-sepolia-receipt-fix.json):
-21 synthetic Sepolia tests,14BE08, typecheck/build đều exit0. Hai file patched
-không còn byte-identical94d5367; bằng chứng13tests/sáu hashes trước đó là lịch sử.
-TV1 chưa re-approve; đây không phải quyền deployment hoặc chứng nhận public RPC.
+**Delta review hiện hành:** TV1 xác nhận receipt-binding đã sửa ở `9e121c5`,
+nhưng [finding submission identity Medium](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#discussion_r4667841738)
+vẫn chặn merge: hash trả về từ broadcast có thể trỏ tới delegation thay vì funding.
+Candidate tính `keccak256(signedRaw)` tại máy ký, fsync identity trước send và
+đối chiếu response trước K2. [Ma trận, lệnh và giới hạn mới](evidence/tv4-20261124-submission-identity.md)
+tách khỏi [bằng chứng receipt-binding trước đó](evidence/tv4-20261123-sepolia-receipt-fix.json).
+TV1 phải re-review; không tự dismiss request-changes hoặc coi đây là quyền broadcast.
 
 
 ## Kiểm tra không cần signer
@@ -49,7 +50,9 @@ là deployment/testnet PASS hay đủ gas budget. Không dùng địa chỉ Anvi
   estimate hiện hành +20% gas headroom, block gas/fee/cumulative-budget/balance
   và pending/latest/expected nonce gates cho **mỗi** transaction.
 - `sepolia_cli.mjs`: từ chối output cũ, journal fsync/atomic rename trước/sau send.
-  Send mơ hồ giữ `AWAITING_SIGNER`/nonce để reconcile, không tự resend/resume.
+  `SIGNED` giữ hash tính từ signed bytes trước broadcast; khi response mất/sai,
+  trạng thái này **không chứng minh chưa gửi**. Đối chiếu hash/sender/nonce/chain
+  với custodian; không tự resend/resume, không lưu raw signed bytes hoặc secret.
 - `deploy_sepolia.mjs`: explicit chain/source approval, từ chối tracked source
   dirty, grant→audit→renounce→audit→delegate→audit→fund→audit; K2 canonical receipt.
 - `check_roles_sepolia.mjs`: read-only source/constructor/runtime/ABI/admin/history
@@ -60,12 +63,20 @@ là deployment/testnet PASS hay đủ gas budget. Không dùng địa chỉ Anvi
 - `node --test tests/smoke/sepolia.test.mjs`: role-map/network/K2/nonce/signing/
   journal và fail-closed bootstrap trên chain **synthetic**, không gọi là Sepolia PASS.
 
-Gate K2 chỉ chấp nhận **submitted transaction hash** ở cả receipt đầu và lần đọc
-lại; block number/hash/index phải khớp, và `canonical.transactions[index]` phải
-chính là hash đã gửi. Chỉ sau đó mới ghi `CONFIRMED_K2`/receipt journal.
-Mismatch dừng ở `FAIL_STOP_NO_AUTOMATIC_RETRY`; funding vẫn `SUBMITTED`, không
-gắn receipt delegation cũ thành funding đã đủ xác nhận. Regression end-to-end
-giữ funding ở head với **0 descendants**, không đổi K/timeout/poll để lấy PASS.
+Chuỗi identity: **signed raw bytes → keccak256 → journal SIGNED → broadcast
+response cùng hash → SUBMITTED → hai canonical receipt reads → CONFIRMED_K2**.
+Hash response hợp lệ khác hoa/thường được chuẩn hóa về lowercase; hash sai
+đối tượng/sai độ dài/null hoặc response mất đều dừng, không dùng response đó để
+chọn receipt. Đây là transaction hash, không phải descriptionHash/proposalId;
+không normalize lại description, không đổi hash contract/frontend/backend.
+
+Gate K2 tiếp tục yêu cầu hai receipt cùng transaction hash, block number/hash/index
+khớp và `canonical.transactions[index]` đúng identity. Mismatch receipt giữ
+`SUBMITTED`; mismatch/mất response broadcast giữ `SIGNED` cùng hash local.
+Manifest chuyển `FAIL_STOP_NO_AUTOMATIC_RETRY`, không ghi receipt funding/K2.
+Hai regression tách biệt giữ actual funding ở head với **0 descendants**:
+receipt delegation bị thay và response submission delegation bị thay.
+K/nonce/gas/role/source guards không bị nới.
 
 
 Sau khi toàn checklist bên dưới được owner xác nhận công khai và TV1 review,

@@ -200,3 +200,24 @@ hoặc sửa DOM/control, không dùng nó chứng minh extension identity thay 
 A400 For/11.000 BUD/revert/retry của [lượt extension đã hoàn tất](evidence/tv4-20261123-real-extension.json)
 vẫn là proof riêng; case này không được thay proposal/request đã thực thi để
 gọi là retry, không dùng profile/port archived sau cleanup.
+
+## Diễn tập Integration & Release — 24/11
+
+Đây là kịch bản, không phải biên bản đã diễn tập. Chọn một full SHA sau review/CI;
+ghi SHA tooling và sản phẩm riêng nếu dùng `--project-root`. Không dùng journal,
+manifest hoặc endpoint archived cho lượt mới.
+
+| Bước | Thao tác | Kết quả cần trình bày |
+|---|---|---|
+| Chuẩn bị | Node24.15.0/Foundry1.8.5/PG18.4; lockfile/submodule đúng; `forge build`; tạo output mới. Đọc [gate hiện hành](evidence/tv4-20261124-submission-identity.md). | SHA/artifact/manifest/chain/deployment nhất quán; không secret trong màn hình/log. |
+| Hash và fail-stop local | `node --test --test-name-pattern='signed submission|funding submission|unconfirmed final funding' tests/smoke/sepolia.test.mjs` | Response hash delegation và receipt delegation là hai lỗi khác nhau, đều bị từ chối; signed hash local còn trong journal, không resend hoặc false K2. Chỉ Anvil disposable, không Sepolia. |
+| Demo browser nhóm | Tạo stack `--serve` theo hướng dẫn trên; thao tác extension thật trên cùng proposal: tạo, vote, queue, execute thiếu quỹ, nạp2.000, retry. | Lưu receipt0/receipt1, IDs và publication cùng H/hash; SQL/API/UI, Treasury1.000/recipient11.000; không gọi adapter là extension. |
+| Ca còn thiếu | TV3 thực hiện site-authorized A→B theo checklist account-switch trên; TV2 nhận scope receipt/worker/API. | Draft giữ nguyên, không send từ phiên A cũ; chưa có bằng chứng thì ghi PARTIAL, không tick PASS. |
+| Kết thúc | Lưu report/log/ảnh đã redact; Ctrl-C đúng runner sở hữu, kiểm teardown; nhóm ghi quyết định và review còn thiếu. | Không release/tag/merge chỉ từ demo local. Không tái tạo server staging đã rút scope. |
+
+Nếu thiếu PG/Chrome/extension hoặc RPC lỗi: dừng đúng bước, giữ failed report;
+chỉ trình bày evidence lịch sử với SHA/ngày/giới hạn rõ, không gọi là demo live.
+Nếu submission mơ hồ: không chạy lại journal, không gửi lại giao dịch; đối chiếu
+hash local/sender/nonce/chain với custodian theo [runbook Sepolia](sepolia-deployment.md).
+Demo Sepolia chỉ thêm sau đủ owner authorization/map/custodians/budget, chờ thời
+gian thật; không dùng warp local thay Executed/Defeated testnet.

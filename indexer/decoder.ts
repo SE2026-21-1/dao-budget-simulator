@@ -33,7 +33,7 @@ export function decodeLog(log: NormalizedLog): DecodeResult {
       throw new Error('Log topics must contain one to four 32-byte values');
     }
     if (!/^0x(?:[0-9a-fA-F]{2})*$/.test(log.data)) throw new Error('Log data must be an even-length hex byte string');
-    const fragment = registration.interface.getEvent(log.topics[0]!);
+    const fragment = registration.eventsByTopic[log.topics[0]!.toLowerCase()];
     if (!fragment) {
       return { status: 'unknown_topic', code: 'UNKNOWN_TOPIC', message: `No supported event for topic ${log.topics[0]}`, abiVersion };
     }

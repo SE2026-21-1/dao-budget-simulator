@@ -12,7 +12,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Interface, toQuantity } from 'ethers';
 import pg from 'pg';
 import { verifyKeyboard } from './qa07_keyboard.mjs';
-import { assertReconciledSnapshot } from './qa07_snapshot.mjs';
+import { assertRenderedSnapshot, readReconciledSnapshot } from './qa07_snapshot.mjs';
 
 const args = process.argv.slice(2);
 assert.ok(args[0] === '--postgres-bin' && args[2] === '--output',
@@ -307,12 +307,12 @@ try {
     asOfBlockHash: await page.locator('.snapshot-info code').nth(0).innerText(),
     snapshotRevision: await page.locator('.snapshot-info code').nth(1).innerText(),
   };
-  assert.equal(uiSnapshot.asOfBlockHash, final.context.asOfBlockHash, 'Rendered UI hash must match the reconciled publication');
-  assert.equal(uiSnapshot.snapshotRevision, final.context.snapshotRevision, 'Rendered UI revision must match the reconciled publication');
+  assertRenderedSnapshot(uiSnapshot, final.context);
   await screenshot(page, '08-executed-reconciled-ui');
-  const detail = await get(`/proposals/${proposalId}`); assert.equal(detail.status, 200);
-  const transfers = await get('/treasury/transfers', { proposalId }); assert.equal(transfers.status, 200);
-  assertReconciledSnapshot(final.context, detail.body.context, transfers.body.context);
+  // Force a real newer worker publication while the summary/UI snapshot remains cached and canonical.
+  const interleaved = await publish('newer-publication-before-pinned-reconciliation');
+  assert.ok(BigInt(interleaved.context.asOfBlock) > BigInt(final.context.asOfBlock));
+  const { detail, transfers, pin } = await readReconciledSnapshot(get, final.context, proposalId);
   assert.equal(detail.body.data.requestId, requestId); assert.equal(detail.body.data.state, 'Executed');
   assert.equal(detail.body.data.operation.status, 'Done');
   const executeHash = report.browserTransactions.at(-1).transactionHash;
@@ -323,7 +323,7 @@ try {
   assert.equal(String(await call('Governor', 'state', [proposalId], at)), '7');
   assert.equal(await call('Timelock', 'isOperationDone', [detail.body.data.operation.operationId], at), true);
   report.reconciliation = { detail, transfers, context: final.context, operationId: detail.body.data.operation.operationId,
-    uiSnapshot,
+    uiSnapshot, pin, latestContextBeforeReads: interleaved.context,
     executeHash, requestId, proposalId, treasuryBalance: String(await call('BUD', 'balanceOf', [addresses.Treasury], at)),
     recipientBalance: String(await call('BUD', 'balanceOf', [accounts.recipient], at)), paid: await call('Treasury', 'paidRequests', [requestId], at) };
   assert.equal(report.reconciliation.recipientBalance, '11000000000000000000000'); assert.equal(report.reconciliation.paid, true);
@@ -349,7 +349,7 @@ try {
     if (tx.receipt.status === '0x1') assert.ok(events.some(event => String(event.args.proposalId) === proposalId));
   }
   assert.deepEqual(report.browserTransactions.map(t => t.decoded), ['propose', 'castVote', 'queue', 'execute', 'execute']);
-  report.checks.push('same browser-created proposal: propose/vote/queue/reverted-execute/funded-execute; receipts, worker, API, rendered UI revision and canonical H/hash reconciled');
+  report.checks.push('same browser-created proposal: propose/vote/queue/reverted-execute/funded-execute; receipts, worker, rendered UI revision and summary-pinned API H/hash/revision reconciled despite a newer real worker publication');
   uiMode = 'hold'; uiGate = new Promise(done => { releaseUi = done; });
   await page.goto(`${uiBase}/proposals`); await page.getByRole('status', { name: 'Đang tải dữ liệu đề xuất' }).waitFor(); await screenshot(page, '09-loading-real-transport');
   uiMode = 'offline'; releaseUi(); await page.getByRole('button', { name: 'Thử lại', exact: true }).waitFor(); await screenshot(page, '10-api-network-error');

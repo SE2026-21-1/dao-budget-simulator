@@ -80,12 +80,17 @@ Một proposal duy nhất do form browser tạo, cùng deployment xuyên suốt:
 4. Mine qua snapshot; browser bỏ phiếu; mine qua deadline; browser Queue; mine qua ETA.
 5. Browser Execute khoản 11.000 BUD khi Treasury chỉ có 10.000: receipt status=0, chưa paid, số dư không đổi.
 6. Nạp thêm 2.000 BUD bằng tài khoản funding được sở hữu; browser retry Execute cùng proposal/request, receipt status=1.
-7. Worker CLI publish; SQL disbursement, API detail/transfer, receipt và contract đọc bằng EIP-1898 canonical blockHash khớp nhau. Treasury=1.000 BUD, recipient=11.000 BUD tại H/hash này. Desktop UI hiển thị Executed, txHash và H/hash.
+7. Worker CLI publish; SQL disbursement, API detail/transfer, receipt và contract đọc bằng EIP-1898 canonical blockHash khớp nhau. Summary/detail/transfers phải cùng chainId, deploymentId, H/hash, snapshotRevision, asOfTimestamp và dataKind; không so freshness `sync` có thể thay đổi giữa các request. Treasury=1.000 BUD, recipient=11.000 BUD tại H/hash này. Desktop UI hiển thị Executed, txHash và H/hash; runner đọc revision từ `<code>` thực của `.snapshot-info`, đối chiếu với summary và lưu `reconciliation.uiSnapshot` (không suy từ API/client).
 8. Proxy transport trì hoãn request thật để chụp loading; đóng socket để chụp error; phục hồi transport và dùng nút Thử lại. Không chế tạo API envelope.
 9. Snapshot Anvil sau lifecycle; tạo nhánh funding 1 wei, lấy cursor thật. Revert và tạo nhánh funding 2 wei. Worker phát hiện reorg; proxy chỉ giữ RPC **sau khi worker đã ghi gate recovering thật** để quan sát API summary503 + cursor409 và lỗi UI. Thả RPC, worker canonical replay, cursor cũ vẫn409; UI retry phục hồi. Không sửa SQL/state product để tạo kết quả.
 10. Chụp detail Executed ở 1366×900 và 390×844.
 
 `PASS` chỉ nói về các assertion đã chạy trong report và các ảnh cần review; không đồng nghĩa nghiệm thu MetaMask, public testnet, explorer hoặc SLA BE08. Có lỗi phải giữ nguyên report/log/ảnh của lần đó, ghi rõ đã dừng ở bước nào; không đổi failed evidence thành PASS và không thu hẹp assertion để né lỗi.
+
+Regression độc lập (không chain/browser): `node --test tests/smoke/qa07-snapshot.test.mjs`.
+Negative control đổi riêng revision ở detail hoặc transfers, giữ nguyên chain/deployment/H/hash;
+positive control cùng revision vẫn đạt. Các mismatch chain/deployment/H/hash và metadata publication
+cũng phải bị từ chối. Đây là kiểm oracle QA, không thay acceptance extension #19/#36.
 
 ## Trách nhiệm nghiệm thu
 

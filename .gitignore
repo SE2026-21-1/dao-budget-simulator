@@ -19,6 +19,7 @@
 *.tar.gz
 !docs/evidence/tv4-20261123-raw.tar.gz
 !docs/evidence/tv4-20261123-current-ui.tar.gz
+!docs/evidence/qa07-revision-20261125/raw.tar.gz
 *.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml

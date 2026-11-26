@@ -552,3 +552,17 @@ Import tài nguyên đã tạo tay trước khi apply Terraform; chuyển contai
 Compose trong thời gian bảo trì có backup, không chạy tự động khi pull Git.
 Đây là chain Anvil 31337 riêng, chưa bật giao dịch ví công khai; Quick Tunnel
 hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
+
+## What-if Budget Simulator (TV1, off-chain)
+
+Module TypeScript độc lập tại `simulator/` thử thứ tự giải ngân, requestId trùng,
+thiếu quỹ, top-up và retry bằng `bigint`. Không gọi RPC hoặc thay đổi state chain,
+API hay UI hiện có. Kết quả là giả định, không chứng minh giao dịch thật sẽ thành công.
+
+```sh
+npm ci
+npm run test:simulator
+```
+
+[Thiết kế, schema và giới hạn](docs/what-if-budget.md) ·
+[Ví dụ có thể chạy](docs/what-if-budget-examples.md).

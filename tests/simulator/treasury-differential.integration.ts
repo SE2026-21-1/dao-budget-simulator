@@ -9,7 +9,7 @@ import type { TreasuryScenario } from '../../simulator/types.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = ['SuccessAndExactBalance', 'InsufficientFunds', 'SharedRequestAndReplay', 'FundingAndRetry',
-  'LargeFirst', 'SmallFirst', 'FailedSharedRequestCanStillBePaid', 'ZeroIdAndExistingPaidState'];
+  'LargeFirst', 'SmallFirst', 'FailedSharedRequestCanStillBePaid', 'ZeroIdAndExistingPaidState', 'OneBaseUnitAboveSafeIntegerRange'];
 const schema = ['address', 'uint256', 'tuple(bytes32 id,address recipient,uint256 amount)[]',
   'tuple(uint8 kind,uint256 proposalIndex,uint256 amount)[]', 'bool[]', 'tuple(bool success,uint256 balance,bool[] paid)[]'];
 interface ForgeResult { status: string; decoded_logs: string[] }

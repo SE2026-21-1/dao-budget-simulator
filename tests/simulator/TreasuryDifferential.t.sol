@@ -126,4 +126,13 @@ contract TreasuryDifferentialTest is Test {
         steps[1] = Step(0, 1, 0);
         _run(10, requests, steps, true);
     }
+
+    function testDifferentialOneBaseUnitAboveSafeIntegerRange() public {
+        Step[] memory steps = new Step[](4);
+        steps[0] = Step(0, 0, 0);
+        steps[1] = Step(0, 1, 0);
+        steps[2] = Step(1, 0, 1);
+        steps[3] = Step(0, 1, 0);
+        _run(10_000 ether, _requests(6000 ether + 1, 4000 ether, false), steps, false);
+    }
 }

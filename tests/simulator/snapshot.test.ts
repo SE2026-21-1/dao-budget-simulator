@@ -166,3 +166,22 @@ test('top-ups and eligibility remain explicit assumptions after a successful sna
     steps: [{ kind: 'top-up', amount: 1000n }, { kind: 'execute', proposalId: 'p1' }] });
   assert.equal(simulateBudget(plan.scenario).trace[1]!.outcome, 'not-eligible');
 });
+
+test('large historical balances retain a single base-unit difference without Number conversion', async () => {
+  const f = fixture(), balance = 10_000n * 10n ** 18n + 1n;
+  const plan = await readPinnedScenario(async (m, p) => m === 'eth_call' && methodName(p) === 'balanceOf'
+    ? B.encodeFunctionResult('balanceOf', [balance]) : f.rpc(m, p), f.request);
+  assert.equal(plan.scenario.initialBalance, balance);
+});
+test('BUD code identity is checked independently of Treasury identity', async () => {
+  const f = fixture();
+  await assert.rejects(readPinnedScenario(async (m, p) => m === 'eth_getCode' && p[0] === token
+    ? '0x6001' : f.rpc(m, p), f.request), errorCode('CONTRACT_MISMATCH'));
+});
+test('equivalent hexadecimal casing does not invalidate a canonical snapshot', async () => {
+  const f = fixture();
+  const request = { ...f.request, snapshot: { ...f.request.snapshot, blockHash: '0x' + 'AB'.repeat(32) } };
+  const plan = await readPinnedScenario(async (m, p) => m === 'eth_getBlockByNumber'
+    ? { number: '0xA', hash: '0x' + 'AB'.repeat(32) } : f.rpc(m, p), request);
+  assert.equal(plan.source.snapshot.blockHash, blockHash);
+});

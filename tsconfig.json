@@ -10,5 +10,5 @@
     "outDir": "dist",
     "skipLibCheck": true
   },
-  "include": ["indexer/**/*.ts", "tests/indexer/**/*.ts"]
+  "include": ["indexer/**/*.ts", "tests/indexer/**/*.ts", "simulator/**/*.ts", "tests/simulator/**/*.ts"]
 }

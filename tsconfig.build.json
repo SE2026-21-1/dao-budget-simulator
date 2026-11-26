@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "rootDir": "." },
-  "include": ["indexer/**/*.ts"],
+  "include": ["indexer/**/*.ts", "simulator/**/*.ts"],
   "exclude": ["tests"]
 }

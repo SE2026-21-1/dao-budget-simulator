@@ -190,6 +190,9 @@ như đầu ra đã cung cấp; không trỏ DNS public vào IP RFC1918 của VM
 
 ## Còn cần hoàn thiện
 
+- [Backfill bootstrap topics bằng decoder đã bổ sung](bootstrap-topic-backfill.md).
+- [Chuyển sang hostname HTTPS cố định bằng named tunnel](stable-api-tunnel.md).
+
 Đã có [công cụ pull CD và systemd timer](../deploy/anvil-demo/cd/README.md)
 để VM nhận release từ CI và chỉ cập nhật API/indexer. Cần cài, kiểm tra một lần
 và bật timer trên VM; commit file không tự kích hoạt CD. Rollout thủ công từ

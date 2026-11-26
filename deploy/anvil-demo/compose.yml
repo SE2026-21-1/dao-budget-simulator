@@ -136,6 +136,27 @@ services:
       driver: local
       options: {max-size: 10m, max-file: "3"}
 
+  named-tunnel:
+    profiles: [named-tunnel]
+    image: ${TUNNEL_IMAGE:?Set digest-pinned TUNNEL_IMAGE}
+    container_name: dao-demo-named-tunnel
+    restart: unless-stopped
+    user: "${DAO_UID:-1000}:${DAO_GID:-1000}"
+    network_mode: host
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    command: [tunnel, --no-autoupdate, --protocol, http2, --metrics, "127.0.0.1:20242", run, --token-file, /run/secrets/cloudflared-token]
+    volumes:
+      - type: bind
+        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/cloudflared.token
+        target: /run/secrets/cloudflared-token
+        read_only: true
+        bind: {create_host_path: false}
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+
 volumes:
   postgres-data:
     external: true

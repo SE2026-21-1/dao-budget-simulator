@@ -87,3 +87,30 @@ export interface SimulationResult {
   readonly failedProposalIds: readonly string[];
   readonly unattemptedProposalIds: readonly string[];
 }
+
+export interface SimulationPlan {
+  readonly name: string;
+  readonly steps: readonly ScenarioStep[];
+}
+
+export interface ExecutionOrder {
+  readonly name: string;
+  readonly proposalIds: readonly string[];
+}
+
+export interface ScenarioDifference {
+  readonly name: string;
+  readonly newlyExecutedProposalIds: readonly string[];
+  readonly noLongerExecutedProposalIds: readonly string[];
+  readonly totalDisbursedDelta: bigint;
+  readonly totalTopUpsDelta: bigint;
+  readonly finalBalanceDelta: bigint;
+}
+
+export interface ScenarioComparison {
+  readonly kind: 'hypothetical-budget-comparison-v1';
+  /** First plan is the baseline; signed deltas are alternative minus baseline. */
+  readonly baselineName: string;
+  readonly variants: readonly { readonly name: string; readonly result: SimulationResult }[];
+  readonly differences: readonly ScenarioDifference[];
+}

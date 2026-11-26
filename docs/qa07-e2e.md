@@ -6,7 +6,21 @@ Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/li
 
 **Chế độ tự động dùng adapter EIP-1193 với tài khoản Anvil unlocked do runner sở hữu, KHÔNG phải MetaMask.** Adapter công bố tên có chữ NOT MetaMask, chỉ gửi từ tài khoản A trên chain mới 31337 và đặt gas 8.000.000. Từ chối code 4001 và `chainChanged` sai mạng là fault injection ở adapter; không được ghi thành đã kiểm thử popup/extension thật. Không sử dụng ví người dùng, ký bên ngoài, fork hay RPC/DB caller. Chế độ `--serve` dưới đây không inject adapter hoặc tự thực hiện workflow.
 
-## Gate hiện hành — 26/11/2026
+## Gate hiện hành — 27/11/2026
+
+- [#19 lượt hẹp mới đã review](evidence/2026-11-27-issue19-review.md):
+  B-active + draft + lỗi sau Submit có ảnh trực tiếp; no-send vẫn **inference**, chưa provider trace.
+  MetaMask13.58.0 chỉ producer khai báo của run mới/source4cba99a, không version phiên H26.
+  Proposals503 được giữ nguyên, thiếu raw response/log để chốt nguyên nhân; không full E2E PASS.
+  Không yêu cầu lại governance hoặc provenance H26 đã đạt.
+- [#42 readiness mới](evidence/2026-11-27-receiver-readiness.md): stack TV3 báo source4cba99a
+  khác approved896f93e, không proposal/snapshot còn TTL. TV2/lead phải chốt receiver/chuẩn bị,
+  không tự bỏ no-redeploy. API-only #42 trước shutdown #40 nếu cùng stack.
+- Pipeline #41 product6766e5e/H52 và #18/#36/BE06/bounded invariants đã nghiệm thu giữ nguyên.
+  [Integration/demo disposition](evidence/2026-11-27-tv4-acceptance.md) không chọn revision demo,
+  không merge/promote/tag/release hoặc cấp quyền Sepolia. #20 owner gates còn BLOCKED.
+
+## Gate 26/11/2026 — lịch sử, cập nhật mới ở trên
 
 - [TV3 review6055560601 COMMENT](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
   xác nhận pinning P2 được giải quyết tại evidence HEAD

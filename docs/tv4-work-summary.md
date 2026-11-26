@@ -10,14 +10,30 @@ Tài liệu này giải thích các thay đổi đã thực hiện, giá trị c
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Phạm vi hiện hành — 26/11/2026
+## Phạm vi hiện hành — 27/11/2026
 
 Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
 đóng ngày 23/11. Đã gỡ workflow deploy/SSH, script rollout/rollback và mẫu env
 server; giữ bước xác minh release và GHCR/Compose CI. Báo cáo kiểm thử lịch sử
 bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
-## Trạng thái hiện hành — 26/11/2026
+## Trạng thái hiện hành — 27/11/2026
+
+[Báo cáo chung theo SHA](evidence/2026-11-27-tv4-acceptance.md) và
+[bản nháp bàn giao chưa đăng](evidence/2026-11-27-handoff-drafts.md):
+review gói #19 mới đã nhận B-active/error/draft visual, giữ no-send inference và503 UNKNOWN;
+không gán version/ảnh mới cho H26. [7checksums/63CRLF-source comparisons](evidence/2026-11-27-issue19-review.json)
+không được gọi raw LF Git byte equality hoặc served-frontend attestation.
+
+[Merge audit](evidence/2026-11-27-pr60-pr61-integration.md) xác định một conflict registry
+với Devd63842a; patch review giữ admin ABI và BE08 index, không actual merge.
+[PR62 review](evidence/2026-11-27-pr62-tv4-review.md) trên d4a0fb5 chạy144narrow tests PASS,
+không live archive/finality hoặc approval. [Receiver](evidence/2026-11-27-receiver-readiness.md)
+NOT READY theo TV3/TV2; checklist/lệnh API-only/Windows lifecycle đã bàn giao, không service action.
+Giữ #20 owner gates và #44 group demo blocked; không mở lại #18/#36/BE06/bounded invariants,
+không staging #56, Terraform/OpenStack/SSH rollout hoặc Sepolia broadcast.
+
+## Trạng thái 26/11/2026 — lịch sử, không thay kết luận mới ở trên
 
 [Báo cáo nghiệm thu mới](evidence/tv4-20261126-acceptance.md) ghi baseline PR60
 `b92bef5409d6478de97efbc8209241620967d18a`, Dev mới

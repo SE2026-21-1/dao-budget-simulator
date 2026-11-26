@@ -1,6 +1,6 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
-Ngày đối chiếu hiện hành: **26/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
+Ngày đối chiếu hiện hành: **27/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
@@ -218,8 +218,24 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 
 ### Revision và nguồn evidence hiện hành
 
-[Nghiệm thu26/11](evidence/tv4-20261126-acceptance.md) là trạng thái hiện hành;
-PR60 baseline b92bef5409d6478de97efbc8209241620967d18a, không nhập Dev mới3d0f6ca.
+[Nghiệm thu27/11](evidence/2026-11-27-tv4-acceptance.md) thay trạng thái26/11 bên dưới:
+PR60 baseline d4d405f2ca64e1786b44c7d81354cbe2de18040f; Devd63842a được audit bằng Git objects,
+không nhập vào branch. [Conflict/patch](evidence/2026-11-27-pr60-pr61-integration.md) giữ fixes/security/clock/migrations.
+
+- **N19** = [review gói mới](evidence/2026-11-27-issue19-review.md), evidence887c5ec/product4cba99a:
+  B-active/draft/error-afterSubmit visual accepted; 7checksums PASS; no-send inference, provider boundary chưa instrument.
+  MetaMask13.58.0 chỉ lời khai run mới, H26 version UNKNOWN; proposals503 cause UNKNOWN, không E2E PASS.
+- **I27** = [merge-tree/patch review](evidence/2026-11-27-pr60-pr61-integration.md): PR60/61 đều conflict registry
+  với Devd63842a; patch hợp nhất ancillary ABI + frozen index chỉ để review, chưa applied/merged.
+- **P62** = [TV4 snapshot/workflow review](evidence/2026-11-27-pr62-tv4-review.md), source d4a0fb5:
+  144 narrow synthetic/unit PASS, không defect có reproduction; live EIP1898/archive/finality SKIP.
+- **R27** = [receiver readiness/checklist](evidence/2026-11-27-receiver-readiness.md):
+  TV3 NOT READY/source4cba99a/thiếuproposal+TTL; #42 và#40 runtime SKIP, không thay accepted BE06/pipeline.
+
+Đoạn26/11 sau đây giữ làm lịch sử source/review; N19/R27 cập nhật đúng các gap đã thay đổi.
+
+[Nghiệm thu26/11](evidence/tv4-20261126-acceptance.md) là trạng thái tại ngày26/11;
+PR60 baseline b92bef5409d6478de97efbc8209241620967d18a, không nhập Dev3d0f6ca trong lượt đó.
 TV3 [COMMENT6055560601](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
 đã xác nhận pinning P2 resolved, không phải whole-PR approval.
 TV2 BE08 approvals PR60 [0a5cc5c/6053195381](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381)
@@ -291,13 +307,13 @@ On-chain local/testnet evidence luôn có chainId, addresses, deployment blocks,
 
 TV4 chỉ đổi trạng thái một TC/INV/Q thành **ĐẠT** khi có actual evidence tái lập gắn đúng commit, đủ positive/negative và oracle độc lập. Nghiệm thu cuối cần mọi FR/BR/NFR có evidence đủ, không lỗi mở cho chi sai hoặc bypass; clone sạch chạy demo/test, testnet ít nhất một giải ngân và một thất bại, DB rebuild cùng H. Không khóa acceptance bằng CI xanh chỉ kiểm ABI/fixtures.
 
-## 8. Phụ thuộc nghiệm thu hiện hành — 26/11/2026
+## 8. Phụ thuộc nghiệm thu hiện hành — 27/11/2026
 
 | Owner | Việc còn lại / điều kiện tiếp tục |
 |---|---|
-| TV3 → TV4 | #19 documentary: B-active sau Submit + exact H26 extension version còn thiếu. Provenance bổ sung đã đạt; nếu lịch sử không còn, chỉ narrow run mới có source/manifest/version/trace/no-send riêng. |
+| TV3 + TV2 → TV4 | #19: N19 đã nhận B-active visual; provider-boundary no-send chưa instrument, version13.58.0 chỉ producer khai báo lượt mới; H26 UNKNOWN/MISSING giữ nguyên. TV2 phân loại503 từ raw body/context/log tối thiểu nếu còn, không rerun toàn governance/provenance đã đạt. |
 | TV3; TV2 hỗ trợ → TV4 | [#40 chọn B](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7184789349): lifecycle run ID mới trên owned receiver, PID/listeners/shutdown/Windows transport/task/Vite/HTTP/raw foreground exit; giữ accepted BE09 offline. |
-| TV2 + TV3; lead khi đổi scope → TV4 | [#42 readiness](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7184789885): xác định receiver phù hợp source896f93e hoặc xin quyết định nếu bootstrap xung đột no-redeploy; sau đó chỉ API restart, năm pinned data endpoints + health riêng/sáu status/raw/context/digest. Không worker/PG restart hoặc BE06 rerun. [Runbook](indexer.md#api-only-restart). |
+| TV2 + TV3; lead khi đổi scope → TV4 | [R27 readiness](evidence/2026-11-27-receiver-readiness.md): TV3 báo source4cba99a khác approved896f93e, thiếu proposal/snapshot TTL. TV2 chốt receiver hoặc lead duyệt bootstrap mới riêng vì no-redeploy; sau đó #42 API-only trước#40 nếu chungstack, 5pinned data endpoints+health riêng/6status/raw/context/digest. Không worker/PG restart hoặc BE06 rerun trong phép đo. |
 | Owner do nhóm chỉ định; TV1/TV4 review | #20: full approved SHA,9public addresses,6signer custodians/signing path, numeric gas/fee budget/funder + explicit authorization; actual Sepolia manifest/roles/real-time Executed+Defeated receipts chưa có. Không mặc định TV1/TV2 giữ signer. |
 | Nhóm + TV4 | #44: chọn source/manifest demo/video/report và nghiệm thu các gate còn mở. #6/#7 In review/PARTIAL; #41 local pipeline accepted nhưng còn documentary/lifecycle. #18/#36 và bounded invariants không mở lại. #56 retired, không khôi phục server rollout. |
 

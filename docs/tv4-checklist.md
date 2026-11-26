@@ -5,7 +5,7 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Phạm vi hiện hành — 26/11/2026
+## Phạm vi hiện hành — 27/11/2026
 
 - Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
   đóng ngày 23/11/2026. Không có yêu cầu cấp VM hay triển khai lại server.
@@ -13,7 +13,30 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 - Extension #19/#41, Sepolia #20 và release #44 được xét độc lập theo bằng chứng.
 - Các trạng thái lịch sử bên dưới chỉ đúng tại ngày và source đã ghi.
 
-## Kết luận hiện hành — 26/11/2026
+## Kết luận hiện hành — 27/11/2026
+
+- [x] [Review bytes #19 mới](evidence/2026-11-27-issue19-review.md): evidence
+  `887c5ecafd79feaf64956b8e05e9d16576404d84`, product `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`;
+  7/7 payload checksums, B-active/draft/lỗi sau Submit đã xem trực tiếp.
+  **Scoped visual/preflight accepted; no-send chỉ inference; full issue pending.**
+  Version13.58.0 do producer khai báo chỉ lượt mới; không sửa UNKNOWN/MISSING của H26.
+- [ ] TV3 bổ sung provider-boundary trace/extension identity nếu cần chốt zero-send;
+  TV2 phân loại proposals503 bằng raw request/body/log tối thiểu, không rerun governance/provenance đã đạt.
+- [x] [Merge audit + resolution diff PR60/61](evidence/2026-11-27-pr60-pr61-integration.md):
+  cả hai conflict với Dev `d63842ae50dc9a29a42529ce7cd08ca7c569759e` tại `indexer/abi-registry.ts`;
+  giữ ancillary ABI + frozen topic index. Patch chỉ để review, chưa áp vào branch.
+- [x] [PR62 TV4 review](evidence/2026-11-27-pr62-tv4-review.md): exact source
+  `d4a0fb563e66be951760167a6f62b246821dc17c`, 144 narrow tests PASS;
+  chưa thấy defect có reproduction. Live RPC/archive/finality SKIP, không approval.
+- [ ] [Receiver NOT READY](evidence/2026-11-27-receiver-readiness.md):
+  TV3 báo source4cba99a khác approved896f93e, thiếu proposal/snapshot TTL.
+  TV2/lead chốt receiver hoặc bootstrap ngoại lệ no-redeploy; chưa service action.
+  Thu #42 API-only trước shutdown #40 nếu chung stack; checklist/lệnh so6responses/5digests đã sẵn.
+- [ ] #20 giữ owner-approved SHA/map/custodians/signing/gas/authorization BLOCKED;
+  #44 chưa release/demo-ready. #18/#36/BE06/bounded invariants và approvals đúng scope giữ nguyên.
+  [Báo cáo chung](evidence/2026-11-27-tv4-acceptance.md), [bản nháp chưa đăng](evidence/2026-11-27-handoff-drafts.md).
+
+## Kết luận 26/11/2026 — lịch sử, phần thiếu #19 được cập nhật ở trên
 
 - [x] [Nghiệm thu cập nhật, baseline và giới hạn](evidence/tv4-20261126-acceptance.md).
   PR60 baseline `b92bef5409d6478de97efbc8209241620967d18a`; không nhập Dev mới

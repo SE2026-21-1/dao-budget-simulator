@@ -1,0 +1,2248 @@
+diff --git a/.github/workflows/anvil-demo-infra.yml b/.github/workflows/anvil-demo-infra.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..0c6d280581cd2f60f97beb64cc9f18ca43e7dbc3
+--- /dev/null
++++ b/.github/workflows/anvil-demo-infra.yml
+@@ -0,0 +1,58 @@
++name: Anvil demo infrastructure validation
++
++on:
++  push:
++    branches: [Dev, 'feature/**']
++    paths:
++      - 'infra/**'
++      - 'deploy/anvil-demo/**'
++      - '.github/workflows/anvil-demo-infra.yml'
++  pull_request:
++    paths:
++      - 'infra/**'
++      - 'deploy/anvil-demo/**'
++      - '.github/workflows/anvil-demo-infra.yml'
++  workflow_dispatch:
++
++permissions:
++  contents: read
++
++jobs:
++  validate:
++    runs-on: ubuntu-24.04
++    timeout-minutes: 10
++    steps:
++      - uses: actions/checkout@v7.0.1
++        with:
++          persist-credentials: false
++      - uses: hashicorp/setup-terraform@v3
++        with:
++          terraform_version: '1.16.5'
++      - name: Validate Terraform without cloud credentials or apply
++        run: |
++          terraform fmt -check -diff infra/openstack
++          terraform -chdir=infra/openstack init -backend=false -input=false -lockfile=readonly
++          terraform -chdir=infra/openstack validate
++      - name: Check cloud-init YAML and embedded shell
++        run: |
++          python3 - <<'PY'
++          import subprocess
++          import yaml
++          with open('infra/openstack/cloud-init.yaml') as handle:
++              config = yaml.safe_load(handle)
++          subprocess.run(['bash', '-n'], input=config['write_files'][0]['content'], text=True, check=True)
++          PY
++      - name: Test pull CD trust, rollback and interruption boundaries
++        run: python3 -m unittest discover -s deploy/anvil-demo/cd -p 'test_*.py' -v
++      - name: Render Compose using disposable configuration only
++        shell: bash
++        run: |
++          set -euo pipefail
++          export DAO_DEMO_HOME="$RUNNER_TEMP/dao-demo-compose"
++          export DAO_UID=1000 DAO_GID=1000
++          export API_IMAGE=dao-api:896f93e INDEXER_IMAGE=dao-indexer:896f93e
++          export TUNNEL_IMAGE=cloudflare/cloudflared:2026.11.2
++          mkdir -p "$DAO_DEMO_HOME/config" "$DAO_DEMO_HOME/anvil"
++          touch "$DAO_DEMO_HOME/config/runtime.env" "$DAO_DEMO_HOME/config/postgres.env" "$DAO_DEMO_HOME/config/cloudflared.token"
++          printf '{}\n' > "$DAO_DEMO_HOME/config/indexer.json"
++          docker compose -f deploy/anvil-demo/compose.yml --profile tunnel --profile named-tunnel config --quiet
+diff --git a/.gitignore b/.gitignore
+index 061adc138babef5cbec86515e94fea0b73595da2..cf78f53df2fee94e4bf029a06c17aaa29ed1fc01 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -41,3 +41,15 @@ replay_pid*
+ /dist/
+ /coverage/
+ /indexer/config/local*.json
++
++# Deployment data and cloud credentials never belong in source control.
++*.tfstate
++*.tfstate.*
++*.tfplan
++*.dump
++*.dump.*
++clouds.yaml
++secure.yaml
++passwords.yml
++admin-openrc.sh
++/infra/kolla/globals.yml
+diff --git a/README.md b/README.md
+index 5bfca133b5189cff3ab0dd4623502066d4162a77..62b1105fac24acffcfa0991871a5b56172ec39eb 100644
+--- a/README.md
++++ b/README.md
+@@ -549,3 +549,22 @@ Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06
+ ## BE07 recovery và worker
+ 
+ Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.
++
++## Anvil demo trên OpenStack/Kolla-Ansible
++
++Cloud lab được dựng bằng **Kolla-Ansible**; VM demo chạy Anvil, PostgreSQL,
++indexer và read API, frontend giữ trên Netlify. Khai báo và hướng dẫn:
++
++- [Lớp cloud Kolla-Ansible và các thông số đã quan sát](infra/kolla/README.md).
++- [Terraform tạo/import VM, mạng, router, security group và floating IP](infra/openstack/README.md).
++- [Compose cho backend demo có lưu state/volume](deploy/anvil-demo/compose.yml).
++- [Runbook nhận quản lý deployment hiện tại, backup, kiểm tra và cấu hình Netlify](docs/openstack-anvil-demo.md).
++
++Import tài nguyên đã tạo tay trước khi apply Terraform; chuyển container sang
++Compose trong thời gian bảo trì có backup, không chạy tự động khi pull Git.
++Đây là chain Anvil 31337 riêng, chưa bật giao dịch ví công khai; Quick Tunnel
++hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
++
++[Pull CD cho VM](deploy/anvil-demo/cd/README.md) nhận release đã qua CI và cập nhật
++riêng API/indexer theo digest, preflight, health/data checks và rollback. Cần cài
++agent và bật systemd timer trên VM sau khi kiểm tra; commit file không tự bật CD.
+diff --git a/deploy/anvil-demo/.env.example b/deploy/anvil-demo/.env.example
+new file mode 100644
+index 0000000000000000000000000000000000000000..b9c40185518446c75c124082f6dbeb660a1c5db5
+--- /dev/null
++++ b/deploy/anvil-demo/.env.example
+@@ -0,0 +1,9 @@
++# Copy to an ignored .env locally. These are Compose inputs, not application secrets.
++DAO_DEMO_HOME=/home/ubuntu/dao-demo
++DAO_UID=1000
++DAO_GID=1000
++# Existing images built from the source revision actually deployed:
++API_IMAGE=dao-api:896f93e
++INDEXER_IMAGE=dao-indexer:896f93e
++# Fill using docker image inspect after pulling the official cloudflared image.
++TUNNEL_IMAGE=REPLACE_WITH_CLOUDFLARED_REPODIGEST
+diff --git a/deploy/anvil-demo/.gitignore b/deploy/anvil-demo/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..d2e5419e14722fdf90bf2b8407dc8bd7e9af7841
+--- /dev/null
++++ b/deploy/anvil-demo/.gitignore
+@@ -0,0 +1,7 @@
++config/
++anvil/
++backups/
++*.dump
++*.dump.*
++*.env
++!.env.example
+diff --git a/deploy/anvil-demo/cd/.gitignore b/deploy/anvil-demo/cd/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..7a60b85e148f80966a550e5ab6a762a907c69ca6
+--- /dev/null
++++ b/deploy/anvil-demo/cd/.gitignore
+@@ -0,0 +1,2 @@
++__pycache__/
++*.pyc
+diff --git a/deploy/anvil-demo/cd/README.md b/deploy/anvil-demo/cd/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2992774a9c85848c609652ffe206dc1d3208ae2b
+--- /dev/null
++++ b/deploy/anvil-demo/cd/README.md
+@@ -0,0 +1,131 @@
++# Pull CD cho VM demo
++
++VM chủ động lấy release từ GitHub/GHCR, không cần inbound SSH từ GitHub Actions
++và không cài self-hosted runner cho repository public. Agent chỉ thay hai image
++API/indexer. Anvil, PostgreSQL, Quick Tunnel, Terraform và Kolla không thuộc rollout.
++Đọc [runbook chính](../../../docs/openstack-anvil-demo.md) trước khi vận hành.
++
++## Những gì được kiểm tra
++
++1. HEAD hiện tại của `Dev`, CI run `push` từ đúng repository, workflow/path/name
++   và trạng thái completed/success. CI workflow blob được ghim trong agent;
++   thay CI policy cần review và cài lại agent, không tự tin tưởng policy mới.
++2. Đúng một artifact `release-SHA` còn hạn thuộc run đó; checksum SHA256 ZIP
++   khớp API GitHub. ZIP chỉ được có `manifest.json`, không extract file tùy ý.
++3. Manifest khớp repository/SHA/run ID, ba image digest và migration fingerprint.
++4. Pull API/indexer theo digest, dùng image candidate chạy preflight schema,
++   tracked migrations, metadata và RPC. Không tự migrate database.
++5. Kiểm tra lại Dev chưa tiến lên trước khi đổi cấu hình. Compose chỉ chạy
++   `up --no-deps --pull never indexer api`, có health wait và khóa chống chạy chồng.
++6. Kiểm tra image ID thực tế, API scope/chain, publication không lùi, hash và
++   số dư/proposal ở H không đổi. Unknown/decode errors không được tăng;
++   `degraded` với 16 unknown topics cũ không bị che đi.
++7. Nếu lỗi sau đổi env: phục hồi env cũ, khởi động lại hai app và kiểm tra lại
++   image IDs cùng dữ liệu. Release lỗi bị chặn lặp cho tới khi operator retry.
++
++Đây không phải kiểm thử nghiệp vụ đầy đủ. Agent không bảo vệ trước mọi thay đổi
++ứng dụng không tương thích về dữ liệu: chỉ tự triển khai release có migration set
++đã có trong DB. Thay schema hoặc vận hành reorg/restore cần quy trình riêng.
++Chỉ commit được nhóm tin tưởng mới được đưa vào `Dev`.
++
++## Điều kiện trước khi bật
++
++- Đã chuyển API/indexer sang Compose và thử cập nhật/rollback thủ công.
++- `gh` đăng nhập dưới user `ubuntu`, đọc được workflow/artifact của repo chung.
++- `sudo -n docker` hoạt động; Docker root đã login GHCR bằng token classic
++  `read:packages`. Token này không đặt trong unit/env file hoặc Git.
++- Hai network `dao-demo`/`dao-demo-db`, volume/state/config đang có như runbook.
++- Có Python >=3.9, GitHub CLI (kể cả 2.4), Docker Compose >=2.24.4.
++- File `deploy/anvil-demo/.env` hiện trỏ đúng các image đang chạy.
++
++Agent sử dụng Python stdlib, không yêu cầu Node trên host. Chạy dưới ubuntu;
++chỉ lệnh Docker dùng sudo không tương tác. Chỉ cài unit dưới đây trên VM demo,
++không cài trên host điều khiển Kolla. Nếu user/home khác, sửa unit và env trước.
++
++## Cài bản script đã review, chưa bật lịch
++
++Trên `ubuntu@dao-demo-01`, checkout commit chứa bộ file này sau khi Git sạch.
++Việc checkout không cập nhật container. Thư mục `/opt/dao-demo-cd` giữ code và
++Compose đã review, root sở hữu; agent không checkout hay thực thi source tải về.
++
++```bash
++cd "$HOME/dao-budget-simulator"
++sudo -n install -d -m 0755 /opt/dao-demo-cd
++sudo -n install -m 0644 deploy/anvil-demo/cd/agent.py /opt/dao-demo-cd/agent.py
++sudo -n install -m 0644 deploy/anvil-demo/compose.yml /opt/dao-demo-cd/compose.yml
++sudo -n install -m 0600 deploy/anvil-demo/cd/agent.env.example /etc/dao-demo-cd.env
++sudo -n install -m 0644 deploy/anvil-demo/cd/dao-demo-cd.service /etc/systemd/system/dao-demo-cd.service
++sudo -n install -m 0644 deploy/anvil-demo/cd/dao-demo-cd.timer /etc/systemd/system/dao-demo-cd.timer
++sudo -n systemctl daemon-reload
++```
++
++Chạy kiểm tra trust GitHub/artifact dưới chính user ubuntu. `--check` không pull
++image hay kiểm tra schema và không thay dịch vụ. Nếu HEAD đang CI, chờ release
++của chính HEAD hoàn tất; không dùng release cũ để vượt qua CI đang lỗi.
++
++```bash
++DAO_CD_ROOT="$HOME/dao-demo" \
++DAO_CD_COMPOSE_ENV="$HOME/dao-budget-simulator/deploy/anvil-demo/.env" \
++DAO_CD_COMPOSE_FILE=/opt/dao-demo-cd/compose.yml \
++python3 /opt/dao-demo-cd/agent.py --check
++```
++
++Khi CHECK_OK, chạy service một lần có quan sát (có thể cập nhật app):
++
++```bash
++sudo -n systemctl start dao-demo-cd.service
++sudo -n journalctl -u dao-demo-cd.service -n 40 --no-pager
++```
++
++Mong đợi `ALREADY_CURRENT SHA` hoặc `RELEASE_UPDATE_OK SHA`. Chỉ khi lần chạy
++này đạt mới bật timer; kiểm tra lại website và API sau đó:
++
++```bash
++sudo -n systemctl enable --now dao-demo-cd.timer
++systemctl list-timers dao-demo-cd.timer --all
++```
++
++Timer kiểm tra sau boot khoảng 2 phút và khoảng 2 phút sau lần chạy kết thúc,
++có jitter tối đa 15 giây. Không có CD đang hoạt động chỉ vì commit các file này;
++phải cài và bật timer trên VM. Timeout service 20 phút, có thể gián đoạn API ngắn
++trong mỗi rollout. Không cần restart Quick Tunnel nên không đổi URL do CD.
++
++## Theo dõi, dừng và phục hồi
++
++```bash
++sudo -n journalctl -u dao-demo-cd.service -n 60 --no-pager
++sudo -n systemctl disable --now dao-demo-cd.timer
++systemctl is-active dao-demo-cd.service
++```
++
++Dừng timer không hủy service đang chạy. Chờ service kết thúc trước thao tác
++thủ công; không kill ngang trong rollout. Dữ liệu đối chiếu nằm dưới
++`~/dao-demo/cd/`, gồm env rollback, snapshot trước/sau, `applied.json` hoặc
++`failed.json`; giữ private, không đưa lên Git.
++
++Sau khi chẩn đoán và sửa nguyên nhân release lỗi, chỉ operator chạy lại với
++`--apply --retry-failed` cùng ba biến đường dẫn ở trên. Timer không tự retry
++release đã bị đánh dấu lỗi.
++
++Nếu có `pending.json`, tiến trình trước đã bị ngắt: agent chặn mọi apply mới.
++Dừng timer, kiểm tra file này để lấy thư mục evidence và image IDs trước đó.
++Đối chiếu container đang chạy và `.env`. Nếu cần rollback, khôi phục
++`compose-before.env` trong evidence về đường dẫn Compose env, chạy Compose
++`up -d --no-deps --pull never --wait indexer api`, kiểm tra health/image/data.
++Chỉ xóa `pending.json` sau khi xác nhận trạng thái ổn định; không xóa state/DB
++và không tự restore dump đè dữ liệu mới. `ROLLBACK_FAILED` cần operator xử lý,
++không phải bằng chứng đã quay lại bản cũ thành công.
++
++GHCR token có hạn: gia hạn/thay bằng lệnh login có password-stdin khi cần.
++Không chạy `gh auth status --show-token`, `cat` credential file hay in đầy đủ
++Compose config ra log/chát. Agent cố ý không in stdout/stderr của lệnh chứa secret.
++
++## Kiểm thử
++
++```bash
++python3 -m unittest discover -s deploy/anvil-demo/cd -p 'test_*.py' -v
++```
++
++Tests mô phỏng GitHub/Docker để kiểm tra trust boundary, preflight rejection,
++head race, rollback, chặn retry, image scope và xử lý ngắt. Không phải bằng chứng
++đã bật timer hoặc thử rollout/rollback live trên cloud.
+diff --git a/deploy/anvil-demo/cd/agent.env.example b/deploy/anvil-demo/cd/agent.env.example
+new file mode 100644
+index 0000000000000000000000000000000000000000..efed38483d7d9b2fb3f9322a2653b352b1c6dcb6
+--- /dev/null
++++ b/deploy/anvil-demo/cd/agent.env.example
+@@ -0,0 +1,4 @@
++# No tokens or database secrets here. Adapt these paths if the VM user differs.
++DAO_CD_ROOT=/home/ubuntu/dao-demo
++DAO_CD_COMPOSE_ENV=/home/ubuntu/dao-budget-simulator/deploy/anvil-demo/.env
++DAO_CD_COMPOSE_FILE=/opt/dao-demo-cd/compose.yml
+diff --git a/deploy/anvil-demo/cd/agent.py b/deploy/anvil-demo/cd/agent.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..e08e499f72409bc037ef0cbe1eb0a5d3ec5b46bf
+--- /dev/null
++++ b/deploy/anvil-demo/cd/agent.py
+@@ -0,0 +1,264 @@
++#!/usr/bin/env python3
++"""Pull a verified Dev release; deploy API/indexer only. Never execute fetched source."""
++import argparse
++import datetime
++import fcntl
++import hashlib
++import io
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import tempfile
++import urllib.request
++import zipfile
++
++REPOSITORY = "SE2026-21-1/dao-budget-simulator"
++WORKFLOW = ".github/workflows/ci.yml"
++# A changed CI policy requires a reviewed agent update, not automatic acceptance.
++TRUSTED_WORKFLOW_BLOB = "e97ca24b6d91a8898cc7c949a201ea73ca26b237"
++SHA = re.compile(r"[0-9a-f]{40}")
++HASH = re.compile(r"[0-9a-f]{64}")
++
++
++class Rejected(RuntimeError):
++    pass
++
++
++def require(condition, message):
++    if not condition:
++        raise Rejected(message)
++
++
++def atomic_write(path, data):
++    path = Path(path)
++    fd, temporary = tempfile.mkstemp(prefix=".dao-cd-", dir=path.parent)
++    try:
++        with os.fdopen(fd, "wb") as handle:
++            handle.write(data)
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, path)
++    finally:
++        if os.path.exists(temporary):
++            os.unlink(temporary)
++
++
++def validate_manifest(value, sha, run_id):
++    require(set(value) == {"schemaVersion", "repository", "sha", "runId", "images", "migrationSet"}, "Unexpected manifest fields")
++    require(value["schemaVersion"] == 1 and value["repository"] == REPOSITORY, "Wrong manifest repository/version")
++    require(value["sha"] == sha and value["runId"] == str(run_id), "Manifest does not match trusted CI run")
++    require(isinstance(value["migrationSet"], str) and HASH.fullmatch(value["migrationSet"]), "Invalid migration fingerprint")
++    require(set(value["images"]) == {"frontend", "api", "indexer"}, "Incomplete release")
++    for service, image in value["images"].items():
++        prefix = "ghcr.io/" + REPOSITORY.lower() + "/" + service + "@sha256:"
++        require(isinstance(image, str) and image.startswith(prefix) and HASH.fullmatch(image[len(prefix):]), "Invalid image digest")
++    return value
++
++
++def decode_artifact(archive, digest, sha, run_id):
++    require(len(archive) <= 1024 * 1024, "Release artifact too large")
++    require(digest == "sha256:" + hashlib.sha256(archive).hexdigest(), "Artifact digest mismatch")
++    with zipfile.ZipFile(io.BytesIO(archive)) as source:
++        require(source.namelist() == ["manifest.json"], "Unexpected archive members")
++        require(source.getinfo("manifest.json").file_size <= 16384, "Manifest too large")
++        value = json.loads(source.read("manifest.json"))
++    return validate_manifest(value, sha, run_id)
++
++
++def replace_images(original, images):
++    lines, seen = [], set()
++    for line in original.decode().splitlines():
++        key = line.partition("=")[0]
++        if key in {"API_IMAGE", "INDEXER_IMAGE"}:
++            require(key not in seen, "Duplicate Compose image variable")
++            line = key + "=" + images[key.removesuffix("_IMAGE").lower()]
++            seen.add(key)
++        lines.append(line)
++    require(seen == {"API_IMAGE", "INDEXER_IMAGE"}, "Missing Compose image variables")
++    return ("\n".join(lines) + "\n").encode()
++
++
++class Agent:
++    def __init__(self, root, compose_env, compose_file):
++        self.root = Path(root).resolve()
++        self.env = Path(compose_env).resolve()
++        self.compose_file = Path(compose_file).resolve()
++        self.state = self.root / "cd"
++        self.state.mkdir(mode=0o700, parents=True, exist_ok=True)
++
++    def command(self, args, label, timeout=120, binary=False):
++        try:
++            result = subprocess.run(args, capture_output=True, timeout=timeout, check=False)
++        except (OSError, subprocess.TimeoutExpired) as error:
++            raise Rejected(label + " could not complete") from error
++        # Never emit command stdout/stderr: GH credentials and backend secrets must not enter logs.
++        require(result.returncode == 0, label + " failed (exit " + str(result.returncode) + ")")
++        return result.stdout if binary else result.stdout.decode().strip()
++
++    def api(self, endpoint, binary=False):
++        result = self.command(["gh", "api", "--hostname", "github.com", "repos/" + REPOSITORY + "/" + endpoint], "GitHub API", binary=binary)
++        return result if binary else json.loads(result)
++
++    def head(self):
++        sha = self.api("branches/Dev")["commit"]["sha"]
++        require(isinstance(sha, str) and SHA.fullmatch(sha), "Invalid Dev SHA")
++        return sha
++
++    def discover(self):
++        sha = self.head()
++        blob = self.api("contents/" + WORKFLOW + "?ref=" + sha)
++        require(blob.get("sha") == TRUSTED_WORKFLOW_BLOB, "CI workflow changed; operator review required")
++        runs = self.api("actions/workflows/ci.yml/runs?branch=Dev&event=push&status=success&head_sha=" + sha + "&per_page=20")
++        candidates = [r for r in runs["workflow_runs"] if r.get("head_sha") == sha]
++        require(candidates, "Current Dev has no successful release yet")
++        run = self.api("actions/runs/" + str(candidates[0]["id"]))
++        require(run.get("status") == "completed" and run.get("conclusion") == "success", "CI is not successful")
++        require(run.get("head_sha") == sha and run.get("head_branch") == "Dev" and run.get("event") == "push", "Untrusted CI event")
++        require(run.get("path") == WORKFLOW and run.get("name") == "TV4 CI", "Wrong workflow")
++        require(run.get("head_repository", {}).get("full_name") == REPOSITORY, "Wrong source repository")
++        artifacts = self.api("actions/runs/" + str(run["id"]) + "/artifacts?per_page=100")["artifacts"]
++        matches = [a for a in artifacts if a.get("name") == "release-" + sha and not a.get("expired")]
++        require(len(matches) == 1, "Exactly one unexpired release artifact is required")
++        artifact = matches[0]
++        require(artifact.get("size_in_bytes", 0) <= 1024 * 1024, "Release artifact too large")
++        archive = self.api("actions/artifacts/" + str(artifact["id"]) + "/zip", binary=True)
++        return decode_artifact(archive, artifact.get("digest"), sha, run["id"])
++
++    def docker(self, args, label, timeout=120):
++        return self.command(["sudo", "-n", "docker", *args], label, timeout=timeout)
++
++    def compose(self):
++        return ["compose", "--env-file", str(self.env), "-f", str(self.compose_file)]
++
++    def start_apps(self):
++        self.docker(self.compose() + ["up", "-d", "--no-deps", "--pull", "never", "--wait", "--wait-timeout", "180", "indexer", "api"], "Compose app update", timeout=240)
++
++    def snapshot(self):
++        result = {}
++        for endpoint in ("health", "summary"):
++            url = "http://127.0.0.1:3000/api/" + endpoint + "?chainId=31337&deploymentId=dao-demo-anvil"
++            with urllib.request.urlopen(url, timeout=15) as response:
++                result[endpoint] = json.load(response)
++        health = result["health"]
++        require(health["data"]["database"] == "up" and health["data"]["publication"] == "ready", "Database/publication not ready")
++        require(health["data"]["indexer"] == "synced", "Indexer not synced")
++        for value in result.values():
++            require(value["context"]["chainId"] == "31337" and value["context"]["deploymentId"] == "dao-demo-anvil" and value["context"]["dataKind"] == "chain", "Wrong API context")
++        return result
++
++    def verify_images(self, manifest):
++        for service in ("api", "indexer"):
++            expected = self.docker(["image", "inspect", manifest["images"][service], "--format", "{{.Id}}"], "Inspect candidate image")
++            actual = self.docker(["container", "inspect", "dao-demo-" + service, "--format", "{{.Image}}"], "Inspect running image")
++            require(actual == expected, "Running image does not match release")
++
++    def running_images(self):
++        return {service: self.docker(["container", "inspect", "dao-demo-" + service, "--format", "{{.Image}}"], "Inspect rollback image") for service in ("api", "indexer")}
++
++    def verify_data(self, before, after):
++        for endpoint in ("health", "summary"):
++            old, new = before[endpoint]["context"], after[endpoint]["context"]
++            require(int(new["asOfBlock"]) >= int(old["asOfBlock"]), "Publication moved backwards")
++            require(new["snapshotRevision"] == old["snapshotRevision"], "Snapshot revision changed unexpectedly")
++            if new["asOfBlock"] == old["asOfBlock"]:
++                require(new["asOfBlockHash"] == old["asOfBlockHash"], "Canonical block hash changed")
++                if endpoint == "summary":
++                    require(before[endpoint]["data"]["treasury"] == after[endpoint]["data"]["treasury"], "Treasury changed at unchanged H")
++                    require(before[endpoint]["data"]["proposalCounts"] == after[endpoint]["data"]["proposalCounts"], "Proposals changed at unchanged H")
++        old_issues, new_issues = before["health"]["data"]["rawDecodeIssues"], after["health"]["data"]["rawDecodeIssues"]
++        for key in ("unknownTopics", "decodeErrors"):
++            require(new_issues[key] <= old_issues[key], "Raw decode issues increased")
++
++    def apply(self, manifest, retry_failed=False):
++        pending = self.state / "pending.json"
++        require(not pending.exists(), "Interrupted deployment detected; operator must inspect pending.json before another apply")
++        failed = self.state / "failed.json"
++        if failed.exists() and json.loads(failed.read_text()).get("sha") == manifest["sha"]:
++            require(retry_failed, "Release previously failed; use --retry-failed after diagnosis")
++        directory = Path(tempfile.mkdtemp(prefix=manifest["sha"][:12] + "-", dir=self.state))
++        manifest_path = directory / "manifest.json"
++        atomic_write(manifest_path, json.dumps(manifest).encode())
++        original = self.env.read_bytes()
++        atomic_write(directory / "compose-before.env", original)
++        replacement = replace_images(original, manifest["images"])
++        changed = False
++        try:
++            if replacement == original:
++                self.verify_images(manifest)
++                self.snapshot()
++                print("ALREADY_CURRENT " + manifest["sha"])
++                return
++            before = self.snapshot()
++            previous_images = self.running_images()
++            atomic_write(directory / "before.json", json.dumps(before).encode())
++            for service in ("api", "indexer"):
++                self.docker(["pull", manifest["images"][service]], "Pull " + service, timeout=300)
++            self.docker(["run", "--rm", "--network", "dao-demo-db", "--env-file", str(self.root / "config/runtime.env"),
++                         "--mount", "type=bind,src=" + str(self.root / "config") + ",dst=/run/dao,readonly",
++                         "--mount", "type=bind,src=" + str(directory) + ",dst=/run/release,readonly",
++                         "--entrypoint", "node", manifest["images"]["indexer"], "/app/deploy/preflight.mjs",
++                         "--manifest", "/run/release/manifest.json"], "Schema/metadata/RPC preflight")
++            require(self.head() == manifest["sha"], "Dev advanced during preparation; retry next cycle")
++            atomic_write(pending, json.dumps({"sha": manifest["sha"], "evidence": str(directory), "previousImages": previous_images}).encode())
++            atomic_write(self.env, replacement)
++            changed = True
++            self.docker(self.compose() + ["config", "--quiet"], "Compose validation")
++            self.start_apps()
++            self.verify_images(manifest)
++            after = self.snapshot()
++            self.verify_data(before, after)
++            atomic_write(directory / "after.json", json.dumps(after).encode())
++            atomic_write(self.state / "applied.json", json.dumps({"sha": manifest["sha"], "runId": manifest["runId"], "images": manifest["images"], "at": datetime.datetime.now(datetime.timezone.utc).isoformat()}).encode())
++            if failed.exists():
++                failed.unlink()
++            pending.unlink()
++            print("RELEASE_UPDATE_OK " + manifest["sha"])
++        except Exception as error:
++            reason = str(error) if isinstance(error, Rejected) else "runtime/data validation failed"
++            atomic_write(failed, json.dumps({"sha": manifest["sha"], "reason": reason, "evidence": str(directory)}).encode())
++            if changed:
++                atomic_write(self.env, original)
++                try:
++                    self.start_apps()
++                    after = self.snapshot()
++                    self.verify_data(before, after)
++                    require(self.running_images() == previous_images, "Rollback did not restore previous image IDs")
++                    pending.unlink()
++                    print("ROLLBACK_OK")
++                except Exception as rollback_error:
++                    raise Rejected("ROLLBACK_FAILED; operator intervention required. Evidence: " + str(directory)) from rollback_error
++            elif pending.exists():
++                pending.unlink()
++            raise Rejected("Release rejected: " + reason + "; evidence: " + str(directory)) from error
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    mode = parser.add_mutually_exclusive_group(required=True)
++    mode.add_argument("--check", action="store_true", help="Verify CI/artifact only; do not pull/deploy")
++    mode.add_argument("--apply", action="store_true")
++    parser.add_argument("--retry-failed", action="store_true")
++    args = parser.parse_args()
++    agent = Agent(os.environ["DAO_CD_ROOT"], os.environ["DAO_CD_COMPOSE_ENV"], os.environ["DAO_CD_COMPOSE_FILE"])
++    with (agent.state / "deploy.lock").open("a") as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            print("SKIPPED another deployment is running")
++            return
++        manifest = agent.discover()
++        if args.check:
++            print("CHECK_OK trusted CI/artifact " + manifest["sha"] + "; image/schema checks run only with --apply")
++        else:
++            agent.apply(manifest, retry_failed=args.retry_failed)
++
++
++if __name__ == "__main__":
++    try:
++        main()
++    except Exception as error:
++        # Only controlled errors are safe for journal output.
++        print("CD_FAILED: " + (str(error) if isinstance(error, Rejected) else "check local configuration, GitHub access and service availability"))
++        raise SystemExit(1)
+diff --git a/deploy/anvil-demo/cd/dao-demo-cd.service b/deploy/anvil-demo/cd/dao-demo-cd.service
+new file mode 100644
+index 0000000000000000000000000000000000000000..7ddb7fd47fb4b00d34e6609498453adb432655a2
+--- /dev/null
++++ b/deploy/anvil-demo/cd/dao-demo-cd.service
+@@ -0,0 +1,15 @@
++[Unit]
++Description=Pull verified DAO Dev release and update API/indexer
++Wants=network-online.target
++After=network-online.target docker.service
++
++[Service]
++Type=oneshot
++User=ubuntu
++Group=ubuntu
++Environment=HOME=/home/ubuntu
++EnvironmentFile=/etc/dao-demo-cd.env
++WorkingDirectory=/opt/dao-demo-cd
++ExecStart=/usr/bin/python3 /opt/dao-demo-cd/agent.py --apply
++UMask=0077
++TimeoutStartSec=20min
+diff --git a/deploy/anvil-demo/cd/dao-demo-cd.timer b/deploy/anvil-demo/cd/dao-demo-cd.timer
+new file mode 100644
+index 0000000000000000000000000000000000000000..1289dbf04f4cf8250f270b9409c329adb238385c
+--- /dev/null
++++ b/deploy/anvil-demo/cd/dao-demo-cd.timer
+@@ -0,0 +1,11 @@
++[Unit]
++Description=Check for a verified DAO backend release periodically
++
++[Timer]
++OnBootSec=2min
++OnUnitInactiveSec=2min
++RandomizedDelaySec=15s
++Unit=dao-demo-cd.service
++
++[Install]
++WantedBy=timers.target
+diff --git a/deploy/anvil-demo/cd/test_agent.py b/deploy/anvil-demo/cd/test_agent.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a2357c9d78b8c0858b80f620936a7b89ac88b6c2
+--- /dev/null
++++ b/deploy/anvil-demo/cd/test_agent.py
+@@ -0,0 +1,198 @@
++"""Failure-boundary tests. Docker/GitHub are simulated; no live deployment claimed."""
++import copy
++import hashlib
++import importlib.util
++import io
++import json
++from pathlib import Path
++import tempfile
++import unittest
++import zipfile
++
++spec = importlib.util.spec_from_file_location("agent", Path(__file__).with_name("agent.py"))
++agent = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(agent)
++SHA = "a" * 40
++
++
++def manifest():
++    return {"schemaVersion": 1, "repository": agent.REPOSITORY, "sha": SHA,
++            "runId": "12", "migrationSet": "b" * 64,
++            "images": {s: "ghcr.io/" + agent.REPOSITORY.lower() + "/" + s + "@sha256:" + "c" * 64
++                       for s in ("frontend", "api", "indexer")}}
++
++
++def snapshot():
++    context = {"chainId": "31337", "deploymentId": "dao-demo-anvil", "dataKind": "chain",
++               "asOfBlock": "19", "asOfBlockHash": "0x123", "snapshotRevision": "revision"}
++    return {"health": {"context": copy.deepcopy(context), "data": {
++                "database": "up", "publication": "ready", "indexer": "synced",
++                "rawDecodeIssues": {"unknownTopics": 16, "decodeErrors": 0}}},
++            "summary": {"context": copy.deepcopy(context), "data": {
++                "treasury": {"balance": "10000"}, "proposalCounts": {"total": 0}}}}
++
++
++class FakeAgent(agent.Agent):
++    def __init__(self, root):
++        self.env_path = Path(root) / "compose.env"
++        self.env_path.write_text("API_IMAGE=old-api\nINDEXER_IMAGE=old-indexer\n")
++        super().__init__(root, self.env_path, Path(root) / "compose.yml")
++        self.initial = self.env.read_bytes()
++        self.calls = []
++        self.starts = 0
++        self.current = {"api": "old-api", "indexer": "old-indexer"}
++        self.fail_preflight = False
++        self.bad_data = False
++        self.stale_head = False
++
++    def docker(self, args, label, timeout=120):
++        self.calls.append((args, label))
++        if self.fail_preflight and "preflight" in label:
++            raise agent.Rejected("schema mismatch")
++        return ""
++
++    def head(self):
++        return "d" * 40 if self.stale_head else SHA
++
++    def running_images(self):
++        return dict(self.current)
++
++    def verify_images(self, value):
++        for service in ("api", "indexer"):
++            agent.require(self.current[service] == value["images"][service], "wrong image")
++
++    def start_apps(self):
++        self.starts += 1
++        values = dict(line.split("=", 1) for line in self.env.read_text().splitlines())
++        self.current = {s: values[s.upper() + "_IMAGE"] for s in ("api", "indexer")}
++
++    def snapshot(self):
++        result = snapshot()
++        if self.bad_data and self.current["api"] != "old-api":
++            result["summary"]["data"]["treasury"]["balance"] = "0"
++        return result
++
++
++class SafetyTests(unittest.TestCase):
++    def test_artifact_digest_and_members_fail_closed(self):
++        buffer = io.BytesIO()
++        with zipfile.ZipFile(buffer, "w") as archive:
++            archive.writestr("manifest.json", json.dumps(manifest()))
++        data = buffer.getvalue()
++        digest = "sha256:" + hashlib.sha256(data).hexdigest()
++        self.assertEqual(agent.decode_artifact(data, digest, SHA, 12), manifest())
++        with self.assertRaises(agent.Rejected):
++            agent.decode_artifact(data, "sha256:" + "0" * 64, SHA, 12)
++        with self.assertRaises(agent.Rejected):
++            agent.decode_artifact(data, digest, "d" * 40, 12)
++        buffer = io.BytesIO()
++        with zipfile.ZipFile(buffer, "w") as archive:
++            archive.writestr("../manifest.json", json.dumps(manifest()))
++        data = buffer.getvalue()
++        with self.assertRaises(agent.Rejected):
++            agent.decode_artifact(data, "sha256:" + hashlib.sha256(data).hexdigest(), SHA, 12)
++
++    def test_untrusted_event_and_changed_workflow_rejected(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            calls = []
++            def api(endpoint, binary=False):
++                calls.append(endpoint)
++                if endpoint == "branches/Dev":
++                    return {"commit": {"sha": SHA}}
++                if endpoint.startswith("contents/"):
++                    return {"sha": "wrong"}
++                self.fail("Should reject before reading runs/artifacts")
++            worker.api = api
++            with self.assertRaises(agent.Rejected):
++                worker.discover()
++            self.assertTrue(all(not call.startswith("actions/") for call in calls))
++
++            def api(endpoint, binary=False):
++                if endpoint == "branches/Dev":
++                    return {"commit": {"sha": SHA}}
++                if endpoint.startswith("contents/"):
++                    return {"sha": agent.TRUSTED_WORKFLOW_BLOB}
++                if endpoint.startswith("actions/workflows/"):
++                    return {"workflow_runs": [{"id": 12, "head_sha": SHA}]}
++                if endpoint == "actions/runs/12":
++                    return {"status": "completed", "conclusion": "success", "head_sha": SHA,
++                            "head_branch": "Dev", "event": "pull_request"}
++                self.fail("Must not download artifact from a PR")
++            worker.api = api
++            with self.assertRaises(agent.Rejected):
++                worker.discover()
++
++    def test_schema_failure_and_stale_head_never_restart_apps(self):
++        for failure in ("fail_preflight", "stale_head"):
++            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as root:
++                worker = FakeAgent(root)
++                setattr(worker, failure, True)
++                with self.assertRaises(agent.Rejected):
++                    worker.apply(manifest())
++                self.assertEqual(worker.starts, 0)
++                self.assertEqual(worker.env.read_bytes(), worker.initial)
++
++    def test_bad_postcheck_restores_env_and_old_images_and_blocks_retry(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            worker.bad_data = True
++            with self.assertRaises(agent.Rejected):
++                worker.apply(manifest())
++            self.assertEqual(worker.starts, 2)
++            self.assertEqual(worker.env.read_bytes(), worker.initial)
++            self.assertEqual(worker.current, {"api": "old-api", "indexer": "old-indexer"})
++            self.assertFalse((worker.state / "pending.json").exists())
++            with self.assertRaises(agent.Rejected):
++                worker.apply(manifest())
++            self.assertEqual(worker.starts, 2)
++
++    def test_success_records_release_and_only_targets_apps(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            worker.apply(manifest())
++            self.assertEqual(worker.starts, 1)
++            self.assertEqual(json.loads((worker.state / "applied.json").read_text())["sha"], SHA)
++            self.assertFalse((worker.state / "pending.json").exists())
++            calls = len(worker.calls)
++            worker.apply(manifest())
++            self.assertEqual(worker.starts, 1)
++            self.assertEqual(len(worker.calls), calls)
++
++    def test_interrupted_update_requires_operator_inspection(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            (worker.state / "pending.json").write_text("{}")
++            with self.assertRaises(agent.Rejected):
++                worker.apply(manifest())
++            self.assertEqual(worker.calls, [])
++            self.assertEqual(worker.env.read_bytes(), worker.initial)
++
++    def test_rollout_command_excludes_dependencies_and_pulls(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            agent.Agent.start_apps(worker)
++            arguments = worker.calls[-1][0]
++            self.assertIn("--no-deps", arguments)
++            self.assertEqual(arguments[-2:], ["indexer", "api"])
++            self.assertEqual(arguments[arguments.index("--pull") + 1], "never")
++
++    def test_failed_rollback_retains_pending_marker(self):
++        with tempfile.TemporaryDirectory() as root:
++            worker = FakeAgent(root)
++            worker.bad_data = True
++            start = worker.start_apps
++            def fail_second_start():
++                if worker.starts:
++                    raise agent.Rejected("rollback startup failed")
++                start()
++            worker.start_apps = fail_second_start
++            with self.assertRaisesRegex(agent.Rejected, "ROLLBACK_FAILED"):
++                worker.apply(manifest())
++            self.assertEqual(worker.env.read_bytes(), worker.initial)
++            self.assertTrue((worker.state / "pending.json").exists())
++            self.assertTrue((worker.state / "failed.json").exists())
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/deploy/anvil-demo/compose.yml b/deploy/anvil-demo/compose.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..76f54dde356b568d5ceb99ed5b03e5da0f8d0647
+--- /dev/null
++++ b/deploy/anvil-demo/compose.yml
+@@ -0,0 +1,171 @@
++name: dao-demo
++
++x-app: &app
++  restart: unless-stopped
++  init: true
++  user: node
++  read_only: true
++  cap_drop: [ALL]
++  security_opt: [no-new-privileges:true]
++  env_file:
++    - ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/runtime.env
++  logging:
++    driver: local
++    options: {max-size: 10m, max-file: "3"}
++
++services:
++  postgres:
++    image: postgres:18.4-bookworm@sha256:882236b897e39051d2368c5ccc6cda944904723506b2dfc97f2a8f5bc9afa382
++    container_name: dao-demo-postgres
++    restart: unless-stopped
++    env_file:
++      - ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/postgres.env
++    volumes:
++      - postgres-data:/var/lib/postgresql
++    networks: [database]
++    shm_size: 128m
++    stop_grace_period: 60s
++    healthcheck:
++      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
++      interval: 5s
++      timeout: 3s
++      retries: 12
++    logging:
++      driver: local
++      options: {max-size: 10m, max-file: "3"}
++
++  anvil:
++    image: ghcr.io/foundry-rs/foundry@sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043
++    container_name: dao-demo-anvil
++    restart: unless-stopped
++    user: "${DAO_UID:-1000}:${DAO_GID:-1000}"
++    environment: {HOME: /data}
++    entrypoint: [anvil]
++    command:
++      - --host
++      - 0.0.0.0
++      - --port
++      - "8545"
++      - --chain-id
++      - "31337"
++      - --hardfork
++      - osaka
++      - --state
++      - /data/state.json
++      - --state-interval
++      - "30"
++      - --preserve-historical-states
++      - --silent
++    volumes:
++      - type: bind
++        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/anvil
++        target: /data
++        bind: {create_host_path: false}
++    ports: ["127.0.0.1:8545:8545"]
++    networks: [database, edge]
++    stop_grace_period: 60s
++    healthcheck:
++      test: [CMD, cast, chain-id, --rpc-url, "http://127.0.0.1:8545"]
++      interval: 10s
++      timeout: 3s
++      retries: 6
++    logging:
++      driver: local
++      options: {max-size: 10m, max-file: "3"}
++
++  indexer:
++    <<: *app
++    image: ${INDEXER_IMAGE:?Set tested INDEXER_IMAGE}
++    container_name: dao-demo-indexer
++    volumes:
++      - type: bind
++        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/indexer.json
++        target: /run/dao/indexer.json
++        read_only: true
++        bind: {create_host_path: false}
++    networks: [database]
++    depends_on:
++      postgres: {condition: service_healthy}
++      anvil: {condition: service_healthy}
++    healthcheck:
++      test: [CMD, node, /app/deploy/worker-health.mjs]
++      interval: 10s
++      timeout: 3s
++      start_period: 30s
++      retries: 3
++    stop_grace_period: 30s
++
++  api:
++    <<: *app
++    image: ${API_IMAGE:?Set tested API_IMAGE}
++    container_name: dao-demo-api
++    volumes:
++      - type: bind
++        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/indexer.json
++        target: /run/dao/indexer.json
++        read_only: true
++        bind: {create_host_path: false}
++    # An internal-only network did not publish the port in the observed Docker 29 lab.
++    networks: [database, edge]
++    ports: ["127.0.0.1:3000:3000"]
++    depends_on:
++      postgres: {condition: service_healthy}
++      indexer: {condition: service_healthy}
++    healthcheck:
++      # Readiness only: degraded raw decode status is still exposed by the HTTP body.
++      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health?'+new URLSearchParams({chainId:process.env.CHAIN_ID,deploymentId:process.env.DEPLOYMENT_ID})).then(async r=>{const b=await r.json();if(!r.ok||b.data?.database!=='up'||b.data?.publication!=='ready')process.exit(1)}).catch(()=>process.exit(1))"]
++      interval: 10s
++      timeout: 5s
++      start_period: 30s
++      retries: 3
++    stop_grace_period: 30s
++
++  tunnel:
++    profiles: [tunnel]
++    image: ${TUNNEL_IMAGE:?Set digest-pinned TUNNEL_IMAGE}
++    container_name: dao-demo-tunnel
++    restart: unless-stopped
++    network_mode: host
++    read_only: true
++    cap_drop: [ALL]
++    security_opt: [no-new-privileges:true]
++    command: [tunnel, --no-autoupdate, --protocol, http2, --url, "http://127.0.0.1:3000"]
++    depends_on:
++      api: {condition: service_healthy}
++    logging:
++      driver: local
++      options: {max-size: 10m, max-file: "3"}
++
++  named-tunnel:
++    profiles: [named-tunnel]
++    image: ${TUNNEL_IMAGE:?Set digest-pinned TUNNEL_IMAGE}
++    container_name: dao-demo-named-tunnel
++    restart: unless-stopped
++    user: "${DAO_UID:-1000}:${DAO_GID:-1000}"
++    network_mode: host
++    read_only: true
++    cap_drop: [ALL]
++    security_opt: [no-new-privileges:true]
++    command: [tunnel, --no-autoupdate, --protocol, http2, --metrics, "127.0.0.1:20242", run, --token-file, /run/secrets/cloudflared-token]
++    volumes:
++      - type: bind
++        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/cloudflared.token
++        target: /run/secrets/cloudflared-token
++        read_only: true
++        bind: {create_host_path: false}
++    logging:
++      driver: local
++      options: {max-size: 10m, max-file: "3"}
++
++volumes:
++  postgres-data:
++    external: true
++    name: dao-demo-postgres-data
++
++networks:
++  database:
++    external: true
++    name: dao-demo-db
++  edge:
++    external: true
++    name: dao-demo
+diff --git a/docs/bootstrap-topic-backfill.md b/docs/bootstrap-topic-backfill.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9c48096296b14067a513c8cd85ac0b78a8937aac
+--- /dev/null
++++ b/docs/bootstrap-topic-backfill.md
+@@ -0,0 +1,62 @@
++# Bổ sung decode cho các bootstrap administrative events
++
++## Nguyên nhân và thay đổi
++
++Raw ABI trước đây chỉ bao gồm business event, trong khi BE04 có danh sách riêng
++để kiểm tra và bỏ qua administrative event khỏi business model. Vì vậy dữ liệu
++được publish đúng nhưng raw health vẫn degraded với 16 unknown topics.
++
++`indexer/ancillary-abi.ts` dùng chung danh sách chính xác cho raw decoder và
++projector. Canonical encoding/indexed count vẫn được kiểm tra bởi decodeLog;
++topic thật sự lạ vẫn unknown, dữ liệu sai vẫn decode_error. Không sửa health
++để giấu cảnh báo, không thay ABI version/chain/deployment scope hay migration.
++
++Regression từ receipt BE03 được lưu trong repo xác nhận 16 event (governor 5,
++timelock 7, treasury 4) decode đầy đủ và raw bytes không đổi. Compiler ABI checks
++đối chiếu toàn bộ fragment quản trị với shared ABI đã ghim. Business projection
++vẫn bỏ qua chúng, không tạo proposal hay tính thêm dòng tiền.
++
++## Deployment đang có cần backfill riêng
++
++Release mới decode đúng log mới nhưng không tự ghi lại các row cũ khi worker
++idle. Vì vậy phải chạy CLI `--redecode` có chủ đích sau khi release mới đã qua CI
++và CD đã dùng đúng image. Không chạy migration, không rescan/reset chain, không
++UPDATE unknown thành decoded bằng SQL. Dùng chính bytes đã lưu để tính lại.
++
++1. Tạm dừng timer CD và chờ service không còn activating/active. Ghi lại image
++   và health/summary làm baseline. Nếu service còn chạy, không kill giữa rollout.
++2. Sao lưu DB và config ngoài Git, xác nhận archive và checksum như runbook chính.
++3. Dừng riêng worker indexer bằng Compose; API tiếp tục đọc publication hiện có.
++4. Chạy một tiến trình CLI cùng image release mới:
++
++```bash
++sudo -n docker compose --env-file deploy/anvil-demo/.env \
++  -f deploy/anvil-demo/compose.yml stop --timeout 30 indexer
++sudo -n docker compose --env-file deploy/anvil-demo/.env \
++  -f deploy/anvil-demo/compose.yml run --rm --no-deps \
++  --entrypoint node indexer /app/dist/indexer/cli.js \
++  --config /run/dao/indexer.json --redecode
++```
++
++CLI giữ transaction/advisory lock và kiểm tra metadata. Exit 0 nếu decode không
++còn issue, exit 2 nếu còn issue. Nếu lỗi, giữ report/backup, không reset chain.
++Khởi động lại worker để phục vụ canonical checks, rồi chẩn đoán các row còn lỗi.
++
++```bash
++sudo -n docker compose --env-file deploy/anvil-demo/.env \
++  -f deploy/anvil-demo/compose.yml up -d --no-deps --pull never \
++  --wait --wait-timeout 180 indexer
++curl --fail-with-body --silent --show-error \
++  'http://127.0.0.1:3000/api/health?chainId=31337&deploymentId=dao-demo-anvil'
++```
++
++5. Đối chiếu raw row IDs/topics/data/receipt coordinates không đổi; H/hash/revision,
++   Treasury và proposals không đổi nếu không có giao dịch mới. Chờ worker publish
++   lại: unknownTopics=0, decodeErrors=0, rawDecodeComplete=true. Administrative
++   events vẫn được ghi ignoredAncillaryEvents=16 trong projection.
++6. Khi tất cả đạt, bật lại timer CD. Đây là cập nhật derived decode metadata;
++   rollback image cũ không hoàn tác backfill và có thể cần re-decode lại với ABI
++   cũ. Không thực hiện downgrade decoder tùy tiện sau maintenance.
++
++Không thể kết luận live VM đã hết degraded chỉ từ unit tests hoặc CI. Cần lấy
++đầu ra CLI/health/SQL trên deployment thực tế để nghiệm thu.
+diff --git a/docs/openstack-anvil-demo.md b/docs/openstack-anvil-demo.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..59ec0e9b2b6adbe89c0015940a562320bf5a2d8c
+--- /dev/null
++++ b/docs/openstack-anvil-demo.md
+@@ -0,0 +1,208 @@
++# Demo Netlify + OpenStack/Kolla-Ansible + Anvil
++
++## Kiến trúc và phạm vi
++
++**OpenStack được triển khai bằng Kolla-Ansible**, mô hình lab all-in-one.
++Xem [hồ sơ Kolla](../infra/kolla/README.md); không suy diễn version OpenStack,
++inventory hay globals.yml chưa được cung cấp.
++
++| Lớp | Công cụ và trách nhiệm |
++| --- | --- |
++| Cloud | Kolla-Ansible chạy các dịch vụ OpenStack trong container trên host lab |
++| Tài nguyên tenant | [Terraform](../infra/openstack/README.md): VM, Neutron network/subnet/router, SG, keypair, port, floating IP |
++| Backend demo | [Compose](../deploy/anvil-demo/compose.yml): Anvil, PostgreSQL, indexer, API; tunnel tùy chọn |
++| Frontend | Netlify, repository chung, production branch `Dev` |
++| DNS | P.A Việt Nam; giữ bản ghi website Netlify đang hoạt động |
++
++Đây là Anvil demo riêng chain `31337`, **không phải Sepolia** và không khôi phục
++hạ tầng staging cũ. Chỉ đọc API qua HTTPS; chưa công khai RPC để giao dịch ví.
++Không thay đổi personal/individual hoặc khu vực đánh giá cá nhân.
++
++## Inventory từ lần triển khai ngày 2026-11-25
++
++Đây là đầu ra vận hành do người triển khai cung cấp, không phải một lần kiểm tra
++live mới của CI. IDs để đối chiếu/import ở [runbook Terraform](../infra/openstack/README.md).
++
++| Thành phần | Giá trị đã quan sát |
++| --- | --- |
++| Project | `dao-budget-demo` |
++| VM | `dao-demo-01`, Ubuntu 22.04, 2 vCPU / 2048 MiB / 20 GiB |
++| Private network | `dao-demo-net`, `10.20.30.0/24`, VM `10.20.30.192` |
++| Router | `dao-demo-router`, SNAT, provider network `public` |
++| Floating IP VM | `192.168.248.217`, RFC1918; chỉ lab truy cập được |
++| SSH | `dao-demo-key`, ingress từ host br-ex `192.168.248.1/32` |
++| Database | PostgreSQL 18.4; Docker volume `dao-demo-postgres-data` |
++| Chain | Anvil/Foundry 1.8.5, hardfork Osaka, state lưu ngoài container |
++| Source đang chạy | `896f93ea282d76fa72339a97ea12339240c16da4` |
++| Public deployment name | `dao-demo-anvil`; SQL ID đã cấp trong DB này: `1` |
++| Publication | H=19, Treasury 10.000 BUD, 0 đề xuất/chi |
++| Decode | 16 unknown topics, 0 decode errors; HTTP health vẫn `degraded` |
++
++Raw start block là `2` (bốn vai trò raw), không dùng block GOV sớm hơn làm prefix.
++API healthcheck xác nhận database up/publication ready, **không** chứng minh
++rawDecodeComplete. Không đổi unknown thành decoded để làm health xanh.
++
++## Khai báo và tạo VM
++
++Theo [infra/openstack](../infra/openstack/README.md). Project/flavor đã được tạo
++thủ công nên import tài nguyên hiện tại trước; không apply tạo một VM thứ hai.
++Cloud-init chỉ dành cho VM mới. Không cần Cinder; không xóa Docker volume Kolla
++hoặc lab cũ để lấy dung lượng. Quota không đảm bảo host còn RAM/disk thật.
++
++## Các file riêng trên VM
++
++```text
++/home/ubuntu/dao-demo/
++  anvil/state.json
++  config/deployment.json
++  config/indexer.json
++  config/frontend.json
++  config/postgres.env
++  config/runtime.env
++  config/before-migrations.dump
++```
++
++Đây là dữ liệu vận hành ngoài Git. Không copy cả thư mục vào repo.
++`postgres.env`/`runtime.env` có quyền 600, thư mục cha 700; không commit private key,
++database URL/password, cursor secret, token, Terraform state/plan hay bản dump.
++`indexer.json` được mount trực tiếp cho user `node`, cần file readable (644);
++thư mục host vẫn riêng tư. Compose giữ nguyên manifest và config hiện có.
++
++`runtime.env` cần các tên biến sau, **giữ nguyên giá trị bí mật đang dùng**:
++
++- `DATABASE_URL` trỏ hostname `dao-demo-postgres:5432`.
++- `API_CURSOR_SECRET` ổn định, tối thiểu 32 bytes.
++- `CHAIN_ID=31337`, `DEPLOYMENT_ID=dao-demo-anvil` (tên công khai, không phải SQL ID).
++- `RPC_URL=http://dao-demo-anvil:8545`.
++- `API_HOST=0.0.0.0`, `API_PORT=3000` (bên trong container).
++- `API_CORS_ORIGINS=https://dao-budget-simulator.xyz`.
++
++## Chuẩn bị Compose cho deployment đã có
++
++Compose yêu cầu Docker Compose >=2.24.4, hai network external và volume đã có.
++Trên **VM ubuntu@dao-demo-01**, kiểm tra thay vì tạo trùng:
++
++```bash
++sudo docker network inspect dao-demo dao-demo-db --format '{{.Name}} internal={{.Internal}}'
++sudo docker volume inspect dao-demo-postgres-data --format '{{.Name}}'
++cd "$HOME/dao-budget-simulator"
++cp deploy/anvil-demo/.env.example deploy/anvil-demo/.env
++id -u
++id -g
++sudo docker inspect dao-demo-tunnel --format '{{.Config.Image}}'
++```
++
++Sửa `.env` cục bộ: `DAO_DEMO_HOME=/home/ubuntu/dao-demo`, UID/GID của user,
++hai image tag đã kiểm thử và `TUNNEL_IMAGE` bằng digest từ container đang chạy.
++Không dùng chuỗi REPLACE_WITH. Nếu chưa có tunnel image, pull official
++`cloudflare/cloudflared` rồi lấy `RepoDigests` và ghi digest vào file cục bộ.
++
++```bash
++sudo docker compose --env-file deploy/anvil-demo/.env -f deploy/anvil-demo/compose.yml config --quiet
++```
++
++Lệnh trên chỉ validate, không khởi chạy. Không in `compose config` đầy đủ vì có thể
++render secrets từ env_file. App yêu cầu config đã được chuẩn bị; file này không
++tự migrate database, deploy lại hợp đồng hoặc tạo journal/metadata giả.
++
++### Chuyển container tạo tay sang Compose trong thời gian bảo trì
++
++**Không chạy tự động chỉ vì pull Git.** Container cũ cùng tên sẽ xung đột; chỉ
++chuyển sau khi kiểm tra backup và chấp nhận gián đoạn ngắn. Trước khi dừng, lưu
++phản hồi API health/summary làm mốc H/hash/revision và số dư để đối chiếu sau.
++
++```bash
++umask 077
++DAO_BACKUP_DIR="$HOME/dao-demo-backups/$(date -u +%Y%m%dT%H%M%SZ)"
++mkdir -p "$DAO_BACKUP_DIR"
++chmod 700 "$DAO_BACKUP_DIR"
++# Dừng writer và flush Anvil state bằng shutdown bình thường.
++sudo docker stop --time 60 dao-demo-tunnel dao-demo-api dao-demo-indexer dao-demo-anvil
++sudo docker exec dao-demo-postgres sh -c 'exec pg_dump -Fc -U "$POSTGRES_USER" -d "$POSTGRES_DB"' > "$DAO_BACKUP_DIR/database.dump"
++test -s "$DAO_BACKUP_DIR/database.dump"
++tar -czf "$DAO_BACKUP_DIR/anvil-config.tar.gz" -C "$HOME/dao-demo" anvil config
++sha256sum "$DAO_BACKUP_DIR/database.dump" "$DAO_BACKUP_DIR/anvil-config.tar.gz"
++```
++
++Nếu backup có lỗi, dừng và xử lý; không chạy phần xóa container. Kiểm tra restore
++database vào DB tách biệt khi cần xác minh khả năng phục hồi; không restore đè live.
++Anvil state và database phải được giữ theo cùng bộ backup. Không tự tạo chain mới
++rồi dùng lại metadata DB cũ.
++
++Khi backup đã xác nhận, chỉ bỏ **container**; không bỏ volume/bind data:
++
++```bash
++sudo docker stop --time 60 dao-demo-postgres
++sudo docker rm dao-demo-tunnel dao-demo-api dao-demo-indexer dao-demo-anvil dao-demo-postgres
++sudo docker compose --env-file deploy/anvil-demo/.env -f deploy/anvil-demo/compose.yml up -d --wait postgres anvil indexer api
++# Tùy chọn: bật tunnel tạm. Lấy URL MỚI sau khi container được tạo lại.
++sudo docker compose --env-file deploy/anvil-demo/.env -f deploy/anvil-demo/compose.yml --profile tunnel up -d tunnel
++sudo docker logs --tail 40 dao-demo-tunnel
++```
++
++Không dùng `docker system prune --volumes`, `docker volume rm`, `anvil_reset`,
++không xóa state hoặc chạy lại `deploy_local.mjs` trên chain đã deploy.
++Volume PostgreSQL là external nên Compose không quản lý vòng đời của nó.
++Hai network cũng external: DB internal, edge bridge cho host port publishing.
++API có cả hai network; lần triển khai thực tế chỉ có DB internal đã không publish
++được cổng host cho đến khi thêm edge network.
++
++## Kiểm tra sau khởi động/restart
++
++```bash
++sudo docker compose --env-file deploy/anvil-demo/.env -f deploy/anvil-demo/compose.yml ps
++sudo docker exec dao-demo-anvil cast chain-id --rpc-url http://127.0.0.1:8545
++sudo docker exec dao-demo-anvil cast block-number --rpc-url http://127.0.0.1:8545
++curl --fail-with-body --silent --show-error 'http://127.0.0.1:3000/api/health?chainId=31337&deploymentId=dao-demo-anvil'
++curl --fail-with-body --silent --show-error 'http://127.0.0.1:3000/api/summary?chainId=31337&deploymentId=dao-demo-anvil'
++```
++
++Đối chiếu chain/H/hash/address/số dư với trước bảo trì, không chỉ container Up.
++Nếu chain trở về block 0, dừng indexer/API và kiểm tra state mount; không tự reseed.
++Publication/worker phải ready, nhưng vẫn báo `degraded` nếu còn unknown topics.
++Chưa chạy nghiệm thu restart/restore trên cloud chỉ bằng cách commit file này.
++
++## Netlify, HTTPS và DNS
++
++Netlify dùng repo `SE2026-21-1/dao-budget-simulator`, branch `Dev`, base directory
++trống, build `npm ci --prefix frontend && npm run build --prefix frontend`, publish
++`frontend/dist`, Node `24.15.0`. Production env:
++
++```dotenv
++VITE_DATA_SOURCE=live
++VITE_API_BASE_URL=https://YOUR-CURRENT-TUNNEL.trycloudflare.com
++VITE_CHAIN_ID=31337
++VITE_DEPLOYMENT_ID=dao-demo-anvil
++VITE_CHAIN_NAME=DAO Anvil Demo
++```
++
++URL trên là placeholder, thay bằng URL thực. Không thêm `/api` cuối API base.
++Không đặt `VITE_RPC_URL` ở demo chỉ đọc và không đặt `VITE_CONTAINER_RUNTIME=1`
++cho static Vite build. Không đưa secret backend vào biến VITE. Thay env phải
++build/deploy lại. Kiểm tra browser Network: request đúng chain/name, `dataKind=chain`,
++Treasury 10.000 BUD khi chưa có giao dịch mới; dữ liệu fixture không phải nghiệm thu.
++
++Quick Tunnel chỉ phục vụ HTTP API, không public Anvil unlocked RPC/PostgreSQL.
++URL có thể đổi khi tunnel restart/recreate; không có uptime guarantee. Endpoint
++ổn định/named tunnel là việc tiếp theo, chưa được triển khai bởi tài liệu này.
++DNS P.A Việt Nam giữ `@ A 75.2.60.5` và `www CNAME dao-budget-simulator.netlify.app`
++như đầu ra đã cung cấp; không trỏ DNS public vào IP RFC1918 của VM.
++
++## Còn cần hoàn thiện
++
++- [Backfill bootstrap topics bằng decoder đã bổ sung](bootstrap-topic-backfill.md).
++- [Chuyển sang hostname HTTPS cố định bằng named tunnel](stable-api-tunnel.md).
++
++Đã có [công cụ pull CD và systemd timer](../deploy/anvil-demo/cd/README.md)
++để VM nhận release từ CI và chỉ cập nhật API/indexer. Cần cài, kiểm tra một lần
++và bật timer trên VM; commit file không tự kích hoạt CD. Rollout thủ công từ
++`896f93e` sang image digest của release `3d0f6ca` đã được người vận hành cung cấp
++đầu ra `RELEASE_UPDATE_OK`, giữ H=19; đó chưa phải nghiệm thu timer tự động.
++
++- Đối chiếu ABI cho 16 bootstrap unknown topics; giữ health degraded cho tới khi có bằng chứng.
++- Kiểm tra restart/restore thực tế trong thời gian bảo trì.
++- Thay Quick Tunnel bằng endpoint HTTPS ổn định.
++- Thu thập release/inventory/globals Kolla đã redact nếu cần tái dựng toàn bộ cloud.
++
++Không coi Terraform validate, Compose render hay CI syntax checks là bằng chứng
++đã apply cloud, chuyển container đang chạy, restore dữ liệu hoặc chạy testnet.
+diff --git a/docs/stable-api-tunnel.md b/docs/stable-api-tunnel.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f9f7342f570eaee99c23526d888377283a27ab2
+--- /dev/null
++++ b/docs/stable-api-tunnel.md
+@@ -0,0 +1,117 @@
++# Endpoint API cố định: api.dao-budget-simulator.xyz
++
++Mục tiêu: named Cloudflare Tunnel tới `http://127.0.0.1:3000` trên VM.
++Tên miền vẫn đăng ký tại P.A Việt Nam; frontend vẫn chạy trên Netlify.
++Không public Anvil RPC, PostgreSQL hoặc metrics. Quick Tunnel cũ chạy song song
++đến khi endpoint mới đã kiểm tra và Netlify chuyển thành công.
++
++## 1. Chuẩn bị DNS và tài khoản
++
++Cần quyền quản trị domain và tài khoản Cloudflare. Với Full DNS setup, thêm
++`dao-budget-simulator.xyz` vào Cloudflare, chọn gói phù hợp và review toàn bộ
++bản ghi trước khi thay nameserver tại nhà đăng ký. Không tự giả định DNS scan
++đã tìm đủ MX/TXT/CAA hoặc bản ghi xác minh dịch vụ.
++
++Giữ nguyên nội dung các bản ghi website đang dùng và đặt **DNS only**:
++
++| Host | Loại | Giá trị đã quan sát |
++| --- | --- | --- |
++| @ | A | 75.2.60.5 |
++| www | CNAME | dao-budget-simulator.netlify.app |
++
++Xuất/sao lưu toàn bộ DNS từ P.A Việt Nam. Nếu có DNSSEC/DS ở nhà đăng ký, làm
++theo quy trình migration DNSSEC của Cloudflare trước khi đổi NS để tránh SERVFAIL.
++Sau khi bản ghi đã đối chiếu đầy đủ, thay NS tại P.A Việt Nam bằng chính hai NS
++Cloudflare cấp cho zone, không dùng NS mẫu. Chờ zone Active và website vẫn lên
++bình thường. Đây là đổi nơi quản lý DNS, không transfer registrar.
++
++Nếu đang giữ DNS ở P.A Việt Nam và chưa có Cloudflare zone phù hợp, không chỉ
++thêm một CNAME api vào UUID.cfargotunnel.com rồi coi như xong: published tunnel
++phải được gắn domain/zone đúng mô hình Cloudflare hỗ trợ.
++
++## 2. Tạo remotely-managed named tunnel
++
++Trong dashboard Cloudflare, vào khu vực Tunnels/Cloudflare One, tạo tunnel
++Cloudflared tên `dao-demo-api`. Thêm published application route:
++
++- Hostname: `api.dao-budget-simulator.xyz`.
++- Service: HTTP, `127.0.0.1:3000` (connector chạy host network của VM).
++- Không trỏ service tới 8545 hoặc 5432.
++
++Dashboard tạo bản ghi DNS cho tunnel. Không nhập UUID giả hoặc tự đổi apex/www.
++Không bật trang đăng nhập Cloudflare Access cho endpoint này khi frontend public
++chưa có cơ chế xác thực tương ứng. API hiện chỉ hỗ trợ đọc GET/OPTIONS.
++
++## 3. Lưu token trên VM, không đưa vào Git/chát
++
++Token tunnel khác với GitHub PAT. Lấy riêng giá trị token từ bước cài connector
++trong dashboard, không dán toàn bộ lệnh install. Lưu file ngoài repo:
++
++```bash
++python3 - <<'PY'
++import getpass, os
++from pathlib import Path
++path = Path.home() / 'dao-demo/config/cloudflared.token'
++token = getpass.getpass('Dán token của named tunnel (ẩn): ').strip()
++if not token or any(char.isspace() for char in token):
++    raise SystemExit('Token trống hoặc chứa khoảng trắng; không ghi file.')
++fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
++with os.fdopen(fd, 'w') as handle:
++    handle.write(token)
++print('TOKEN_FILE_READY')
++PY
++```
++
++File thuộc user ubuntu, mode 600. Compose dùng cùng UID/GID và bind read-only;
++token không nằm trong command line hay environment của container. Không ghi đè
++file cũ nếu chưa review rotation. `--token-file` yêu cầu cloudflared >=2025.4.0;
++image đã quan sát 2026.11.2 đáp ứng, tiếp tục dùng digest đã ghim.
++
++## 4. Chạy connector mới song song
++
++Checkout bản source có profile `named-tunnel`; kiểm tra Git sạch trước khi đổi
++commit. Dùng Compose trong repo, không thay bản `/opt/dao-demo-cd/compose.yml`
++đã review của agent. Chỉ tạo service named-tunnel:
++
++```bash
++sudo -n docker compose --env-file deploy/anvil-demo/.env \
++  -f deploy/anvil-demo/compose.yml --profile named-tunnel \
++  up -d --no-deps named-tunnel
++sudo -n docker logs --tail 40 dao-demo-named-tunnel
++```
++
++Metrics bind loopback 20242 để tránh xung đột connector cũ. Không stop/recreate
++Quick Tunnel, API, indexer, Anvil hay PostgreSQL trong bước này.
++
++## 5. Kiểm tra và chuyển frontend
++
++```bash
++curl --fail-with-body --silent --show-error --include \
++  -H 'Origin: https://dao-budget-simulator.xyz' \
++  'https://api.dao-budget-simulator.xyz/api/health?chainId=31337&deploymentId=dao-demo-anvil'
++curl --fail-with-body --silent --show-error \
++  'https://api.dao-budget-simulator.xyz/api/summary?chainId=31337&deploymentId=dao-demo-anvil'
++```
++
++Yêu cầu HTTPS hợp lệ, HTTP 200, đúng chain/name/H/hash, số dư và header
++`Access-Control-Allow-Origin` đúng website. So sánh với API loopback và tunnel cũ.
++Không hạ yêu cầu TLS hoặc dùng `curl -k` để vượt lỗi certificate.
++
++Chỉ sau khi đạt, đặt Production Netlify:
++`VITE_API_BASE_URL=https://api.dao-budget-simulator.xyz` (không thêm /api),
++build/deploy lại và kiểm tra browser Network thực sự gọi host mới. Giữ các biến
++chain/deployment hiện có. Đọc dữ liệu đúng, không fallback fixture khi API lỗi.
++
++Kiểm tra restart riêng named connector vẫn giữ hostname và API hoạt động, trong
++khi Quick Tunnel còn dự phòng. Khi đã nghiệm thu, dừng Quick Tunnel cũ:
++`sudo -n docker stop --timeout 30 dao-demo-tunnel`. Chưa xóa container cũ cho
++đến khi hoàn tất rollback window. Nếu chuyển Netlify lỗi, đổi API base về URL
++Quick Tunnel còn chạy và build lại; không đổi database/chain để xử lý lỗi DNS.
++
++Named tunnel giữ hostname qua restart nhưng không thay thế uptime của VM/host
++lab. Hồ sơ này chưa chứng minh domain/zone, named tunnel hay DNS đã được đổi.
++
++Nguồn chính thức:
++- https://developers.cloudflare.com/tunnel/get-started/
++- https://developers.cloudflare.com/dns/zone-setups/full-setup/setup/
++- https://developers.cloudflare.com/tunnel/reference/run-parameters/
+diff --git a/indexer/abi-registry.ts b/indexer/abi-registry.ts
+index 46b9a9527e728932b2943d96dc20af7c7908e199..1cfa999aedae4e445b8259b1bd0bd5cbcb053c66 100644
+--- a/indexer/abi-registry.ts
++++ b/indexer/abi-registry.ts
+@@ -1,7 +1,8 @@
+ import { Interface, type EventFragment } from 'ethers';
++import { ANCILLARY_ABI } from './ancillary-abi.js';
+ import type { ContractConfig, ContractRole } from './types.js';
+ 
+-/** Event subsets only, not a full implementation ABI or a deployment claim. */
++/** Business plus explicitly supported administrative events, not a deployment claim. */
+ export interface AbiRegistration {
+   role: ContractRole;
+   version: string;
+@@ -16,7 +17,8 @@ const ozRevision = 'c64a1edb67b6e3f4a15cca8909c9482ad33a02b0';
+ const ozSource = `https://github.com/OpenZeppelin/openzeppelin-contracts/blob/${ozRevision}/contracts/`;
+ 
+ function register(role: ContractRole, version: string, source: string, abi: string[]): AbiRegistration {
+-  const eventInterface = new Interface(abi);
++  const registeredAbi = [...abi, ...ANCILLARY_ABI[role]];
++  const eventInterface = new Interface(registeredAbi);
+   const eventsByTopic: Record<string, EventFragment> = Object.create(null);
+   // ethers' topic lookup hashes each candidate signature on every log.
+   eventInterface.forEachEvent(fragment => { eventsByTopic[fragment.topicHash] = fragment; });
+@@ -25,7 +27,7 @@ function register(role: ContractRole, version: string, source: string, abi: stri
+     version,
+     source,
+     integrationStatus: 'awaiting-sc06' as const,
+-    abi: Object.freeze(abi),
++    abi: Object.freeze(registeredAbi),
+     interface: eventInterface,
+     eventsByTopic: Object.freeze(eventsByTopic),
+   });
+diff --git a/indexer/ancillary-abi.ts b/indexer/ancillary-abi.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..83ace11f0e30084c1d38e5fc04cf566cbbb1a5ad
+--- /dev/null
++++ b/indexer/ancillary-abi.ts
+@@ -0,0 +1,33 @@
++import { Interface } from 'ethers';
++import type { ContractRole } from './types.js';
++
++// Administrative events already accepted by the BE04 projector. Raw decoding
++// must recognize the same exact indexed layouts instead of reporting them unknown.
++// Fragments are checked against the pinned shared compiler ABIs in decoder tests.
++export const ANCILLARY_ABI: Readonly<Record<ContractRole, readonly string[]>> = Object.freeze({
++  governor: Object.freeze([
++    'event VotingDelaySet(uint256 oldVotingDelay,uint256 newVotingDelay)',
++    'event VotingPeriodSet(uint256 oldVotingPeriod,uint256 newVotingPeriod)',
++    'event ProposalThresholdSet(uint256 oldProposalThreshold,uint256 newProposalThreshold)',
++    'event QuorumNumeratorUpdated(uint256 oldQuorumNumerator,uint256 newQuorumNumerator)',
++    'event TimelockChange(address oldTimelock,address newTimelock)',
++  ]),
++  treasury: Object.freeze([
++    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
++    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
++    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
++  ]),
++  timelock: Object.freeze([
++    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
++    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
++    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
++    'event MinDelayChange(uint256 oldDuration,uint256 newDuration)',
++  ]),
++  budget_token: Object.freeze(['event Approval(address indexed owner,address indexed spender,uint256 value)']),
++});
++
++const interfaces = Object.fromEntries(Object.entries(ANCILLARY_ABI).map(([role, abi]) => [role, new Interface(abi)])) as Record<ContractRole, Interface>;
++
++export function isAncillaryTopic(role: ContractRole, topic: string): boolean {
++  return interfaces[role].getEvent(topic) !== null;
++}
+diff --git a/indexer/projection/model.ts b/indexer/projection/model.ts
+index 62e93a1fe67efd46e6f62131091edf43832e581d..b4afe57ae6ad4eaf182b4c1d7fcd65d914f9f300 100644
+--- a/indexer/projection/model.ts
++++ b/indexer/projection/model.ts
+@@ -1,5 +1,6 @@
+ import { AbiCoder, Interface, ZeroAddress, ZeroHash, keccak256, toUtf8Bytes } from 'ethers';
+ import { decodeLog } from '../decoder.js';
++import { isAncillaryTopic } from '../ancillary-abi.js';
+ import { IndexerError } from '../errors.js';
+ import type { ContractRole, JsonObject, NormalizedLog } from '../types.js';
+ 
+@@ -122,45 +123,11 @@ export function operationId(
+   );
+ }
+ 
+-// Known administrative events may coexist with the BE03 business ABI subset.
+-// Validate their complete encoding. Arbitrary unknown topics still stop publication.
+-const ancillary: Partial<Record<ContractRole, Interface>> = {
+-  governor: new Interface([
+-    'event VotingDelaySet(uint256 oldVotingDelay,uint256 newVotingDelay)',
+-    'event VotingPeriodSet(uint256 oldVotingPeriod,uint256 newVotingPeriod)',
+-    'event ProposalThresholdSet(uint256 oldProposalThreshold,uint256 newProposalThreshold)',
+-    'event QuorumNumeratorUpdated(uint256 oldQuorumNumerator,uint256 newQuorumNumerator)',
+-    'event TimelockChange(address oldTimelock,address newTimelock)',
+-  ]),
+-  treasury: new Interface([
+-    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
+-    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
+-    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
+-  ]),
+-  timelock: new Interface([
+-    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
+-    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
+-    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
+-    'event MinDelayChange(uint256 oldDuration,uint256 newDuration)',
+-  ]),
+-  budget_token: new Interface(['event Approval(address indexed owner,address indexed spender,uint256 value)']),
+-};
++// Ancillary events are decoded and canonically validated by the raw decoder,
++// but never become proposal/vote/treasury business events.
+ export function classify(log: NormalizedLog): ReturnType<typeof decodeLog> | null {
+   const decoded = decodeLog(log);
+-  if (decoded.status !== 'unknown_topic') return decoded;
+-  try {
+-    const abi = ancillary[log.contract.role]!;
+-    const parsed = abi.parseLog({ topics: log.topics, data: log.data });
+-    if (!parsed) return decoded;
+-    const encoded = abi.encodeEventLog(parsed.fragment, parsed.args);
+-    if (
+-      encoded.data.toLowerCase() === log.data &&
+-      JSON.stringify(encoded.topics.map((t) => t.toLowerCase())) === JSON.stringify(log.topics)
+-    )
+-      return null;
+-  } catch {
+-    /* Unknown or malformed ancillary events cannot be silently skipped. */
+-  }
++  if (decoded.status === 'decoded' && isAncillaryTopic(log.contract.role, log.topics[0]!)) return null;
+   return decoded;
+ }
+ 
+diff --git a/infra/kolla/README.md b/infra/kolla/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..9a1e69cbf8c021a8e6b21ce01a361ca94fa95843
+--- /dev/null
++++ b/infra/kolla/README.md
+@@ -0,0 +1,39 @@
++# OpenStack triển khai bằng Kolla-Ansible
++
++Cloud của demo này do **Kolla-Ansible** triển khai, theo mô hình lab all-in-one.
++Kolla-Ansible vận hành control plane và compute trong container; Terraform ở
++`../openstack` chỉ quản lý tài nguyên tenant qua API OpenStack. Đây là hai lớp khác nhau.
++
++## Thông tin đã quan sát từ terminal ngày 2026-11-25
++
++- Host lab có khoảng 7,7 GiB RAM; chỉ cấp một VM demo 2 GiB sau khi giải phóng RAM.
++- Có Nova, Placement, Neutron/OVS, Glance, Keystone, Horizon,
++  MariaDB, RabbitMQ, HAProxy/Keepalived và các container Kolla liên quan.
++- Nova compute mount `/var/lib/docker/volumes/nova_compute/_data` vào
++  `/var/lib/nova`; `state_path = /var/lib/nova`.
++- Không có endpoint block-storage trong catalog được kiểm tra; không dùng Cinder.
++- Provider network `public`: `192.168.248.0/24`; host truy cập qua `br-ex`,
++  source `192.168.248.1`. Floating IP lab không phải địa chỉ Internet public.
++
++## Giới hạn của bản khai báo
++
++Chưa thu thập version Kolla-Ansible/OpenStack, inventory gốc và globals.yml đã
++redact. Vì vậy repo không giả định release, tên NIC hay dựng globals.yml giả làm
++bản cấu hình thực tế. Không chạy `kolla-ansible deploy/reconfigure/destroy` từ repo này.
++
++Trên máy quản trị, kiểm tra read-only để hoàn thiện hồ sơ khi cần:
++
++```bash
++kolla-ansible --version
++openstack --version
++openstack compute service list
++openstack network agent list
++sudo docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
++sudo docker exec nova_compute grep -E '^[[:space:]]*(state_path|instances_path|images_type)[[:space:]]*=' /etc/nova/nova.conf
++```
++
++Không commit `/etc/kolla/passwords.yml`, admin-openrc, clouds.yaml có credentials,
++private key, cấu hình có token hay full `docker inspect` chứa environment secrets.
++Không dọn Docker volume trên host Kolla để giải phóng dung lượng VM.
++
++Tài liệu chính thức: https://docs.openstack.org/kolla-ansible/latest/
+diff --git a/infra/openstack/.gitignore b/infra/openstack/.gitignore
+new file mode 100644
+index 0000000000000000000000000000000000000000..28cf859534ce0259fdd1d394e1118da4853953c9
+--- /dev/null
++++ b/infra/openstack/.gitignore
+@@ -0,0 +1,13 @@
++.terraform/
++*.tfstate
++*.tfstate.*
++*.tfplan
++*.tfvars
++*.tfvars.json
++!*.tfvars.example
++crash*.log
++override.tf
++*_override.tf
++clouds.yaml
++secure.yaml
++# Review and commit .terraform.lock.hcl after provider initialization.
+diff --git a/infra/openstack/.terraform.lock.hcl b/infra/openstack/.terraform.lock.hcl
+new file mode 100644
+index 0000000000000000000000000000000000000000..6b7ddaafd9a5bad2ba38242c688dedf8381edbc8
+--- /dev/null
++++ b/infra/openstack/.terraform.lock.hcl
+@@ -0,0 +1,25 @@
++# This file is maintained automatically by "terraform init".
++# Manual edits may be lost in future updates.
++
++provider "registry.terraform.io/terraform-provider-openstack/openstack" {
++  version     = "3.4.0"
++  constraints = "~> 3.0"
++  hashes = [
++    "h1:MVSoVvhjbu7s1pfYfsiYED8A++XfAoyOlSX1x9PW68E=",
++    "zh:11b3c88e24197a29b13cf5ab41771944bd16707b561645323e8cbb4f1da00b7b",
++    "zh:1c3e89cf19118fc07d7b04257251fc9897e722c16e0a0df7b07fcd261f8c12e7",
++    "zh:2dc60dbbbb822fbb1e7b17e3b89e3e6a7a8fe54a716d4477d2fa40f836c4de0f",
++    "zh:68f851e333f0ab2367e9b2680739d47e4151ca9f803934ef265f6fa70a28e6e0",
++    "zh:6995b0bcae5a291d7b0a4d3a5df109eb97f8d1d34be6eb27768fe29b5e0d8def",
++    "zh:7b68bf81891a0445c543629d4d160226a6f2d5e8e5ee4baf21e0221412437d17",
++    "zh:8f117b8b17280598a92c6202b183a77168fe573397cfb597b9c2028da281846d",
++    "zh:b0a23b990eb9260e9616fd8471f11b37485f92df0e5eef46cd286f87396b0e0a",
++    "zh:baa5052ab3207f3a996c1fd715935d79a4e1c57d3d24e3c549b6c20ea9307e38",
++    "zh:c012cbda058aa7b76b718074fd73829ecd4009ad98e3dafe496e5f26099625c0",
++    "zh:c1c95e5dbe546a935a62c63814aef04718b58dd4258e5da40d681b43322924e9",
++    "zh:c720bdbdf432041f99572bac40d24659239b989cbf1540f92ebb441900ac8bae",
++    "zh:c92ac802a3dd1abbf9c9ccf0aba1f261fe9f8c2e7fafc196c7119b73c25a0772",
++    "zh:fd4faf25ee72acef4ab12c93ea9c7a5ccb41315e8851609e08b37d3c91ea6584",
++    "zh:ff347392412fc7950635e2c1c5bb878d88b661c1c5ba052edd290d971a14028f",
++  ]
++}
+diff --git a/infra/openstack/README.md b/infra/openstack/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..5d1b099cfcb752b4595d902fef9ac39bfc379523
+--- /dev/null
++++ b/infra/openstack/README.md
+@@ -0,0 +1,93 @@
++# VM demo trên OpenStack/Kolla-Ansible
++
++Cloud được triển khai bằng **Kolla-Ansible**; xem [hồ sơ lớp cloud](../kolla/README.md).
++Module Terraform này khai báo tài nguyên tenant, không triển khai lại OpenStack.
++Runbook ứng dụng: [Netlify + OpenStack + Anvil](../../docs/openstack-anvil-demo.md).
++
++## Phạm vi
++
++- Một Ubuntu 22.04 VM; flavor có sẵn 2 vCPU, 2048 MiB RAM, 20 GiB disk Nova.
++- Network/subnet/router, security group, SSH public key, port và floating IP.
++- Project, member role, flavor, image và provider network là đầu vào có sẵn.
++- Chỉ SSH/ICMP từ management CIDR; không mở ingress API, PostgreSQL hay Anvil.
++- Cloud-init cài Docker/Compose/Git trên VM mới, không chứa secret hay deploy app.
++- `prevent_destroy` bảo vệ tài nguyên lõi; không tháo bảo vệ để vượt plan thay VM.
++- Terraform không sinh private key. State, plan, tfvars và credentials phải giữ riêng.
++
++## Điều kiện đầu vào
++
++Dùng Terraform >=1.9; OpenStack provider 3.x. Credentials ở `OS_*` hoặc
++clouds.yaml ngoài repo. Cloud operator cấp project `dao-budget-demo`, role member
++cho user vận hành, flavor `dao-demo-2c2g20` với quyền dùng trong project, image Ubuntu
++và quyền dùng provider network. Chỉ tạo khi tài nguyên chưa có:
++
++```bash
++openstack project create --domain default --description "DAO Budget Simulator isolated demo" dao-budget-demo
++openstack role add --project dao-budget-demo --user OPERATOR_USER_ID member
++openstack flavor create --private --project dao-budget-demo --vcpus 2 --ram 2048 --disk 20 dao-demo-2c2g20
++```
++
++Chuyển credentials sang đúng project demo trước khi Terraform chạy. Xác nhận token:
++
++```bash
++openstack token issue -f value -c project_id
++cd infra/openstack
++cp terraform.tfvars.example terraform.tfvars
++# Sửa ID và đường dẫn PUBLIC key theo cloud của bạn.
++terraform init
++terraform validate
++```
++
++Commit `.terraform.lock.hcl` sau khi review provider đã tải; không commit tfvars,
++tfstate hoặc plan. Quota không thay thế dung lượng thật trên host Kolla: lab khoảng
++8 GiB RAM chỉ bố trí một VM 2 GiB sau khi giải phóng đủ RAM.
++
++## Nhận quản lý VM đang chạy: import trước, không tạo trùng
++
++Các ID dưới đây lấy từ đầu ra vận hành ngày 2026-11-25, không phải live discovery.
++Đối chiếu CLI trước khi import; không dùng ID này cho cloud khác.
++
++```bash
++terraform import openstack_networking_network_v2.demo 942ca6b3-a33e-479a-a1f5-0a1942ecb740
++terraform import openstack_networking_subnet_v2.demo 7a154ee5-9c08-43fd-9aeb-21b895501ee0
++terraform import openstack_networking_router_v2.demo 27c2787d-9500-40a9-beaf-5750a7c43d52
++terraform import openstack_networking_secgroup_v2.demo e11a89d6-2061-48e2-9815-0cb1874c5fdd
++terraform import openstack_compute_keypair_v2.demo dao-demo-key
++terraform import openstack_networking_port_v2.demo 2842c03b-756d-436d-9f63-61127acb0110
++terraform import openstack_compute_instance_v2.demo b9a59903-b03e-47b4-8b87-5a62e58c909e
++terraform import openstack_networking_floatingip_v2.demo 0fb2837b-3236-417b-862c-e73b8106009d
++terraform import openstack_networking_floatingip_associate_v2.demo 0fb2837b-3236-417b-862c-e73b8106009d
++```
++
++Lấy ID router-interface port và hai ingress rule từ cloud, không đoán:
++
++```bash
++openstack port list --router dao-demo-router --long
++openstack security group rule list dao-demo-sg --long
++# Thay các chữ IN HOA bằng ID vừa đối chiếu:
++terraform import openstack_networking_router_interface_v2.demo ROUTER_INTERFACE_PORT_ID
++terraform import openstack_networking_secgroup_rule_v2.ssh SSH_RULE_ID
++terraform import openstack_networking_secgroup_rule_v2.icmp ICMP_RULE_ID
++terraform plan
++```
++
++Chọn port router nối subnet `10.20.30.0/24`, rule ingress IPv4 TCP/22 và ICMP
++từ `192.168.248.1/32`. Egress mặc định được giữ. Import không đảm bảo plan rỗng:
++đối chiếu name/description, network/port representation, image/flavor và keypair
++với state. Nếu plan thay VM/port/network hoặc báo prevent_destroy, dừng chỉnh
++khai báo cho khớp tài nguyên thực; không force recreate. `user_data` được bỏ qua
++khi cập nhật để không thay VM chỉ nhằm bổ sung cloud-init.
++
++## Tạo trên project mới chưa có tài nguyên demo
++
++Điền tfvars của cloud mới và public key tạo bên ngoài Terraform. Sau khi xác thực
++đúng project: `terraform plan -out=demo.tfplan`, review rồi
++`terraform apply demo.tfplan`. Không có auto-apply trong CI. Trên VM mới, chờ
++`sudo cloud-init status --wait` và kiểm tra Docker trước triển khai ứng dụng.
++Không dùng quy trình tạo mới cho VM đã có dữ liệu.
++
++Provider network `public` trong lab là RFC1918. Floating IP `192.168.248.217`
++không phải IP Internet; không trỏ bản ghi A public vào đó. Không quản lý/xóa
++public network, lab Terraform cũ, Signify, Docker volumes Kolla hay DNS Netlify.
++
++Tham chiếu: https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs
+diff --git a/infra/openstack/cloud-init.yaml b/infra/openstack/cloud-init.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..eace8c8c0ebd8ce8987b67b2e7aca8d81a3781c6
+--- /dev/null
++++ b/infra/openstack/cloud-init.yaml
+@@ -0,0 +1,24 @@
++#cloud-config
++# Fresh VM only; never rebuild a running VM merely to add this configuration.
++write_files:
++  - path: /usr/local/sbin/dao-install-docker
++    owner: root:root
++    permissions: '0755'
++    content: |
++      #!/usr/bin/env bash
++      set -euo pipefail
++      export DEBIAN_FRONTEND=noninteractive
++      apt-get update
++      apt-get install -y ca-certificates curl git
++      install -m 0755 -d /etc/apt/keyrings
++      curl --fail --silent --show-error --location --retry 5 \
++        https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
++      chmod a+r /etc/apt/keyrings/docker.asc
++      . /etc/os-release
++      printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu %s stable\n' \
++        "$(dpkg --print-architecture)" "$VERSION_CODENAME" > /etc/apt/sources.list.d/docker.list
++      apt-get update
++      apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
++      systemctl enable --now docker
++runcmd:
++  - [bash, /usr/local/sbin/dao-install-docker]
+diff --git a/infra/openstack/main.tf b/infra/openstack/main.tf
+new file mode 100644
+index 0000000000000000000000000000000000000000..790f00c66b471390c045bfc69b47220d4945f467
+--- /dev/null
++++ b/infra/openstack/main.tf
+@@ -0,0 +1,120 @@
++data "openstack_compute_flavor_v2" "demo" {
++  name = var.flavor_name
++}
++
++resource "openstack_compute_keypair_v2" "demo" {
++  name       = "dao-demo-key"
++  public_key = trimspace(file(pathexpand(var.ssh_public_key_path)))
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_network_v2" "demo" {
++  name           = "dao-demo-net"
++  admin_state_up = true
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_subnet_v2" "demo" {
++  name            = "dao-demo-subnet"
++  network_id      = openstack_networking_network_v2.demo.id
++  cidr            = var.subnet_cidr
++  gateway_ip      = cidrhost(var.subnet_cidr, 1)
++  ip_version      = 4
++  enable_dhcp     = true
++  dns_nameservers = ["1.1.1.1"]
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_router_v2" "demo" {
++  name                = "dao-demo-router"
++  admin_state_up      = true
++  external_network_id = var.external_network_id
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_router_interface_v2" "demo" {
++  router_id = openstack_networking_router_v2.demo.id
++  subnet_id = openstack_networking_subnet_v2.demo.id
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_secgroup_v2" "demo" {
++  name                 = "dao-demo-sg"
++  description          = "DAO demo: SSH and ICMP from management CIDR only"
++  delete_default_rules = false
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_secgroup_rule_v2" "ssh" {
++  direction         = "ingress"
++  ethertype         = "IPv4"
++  protocol          = "tcp"
++  port_range_min    = 22
++  port_range_max    = 22
++  remote_ip_prefix  = var.management_cidr
++  security_group_id = openstack_networking_secgroup_v2.demo.id
++}
++
++resource "openstack_networking_secgroup_rule_v2" "icmp" {
++  direction         = "ingress"
++  ethertype         = "IPv4"
++  protocol          = "icmp"
++  remote_ip_prefix  = var.management_cidr
++  security_group_id = openstack_networking_secgroup_v2.demo.id
++}
++
++resource "openstack_networking_port_v2" "demo" {
++  name               = "dao-demo-port"
++  network_id         = openstack_networking_network_v2.demo.id
++  admin_state_up     = true
++  security_group_ids = [openstack_networking_secgroup_v2.demo.id]
++  fixed_ip {
++    subnet_id  = openstack_networking_subnet_v2.demo.id
++    ip_address = var.private_ip
++  }
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_compute_instance_v2" "demo" {
++  name       = "dao-demo-01"
++  image_id   = var.image_id
++  flavor_id  = data.openstack_compute_flavor_v2.demo.id
++  key_pair   = openstack_compute_keypair_v2.demo.name
++  user_data  = file("${path.module}/cloud-init.yaml")
++  depends_on = [openstack_networking_router_interface_v2.demo]
++  network {
++    port = openstack_networking_port_v2.demo.id
++  }
++  lifecycle {
++    prevent_destroy = true
++    # Importing the manually configured VM must not replace it to add cloud-init.
++    ignore_changes = [user_data]
++  }
++}
++
++resource "openstack_networking_floatingip_v2" "demo" {
++  pool = var.floating_ip_pool
++  lifecycle {
++    prevent_destroy = true
++  }
++}
++
++resource "openstack_networking_floatingip_associate_v2" "demo" {
++  floating_ip = openstack_networking_floatingip_v2.demo.address
++  port_id     = openstack_networking_port_v2.demo.id
++  depends_on  = [openstack_networking_router_interface_v2.demo]
++}
+diff --git a/infra/openstack/outputs.tf b/infra/openstack/outputs.tf
+new file mode 100644
+index 0000000000000000000000000000000000000000..581238e8b232e37eb36dee923ce87e4736372fb9
+--- /dev/null
++++ b/infra/openstack/outputs.tf
+@@ -0,0 +1,12 @@
++output "server_id" {
++  value = openstack_compute_instance_v2.demo.id
++}
++
++output "private_ip" {
++  value = var.private_ip
++}
++
++output "floating_ip" {
++  description = "May be RFC1918 in a lab; not necessarily Internet reachable."
++  value       = openstack_networking_floatingip_v2.demo.address
++}
+diff --git a/infra/openstack/terraform.tfvars.example b/infra/openstack/terraform.tfvars.example
+new file mode 100644
+index 0000000000000000000000000000000000000000..035798a9c1c19e235ce22f4ab1bfe25226120a8e
+--- /dev/null
++++ b/infra/openstack/terraform.tfvars.example
+@@ -0,0 +1,10 @@
++# Copy locally to terraform.tfvars; recheck these observed lab IDs before use.
++project_id          = "f8c93d5c31844a158e8c7c1dc344c3b1"
++external_network_id = "4b670660-11a4-4f98-bfb9-616230f0121b"
++floating_ip_pool    = "public"
++image_id            = "73655619-91f2-41a9-82eb-e08047517710"
++flavor_name         = "dao-demo-2c2g20"
++ssh_public_key_path = "~/.ssh/dao_demo_ed25519.pub"
++management_cidr     = "192.168.248.1/32"
++subnet_cidr         = "10.20.30.0/24"
++private_ip          = "10.20.30.192"
+diff --git a/infra/openstack/variables.tf b/infra/openstack/variables.tf
+new file mode 100644
+index 0000000000000000000000000000000000000000..b1f7c81629088e5b266234d8655d54a928392c16
+--- /dev/null
++++ b/infra/openstack/variables.tf
+@@ -0,0 +1,56 @@
++variable "project_id" {
++  description = "Existing isolated project; provision project/membership separately as cloud operator."
++  type        = string
++}
++
++variable "external_network_id" {
++  description = "Existing provider network, never created or deleted by this module."
++  type        = string
++}
++
++variable "floating_ip_pool" {
++  type    = string
++  default = "public"
++}
++
++variable "image_id" {
++  description = "Existing Ubuntu 22.04 cloud image."
++  type        = string
++}
++
++variable "flavor_name" {
++  description = "Existing project-accessible 2-vCPU/2048-MiB/20-GiB flavor."
++  type        = string
++  default     = "dao-demo-2c2g20"
++}
++
++variable "ssh_public_key_path" {
++  description = "Existing PUBLIC key only; private keys are never generated in Terraform state."
++  type        = string
++
++  validation {
++    condition     = endswith(var.ssh_public_key_path, ".pub")
++    error_message = "Supply a .pub file, never a private key."
++  }
++}
++
++variable "management_cidr" {
++  description = "SSH source actually seen by Neutron (Kolla host br-ex in this lab)."
++  type        = string
++  default     = "192.168.248.1/32"
++
++  validation {
++    condition     = can(cidrnetmask(var.management_cidr)) && var.management_cidr != "0.0.0.0/0"
++    error_message = "Use a restricted IPv4 management CIDR."
++  }
++}
++
++variable "subnet_cidr" {
++  type    = string
++  default = "10.20.30.0/24"
++}
++
++variable "private_ip" {
++  type    = string
++  default = "10.20.30.192"
++}
+diff --git a/infra/openstack/versions.tf b/infra/openstack/versions.tf
+new file mode 100644
+index 0000000000000000000000000000000000000000..c9fcf8df04ebbe547f9f0f8f6b0e28aad781188d
+--- /dev/null
++++ b/infra/openstack/versions.tf
+@@ -0,0 +1,15 @@
++terraform {
++  required_version = ">= 1.9, < 2.0"
++
++  required_providers {
++    openstack = {
++      source  = "terraform-provider-openstack/openstack"
++      version = "~> 3.0"
++    }
++  }
++}
++
++# Authenticate outside Git with project-scoped OS_* variables or clouds.yaml.
++provider "openstack" {
++  tenant_id = var.project_id
++}
+diff --git a/scripts/check_be04_live.mjs b/scripts/check_be04_live.mjs
+index fb2399714c353109d3351de5d236afce264caa96..53c5af95e38b0d088650cc19a9289945d85aea5c 100644
+--- a/scripts/check_be04_live.mjs
++++ b/scripts/check_be04_live.mjs
+@@ -323,7 +323,7 @@ try {
+       const health = await phaseApiGet('/health', scope);
+       assert.equal(health.status, 200, `${label}/health`);
+       assert.equal(health.body.data.publication, 'ready');
+-      assert.equal(health.body.data.rawDecodeComplete, false);
++      assert.equal(health.body.data.rawDecodeComplete, true);
+       phaseApiChecks.push({ label, context: summary.body.context, balance: contractBalance, totals: sqlTotals,
+         proposalCount: list.body.pagination.totalCount, transferCount, health: health.body.data.status });
+     }
+@@ -727,9 +727,9 @@ try {
+     assert.deepEqual(firstData, referenceData);
+     const normalizedSha256 = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+     const sourceDecode = report.phases.at(-1).raw;
+-    assert.equal(sourceDecode.unknownTopics, 16, 'Keep all 16 known bootstrap ancillary unknown logs.');
++    assert.equal(sourceDecode.unknownTopics, 0, 'Bootstrap administrative events must decode with the pinned ABI.');
+     assert.equal(firstRebuild.decodeWarnings.complete, sourceDecode.decodeComplete);
+-    assert.equal(firstRebuild.decodeWarnings.complete, false, 'Ancillary unknown logs must not become full decode.');
++    assert.equal(firstRebuild.decodeWarnings.complete, true, 'Canonical bootstrap administrative logs must decode without affecting business projections.');
+     assert.equal(firstRebuild.decodeWarnings.unknownTopics, sourceDecode.unknownTopics);
+ 
+     const proposalId = String(firstData.proposalStates[0].proposalId);
+@@ -790,8 +790,8 @@ try {
+     const advancedData = await jsonFile(advancedTargetExportPath);
+     assert.deepEqual(advancedReferenceData, referenceData);
+     assert.deepEqual(advancedData, referenceData);
+-    assert.equal(advancedRebuild.decodeWarnings.complete, false);
+-    assert.equal(advancedRebuild.decodeWarnings.unknownTopics, 16);
++    assert.equal(advancedRebuild.decodeWarnings.complete, true);
++    assert.equal(advancedRebuild.decodeWarnings.unknownTopics, 0);
+     for (const [targetPool, identity] of [[be06Target, firstRebuild.target], [be06AdvancedTarget, advancedRebuild.target]]) {
+       const [blocksAhead, eventsAhead] = await Promise.all([
+         targetPool.query('SELECT count(*)::text AS count FROM indexed_blocks WHERE deployment_id=$1 AND block_number>$2',
+diff --git a/scripts/governance_storage.mjs b/scripts/governance_storage.mjs
+index 9472746c95921d933657bc38a64051b7c45b2696..bcb1ea79f33a2c48d861372bb5a6bf11e7703a87 100644
+--- a/scripts/governance_storage.mjs
++++ b/scripts/governance_storage.mjs
+@@ -9,6 +9,7 @@ import { parseConfig } from '../indexer/config.ts';
+ import { HttpRpc } from '../indexer/rpc.ts';
+ import { scan, ScanError } from '../indexer/scanner.ts';
+ import { PostgresStorage } from '../indexer/storage.ts';
++import { isAncillaryTopic } from '../indexer/ancillary-abi.ts';
+ 
+ const sha = value => createHash('sha256').update(value).digest('hex');
+ const canonical = value => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item)
+@@ -183,7 +184,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
+     directory = await lifecycle.temporaryDirectory(join(tmpdir(), 'tv4-governance-storage-'));
+     const sourceHashes = {};
+     for (const path of ['scripts/governance_storage.mjs', 'scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'indexer/config.ts', 'indexer/rpc.ts', 'indexer/reader.ts',
+-      'indexer/scanner.ts', 'indexer/storage.ts', 'indexer/cli.ts', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'database/migrations/001_initial.sql', 'package-lock.json']) {
++      'indexer/scanner.ts', 'indexer/storage.ts', 'indexer/cli.ts', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/ancillary-abi.ts', 'database/migrations/001_initial.sql', 'package-lock.json']) {
+       sourceHashes[path] = sha(await readFile(join(root, path)));
+     }
+     const lock = JSON.parse(await readFile(join(root, 'package-lock.json'), 'utf8'));
+@@ -249,7 +250,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
+     const stored = await snapshot(pools[0], deploymentIds[0]);
+     assert.deepEqual(stored, expected, 'SQL semantic data must exactly equal live canonical reader output');
+     const unknown = batch.logs.filter(item => item.decode.status === 'unknown_topic');
+-    assert.ok(unknown.length > 0, 'Expected actual unsupported initialization topics retained raw');
++    assert.equal(unknown.length, 0, 'All events emitted by this deployed governance lifecycle must be supported');
+     result.phases.push({ phase, state: 'passed', digest: stored.digest });
+     phase = 'sql_same_h_ledger';
+     const sqlLedger = await ledger(pools[0], deploymentIds[0], manifest.contracts.Treasury.address.toLowerCase(), chainLedger, readBalance, readSupply);
+@@ -258,12 +259,16 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
+       decoded: stored.events.filter(item => item.event_name !== null).length, unknownTopics: unknown.length, decodeErrors: 0 };
+     result.unknownTopicCounts = Object.fromEntries([...new Set(unknown.map(item => item.log.topics[0]))].sort().map(topic =>
+       [topic, unknown.filter(item => item.log.topics[0] === topic).length]));
+-    phase = 'known_unknown_topic_full_abi_provenance';
++    phase = 'administrative_event_full_abi_provenance';
+     const roleNames = { budget_token: 'BUD', treasury: 'Treasury', timelock: 'Timelock', governor: 'Governor' };
+-    result.knownUnsupportedEvents = [...new Set(unknown.map(({ log }) => {
++    const administrative = batch.logs.filter(({ log }) => isAncillaryTopic(log.contract.role, log.topics[0]));
++    assert.ok(administrative.length > 0, 'Expected actual administrative events from initialization');
++    result.knownAdministrativeEvents = [...new Set(administrative.map(({ log, decode }) => {
+       const name = roleNames[log.contract.role];
+       const event = new Interface(abis[name]).parseLog(log.rawLog);
+-      assert.ok(event, 'Unsupported topic must still be known in the deployed full contract ABI');
++      assert.ok(event, 'Administrative topic must be present in the deployed full contract ABI');
++      assert.equal(decode.status, 'decoded');
++      assert.equal(decode.eventName, event.name);
+       return `${name}.${event.name}`;
+     }))].sort();
+     result.ledger = sqlLedger;
+@@ -278,7 +283,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
+     result.phases.push({ phase, state: 'passed', report: rerun, digest: stored.digest });
+     phase = 'cli_new_process_full_rerun_idempotent';
+     const restart = await cliScan({ root, directory, connectionString: urls[0], input: input(deploymentIds[0], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'restart', lifecycle });
+-    assert.equal(restart.exitCode, 2, 'Unknown initialization topics must produce CLI exit 2');
++    assert.equal(restart.exitCode, 0, 'Supported initialization topics must allow a clean CLI rerun');
+     assert.ok(restart.report.committedBatches.every(item => item.insertedBlocks === 0 && item.insertedEvents === 0));
+     assert.deepEqual(await snapshot(pools[0], deploymentIds[0]), stored);
+     result.phases.push({ phase, state: 'passed', ...restart, digest: stored.digest });
+diff --git a/scripts/smoke_governance.mjs b/scripts/smoke_governance.mjs
+index 4197bd6ee0700ceca04c1c62b519236eee3a454f..07da61f155811729fb406f2eb50a6459d785e210 100755
+--- a/scripts/smoke_governance.mjs
++++ b/scripts/smoke_governance.mjs
+@@ -11,6 +11,7 @@ import { AbiCoder, Interface, ZeroAddress, ZeroHash, id, keccak256, toBeHex, toQ
+ import { deployGovernance, checkGovernanceRoles } from './governance_local.mjs';
+ import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
+ import { decodeLog } from '../indexer/decoder.ts';
++import { getAbi } from '../indexer/abi-registry.ts';
+ import { HttpRpc } from '../indexer/rpc.ts';
+ import { readBatch } from '../indexer/reader.ts';
+ 
+@@ -36,7 +37,7 @@ const report = {
+   sourceHashes: {}, receipts: [], proposals: [], assertions: [],
+ };
+ try {
+-  for (const path of ['scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
++  for (const path of ['scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/ancillary-abi.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
+     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
+   }
+   report.runtime = { node: process.version, anvil: execFileSync('anvil', ['--version'], { encoding: 'utf8' }).trim(), forge: execFileSync('forge', ['--version'], { encoding: 'utf8' }).trim(), evm: 'osaka', chainId: '31337', isolation: 'owned ephemeral loopback Anvil; unlocked local accounts, no keys; exact transaction timestamps' };
+@@ -299,9 +300,10 @@ try {
+       assert.ok(!paidIds.has(event.args.requestId)); paidIds.add(event.args.requestId); payoutTotal += event.args.amount;
+     }
+     // BE02 currently supports these four roles; GOV raw receipts remain in evidence.
+-    if (!roleMap[name] || !['Transfer', 'BudgetDisbursed', 'ProposalCreated', 'VoteCast', 'ProposalQueued', 'ProposalExecuted', 'ProposalCanceled', 'CallScheduled', 'CallExecuted', 'CallSalt'].includes(event?.name)) continue;
++    if (!roleMap[name] || !event) continue;
+     const [role, abiVersion] = roleMap[name];
+     const contract = { role, address: log.address, deploymentBlock: BigInt(manifest.contracts[name].deploymentBlock), abiVersion };
++    if (!getAbi(contract).interface.getEvent(log.topics[0])) continue;
+     const decoded = decodeLog({ contract, blockNumber: BigInt(log.blockNumber), blockHash: log.blockHash, transactionHash: log.transactionHash, transactionIndex: BigInt(log.transactionIndex), logIndex: BigInt(log.logIndex), topics: log.topics, data: log.data, rawLog: log });
+     assert.equal(decoded.status, 'decoded', `BE02 failed live ${name}.${event.name}: ${JSON.stringify(decoded)}`);
+     assert.equal(decoded.eventName, event.name);
+@@ -333,7 +335,7 @@ try {
+     decoded: batch.logs.filter(item => item.decode.status === 'decoded').length,
+     unknownTopics: batch.logs.filter(item => item.decode.status === 'unknown_topic').length,
+     decodeErrors: 0, discardedOutsideDeployment,
+-    scope: 'Actual BE02 HttpRpc/readBatch over owned Anvil, all contiguous headers including empty/reverted blocks and all four supported roles. Unknown initialization/access-control topics retained raw. No database/checkpoint/reorg/projection/API acceptance.',
++    scope: 'Actual BE02 HttpRpc/readBatch over owned Anvil, all contiguous headers including empty/reverted blocks and all four supported roles. Supported initialization/access-control events decode canonically; genuinely unknown topics remain raw. No database/checkpoint/reorg/projection/API acceptance.',
+   };
+   assert.equal(totalIn, 13_000n * U); assert.equal(totalOut, 13_000n * U); assert.equal(payoutTotal, totalOut); assert.equal(paidIds.size, 2);
+   const finalBalances = await balances();
+diff --git a/tests/indexer/decoder.test.ts b/tests/indexer/decoder.test.ts
+index 55f1e9fcb8217d2e6a0c6cc9c08612edea26093b..ffa37fbffbac77d6982d714e3d5d1e2b2c5275ef 100644
+--- a/tests/indexer/decoder.test.ts
++++ b/tests/indexer/decoder.test.ts
+@@ -4,6 +4,8 @@ import test from 'node:test';
+ import { Interface } from 'ethers';
+ import { ABI_REGISTRY, getAbi, validateAbi } from '../../indexer/abi-registry.js';
+ import { decodeLog } from '../../indexer/decoder.js';
++import { ANCILLARY_ABI } from '../../indexer/ancillary-abi.js';
++import { classify } from '../../indexer/projection/model.js';
+ import type { ContractConfig, ContractRole, JsonObject, NormalizedLog } from '../../indexer/types.js';
+ 
+ interface Fixture {
+@@ -52,6 +54,58 @@ function expectDecodeError(log: NormalizedLog): void {
+   assert.equal(result.abiVersion, log.contract.abiVersion);
+ }
+ 
++test('all supported administrative layouts match shared compiler ABI and reject malformed encoding', () => {
++  const names = { governor: 'BudgetGovernor', timelock: 'TimelockController', treasury: 'Treasury', budget_token: 'BudgetToken' };
++  const versions = { governor: 'oz-5.4.0-governor', timelock: 'oz-5.4.0-timelock', treasury: 'sc01-itreasury-v1', budget_token: 'oz-5.4.0-erc20' };
++  for (const role of Object.keys(names) as ContractRole[]) {
++    const compiler = new Interface(JSON.parse(readFileSync(new URL(`../../shared/abi/${names[role]}.json`, import.meta.url), 'utf8')));
++    for (const declaration of ANCILLARY_ABI[role]) {
++      const fragment = new Interface([declaration]).fragments[0]!;
++      const event = compiler.getEvent(fragment.format('sighash'))!;
++      assert.equal(fragment.format('full'), event.format('full'));
++      const values = event.inputs.map(input => input.type === 'address' ? '0x1234567890abcdef1234567890abcdef12345678'
++        : input.type === 'bytes32' ? `0x${'11'.repeat(32)}` : 7n);
++      const encoded = compiler.encodeEventLog(event, values);
++      const log = normalize(vector('Transfer'));
++      log.contract = { ...log.contract, role, abiVersion: versions[role] };
++      Object.assign(log, encoded);
++      const decoded = decodeLog(log);
++      assert.equal(decoded.status, 'decoded');
++      if (decoded.status === 'decoded') assert.equal(decoded.eventName, event.name);
++      assert.equal(classify(log), null, 'Administrative events must not enter the business model');
++      expectDecodeError({ ...log, data: encoded.data + '00' });
++      assert.equal(classify({ ...log, data: encoded.data + '00' })?.status, 'decode_error');
++    }
++  }
++});
++
++test('historical receipt regression: all 16 bootstrap logs decode and raw bytes remain unchanged', () => {
++  const evidence = JSON.parse(readFileSync(new URL('../../docs/evidence/be03-integration-20261024/sql-final.json', import.meta.url), 'utf8'));
++  const manifest = JSON.parse(readFileSync(new URL('../../docs/evidence/be03-integration-20261024/manifest.json', import.meta.url), 'utf8'));
++  const keys = { governor: 'Governor', timelock: 'Timelock', treasury: 'Treasury', budget_token: 'BUD' };
++  const counts: Record<string, number> = {};
++  let ancillary = 0;
++  for (const row of evidence.events) {
++    const role = row.contract_role as ContractRole;
++    const contract = manifest.contracts[keys[role]];
++    const log: NormalizedLog = {
++      contract: { role, abiVersion: contract.abiVersion, address: contract.address.toLowerCase(), deploymentBlock: BigInt(contract.deploymentBlock) },
++      blockNumber: BigInt(row.block_number), blockHash: row.block_hash,
++      transactionHash: row.transaction_hash, transactionIndex: BigInt(row.transaction_index), logIndex: BigInt(row.log_index),
++      topics: row.topics, data: row.data, rawLog: row.rpc_log,
++    };
++    const original = structuredClone(log);
++    assert.equal(decodeLog(log).status, 'decoded');
++    if (classify(log) === null) {
++      ancillary++;
++      counts[role] = (counts[role] ?? 0) + 1;
++    }
++    assert.deepEqual(log, original);
++  }
++  assert.equal(ancillary, 16);
++  assert.deepEqual(counts, { governor: 5, timelock: 7, treasury: 4 });
++});
++
+ test('VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields', () => {
+   // Synthetic log encoded from the handed-over compiler ABI, NOT a receipt.
+   const abi = new Interface(JSON.parse(readFileSync(new URL('../../shared/abi/BudgetGovernor.json', import.meta.url), 'utf8')));
+diff --git a/tests/indexer/projection-storage.test.ts b/tests/indexer/projection-storage.test.ts
+index 627208b53bb21c01345acd00906ce4d1a0434a16..0bbec849401817bf8e1108c86b92a66879cf33da 100644
+--- a/tests/indexer/projection-storage.test.ts
++++ b/tests/indexer/projection-storage.test.ts
+@@ -589,27 +589,41 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
+         .split('\n')
+         .map((s) => JSON.parse(s));
+     };
+-    const first = await run('--sync-project', 2);
++    const first = await run('--sync-project', 0);
+     assert.equal(first.at(-2).type, 'sync_result');
+     assert.equal(first.at(-1).type, 'projection_result');
+-    assert.equal(first.at(-2).decodeComplete, false);
++    assert.equal(first.at(-2).decodeComplete, true);
+     assert.equal(first.at(-1).ignoredAncillaryEvents, 1);
+     const second = await run('--project', 0);
+     assert.deepEqual(second[0].context, first.at(-1).context);
+-    assert.equal(second[0].rawDecodeIssues, 1);
++    assert.equal(second[0].rawDecodeIssues, 0);
+     assert.equal(
+       (await pool.query('SELECT last_error_code FROM checkpoints WHERE deployment_id=$1', [config.deploymentId]))
+         .rows[0].last_error_code,
+-      'DECODE_INCOMPLETE',
++      null,
+     );
+     assert.deepEqual(second[0].treasury, { totalIn: '10000', totalOut: '0', balance: '10000' });
+-    const redecode = await run('--redecode', 2);
++    // Simulate persisted rows from the previous subset-only decoder, then
++    // backfill derived metadata without rescanning or rewriting raw evidence.
++    await pool.query(`UPDATE raw_events SET event_name=NULL,decoded_payload=NULL,
++      decode_status='unknown_topic',decode_error_code='UNKNOWN_TOPIC'
++      WHERE deployment_id=$1 AND event_name='RoleGranted'`, [config.deploymentId]);
++    const rawBytes = () => pool.query(`SELECT raw_event_id::text,block_number::text,block_hash,
++      transaction_hash,topics,data,rpc_log FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId]);
++    const beforeBytes = (await rawBytes()).rows;
++    const redecode = await run('--redecode', 0);
+     assert.equal(redecode[0].type, 'redecode_result');
+     assert.equal(redecode[0].processedMeaning,
+       'raw events re-decoded in this deployment (through H when a raw checkpoint exists), including unchanged rows');
+     assert.equal(redecode[0].processed, Number((await pool.query(
+       'SELECT count(*)::int AS count FROM raw_events WHERE deployment_id=$1', [config.deploymentId],
+     )).rows[0].count));
+-    assert.equal(redecode[0].unknownTopics, 1);
++    assert.equal(redecode[0].unknownTopics, 0);
++    assert.equal(redecode[0].decodeErrors, 0);
++    assert.deepEqual((await rawBytes()).rows, beforeBytes);
++    const afterBackfill = await run('--project', 0);
++    assert.deepEqual(afterBackfill[0].context, first.at(-1).context);
++    assert.deepEqual(afterBackfill[0].treasury, first.at(-1).treasury);
++    assert.equal(afterBackfill[0].ignoredAncillaryEvents, 1);
+   });
+ });

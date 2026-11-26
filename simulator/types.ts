@@ -25,7 +25,12 @@ export interface ExecuteStep {
   readonly proposalId: string;
 }
 
-export type ScenarioStep = ExecuteStep;
+export interface TopUpStep {
+  readonly kind: 'top-up';
+  readonly amount: bigint;
+}
+
+export type ScenarioStep = ExecuteStep | TopUpStep;
 
 export interface TreasuryScenario extends ScenarioDefinition {
   /** Array order is execution order. Repeated proposal IDs are explicit retries. */
@@ -47,7 +52,16 @@ export interface ExecutionTrace {
   readonly balanceAfter: bigint;
 }
 
-export type StepTrace = ExecutionTrace;
+export interface TopUpTrace {
+  readonly kind: 'top-up';
+  readonly stepIndex: number;
+  readonly amount: bigint;
+  readonly outcome: 'applied' | 'balance-overflow';
+  readonly balanceBefore: bigint;
+  readonly balanceAfter: bigint;
+}
+
+export type StepTrace = ExecutionTrace | TopUpTrace;
 
 export interface ProposalResult {
   readonly proposalId: string;
@@ -63,6 +77,7 @@ export interface SimulationResult {
   readonly initialBalance: bigint;
   readonly finalBalance: bigint;
   readonly totalDisbursed: bigint;
+  readonly totalTopUps: bigint;
   readonly paidRequestIds: readonly string[];
   readonly trace: readonly StepTrace[];
   /** Summaries follow input proposal order; attempts include failed retries. */

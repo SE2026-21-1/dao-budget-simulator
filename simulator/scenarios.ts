@@ -2,7 +2,7 @@ import type { ExecuteStep, ScenarioDefinition, TreasuryScenario } from './types.
 import { invalid, LIMITS, validateDefinition } from './validation.js';
 
 /** A permutation must mention every proposal exactly once; retries use explicit steps instead. */
-export function withExecutionOrder(input: ScenarioDefinition, order: readonly string[]): TreasuryScenario & { readonly steps: readonly ExecuteStep[] } {
+export function withExecutionOrder(input: ScenarioDefinition, order: readonly string[]): Omit<TreasuryScenario, 'steps'> & { readonly steps: readonly ExecuteStep[] } {
   const base = validateDefinition(input);
   if (!Array.isArray(order) || order.length > LIMITS.proposals) invalid('INVALID_EXECUTION_ORDER', 'order');
   const ids = new Set(base.proposals.map(p => p.proposalId));

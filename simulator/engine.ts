@@ -1,5 +1,5 @@
 import type { ExecutionOutcome, HypotheticalProposal, ProposalResult, SimulationResult, StepTrace, TreasuryScenario } from './types.js';
-import { validateScenario } from './validation.js';
+import { UINT256_MAX, validateScenario } from './validation.js';
 
 /** Pure hypothetical transitions. No RPC, clock, randomness or mutation of input. */
 export function simulateBudget(input: TreasuryScenario): SimulationResult {
@@ -12,6 +12,7 @@ export function simulateBudget(input: TreasuryScenario): SimulationResult {
   const trace: StepTrace[] = [];
   let balance = scenario.initialBalance;
   let totalDisbursed = 0n;
+  let totalTopUps = 0n;
 
   function outcome(p: HypotheticalProposal): ExecutionOutcome {
     if (!p.executionAllowed) return 'not-eligible';
@@ -22,6 +23,14 @@ export function simulateBudget(input: TreasuryScenario): SimulationResult {
   }
 
   for (const [stepIndex, step] of scenario.steps.entries()) {
+    if (step.kind === 'top-up') {
+      const balanceBefore = balance;
+      const applied = step.amount <= UINT256_MAX - balance;
+      if (applied) { balance += step.amount; totalTopUps += step.amount; }
+      trace.push({ kind: 'top-up', stepIndex, amount: step.amount,
+        outcome: applied ? 'applied' : 'balance-overflow', balanceBefore, balanceAfter: balance });
+      continue;
+    }
     // validateScenario guarantees every execute step refers to this map.
     const p = proposals.get(step.proposalId)!;
     const result = outcome(p);
@@ -41,7 +50,7 @@ export function simulateBudget(input: TreasuryScenario): SimulationResult {
 
   const results = [...summaries.values()];
   return { kind: 'hypothetical-budget-result-v1', treasuryAddress: scenario.treasuryAddress,
-    initialBalance: scenario.initialBalance, finalBalance: balance, totalDisbursed,
+    initialBalance: scenario.initialBalance, finalBalance: balance, totalDisbursed, totalTopUps,
     paidRequestIds: [...paid], trace, proposals: results, executedProposalIds: [...executed],
     failedProposalIds: results.filter(p => p.attempts > 0 && !p.executed).map(p => p.proposalId),
     unattemptedProposalIds: results.filter(p => p.attempts === 0).map(p => p.proposalId) };

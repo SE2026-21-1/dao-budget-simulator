@@ -98,7 +98,12 @@ export function validateScenario(input: unknown): TreasuryScenario {
   const ids = new Set(base.proposals.map(p => p.proposalId));
   const steps: ScenarioStep[] = Array.from(boundedArray(value.steps, 'steps', LIMITS.steps), (item, i) => {
     const path = `steps[${i}]`;
-    const step = record(item, path, ['kind', 'proposalId']);
+    const step = record(item, path, ['kind', 'proposalId', 'amount']);
+    if (step.kind === 'top-up') {
+      record(item, path, ['kind', 'amount']);
+      return { kind: 'top-up', amount: uint256(step.amount, `${path}.amount`, true) };
+    }
+    record(item, path, ['kind', 'proposalId']);
     if (step.kind !== 'execute') invalid('INVALID_SHAPE', `${path}.kind`);
     const id = proposalId(step.proposalId, `${path}.proposalId`);
     if (!ids.has(id)) invalid('UNKNOWN_PROPOSAL', `${path}.proposalId`);

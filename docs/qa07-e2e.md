@@ -6,6 +6,31 @@ Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/li
 
 **Chế độ tự động dùng adapter EIP-1193 với tài khoản Anvil unlocked do runner sở hữu, KHÔNG phải MetaMask.** Adapter công bố tên có chữ NOT MetaMask, chỉ gửi từ tài khoản A trên chain mới 31337 và đặt gas 8.000.000. Từ chối code 4001 và `chainChanged` sai mạng là fault injection ở adapter; không được ghi thành đã kiểm thử popup/extension thật. Không sử dụng ví người dùng, ký bên ngoài, fork hay RPC/DB caller. Chế độ `--serve` dưới đây không inject adapter hoặc tự thực hiện workflow.
 
+## Gate hiện hành — 26/11/2026
+
+- [TV3 review6055560601 COMMENT](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
+  xác nhận pinning P2 được giải quyết tại evidence HEAD
+  `b92bef5409d6478de97efbc8209241620967d18a` (fix
+  `bbe6fa47cc9d9f9c49a60330bc48d910724fb517`); không còn chờ re-review này.
+  Đây **không** phải whole-PR APPROVED hoặc MetaMask acceptance.
+- TV1 security APPROVED b186844; TV2 BE08 APPROVED đúng PR60
+  `0a5cc5cfda29a92df4ab4498e1cd72cd57023088` / PR61
+  `cba8b6c9eda65959d82250441b8eed131a1a5044`, giữ scope từng review.
+- [#41 local OptionB pipeline ACCEPTED](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461):
+  product `6766e5ee2d8c466542687cbeb09677c4d11e5463`, publication H52/hash/revision
+  và original receipts là evidence lịch sử đã nhận. SQL query H58 không phải
+  publication H52; không gán run đó cho b92bef5 hoặc revision demo mới, không chờ
+  thêm worker/SQL signoff hoặc chạy lại governance để lấy lại evidence đã đủ.
+- #19 vẫn documentary PARTIAL: [provenance bổ sung đạt liên kết run/source/digests](evidence/2026-11-26-issue19-provenance-review.md);
+  thiếu capture **B-active afterSubmit** và exact MetaMask version của phiên H26.
+  Không biến provenance PASS thành full acceptance hoặc yêu cầu làm lại cả governance.
+- #40 đã chọn **Option B lifecycle hẹp**: cần run/output receiver mới theo scope đó,
+  không dùng Option B pipeline #41 thay lifecycle. #42 receiver preregistration và
+  API-only restart evidence vẫn BLOCKED; giữ DB/deployment/worker, không BE06 rerun.
+- #20 owner authorization/testnet và nhóm chốt exact source/manifest/run/video
+  vẫn riêng. Read-only probe/local drill không thay receiver, ví thật, Sepolia hoặc
+  video nhóm. Cập nhật docs này không chạy test, service, ký hay broadcast.
+
 ## Lệnh chạy duy nhất sau khi chuẩn bị xong
 
 Ví dụ đường dẫn của workstation QA (đổi đường dẫn binary nếu cần):
@@ -33,8 +58,10 @@ submodules, root/frontend `npm ci` và `forge build` tại checkout đó trướ
 `qaHarness.sha256`/`keyboardSha256` ghi riêng bytes tooling. Không gọi cả PR60 đã
 được duyệt chỉ vì dùng baseline Dev đã có review.
 
-Baseline TV4 đã xác nhận cho run mới #41: **Dev
+Baseline sản phẩm đã dùng cho evidence lịch sử #41: **Dev
 `6766e5ee2d8c466542687cbeb09677c4d11e5463`**, local unforked31337, K2.
+Không tự chọn baseline đó hoặc current HEAD cho run mới: nhóm chọn full approved
+product SHA và tooling SHA riêng, ghi quyết định trước rehearsal.
 Checkout tách riêng, không checkout/reset nhánh personal hoặc đưa #21/#55 vào ancestry.
 
 ```sh
@@ -142,8 +169,13 @@ global wallet đang B. Revoke permissions thật đã phát `accountsChanged([])
 khóa ký A. Driver gặp lỗi focus/không còn control truy cập được khi hoàn tất
 B, kể cả trên display Xvfb riêng; không sửa MetaMask/app state hoặc tăng timeout.
 
-TV3 chỉ cần hoàn tất **case account** trên stack mới của approved source, không
-chạy lại cả campaign governance hoặc các bundle lịch sử:
+[TV3 A→B→A đã được tiếp nhận scoped functional support](evidence/2026-11-25-issue19-tv4-review.md);
+[supplement provenance đã đạt](evidence/2026-11-26-issue19-provenance-review.md).
+Chỉ còn B-active afterSubmit và exact version của phiên H26. Nếu bản gốc không
+còn, TV3 chỉ narrow recapture draft/account-switch/no-send trên stack mới của
+approved source, **run ID mới và version đúng phiên mới**; không gán ảnh/version
+mới thành H26 hoặc chạy lại governance. Checklist dưới là thủ tục cho phần thiếu,
+không phải yêu cầu rerun phần functional đã được hỗ trợ.
 
 1. Lấy `handoff.json` mới từ `--serve`; kiểm đúng31337/K2/manifest/source. A và B
    là hai account disposable do operator giữ; B không có GOV/votes.
@@ -210,17 +242,24 @@ gọi là retry, không dùng profile/port archived sau cleanup.
 
 ## Diễn tập Integration & Release — 24/11
 
-Đây là kịch bản, không phải biên bản đã diễn tập. Chọn một full SHA sau review/CI;
-ghi SHA tooling và sản phẩm riêng nếu dùng `--project-root`. Không dùng journal,
-manifest hoặc endpoint archived cho lượt mới.
+Kịch bản cập nhật **26/11**; chưa chạy trong lượt docs này, không phải biên bản nghiệm thu.
+Nhóm chọn full approved product SHA và tooling SHA riêng sau review/CI; current
+candidate/evidence b92bef5409d6478de97efbc8209241620967d18a không tự thành revision
+demo. Trang mở đầu demo/video phải ghi run ID/thời gian/operator, hai SHA,
+manifest path + SHA256, toolchain, chainId/K, deploymentId/năm contract addresses,
+creation blocks, frontend origin/API/RPC và publication H/hash/revision.
+Đối chiếu các giá trị đó với handoff/manifest **run đang sống** trước nối ví;
+khác source/manifest/endpoint thì dừng trước ký, giữ evidence mismatch.
+Không dùng journal/manifest/endpoint archived cho lượt mới. Evidence H52/product6766e5e
+đã nhận được trình bày riêng với ngày/run cũ, không relabel thành live run mới.
 
 | Bước | Thao tác | Kết quả cần trình bày |
 |---|---|---|
-| Chuẩn bị | Node24.15.0/Foundry1.8.5/PG18.4; lockfile/submodule đúng; `forge build`; tạo output mới. Đọc [gate hiện hành](evidence/tv4-20261124-submission-identity.md). | SHA/artifact/manifest/chain/deployment nhất quán; không secret trong màn hình/log. |
+| Chuẩn bị (chỉ khi operator được phép chạy) | Node24.15.0/Foundry1.8.5/PG18.4; lockfile/submodule đúng; build artifacts từ product SHA đã chọn, output mới; đối chiếu header run ở trên và [Sepolia gates](sepolia-deployment.md). | SHA/artifact/manifest/chain/deployment nhất quán; endpoints thuộc run đang sống; không secret trên màn hình/log. Thiếu prerequisite thì dừng, không tự khởi động/sửa service của người khác. |
 | Hash và fail-stop local | `node --test --test-name-pattern='signed submission|funding submission|unconfirmed final funding' tests/smoke/sepolia.test.mjs` | Response hash delegation và receipt delegation là hai lỗi khác nhau, đều bị từ chối; signed hash local còn trong journal, không resend hoặc false K2. Chỉ Anvil disposable, không Sepolia. |
 | Demo browser nhóm | Tạo stack `--serve` theo hướng dẫn trên; thao tác extension thật trên cùng proposal: tạo, vote, queue, execute thiếu quỹ, nạp2.000, retry. | Lưu receipt0/receipt1, IDs và publication cùng H/hash; SQL/API/UI, Treasury1.000/recipient11.000; không gọi adapter là extension. |
-| Ca còn thiếu | TV3 thực hiện site-authorized A→B theo checklist account-switch trên; TV2 nhận scope receipt/worker/API. | Draft giữ nguyên, không send từ phiên A cũ; chưa có bằng chứng thì ghi PARTIAL, không tick PASS. |
-| Kết thúc | Lưu report/log/ảnh đã redact; Ctrl-C đúng runner sở hữu, kiểm teardown; nhóm ghi quyết định và review còn thiếu. | Không release/tag/merge chỉ từ demo local. Không tái tạo server staging đã rút scope. |
+| Ca còn thiếu | TV3 bổ sung documentary B-active afterSubmit/exact MetaMask version #19; provenance H26 đã review riêng, ảnh mới chỉ dùng cho narrow run mới. Receiver chạy lifecycle Option B #40 và preregister/API-only restart #42 theo runbook riêng. | Ghi rõ run nào chứng minh bước nào; thiếu bytes thì PARTIAL/BLOCKED. Không chờ lại #41 worker/SQL đã accepted; không dùng local adapter thay receiver/ví thật. |
+| Kết thúc | Lưu requirement→issue→commit→test/report/receipt, log/ảnh đã redact và quyết định scoped review; operator cleanup đúng runner sở hữu sau rehearsal. Nhóm chọn lịch/video/report khi đủ gates. | Video phải chỉ rõ live/local/archived/testnet từng đoạn; chưa có video/rehearsal thì ghi chưa chạy. Không release/tag/merge từ demo local; không tái tạo server staging đã retired #56. |
 
 Nếu thiếu PG/Chrome/extension hoặc RPC lỗi: dừng đúng bước, giữ failed report;
 chỉ trình bày evidence lịch sử với SHA/ngày/giới hạn rõ, không gọi là demo live.

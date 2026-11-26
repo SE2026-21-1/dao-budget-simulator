@@ -1,5 +1,9 @@
 # TV4 — nghiệm thu theo phạm vi, 23/11/2026
 
+> Báo cáo lịch sử23/11, giữ nguyên source/lệnh/kết quả tại thời điểm đó.
+> [Nghiệm thu hiện hành26/11](tv4-20261126-acceptance.md) thay pending pinning,
+> TV2 BE08/worker-SQL và receiver decisions bên dưới; không dùng lời pending cũ làm blocker mới.
+
 ## Revision, workspace và quyền
 
 - Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`; main `ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4`. Đã fetch và đọc PR/review/comments/checks mới của #60/#61 và #7/#18/#20/#36/#40/#41/#42/#44/#56.

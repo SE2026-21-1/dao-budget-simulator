@@ -5,7 +5,7 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
-## Phạm vi hiện hành — 24/11/2026
+## Phạm vi hiện hành — 26/11/2026
 
 - Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
   đóng ngày 23/11/2026. Không có yêu cầu cấp VM hay triển khai lại server.
@@ -13,7 +13,23 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 - Extension #19/#41, Sepolia #20 và release #44 được xét độc lập theo bằng chứng.
 - Các trạng thái lịch sử bên dưới chỉ đúng tại ngày và source đã ghi.
 
-## Kết luận hiện hành — 24/11/2026
+## Kết luận hiện hành — 26/11/2026
+
+- [x] [Nghiệm thu cập nhật, baseline và giới hạn](evidence/tv4-20261126-acceptance.md).
+  PR60 baseline `b92bef5409d6478de97efbc8209241620967d18a`; không nhập Dev mới
+  `3d0f6ca3f971ae6861b1a18160329bdfabe7ab8e` chứa hạ tầng ngoài scope #56.
+- [x] [TV3 review6055560601](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601):
+  snapshot-pinning P2 resolved tại b92bef5; **COMMENT**, không approval toàn PR.
+  23 regression/real-worker interleaving là kết quả nguồn bbe6fa4 đã có, không rerun hôm nay.
+- [x] [#19 provenance bổ sung đã kiểm bytes](evidence/2026-11-26-issue19-provenance-review.md):
+  đạt liên kết run/source/manifest/handoff; full documentary vẫn PARTIAL.
+- [ ] TV3: ảnh/clip B-active sau Submit và exact MetaMask version H26 còn thiếu;
+  nếu không còn lịch sử, chỉ draft/account-switch/no-send run mới, không toàn governance.
+- [ ] [#40 đã chọn B](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7184789349):
+  lượt receiver lifecycle hẹp mới, không mở lại BE09 offline đã nhận.
+- [ ] [#42 receiver readiness](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7184789885):
+  TV2 chỉ receiver/cách chuẩn bị không redeploy; TV3 chỉ API restart sau khi đủ điều kiện.
+  [Checklist PID/HTTP/pinning/digest](indexer.md#api-only-restart); không restart worker/PG.
 
 - [x] [Native bottleneck fix và raw proof mới](evidence/be08-native-performance-20261124/report.md):
   PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60 `7141d731c10d1e64c81cc1736d21ba8dac16e2ea`;
@@ -33,7 +49,9 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   publication30s trước outage, không đổi timeout hay gọi CI thành local PASS.
 - [x] [Hai JSON worker/SQL H52 và provenance](evidence/tv4-20261124-h52/provenance.md)
   trích nguyên bytes,161manifest hashes khớp; đã bàn giao [#41](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7131321571).
-  TV2 đã nhận receipt/API; chỉ worker/SQL chờ kết luận, #41 giữ Blocked.
+  [TV2 worker/SQL PASS7155488965](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155488965)
+  và [TV4 local pipeline ACCEPTED7155604461](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461);
+  không còn chờ worker/SQL. #41 vẫn Blocked vì documentary #19 và lifecycle #40.
 - [x] [Đồng bộ PR60 với Dev896f93e](evidence/tv4-20261124-pr60-dev-sync.md):
   giải năm conflict theo nội dung, giữ verify-only/GHCR/Compose, không phục hồi server.
   Local7release/migration-manifest,44deployment,14BE08 và BE07native10phases PASS;
@@ -46,8 +64,11 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   [demo/failure plan](qa07-e2e.md#diễn-tập-integration--release--2411) đã cập nhật.
 - [x] [TV1 approve b186844](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460)
   chỉ signing/receipt/journal/role-audit; nguồn/tests đó không đổi bởi BE08.
-- [ ] TV2 re-review BE08/delivery, TV3 harness/consumer và CI HEAD cuối;
-  không tự dismiss/resolve hoặc merge. #20 owner/testnet và #19/#40/#41/#42 vẫn mở.
+- [x] TV2 BE08 APPROVED: PR60 `0a5cc5cfda29a92df4ab4498e1cd72cd57023088`
+  [6053195381](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381);
+  PR61 `cba8b6c9eda65959d82250441b8eed131a1a5044`
+  [6053196499](https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6053196499).
+  Không tự dismiss/resolve/approve hoặc merge; CI head mới theo PR, #20/#44 vẫn Blocked.
 - [x] Project#1 qua browser `/dung0611`:4items×2fields (#6/#7/#20/#44),
   đã reload kiểm; giữ In review/Blocked, không Done; Project#2 không đổi.
   API thiếu scope không còn chặn kênh browser. #56 retired, #18/#36 không mở lại.
@@ -56,6 +77,8 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
 ## Kết luận theo bằng chứng — 23/11/2026
 
 Nguồn quyết định: [báo cáo TV4 theo SHA/evidence](evidence/tv4-20261123-acceptance.md);
+Trạng thái23/11 dưới đây được giữ nguyên theo ngày; pending reviews/worker-SQL/account-switch
+đã được thay thế bởi kết luận26/11 ở trên, không dùng như blocker hiện hành.
 các checkbox/nhận định trước đây bên dưới giữ nguyên phạm vi lịch sử.
 
 - [x] #60 giữ TC10 và exact three-file BE08 #61 tại5c89997;14BE08/40integration/

@@ -1,6 +1,6 @@
 # Sepolia — chuẩn bị chung và điều kiện triển khai
 
-## Trạng thái TV4 ngày 24/11/2026
+## Trạng thái TV4 ngày 26/11/2026
 
 Mạng đã chốt tại #20: Sepolia, chainId **11155111**, RPC public
 `https://ethereum-sepolia-rpc.publicnode.com`, **K=2**. Lượt này không được cấp
@@ -14,13 +14,15 @@ file hoặc nội dung personal/individual/VT-063/VT-064 của #21/#55.
 Hash/provenance và tests local mới được ghi riêng; approval lịch sử không tự
 thành approval candidate mới. Guard local loopback/unforked31337 giữ nguyên.
 
-**Delta review hiện hành:** TV1 xác nhận receipt-binding đã sửa ở `9e121c5`,
-nhưng [finding submission identity Medium](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#discussion_r4667841738)
-vẫn chặn merge: hash trả về từ broadcast có thể trỏ tới delegation thay vì funding.
-Candidate tính `keccak256(signedRaw)` tại máy ký, fsync identity trước send và
-đối chiếu response trước K2. [Ma trận, lệnh và giới hạn mới](evidence/tv4-20261124-submission-identity.md)
-tách khỏi [bằng chứng receipt-binding trước đó](evidence/tv4-20261123-sepolia-receipt-fix.json).
-TV1 phải re-review; không tự dismiss request-changes hoặc coi đây là quyền broadcast.
+**Review security đã hoàn tất:** [TV1 APPROVED b186844](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460)
+cho signing/submission/receipt/journal/roles trong scope đã review; không yêu cầu
+review lại bytes không đổi. Submission identity Medium được sửa tại
+`033e63d3d70408ee87563e8dc809f67fbde67c72`: tính `keccak256(signedRaw)` tại máy ký,
+fsync identity trước send và đối chiếu response trước K2.
+[Ma trận, lệnh và giới hạn](evidence/tv4-20261124-submission-identity.md)
+tách khỏi [receipt-binding trước đó](evidence/tv4-20261123-sepolia-receipt-fix.json).
+Approval kỹ thuật không chọn revision triển khai, không cấp quyền broadcast và
+không nghiệm thu manifest/roles của deployment chưa tồn tại.
 
 
 ## Kiểm tra không cần signer
@@ -79,7 +81,7 @@ receipt delegation bị thay và response submission delegation bị thay.
 K/nonce/gas/role/source guards không bị nới.
 
 
-Sau khi toàn checklist bên dưới được owner xác nhận công khai và TV1 review,
+Sau khi toàn checklist bên dưới được owner xác nhận công khai và báo TV1 trước broadcast,
 operator giữ file ngoài Git, mode0600: public accounts map
 (`format=dao-budget-sepolia-accounts-v1`, `chainId=11155111`,
 `approvedSourceCommit`, `signerOwner`, chín `accounts`) và sáu keystore entries
@@ -100,18 +102,23 @@ Partial renounce không có general recovery guarantee; có thể phải redeplo
 
 ## Checklist công khai trước khi gửi (#20)
 
-Owner được nhóm chỉ định, do TV2 `@daongocuong` phối hợp xác định, cần ghi quyết định:
+Owner được nhóm chỉ định, do TV2 `@daongocuong` phối hợp xác định; **không mặc
+định TV1/TV2 giữ signer**. Mỗi mục cần người xác nhận + evidence công khai,
+hoặc ghi chưa có + người xử lý; giữ yêu cầu #20 hiện có, không tạo request trùng:
 
-- [ ] Full SHA được chọn và review; compiler/artifact/ABI hashes cùng checkout.
-- [ ] Chín địa chỉ khác nhau A/B/C/D/funding/deployer/caller/recipient/outsider.
-- [ ] Custodian từng signer A/B/C/D/funding/deployer, custody an toàn và xác nhận
-      exclusive-use trong lượt deployment.
+- [ ] Owner chọn **full approved SHA** tích hợp sau review, compiler/artifact/ABI
+      hashes cùng checkout; không tự lấy current HEAD/Dev/PR head làm lựa chọn.
+- [ ] Chín địa chỉ public khác nhau: A/B/C/D/funding/deployer/caller/recipient/outsider.
+- [ ] Tên custodian **riêng từng signer** A/B/C/D/funding/deployer; xác nhận
+      custody an toàn và exclusive-use trong lượt deployment.
 - [ ] Đường remote chung đã triển khai và review: signer bảo vệ, chainId guard,
       receipt canonical K2, journal bền vững, nonce pending/latest/expected,
       dừng và reconcile khi send mơ hồ; không tự resend.
-- [ ] Native balances tại H/hash, estimates theo map thật, headroom, fee cap từng
-      transaction, tổng native budget bằng số và người nạp gas.
-- [ ] Explicit broadcast authorization gắn đúng SHA/map/chain/budget.
+- [ ] Native balances tại H/hash, estimates theo map thật và headroom; gas limit,
+      fee cap từng transaction và tổng native budget **bằng số, có đơn vị**;
+      người nạp gas và xác nhận đủ tiền cho từng signer.
+- [ ] Explicit broadcast authorization của owner gắn đúng full SHA/map,
+      Sepolia11155111/PublicNode/K2, numerical fee cap/budget và phạm vi campaign.
 
 Không yêu cầu hoặc công khai private key, seed, keystore, password, token hay
 RPC secret. Quyền xử lý repository không phải quyền tiêu gas của signer.
@@ -134,7 +141,9 @@ H/hash, rồi worker/API/UI.
 
 ## Kết luận
 
-Probe không signer và helper remote chung đã chuẩn bị. Deployment/nghiệm thu #20
-vẫn **BLOCKED** khi owner checklist và peer review candidate chưa đủ.
+Probe không signer và helper remote chung đã chuẩn bị; security review đúng scope
+đã nhận. Deployment/nghiệm thu #20 vẫn **BLOCKED**: owner checklist chưa đủ,
+actual manifest/constructor/runtime/final roles/bootstrap history và real-time
+Executed + Defeated chưa có. Không có broadcast hoặc rehearsal mới trong cập nhật docs.
 SSH/OpenStack ngoài scope: không provision VM/apply Terraform hoặc sửa hạ tầng chung.
 

@@ -2,20 +2,41 @@
 
 Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
-Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
+Nhánh bàn giao hiện hành: `feature/tv4-qa-completion-20261121` → `Dev`, qua
+[PR #60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60);
+`feature/tv4-operation`/PR5 là lịch sử, không nhập PR21/55/personal.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Phạm vi hiện hành — 24/11/2026
+## Phạm vi hiện hành — 26/11/2026
 
 Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
 đóng ngày 23/11. Đã gỡ workflow deploy/SSH, script rollout/rollback và mẫu env
 server; giữ bước xác minh release và GHCR/Compose CI. Báo cáo kiểm thử lịch sử
 bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
-## Trạng thái hiện hành — 24/11/2026
+## Trạng thái hiện hành — 26/11/2026
+
+[Báo cáo nghiệm thu mới](evidence/tv4-20261126-acceptance.md) ghi baseline PR60
+`b92bef5409d6478de97efbc8209241620967d18a`, Dev mới
+`3d0f6ca3f971ae6861b1a18160329bdfabe7ab8e` và giới hạn thay đổi chỉ tài liệu.
+Không nhập hạ tầng mới của Dev hoặc phục hồi staging #56.
+
+- TV3 [COMMENT6055560601](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
+  xác nhận QA07 pinning P2 resolved ở b92bef5, không phải approval toàn PR.
+  TV1 security và TV2 BE08 approvals giữ exact-SHA/scope, không đòi review lại source không đổi.
+- [#19 supplement bytes](evidence/2026-11-26-issue19-provenance-review.md): SHA/CRC/path/
+  2checksums và run/source/manifest/handoff đạt; ảnh B-active sau Submit và exact
+  MetaMask version H26 vẫn thiếu. Không gán version từ profile khác hoặc ảnh mới cho run cũ.
+- [#40 chọn B](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7184789349):
+  TV3 làm riêng lifecycle run mới, giữ BE09 offline đã nhận.
+  [#42 coordination](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7184789885):
+  TV2 giải receiver readiness, TV3 API-only sau khi đủ điều kiện; không redeploy/rebuild ngầm.
+- [Receiver runbook](indexer.md#api-only-restart), [Sepolia owner checklist](sepolia-deployment.md)
+  và [demo](qa07-e2e.md) tách điều đã nghiệm thu local khỏi documentary/receiver/testnet/release.
+  Không chạy lại campaign đã đủ evidence, không đóng issue hoặc tự merge.
 
 [Native performance fix và bằng chứng nguyên bản](evidence/be08-native-performance-20261124/report.md):
 PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60
@@ -44,9 +65,11 @@ tại load publication30s trước outage; giữ cả failure packet, không n�
 `7221c131f558a6566c715c371e58899acb05dccc` giữ nguyên bytes và MANIFEST hashes.
 [TV2 đã nhận receipt/API](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7129225892);
 [bàn giao hai raw JSON/checksums](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7131321571)
-không chạy lại chain, không sửa SQLprojectionH58 thànhH52. Chờ worker/SQL peer
-ack và TV4 scoped sign-off; không đóng#41. TV1 security approvalb186844 giữ đúng
-phạm vi, không yêu cầu re-review các security sources không đổi.
+không chạy lại chain, không sửa SQLprojectionH58 thànhH52.
+[TV2 worker/SQL PASS7155488965](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155488965)
+và [TV4 local pipeline ACCEPTED7155604461](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461)
+đã có; #41 còn documentary #19/lifecycle #40, không còn chờ worker/SQL.
+TV1 security approvalb186844 giữ phạm vi, không yêu cầu re-review security sources không đổi.
 
 [Đợt đồng bộ Dev896f93e → nhánh PR60](evidence/tv4-20261124-pr60-dev-sync.md)
 tái hiện và giải đúng năm conflict; giữ ba test migration/manifest của Dev cùng
@@ -65,12 +88,17 @@ chưa claim browser rerun, testnet hoặc release acceptance. Project#1 đã c�
 qua browser:4items×2fields, reload kiểm, giữ In review/Blocked; Project#2 không đổi.
 Follow-up clock96e4601 giữ boundary assertions, native BE07/PostgreSQL18.4
 10phases PASS; pushCI45341624946 success không thay PR merge-ref gate.
-PR60 tiếp tục qua TV1/TV2/TV3 và final-head CI; không pushDev/bypass review.
+TV2 đã APPROVED BE08 PR60 `0a5cc5cfda29a92df4ab4498e1cd72cd57023088`
+([6053195381](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381))
+và PR61 `cba8b6c9eda65959d82250441b8eed131a1a5044`
+([6053196499](https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6053196499)).
+Final-head CI/reviewer-owned threads vẫn riêng; không pushDev/bypass review.
 
 ## Trạng thái theo bằng chứng — 23/11/2026
 
 [Báo cáo nghiệm thu, raw archive, lệnh/exit/SHA và giới hạn](evidence/tv4-20261123-acceptance.md)
-là đầu mối hiện hành; các mục21/11 trở về trước bên dưới là lịch sử.
+là báo cáo lịch sử23/11; pending reviews và account-switch/worker-SQL bên dưới không
+thay kết luận26/11. Không sửa lại source/ngày/kết quả cũ.
 
 - Tích hợp #61 vào #60 bằng `5c899976ac4de97434737493815e7ccbdcd13984`:
   giữ TC10, thay ba file BE08 bằng same-ID lifecycle oracle, không miễn trừ5giây.

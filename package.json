@@ -33,7 +33,8 @@
     "test:be08": "node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs tests/indexer/be08-rpc-outage.test.mjs",
     "test:be08:native": "node scripts/check_be08_native.mjs",
     "benchmark:api": "node --import tsx scripts/benchmark_api.mjs",
-    "test:simulator": "node --import tsx --test tests/simulator/*.test.ts"
+    "test:simulator": "node --import tsx --test tests/simulator/*.test.ts",
+    "test:simulator:differential": "node --import tsx --test tests/simulator/treasury-differential.integration.ts"
   },
   "dependencies": {
     "ethers": "6.17.0",

@@ -229,3 +229,5 @@ và một PostgreSQL mới đúng scope; không có DB như vậy trong lượt 
 Nếu cần kiểm API đầy đủ, dùng runbook `npm run test:api:db` với PostgreSQL test riêng.
 Không cần API/DB/RPC cho engine hoặc workflow simulator. Warnings hiện có của compiler/
 Foundry được giữ nguyên; không khẳng định warning-free hoặc full product acceptance.
+
+Kết quả bổ sung sau bàn giao đầu: [API regression và kiểm chứng mới](what-if-budget-verification.md). Bảng trên giữ nguyên kết quả của lượt cũ, không ghi đè FAIL lịch sử.

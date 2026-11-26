@@ -556,8 +556,8 @@ hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
 ## What-if Budget Simulator (TV1, off-chain)
 
 Module TypeScript độc lập tại `simulator/` thử thứ tự giải ngân, requestId trùng,
-thiếu quỹ, top-up và retry bằng `bigint`. Không gọi RPC hoặc thay đổi state chain,
-API hay UI hiện có. Kết quả là giả định, không chứng minh giao dịch thật sẽ thành công.
+thiếu quỹ, top-up và retry bằng `bigint`. Core không gọi RPC. Adapter opt-in chỉ đọc
+Treasury tại snapshot đã pin; không thay đổi state chain, API hay UI hiện có. Kết quả là giả định, không chứng minh giao dịch thật sẽ thành công.
 
 ```sh
 npm ci
@@ -565,4 +565,6 @@ npm run test:simulator
 ```
 
 [Thiết kế, schema và giới hạn](docs/what-if-budget.md) ·
-[Ví dụ có thể chạy](docs/what-if-budget-examples.md).
+[Ví dụ có thể chạy](docs/what-if-budget-examples.md) ·
+[Snapshot adapter](docs/what-if-budget-snapshots.md) ·
+[Kiểm chứng bổ sung](docs/what-if-budget-verification.md).

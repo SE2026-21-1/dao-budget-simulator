@@ -2,8 +2,9 @@
 
 ## Phạm vi và nguồn thiết kế
 
-Module off-chain độc lập để thử các kế hoạch giải ngân BUD giả định. Không có RPC,
-wallet, giao dịch, deployment hoặc thay đổi API/UI. Kết quả luôn mang nhãn
+Core off-chain độc lập để thử các kế hoạch giải ngân BUD giả định, không RPC.
+Adapter opt-in bổ sung chỉ đọc snapshot đã pin; không wallet, giao dịch, deployment
+hoặc thay đổi API/UI. Kết quả luôn mang nhãn
 `hypothetical-budget-result-v1`; không phải receipt hoặc chứng cứ blockchain.
 
 Base triển khai: `Dev` tại `3d0f6ca3f971ae6861b1a18160329bdfabe7ab8e`.
@@ -227,7 +228,9 @@ Bảy API tests **chưa kiểm chứng nghiệp vụ**: guard yêu cầu `BE05_T
 và một PostgreSQL mới đúng scope; không có DB như vậy trong lượt này. Không bật flag
 để bỏ qua guard, không kết nối DB đang phục vụ, không sửa API/DB tests để làm xanh.
 Nếu cần kiểm API đầy đủ, dùng runbook `npm run test:api:db` với PostgreSQL test riêng.
-Không cần API/DB/RPC cho engine hoặc workflow simulator. Warnings hiện có của compiler/
+Không cần API/DB/RPC cho engine; CI differential bổ sung dùng Foundry test VM. Warnings hiện có của compiler/
 Foundry được giữ nguyên; không khẳng định warning-free hoặc full product acceptance.
 
 Kết quả bổ sung sau bàn giao đầu: [API regression và kiểm chứng mới](what-if-budget-verification.md). Bảng trên giữ nguyên kết quả của lượt cũ, không ghi đè FAIL lịch sử.
+
+[Adapter snapshot chỉ đọc, trust boundary và tích hợp](what-if-budget-snapshots.md).

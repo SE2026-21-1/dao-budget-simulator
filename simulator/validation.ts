@@ -3,7 +3,7 @@ import type { HypotheticalProposal, ScenarioDefinition, ScenarioStep, TreasurySc
 
 export const UINT256_MAX = (1n << 256n) - 1n;
 export const LIMITS = Object.freeze({ proposals: 1000, steps: 10000, paidRequests: 10000, comparisons: 16 });
-export type ValidationCode = 'INVALID_SHAPE' | 'INVALID_UINT256' | 'INVALID_ADDRESS' | 'INVALID_REQUEST_ID'
+export type ValidationCode = 'INVALID_JSON' | 'INVALID_SHAPE' | 'INVALID_UINT256' | 'INVALID_ADDRESS' | 'INVALID_REQUEST_ID'
   | 'INVALID_PROPOSAL_ID' | 'DUPLICATE_PROPOSAL_ID' | 'DUPLICATE_PAID_REQUEST_ID'
   | 'INVALID_EXECUTION_ORDER' | 'UNKNOWN_PROPOSAL' | 'LIMIT_EXCEEDED';
 
@@ -67,7 +67,7 @@ export function validateDefinition(input: unknown): ScenarioDefinition {
   const treasuryAddress = address(value.treasuryAddress, 'treasuryAddress');
   const initialBalance = uint256(value.initialBalance, 'initialBalance');
   const paid = new Set<string>();
-  const initialPaidRequestIds = Array.from(boundedArray(value.initialPaidRequestIds ?? [], 'initialPaidRequestIds', LIMITS.paidRequests), (item, i) => {
+  const initialPaidRequestIds = Array.from(boundedArray(value.initialPaidRequestIds === undefined ? [] : value.initialPaidRequestIds, 'initialPaidRequestIds', LIMITS.paidRequests), (item, i) => {
     const id = requestId(item, `initialPaidRequestIds[${i}]`);
     if (paid.has(id)) invalid('DUPLICATE_PAID_REQUEST_ID', `initialPaidRequestIds[${i}]`);
     paid.add(id);

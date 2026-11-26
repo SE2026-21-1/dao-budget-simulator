@@ -60,3 +60,7 @@ test('validation returns an independent copy without changing input', () => {
   assert.notEqual(output.proposals[0]!.request, input.proposals[0]!.request);
   assert.notEqual(output.steps, input.steps);
 });
+
+test('explicit null is not an omitted initial paid-request list', () => {
+  rejects(scenario({ initialPaidRequestIds: null as never }), 'INVALID_SHAPE');
+});

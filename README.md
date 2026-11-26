@@ -552,3 +552,7 @@ Import tài nguyên đã tạo tay trước khi apply Terraform; chuyển contai
 Compose trong thời gian bảo trì có backup, không chạy tự động khi pull Git.
 Đây là chain Anvil 31337 riêng, chưa bật giao dịch ví công khai; Quick Tunnel
 hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
+
+[Pull CD cho VM](deploy/anvil-demo/cd/README.md) nhận release đã qua CI và cập nhật
+riêng API/indexer theo digest, preflight, health/data checks và rollback. Cần cài
+agent và bật systemd timer trên VM sau khi kiểm tra; commit file không tự bật CD.

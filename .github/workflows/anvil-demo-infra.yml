@@ -42,6 +42,8 @@ jobs:
               config = yaml.safe_load(handle)
           subprocess.run(['bash', '-n'], input=config['write_files'][0]['content'], text=True, check=True)
           PY
+      - name: Test pull CD trust, rollback and interruption boundaries
+        run: python3 -m unittest discover -s deploy/anvil-demo/cd -p 'test_*.py' -v
       - name: Render Compose using disposable configuration only
         shell: bash
         run: |

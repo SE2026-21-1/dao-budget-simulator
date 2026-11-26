@@ -7,6 +7,11 @@ import { address, uint256, validateScenario } from './validation.js';
 /** The adapter has no signer/URL and invokes only these read methods. Transport supplies timeouts. */
 export type SnapshotReadMethod = 'eth_chainId' | 'eth_getBlockByNumber' | 'eth_getCode' | 'eth_call';
 export type SnapshotReadRpc = (method: SnapshotReadMethod, params: readonly unknown[]) => Promise<unknown>;
+export interface SnapshotReadOptions {
+  /** Deadline for the whole read, not a fresh timeout per request. Default 30s; maximum 120s. */
+  readonly timeoutMs?: number;
+  readonly signal?: AbortSignal;
+}
 export interface PinnedChainSnapshot {
   readonly chainId: bigint;
   readonly blockNumber: bigint;
@@ -37,7 +42,7 @@ export interface PinnedBudgetInput {
   readonly scenario: TreasuryScenario;
 }
 export type SnapshotReadCode = 'INVALID_SNAPSHOT' | 'RPC_READ_FAILED' | 'INVALID_RPC_DATA'
-  | 'SNAPSHOT_MISMATCH' | 'CONTRACT_MISMATCH' | 'UNSUPPORTED_TOKEN';
+  | 'SNAPSHOT_MISMATCH' | 'CONTRACT_MISMATCH' | 'UNSUPPORTED_TOKEN' | 'READ_TIMEOUT' | 'READ_ABORTED';
 export class SnapshotReadError extends Error {
   constructor(readonly code: SnapshotReadCode, readonly field: string) {
     super(`${code}: ${field}`);
@@ -59,8 +64,15 @@ function quantity(value: unknown, field: string): bigint {
 }
 
 /** Opt-in, fail-closed snapshot reader. Never falls back to number-tagged state or latest. */
-export async function readPinnedScenario(rpc: SnapshotReadRpc, input: PinnedScenarioRequest): Promise<PinnedBudgetInput> {
+export async function readPinnedScenario(rpc: SnapshotReadRpc, input: PinnedScenarioRequest,
+  options: SnapshotReadOptions = {}): Promise<PinnedBudgetInput> {
   if (!input || !input.snapshot || !input.contracts || typeof rpc !== 'function') fail('INVALID_SNAPSHOT', 'input');
+  if (!options || typeof options !== 'object') fail('INVALID_SNAPSHOT', 'options');
+  const timeoutMs = options.timeoutMs === undefined ? 30_000 : options.timeoutMs;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 120_000) fail('INVALID_SNAPSHOT', 'timeoutMs');
+  const signal = options.signal;
+  if (signal !== undefined && !(signal instanceof AbortSignal)) fail('INVALID_SNAPSHOT', 'signal');
+  const deadline = performance.now() + timeoutMs;
   // Copy all supplied data before the first await; async caller mutation cannot switch the pin or proposals.
   const snapshot = { chainId: uint256(input.snapshot.chainId, 'snapshot.chainId', true),
     blockNumber: uint256(input.snapshot.blockNumber, 'snapshot.blockNumber'),
@@ -75,8 +87,35 @@ export async function readPinnedScenario(rpc: SnapshotReadRpc, input: PinnedScen
   const queriedRequestIds = [...new Set(template.proposals.map(p => p.request.requestId))];
   const tag = Object.freeze({ blockHash: snapshot.blockHash, requireCanonical: true });
   const read = async (method: SnapshotReadMethod, params: readonly unknown[]): Promise<unknown> => {
-    try { return await rpc(method, params); }
-    catch { return fail('RPC_READ_FAILED', method); } // Do not leak endpoint credentials through provider exceptions.
+    if (signal?.aborted) fail('READ_ABORTED', method);
+    const remaining = deadline - performance.now();
+    if (remaining <= 0) fail('READ_TIMEOUT', method);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let onAbort: (() => void) | undefined;
+    try {
+      const value = await Promise.race([
+        Promise.resolve().then(async () => {
+          if (signal?.aborted) fail('READ_ABORTED', method);
+          if (performance.now() >= deadline) fail('READ_TIMEOUT', method);
+          try { return await rpc(method, params); }
+          catch { return fail('RPC_READ_FAILED', method); } // Never leak provider URLs or credentials.
+        }),
+        new Promise<never>((_resolve, reject) => {
+          timer = setTimeout(() => reject(new SnapshotReadError('READ_TIMEOUT', method)), Math.ceil(remaining));
+          if (signal) {
+            onAbort = () => reject(new SnapshotReadError('READ_ABORTED', method));
+            signal.addEventListener('abort', onAbort, { once: true });
+            if (signal.aborted) onAbort();
+          }
+        }),
+      ]);
+      if (signal?.aborted) fail('READ_ABORTED', method);
+      if (performance.now() >= deadline) fail('READ_TIMEOUT', method);
+      return value;
+    } finally {
+      clearTimeout(timer);
+      if (onAbort) signal?.removeEventListener('abort', onAbort);
+    }
   };
   const anchor = async (): Promise<void> => {
     if (quantity(await read('eth_chainId', []), 'chainId') !== snapshot.chainId) fail('SNAPSHOT_MISMATCH', 'chainId');

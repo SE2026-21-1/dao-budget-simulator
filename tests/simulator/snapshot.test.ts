@@ -185,3 +185,45 @@ test('equivalent hexadecimal casing does not invalidate a canonical snapshot', a
     ? { number: '0xA', hash: '0x' + 'AB'.repeat(32) } : f.rpc(m, p), request);
   assert.equal(plan.source.snapshot.blockHash, blockHash);
 });
+
+test('an already-aborted caller starts no RPC and exposes no abort reason', async () => {
+  const f = fixture(), controller = new AbortController();
+  controller.abort('credential-bearing reason');
+  await assert.rejects(readPinnedScenario(f.rpc, f.request, { signal: controller.signal }), (error: unknown) =>
+    error instanceof SnapshotReadError && error.code === 'READ_ABORTED' && !error.message.includes('credential'));
+  assert.equal(f.calls.length, 0);
+});
+test('caller abort during a read rejects without starting later queries', async () => {
+  const f = fixture(), controller = new AbortController(); let started = 0;
+  await assert.rejects(readPinnedScenario(async () => { started++; controller.abort(); return '0x7a69'; }, f.request,
+    { signal: controller.signal }), errorCode('READ_ABORTED'));
+  assert.equal(started, 1);
+});
+test('a stalled transport is bounded by the whole-read deadline without retry', async () => {
+  const f = fixture(); let started = 0;
+  await assert.rejects(readPinnedScenario(async () => { started++; return new Promise(() => undefined); }, f.request,
+    { timeoutMs: 10 }), errorCode('READ_TIMEOUT'));
+  assert.equal(started, 1);
+});
+test('abort interrupts an unresolved RPC without waiting for the transport', async () => {
+  const f = fixture(), controller = new AbortController(); let started = 0;
+  await assert.rejects(readPinnedScenario(async () => {
+    started++; queueMicrotask(() => controller.abort()); return new Promise(() => undefined);
+  }, f.request, { signal: controller.signal }), errorCode('READ_ABORTED'));
+  assert.equal(started, 1);
+});
+test('invalid deadline settings fail before reads', async () => {
+  const f = fixture();
+  for (const timeoutMs of [0, -1, 0.5, Infinity, 120_001, '10', null]) {
+    await assert.rejects(readPinnedScenario(f.rpc, f.request, { timeoutMs: timeoutMs as number }), errorCode('INVALID_SNAPSHOT'));
+  }
+  assert.equal(f.calls.length, 0);
+});
+
+test('several individually fast reads share one deadline instead of resetting it per call', async () => {
+  const f = fixture(); let started = 0;
+  await assert.rejects(readPinnedScenario(async (m, p) => {
+    started++; await new Promise(resolve => setTimeout(resolve, 10)); return f.rpc(m, p);
+  }, { ...f.request, proposals: [], steps: [] }, { timeoutMs: 25 }), errorCode('READ_TIMEOUT'));
+  assert.ok(started < 9, 'The adapter must stop before completing the otherwise valid nine-read empty-scope plan');
+});

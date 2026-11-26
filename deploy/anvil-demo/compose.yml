@@ -1,0 +1,150 @@
+name: dao-demo
+
+x-app: &app
+  restart: unless-stopped
+  init: true
+  user: node
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  env_file:
+    - ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/runtime.env
+  logging:
+    driver: local
+    options: {max-size: 10m, max-file: "3"}
+
+services:
+  postgres:
+    image: postgres:18.4-bookworm@sha256:882236b897e39051d2368c5ccc6cda944904723506b2dfc97f2a8f5bc9afa382
+    container_name: dao-demo-postgres
+    restart: unless-stopped
+    env_file:
+      - ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/postgres.env
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    networks: [database]
+    shm_size: 128m
+    stop_grace_period: 60s
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+
+  anvil:
+    image: ghcr.io/foundry-rs/foundry@sha256:32c8ea9ef052a440cb1620175987a3f49eff8b068a0c6a3d09ebf7f5f9a0e043
+    container_name: dao-demo-anvil
+    restart: unless-stopped
+    user: "${DAO_UID:-1000}:${DAO_GID:-1000}"
+    environment: {HOME: /data}
+    entrypoint: [anvil]
+    command:
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8545"
+      - --chain-id
+      - "31337"
+      - --hardfork
+      - osaka
+      - --state
+      - /data/state.json
+      - --state-interval
+      - "30"
+      - --preserve-historical-states
+      - --silent
+    volumes:
+      - type: bind
+        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/anvil
+        target: /data
+        bind: {create_host_path: false}
+    ports: ["127.0.0.1:8545:8545"]
+    networks: [database, edge]
+    stop_grace_period: 60s
+    healthcheck:
+      test: [CMD, cast, chain-id, --rpc-url, "http://127.0.0.1:8545"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+
+  indexer:
+    <<: *app
+    image: ${INDEXER_IMAGE:?Set tested INDEXER_IMAGE}
+    container_name: dao-demo-indexer
+    volumes:
+      - type: bind
+        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/indexer.json
+        target: /run/dao/indexer.json
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [database]
+    depends_on:
+      postgres: {condition: service_healthy}
+      anvil: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, /app/deploy/worker-health.mjs]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 3
+    stop_grace_period: 30s
+
+  api:
+    <<: *app
+    image: ${API_IMAGE:?Set tested API_IMAGE}
+    container_name: dao-demo-api
+    volumes:
+      - type: bind
+        source: ${DAO_DEMO_HOME:?Set DAO_DEMO_HOME}/config/indexer.json
+        target: /run/dao/indexer.json
+        read_only: true
+        bind: {create_host_path: false}
+    # An internal-only network did not publish the port in the observed Docker 29 lab.
+    networks: [database, edge]
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      indexer: {condition: service_healthy}
+    healthcheck:
+      # Readiness only: degraded raw decode status is still exposed by the HTTP body.
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health?'+new URLSearchParams({chainId:process.env.CHAIN_ID,deploymentId:process.env.DEPLOYMENT_ID})).then(async r=>{const b=await r.json();if(!r.ok||b.data?.database!=='up'||b.data?.publication!=='ready')process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    stop_grace_period: 30s
+
+  tunnel:
+    profiles: [tunnel]
+    image: ${TUNNEL_IMAGE:?Set digest-pinned TUNNEL_IMAGE}
+    container_name: dao-demo-tunnel
+    restart: unless-stopped
+    network_mode: host
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    command: [tunnel, --no-autoupdate, --protocol, http2, --url, "http://127.0.0.1:3000"]
+    depends_on:
+      api: {condition: service_healthy}
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+
+volumes:
+  postgres-data:
+    external: true
+    name: dao-demo-postgres-data
+
+networks:
+  database:
+    external: true
+    name: dao-demo-db
+  edge:
+    external: true
+    name: dao-demo

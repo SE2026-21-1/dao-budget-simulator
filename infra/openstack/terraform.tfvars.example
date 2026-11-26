@@ -1,0 +1,10 @@
+# Copy locally to terraform.tfvars; recheck these observed lab IDs before use.
+project_id          = "f8c93d5c31844a158e8c7c1dc344c3b1"
+external_network_id = "4b670660-11a4-4f98-bfb9-616230f0121b"
+floating_ip_pool    = "public"
+image_id            = "73655619-91f2-41a9-82eb-e08047517710"
+flavor_name         = "dao-demo-2c2g20"
+ssh_public_key_path = "~/.ssh/dao_demo_ed25519.pub"
+management_cidr     = "192.168.248.1/32"
+subnet_cidr         = "10.20.30.0/24"
+private_ip          = "10.20.30.192"

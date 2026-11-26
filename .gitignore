@@ -38,3 +38,15 @@ replay_pid*
 /dist/
 /coverage/
 /indexer/config/local*.json
+
+# Deployment data and cloud credentials never belong in source control.
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.dump
+*.dump.*
+clouds.yaml
+secure.yaml
+passwords.yml
+admin-openrc.sh
+/infra/kolla/globals.yml

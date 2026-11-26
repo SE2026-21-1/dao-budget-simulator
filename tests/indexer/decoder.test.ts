@@ -4,6 +4,8 @@ import test from 'node:test';
 import { Interface } from 'ethers';
 import { ABI_REGISTRY, getAbi, validateAbi } from '../../indexer/abi-registry.js';
 import { decodeLog } from '../../indexer/decoder.js';
+import { ANCILLARY_ABI } from '../../indexer/ancillary-abi.js';
+import { classify } from '../../indexer/projection/model.js';
 import type { ContractConfig, ContractRole, JsonObject, NormalizedLog } from '../../indexer/types.js';
 
 interface Fixture {
@@ -51,6 +53,58 @@ function expectDecodeError(log: NormalizedLog): void {
   assert.ok(result.message.length > 0);
   assert.equal(result.abiVersion, log.contract.abiVersion);
 }
+
+test('all supported administrative layouts match shared compiler ABI and reject malformed encoding', () => {
+  const names = { governor: 'BudgetGovernor', timelock: 'TimelockController', treasury: 'Treasury', budget_token: 'BudgetToken' };
+  const versions = { governor: 'oz-5.4.0-governor', timelock: 'oz-5.4.0-timelock', treasury: 'sc01-itreasury-v1', budget_token: 'oz-5.4.0-erc20' };
+  for (const role of Object.keys(names) as ContractRole[]) {
+    const compiler = new Interface(JSON.parse(readFileSync(new URL(`../../shared/abi/${names[role]}.json`, import.meta.url), 'utf8')));
+    for (const declaration of ANCILLARY_ABI[role]) {
+      const fragment = new Interface([declaration]).fragments[0]!;
+      const event = compiler.getEvent(fragment.format('sighash'))!;
+      assert.equal(fragment.format('full'), event.format('full'));
+      const values = event.inputs.map(input => input.type === 'address' ? '0x1234567890abcdef1234567890abcdef12345678'
+        : input.type === 'bytes32' ? `0x${'11'.repeat(32)}` : 7n);
+      const encoded = compiler.encodeEventLog(event, values);
+      const log = normalize(vector('Transfer'));
+      log.contract = { ...log.contract, role, abiVersion: versions[role] };
+      Object.assign(log, encoded);
+      const decoded = decodeLog(log);
+      assert.equal(decoded.status, 'decoded');
+      if (decoded.status === 'decoded') assert.equal(decoded.eventName, event.name);
+      assert.equal(classify(log), null, 'Administrative events must not enter the business model');
+      expectDecodeError({ ...log, data: encoded.data + '00' });
+      assert.equal(classify({ ...log, data: encoded.data + '00' })?.status, 'decode_error');
+    }
+  }
+});
+
+test('historical receipt regression: all 16 bootstrap logs decode and raw bytes remain unchanged', () => {
+  const evidence = JSON.parse(readFileSync(new URL('../../docs/evidence/be03-integration-20261024/sql-final.json', import.meta.url), 'utf8'));
+  const manifest = JSON.parse(readFileSync(new URL('../../docs/evidence/be03-integration-20261024/manifest.json', import.meta.url), 'utf8'));
+  const keys = { governor: 'Governor', timelock: 'Timelock', treasury: 'Treasury', budget_token: 'BUD' };
+  const counts: Record<string, number> = {};
+  let ancillary = 0;
+  for (const row of evidence.events) {
+    const role = row.contract_role as ContractRole;
+    const contract = manifest.contracts[keys[role]];
+    const log: NormalizedLog = {
+      contract: { role, abiVersion: contract.abiVersion, address: contract.address.toLowerCase(), deploymentBlock: BigInt(contract.deploymentBlock) },
+      blockNumber: BigInt(row.block_number), blockHash: row.block_hash,
+      transactionHash: row.transaction_hash, transactionIndex: BigInt(row.transaction_index), logIndex: BigInt(row.log_index),
+      topics: row.topics, data: row.data, rawLog: row.rpc_log,
+    };
+    const original = structuredClone(log);
+    assert.equal(decodeLog(log).status, 'decoded');
+    if (classify(log) === null) {
+      ancillary++;
+      counts[role] = (counts[role] ?? 0) + 1;
+    }
+    assert.deepEqual(log, original);
+  }
+  assert.equal(ancillary, 16);
+  assert.deepEqual(counts, { governor: 5, timelock: 7, treasury: 4 });
+});
 
 test('VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields', () => {
   // Synthetic log encoded from the handed-over compiler ABI, NOT a receipt.

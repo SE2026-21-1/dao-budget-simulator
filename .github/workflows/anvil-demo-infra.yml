@@ -42,6 +42,8 @@ jobs:
               config = yaml.safe_load(handle)
           subprocess.run(['bash', '-n'], input=config['write_files'][0]['content'], text=True, check=True)
           PY
+      - name: Test pull CD trust, rollback and interruption boundaries
+        run: python3 -m unittest discover -s deploy/anvil-demo/cd -p 'test_*.py' -v
       - name: Render Compose using disposable configuration only
         shell: bash
         run: |
@@ -51,6 +53,6 @@ jobs:
           export API_IMAGE=dao-api:896f93e INDEXER_IMAGE=dao-indexer:896f93e
           export TUNNEL_IMAGE=cloudflare/cloudflared:2026.11.2
           mkdir -p "$DAO_DEMO_HOME/config" "$DAO_DEMO_HOME/anvil"
-          touch "$DAO_DEMO_HOME/config/runtime.env" "$DAO_DEMO_HOME/config/postgres.env"
+          touch "$DAO_DEMO_HOME/config/runtime.env" "$DAO_DEMO_HOME/config/postgres.env" "$DAO_DEMO_HOME/config/cloudflared.token"
           printf '{}\n' > "$DAO_DEMO_HOME/config/indexer.json"
-          docker compose -f deploy/anvil-demo/compose.yml --profile tunnel config --quiet
+          docker compose -f deploy/anvil-demo/compose.yml --profile tunnel --profile named-tunnel config --quiet

@@ -11,6 +11,7 @@ import { AbiCoder, Interface, ZeroAddress, ZeroHash, id, keccak256, toBeHex, toQ
 import { deployGovernance, checkGovernanceRoles } from './governance_local.mjs';
 import { createSmokeLifecycle } from './smoke_lifecycle.mjs';
 import { decodeLog } from '../indexer/decoder.ts';
+import { getAbi } from '../indexer/abi-registry.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { readBatch } from '../indexer/reader.ts';
 
@@ -36,7 +37,7 @@ const report = {
   sourceHashes: {}, receipts: [], proposals: [], assertions: [],
 };
 try {
-  for (const path of ['scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
+  for (const path of ['scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'scripts/governance_local.mjs', 'contracts/BudgetGovernor.sol', 'contracts/GovernanceToken.sol', 'contracts/BudgetToken.sol', 'contracts/Treasury.sol', 'indexer/decoder.ts', 'indexer/ancillary-abi.ts', 'indexer/abi-registry.ts', 'indexer/reader.ts', 'indexer/rpc.ts']) {
     report.sourceHashes[path] = createHash('sha256').update(await readFile(new URL(`../${path}`, import.meta.url))).digest('hex');
   }
   report.runtime = { node: process.version, anvil: execFileSync('anvil', ['--version'], { encoding: 'utf8' }).trim(), forge: execFileSync('forge', ['--version'], { encoding: 'utf8' }).trim(), evm: 'osaka', chainId: '31337', isolation: 'owned ephemeral loopback Anvil; unlocked local accounts, no keys; exact transaction timestamps' };
@@ -299,9 +300,10 @@ try {
       assert.ok(!paidIds.has(event.args.requestId)); paidIds.add(event.args.requestId); payoutTotal += event.args.amount;
     }
     // BE02 currently supports these four roles; GOV raw receipts remain in evidence.
-    if (!roleMap[name] || !['Transfer', 'BudgetDisbursed', 'ProposalCreated', 'VoteCast', 'ProposalQueued', 'ProposalExecuted', 'ProposalCanceled', 'CallScheduled', 'CallExecuted', 'CallSalt'].includes(event?.name)) continue;
+    if (!roleMap[name] || !event) continue;
     const [role, abiVersion] = roleMap[name];
     const contract = { role, address: log.address, deploymentBlock: BigInt(manifest.contracts[name].deploymentBlock), abiVersion };
+    if (!getAbi(contract).interface.getEvent(log.topics[0])) continue;
     const decoded = decodeLog({ contract, blockNumber: BigInt(log.blockNumber), blockHash: log.blockHash, transactionHash: log.transactionHash, transactionIndex: BigInt(log.transactionIndex), logIndex: BigInt(log.logIndex), topics: log.topics, data: log.data, rawLog: log });
     assert.equal(decoded.status, 'decoded', `BE02 failed live ${name}.${event.name}: ${JSON.stringify(decoded)}`);
     assert.equal(decoded.eventName, event.name);
@@ -333,7 +335,7 @@ try {
     decoded: batch.logs.filter(item => item.decode.status === 'decoded').length,
     unknownTopics: batch.logs.filter(item => item.decode.status === 'unknown_topic').length,
     decodeErrors: 0, discardedOutsideDeployment,
-    scope: 'Actual BE02 HttpRpc/readBatch over owned Anvil, all contiguous headers including empty/reverted blocks and all four supported roles. Unknown initialization/access-control topics retained raw. No database/checkpoint/reorg/projection/API acceptance.',
+    scope: 'Actual BE02 HttpRpc/readBatch over owned Anvil, all contiguous headers including empty/reverted blocks and all four supported roles. Supported initialization/access-control events decode canonically; genuinely unknown topics remain raw. No database/checkpoint/reorg/projection/API acceptance.',
   };
   assert.equal(totalIn, 13_000n * U); assert.equal(totalOut, 13_000n * U); assert.equal(payoutTotal, totalOut); assert.equal(paidIds.size, 2);
   const finalBalances = await balances();

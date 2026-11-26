@@ -190,6 +190,15 @@ như đầu ra đã cung cấp; không trỏ DNS public vào IP RFC1918 của VM
 
 ## Còn cần hoàn thiện
 
+- [Backfill bootstrap topics bằng decoder đã bổ sung](bootstrap-topic-backfill.md).
+- [Chuyển sang hostname HTTPS cố định bằng named tunnel](stable-api-tunnel.md).
+
+Đã có [công cụ pull CD và systemd timer](../deploy/anvil-demo/cd/README.md)
+để VM nhận release từ CI và chỉ cập nhật API/indexer. Cần cài, kiểm tra một lần
+và bật timer trên VM; commit file không tự kích hoạt CD. Rollout thủ công từ
+`896f93e` sang image digest của release `3d0f6ca` đã được người vận hành cung cấp
+đầu ra `RELEASE_UPDATE_OK`, giữ H=19; đó chưa phải nghiệm thu timer tự động.
+
 - Đối chiếu ABI cho 16 bootstrap unknown topics; giữ health degraded cho tới khi có bằng chứng.
 - Kiểm tra restart/restore thực tế trong thời gian bảo trì.
 - Thay Quick Tunnel bằng endpoint HTTPS ổn định.

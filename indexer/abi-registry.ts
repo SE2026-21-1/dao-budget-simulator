@@ -1,7 +1,8 @@
 import { Interface } from 'ethers';
+import { ANCILLARY_ABI } from './ancillary-abi.js';
 import type { ContractConfig, ContractRole } from './types.js';
 
-/** Event subsets only, not a full implementation ABI or a deployment claim. */
+/** Business plus explicitly supported administrative events, not a deployment claim. */
 export interface AbiRegistration {
   role: ContractRole;
   version: string;
@@ -20,8 +21,8 @@ function register(role: ContractRole, version: string, source: string, abi: stri
     version,
     source,
     integrationStatus: 'awaiting-sc06' as const,
-    abi: Object.freeze(abi),
-    interface: new Interface(abi),
+    abi: Object.freeze([...abi, ...ANCILLARY_ABI[role]]),
+    interface: new Interface([...abi, ...ANCILLARY_ABI[role]]),
   });
 }
 

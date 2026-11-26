@@ -546,27 +546,41 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
         .split('\n')
         .map((s) => JSON.parse(s));
     };
-    const first = await run('--sync-project', 2);
+    const first = await run('--sync-project', 0);
     assert.equal(first.at(-2).type, 'sync_result');
     assert.equal(first.at(-1).type, 'projection_result');
-    assert.equal(first.at(-2).decodeComplete, false);
+    assert.equal(first.at(-2).decodeComplete, true);
     assert.equal(first.at(-1).ignoredAncillaryEvents, 1);
     const second = await run('--project', 0);
     assert.deepEqual(second[0].context, first.at(-1).context);
-    assert.equal(second[0].rawDecodeIssues, 1);
+    assert.equal(second[0].rawDecodeIssues, 0);
     assert.equal(
       (await pool.query('SELECT last_error_code FROM checkpoints WHERE deployment_id=$1', [config.deploymentId]))
         .rows[0].last_error_code,
-      'DECODE_INCOMPLETE',
+      null,
     );
     assert.deepEqual(second[0].treasury, { totalIn: '10000', totalOut: '0', balance: '10000' });
-    const redecode = await run('--redecode', 2);
+    // Simulate persisted rows from the previous subset-only decoder, then
+    // backfill derived metadata without rescanning or rewriting raw evidence.
+    await pool.query(`UPDATE raw_events SET event_name=NULL,decoded_payload=NULL,
+      decode_status='unknown_topic',decode_error_code='UNKNOWN_TOPIC'
+      WHERE deployment_id=$1 AND event_name='RoleGranted'`, [config.deploymentId]);
+    const rawBytes = () => pool.query(`SELECT raw_event_id::text,block_number::text,block_hash,
+      transaction_hash,topics,data,rpc_log FROM raw_events WHERE deployment_id=$1 ORDER BY raw_event_id`, [config.deploymentId]);
+    const beforeBytes = (await rawBytes()).rows;
+    const redecode = await run('--redecode', 0);
     assert.equal(redecode[0].type, 'redecode_result');
     assert.equal(redecode[0].processedMeaning,
       'raw events re-decoded in this deployment (through H when a raw checkpoint exists), including unchanged rows');
     assert.equal(redecode[0].processed, Number((await pool.query(
       'SELECT count(*)::int AS count FROM raw_events WHERE deployment_id=$1', [config.deploymentId],
     )).rows[0].count));
-    assert.equal(redecode[0].unknownTopics, 1);
+    assert.equal(redecode[0].unknownTopics, 0);
+    assert.equal(redecode[0].decodeErrors, 0);
+    assert.deepEqual((await rawBytes()).rows, beforeBytes);
+    const afterBackfill = await run('--project', 0);
+    assert.deepEqual(afterBackfill[0].context, first.at(-1).context);
+    assert.deepEqual(afterBackfill[0].treasury, first.at(-1).treasury);
+    assert.equal(afterBackfill[0].ignoredAncillaryEvents, 1);
   });
 });

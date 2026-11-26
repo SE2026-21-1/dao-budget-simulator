@@ -1,5 +1,6 @@
 import { AbiCoder, Interface, ZeroAddress, ZeroHash, keccak256, toUtf8Bytes } from 'ethers';
 import { decodeLog } from '../decoder.js';
+import { isAncillaryTopic } from '../ancillary-abi.js';
 import { IndexerError } from '../errors.js';
 import type { ContractRole, JsonObject, NormalizedLog } from '../types.js';
 
@@ -122,45 +123,11 @@ export function operationId(
   );
 }
 
-// Known administrative events may coexist with the BE03 business ABI subset.
-// Validate their complete encoding. Arbitrary unknown topics still stop publication.
-const ancillary: Partial<Record<ContractRole, Interface>> = {
-  governor: new Interface([
-    'event VotingDelaySet(uint256 oldVotingDelay,uint256 newVotingDelay)',
-    'event VotingPeriodSet(uint256 oldVotingPeriod,uint256 newVotingPeriod)',
-    'event ProposalThresholdSet(uint256 oldProposalThreshold,uint256 newProposalThreshold)',
-    'event QuorumNumeratorUpdated(uint256 oldQuorumNumerator,uint256 newQuorumNumerator)',
-    'event TimelockChange(address oldTimelock,address newTimelock)',
-  ]),
-  treasury: new Interface([
-    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
-    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
-    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
-  ]),
-  timelock: new Interface([
-    'event RoleGranted(bytes32 indexed role,address indexed account,address indexed sender)',
-    'event RoleRevoked(bytes32 indexed role,address indexed account,address indexed sender)',
-    'event RoleAdminChanged(bytes32 indexed role,bytes32 indexed previousAdminRole,bytes32 indexed newAdminRole)',
-    'event MinDelayChange(uint256 oldDuration,uint256 newDuration)',
-  ]),
-  budget_token: new Interface(['event Approval(address indexed owner,address indexed spender,uint256 value)']),
-};
+// Ancillary events are decoded and canonically validated by the raw decoder,
+// but never become proposal/vote/treasury business events.
 export function classify(log: NormalizedLog): ReturnType<typeof decodeLog> | null {
   const decoded = decodeLog(log);
-  if (decoded.status !== 'unknown_topic') return decoded;
-  try {
-    const abi = ancillary[log.contract.role]!;
-    const parsed = abi.parseLog({ topics: log.topics, data: log.data });
-    if (!parsed) return decoded;
-    const encoded = abi.encodeEventLog(parsed.fragment, parsed.args);
-    if (
-      encoded.data.toLowerCase() === log.data &&
-      JSON.stringify(encoded.topics.map((t) => t.toLowerCase())) === JSON.stringify(log.topics)
-    )
-      return null;
-  } catch {
-    /* Unknown or malformed ancillary events cannot be silently skipped. */
-  }
+  if (decoded.status === 'decoded' && isAncillaryTopic(log.contract.role, log.topics[0]!)) return null;
   return decoded;
 }
 

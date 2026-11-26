@@ -1,0 +1,15 @@
+{
+  "runId": "TV3-MM-negative-20261126-4cba99a0",
+  "capturedAtUtc": "2026-11-26T16:41:54.5152071Z",
+  "phase": "before-repeat",
+  "chainIdHex": "0x7a69",
+  "blockNumberHex": "0x13",
+  "blockHash": "0x81a732f2b519c449c2d3b6babe165db663bb28c52a1a1f1b5d66d496e90efddf",
+  "accountB": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+  "nonceLatestHex": "0x0",
+  "noncePendingHex": "0x0",
+  "txpoolStatus": {
+    "pending": "0x0",
+    "queued": "0x0"
+  }
+}

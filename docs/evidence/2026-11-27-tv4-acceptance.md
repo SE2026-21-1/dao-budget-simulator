@@ -1,5 +1,9 @@
 # TV4 — công việc chung và bàn giao theo GitHub, 27/11/2026
 
+> **Historical first27/11 snapshot:** [r3 current handoff](2026-11-27-r3-dev-merge-handoff.md).
+> #42 independently PASS scoped; actual integrated union/admin candidate exists with r2 runtime proof.
+> Earlier NOT READY/static-only statements below are not current source-merge or receiver blockers.
+
 ## 1. Baseline / nguồn tin
 
 Đọc README, manifest scripts, tracked guidance, Git status/remotes/branches/worktrees và đầy đủ GitHub body/comments/reviews/inline/pagination cho #6/#7/#19/#20/#40/#41/#42/#44, PR60/61/62/52. Không có root `AGENTS.md` hoặc AGENTS tracked trên cây PR60/Dev đã kiểm. Không nhận bài cá nhân vào phạm vi. GitHub API raw và transcripts đầy đủ nằm ngoài repo `/tmp/tv4-review-20261127`; links công khai theo từng báo cáo bên dưới.

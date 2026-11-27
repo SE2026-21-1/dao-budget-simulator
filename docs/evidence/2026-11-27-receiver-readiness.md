@@ -1,5 +1,9 @@
 # TV4 — receiver readiness #42 và lifecycle #40, 27/11/2026
 
+> **Historical snapshot, superseded:** [r3 current handoff](2026-11-27-r3-dev-merge-handoff.md).
+> #42 now independently PASS scoped via r2; no current receiver-NOT-READY blocker.
+> Original observations/status/exits below are preserved; #40 is access/ownership HOLD, not a failed run.
+
 ## Kết luận và source
 
 **#42 NOT READY / API-only restart SKIP; #40 lifecycle mới SKIP, vẫn PARTIAL.** Không có receiver TV3 được cấp quyền truy cập trong phiên này. Không dùng máy Linux TV4 làm receiver TV3; không SSH, rollout, deploy, restart/stop/start service, đổi task, nới TTL hoặc chạy lại BE06/BE09 đã được tiếp nhận.

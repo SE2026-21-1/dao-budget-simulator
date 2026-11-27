@@ -1,5 +1,10 @@
 # QA07 — Browser → worker → API → UI trên môi trường dùng một lần
 
+> **Current disposition:** [r3 integration/review handoff](evidence/2026-11-27-r3-dev-merge-handoff.md).
+> #42 receiver API-only independently PASS scoped; old readiness text below is historical.
+> #41 local pipeline remains accepted; #19 boundary/session/raw503 and #40 access/lifecycle remain separate.
+> Dev-source merge does not establish release/testnet/demo acceptance.
+
 ## Phạm vi và điều kiện
 
 Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/lifecycle của repo, không thay product code, không thêm package script. Chạy bằng Node **24.15.0**, PostgreSQL **18.4**, Forge/Anvil **1.8.5**, production artifacts từ `forge build` (Solidity 0.8.37, Osaka, optimizer 200), submodule đúng revision. Cài dependency root/frontend bằng lockfile trước khi chạy. Cần Chrome và Playwright bên ngoài hoặc trong môi trường QA; không thay `package.json` của dự án.

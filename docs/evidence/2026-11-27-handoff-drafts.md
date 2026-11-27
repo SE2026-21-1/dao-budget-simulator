@@ -1,5 +1,9 @@
 # Bản nháp GitHub — TV4, 27/11/2026
 
+> **Superseded, do not post this draft:** [r3 candidate handoff](2026-11-27-r3-dev-merge-handoff.md)
+> links current immutable r2 issue drafts and #42 independent PASS. Old NOT READY wording below is historical.
+> Only candidate PR/review handoff is authorized for posting; other issue signoffs remain for the user.
+
 **CHƯA ĐĂNG.** Người dùng xem trước; không tạo comment/review/request trùng, không tự resolve/approve/đóng issue. Các link báo cáo thuộc cùng commit bàn giao chứa file này; full product/evidence/approved/CI SHAs có trong [báo cáo chung](2026-11-27-tv4-acceptance.md).
 
 ## #19 — nghiệm thu gói hẹp mới

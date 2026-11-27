@@ -1,5 +1,10 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
+> **Current Dev-merge handoff:** [r3 candidate/review/CI contract](evidence/2026-11-27-r3-dev-merge-handoff.md).
+> #42 independently PASS scoped at896f93e/H22; older NOT READY/R27 text below is historical.
+> Candidate union/admin integration is implemented and r2 runtime-verified; current PR CI/review is separate.
+> #19/#40/PR62-live/#20/#44 remain release/receiver scopes, not automatic Dev-merge blockers.
+
 Ngày đối chiếu hiện hành: **27/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.

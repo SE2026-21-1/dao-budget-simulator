@@ -1,5 +1,10 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
+> **Current integration path:** `tv4/integration-20261127-r2` → Dev,
+> [r3 handoff](evidence/2026-11-27-r3-dev-merge-handoff.md); candidate already contains pinned PR60/61 histories.
+> #42 scoped independent PASS; old NOT READY/static-only statements below are historical snapshots.
+> PR60/61 stay open pending maintainer disposition. No merge/release/rollout/broadcast.
+
 Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao hiện hành: `feature/tv4-qa-completion-20261121` → `Dev`, qua

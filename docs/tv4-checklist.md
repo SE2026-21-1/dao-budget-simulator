@@ -1,5 +1,9 @@
 # TV4 — Checklist kiểm thử bảo mật và vận hành
 
+> **Current Dev-merge handoff:** [r3 source/CI/narrow review gates](evidence/2026-11-27-r3-dev-merge-handoff.md).
+> #42 is independently PASS scoped; obsolete receiver NOT READY checkboxes below are historical.
+> Separate pending receiver/wallet/testnet/release acceptance from current source-merge checks and peer review.
+
 Nguồn yêu cầu: [đặc tả nhóm trên Dev](https://github.com/SE2026-21-1/dao-budget-simulator/blob/Dev/docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), mục 7–10.
 TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.

@@ -1,0 +1,1447 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "TV4 / Phan Thanh Dũng",
+  "method": "Independent offline inspection of actual downloaded bytes; not a receiver rerun",
+  "productSource": "896f93ea282d76fa72339a97ea12339240c16da4",
+  "chainId": "31337",
+  "deploymentId": "tv3-issue42-20261127",
+  "databaseDeploymentId": "1",
+  "atBlock": "22",
+  "blockHash": "0x3b9fd152a6d4946883c3cb206bd4e18d5ffb8629dfb137d55169ab9e027e94c8",
+  "snapshotRevision": "edc6f818-67a1-4b6e-90b1-22844197db90",
+  "sourceScope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+  "snapshotId": "ff83df86-df42-4532-a98d-e705576ec210",
+  "verdict": "PASS_SCOPED_RECEIVER_API_RESTART",
+  "semanticDigests": {
+    "summary": {
+      "before": "84ea2ab00b5ed3a85b076cea1918f439b1a585dec9c6d790a474466bfa889ff3",
+      "after": "84ea2ab00b5ed3a85b076cea1918f439b1a585dec9c6d790a474466bfa889ff3",
+      "verdict": "PASS"
+    },
+    "proposals": {
+      "before": "1eab14d65a42d19a990a38f5bcbc0e82e75010fa12ad704fea23a92c53c29f99",
+      "after": "1eab14d65a42d19a990a38f5bcbc0e82e75010fa12ad704fea23a92c53c29f99",
+      "verdict": "PASS"
+    },
+    "detail": {
+      "before": "3d9f4b2c0b072c285c3475c3ef5ab4a76ca8aacefc574382d55fff289d56e57d",
+      "after": "3d9f4b2c0b072c285c3475c3ef5ab4a76ca8aacefc574382d55fff289d56e57d",
+      "verdict": "PASS"
+    },
+    "votes": {
+      "before": "54aa3e796c084d06eaa64ed5cbe204866b64e0d538d8f557593bb4c0b1579ac5",
+      "after": "54aa3e796c084d06eaa64ed5cbe204866b64e0d538d8f557593bb4c0b1579ac5",
+      "verdict": "PASS"
+    },
+    "transfers": {
+      "before": "df6433e3d57e46caf3d69033679d7d6964ce69c95fa7125f4f968656cc705a89",
+      "after": "df6433e3d57e46caf3d69033679d7d6964ce69c95fa7125f4f968656cc705a89",
+      "verdict": "PASS"
+    }
+  },
+  "archives": [
+    {
+      "name": "issue42-api-restart-h22.tar.gz",
+      "bytes": 12312,
+      "sha256": "f05b176ebfea53dcb43fb89a00a0275192c4b9dc55abdcbe92f00a2a42bd94af",
+      "producerComment": 7212126524,
+      "checksumsPassed": 78,
+      "inventory": [
+        {
+          "path": "RESTART-RESULT.txt",
+          "bytes": 832,
+          "sha256": "1f921f994b5d40fb6d285a617db059f901ac98ed03e4dd3eea8a5ff8e149c67b",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "SHA256SUMS",
+          "bytes": 6936,
+          "sha256": "da79548f71c4add8f11844d79716e43b67ad4bc3ba2544dd6dbb857ec7a1c59f",
+          "checksumListed": false,
+          "step": "checksum-inventory",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/detail.captured-at",
+          "bytes": 26,
+          "sha256": "d251ee1b21b5ea5937bfa28ea88bd95b98a8540a9abfc0416f03549ba640c713",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/detail.headers",
+          "bytes": 230,
+          "sha256": "a0a68432631876fc91c90f7f9e5a070901fe2bbf950e57078688a7daf786d7ab",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/detail.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/detail.json",
+          "bytes": 2109,
+          "sha256": "e5bab31085ad0fadae011ac0d07d51a69affab008d8f70b44b6708aa14880223",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/detail.url",
+          "bytes": 257,
+          "sha256": "b4c7392e43d9ac8c2231d9b9cbbeafe614c2bbf7d2d8b33283a8e95d9a88b07e",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/health.captured-at",
+          "bytes": 26,
+          "sha256": "2910f98d02c09c2e8c9074b90d58572337c2a2c0f4c52c826b944ee78c0524c9",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/health.headers",
+          "bytes": 229,
+          "sha256": "1c90a054aeb73d0ebb0d2aed80720af4c4f0a30e4b1091dd131b4c9ca12766e5",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/health.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/health.json",
+          "bytes": 857,
+          "sha256": "0965728808f9f5f0dafe3c1ef4b19b7d9a4c5a90b237ffd9ae1814da8d990c77",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/health.url",
+          "bytes": 82,
+          "sha256": "56bd5fbb26078c2e5ccdfcb6f437547bdb4b1c807f62080fd8c6238d4bcde5c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/proposals.captured-at",
+          "bytes": 26,
+          "sha256": "d251ee1b21b5ea5937bfa28ea88bd95b98a8540a9abfc0416f03549ba640c713",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/proposals.headers",
+          "bytes": 230,
+          "sha256": "a07bd41ee2c99bbef48958ac366ab58b6c222db2fb12d9f3c3ce0b5430ac0e08",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/proposals.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/proposals.json",
+          "bytes": 2170,
+          "sha256": "465bc9adef31ac42869f201d1ad424a946abaa379fe746d3403fd5e297e994e9",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/proposals.url",
+          "bytes": 179,
+          "sha256": "8964369fdab58c989dffa5131e92526466d3730ba4097401cdd5cfd4a20b10c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/semantic-sha256.txt",
+          "bytes": 366,
+          "sha256": "4e8b1132aff058a5b5c3f40b52a9d0d5810007025d6a6303e3f405f8350557d7",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/summary.captured-at",
+          "bytes": 26,
+          "sha256": "d251ee1b21b5ea5937bfa28ea88bd95b98a8540a9abfc0416f03549ba640c713",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/summary.headers",
+          "bytes": 230,
+          "sha256": "f1702af28394451036096ebdc4bb960823fca847ba8786fd18365fa1cc137a3e",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/summary.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/summary.json",
+          "bytes": 1895,
+          "sha256": "c16ffb961bfaa98ca3e31e4ec865a8b6377b194af3c618c32a3774f04066e3be",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/summary.url",
+          "bytes": 177,
+          "sha256": "261df748fce1781fb3dc8f94f5e262a7fa49379a15639c352f376e89161df576",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/transfers.captured-at",
+          "bytes": 26,
+          "sha256": "d251ee1b21b5ea5937bfa28ea88bd95b98a8540a9abfc0416f03549ba640c713",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/transfers.headers",
+          "bytes": 230,
+          "sha256": "ef4f21c65b7c05399577756528e12fe4ae873a3797a42a04f866562c91d4fd45",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/transfers.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/transfers.json",
+          "bytes": 1094,
+          "sha256": "6093e7ff97dd5c4a1a45eb613c1299bfdaa264d99013bf315f9e68277009a95e",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/transfers.url",
+          "bytes": 188,
+          "sha256": "b8d4f132a63c13b029d2d175c0bdafbdf66b2a3391a599f29e4ba045ff4c8ee4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/votes.captured-at",
+          "bytes": 26,
+          "sha256": "d251ee1b21b5ea5937bfa28ea88bd95b98a8540a9abfc0416f03549ba640c713",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/votes.headers",
+          "bytes": 230,
+          "sha256": "51a3f6fe38b461a3f689419ee565935b34f73880c8ee3723c7aa6f1d04830837",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/votes.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/votes.json",
+          "bytes": 1055,
+          "sha256": "24be07a2767aa0d4dcc06eaf32d9a024540645a068768644b21997bd9936ca4a",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "after/votes.url",
+          "bytes": 263,
+          "sha256": "07a8d82c2a60a326ea810080a96e416c019d0ae2fd343ba32a80a7a70fdf0d60",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "api-after.log",
+          "bytes": 111,
+          "sha256": "5d3acd78bbc82fe112ce7e84d78fe9223ca96a795e3596bc7dedbc7bf1ae3606",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "api-before.log",
+          "bytes": 111,
+          "sha256": "5d3acd78bbc82fe112ce7e84d78fe9223ca96a795e3596bc7dedbc7bf1ae3606",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "api-start-time.txt",
+          "bytes": 26,
+          "sha256": "124b4f7dc7f06d9fea6d89b34f70b7aacf9090cf9f5f2b701e9eb7ba076f2472",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "api-stop.txt",
+          "bytes": 185,
+          "sha256": "28057094bbd42097aa98797c7ef636e7269337ac440ca50be040e7f58b63a96f",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "api-wrapper.pid",
+          "bytes": 6,
+          "sha256": "14d83dccc73ef71f3538af9efccb0dbe6d4cb8bc6899ee8f42030cddfb7148f0",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/detail.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/detail.headers",
+          "bytes": 230,
+          "sha256": "878b38709ee03bb32dc041ea7e274fe30f04b00e5fc74957557559898127069b",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/detail.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/detail.json",
+          "bytes": 2109,
+          "sha256": "cc00acf46aecac96d04099bbd3e41cb498f5620c4009bb577ad541c669dcf0e2",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/detail.url",
+          "bytes": 257,
+          "sha256": "b4c7392e43d9ac8c2231d9b9cbbeafe614c2bbf7d2d8b33283a8e95d9a88b07e",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/health.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/health.headers",
+          "bytes": 229,
+          "sha256": "b0631f2e059cc5bbf86d54fa2c2fa13b53b38a560ded45ba2118774f4550638a",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/health.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/health.json",
+          "bytes": 857,
+          "sha256": "c6dc76f42c35315e4d016d2c522c80bb985d3ab8efaabae908573f6ee69a2dea",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/health.url",
+          "bytes": 82,
+          "sha256": "56bd5fbb26078c2e5ccdfcb6f437547bdb4b1c807f62080fd8c6238d4bcde5c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/proposals.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/proposals.headers",
+          "bytes": 230,
+          "sha256": "641369ed123a6dc6809aea9031de48c6f94d55a1991719ddefc25f05886cbd02",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/proposals.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/proposals.json",
+          "bytes": 2170,
+          "sha256": "5c33fd691797c36adc99356b3defbf20855fff875db47e07f1dfe4d0d4fd0bba",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/proposals.url",
+          "bytes": 179,
+          "sha256": "8964369fdab58c989dffa5131e92526466d3730ba4097401cdd5cfd4a20b10c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/semantic-sha256.txt",
+          "bytes": 340,
+          "sha256": "c90691a1092b596f55ac1852835807e5cc5ddd30af3dbd16e3bdc9ff0078bd0f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/summary.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/summary.headers",
+          "bytes": 230,
+          "sha256": "bd88e872b0557d6451095050cd048cc177ff1686ce2dcf2f2c4af134c37d8075",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/summary.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/summary.json",
+          "bytes": 1895,
+          "sha256": "a7d2103b89c88e78b3053714caa669b2a1bf81ffd105aa36fb3345cf0780a344",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/summary.url",
+          "bytes": 177,
+          "sha256": "261df748fce1781fb3dc8f94f5e262a7fa49379a15639c352f376e89161df576",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/transfers.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/transfers.headers",
+          "bytes": 230,
+          "sha256": "09a1ba5692c4a12ff27602fff74348f79e02441eb86b81de036b8e9e0d147d01",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/transfers.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/transfers.json",
+          "bytes": 1094,
+          "sha256": "0b13d78f03486e402d60b296e152cbe0e6bf5553b7149b36334ae124773e4d4a",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/transfers.url",
+          "bytes": 188,
+          "sha256": "b8d4f132a63c13b029d2d175c0bdafbdf66b2a3391a599f29e4ba045ff4c8ee4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/votes.captured-at",
+          "bytes": 26,
+          "sha256": "4ce3971b56aa4a2523f5bfbaf7bbcec8acc46a5b0e96d932f5f82a74fe22e08d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/votes.headers",
+          "bytes": 230,
+          "sha256": "99240530ce0c795b22a305792ffd52c039e1f783b01d9c2b475e1aee549f79dd",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/votes.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/votes.json",
+          "bytes": 1055,
+          "sha256": "4493b90faff43f2455658c496d71d1e26652d793bb70fb6ca8ea22b04dafd6fe",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "before/votes.url",
+          "bytes": 263,
+          "sha256": "07a8d82c2a60a326ea810080a96e416c019d0ae2fd343ba32a80a7a70fdf0d60",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "canonical-h22-after.json",
+          "bytes": 218,
+          "sha256": "50e2a69849188d6f9e3cb80ffac60e4bff9bef0c9cccf7ebfe7a8847e3e0cab9",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "preflight-db.txt",
+          "bytes": 2007,
+          "sha256": "99385bd743bc4a9525e5a19766fc145a05b37ed430eb88f9dc1993df79977179",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "preflight.txt",
+          "bytes": 4448,
+          "sha256": "d9c99a36803052b8e270b190f26083f57f81a7ed8f432e9b39cc653296d3a1da",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "processes-after.txt",
+          "bytes": 2246,
+          "sha256": "ff86e447c6acf6807d723ce2e03a40c93632a442515999eb484cdbcf0a39e159",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "semantic-expected.txt",
+          "bytes": 366,
+          "sha256": "4e8b1132aff058a5b5c3f40b52a9d0d5810007025d6a6303e3f405f8350557d7",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "snapshot-before-restart.txt",
+          "bytes": 1004,
+          "sha256": "4f4afcb66ccf241a151adb8ac93d5d4f3acf8c79faf759685ad81ab7c07a9ec5",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "startup-health.headers",
+          "bytes": 229,
+          "sha256": "9bb29a493a17afef3c04b06be5b876b0cfae74019f6e4ab0b1977373c8f38287",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "startup-health.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "startup-health.json",
+          "bytes": 857,
+          "sha256": "44fa659ac82f75748bdbc09949d2ab8904d39a5c1bbf3df8b756f3927686cb05",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        },
+        {
+          "path": "state-after.txt",
+          "bytes": 2186,
+          "sha256": "720de62ad78c24db8ba99e59a011933e5dd663b00fe05e3e496613d5d8dc05a3",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "api-restart-attempt-20261127T134827+0700"
+        }
+      ]
+    },
+    {
+      "name": "issue42-readiness-supplement-h22.tar.gz",
+      "bytes": 8781,
+      "sha256": "40df4a5abc8942f2e52da0caab75757e73411f2165f486273c51ab8070bb68b0",
+      "producerComment": 7211549518,
+      "checksumsPassed": 37,
+      "inventory": [
+        {
+          "path": "README.txt",
+          "bytes": 743,
+          "sha256": "66049a28d326c70fa28a9340ad259db010459b2944b62a6355a52c378a47dd3d",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "SHA256SUMS",
+          "bytes": 3291,
+          "sha256": "4f98c647d600185ea59ead4d1ff44f1d4c05076161f38e57cd9c42c9d85d307d",
+          "checksumListed": false,
+          "step": "checksum-inventory",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/detail.captured-at",
+          "bytes": 26,
+          "sha256": "e9c59401af321b8b77331408ad1f64e1478dc7205bbb35266747a29cbcc59227",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/detail.headers",
+          "bytes": 230,
+          "sha256": "065031aedbdd69612767db0679c7d8e49e1a15ea3bb8cfb63b401690c3527ea4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/detail.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/detail.json",
+          "bytes": 2109,
+          "sha256": "142b196c376be673f1ac5a24135b2a831004a9915e964d5948c3f5d3c7ab234b",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/detail.url",
+          "bytes": 257,
+          "sha256": "b4c7392e43d9ac8c2231d9b9cbbeafe614c2bbf7d2d8b33283a8e95d9a88b07e",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/health.captured-at",
+          "bytes": 26,
+          "sha256": "e9c59401af321b8b77331408ad1f64e1478dc7205bbb35266747a29cbcc59227",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/health.headers",
+          "bytes": 229,
+          "sha256": "91d0a7e11db4eeeffc21b04c1518eec4bea73976917ad785b49151ff5f34b674",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/health.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/health.json",
+          "bytes": 857,
+          "sha256": "7662981767436375a0baaf539634d238705e13d087721bc723345335b0047997",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/health.url",
+          "bytes": 82,
+          "sha256": "56bd5fbb26078c2e5ccdfcb6f437547bdb4b1c807f62080fd8c6238d4bcde5c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/proposals.captured-at",
+          "bytes": 26,
+          "sha256": "e9c59401af321b8b77331408ad1f64e1478dc7205bbb35266747a29cbcc59227",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/proposals.headers",
+          "bytes": 230,
+          "sha256": "2305a356273d11e16c8f01379c5846e0d75a3325e33b3e0f784021016a7d4a8b",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/proposals.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/proposals.json",
+          "bytes": 2170,
+          "sha256": "4c4cf673c2a17a50d733c09517ee6269e25a06567bd41bd9e99f85f0e882b335",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/proposals.url",
+          "bytes": 179,
+          "sha256": "8964369fdab58c989dffa5131e92526466d3730ba4097401cdd5cfd4a20b10c4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/summary.captured-at",
+          "bytes": 26,
+          "sha256": "e9c59401af321b8b77331408ad1f64e1478dc7205bbb35266747a29cbcc59227",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/summary.headers",
+          "bytes": 230,
+          "sha256": "cec7684140848d7128eee2372bd3897d38d86817d2390897a5d9d7554cc5dd3a",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/summary.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/summary.json",
+          "bytes": 1895,
+          "sha256": "6eb7820e75e73b0c73b3044b2e633d7a2ea48af74cb2591a847b2ebafdcd034d",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/summary.url",
+          "bytes": 177,
+          "sha256": "261df748fce1781fb3dc8f94f5e262a7fa49379a15639c352f376e89161df576",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/transfers.captured-at",
+          "bytes": 26,
+          "sha256": "401b6428343217a1a8446191ced40bd32b27186c969875224dca4f15e05e93c3",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/transfers.headers",
+          "bytes": 230,
+          "sha256": "b59e260682c7c150a3c9ae52118bb61eb251ee8462fea02f358c78f03df09f04",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/transfers.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/transfers.json",
+          "bytes": 1094,
+          "sha256": "614f46d11c6304297d169386018e0824bca3d0381bf994022ef00b0f0895bff9",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/transfers.url",
+          "bytes": 188,
+          "sha256": "b8d4f132a63c13b029d2d175c0bdafbdf66b2a3391a599f29e4ba045ff4c8ee4",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/votes.captured-at",
+          "bytes": 26,
+          "sha256": "e9c59401af321b8b77331408ad1f64e1478dc7205bbb35266747a29cbcc59227",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/votes.headers",
+          "bytes": 230,
+          "sha256": "019803864c38b1b8e32a538e064cb8d9646cc5d2b04d7c3b19c00840de611ad6",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/votes.http",
+          "bytes": 4,
+          "sha256": "c11e3f4837efde2441e23a7b9da02131f53bf59fddeb7147c4ab81afe400460f",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/votes.json",
+          "bytes": 1055,
+          "sha256": "0d6bcf1675d8974c81f3596960e09fbe9c84b1478e028b3c4e951c7fa5a90e2a",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "api/votes.url",
+          "bytes": 263,
+          "sha256": "07a8d82c2a60a326ea810080a96e416c019d0ae2fd343ba32a80a7a70fdf0d60",
+          "checksumListed": true,
+          "step": "http-capture",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/canonical-h22-rpc.json",
+          "bytes": 218,
+          "sha256": "50e2a69849188d6f9e3cb80ffac60e4bff9bef0c9cccf7ebfe7a8847e3e0cab9",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/read-only-state.sql",
+          "bytes": 1603,
+          "sha256": "8cb41d760f35374a9494ca387c404fb54d876bb1be3beaac23d2fcb36b08a7c4",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/read-only-state.txt",
+          "bytes": 6820,
+          "sha256": "72703f228b8562b4354bcebfe0f3f9ef926b9488a2bfdbb81cf861a9354c5d66",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/receiver-identity.txt",
+          "bytes": 2121,
+          "sha256": "aa3b42ae1c0625ea5be7ab787dcf265912d514fe97697ad136518e4dd7ca83ff",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/snapshot-after-capture.txt",
+          "bytes": 990,
+          "sha256": "35e70f8b1f76a4792d1c844a8ec6133c562c7521ec3849f8518a547f1cd0d7a6",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        },
+        {
+          "path": "evidence/unknown-topic-classification.json",
+          "bytes": 7171,
+          "sha256": "510ead18ec1b791a856a32eef87e184271e99f5b28c07e7842d7a15d2e1a14f1",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-readiness-supplement-h22"
+        }
+      ]
+    },
+    {
+      "name": "issue42-tv2-review.tar.gz",
+      "bytes": 40540,
+      "sha256": "3858ee3de88a2bff042d1e40f831bb21aa51d736511aeb25e08ec887c02318a5",
+      "producerComment": 7210536692,
+      "checksumsPassed": 34,
+      "inventory": [
+        {
+          "path": "SHA256SUMS",
+          "bytes": 3268,
+          "sha256": "9871d108423deb1f2f25025a9779afab1d6754088faf9c0d1eb9093365757b7c",
+          "checksumListed": false,
+          "step": "checksum-inventory",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/check-roles.log",
+          "bytes": 11137,
+          "sha256": "14219dbea6069b2f70b388f5cc064370dc5962ffb44427a1dd7d9768702b55bd",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/correct-metadata-v2.log",
+          "bytes": 36,
+          "sha256": "203f65ce062014d91ecf56a27ee3bad17fa938bac0cb1aa68170ce01f1b96813",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/correct-metadata-v2.sql",
+          "bytes": 1755,
+          "sha256": "1d03e5229fc417c5589506911a5d65c5193797844e466579f48100d5c02cd443",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/correct-metadata.log",
+          "bytes": 187,
+          "sha256": "00d18898258bd859efb81d6e54fb30b0052691c323989c8e6f231fdd7c06aa54",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/correct-metadata.sql",
+          "bytes": 1773,
+          "sha256": "f8e2d6a76a478c6249ba384acb229e98a43c8fe2860b0e27fc2aa4d72782114f",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/corrected-metadata-select.txt",
+          "bytes": 1225,
+          "sha256": "8aa01956405712380609ba45c6ffaeebeaa048cd7c206c0c0c94694696ea468a",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/createdb.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/deploy.log",
+          "bytes": 222,
+          "sha256": "6d21d4c91947bd6f0f5c61e64ee7d88ed31100e1f4a80c33b068fe3110eb13a4",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/handoff-export.log",
+          "bytes": 206,
+          "sha256": "bbaad41bf2d0011e7f87c0d4228b83fba1464bc1c26cc9cea2bf1ce0706bf420",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/initdb.log",
+          "bytes": 798,
+          "sha256": "bf27340d18dd80bc37317d1917614522137d58f757997f38d04eaaa8c0589d27",
+          "checksumListed": true,
+          "step": "snapshot-canonical-publication",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/metadata-select.txt",
+          "bytes": 2119,
+          "sha256": "80b81c800c0c169e65970e3a78c11636d18e39e4f1db2f493f686a65b508d8fb",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/migration-001_initial.sql.log",
+          "bytes": 403,
+          "sha256": "24210e496a7c27081d679ff1148e50f2c88629e1b8222cdcd3ab16613f509d47",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/migration-002_be03.sql.log",
+          "bytes": 77,
+          "sha256": "8986da4a43b408449cd857eac3da0a9aac2582fc684c22d93a86587a3f11d0fd",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/migration-003_be04.sql.log",
+          "bytes": 79,
+          "sha256": "79b85cc30368abc15ebc0107064630244c497147ff091328a956b539e59e8a36",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/migration-004_be05_api.sql.log",
+          "bytes": 175,
+          "sha256": "14ab28d825f41adee2e302db75301f1dc4fbaeb709a2dc567f60b8aa0cdef4da",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/migration-005_be07.sql.log",
+          "bytes": 33,
+          "sha256": "be27d510fd16ac29412a0abd47ea5685a65866dc94ce7a978758eb0f339fe945",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/postgres-start.log",
+          "bytes": 52,
+          "sha256": "66afd0411ccc09366e99fdd99b85f21899c8d2d064f5835126859618802153ad",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/postgres.log",
+          "bytes": 2529,
+          "sha256": "bf3983d6764dbf23183456b73052a647f38d76b97edafe39f420eef2002776c4",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/preflight-wsl-corrected.txt",
+          "bytes": 5771,
+          "sha256": "e57a70c335d65916ed84a61413358c7abad31f2e1f56c6d60c9b2857df66a7eb",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/receiver-processes-final.txt",
+          "bytes": 1455,
+          "sha256": "4d9d1fd7a2fa27ba0451bcd759d7c44eca98878c9d3c6f619b379f8bb37af181",
+          "checksumListed": true,
+          "step": "process-lifecycle",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/register-metadata.log",
+          "bytes": 63,
+          "sha256": "bff2ab9d8e9f89298779b8d1cbac45721514b16f097a0d9d65ef25deeddaae09",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/register-metadata.sql",
+          "bytes": 1301,
+          "sha256": "726abf5135beca1c16879c0bebd016bf86c8262d31174ebc5abfc4affba1487a",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "evidence/windows-listeners.txt",
+          "bytes": 459,
+          "sha256": "c8c57da1a36ad443176cad988a4979ff1d6a93f81f71259b1583bc46f0a6ade1",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/abi/BUD.json",
+          "bytes": 5830,
+          "sha256": "974f92ba6741dd942f365ee9feccb587b97ae64358b25d64958e65f637829415",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/abi/GOV.json",
+          "bytes": 14712,
+          "sha256": "91211941f2cbe2a03d463766120c8f3279c3d0a8ea50d3208a7ca4f417713113",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/abi/Governor.json",
+          "bytes": 33474,
+          "sha256": "fff98f26ce17855e6382c7640df5af6b43a50b5468aeb462bfe21c7f7efe2829",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/abi/Timelock.json",
+          "bytes": 18966,
+          "sha256": "1e34d86f1cbac7e2c89ebe5f708b0769d5e5e1ca09e4bc1e75569065d8266fcc",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/abi/Treasury.json",
+          "bytes": 7767,
+          "sha256": "9e0e4639138e606f25610ebff74ebc1b295c77e00374831545367149daa7a583",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/be02-contracts.json",
+          "bytes": 644,
+          "sha256": "9e58a968b6468c3ee00026f82559a95823f0df273efdfbfbb52a669564fb215b",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/handoff.json",
+          "bytes": 3620,
+          "sha256": "ddf507386f37be0b688542c0e8083f7cd878fd0da87a57bbf5df9491079bc172",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/manifest.json",
+          "bytes": 100121,
+          "sha256": "943baa4db5c2492ee02f34e028103b223f45968260f0b8181ef7acde475d7f4e",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "handoff/role-audit.json",
+          "bytes": 11059,
+          "sha256": "3d6ce64f76e39b8bf72c0608b322c2d83b77648623234f3614818be5c731b96d",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "indexer.json",
+          "bytes": 929,
+          "sha256": "be2cce2b53078c63b0dfe2cc968dfb7f820c879a64a9b4efbca8eb380cb56397",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        },
+        {
+          "path": "manifest.json",
+          "bytes": 100121,
+          "sha256": "943baa4db5c2492ee02f34e028103b223f45968260f0b8181ef7acde475d7f4e",
+          "checksumListed": true,
+          "step": "metadata-provenance",
+          "producer": "TV3 / LangXiTrum2005",
+          "run": "issue42-tv2-review"
+        }
+      ]
+    }
+  ],
+  "limitations": {
+    "oldApiTerminationExit": "NOT_CAPTURED; TERM command exit 0 is separate",
+    "newApiTerminationExit": "N/A_RUNNING_AT_CAPTURE",
+    "producerCurlSqlRpcExits": "NOT_CAPTURED_IN_RESTART_BUNDLE; HTTP status/body and SQL output reviewed, no inferred exit0",
+    "secretAndTtlUnchanged": "Producer attestation; no secrets requested or exported",
+    "fullAncillaryEncoding": "Classification has topics/coordinates only;16/16 ABI topic/address match, no independent full-payload re-decode",
+    "liveEndpointNow": "NOT_CHECKED; historical capture acceptance only"
+  }
+}

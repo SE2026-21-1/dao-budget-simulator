@@ -1,0 +1,11 @@
+[Unit]
+Description=Check for a verified DAO backend release periodically
+
+[Timer]
+OnBootSec=2min
+OnUnitInactiveSec=2min
+RandomizedDelaySec=15s
+Unit=dao-demo-cd.service
+
+[Install]
+WantedBy=timers.target

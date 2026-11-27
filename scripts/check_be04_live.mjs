@@ -323,7 +323,7 @@ try {
       const health = await phaseApiGet('/health', scope);
       assert.equal(health.status, 200, `${label}/health`);
       assert.equal(health.body.data.publication, 'ready');
-      assert.equal(health.body.data.rawDecodeComplete, false);
+      assert.equal(health.body.data.rawDecodeComplete, true);
       phaseApiChecks.push({ label, context: summary.body.context, balance: contractBalance, totals: sqlTotals,
         proposalCount: list.body.pagination.totalCount, transferCount, health: health.body.data.status });
     }
@@ -727,9 +727,9 @@ try {
     assert.deepEqual(firstData, referenceData);
     const normalizedSha256 = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
     const sourceDecode = report.phases.at(-1).raw;
-    assert.equal(sourceDecode.unknownTopics, 16, 'Keep all 16 known bootstrap ancillary unknown logs.');
+    assert.equal(sourceDecode.unknownTopics, 0, 'Bootstrap administrative events must decode with the pinned ABI.');
     assert.equal(firstRebuild.decodeWarnings.complete, sourceDecode.decodeComplete);
-    assert.equal(firstRebuild.decodeWarnings.complete, false, 'Ancillary unknown logs must not become full decode.');
+    assert.equal(firstRebuild.decodeWarnings.complete, true, 'Canonical bootstrap administrative logs must decode without affecting business projections.');
     assert.equal(firstRebuild.decodeWarnings.unknownTopics, sourceDecode.unknownTopics);
 
     const proposalId = String(firstData.proposalStates[0].proposalId);
@@ -790,8 +790,8 @@ try {
     const advancedData = await jsonFile(advancedTargetExportPath);
     assert.deepEqual(advancedReferenceData, referenceData);
     assert.deepEqual(advancedData, referenceData);
-    assert.equal(advancedRebuild.decodeWarnings.complete, false);
-    assert.equal(advancedRebuild.decodeWarnings.unknownTopics, 16);
+    assert.equal(advancedRebuild.decodeWarnings.complete, true);
+    assert.equal(advancedRebuild.decodeWarnings.unknownTopics, 0);
     for (const [targetPool, identity] of [[be06Target, firstRebuild.target], [be06AdvancedTarget, advancedRebuild.target]]) {
       const [blocksAhead, eventsAhead] = await Promise.all([
         targetPool.query('SELECT count(*)::text AS count FROM indexed_blocks WHERE deployment_id=$1 AND block_number>$2',

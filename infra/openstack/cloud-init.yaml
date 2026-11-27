@@ -1,0 +1,24 @@
+#cloud-config
+# Fresh VM only; never rebuild a running VM merely to add this configuration.
+write_files:
+  - path: /usr/local/sbin/dao-install-docker
+    owner: root:root
+    permissions: '0755'
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y ca-certificates curl git
+      install -m 0755 -d /etc/apt/keyrings
+      curl --fail --silent --show-error --location --retry 5 \
+        https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      chmod a+r /etc/apt/keyrings/docker.asc
+      . /etc/os-release
+      printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu %s stable\n' \
+        "$(dpkg --print-architecture)" "$VERSION_CODENAME" > /etc/apt/sources.list.d/docker.list
+      apt-get update
+      apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      systemctl enable --now docker
+runcmd:
+  - [bash, /usr/local/sbin/dao-install-docker]

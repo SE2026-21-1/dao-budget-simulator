@@ -1,0 +1,58 @@
+name: Anvil demo infrastructure validation
+
+on:
+  push:
+    branches: [Dev, 'feature/**']
+    paths:
+      - 'infra/**'
+      - 'deploy/anvil-demo/**'
+      - '.github/workflows/anvil-demo-infra.yml'
+  pull_request:
+    paths:
+      - 'infra/**'
+      - 'deploy/anvil-demo/**'
+      - '.github/workflows/anvil-demo-infra.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.16.5'
+      - name: Validate Terraform without cloud credentials or apply
+        run: |
+          terraform fmt -check -diff infra/openstack
+          terraform -chdir=infra/openstack init -backend=false -input=false -lockfile=readonly
+          terraform -chdir=infra/openstack validate
+      - name: Check cloud-init YAML and embedded shell
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          import yaml
+          with open('infra/openstack/cloud-init.yaml') as handle:
+              config = yaml.safe_load(handle)
+          subprocess.run(['bash', '-n'], input=config['write_files'][0]['content'], text=True, check=True)
+          PY
+      - name: Test pull CD trust, rollback and interruption boundaries
+        run: python3 -m unittest discover -s deploy/anvil-demo/cd -p 'test_*.py' -v
+      - name: Render Compose using disposable configuration only
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DAO_DEMO_HOME="$RUNNER_TEMP/dao-demo-compose"
+          export DAO_UID=1000 DAO_GID=1000
+          export API_IMAGE=dao-api:896f93e INDEXER_IMAGE=dao-indexer:896f93e
+          export TUNNEL_IMAGE=cloudflare/cloudflared:2026.11.2
+          mkdir -p "$DAO_DEMO_HOME/config" "$DAO_DEMO_HOME/anvil"
+          touch "$DAO_DEMO_HOME/config/runtime.env" "$DAO_DEMO_HOME/config/postgres.env" "$DAO_DEMO_HOME/config/cloudflared.token"
+          printf '{}\n' > "$DAO_DEMO_HOME/config/indexer.json"
+          docker compose -f deploy/anvil-demo/compose.yml --profile tunnel --profile named-tunnel config --quiet

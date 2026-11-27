@@ -549,3 +549,22 @@ Xem [hướng dẫn vận hành, manifest mẫu và kiểm thử live](docs/be06
 ## BE07 recovery và worker
 
 Xem [BE07](docs/be07.md) để áp dụng migration 005, chạy worker polling và nghiệm thu reorg/RPC trên PostgreSQL/Anvil local cô lập. Native acceptance: `npm run test:be07:native`.
+
+## Anvil demo trên OpenStack/Kolla-Ansible
+
+Cloud lab được dựng bằng **Kolla-Ansible**; VM demo chạy Anvil, PostgreSQL,
+indexer và read API, frontend giữ trên Netlify. Khai báo và hướng dẫn:
+
+- [Lớp cloud Kolla-Ansible và các thông số đã quan sát](infra/kolla/README.md).
+- [Terraform tạo/import VM, mạng, router, security group và floating IP](infra/openstack/README.md).
+- [Compose cho backend demo có lưu state/volume](deploy/anvil-demo/compose.yml).
+- [Runbook nhận quản lý deployment hiện tại, backup, kiểm tra và cấu hình Netlify](docs/openstack-anvil-demo.md).
+
+Import tài nguyên đã tạo tay trước khi apply Terraform; chuyển container sang
+Compose trong thời gian bảo trì có backup, không chạy tự động khi pull Git.
+Đây là chain Anvil 31337 riêng, chưa bật giao dịch ví công khai; Quick Tunnel
+hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
+
+[Pull CD cho VM](deploy/anvil-demo/cd/README.md) nhận release đã qua CI và cập nhật
+riêng API/indexer theo digest, preflight, health/data checks và rollback. Cần cài
+agent và bật systemd timer trên VM sau khi kiểm tra; commit file không tự bật CD.

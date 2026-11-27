@@ -9,6 +9,7 @@ import { parseConfig } from '../indexer/config.ts';
 import { HttpRpc } from '../indexer/rpc.ts';
 import { scan, ScanError } from '../indexer/scanner.ts';
 import { PostgresStorage } from '../indexer/storage.ts';
+import { isAncillaryTopic } from '../indexer/ancillary-abi.ts';
 
 const sha = value => createHash('sha256').update(value).digest('hex');
 const canonical = value => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item)
@@ -183,7 +184,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     directory = await lifecycle.temporaryDirectory(join(tmpdir(), 'tv4-governance-storage-'));
     const sourceHashes = {};
     for (const path of ['scripts/governance_storage.mjs', 'scripts/smoke_governance.mjs', 'scripts/smoke_lifecycle.mjs', 'indexer/config.ts', 'indexer/rpc.ts', 'indexer/reader.ts',
-      'indexer/scanner.ts', 'indexer/storage.ts', 'indexer/cli.ts', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'database/migrations/001_initial.sql', 'package-lock.json']) {
+      'indexer/scanner.ts', 'indexer/storage.ts', 'indexer/cli.ts', 'indexer/decoder.ts', 'indexer/abi-registry.ts', 'indexer/ancillary-abi.ts', 'database/migrations/001_initial.sql', 'package-lock.json']) {
       sourceHashes[path] = sha(await readFile(join(root, path)));
     }
     const lock = JSON.parse(await readFile(join(root, 'package-lock.json'), 'utf8'));
@@ -249,7 +250,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     const stored = await snapshot(pools[0], deploymentIds[0]);
     assert.deepEqual(stored, expected, 'SQL semantic data must exactly equal live canonical reader output');
     const unknown = batch.logs.filter(item => item.decode.status === 'unknown_topic');
-    assert.ok(unknown.length > 0, 'Expected actual unsupported initialization topics retained raw');
+    assert.equal(unknown.length, 0, 'All events emitted by this deployed governance lifecycle must be supported');
     result.phases.push({ phase, state: 'passed', digest: stored.digest });
     phase = 'sql_same_h_ledger';
     const sqlLedger = await ledger(pools[0], deploymentIds[0], manifest.contracts.Treasury.address.toLowerCase(), chainLedger, readBalance, readSupply);
@@ -258,12 +259,16 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
       decoded: stored.events.filter(item => item.event_name !== null).length, unknownTopics: unknown.length, decodeErrors: 0 };
     result.unknownTopicCounts = Object.fromEntries([...new Set(unknown.map(item => item.log.topics[0]))].sort().map(topic =>
       [topic, unknown.filter(item => item.log.topics[0] === topic).length]));
-    phase = 'known_unknown_topic_full_abi_provenance';
+    phase = 'administrative_event_full_abi_provenance';
     const roleNames = { budget_token: 'BUD', treasury: 'Treasury', timelock: 'Timelock', governor: 'Governor' };
-    result.knownUnsupportedEvents = [...new Set(unknown.map(({ log }) => {
+    const administrative = batch.logs.filter(({ log }) => isAncillaryTopic(log.contract.role, log.topics[0]));
+    assert.ok(administrative.length > 0, 'Expected actual administrative events from initialization');
+    result.knownAdministrativeEvents = [...new Set(administrative.map(({ log, decode }) => {
       const name = roleNames[log.contract.role];
       const event = new Interface(abis[name]).parseLog(log.rawLog);
-      assert.ok(event, 'Unsupported topic must still be known in the deployed full contract ABI');
+      assert.ok(event, 'Administrative topic must be present in the deployed full contract ABI');
+      assert.equal(decode.status, 'decoded');
+      assert.equal(decode.eventName, event.name);
       return `${name}.${event.name}`;
     }))].sort();
     result.ledger = sqlLedger;
@@ -278,7 +283,7 @@ export async function governanceStorageSmoke({ root, urls, manifest, abis, confi
     result.phases.push({ phase, state: 'passed', report: rerun, digest: stored.digest });
     phase = 'cli_new_process_full_rerun_idempotent';
     const restart = await cliScan({ root, directory, connectionString: urls[0], input: input(deploymentIds[0], config.fromBlock, config.toBlock), expectedLogs: batch.logs, label: 'restart', lifecycle });
-    assert.equal(restart.exitCode, 2, 'Unknown initialization topics must produce CLI exit 2');
+    assert.equal(restart.exitCode, 0, 'Supported initialization topics must allow a clean CLI rerun');
     assert.ok(restart.report.committedBatches.every(item => item.insertedBlocks === 0 && item.insertedEvents === 0));
     assert.deepEqual(await snapshot(pools[0], deploymentIds[0]), stored);
     result.phases.push({ phase, state: 'passed', ...restart, digest: stored.digest });

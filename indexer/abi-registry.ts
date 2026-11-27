@@ -1,7 +1,8 @@
 import { Interface, type EventFragment } from 'ethers';
+import { ANCILLARY_ABI } from './ancillary-abi.js';
 import type { ContractConfig, ContractRole } from './types.js';
 
-/** Event subsets only, not a full implementation ABI or a deployment claim. */
+/** Business plus explicitly supported administrative events, not a deployment claim. */
 export interface AbiRegistration {
   role: ContractRole;
   version: string;
@@ -16,7 +17,8 @@ const ozRevision = 'c64a1edb67b6e3f4a15cca8909c9482ad33a02b0';
 const ozSource = `https://github.com/OpenZeppelin/openzeppelin-contracts/blob/${ozRevision}/contracts/`;
 
 function register(role: ContractRole, version: string, source: string, abi: string[]): AbiRegistration {
-  const eventInterface = new Interface(abi);
+  const registeredAbi = [...abi, ...ANCILLARY_ABI[role]];
+  const eventInterface = new Interface(registeredAbi);
   const eventsByTopic: Record<string, EventFragment> = Object.create(null);
   // ethers' topic lookup hashes each candidate signature on every log.
   eventInterface.forEachEvent(fragment => { eventsByTopic[fragment.topicHash] = fragment; });
@@ -25,7 +27,7 @@ function register(role: ContractRole, version: string, source: string, abi: stri
     version,
     source,
     integrationStatus: 'awaiting-sc06' as const,
-    abi: Object.freeze(abi),
+    abi: Object.freeze(registeredAbi),
     interface: eventInterface,
     eventsByTopic: Object.freeze(eventsByTopic),
   });

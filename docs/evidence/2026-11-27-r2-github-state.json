@@ -1,0 +1,565 @@
+{
+  "method": "Read-only GitHub API and downloaded existing job logs; no Actions rerun or GitHub mutations",
+  "refs": {
+    "Dev": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+    "main": "ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4"
+  },
+  "metadataCaveat": "Initial cached PR60.base.sha896f93e and PR61.base.sha6766e5e were not current fetched Dev. git ls-remote and origin/Dev both d63842. Restart actual source remains896f93e.",
+  "pulls": [
+    {
+      "number": 60,
+      "head": "24f66b6cae0f13651c622625adcc687e6d11fffd",
+      "apiBaseAtInitialRead": "896f93ea282d76fa72339a97ea12339240c16da4",
+      "state": "open",
+      "reviews": [
+        {
+          "id": 6011704131,
+          "state": "APPROVED",
+          "commit": "c1ffb9ee0f661d095cba92d20855295e7a3d3f26",
+          "reviewer": "nvdungmim",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6011704131"
+        },
+        {
+          "id": 6011839494,
+          "state": "CHANGES_REQUESTED",
+          "commit": "c1ffb9ee0f661d095cba92d20855295e7a3d3f26",
+          "reviewer": "daongocuong",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6011839494"
+        },
+        {
+          "id": 6018122562,
+          "state": "CHANGES_REQUESTED",
+          "commit": "c0d0b26a4b3978eb724a0b253dd8eb7c62d1b789",
+          "reviewer": "nvdungmim",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6018122562"
+        },
+        {
+          "id": 6023976711,
+          "state": "COMMENTED",
+          "commit": "9e121c51c2091b3b544cc74acc558d9eb8c31076",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6023976711"
+        },
+        {
+          "id": 6024264352,
+          "state": "CHANGES_REQUESTED",
+          "commit": "9e121c51c2091b3b544cc74acc558d9eb8c31076",
+          "reviewer": "nvdungmim",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6024264352"
+        },
+        {
+          "id": 6034590000,
+          "state": "COMMENTED",
+          "commit": "d2a3dd841c555979820ccacac07072e607265e1c",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6034590000"
+        },
+        {
+          "id": 6037012460,
+          "state": "APPROVED",
+          "commit": "b186844d1ff19ef26dfd83a060e7584bb6e0c419",
+          "reviewer": "nvdungmim",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460"
+        },
+        {
+          "id": 6037802801,
+          "state": "CHANGES_REQUESTED",
+          "commit": "b186844d1ff19ef26dfd83a060e7584bb6e0c419",
+          "reviewer": "daongocuong",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037802801"
+        },
+        {
+          "id": 6039401845,
+          "state": "COMMENTED",
+          "commit": "47faa8ee96c910a2ed211b1c14d747a485006aee",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6039401845"
+        },
+        {
+          "id": 6040463747,
+          "state": "COMMENTED",
+          "commit": "59426fb50607583b1bec77ec9d998a8fd0410cf5",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6040463747"
+        },
+        {
+          "id": 6041875677,
+          "state": "CHANGES_REQUESTED",
+          "commit": "59426fb50607583b1bec77ec9d998a8fd0410cf5",
+          "reviewer": "LangXiTrum2005",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6041875677"
+        },
+        {
+          "id": 6053195381,
+          "state": "APPROVED",
+          "commit": "0a5cc5cfda29a92df4ab4498e1cd72cd57023088",
+          "reviewer": "daongocuong",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381"
+        },
+        {
+          "id": 6053667048,
+          "state": "CHANGES_REQUESTED",
+          "commit": "0a5cc5cfda29a92df4ab4498e1cd72cd57023088",
+          "reviewer": "LangXiTrum2005",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053667048"
+        },
+        {
+          "id": 6053803666,
+          "state": "COMMENTED",
+          "commit": "b92bef5409d6478de97efbc8209241620967d18a",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053803666"
+        },
+        {
+          "id": 6055560601,
+          "state": "COMMENTED",
+          "commit": "b92bef5409d6478de97efbc8209241620967d18a",
+          "reviewer": "LangXiTrum2005",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601"
+        }
+      ],
+      "runs": [
+        {
+          "id": 45869593649,
+          "name": "Verify public Foundry fallback",
+          "event": "push",
+          "head": "24f66b6cae0f13651c622625adcc687e6d11fffd",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45869593649",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": [
+            {
+              "id": 140081244688,
+              "name": "Anonymous attestation, extraction and contract gates",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 45869593683,
+          "name": "TV4 CI",
+          "event": "push",
+          "head": "24f66b6cae0f13651c622625adcc687e6d11fffd",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45869593683",
+          "actualCheckoutFromDownloadedLog": "24f66b6cae0f13651c622625adcc687e6d11fffd",
+          "jobs": [
+            {
+              "id": 140081245616,
+              "name": "BE06 pinned-H rebuild and normalized compare",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081245964,
+              "name": "BE04 projection semantics and atomic PostgreSQL publication",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081245980,
+              "name": "BE07 recovery, RPC failures and native database regressions",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081245995,
+              "name": "BE02 TypeScript and isolated PostgreSQL storage",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246033,
+              "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246056,
+              "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246067,
+              "name": "Container build, release validation and Compose smoke",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246091,
+              "name": "BE01 fixtures and PostgreSQL constraints",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246094,
+              "name": "be08-release-gate / be08",
+              "conclusion": "success"
+            },
+            {
+              "id": 140081246131,
+              "name": "Frontend lint and production build",
+              "conclusion": "success"
+            },
+            {
+              "id": 140084162933,
+              "name": "Publish tested release image set",
+              "conclusion": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 61,
+      "head": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+      "apiBaseAtInitialRead": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+      "state": "open",
+      "reviews": [
+        {
+          "id": 6037801610,
+          "state": "CHANGES_REQUESTED",
+          "commit": "42518f76ab102e65f286e8c74fc66fdf4409a841",
+          "reviewer": "daongocuong",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6037801610"
+        },
+        {
+          "id": 6039274584,
+          "state": "COMMENTED",
+          "commit": "72d08940d63b99ec4d8e4d49f463251d7a0c714c",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6039274584"
+        },
+        {
+          "id": 6040463102,
+          "state": "COMMENTED",
+          "commit": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+          "reviewer": "dung0611",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6040463102"
+        },
+        {
+          "id": 6053196499,
+          "state": "APPROVED",
+          "commit": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+          "reviewer": "daongocuong",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6053196499"
+        }
+      ],
+      "runs": [
+        {
+          "id": 45403578804,
+          "name": "Verify public Foundry fallback",
+          "event": "pull_request",
+          "head": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45403578804",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": [
+            {
+              "id": 138478212439,
+              "name": "Anonymous attestation, extraction and contract gates",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 45403578782,
+          "name": "TV4 CI",
+          "event": "pull_request",
+          "head": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45403578782",
+          "actualCheckoutFromDownloadedLog": "b071a29a3c931ffa007dc2e864d56f81e5c41b67",
+          "jobs": [
+            {
+              "id": 138478212804,
+              "name": "BE04 projection semantics and atomic PostgreSQL publication",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213153,
+              "name": "BE06 pinned-H rebuild and normalized compare",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213428,
+              "name": "Frontend lint and production build",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213448,
+              "name": "be08-release-gate / be08",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213487,
+              "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213537,
+              "name": "Container build, release validation and Compose smoke",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213546,
+              "name": "BE07 recovery, RPC failures and native database regressions",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213573,
+              "name": "BE01 fixtures and PostgreSQL constraints",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213626,
+              "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+              "conclusion": "success"
+            },
+            {
+              "id": 138478213636,
+              "name": "BE02 TypeScript and isolated PostgreSQL storage",
+              "conclusion": "success"
+            },
+            {
+              "id": 138482277452,
+              "name": "Publish tested release image set",
+              "conclusion": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+      "apiBaseAtInitialRead": "ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4",
+      "state": "open",
+      "reviews": [],
+      "runs": [
+        {
+          "id": 45783467833,
+          "name": "Anvil demo infrastructure validation",
+          "event": "pull_request",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783467833",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": [
+            {
+              "id": 139784318551,
+              "name": "validate",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 45783467894,
+          "name": "Verify public Foundry fallback",
+          "event": "pull_request",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783467894",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": [
+            {
+              "id": 139784319005,
+              "name": "Anonymous attestation, extraction and contract gates",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 45783467915,
+          "name": "TV4 CI",
+          "event": "pull_request",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783467915",
+          "actualCheckoutFromDownloadedLog": "c35aefaabe3ad964195f71bf22d327a53939d65a",
+          "jobs": [
+            {
+              "id": 139784320494,
+              "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320831,
+              "name": "BE01 fixtures and PostgreSQL constraints",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320844,
+              "name": "BE02 TypeScript and isolated PostgreSQL storage",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320933,
+              "name": "Frontend lint and production build",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320952,
+              "name": "BE06 pinned-H rebuild and normalized compare",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320959,
+              "name": "BE07 recovery, RPC failures and native database regressions",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784320977,
+              "name": "Container build, release validation and Compose smoke",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784321046,
+              "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784321062,
+              "name": "be08-release-gate / be08",
+              "conclusion": "success"
+            },
+            {
+              "id": 139784321092,
+              "name": "BE04 projection semantics and atomic PostgreSQL publication",
+              "conclusion": "success"
+            },
+            {
+              "id": 139787357124,
+              "name": "Publish tested release image set",
+              "conclusion": "skipped"
+            }
+          ]
+        },
+        {
+          "id": 45783460691,
+          "name": "TV4 CI",
+          "event": "push",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783460691",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": "NOT_RETRIEVED"
+        },
+        {
+          "id": 45783460601,
+          "name": "Anvil demo infrastructure validation",
+          "event": "push",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783460601",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": "NOT_RETRIEVED"
+        },
+        {
+          "id": 45783460510,
+          "name": "Verify public Foundry fallback",
+          "event": "push",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45783460510",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": "NOT_RETRIEVED"
+        },
+        {
+          "id": 45782370229,
+          "name": "TV4 CI",
+          "event": "push",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45782370229",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": "NOT_RETRIEVED"
+        },
+        {
+          "id": 45782370341,
+          "name": "Verify public Foundry fallback",
+          "event": "push",
+          "head": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45782370341",
+          "actualCheckoutFromDownloadedLog": null,
+          "jobs": "NOT_RETRIEVED"
+        }
+      ]
+    }
+  ],
+  "checkoutLogs": [
+    {
+      "run": 45869593683,
+      "job": 140081246067,
+      "downloadExit": 0,
+      "sha256": "84c205cb207c6ca9408afc56329ce74a2ead4dc895a1d9a5d0ca72aecbf99856",
+      "excerpts": [
+        "2026-11-26T17:39:56.4047856Z ##[endgroup]",
+        "2026-11-26T17:39:56.4091548Z [command]/usr/bin/git log -1 --format=%H",
+        "2026-11-26T17:39:56.4112443Z 24f66b6cae0f13651c622625adcc687e6d11fffd",
+        "2026-11-26T17:39:56.4121745Z ##[group]Removing auth",
+        "2026-11-26T17:40:11.8152293Z ✔ all existing SQL migrations retain their bodies without nested transaction wrappers (7.605937ms)",
+        "2026-11-26T17:40:11.8210851Z ✔ migration set hashes exact contents in sorted filename order (6.839919ms)",
+        "2026-11-26T17:40:11.8274890Z ✔ manifest rejects tags, cross-service digests, foreign registries and numeric run IDs (6.623222ms)",
+        "2026-11-26T17:40:11.8322009Z ✔ complete release produces only digest-pinned image environment (1.347692ms)",
+        "2026-11-26T17:40:11.8324420Z ℹ suites 0",
+        "2026-11-26T17:40:11.8324573Z ℹ pass 7",
+        "2026-11-26T17:40:11.8324726Z ℹ fail 0",
+        "2026-11-26T17:40:11.8324877Z ℹ cancelled 0"
+      ]
+    },
+    {
+      "run": 45403578782,
+      "job": 138478213537,
+      "downloadExit": 0,
+      "sha256": "c16bb4565ef21436024dc802c629a5833b2d8f71a15f63610162d4eea884f195",
+      "excerpts": [
+        "2026-11-24T13:27:25.5613776Z ",
+        "2026-11-24T13:27:25.5614080Z HEAD is now at b071a29 Merge cba8b6c9eda65959d82250441b8eed131a1a5044 into 896f93ea282d76fa72339a97ea12339240c16da4",
+        "2026-11-24T13:27:25.5632109Z ##[endgroup]",
+        "2026-11-24T13:27:25.5633133Z ##[group]Setting up auth for fetching submodules",
+        "2026-11-24T13:27:32.5600401Z ##[endgroup]",
+        "2026-11-24T13:27:32.5640794Z [command]/usr/bin/git log -1 --format=%H",
+        "2026-11-24T13:27:32.5660088Z b071a29a3c931ffa007dc2e864d56f81e5c41b67",
+        "2026-11-24T13:27:32.5669683Z ##[group]Removing auth",
+        "2026-11-24T13:27:48.5048687Z ✔ all existing SQL migrations retain their bodies without nested transaction wrappers (7.257088ms)",
+        "2026-11-24T13:27:48.5071379Z ✔ migration set hashes exact contents in sorted filename order (5.895418ms)",
+        "2026-11-24T13:27:48.5122092Z ✔ manifest rejects tags, cross-service digests, foreign registries and numeric run IDs (5.309775ms)",
+        "2026-11-24T13:27:48.5183439Z ✔ complete release produces only digest-pinned image environment (1.735269ms)",
+        "2026-11-24T13:27:48.5210786Z ℹ suites 0",
+        "2026-11-24T13:27:48.5211107Z ℹ pass 7",
+        "2026-11-24T13:27:48.5211529Z ℹ fail 0",
+        "2026-11-24T13:27:48.5211755Z ℹ cancelled 0"
+      ]
+    },
+    {
+      "run": 45783467915,
+      "job": 139784320977,
+      "downloadExit": 0,
+      "sha256": "d59cb5f45e8f6455b0a89acefe5d0d4acd551cbcaa55a5399bf454b106d36189",
+      "excerpts": [
+        "2026-11-26T08:28:48.6937710Z ",
+        "2026-11-26T08:28:48.6938107Z HEAD is now at c35aefa Merge d63842ae50dc9a29a42529ce7cd08ca7c569759e into ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4",
+        "2026-11-26T08:28:48.6946837Z ##[endgroup]",
+        "2026-11-26T08:28:48.6947407Z ##[group]Setting up auth for fetching submodules",
+        "2026-11-26T08:28:55.0365640Z ##[endgroup]",
+        "2026-11-26T08:28:55.0399438Z [command]/usr/bin/git log -1 --format=%H",
+        "2026-11-26T08:28:55.0418156Z c35aefaabe3ad964195f71bf22d327a53939d65a",
+        "2026-11-26T08:28:55.0423583Z ##[group]Removing auth",
+        "2026-11-26T08:29:09.5617847Z ✔ all existing SQL migrations retain their bodies without nested transaction wrappers (7.311059ms)",
+        "2026-11-26T08:29:09.5678442Z ✔ migration set hashes exact contents in sorted filename order (6.863459ms)",
+        "2026-11-26T08:29:09.5709888Z ✔ manifest rejects tags, cross-service digests, foreign registries and numeric run IDs (5.000033ms)",
+        "2026-11-26T08:29:09.5753747Z ✔ complete release produces only digest-pinned image environment (1.60885ms)",
+        "2026-11-26T08:29:09.5756667Z ℹ suites 0",
+        "2026-11-26T08:29:09.5756821Z ℹ pass 7",
+        "2026-11-26T08:29:09.5757190Z ℹ fail 0",
+        "2026-11-26T08:29:09.5757345Z ℹ cancelled 0"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "operation": "Initial gh command",
+      "exit": 127,
+      "cause": "gh absent from PATH"
+    },
+    {
+      "operation": "Anonymous actions/jobs metadata for PR52 push45783460691",
+      "result": "HTTP403 rate limit exceeded; preceding requested metadata retained; client installed authenticated afterward"
+    }
+  ]
+}

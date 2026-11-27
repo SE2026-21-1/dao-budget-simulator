@@ -22,19 +22,24 @@ TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần ng�
   Version13.58.0 do producer khai báo chỉ lượt mới; không sửa UNKNOWN/MISSING của H26.
 - [ ] TV3 bổ sung provider-boundary trace/extension identity nếu cần chốt zero-send;
   TV2 phân loại proposals503 bằng raw request/body/log tối thiểu, không rerun governance/provenance đã đạt.
-- [x] [Merge audit + resolution diff PR60/61](evidence/2026-11-27-pr60-pr61-integration.md):
-  cả hai conflict với Dev `d63842ae50dc9a29a42529ce7cd08ca7c569759e` tại `indexer/abi-registry.ts`;
-  giữ ancillary ABI + frozen topic index. Patch chỉ để review, chưa áp vào branch.
+- [x] [Candidate PR60/61 integration](evidence/2026-11-27-r2-integration.md):
+  từ head60 `24f66b6cae0f13651c622625adcc687e6d11fffd`, head61 `cba8b6c9eda65959d82250441b8eed131a1a5044`
+  và fetched Dev `d63842ae50dc9a29a42529ce7cd08ca7c569759e`; không dùng patch cũ như exact-base patch mới.
+  Một union ABI dựng Interface và frozen topic index; runtime commands/results theo report, chưa merge PR vào Dev.
 - [x] [PR62 TV4 review](evidence/2026-11-27-pr62-tv4-review.md): exact source
   `d4a0fb563e66be951760167a6f62b246821dc17c`, 144 narrow tests PASS;
   chưa thấy defect có reproduction. Live RPC/archive/finality SKIP, không approval.
-- [ ] [Receiver NOT READY](evidence/2026-11-27-receiver-readiness.md):
-  TV3 báo source4cba99a khác approved896f93e, thiếu proposal/snapshot TTL.
-  TV2/lead chốt receiver hoặc bootstrap ngoại lệ no-redeploy; chưa service action.
-  Thu #42 API-only trước shutdown #40 nếu chung stack; checklist/lệnh so6responses/5digests đã sẵn.
+- [x] [#42 scoped receiver API-only PASS độc lập](evidence/2026-11-27-r2-issue42.md):
+  source896f93e/H22/hash3b9fd152…94c8/revisionedc6f818…db90;78/78restart checksums,
+  12HTTP200/6URLpairs/5digestpairs MATCH; snapshot cuối còn394sTTL; API9959→14532, Anvil/PG/worker identity giữ nguyên.
+  Không còn receiver NOT READY blocker; oldAPIterminationexit chưa capture, newAPItermination N/A còn chạy.
+  Evidence đã niêm phong offline trước lifecycle#40; không restart/rebuild BE06.
+- [ ] [#40 readiness HOLD / lifecycle SKIP](evidence/2026-11-27-r2-receiver-deltas.md):
+  receiver owner mở access Windows/WSL, inventory ownership/task/listener/transport, clean TV2-approvede8e443c/toolchain.
+  TV3 narrowOptionB; TV4 kiểm restoration/HTTP/rawforegroundserve+actualexit, không Linux substitute hoặc tác động #42.
 - [ ] #20 giữ owner-approved SHA/map/custodians/signing/gas/authorization BLOCKED;
   #44 chưa release/demo-ready. #18/#36/BE06/bounded invariants và approvals đúng scope giữ nguyên.
-  [Báo cáo chung](evidence/2026-11-27-tv4-acceptance.md), [bản nháp chưa đăng](evidence/2026-11-27-handoff-drafts.md).
+  [Báo cáo r2](evidence/2026-11-27-r2-acceptance.md), [draft mới chưa đăng](evidence/2026-11-27-r2-handoff-drafts.md).
 
 ## Kết luận 26/11/2026 — lịch sử, phần thiếu #19 được cập nhật ở trên
 

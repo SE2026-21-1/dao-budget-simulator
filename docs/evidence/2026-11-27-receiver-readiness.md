@@ -1,5 +1,10 @@
 # TV4 — receiver readiness #42 và lifecycle #40, 27/11/2026
 
+> **LỊCH SỬ — snapshot lượt đầu, không phải trạng thái hiện hành.**
+> [TV4 r2 kiểm độc lập #42: PASS scoped](2026-11-27-r2-issue42.md), không còn receiver NOT READY;
+> [#40 r2](2026-11-27-r2-receiver-deltas.md) là access/ownership HOLD, lifecycle SKIP, không run FAIL.
+> Phần dưới giữ nguyên quan sát/câu lệnh/kết quả tại source và thời điểm cũ, không sửa bằng chứng lịch sử.
+
 ## Kết luận và source
 
 **#42 NOT READY / API-only restart SKIP; #40 lifecycle mới SKIP, vẫn PARTIAL.** Không có receiver TV3 được cấp quyền truy cập trong phiên này. Không dùng máy Linux TV4 làm receiver TV3; không SSH, rollout, deploy, restart/stop/start service, đổi task, nới TTL hoặc chạy lại BE06/BE09 đã được tiếp nhận.

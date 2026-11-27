@@ -2,8 +2,10 @@
 
 Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
-Nhánh bàn giao hiện hành: `feature/tv4-qa-completion-20261121` → `Dev`, qua
-[PR #60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60);
+Nhánh docs bàn giao r2: `tv4/acceptance-20261127-r2`, từ
+[PR #60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60)
+head `24f66b6cae0f13651c622625adcc687e6d11fffd`.
+Nhánh ứng viên tích hợp riêng được ghim trong report r2; chưa merge PR60/61 vào Dev.
 `feature/tv4-operation`/PR5 là lịch sử, không nhập PR21/55/personal.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
@@ -19,17 +21,20 @@ bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
 ## Trạng thái hiện hành — 27/11/2026
 
-[Báo cáo chung theo SHA](evidence/2026-11-27-tv4-acceptance.md) và
-[bản nháp bàn giao chưa đăng](evidence/2026-11-27-handoff-drafts.md):
+[Báo cáo r2 theo SHA](evidence/2026-11-27-r2-acceptance.md) và
+[draft hiện hành chưa đăng](evidence/2026-11-27-r2-handoff-drafts.md):
 review gói #19 mới đã nhận B-active/error/draft visual, giữ no-send inference và503 UNKNOWN;
 không gán version/ảnh mới cho H26. [7checksums/63CRLF-source comparisons](evidence/2026-11-27-issue19-review.json)
 không được gọi raw LF Git byte equality hoặc served-frontend attestation.
 
-[Merge audit](evidence/2026-11-27-pr60-pr61-integration.md) xác định một conflict registry
-với Devd63842a; patch review giữ admin ABI và BE08 index, không actual merge.
-[PR62 review](evidence/2026-11-27-pr62-tv4-review.md) trên d4a0fb5 chạy144narrow tests PASS,
-không live archive/finality hoặc approval. [Receiver](evidence/2026-11-27-receiver-readiness.md)
-NOT READY theo TV3/TV2; checklist/lệnh API-only/Windows lifecycle đã bàn giao, không service action.
+[Candidate integration r2](evidence/2026-11-27-r2-integration.md) giữ PR61 history,
+Devd63842a administrative ABI và BE08 frozen index từ cùng một union mỗi registration;
+runtime command/exit/counts theo report, chưa merge/promote Dev.
+[PR62 review](evidence/2026-11-27-pr62-tv4-review.md) 144PASS là proof cũ trên unchanged d4a0fb5,
+không rerun; [fresh delta](evidence/2026-11-27-r2-receiver-deltas.md) giữ live SKIP vì thiếu approved config.
+[#42 independent receiver PASS](evidence/2026-11-27-r2-issue42.md): source896f93e/H22,
+78/78restart checksums/12HTTP200/5digestpairs MATCH, TTL/process/checkpoint/canonical đã kiểm độc lập.
+Không còn receiver NOT READY blocker. #40 riêng là access/ownership HOLD, lifecycle SKIP, không failed run.
 Giữ #20 owner gates và #44 group demo blocked; không mở lại #18/#36/BE06/bounded invariants,
 không staging #56, Terraform/OpenStack/SSH rollout hoặc Sepolia broadcast.
 

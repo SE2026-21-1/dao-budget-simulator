@@ -218,21 +218,31 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 
 ### Revision và nguồn evidence hiện hành
 
-[Nghiệm thu27/11](evidence/2026-11-27-tv4-acceptance.md) thay trạng thái26/11 bên dưới:
-PR60 baseline d4d405f2ca64e1786b44c7d81354cbe2de18040f; Devd63842a được audit bằng Git objects,
-không nhập vào branch. [Conflict/patch](evidence/2026-11-27-pr60-pr61-integration.md) giữ fixes/security/clock/migrations.
+[Nghiệm thu r2](evidence/2026-11-27-r2-acceptance.md) là trạng thái hiện hành.
+Baseline docs/PR60 **24f66b6cae0f13651c622625adcc687e6d11fffd**, PR61
+**cba8b6c9eda65959d82250441b8eed131a1a5044**, fetched Dev
+**d63842ae50dc9a29a42529ce7cd08ca7c569759e**. Source receiver #42 là896f93e,
+không thay Dev/PR HEAD/actual CI checkout.
 
 - **N19** = [review gói mới](evidence/2026-11-27-issue19-review.md), evidence887c5ec/product4cba99a:
   B-active/draft/error-afterSubmit visual accepted; 7checksums PASS; no-send inference, provider boundary chưa instrument.
   MetaMask13.58.0 chỉ lời khai run mới, H26 version UNKNOWN; proposals503 cause UNKNOWN, không E2E PASS.
-- **I27** = [merge-tree/patch review](evidence/2026-11-27-pr60-pr61-integration.md): PR60/61 đều conflict registry
-  với Devd63842a; patch hợp nhất ancillary ABI + frozen index chỉ để review, chưa applied/merged.
+- **I27** = [candidate integration/runtime report r2](evidence/2026-11-27-r2-integration.md):
+  giữ PR61 history, Dev admin ABI + một union/interface/frozen index mỗi registration,
+  SQL batch/FK/rollback và các security/clock/final-trace guards; candidate riêng chưa merge PR vào Dev.
+  [Patch tĩnh lượt đầu](evidence/2026-11-27-pr60-pr61-integration.md) là lịch sử, không áp mù vào HEAD mới.
 - **P62** = [TV4 snapshot/workflow review](evidence/2026-11-27-pr62-tv4-review.md), source d4a0fb5:
   144 narrow synthetic/unit PASS, không defect có reproduction; live EIP1898/archive/finality SKIP.
-- **R27** = [receiver readiness/checklist](evidence/2026-11-27-receiver-readiness.md):
-  TV3 NOT READY/source4cba99a/thiếuproposal+TTL; #42 và#40 runtime SKIP, không thay accepted BE06/pipeline.
+- **R27** = [TV4 independent #42 PASS](evidence/2026-11-27-r2-issue42.md):
+  source896f93e/chain31337/deployment tv3-issue42-20261127/H22/hash3b9fd152…94c8/revisionedc6f818…db90;
+  restart78/78checksums,6URLpairs/12HTTP200/5semantic pairs MATCH, TTL/PID/checkpoint/canonical đã kiểm.
+  TERMcommandexit0 không phải oldAPIterminationexit; newAPI còn chạy nên termination N/A.
+- **D27** = [fresh #19/#40/PR62 delta và checklist](evidence/2026-11-27-r2-receiver-deltas.md):
+  #19 chỉ thiếu boundary/session-version/raw503; #40 access/ownership HOLD, lifecycle SKIP chứ không run FAIL;
+  PR62 head không đổi, không rerun144tests; live SKIP đến khi có approved endpoint/runtime keccak/pin/numeric policy.
 
-Đoạn26/11 sau đây giữ làm lịch sử source/review; N19/R27 cập nhật đúng các gap đã thay đổi.
+Các đoạn26/11 và báo cáo lượt đầu27/11 bên dưới là lịch sử source/review.
+Không mở lại #18/#36/BE06, bounded invariants hoặc10Ready(single)N/A; #41 local pipeline accepted giữ nguyên.
 
 [Nghiệm thu26/11](evidence/tv4-20261126-acceptance.md) là trạng thái tại ngày26/11;
 PR60 baseline b92bef5409d6478de97efbc8209241620967d18a, không nhập Dev3d0f6ca trong lượt đó.

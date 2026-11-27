@@ -13,12 +13,17 @@ Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/li
   MetaMask13.58.0 chỉ producer khai báo của run mới/source4cba99a, không version phiên H26.
   Proposals503 được giữ nguyên, thiếu raw response/log để chốt nguyên nhân; không full E2E PASS.
   Không yêu cầu lại governance hoặc provenance H26 đã đạt.
-- [#42 readiness mới](evidence/2026-11-27-receiver-readiness.md): stack TV3 báo source4cba99a
-  khác approved896f93e, không proposal/snapshot còn TTL. TV2/lead phải chốt receiver/chuẩn bị,
-  không tự bỏ no-redeploy. API-only #42 trước shutdown #40 nếu cùng stack.
+- [#42 receiver API-only PASS độc lập](evidence/2026-11-27-r2-issue42.md):
+  approved source896f93e/H22/hash3b9fd152…94c8/revisionedc6f818…db90;78/78restart checksums,
+  12HTTP200 và5semantic pairs MATCH; evidence đã niêm phong, không còn receiver-not-ready blocker.
+  TERMcommandexit không thay terminationexit cũ; API mới còn chạy, không bịa exit.
+- [#40 readiness HOLD](evidence/2026-11-27-r2-receiver-deltas.md): chưa access/ownership Windows/WSL,
+  không run FAIL. Clean approvede8e443c receiver do TV3 vận hành narrowOptionB; bảo vệ stack/evidence#42.
 - Pipeline #41 product6766e5e/H52 và #18/#36/BE06/bounded invariants đã nghiệm thu giữ nguyên.
-  [Integration/demo disposition](evidence/2026-11-27-tv4-acceptance.md) không chọn revision demo,
-  không merge/promote/tag/release hoặc cấp quyền Sepolia. #20 owner gates còn BLOCKED.
+  [Candidate integration/runtime proof](evidence/2026-11-27-r2-integration.md) khác
+  [evidence/docs handoff](evidence/2026-11-27-r2-acceptance.md); nhóm còn chọn exactsource/manifest/demo/video#44.
+  CIgreen/Netlifypreview/publishSKIP không releaseacceptance; #20 owner gates còn BLOCKED.
+  Không merge/promote/tag/release/broadcast hoặc khôi phục staging#56.
 
 ## Gate 26/11/2026 — lịch sử, cập nhật mới ở trên
 

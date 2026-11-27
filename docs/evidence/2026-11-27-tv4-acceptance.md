@@ -1,5 +1,9 @@
 # TV4 — công việc chung và bàn giao theo GitHub, 27/11/2026
 
+> **LỊCH SỬ — báo cáo lượt đầu27/11.** [Trạng thái r2 hiện hành](2026-11-27-r2-acceptance.md)
+> đã có #42 PASS độc lập và candidate integration/runtime proof. Các câu “NOT READY”/“chỉ static”
+> bên dưới chỉ là quan sát tại thời điểm cũ, không phải blocker bàn giao mới. Giữ nguyên evidence/source/counts lịch sử.
+
 ## 1. Baseline / nguồn tin
 
 Đọc README, manifest scripts, tracked guidance, Git status/remotes/branches/worktrees và đầy đủ GitHub body/comments/reviews/inline/pagination cho #6/#7/#19/#20/#40/#41/#42/#44, PR60/61/62/52. Không có root `AGENTS.md` hoặc AGENTS tracked trên cây PR60/Dev đã kiểm. Không nhận bài cá nhân vào phạm vi. GitHub API raw và transcripts đầy đủ nằm ngoài repo `/tmp/tv4-review-20261127`; links công khai theo từng báo cáo bên dưới.

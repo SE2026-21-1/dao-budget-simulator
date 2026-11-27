@@ -1,4 +1,8 @@
-# Bản nháp GitHub — TV4, 27/11/2026
+# Bản nháp GitHub — TV4, 27/11/2026, lượt đầu (đã thay thế)
+
+> **KHÔNG DÙNG ĐỂ ĐĂNG:** [draft r2 hiện hành](2026-11-27-r2-handoff-drafts.md) thay bản này.
+> #42 đã PASS scoped qua kiểm độc lập; “receiver NOT READY” dưới đây là lịch sử chưa đăng,
+> không phải nội dung bàn giao hiện hành. HEAD/CI/candidate mới được ghim ở report r2.
 
 **CHƯA ĐĂNG.** Người dùng xem trước; không tạo comment/review/request trùng, không tự resolve/approve/đóng issue. Các link báo cáo thuộc cùng commit bàn giao chứa file này; full product/evidence/approved/CI SHAs có trong [báo cáo chung](2026-11-27-tv4-acceptance.md).
 

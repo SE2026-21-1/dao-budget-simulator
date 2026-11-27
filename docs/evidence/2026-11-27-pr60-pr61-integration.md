@@ -1,5 +1,9 @@
 # PR60 / PR61 / Dev — đánh giá tích hợp tĩnh, 27/11/2026
 
+> **LỊCH SỬ — patch tĩnh bound head60 d4d405f, chưa runtime-test ở lượt này.**
+> [Candidate integration/runtime verification r2](2026-11-27-r2-integration.md) dùng head60 mới24f66b6,
+> giữ lịch sử PR61/Dev trên nhánh ứng viên riêng; chưa merge PR vào Dev. Không áp patch dưới đây mù lên HEAD mới.
+
 ## Phạm vi và kết luận
 
 Đã đọc đầy đủ body/comments/reviews/inline trong `/tmp/tv4-review-20261127/scope-60.md` (740 dòng), `scope-61.md` (113 dòng), `scope-52.md` (83 dòng), và Git delta liên quan. Các file dài/truncated được đọc tiếp bằng raw ranges, không suy từ bản tóm tắt. Đây là **review tích hợp + patch chuẩn bị**, không phải merge, approval mới, release hay deployment acceptance.

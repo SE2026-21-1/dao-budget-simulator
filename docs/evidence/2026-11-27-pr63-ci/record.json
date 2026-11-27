@@ -1,0 +1,2073 @@
+{
+  "pullRequest": 63,
+  "head": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+  "base": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+  "mergeRef": "refs/pull/63/merge",
+  "actualMergeCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+  "runs": [
+    {
+      "id": 46034162713,
+      "name": "TV4 CI",
+      "event": "pull_request",
+      "head": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+      "base": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+      "conclusion": "success",
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713",
+      "jobs": [
+        {
+          "id": 140625241005,
+          "name": "BE04 projection semantics and atomic PostgreSQL publication",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241005",
+          "logSha256": "d70cf94378757a34be254d2bcb89bb719ca74f8f442fa99e8a0d71548d726a0b",
+          "logBytes": 28926,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:26.1781100Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:26.1847692Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:36.0529966Z ✔ malformed/unknown business log cannot be silently skipped (0.897381ms)",
+            "2026-11-27T16:30:36.9494832Z ℹ tests 32",
+            "2026-11-27T16:30:36.9496154Z ℹ pass 32",
+            "2026-11-27T16:30:36.9496453Z ℹ fail 0",
+            "2026-11-27T16:30:36.9497033Z ℹ skipped 0",
+            "2026-11-27T16:30:54.3795523Z ℹ tests 11",
+            "2026-11-27T16:30:54.3796074Z ℹ pass 11",
+            "2026-11-27T16:30:54.3796308Z ℹ fail 0",
+            "2026-11-27T16:30:54.3796865Z ℹ skipped 0"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm run typecheck && npm run build",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run npm run test:be04",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Run npm run test:be04:db",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241480,
+          "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241480",
+          "logSha256": "f7eca00c0585cfb2b88f264a481623366de54125f8b86a46fbc8a9bcdd9226c0",
+          "logBytes": 137572,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:30.7679467Z  * [new branch]      feature/tv2-be08                         -> origin/feature/tv2-be08",
+            "2026-11-27T16:30:30.7693182Z  * [new branch]      tv4/be08-outage-lifecycle-20261122       -> origin/tv4/be08-outage-lifecycle-20261122",
+            "2026-11-27T16:30:30.9515153Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:35.6991111Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:40.9571095Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:45.8679040Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:50.8573007Z [PASS] testConcurrentSnapshotsBudgetRaceRetryAndSharedRequestStayIndependent() (gas: 15850886)",
+            "2026-11-27T16:30:50.8992708Z Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest",
+            "2026-11-27T16:30:50.8993427Z [PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)",
+            "2026-11-27T16:30:50.8994109Z [PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)",
+            "2026-11-27T16:30:50.8994680Z [PASS] testCurrentTimepointLookupReverts() (gas: 20959)",
+            "2026-11-27T16:30:50.8995278Z [PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)",
+            "2026-11-27T16:30:50.8995924Z [PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)",
+            "2026-11-27T16:30:50.8996528Z [PASS] testFutureTimepointLookupReverts() (gas: 20922)",
+            "2026-11-27T16:30:50.8997397Z [PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13999, ~: 14089)",
+            "2026-11-27T16:30:50.8998284Z [PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 215105, ~: 215114)",
+            "2026-11-27T16:30:50.8998962Z [PASS] testMetadataAndInitialDistribution() (gas: 83285)",
+            "2026-11-27T16:30:50.8999406Z [PASS] testNoPublicMint() (gas: 45653)",
+            "2026-11-27T16:30:50.8999854Z [PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)",
+            "2026-11-27T16:30:50.9000348Z [PASS] testPastVotesAndPastSupply() (gas: 146978)",
+            "2026-11-27T16:30:50.9000904Z [PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)",
+            "2026-11-27T16:30:50.9001502Z [PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)",
+            "2026-11-27T16:30:50.9002266Z [PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)",
+            "2026-11-27T16:30:50.9032691Z Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest",
+            "2026-11-27T16:30:50.9062538Z [PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)",
+            "2026-11-27T16:30:50.9093077Z [PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)",
+            "2026-11-27T16:30:50.9182620Z Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest",
+            "2026-11-27T16:30:50.9212493Z [PASS] testApproveAndTransferFrom() (gas: 164697)",
+            "2026-11-27T16:30:50.9242637Z [PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)",
+            "2026-11-27T16:30:50.9272801Z [PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86403, ~: 86628)",
+            "2026-11-27T16:30:50.9302475Z [PASS] testMetadataAndInitialSupply() (gas: 53852)",
+            "2026-11-27T16:30:50.9332471Z [PASS] testNoPublicMint() (gas: 45672)",
+            "2026-11-27T16:30:50.9362480Z [PASS] testTransferAboveBalanceReverts() (gas: 51581)",
+            "2026-11-27T16:30:50.9392651Z [PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)",
+            "2026-11-27T16:30:50.9422642Z [PASS] testTransferHasNoFee() (gas: 84330)",
+            "2026-11-27T16:30:50.9452700Z [PASS] testZeroInitialHolderReverts() (gas: 4012)",
+            "2026-11-27T16:30:50.9532694Z Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest",
+            "2026-11-27T16:30:50.9562645Z [PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)",
+            "2026-11-27T16:30:50.9563261Z [PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)",
+            "2026-11-27T16:30:50.9563898Z [PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)",
+            "2026-11-27T16:30:50.9564562Z [PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)",
+            "2026-11-27T16:30:50.9565466Z [PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)",
+            "2026-11-27T16:30:50.9566159Z [PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)",
+            "2026-11-27T16:30:50.9566855Z [PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)",
+            "2026-11-27T16:30:50.9567533Z [PASS] testConstructorRejectsZeroAdmin() (gas: 6350)",
+            "2026-11-27T16:30:50.9568055Z [PASS] testConstructorRejectsZeroToken() (gas: 6273)",
+            "2026-11-27T16:30:50.9568725Z [PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)",
+            "2026-11-27T16:30:50.9569288Z [PASS] testDuplicateRequestReverts() (gas: 139952)",
+            "2026-11-27T16:30:50.9569895Z [PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)",
+            "2026-11-27T16:30:50.9570576Z [PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)",
+            "2026-11-27T16:30:50.9571307Z [PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)",
+            "2026-11-27T16:30:50.9571978Z [PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)",
+            "2026-11-27T16:30:50.9572927Z [PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 188006, ~: 187861)",
+            "2026-11-27T16:30:50.9573522Z [PASS] testGrantAndRevokeSpendingRole() (gas: 237073)",
+            "2026-11-27T16:30:50.9574143Z [PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)",
+            "2026-11-27T16:30:50.9574870Z [PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)",
+            "2026-11-27T16:30:50.9575442Z [PASS] testNativeValueRejected() (gas: 56431)",
+            "2026-11-27T16:30:50.9575867Z [PASS] testOrdinaryWalletCannotPay() (gas: 60949)",
+            "2026-11-27T16:30:50.9576413Z [PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)",
+            "2026-11-27T16:30:50.9577111Z [PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)",
+            "2026-11-27T16:30:50.9577850Z [PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)",
+            "2026-11-27T16:30:50.9602641Z [PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)",
+            "2026-11-27T16:30:50.9632624Z [PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)",
+            "2026-11-27T16:30:50.9662534Z [PASS] testTreasuryRecipientReverts() (gas: 39549)",
+            "2026-11-27T16:30:50.9692543Z [PASS] testZeroAmountReverts() (gas: 41310)",
+            "2026-11-27T16:30:50.9722483Z [PASS] testZeroRecipientReverts() (gas: 38984)",
+            "2026-11-27T16:30:50.9752540Z [PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)",
+            "2026-11-27T16:30:51.0652713Z Ran 82 tests for tests/unit/BudgetGovernor.t.sol:BudgetGovernorTest",
+            "2026-11-27T16:30:51.0682509Z [PASS] testAbstainAloneCannotWin() (gas: 270722)",
+            "2026-11-27T16:30:51.0712688Z [PASS] testAllSensitiveCallsRejectOrdinaryWallet() (gas: 619536)",
+            "2026-11-27T16:30:51.0742694Z [PASS] testBalanceTransferAfterSnapshotDoesNotChangeVoteWeight() (gas: 455801)",
+            "2026-11-27T16:30:51.0768450Z [PASS] testBalanceWithoutDelegationCannotPropose() (gas: 187207)",
+            "2026-11-27T16:30:51.0792530Z [PASS] testBelowThresholdCannotPropose() (gas: 269148)",
+            "2026-11-27T16:30:51.0793193Z [PASS] testCannotQueueBeforeVotingCompletes() (gas: 293713)",
+            "2026-11-27T16:30:51.0852669Z [PASS] testConstructorAndConfiguration() (gas: 130055)",
+            "2026-11-27T16:30:51.0912685Z [PASS] testConstructorRejectsBlockNumberClock() (gas: 147809)",
+            "2026-11-27T16:30:51.0913502Z [PASS] testCopiedProposalCannotReplaceFirstCreatorOrCancelRights() (gas: 480628)",
+            "2026-11-27T16:30:51.0942688Z [PASS] testCorrectSelectorTruncatedTo35BytesRejected() (gas: 104004)",
+            "2026-11-27T16:30:51.0943418Z [PASS] testCorrectSelectorTruncatedTo36BytesRejected() (gas: 104200)",
+            "2026-11-27T16:30:51.0944107Z [PASS] testCorrectSelectorTruncatedTo4BytesRejected() (gas: 90500)",
+            "2026-11-27T16:30:51.0944759Z [PASS] testCorrectSelectorTruncatedTo67BytesRejected() (gas: 112469)",
+            "2026-11-27T16:30:51.0945415Z [PASS] testCorrectSelectorTruncatedTo68BytesRejected() (gas: 112553)",
+            "2026-11-27T16:30:51.0946121Z [PASS] testCorrectSelectorTruncatedTo99BytesRejected() (gas: 117935)",
+            "2026-11-27T16:30:51.0946804Z [PASS] testCreatorCanCancelAtSnapshotWhileStillPending() (gas: 222183)",
+            "2026-11-27T16:30:51.0947779Z [PASS] testCreatorCancelsPendingAndBlocksAllActions() (gas: 335121)",
+            "2026-11-27T16:30:51.0972575Z [PASS] testCreatorCannotCancelActive() (gas: 209480)",
+            "2026-11-27T16:30:51.0973227Z [PASS] testCreatorCannotCancelDefeated() (gas: 255766)",
+            "2026-11-27T16:30:51.0973783Z [PASS] testCreatorCannotCancelExecuted() (gas: 710818)",
+            "2026-11-27T16:30:51.0974300Z [PASS] testCreatorCannotCancelQueued() (gas: 521186)",
+            "2026-11-27T16:30:51.1002571Z [PASS] testCreatorCannotCancelSucceeded() (gas: 361699)",
+            "2026-11-27T16:30:51.1003195Z [PASS] testDelegateAfterSnapshotDoesNotCreateVotes() (gas: 424914)",
+            "2026-11-27T16:30:51.1003933Z [PASS] testDelegateChangeAfterSnapshotDoesNotChangeVoteWeight() (gas: 452479)",
+            "2026-11-27T16:30:51.1004669Z [PASS] testDelegatingToAnotherWalletMovesVotesNotTokens() (gas: 437786)",
+            "2026-11-27T16:30:51.1005303Z [PASS] testDelegationMustBePastForThreshold() (gas: 268354)",
+            "2026-11-27T16:30:51.1005879Z [PASS] testDescriptionBytesAreNotReserialized() (gas: 63692)",
+            "2026-11-27T16:30:51.1006561Z [PASS] testDirtyAddressPaddingRejected() (gas: 105786)",
+            "2026-11-27T16:30:51.1007265Z [PASS] testDistinctProposalsSharingRequestPayOnlyOnce() (gas: 1173687)",
+            "2026-11-27T16:30:51.1008001Z [PASS] testDuplicateVoteRejectedAcrossEntryPoints() (gas: 283476)",
+            "2026-11-27T16:30:51.1008595Z [PASS] testExactlyThresholdCanPropose() (gas: 348529)",
+            "2026-11-27T16:30:51.1009086Z [PASS] testExecuteChangedAmountRejected() (gas: 659889)",
+            "2026-11-27T16:30:51.1009645Z [PASS] testExecuteChangedDescriptionHashRejected() (gas: 649970)",
+            "2026-11-27T16:30:51.1010210Z [PASS] testExecuteChangedRecipientRejected() (gas: 659857)",
+            "2026-11-27T16:30:51.1010817Z [PASS] testExecuteInsufficientBudgetRollsBackAndRetries() (gas: 981703)",
+            "2026-11-27T16:30:51.1011447Z [PASS] testExecuteNonexistentProposalRejected() (gas: 172550)",
+            "2026-11-27T16:30:51.1011982Z [PASS] testExecuteWithoutQueueRejected() (gas: 419301)",
+            "2026-11-27T16:30:51.1012683Z [PASS] testExtendedSignedVoteSnapshotParamsAndReplay() (gas: 732656)",
+            "2026-11-27T16:30:51.1013846Z [PASS] testFor400Against300SucceedsWithoutAutomaticPayment() (gas: 386310)",
+            "2026-11-27T16:30:51.1032514Z [PASS] testForPlusAbstainReachesQuorum() (gas: 567575)",
+            "2026-11-27T16:30:51.1033371Z [PASS] testFuzzConstructorRejectsZeroOrEOA(uint8,bool) (runs: 256, μ: 12954, ~: 12126)",
+            "2026-11-27T16:30:51.1034333Z [PASS] testFuzzDirtyAddressPaddingWithValidSelector(uint8,uint8) (runs: 256, μ: 115656, ~: 115892)",
+            "2026-11-27T16:30:51.1035245Z [PASS] testFuzzMalformedCalldataLengthRejected(uint8) (runs: 256, μ: 70681, ~: 70602)",
+            "2026-11-27T16:30:51.1036120Z [PASS] testFuzzMismatchedArrayLengthsRejected(uint8,uint8) (runs: 256, μ: 77700, ~: 77886)",
+            "2026-11-27T16:30:51.1037052Z [PASS] testFuzzValidPayloadWithTrailingBytesRejected(bytes) (runs: 256, μ: 124534, ~: 122571)",
+            "2026-11-27T16:30:51.1037738Z [PASS] testGovernorSettingsProposalRejected() (gas: 84151)",
+            "2026-11-27T16:30:51.1038243Z [PASS] testGrantRoleSelectorRejected() (gas: 87978)",
+            "2026-11-27T16:30:51.1038727Z [PASS] testInsufficientQuorumDefeated() (gas: 350483)",
+            "2026-11-27T16:30:51.1039193Z [PASS] testInvalidVoteTypeRejected() (gas: 213912)",
+            "2026-11-27T16:30:51.1039696Z [PASS] testLossDespiteQuorumDefeated() (gas: 637681)",
+            "2026-11-27T16:30:51.1040394Z [PASS] testMultipleActionsRejected() (gas: 227372)",
+            "2026-11-27T16:30:51.1040856Z [PASS] testNativeValueRejected() (gas: 95588)",
+            "2026-11-27T16:30:51.1041342Z [PASS] testOtherWalletCannotCancelPending() (gas: 186859)",
+            "2026-11-27T16:30:51.1041997Z [PASS] testProposalCreatedPreservesRawIntegrationData() (gas: 180927)",
+            "2026-11-27T16:30:51.1072737Z [PASS] testProposalDoesNotReserveBudgetOrRequireUnusedRequest() (gas: 294025)",
+            "2026-11-27T16:30:51.1102455Z [PASS] testQueueChangedAmountRejected() (gas: 520039)",
+            "2026-11-27T16:30:51.1113619Z [PASS] testQueueChangedDescriptionHashRejected() (gas: 510140)",
+            "2026-11-27T16:30:51.1114303Z [PASS] testQueueChangedRecipientRejected() (gas: 520028)",
+            "2026-11-27T16:30:51.1114856Z [PASS] testQueueNonexistentProposalRejected() (gas: 172515)",
+            "2026-11-27T16:30:51.1115398Z [PASS] testRevokeRoleSelectorRejected() (gas: 87957)",
+            "2026-11-27T16:30:51.1115866Z [PASS] testSC01FixtureHash() (gas: 11092)",
+            "2026-11-27T16:30:51.1116635Z [PASS] testSettingsCannotBeChangedDirectlyByWallet() (gas: 32301)",
+            "2026-11-27T16:30:51.1117328Z [PASS] testSignedVoteAfterDeadlineRejectedAndNonceUnchanged() (gas: 526827)",
+            "2026-11-27T16:30:51.1118049Z [PASS] testSignedVoteBeforeActiveRollsBackNonceAndCanRetry() (gas: 569340)",
+            "2026-11-27T16:30:51.1118707Z [PASS] testSignedVoteUsesSnapshotAndRejectsReplay() (gas: 718979)",
+            "2026-11-27T16:30:51.1119275Z [PASS] testSuccessfulExecuteCannotReplay() (gas: 726441)",
+            "2026-11-27T16:30:51.1119914Z [PASS] testTamperedSignedSupportRejectedWithoutConsumingNonce() (gas: 559409)",
+            "2026-11-27T16:30:51.1120463Z [PASS] testTieDefeated() (gas: 454398)",
+            "2026-11-27T16:30:51.1121007Z [PASS] testTimelockIdentityAloneCannotInvokeSensitiveCalls() (gas: 631883)",
+            "2026-11-27T16:30:51.1121587Z [PASS] testTimelockTargetRejected() (gas: 80688)",
+            "2026-11-27T16:30:51.1122204Z [PASS] testTokenTransferSelectorRejected() (gas: 90293)",
+            "2026-11-27T16:30:51.1122679Z [PASS] testTrailingDataRejected() (gas: 80988)",
+            "2026-11-27T16:30:51.1123141Z [PASS] testTreasuryRecipientRejected() (gas: 113310)",
+            "2026-11-27T16:30:51.1123594Z [PASS] testValidProposalAndHash() (gas: 189784)",
+            "2026-11-27T16:30:51.1124147Z [PASS] testVoteWithParamsCannotInjectWeightOrVoteTwice() (gas: 585505)",
+            "2026-11-27T16:30:51.1124694Z [PASS] testVotingWindowBoundaries() (gas: 556662)",
+            "2026-11-27T16:30:51.1125228Z [PASS] testWrongSelectorWithCorrectLengthRejected() (gas: 88041)",
+            "2026-11-27T16:30:51.1125806Z [PASS] testWrongTargetRejectedOnDirectPropose() (gas: 80698)",
+            "2026-11-27T16:30:51.1126291Z [PASS] testZeroAmountRejected() (gas: 105548)",
+            "2026-11-27T16:30:51.1126709Z [PASS] testZeroRecipientRejected() (gas: 110764)",
+            "2026-11-27T16:30:51.1127165Z [PASS] testZeroRequestAccepted() (gas: 159730)",
+            "2026-11-27T16:30:51.1127633Z [PASS] testZeroVotingPowerWeightIsZero() (gas: 326441)",
+            "2026-11-27T16:30:51.1238349Z Ran 40 tests for tests/integration/TimelockGovernance.t.sol:TimelockGovernanceTest",
+            "2026-11-27T16:30:51.1239087Z [PASS] testAdminGraphAndNoBootstrapAdminChanges() (gas: 1909359)",
+            "2026-11-27T16:30:51.1239792Z [PASS] testAuditorRejectsUnexpectedAdminChangedLog() (gas: 5035536)",
+            "2026-11-27T16:30:51.1240357Z [PASS] testCannotQueueActive() (gas: 228883)",
+            "2026-11-27T16:30:51.1240903Z [PASS] testCannotQueueCanceled() (gas: 262473)",
+            "2026-11-27T16:30:51.1241390Z [PASS] testCannotQueueDefeated() (gas: 260613)",
+            "2026-11-27T16:30:51.1241764Z [PASS] testCannotQueuePending() (gas: 220131)",
+            "2026-11-27T16:30:51.1242338Z [PASS] testCleanBootstrapRequiresQueueBeforeExecute() (gas: 826645)",
+            "2026-11-27T16:30:51.1242901Z [PASS] testConcurrentProposalsDoNotReserveBudgetAndRetryAfterTopup() (gas: 1581141)",
+            "2026-11-27T16:30:51.1243376Z [PASS] testExecuteAtETAminusOneReverts() (gas: 674721)",
+            "2026-11-27T16:30:51.1243775Z [PASS] testExecuteAtETAplusOneByNonHolder() (gas: 1327844)",
+            "2026-11-27T16:30:51.1244177Z [PASS] testExecuteCannotRepeatAfterDone() (gas: 734715)",
+            "2026-11-27T16:30:51.1244604Z [PASS] testExecuteImmediatelyAfterQueueReverts() (gas: 674317)",
+            "2026-11-27T16:30:51.1245200Z [PASS] testFinalRoleMatrixAndFullBootstrapHistory() (gas: 2403083)",
+            "2026-11-27T16:30:51.1245696Z [PASS] testFormerBootstrapCannotChangeDelayOrRenounceOthers() (gas: 647255)",
+            "2026-11-27T16:30:51.1246192Z [PASS] testFormerBootstrapCannotRegrantTreasuryRoles() (gas: 668277)",
+            "2026-11-27T16:30:51.1246707Z [PASS] testFormerBootstrapCannotScheduleOrExecuteReadyBatch() (gas: 678276)",
+            "2026-11-27T16:30:51.1247440Z [PASS] testFuzzExecuteTamperingDoesNotConsumeReadyOperation(uint8) (runs: 256, μ: 631906, ~: 631330)",
+            "2026-11-27T16:30:51.1248167Z [PASS] testFuzzFormerBootstrapAndUsersCannotChangeRoles(uint8,uint8,bool) (runs: 256, μ: 534256, ~: 533727)",
+            "2026-11-27T16:30:51.1248741Z [PASS] testGovernorUsesBatchOperationNotSingleCallHash() (gas: 569216)",
+            "2026-11-27T16:30:51.1249214Z [PASS] testHistoryAuditorRejectsPublicExecutor() (gas: 6869851)",
+            "2026-11-27T16:30:51.1249738Z [PASS] testHistoryAuditorRejectsUnknownBootstrapHolder() (gas: 6891429)",
+            "2026-11-27T16:30:51.1250241Z [PASS] testInsufficientBudgetRetriesSameReadyOperation() (gas: 955211)",
+            "2026-11-27T16:30:51.1250749Z [PASS] testPreflightRejectsMissingExecutorBeforeRenounce() (gas: 6352030)",
+            "2026-11-27T16:30:51.1251327Z [PASS] testPreflightRejectsStaleScheduledOperationBeforeRenounce() (gas: 9008071)",
+            "2026-11-27T16:30:51.1251812Z [PASS] testPreflightRejectsWrongChain() (gas: 4358614)",
+            "2026-11-27T16:30:51.1252383Z [PASS] testPreflightRejectsWrongDelay() (gas: 4413855)",
+            "2026-11-27T16:30:51.1252899Z [PASS] testPreflightRejectsWrongTokenLink() (gas: 4408128)",
+            "2026-11-27T16:30:51.1253511Z [PASS] testQueueByNonHolderEmitsBatchOperationAndETA() (gas: 638974)",
+            "2026-11-27T16:30:51.1253960Z [PASS] testQueuedProposalCannotQueueAgain() (gas: 619124)",
+            "2026-11-27T16:30:51.1254341Z [PASS] testRelayCannotBypassRolesAfterFinalBootstrap() (gas: 681190)",
+            "2026-11-27T16:30:51.1254766Z [PASS] testRoleChangingProposalRejectedAfterFinalBootstrap() (gas: 699873)",
+            "2026-11-27T16:30:51.1255245Z [PASS] testSecondProposalCanWinSharedRequestWhenExecutedFirst() (gas: 1275864)",
+            "2026-11-27T16:30:51.1255773Z [PASS] testStaleBootstrapOperationExecutesSucceededWithoutGovernorQueue() (gas: 15670691)",
+            "2026-11-27T16:30:51.1257038Z [PASS] testTC01ExecuteExactlyAtETAByNonHolder() (gas: 1327799)",
+            "2026-11-27T16:30:51.1257473Z [PASS] testTwoDistinctProposalsWithSameRequestPayOnce() (gas: 1273506)",
+            "2026-11-27T16:30:51.1257952Z [PASS] testUserAndFormerBootstrapCannotCancelTimelockOperation() (gas: 664951)",
+            "2026-11-27T16:30:51.1258472Z [PASS] testUserCannotExecuteReadyOperationDirectlySingleOrBatch() (gas: 824851)",
+            "2026-11-27T16:30:51.1258914Z [PASS] testUserCannotScheduleSingleOrBatchDirectly() (gas: 248389)",
+            "2026-11-27T16:30:51.1259325Z [PASS] testUsersAndFormerBootstrapCannotDisburseTreasury() (gas: 170330)",
+            "2026-11-27T16:30:51.1259776Z [PASS] testZeroRequestIdCanBePaidOnlyOnceAcrossProposals() (gas: 1277605)",
+            "2026-11-27T16:30:53.4639074Z Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest",
+            "2026-11-27T16:30:53.4639607Z [PASS]",
+            "2026-11-27T16:30:53.4640482Z [PASS] invariant_accountingMatchesSuccessfulPaymentOracle",
+            "2026-11-27T16:30:53.4640978Z [PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs",
+            "2026-11-27T16:30:53.4641403Z [PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay",
+            "2026-11-27T16:30:53.4647369Z [PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)",
+            "2026-11-27T16:31:09.2153919Z [PASS]",
+            "2026-11-27T16:31:09.2154659Z [PASS] invariant_INV01_requestPaymentsAreUniqueAcrossProposalsAndRetries",
+            "2026-11-27T16:31:09.2155118Z [PASS] invariant_INV02_everyPayoutHasValidGovernanceAndFinalRoles",
+            "2026-11-27T16:31:09.2155547Z [PASS] invariant_INV03_treasuryAndRecipientsMatchCommittedLedger",
+            "2026-11-27T16:31:09.2156026Z [PASS] invariant_INV04_snapshotWeightsAndTalliesRemainIndependentOfTokenChanges",
+            "2026-11-27T16:31:09.2317825Z Ran 9 test suites in 18.39s (21.54s CPU time): 182 tests passed, 0 failed, 0 skipped (182 total tests)",
+            "2026-11-27T16:31:36.3961853Z ✔ incomplete and mismatched recursive checkouts fail before compiler artifact access (300.464536ms)",
+            "2026-11-27T16:31:36.3975657Z ✔ final API reads retain the summary snapshot when publication advances before detail and transfers (0.912967ms)",
+            "2026-11-27T16:31:36.3976486Z ✔ omitting the pin on /proposals/7 selects a newer publication and must fail reconciliation (0.468476ms)",
+            "2026-11-27T16:31:36.3977287Z ✔ omitting the pin on /treasury/transfers selects a newer publication and must fail reconciliation (0.230707ms)",
+            "2026-11-27T16:31:36.3977897Z ✔ rendered UI hash and revision match the summary (0.10185ms)",
+            "2026-11-27T16:31:36.3978517Z ✔ rendered UI revision mismatch at the same hash fails the runner oracle (0.150334ms)",
+            "2026-11-27T16:31:36.3979146Z ✔ rendered UI hash mismatch still fails even at the same revision (0.153102ms)",
+            "2026-11-27T16:31:36.6809988Z ✔ unconfirmed final funding cannot borrow a confirmed receipt or journal false K2 success (4275.836654ms)",
+            "2026-11-27T16:31:36.6810621Z ✔ funding submission cannot borrow a delegation hash while its genuine receipt has zero descendants (4285.227194ms)",
+            "2026-11-27T16:31:36.7116203Z ℹ tests 67",
+            "2026-11-27T16:31:36.7116869Z ℹ pass 67",
+            "2026-11-27T16:31:36.7117025Z ℹ fail 0",
+            "2026-11-27T16:31:36.7117416Z ℹ skipped 0",
+            "2026-11-27T16:31:36.7197653Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:31:37.2099686Z Warning: you are leaving 63 commits behind, not connected to",
+            "2026-11-27T16:31:37.2105783Z HEAD is now at 5ba9371 merge(sc06): integrate canonical ABI and chain fixtures",
+            "2026-11-27T16:32:01.8257859Z ℹ tests 32",
+            "2026-11-27T16:32:01.8258251Z ℹ pass 32",
+            "2026-11-27T16:32:01.8258408Z ℹ fail 0",
+            "2026-11-27T16:32:01.8258747Z ℹ skipped 0",
+            "2026-11-27T16:32:23.8423738Z ℹ tests 8",
+            "2026-11-27T16:32:23.8424313Z ℹ pass 8",
+            "2026-11-27T16:32:23.8424537Z ℹ fail 0",
+            "2026-11-27T16:32:23.8424991Z ℹ skipped 0",
+            "2026-11-27T16:32:23.8503498Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:32:25.3521105Z PASS: Treasury local transactions and live BE02 receipt decoding. Evidence: /home/runner/work/dao-budget-simulator/dao-budget-simulator/reports/sc03-local-smoke.json",
+            "2026-11-27T16:32:25.3653525Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:32:44.7427090Z PASS: real local Governor -> Timelock -> Treasury, final roles, attacks/retry, live BE02 decoding. Evidence: /home/runner/work/dao-budget-simulator/dao-budget-simulator/reports/sc04-local-smoke.json",
+            "2026-11-27T16:32:44.7625623Z PASS: real governance chain to PostgreSQL, explicit restart and same-H raw replay. Not projection/API/reorg acceptance.",
+            "2026-11-27T16:32:44.8948704Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:32:53.6421228Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install pinned Foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Set up Node.js for live receipt verification",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Install locked smoke dependencies",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Build, format, tests and ABI fixture",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Verify bootstrap authority and recursive dependency provenance",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Verify historical SC06 provenance and fresh integration quorum mutations",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Verify interrupted smoke cleans owned processes and files",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Exercise Treasury transactions and BE02 live receipt decoding",
+              "conclusion": "success"
+            },
+            {
+              "number": 12,
+              "name": "Exercise final roles, live governance ingestion, restart and raw replay",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Reconcile BE04 projections with live governance at confirmed H",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Record scope of checks",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Upload check evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 27,
+              "name": "Post Set up Node.js for live receipt verification",
+              "conclusion": "success"
+            },
+            {
+              "number": 28,
+              "name": "Post Install pinned Foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 29,
+              "name": "Post Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "number": 30,
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 31,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241498,
+          "name": "Frontend lint and production build",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241498",
+          "logSha256": "224d4414295081831066b68f825ebdde4a473bebaf0bc5fbce89eaf407916013",
+          "logBytes": 25769,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:30.9894195Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:30.9950418Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:35.4560322Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:38.9571951Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:39.1155414Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:43.0376370Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Checkout integrated frontend and canonical BE01 fixtures",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install locked frontend dependencies",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Lint frontend",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Typecheck and build production frontend",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Record frontend scope and versions",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Upload frontend build and evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Checkout integrated frontend and canonical BE01 fixtures",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241507,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241507",
+          "logSha256": "b9d7450252beda88e91a2a49ce85ceb8544f807b3efaa37d38d33647704407db",
+          "logBytes": 43179,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:24.7641828Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:24.7730016Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:29.3989187Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:31.0431516Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:33.4798018Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:35.5460926Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:46.5018841Z ✔ all supported administrative layouts match shared compiler ABI and reject malformed encoding (99.771152ms)",
+            "2026-11-27T16:30:46.5020450Z ✔ historical receipt regression: all 16 bootstrap logs decode and raw bytes remain unchanged (75.688993ms)",
+            "2026-11-27T16:30:46.5109922Z ℹ tests 103",
+            "2026-11-27T16:30:46.5110601Z ℹ pass 103",
+            "2026-11-27T16:30:46.5110930Z ℹ fail 0",
+            "2026-11-27T16:30:46.5111604Z ℹ skipped 0",
+            "2026-11-27T16:30:46.5274173Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:59.0287840Z ℹ tests 21",
+            "2026-11-27T16:30:59.0288994Z ℹ pass 21",
+            "2026-11-27T16:30:59.0289285Z ℹ fail 0",
+            "2026-11-27T16:30:59.0289957Z ℹ skipped 0",
+            "2026-11-27T16:30:59.0340953Z PASS: BE01 migration/constraints and BE02 storage/CLI on isolated real PostgreSQL.",
+            "2026-11-27T16:30:59.2857181Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Checkout BE02 implementation",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Install locked dependencies",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Typecheck BE02 source and tests",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Build BE02",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Check BE02 synthetic RPC and decoder behavior",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Check BE02 storage and host CLI against isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Record BE02 scope, exact revision and tool versions",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Upload BE02 evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Post Checkout BE02 implementation",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241568,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241568",
+          "logSha256": "b3e085e410adfae3bfe999ff99a43d7d6931c1a2c31fed55c69cc0cbc62b8b54",
+          "logBytes": 27812,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:25.9604423Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:25.9699988Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:31.0878230Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:31.2956178Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:41.3574145Z PASS: BE01 migration and database constraints on isolated PostgreSQL.",
+            "2026-11-27T16:30:41.5490671Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Checkout BE01 schema and fixtures",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Check offline API fixtures",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Check migration and constraints in isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Record BE01 scope and versions",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Upload BE01 evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 13,
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Post Checkout BE01 schema and fixtures",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241587,
+          "name": "BE06 pinned-H rebuild and normalized compare",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241587",
+          "logSha256": "841554c18bd97c7fa8a01f945a3b18a2564f58b099dda9d633b01b1845a3d0da",
+          "logBytes": 77158,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:32.9097492Z ##[command]/usr/bin/docker create --name 55a249bae8544862936852afe95da4b0_postgres184_66b6e9 --label 7860f6 --network github_network_9c21b7b53bcd4e1285c018840b9f0732 --network-alias postgres -p 5432:5432 --health-cmd \"pg_isready -U be04_test -d postgres\" --health-interval 5s --health-timeout 3s --health-retries 20 -e \"POSTGRES_USER=be04_test\" -e \"POSTGRES_PASSWORD=be04_test\" -e \"POSTGRES_DB=postgres\" -e GITHUB_ACTIONS=true -e CI=true postgres:18.4",
+            "2026-11-27T16:30:40.8005302Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:45.0839686Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:55.5194997Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:31:05.1733970Z ℹ tests 5",
+            "2026-11-27T16:31:05.1755016Z ℹ pass 5",
+            "2026-11-27T16:31:05.1755306Z ℹ fail 0",
+            "2026-11-27T16:31:05.1755952Z ℹ skipped 0",
+            "2026-11-27T16:31:06.5262921Z ℹ tests 1",
+            "2026-11-27T16:31:06.5263347Z ℹ pass 1",
+            "2026-11-27T16:31:06.5263515Z ℹ fail 0",
+            "2026-11-27T16:31:06.5263890Z ℹ skipped 0"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Build and test BE06",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Create disposable BE06 databases",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Test BE06 against isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Run fresh Anvil and PostgreSQL rebuild/compare acceptance",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Upload BE06 live evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 22,
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 23,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241604,
+          "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241604",
+          "logSha256": "201f82cbcfc335834250ec5824d0c7f34507ee41e0672757772534dae4b90ded",
+          "logBytes": 59420,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:30.5673733Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:37.0752944Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:59.0698575Z ℹ tests 7",
+            "2026-11-27T16:30:59.0699353Z ℹ pass 7",
+            "2026-11-27T16:30:59.0699663Z ℹ fail 0",
+            "2026-11-27T16:30:59.0700567Z ℹ skipped 0",
+            "2026-11-27T16:31:04.2233101Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:31:09.6431382Z Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest",
+            "2026-11-27T16:31:09.6432138Z [PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)",
+            "2026-11-27T16:31:09.6433176Z [PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)",
+            "2026-11-27T16:31:09.6437052Z Ran 1 test suite in 6.58ms (2.32ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm run typecheck && npm run build",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run npm run test:api:db",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Run forge build",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Run forge test --match-path tests/unit/OperationAbiCompatibility.t.sol",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Run fresh Anvil, PostgreSQL and HTTP API integration",
+              "conclusion": "success"
+            },
+            {
+              "number": 11,
+              "name": "Upload BE05 live evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 22,
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 23,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241663,
+          "name": "Container build, release validation and Compose smoke",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241663",
+          "logSha256": "4a300256c8acc60e04c8894b4f1e2dfae8264c80ddde33f796003f67312fd92a",
+          "logBytes": 122495,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:25.7076538Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:33.3832131Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:44.5133449Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:53.2189850Z ✔ all existing SQL migrations retain their bodies without nested transaction wrappers (13.680544ms)",
+            "2026-11-27T16:30:53.2291575Z ✔ migration set hashes exact contents in sorted filename order (11.914487ms)",
+            "2026-11-27T16:30:53.2393143Z ✔ manifest rejects tags, cross-service digests, foreign registries and numeric run IDs (10.378324ms)",
+            "2026-11-27T16:30:53.2471751Z ℹ tests 7",
+            "2026-11-27T16:30:53.2472543Z ℹ pass 7",
+            "2026-11-27T16:30:53.2473409Z ℹ fail 0",
+            "2026-11-27T16:30:53.2474229Z ℹ skipped 0",
+            "2026-11-27T16:31:56.1629651Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:32:05.2651180Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:32:14.4259881Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:32:35.2433967Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:32:51.1502467Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:33:05.8514762Z Live runtime configuration, safe JS serialization, API proxy and chain publication: PASS",
+            "2026-11-27T16:33:08.1100727Z Container smoke PASS: genuine temporary Anvil metadata; nonroot runtime; live public config; API/worker/Postgres; PG18 volume recreation; distinct-image A->B->A rollback; no host database used."
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm ci && forge build",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Verify release rejection cases",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Build all application images without deployment secrets",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Smoke real services and preserve PostgreSQL data across recreation",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Save the exact tested image set",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 10,
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "skipped"
+            },
+            {
+              "number": 18,
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241795,
+          "name": "BE07 recovery, RPC failures and native database regressions",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241795",
+          "logSha256": "bcb27294e22c9491761e0311fb51f35d684c53f93197cba44c7425b417fd9302",
+          "logBytes": 75080,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:30.0265144Z ##[command]/usr/bin/docker create --name 88d6defa04e64950a3acfb913f52847e_postgres184_efb97e --label 5ec86f --network github_network_205d072dce9d4244aff45932cf7c1a55 --network-alias postgres -p 5432:5432 --health-cmd \"pg_isready -U be04_test -d postgres\" --health-interval 5s --health-timeout 3s --health-retries 20 -e \"POSTGRES_USER=be04_test\" -e \"POSTGRES_PASSWORD=be04_test\" -e \"POSTGRES_DB=postgres\" -e GITHUB_ACTIONS=true -e CI=true postgres:18.4",
+            "2026-11-27T16:30:37.9504501Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:45.3335483Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:56.0725707Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Run forge build",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140625241833,
+          "name": "be08-release-gate / be08",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241833",
+          "logSha256": "e539cc85f952d906704400656ebe827bdbdcb46f157c3f6c4f373f689725d6b3",
+          "logBytes": 230623,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:22.7558072Z Uses: SE2026-21-1/dao-budget-simulator/.github/workflows/be08.yml@refs/pull/63/merge (fe8df7cd1019d01b38f5f71a0a78865127c29f80)",
+            "2026-11-27T16:30:22.7561023Z Complete job name: be08-release-gate / be08",
+            "2026-11-27T16:30:31.6696183Z ##[command]/usr/bin/docker create --name ed84a3f5c8824b91bf14eda92f5f29e2_postgres184_a0a983 --label 56c9ae --network github_network_d42e4b9bf87b4e99931e7e3b5e10c3cb --network-alias postgres -p 5432:5432 --health-cmd \"pg_isready -U be08_admin -d postgres\" --health-interval 5s --health-timeout 3s --health-retries 20 -e \"POSTGRES_USER=be08_admin\" -e \"POSTGRES_PASSWORD=be08_ci_disposable\" -e \"POSTGRES_DB=postgres\" -e GITHUB_ACTIONS=true -e CI=true postgres:18.4",
+            "2026-11-27T16:30:39.4879918Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:45.7689106Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:51.7429097Z   cache-key: be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+            "2026-11-27T16:30:51.7429285Z   cache-restore-keys: be08-",
+            "2026-11-27T16:30:55.5333555Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:31:00.4660489Z ##[group]Run npm run test:be08:native -- --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark",
+            "2026-11-27T16:31:00.4661051Z npm run test:be08:native -- --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark",
+            "2026-11-27T16:31:00.5381661Z > dao-budget-simulator@0.0.0 test:be08:native",
+            "2026-11-27T16:31:00.5382103Z > node scripts/check_be08_native.mjs --admin-env BE08_ADMIN_URL --output reports/be08 --benchmark",
+            "2026-11-27T16:31:03.7749380Z # tests 21",
+            "2026-11-27T16:31:03.7750037Z # pass 21",
+            "2026-11-27T16:31:03.7750208Z # fail 0",
+            "2026-11-27T16:31:03.7750602Z # skipped 0",
+            "2026-11-27T16:31:05.7000702Z # tests 19",
+            "2026-11-27T16:31:05.7001624Z # pass 19",
+            "2026-11-27T16:31:05.7001832Z # fail 0",
+            "2026-11-27T16:31:05.7002192Z # skipped 0",
+            "2026-11-27T16:31:07.9135199Z # tests 11",
+            "2026-11-27T16:31:07.9135722Z # pass 11",
+            "2026-11-27T16:31:07.9135896Z # fail 0",
+            "2026-11-27T16:31:07.9136247Z # skipped 0",
+            "2026-11-27T16:31:08.9105186Z # tests 7",
+            "2026-11-27T16:31:08.9105600Z # pass 7",
+            "2026-11-27T16:31:08.9105757Z # fail 0",
+            "2026-11-27T16:31:08.9106092Z # skipped 0",
+            "2026-11-27T16:31:10.6303364Z # tests 1",
+            "2026-11-27T16:31:10.6303620Z # pass 1",
+            "2026-11-27T16:31:10.6303728Z # fail 0",
+            "2026-11-27T16:31:10.6304634Z # skipped 0",
+            "2026-11-27T16:31:16.1221352Z # Subtest: calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary",
+            "2026-11-27T16:31:16.1223587Z ok 32 - calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary",
+            "2026-11-27T16:31:16.1241464Z # Subtest: final worker trace rejects late fifth attempt",
+            "2026-11-27T16:31:16.1241984Z ok 37 - final worker trace rejects late fifth attempt",
+            "2026-11-27T16:31:16.1246563Z # Subtest: final worker trace rejects late fifth attempt across outage boundary",
+            "2026-11-27T16:31:16.1247257Z ok 39 - final worker trace rejects late fifth attempt across outage boundary",
+            "2026-11-27T16:31:23.2957925Z # Subtest: all supported administrative layouts match shared compiler ABI and reject malformed encoding",
+            "2026-11-27T16:31:23.2958493Z ok 60 - all supported administrative layouts match shared compiler ABI and reject malformed encoding",
+            "2026-11-27T16:31:23.2960041Z # Subtest: historical receipt regression: all 16 bootstrap logs decode and raw bytes remain unchanged",
+            "2026-11-27T16:31:23.2960581Z ok 61 - historical receipt regression: all 16 bootstrap logs decode and raw bytes remain unchanged",
+            "2026-11-27T16:31:23.3141396Z # tests 198",
+            "2026-11-27T16:31:23.3141604Z # pass 198",
+            "2026-11-27T16:31:23.3141706Z # fail 0",
+            "2026-11-27T16:31:23.3141915Z # skipped 0",
+            "2026-11-27T16:31:25.3849346Z # tests 19",
+            "2026-11-27T16:31:25.3850132Z # pass 19",
+            "2026-11-27T16:31:25.3850319Z # fail 0",
+            "2026-11-27T16:31:25.3850687Z # skipped 0",
+            "2026-11-27T16:31:25.7690140Z [PASS] testConcurrentSnapshotsBudgetRaceRetryAndSharedRequestStayIndependent() (gas: 15850886)",
+            "2026-11-27T16:31:25.7989623Z Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest",
+            "2026-11-27T16:31:25.7990276Z [PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)",
+            "2026-11-27T16:31:25.7990817Z [PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)",
+            "2026-11-27T16:31:25.7991266Z [PASS] testCurrentTimepointLookupReverts() (gas: 20959)",
+            "2026-11-27T16:31:25.7991745Z [PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)",
+            "2026-11-27T16:31:25.7992286Z [PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)",
+            "2026-11-27T16:31:25.7992769Z [PASS] testFutureTimepointLookupReverts() (gas: 20922)",
+            "2026-11-27T16:31:25.7993630Z [PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13999, ~: 14089)",
+            "2026-11-27T16:31:25.7994386Z [PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 215105, ~: 215114)",
+            "2026-11-27T16:31:25.7994978Z [PASS] testMetadataAndInitialDistribution() (gas: 83285)",
+            "2026-11-27T16:31:25.7995365Z [PASS] testNoPublicMint() (gas: 45653)",
+            "2026-11-27T16:31:25.7995744Z [PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)",
+            "2026-11-27T16:31:25.7996164Z [PASS] testPastVotesAndPastSupply() (gas: 146978)",
+            "2026-11-27T16:31:25.7996641Z [PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)",
+            "2026-11-27T16:31:25.7997143Z [PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)",
+            "2026-11-27T16:31:25.7997649Z [PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)",
+            "2026-11-27T16:31:25.8019919Z Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest",
+            "2026-11-27T16:31:25.8020534Z [PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)",
+            "2026-11-27T16:31:25.8021320Z [PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)",
+            "2026-11-27T16:31:25.8079324Z Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest",
+            "2026-11-27T16:31:25.8089306Z [PASS] testApproveAndTransferFrom() (gas: 164697)",
+            "2026-11-27T16:31:25.8090082Z [PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)",
+            "2026-11-27T16:31:25.8091036Z [PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86403, ~: 86628)",
+            "2026-11-27T16:31:25.8091710Z [PASS] testMetadataAndInitialSupply() (gas: 53852)",
+            "2026-11-27T16:31:25.8092216Z [PASS] testNoPublicMint() (gas: 45672)",
+            "2026-11-27T16:31:25.8092753Z [PASS] testTransferAboveBalanceReverts() (gas: 51581)",
+            "2026-11-27T16:31:25.8109280Z [PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)",
+            "2026-11-27T16:31:25.8109687Z [PASS] testTransferHasNoFee() (gas: 84330)",
+            "2026-11-27T16:31:25.8110036Z [PASS] testZeroInitialHolderReverts() (gas: 4012)",
+            "2026-11-27T16:31:25.8320420Z Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest",
+            "2026-11-27T16:31:25.8320903Z [PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)",
+            "2026-11-27T16:31:25.8321370Z [PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)",
+            "2026-11-27T16:31:25.8321870Z [PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)",
+            "2026-11-27T16:31:25.8322372Z [PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)",
+            "2026-11-27T16:31:25.8322896Z [PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)",
+            "2026-11-27T16:31:25.8323447Z [PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)",
+            "2026-11-27T16:31:25.8323906Z [PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)",
+            "2026-11-27T16:31:25.8324325Z [PASS] testConstructorRejectsZeroAdmin() (gas: 6350)",
+            "2026-11-27T16:31:25.8324718Z [PASS] testConstructorRejectsZeroToken() (gas: 6273)",
+            "2026-11-27T16:31:25.8325149Z [PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)",
+            "2026-11-27T16:31:25.8325564Z [PASS] testDuplicateRequestReverts() (gas: 139952)",
+            "2026-11-27T16:31:25.8326056Z [PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)",
+            "2026-11-27T16:31:25.8326611Z [PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)",
+            "2026-11-27T16:31:25.8327196Z [PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)",
+            "2026-11-27T16:31:25.8327731Z [PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)",
+            "2026-11-27T16:31:25.8328490Z [PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 188006, ~: 187861)",
+            "2026-11-27T16:31:25.8329065Z [PASS] testGrantAndRevokeSpendingRole() (gas: 237073)",
+            "2026-11-27T16:31:25.8329558Z [PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)",
+            "2026-11-27T16:31:25.8330181Z [PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)",
+            "2026-11-27T16:31:25.8330666Z [PASS] testNativeValueRejected() (gas: 56431)",
+            "2026-11-27T16:31:25.8331054Z [PASS] testOrdinaryWalletCannotPay() (gas: 60949)",
+            "2026-11-27T16:31:25.8331489Z [PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)",
+            "2026-11-27T16:31:25.8332022Z [PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)",
+            "2026-11-27T16:31:25.8332612Z [PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)",
+            "2026-11-27T16:31:25.8333208Z [PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)",
+            "2026-11-27T16:31:25.8333797Z [PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)",
+            "2026-11-27T16:31:25.8334261Z [PASS] testTreasuryRecipientReverts() (gas: 39549)",
+            "2026-11-27T16:31:25.8335015Z [PASS] testZeroAmountReverts() (gas: 41310)",
+            "2026-11-27T16:31:25.8335385Z [PASS] testZeroRecipientReverts() (gas: 38984)",
+            "2026-11-27T16:31:25.8335796Z [PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)",
+            "2026-11-27T16:31:25.9049730Z Ran 82 tests for tests/unit/BudgetGovernor.t.sol:BudgetGovernorTest",
+            "2026-11-27T16:31:25.9079258Z [PASS] testAbstainAloneCannotWin() (gas: 270722)",
+            "2026-11-27T16:31:25.9099424Z [PASS] testAllSensitiveCallsRejectOrdinaryWallet() (gas: 619536)",
+            "2026-11-27T16:31:25.9129406Z [PASS] testBalanceTransferAfterSnapshotDoesNotChangeVoteWeight() (gas: 455801)",
+            "2026-11-27T16:31:25.9139245Z [PASS] testBalanceWithoutDelegationCannotPropose() (gas: 187207)",
+            "2026-11-27T16:31:25.9169273Z [PASS] testBelowThresholdCannotPropose() (gas: 269148)",
+            "2026-11-27T16:31:25.9189425Z [PASS] testCannotQueueBeforeVotingCompletes() (gas: 293713)",
+            "2026-11-27T16:31:25.9199221Z [PASS] testConstructorAndConfiguration() (gas: 130055)",
+            "2026-11-27T16:31:25.9229191Z [PASS] testConstructorRejectsBlockNumberClock() (gas: 147809)",
+            "2026-11-27T16:31:25.9249436Z [PASS] testCopiedProposalCannotReplaceFirstCreatorOrCancelRights() (gas: 480628)",
+            "2026-11-27T16:31:25.9279299Z [PASS] testCorrectSelectorTruncatedTo35BytesRejected() (gas: 104004)",
+            "2026-11-27T16:31:25.9289225Z [PASS] testCorrectSelectorTruncatedTo36BytesRejected() (gas: 104200)",
+            "2026-11-27T16:31:25.9319216Z [PASS] testCorrectSelectorTruncatedTo4BytesRejected() (gas: 90500)",
+            "2026-11-27T16:31:25.9337819Z [PASS] testCorrectSelectorTruncatedTo67BytesRejected() (gas: 112469)",
+            "2026-11-27T16:31:25.9338481Z [PASS] testCorrectSelectorTruncatedTo68BytesRejected() (gas: 112553)",
+            "2026-11-27T16:31:25.9339252Z [PASS] testCorrectSelectorTruncatedTo99BytesRejected() (gas: 117935)",
+            "2026-11-27T16:31:25.9339875Z [PASS] testCreatorCanCancelAtSnapshotWhileStillPending() (gas: 222183)",
+            "2026-11-27T16:31:25.9340524Z [PASS] testCreatorCancelsPendingAndBlocksAllActions() (gas: 335121)",
+            "2026-11-27T16:31:25.9341073Z [PASS] testCreatorCannotCancelActive() (gas: 209480)",
+            "2026-11-27T16:31:25.9341572Z [PASS] testCreatorCannotCancelDefeated() (gas: 255766)",
+            "2026-11-27T16:31:25.9342067Z [PASS] testCreatorCannotCancelExecuted() (gas: 710818)",
+            "2026-11-27T16:31:25.9342548Z [PASS] testCreatorCannotCancelQueued() (gas: 521186)",
+            "2026-11-27T16:31:25.9343042Z [PASS] testCreatorCannotCancelSucceeded() (gas: 361699)",
+            "2026-11-27T16:31:25.9343602Z [PASS] testDelegateAfterSnapshotDoesNotCreateVotes() (gas: 424914)",
+            "2026-11-27T16:31:25.9344255Z [PASS] testDelegateChangeAfterSnapshotDoesNotChangeVoteWeight() (gas: 452479)",
+            "2026-11-27T16:31:25.9344935Z [PASS] testDelegatingToAnotherWalletMovesVotesNotTokens() (gas: 437786)",
+            "2026-11-27T16:31:25.9345526Z [PASS] testDelegationMustBePastForThreshold() (gas: 268354)",
+            "2026-11-27T16:31:25.9346075Z [PASS] testDescriptionBytesAreNotReserialized() (gas: 63692)",
+            "2026-11-27T16:31:25.9346596Z [PASS] testDirtyAddressPaddingRejected() (gas: 105786)",
+            "2026-11-27T16:31:25.9347171Z [PASS] testDistinctProposalsSharingRequestPayOnlyOnce() (gas: 1173687)",
+            "2026-11-27T16:31:25.9347784Z [PASS] testDuplicateVoteRejectedAcrossEntryPoints() (gas: 283476)",
+            "2026-11-27T16:31:25.9348319Z [PASS] testExactlyThresholdCanPropose() (gas: 348529)",
+            "2026-11-27T16:31:25.9348911Z [PASS] testExecuteChangedAmountRejected() (gas: 659889)",
+            "2026-11-27T16:31:25.9349485Z [PASS] testExecuteChangedDescriptionHashRejected() (gas: 649970)",
+            "2026-11-27T16:31:25.9350085Z [PASS] testExecuteChangedRecipientRejected() (gas: 659857)",
+            "2026-11-27T16:31:25.9350670Z [PASS] testExecuteInsufficientBudgetRollsBackAndRetries() (gas: 981703)",
+            "2026-11-27T16:31:25.9351276Z [PASS] testExecuteNonexistentProposalRejected() (gas: 172550)",
+            "2026-11-27T16:31:25.9351795Z [PASS] testExecuteWithoutQueueRejected() (gas: 419301)",
+            "2026-11-27T16:31:25.9352350Z [PASS] testExtendedSignedVoteSnapshotParamsAndReplay() (gas: 732656)",
+            "2026-11-27T16:31:25.9379324Z [PASS] testFor400Against300SucceedsWithoutAutomaticPayment() (gas: 386310)",
+            "2026-11-27T16:31:25.9380258Z [PASS] testForPlusAbstainReachesQuorum() (gas: 567575)",
+            "2026-11-27T16:31:25.9381147Z [PASS] testFuzzConstructorRejectsZeroOrEOA(uint8,bool) (runs: 256, μ: 12954, ~: 12126)",
+            "2026-11-27T16:31:25.9381971Z [PASS] testFuzzDirtyAddressPaddingWithValidSelector(uint8,uint8) (runs: 256, μ: 115656, ~: 115892)",
+            "2026-11-27T16:31:25.9382759Z [PASS] testFuzzMalformedCalldataLengthRejected(uint8) (runs: 256, μ: 70681, ~: 70602)",
+            "2026-11-27T16:31:25.9383514Z [PASS] testFuzzMismatchedArrayLengthsRejected(uint8,uint8) (runs: 256, μ: 77700, ~: 77886)",
+            "2026-11-27T16:31:25.9384480Z [PASS] testFuzzValidPayloadWithTrailingBytesRejected(bytes) (runs: 256, μ: 124534, ~: 122571)",
+            "2026-11-27T16:31:25.9385072Z [PASS] testGovernorSettingsProposalRejected() (gas: 84151)",
+            "2026-11-27T16:31:25.9385487Z [PASS] testGrantRoleSelectorRejected() (gas: 87978)",
+            "2026-11-27T16:31:25.9385889Z [PASS] testInsufficientQuorumDefeated() (gas: 350483)",
+            "2026-11-27T16:31:25.9386281Z [PASS] testInvalidVoteTypeRejected() (gas: 213912)",
+            "2026-11-27T16:31:25.9386690Z [PASS] testLossDespiteQuorumDefeated() (gas: 637681)",
+            "2026-11-27T16:31:25.9387072Z [PASS] testMultipleActionsRejected() (gas: 227372)",
+            "2026-11-27T16:31:25.9387428Z [PASS] testNativeValueRejected() (gas: 95588)",
+            "2026-11-27T16:31:25.9387824Z [PASS] testOtherWalletCannotCancelPending() (gas: 186859)",
+            "2026-11-27T16:31:25.9388314Z [PASS] testProposalCreatedPreservesRawIntegrationData() (gas: 180927)",
+            "2026-11-27T16:31:25.9419064Z [PASS] testProposalDoesNotReserveBudgetOrRequireUnusedRequest() (gas: 294025)",
+            "2026-11-27T16:31:25.9419523Z [PASS] testQueueChangedAmountRejected() (gas: 520039)",
+            "2026-11-27T16:31:25.9419943Z [PASS] testQueueChangedDescriptionHashRejected() (gas: 510140)",
+            "2026-11-27T16:31:25.9420391Z [PASS] testQueueChangedRecipientRejected() (gas: 520028)",
+            "2026-11-27T16:31:25.9420819Z [PASS] testQueueNonexistentProposalRejected() (gas: 172515)",
+            "2026-11-27T16:31:25.9421235Z [PASS] testRevokeRoleSelectorRejected() (gas: 87957)",
+            "2026-11-27T16:31:25.9421588Z [PASS] testSC01FixtureHash() (gas: 11092)",
+            "2026-11-27T16:31:25.9422019Z [PASS] testSettingsCannotBeChangedDirectlyByWallet() (gas: 32301)",
+            "2026-11-27T16:31:25.9422586Z [PASS] testSignedVoteAfterDeadlineRejectedAndNonceUnchanged() (gas: 526827)",
+            "2026-11-27T16:31:25.9423169Z [PASS] testSignedVoteBeforeActiveRollsBackNonceAndCanRetry() (gas: 569340)",
+            "2026-11-27T16:31:25.9423708Z [PASS] testSignedVoteUsesSnapshotAndRejectsReplay() (gas: 718979)",
+            "2026-11-27T16:31:25.9424163Z [PASS] testSuccessfulExecuteCannotReplay() (gas: 726441)",
+            "2026-11-27T16:31:25.9424686Z [PASS] testTamperedSignedSupportRejectedWithoutConsumingNonce() (gas: 559409)",
+            "2026-11-27T16:31:25.9425137Z [PASS] testTieDefeated() (gas: 454398)",
+            "2026-11-27T16:31:25.9425587Z [PASS] testTimelockIdentityAloneCannotInvokeSensitiveCalls() (gas: 631883)",
+            "2026-11-27T16:31:25.9426047Z [PASS] testTimelockTargetRejected() (gas: 80688)",
+            "2026-11-27T16:31:25.9426440Z [PASS] testTokenTransferSelectorRejected() (gas: 90293)",
+            "2026-11-27T16:31:25.9426816Z [PASS] testTrailingDataRejected() (gas: 80988)",
+            "2026-11-27T16:31:25.9427191Z [PASS] testTreasuryRecipientRejected() (gas: 113310)",
+            "2026-11-27T16:31:25.9427561Z [PASS] testValidProposalAndHash() (gas: 189784)",
+            "2026-11-27T16:31:25.9428021Z [PASS] testVoteWithParamsCannotInjectWeightOrVoteTwice() (gas: 585505)",
+            "2026-11-27T16:31:25.9428469Z [PASS] testVotingWindowBoundaries() (gas: 556662)",
+            "2026-11-27T16:31:25.9429006Z [PASS] testWrongSelectorWithCorrectLengthRejected() (gas: 88041)",
+            "2026-11-27T16:31:25.9429480Z [PASS] testWrongTargetRejectedOnDirectPropose() (gas: 80698)",
+            "2026-11-27T16:31:25.9429874Z [PASS] testZeroAmountRejected() (gas: 105548)",
+            "2026-11-27T16:31:25.9430223Z [PASS] testZeroRecipientRejected() (gas: 110764)",
+            "2026-11-27T16:31:25.9430581Z [PASS] testZeroRequestAccepted() (gas: 159730)",
+            "2026-11-27T16:31:25.9430959Z [PASS] testZeroVotingPowerWeightIsZero() (gas: 326441)",
+            "2026-11-27T16:31:25.9797381Z Ran 40 tests for tests/integration/TimelockGovernance.t.sol:TimelockGovernanceTest",
+            "2026-11-27T16:31:25.9798176Z [PASS] testAdminGraphAndNoBootstrapAdminChanges() (gas: 1909359)",
+            "2026-11-27T16:31:25.9799108Z [PASS] testAuditorRejectsUnexpectedAdminChangedLog() (gas: 5035536)",
+            "2026-11-27T16:31:25.9799566Z [PASS] testCannotQueueActive() (gas: 228883)",
+            "2026-11-27T16:31:25.9799915Z [PASS] testCannotQueueCanceled() (gas: 262473)",
+            "2026-11-27T16:31:25.9800260Z [PASS] testCannotQueueDefeated() (gas: 260613)",
+            "2026-11-27T16:31:25.9800937Z [PASS] testCannotQueuePending() (gas: 220131)",
+            "2026-11-27T16:31:25.9801376Z [PASS] testCleanBootstrapRequiresQueueBeforeExecute() (gas: 826645)",
+            "2026-11-27T16:31:25.9801967Z [PASS] testConcurrentProposalsDoNotReserveBudgetAndRetryAfterTopup() (gas: 1581141)",
+            "2026-11-27T16:31:25.9802491Z [PASS] testExecuteAtETAminusOneReverts() (gas: 674721)",
+            "2026-11-27T16:31:25.9802903Z [PASS] testExecuteAtETAplusOneByNonHolder() (gas: 1327844)",
+            "2026-11-27T16:31:25.9803314Z [PASS] testExecuteCannotRepeatAfterDone() (gas: 734715)",
+            "2026-11-27T16:31:25.9803754Z [PASS] testExecuteImmediatelyAfterQueueReverts() (gas: 674317)",
+            "2026-11-27T16:31:25.9804239Z [PASS] testFinalRoleMatrixAndFullBootstrapHistory() (gas: 2403083)",
+            "2026-11-27T16:31:25.9804786Z [PASS] testFormerBootstrapCannotChangeDelayOrRenounceOthers() (gas: 647255)",
+            "2026-11-27T16:31:25.9805336Z [PASS] testFormerBootstrapCannotRegrantTreasuryRoles() (gas: 668277)",
+            "2026-11-27T16:31:25.9805885Z [PASS] testFormerBootstrapCannotScheduleOrExecuteReadyBatch() (gas: 678276)",
+            "2026-11-27T16:31:25.9806895Z [PASS] testFuzzExecuteTamperingDoesNotConsumeReadyOperation(uint8) (runs: 256, μ: 631906, ~: 631330)",
+            "2026-11-27T16:31:25.9807763Z [PASS] testFuzzFormerBootstrapAndUsersCannotChangeRoles(uint8,uint8,bool) (runs: 256, μ: 534256, ~: 533727)",
+            "2026-11-27T16:31:25.9808417Z [PASS] testGovernorUsesBatchOperationNotSingleCallHash() (gas: 569216)",
+            "2026-11-27T16:31:25.9809024Z [PASS] testHistoryAuditorRejectsPublicExecutor() (gas: 6869851)",
+            "2026-11-27T16:31:25.9809538Z [PASS] testHistoryAuditorRejectsUnknownBootstrapHolder() (gas: 6891429)",
+            "2026-11-27T16:31:25.9810086Z [PASS] testInsufficientBudgetRetriesSameReadyOperation() (gas: 955211)",
+            "2026-11-27T16:31:25.9810633Z [PASS] testPreflightRejectsMissingExecutorBeforeRenounce() (gas: 6352030)",
+            "2026-11-27T16:31:25.9811237Z [PASS] testPreflightRejectsStaleScheduledOperationBeforeRenounce() (gas: 9008071)",
+            "2026-11-27T16:31:25.9811751Z [PASS] testPreflightRejectsWrongChain() (gas: 4358614)",
+            "2026-11-27T16:31:25.9812147Z [PASS] testPreflightRejectsWrongDelay() (gas: 4413855)",
+            "2026-11-27T16:31:25.9812564Z [PASS] testPreflightRejectsWrongTokenLink() (gas: 4408128)",
+            "2026-11-27T16:31:25.9813033Z [PASS] testQueueByNonHolderEmitsBatchOperationAndETA() (gas: 638974)",
+            "2026-11-27T16:31:25.9813491Z [PASS] testQueuedProposalCannotQueueAgain() (gas: 619124)",
+            "2026-11-27T16:31:25.9813948Z [PASS] testRelayCannotBypassRolesAfterFinalBootstrap() (gas: 681190)",
+            "2026-11-27T16:31:25.9814494Z [PASS] testRoleChangingProposalRejectedAfterFinalBootstrap() (gas: 699873)",
+            "2026-11-27T16:31:25.9815095Z [PASS] testSecondProposalCanWinSharedRequestWhenExecutedFirst() (gas: 1275864)",
+            "2026-11-27T16:31:25.9815758Z [PASS] testStaleBootstrapOperationExecutesSucceededWithoutGovernorQueue() (gas: 15670691)",
+            "2026-11-27T16:31:25.9817359Z [PASS] testTC01ExecuteExactlyAtETAByNonHolder() (gas: 1327799)",
+            "2026-11-27T16:31:25.9817873Z [PASS] testTwoDistinctProposalsWithSameRequestPayOnce() (gas: 1273506)",
+            "2026-11-27T16:31:25.9818454Z [PASS] testUserAndFormerBootstrapCannotCancelTimelockOperation() (gas: 664951)",
+            "2026-11-27T16:31:25.9819182Z [PASS] testUserCannotExecuteReadyOperationDirectlySingleOrBatch() (gas: 824851)",
+            "2026-11-27T16:31:25.9819741Z [PASS] testUserCannotScheduleSingleOrBatchDirectly() (gas: 248389)",
+            "2026-11-27T16:31:25.9820275Z [PASS] testUsersAndFormerBootstrapCannotDisburseTreasury() (gas: 170330)",
+            "2026-11-27T16:31:25.9820988Z [PASS] testZeroRequestIdCanBePaidOnlyOnceAcrossProposals() (gas: 1277605)",
+            "2026-11-27T16:31:28.0440299Z Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest",
+            "2026-11-27T16:31:28.0440596Z [PASS]",
+            "2026-11-27T16:31:28.0441257Z [PASS] invariant_accountingMatchesSuccessfulPaymentOracle",
+            "2026-11-27T16:31:28.0441532Z [PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs",
+            "2026-11-27T16:31:28.0441786Z [PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay",
+            "2026-11-27T16:31:28.0445946Z [PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)",
+            "2026-11-27T16:31:42.3600368Z [PASS]",
+            "2026-11-27T16:31:42.3601199Z [PASS] invariant_INV01_requestPaymentsAreUniqueAcrossProposalsAndRetries",
+            "2026-11-27T16:31:42.3601681Z [PASS] invariant_INV02_everyPayoutHasValidGovernanceAndFinalRoles",
+            "2026-11-27T16:31:42.3602115Z [PASS] invariant_INV03_treasuryAndRecipientsMatchCommittedLedger",
+            "2026-11-27T16:31:42.3602621Z [PASS] invariant_INV04_snapshotWeightsAndTalliesRemainIndependentOfTokenChanges",
+            "2026-11-27T16:31:42.3627823Z Ran 9 test suites in 16.62s (19.30s CPU time): 182 tests passed, 0 failed, 0 skipped (182 total tests)",
+            "2026-11-27T16:36:21.4234537Z {\"status\":\"PASS\",\"output\":\"/home/runner/work/dao-budget-simulator/dao-budget-simulator/reports/be08/benchmark.json\",\"successfulRequests\":32215,\"errorRequests\":0,\"p95Ms\":29.594768999988446,\"failedStage\":null}",
+            "2026-11-27T16:36:21.5585144Z PASS: native BE08 acceptance; evidence: /home/runner/work/dao-budget-simulator/dao-budget-simulator/reports/be08/report.json",
+            "2026-11-27T16:36:21.5792024Z   name: be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+            "2026-11-27T16:36:21.5792204Z   path: reports/be08/",
+            "2026-11-27T16:36:21.9504998Z Uploading artifact: be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80.zip",
+            "2026-11-27T16:36:22.9777178Z Artifact be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80 successfully finalized. Artifact ID 15215558819",
+            "2026-11-27T16:36:22.9778200Z Artifact be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80 has been successfully uploaded! Final size is 1288483 bytes. Artifact ID is 15215558819"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Run actions/setup-python@v7.0.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Run mkdir -p reports && forge build",
+              "conclusion": "success"
+            },
+            {
+              "number": 9,
+              "name": "Current migrations, DB/crash/reorg/rebuild, contracts and 10-client benchmark",
+              "conclusion": "success"
+            },
+            {
+              "number": 10,
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Run actions/setup-python@v7.0.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "number": 18,
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "number": 19,
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "number": 20,
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "number": 21,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "skipped": [
+        {
+          "id": 140628156304,
+          "name": "Publish tested release image set",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "id": 46034162609,
+      "name": "Verify public Foundry fallback",
+      "event": "pull_request",
+      "head": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+      "base": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+      "conclusion": "success",
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162609",
+      "jobs": [
+        {
+          "id": 140625240407,
+          "name": "Anonymous attestation, extraction and contract gates",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162609/job/140625240407",
+          "logSha256": "039087a9baf09ea7caa14c950cb77cdc74c259e53b734131f46f1aa8c0f84dec",
+          "logBytes": 82916,
+          "actualCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+          "excerpts": [
+            "2026-11-27T16:30:25.2339656Z HEAD is now at fe8df7c Merge 4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a into d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+            "2026-11-27T16:30:31.5217801Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-27T16:30:32.8273649Z Ran 2 tests in 0.054s",
+            "2026-11-27T16:30:33.8521908Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:51.1161587Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:51.1692937Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:51.2071265Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+            "2026-11-27T16:30:56.7242189Z [PASS] testConcurrentSnapshotsBudgetRaceRetryAndSharedRequestStayIndependent() (gas: 15850886)",
+            "2026-11-27T16:30:56.7751452Z Ran 15 tests for tests/unit/GovernanceToken.t.sol:GovernanceTokenTest",
+            "2026-11-27T16:30:56.7752099Z [PASS] testChangingDelegateAfterSnapshotPreservesHistory() (gas: 295908)",
+            "2026-11-27T16:30:56.7752672Z [PASS] testClockUsesTimestampRatherThanBlockNumber() (gas: 23885)",
+            "2026-11-27T16:30:56.7753174Z [PASS] testCurrentTimepointLookupReverts() (gas: 20959)",
+            "2026-11-27T16:30:56.7753675Z [PASS] testDelegateToOtherWalletDoesNotTransferTokens() (gas: 229481)",
+            "2026-11-27T16:30:56.7754645Z [PASS] testDelegationAfterSnapshotDoesNotCreatePastVotes() (gas: 124670)",
+            "2026-11-27T16:30:56.7755196Z [PASS] testFutureTimepointLookupReverts() (gas: 20922)",
+            "2026-11-27T16:30:56.7756047Z [PASS] testFuzzConstructorRejectsZeroRecipient(uint8) (runs: 256, μ: 13999, ~: 14089)",
+            "2026-11-27T16:30:56.7756833Z [PASS] testFuzzTransferAndDelegationPreserveSupply(uint256) (runs: 256, μ: 215105, ~: 215114)",
+            "2026-11-27T16:30:56.7757440Z [PASS] testMetadataAndInitialDistribution() (gas: 83285)",
+            "2026-11-27T16:30:56.7757829Z [PASS] testNoPublicMint() (gas: 45653)",
+            "2026-11-27T16:30:56.7758205Z [PASS] testNoVotingPowerBeforeDelegation() (gas: 59420)",
+            "2026-11-27T16:30:56.7758597Z [PASS] testPastVotesAndPastSupply() (gas: 146978)",
+            "2026-11-27T16:30:56.7759042Z [PASS] testSameTimestampUpdatesSingleCheckpoint() (gas: 190982)",
+            "2026-11-27T16:30:56.7759558Z [PASS] testSelfDelegateWritesTimestampCheckpoint() (gas: 157017)",
+            "2026-11-27T16:30:56.7760113Z [PASS] testTransferAfterSnapshotPreservesHistory() (gas: 409774)",
+            "2026-11-27T16:30:56.7790986Z Ran 2 tests for tests/unit/OperationAbiCompatibility.t.sol:OperationAbiCompatibilityTest",
+            "2026-11-27T16:30:56.7820773Z [PASS] testBudgetDisbursedTopicMatchesIndexerAbi() (gas: 323)",
+            "2026-11-27T16:30:56.7851253Z [PASS] testFuzzDisbursementPayloadMatchesClientAbi(bytes32,address,uint256) (runs: 256, μ: 4328, ~: 4328)",
+            "2026-11-27T16:30:56.7941017Z Ran 9 tests for tests/unit/BudgetToken.t.sol:BudgetTokenTest",
+            "2026-11-27T16:30:56.7970727Z [PASS] testApproveAndTransferFrom() (gas: 164697)",
+            "2026-11-27T16:30:56.8000855Z [PASS] testDemoDistributionWithoutTreasuryConstructorDependency() (gas: 84378)",
+            "2026-11-27T16:30:56.8031077Z [PASS] testFuzzTransfersPreserveSupply(uint256) (runs: 256, μ: 86403, ~: 86628)",
+            "2026-11-27T16:30:56.8060710Z [PASS] testMetadataAndInitialSupply() (gas: 53852)",
+            "2026-11-27T16:30:56.8090742Z [PASS] testNoPublicMint() (gas: 45672)",
+            "2026-11-27T16:30:56.8120743Z [PASS] testTransferAboveBalanceReverts() (gas: 51581)",
+            "2026-11-27T16:30:56.8150769Z [PASS] testTransferFromAboveAllowanceReverts() (gas: 111777)",
+            "2026-11-27T16:30:56.8180713Z [PASS] testTransferHasNoFee() (gas: 84330)",
+            "2026-11-27T16:30:56.8210776Z [PASS] testZeroInitialHolderReverts() (gas: 4012)",
+            "2026-11-27T16:30:56.8300927Z Ran 30 tests for tests/unit/Treasury.t.sol:TreasuryTest",
+            "2026-11-27T16:30:56.8305340Z [PASS] testAdminHandoffRemovesAllDeployerPrivileges() (gas: 427065)",
+            "2026-11-27T16:30:56.8330947Z [PASS] testAdminWithoutSpenderCannotPay() (gas: 41505)",
+            "2026-11-27T16:30:56.8360856Z [PASS] testAuthorizedCallbackCannotPaySameRequestTwice() (gas: 1644172)",
+            "2026-11-27T16:30:56.8390802Z [PASS] testAuthorizedPaymentBalancesAndEvent() (gas: 128221)",
+            "2026-11-27T16:30:56.8411732Z [PASS] testCallbackWithoutSpenderCannotPayDifferentRequest() (gas: 1616050)",
+            "2026-11-27T16:30:56.8440936Z [PASS] testCompetingRequestsUseExecutionBalance() (gas: 298532)",
+            "2026-11-27T16:30:56.8470963Z [PASS] testConstructorRejectsTokenWithoutCode() (gas: 8570)",
+            "2026-11-27T16:30:56.8471578Z [PASS] testConstructorRejectsZeroAdmin() (gas: 6350)",
+            "2026-11-27T16:30:56.8500839Z [PASS] testConstructorRejectsZeroToken() (gas: 6273)",
+            "2026-11-27T16:30:56.8530940Z [PASS] testConstructorTokenAndBootstrapRoles() (gas: 57328)",
+            "2026-11-27T16:30:56.8540855Z [PASS] testDuplicateRequestReverts() (gas: 139952)",
+            "2026-11-27T16:30:56.8560972Z [PASS] testDuplicateRequestWithDifferentAmountReverts() (gas: 130205)",
+            "2026-11-27T16:30:56.8591084Z [PASS] testDuplicateRequestWithDifferentRecipientReverts() (gas: 141961)",
+            "2026-11-27T16:30:56.8630959Z [PASS] testFalseAfterActualTransferRollsBackTokenAndTreasury() (gas: 1512773)",
+            "2026-11-27T16:30:56.8660874Z [PASS] testFalseTokenTransferRollsBackPaidFlag() (gas: 191667)",
+            "2026-11-27T16:30:56.8691202Z [PASS] testFuzzPaymentConservesBudget(uint256) (runs: 256, μ: 188006, ~: 187861)",
+            "2026-11-27T16:30:56.8720768Z [PASS] testGrantAndRevokeSpendingRole() (gas: 237073)",
+            "2026-11-27T16:30:56.8750894Z [PASS] testInsufficientBudgetRevertsAndCanRetryAfterFunding() (gas: 241128)",
+            "2026-11-27T16:30:56.8780900Z [PASS] testMultipleDepositsAndPaymentsWithDistinctRequests() (gas: 1014063)",
+            "2026-11-27T16:30:56.8810766Z [PASS] testNativeValueRejected() (gas: 56431)",
+            "2026-11-27T16:30:56.8840756Z [PASS] testOrdinaryWalletCannotPay() (gas: 60949)",
+            "2026-11-27T16:30:56.8870825Z [PASS] testOutsiderCannotGrantOrRevokeRole() (gas: 69484)",
+            "2026-11-27T16:30:56.8900946Z [PASS] testRevertAfterActualTransferRollsBackTokenAndTreasury() (gas: 1351919)",
+            "2026-11-27T16:30:56.8930983Z [PASS] testRevertingTokenTransferRollsBackPaidFlag() (gas: 92436)",
+            "2026-11-27T16:30:56.8960833Z [PASS] testSpenderRenounceStopsFurtherPayments() (gas: 186043)",
+            "2026-11-27T16:30:56.8990840Z [PASS] testSpenderWithoutAdminCannotGrantRoles() (gas: 102176)",
+            "2026-11-27T16:30:56.9020827Z [PASS] testTreasuryRecipientReverts() (gas: 39549)",
+            "2026-11-27T16:30:56.9080814Z [PASS] testZeroAmountReverts() (gas: 41310)",
+            "2026-11-27T16:30:56.9140818Z [PASS] testZeroRecipientReverts() (gas: 38984)",
+            "2026-11-27T16:30:56.9170954Z [PASS] testZeroRequestIdCanBePaidOnlyOnce() (gas: 138168)",
+            "2026-11-27T16:30:56.9411127Z Ran 82 tests for tests/unit/BudgetGovernor.t.sol:BudgetGovernorTest",
+            "2026-11-27T16:30:56.9440844Z [PASS] testAbstainAloneCannotWin() (gas: 270722)",
+            "2026-11-27T16:30:56.9470999Z [PASS] testAllSensitiveCallsRejectOrdinaryWallet() (gas: 619536)",
+            "2026-11-27T16:30:56.9471664Z [PASS] testBalanceTransferAfterSnapshotDoesNotChangeVoteWeight() (gas: 455801)",
+            "2026-11-27T16:30:56.9472325Z [PASS] testBalanceWithoutDelegationCannotPropose() (gas: 187207)",
+            "2026-11-27T16:30:56.9500793Z [PASS] testBelowThresholdCannotPropose() (gas: 269148)",
+            "2026-11-27T16:30:56.9501329Z [PASS] testCannotQueueBeforeVotingCompletes() (gas: 293713)",
+            "2026-11-27T16:30:56.9501821Z [PASS] testConstructorAndConfiguration() (gas: 130055)",
+            "2026-11-27T16:30:56.9502315Z [PASS] testConstructorRejectsBlockNumberClock() (gas: 147809)",
+            "2026-11-27T16:30:56.9502952Z [PASS] testCopiedProposalCannotReplaceFirstCreatorOrCancelRights() (gas: 480628)",
+            "2026-11-27T16:30:56.9530943Z [PASS] testCorrectSelectorTruncatedTo35BytesRejected() (gas: 104004)",
+            "2026-11-27T16:30:56.9561032Z [PASS] testCorrectSelectorTruncatedTo36BytesRejected() (gas: 104200)",
+            "2026-11-27T16:30:56.9561676Z [PASS] testCorrectSelectorTruncatedTo4BytesRejected() (gas: 90500)",
+            "2026-11-27T16:30:56.9562231Z [PASS] testCorrectSelectorTruncatedTo67BytesRejected() (gas: 112469)",
+            "2026-11-27T16:30:56.9562739Z [PASS] testCorrectSelectorTruncatedTo68BytesRejected() (gas: 112553)",
+            "2026-11-27T16:30:56.9563268Z [PASS] testCorrectSelectorTruncatedTo99BytesRejected() (gas: 117935)",
+            "2026-11-27T16:30:56.9563866Z [PASS] testCreatorCanCancelAtSnapshotWhileStillPending() (gas: 222183)",
+            "2026-11-27T16:30:56.9564750Z [PASS] testCreatorCancelsPendingAndBlocksAllActions() (gas: 335121)",
+            "2026-11-27T16:30:56.9565220Z [PASS] testCreatorCannotCancelActive() (gas: 209480)",
+            "2026-11-27T16:30:56.9565635Z [PASS] testCreatorCannotCancelDefeated() (gas: 255766)",
+            "2026-11-27T16:30:56.9566052Z [PASS] testCreatorCannotCancelExecuted() (gas: 710818)",
+            "2026-11-27T16:30:56.9566445Z [PASS] testCreatorCannotCancelQueued() (gas: 521186)",
+            "2026-11-27T16:30:56.9566857Z [PASS] testCreatorCannotCancelSucceeded() (gas: 361699)",
+            "2026-11-27T16:30:56.9567340Z [PASS] testDelegateAfterSnapshotDoesNotCreateVotes() (gas: 424914)",
+            "2026-11-27T16:30:56.9567925Z [PASS] testDelegateChangeAfterSnapshotDoesNotChangeVoteWeight() (gas: 452479)",
+            "2026-11-27T16:30:56.9568560Z [PASS] testDelegatingToAnotherWalletMovesVotesNotTokens() (gas: 437786)",
+            "2026-11-27T16:30:56.9569150Z [PASS] testDelegationMustBePastForThreshold() (gas: 268354)",
+            "2026-11-27T16:30:56.9569788Z [PASS] testDescriptionBytesAreNotReserialized() (gas: 63692)",
+            "2026-11-27T16:30:56.9570267Z [PASS] testDirtyAddressPaddingRejected() (gas: 105786)",
+            "2026-11-27T16:30:56.9570992Z [PASS] testDistinctProposalsSharingRequestPayOnlyOnce() (gas: 1173687)",
+            "2026-11-27T16:30:56.9571572Z [PASS] testDuplicateVoteRejectedAcrossEntryPoints() (gas: 283476)",
+            "2026-11-27T16:30:56.9572067Z [PASS] testExactlyThresholdCanPropose() (gas: 348529)",
+            "2026-11-27T16:30:56.9572506Z [PASS] testExecuteChangedAmountRejected() (gas: 659889)",
+            "2026-11-27T16:30:56.9573005Z [PASS] testExecuteChangedDescriptionHashRejected() (gas: 649970)",
+            "2026-11-27T16:30:56.9573509Z [PASS] testExecuteChangedRecipientRejected() (gas: 659857)",
+            "2026-11-27T16:30:56.9574052Z [PASS] testExecuteInsufficientBudgetRollsBackAndRetries() (gas: 981703)",
+            "2026-11-27T16:30:56.9574597Z [PASS] testExecuteNonexistentProposalRejected() (gas: 172550)",
+            "2026-11-27T16:30:56.9575057Z [PASS] testExecuteWithoutQueueRejected() (gas: 419301)",
+            "2026-11-27T16:30:56.9575571Z [PASS] testExtendedSignedVoteSnapshotParamsAndReplay() (gas: 732656)",
+            "2026-11-27T16:30:56.9576142Z [PASS] testFor400Against300SucceedsWithoutAutomaticPayment() (gas: 386310)",
+            "2026-11-27T16:30:56.9576663Z [PASS] testForPlusAbstainReachesQuorum() (gas: 567575)",
+            "2026-11-27T16:30:56.9577566Z [PASS] testFuzzConstructorRejectsZeroOrEOA(uint8,bool) (runs: 256, μ: 12954, ~: 12126)",
+            "2026-11-27T16:30:56.9578545Z [PASS] testFuzzDirtyAddressPaddingWithValidSelector(uint8,uint8) (runs: 256, μ: 115656, ~: 115892)",
+            "2026-11-27T16:30:56.9591194Z [PASS] testFuzzMalformedCalldataLengthRejected(uint8) (runs: 256, μ: 70681, ~: 70602)",
+            "2026-11-27T16:30:56.9592045Z [PASS] testFuzzMismatchedArrayLengthsRejected(uint8,uint8) (runs: 256, μ: 77700, ~: 77886)",
+            "2026-11-27T16:30:56.9592908Z [PASS] testFuzzValidPayloadWithTrailingBytesRejected(bytes) (runs: 256, μ: 124534, ~: 122571)",
+            "2026-11-27T16:30:56.9593565Z [PASS] testGovernorSettingsProposalRejected() (gas: 84151)",
+            "2026-11-27T16:30:56.9594012Z [PASS] testGrantRoleSelectorRejected() (gas: 87978)",
+            "2026-11-27T16:30:56.9594456Z [PASS] testInsufficientQuorumDefeated() (gas: 350483)",
+            "2026-11-27T16:30:56.9594879Z [PASS] testInvalidVoteTypeRejected() (gas: 213912)",
+            "2026-11-27T16:30:56.9595295Z [PASS] testLossDespiteQuorumDefeated() (gas: 637681)",
+            "2026-11-27T16:30:56.9595692Z [PASS] testMultipleActionsRejected() (gas: 227372)",
+            "2026-11-27T16:30:56.9596072Z [PASS] testNativeValueRejected() (gas: 95588)",
+            "2026-11-27T16:30:56.9596480Z [PASS] testOtherWalletCannotCancelPending() (gas: 186859)",
+            "2026-11-27T16:30:56.9597002Z [PASS] testProposalCreatedPreservesRawIntegrationData() (gas: 180927)",
+            "2026-11-27T16:30:56.9597627Z [PASS] testProposalDoesNotReserveBudgetOrRequireUnusedRequest() (gas: 294025)",
+            "2026-11-27T16:30:56.9598174Z [PASS] testQueueChangedAmountRejected() (gas: 520039)",
+            "2026-11-27T16:30:56.9598659Z [PASS] testQueueChangedDescriptionHashRejected() (gas: 510140)",
+            "2026-11-27T16:30:56.9599137Z [PASS] testQueueChangedRecipientRejected() (gas: 520028)",
+            "2026-11-27T16:30:56.9599603Z [PASS] testQueueNonexistentProposalRejected() (gas: 172515)",
+            "2026-11-27T16:30:56.9600054Z [PASS] testRevokeRoleSelectorRejected() (gas: 87957)",
+            "2026-11-27T16:30:56.9600806Z [PASS] testSC01FixtureHash() (gas: 11092)",
+            "2026-11-27T16:30:56.9601259Z [PASS] testSettingsCannotBeChangedDirectlyByWallet() (gas: 32301)",
+            "2026-11-27T16:30:56.9601857Z [PASS] testSignedVoteAfterDeadlineRejectedAndNonceUnchanged() (gas: 526827)",
+            "2026-11-27T16:30:56.9602503Z [PASS] testSignedVoteBeforeActiveRollsBackNonceAndCanRetry() (gas: 569340)",
+            "2026-11-27T16:30:56.9603094Z [PASS] testSignedVoteUsesSnapshotAndRejectsReplay() (gas: 718979)",
+            "2026-11-27T16:30:56.9603591Z [PASS] testSuccessfulExecuteCannotReplay() (gas: 726441)",
+            "2026-11-27T16:30:56.9604167Z [PASS] testTamperedSignedSupportRejectedWithoutConsumingNonce() (gas: 559409)",
+            "2026-11-27T16:30:56.9630706Z [PASS] testTieDefeated() (gas: 454398)",
+            "2026-11-27T16:30:56.9660872Z [PASS] testTimelockIdentityAloneCannotInvokeSensitiveCalls() (gas: 631883)",
+            "2026-11-27T16:30:56.9690703Z [PASS] testTimelockTargetRejected() (gas: 80688)",
+            "2026-11-27T16:30:56.9720765Z [PASS] testTokenTransferSelectorRejected() (gas: 90293)",
+            "2026-11-27T16:30:56.9749215Z [PASS] testTrailingDataRejected() (gas: 80988)",
+            "2026-11-27T16:30:56.9780826Z [PASS] testTreasuryRecipientRejected() (gas: 113310)",
+            "2026-11-27T16:30:56.9810790Z [PASS] testValidProposalAndHash() (gas: 189784)",
+            "2026-11-27T16:30:56.9840841Z [PASS] testVoteWithParamsCannotInjectWeightOrVoteTwice() (gas: 585505)",
+            "2026-11-27T16:30:56.9870800Z [PASS] testVotingWindowBoundaries() (gas: 556662)",
+            "2026-11-27T16:30:56.9900842Z [PASS] testWrongSelectorWithCorrectLengthRejected() (gas: 88041)",
+            "2026-11-27T16:30:56.9930852Z [PASS] testWrongTargetRejectedOnDirectPropose() (gas: 80698)",
+            "2026-11-27T16:30:56.9960758Z [PASS] testZeroAmountRejected() (gas: 105548)",
+            "2026-11-27T16:30:56.9990789Z [PASS] testZeroRecipientRejected() (gas: 110764)",
+            "2026-11-27T16:30:57.0020779Z [PASS] testZeroRequestAccepted() (gas: 159730)",
+            "2026-11-27T16:30:57.0051149Z [PASS] testZeroVotingPowerWeightIsZero() (gas: 326441)",
+            "2026-11-27T16:30:57.0340612Z Ran 40 tests for tests/integration/TimelockGovernance.t.sol:TimelockGovernanceTest",
+            "2026-11-27T16:30:57.0341460Z [PASS] testAdminGraphAndNoBootstrapAdminChanges() (gas: 1909359)",
+            "2026-11-27T16:30:57.0342149Z [PASS] testAuditorRejectsUnexpectedAdminChangedLog() (gas: 5035536)",
+            "2026-11-27T16:30:57.0342775Z [PASS] testCannotQueueActive() (gas: 228883)",
+            "2026-11-27T16:30:57.0343289Z [PASS] testCannotQueueCanceled() (gas: 262473)",
+            "2026-11-27T16:30:57.0343780Z [PASS] testCannotQueueDefeated() (gas: 260613)",
+            "2026-11-27T16:30:57.0344255Z [PASS] testCannotQueuePending() (gas: 220131)",
+            "2026-11-27T16:30:57.0344832Z [PASS] testCleanBootstrapRequiresQueueBeforeExecute() (gas: 826645)",
+            "2026-11-27T16:30:57.0345587Z [PASS] testConcurrentProposalsDoNotReserveBudgetAndRetryAfterTopup() (gas: 1581141)",
+            "2026-11-27T16:30:57.0346297Z [PASS] testExecuteAtETAminusOneReverts() (gas: 674721)",
+            "2026-11-27T16:30:57.0346873Z [PASS] testExecuteAtETAplusOneByNonHolder() (gas: 1327844)",
+            "2026-11-27T16:30:57.0347456Z [PASS] testExecuteCannotRepeatAfterDone() (gas: 734715)",
+            "2026-11-27T16:30:57.0348043Z [PASS] testExecuteImmediatelyAfterQueueReverts() (gas: 674317)",
+            "2026-11-27T16:30:57.0348693Z [PASS] testFinalRoleMatrixAndFullBootstrapHistory() (gas: 2403083)",
+            "2026-11-27T16:30:57.0349460Z [PASS] testFormerBootstrapCannotChangeDelayOrRenounceOthers() (gas: 647255)",
+            "2026-11-27T16:30:57.0350199Z [PASS] testFormerBootstrapCannotRegrantTreasuryRoles() (gas: 668277)",
+            "2026-11-27T16:30:57.0351050Z [PASS] testFormerBootstrapCannotScheduleOrExecuteReadyBatch() (gas: 678276)",
+            "2026-11-27T16:30:57.0352249Z [PASS] testFuzzExecuteTamperingDoesNotConsumeReadyOperation(uint8) (runs: 256, μ: 631906, ~: 631330)",
+            "2026-11-27T16:30:57.0353358Z [PASS] testFuzzFormerBootstrapAndUsersCannotChangeRoles(uint8,uint8,bool) (runs: 256, μ: 534256, ~: 533727)",
+            "2026-11-27T16:30:57.0354266Z [PASS] testGovernorUsesBatchOperationNotSingleCallHash() (gas: 569216)",
+            "2026-11-27T16:30:57.0354989Z [PASS] testHistoryAuditorRejectsPublicExecutor() (gas: 6869851)",
+            "2026-11-27T16:30:57.0355973Z [PASS] testHistoryAuditorRejectsUnknownBootstrapHolder() (gas: 6891429)",
+            "2026-11-27T16:30:57.0356697Z [PASS] testInsufficientBudgetRetriesSameReadyOperation() (gas: 955211)",
+            "2026-11-27T16:30:57.0357462Z [PASS] testPreflightRejectsMissingExecutorBeforeRenounce() (gas: 6352030)",
+            "2026-11-27T16:30:57.0358262Z [PASS] testPreflightRejectsStaleScheduledOperationBeforeRenounce() (gas: 9008071)",
+            "2026-11-27T16:30:57.0359040Z [PASS] testPreflightRejectsWrongChain() (gas: 4358614)",
+            "2026-11-27T16:30:57.0359617Z [PASS] testPreflightRejectsWrongDelay() (gas: 4413855)",
+            "2026-11-27T16:30:57.0360181Z [PASS] testPreflightRejectsWrongTokenLink() (gas: 4408128)",
+            "2026-11-27T16:30:57.0360925Z [PASS] testQueueByNonHolderEmitsBatchOperationAndETA() (gas: 638974)",
+            "2026-11-27T16:30:57.0361576Z [PASS] testQueuedProposalCannotQueueAgain() (gas: 619124)",
+            "2026-11-27T16:30:57.0362175Z [PASS] testRelayCannotBypassRolesAfterFinalBootstrap() (gas: 681190)",
+            "2026-11-27T16:30:57.0363048Z [PASS] testRoleChangingProposalRejectedAfterFinalBootstrap() (gas: 699873)",
+            "2026-11-27T16:30:57.0363844Z [PASS] testSecondProposalCanWinSharedRequestWhenExecutedFirst() (gas: 1275864)",
+            "2026-11-27T16:30:57.0364750Z [PASS] testStaleBootstrapOperationExecutesSucceededWithoutGovernorQueue() (gas: 15670691)",
+            "2026-11-27T16:30:57.0367167Z [PASS] testTC01ExecuteExactlyAtETAByNonHolder() (gas: 1327799)",
+            "2026-11-27T16:30:57.0367832Z [PASS] testTwoDistinctProposalsWithSameRequestPayOnce() (gas: 1273506)",
+            "2026-11-27T16:30:57.0368604Z [PASS] testUserAndFormerBootstrapCannotCancelTimelockOperation() (gas: 664951)",
+            "2026-11-27T16:30:57.0369425Z [PASS] testUserCannotExecuteReadyOperationDirectlySingleOrBatch() (gas: 824851)",
+            "2026-11-27T16:30:57.0370172Z [PASS] testUserCannotScheduleSingleOrBatchDirectly() (gas: 248389)",
+            "2026-11-27T16:30:57.0371008Z [PASS] testUsersAndFormerBootstrapCannotDisburseTreasury() (gas: 170330)",
+            "2026-11-27T16:30:57.0371757Z [PASS] testZeroRequestIdCanBePaidOnlyOnceAcrossProposals() (gas: 1277605)",
+            "2026-11-27T16:31:00.1791358Z Ran 2 tests for tests/invariant/TreasuryAccounting.t.sol:TreasuryAccountingInvariantTest",
+            "2026-11-27T16:31:00.1792186Z [PASS]",
+            "2026-11-27T16:31:00.1793437Z [PASS] invariant_accountingMatchesSuccessfulPaymentOracle",
+            "2026-11-27T16:31:00.1793945Z [PASS] invariant_eachRequestSucceedsAtMostOnceAcrossRoleEpochs",
+            "2026-11-27T16:31:00.1794414Z [PASS] invariant_onlyCurrentlyAuthorizedActorsCanPay",
+            "2026-11-27T16:31:00.1802124Z [PASS] testPendingRequestSurvivesFundingAndSpenderEpochsWithoutReplay() (gas: 1793496)",
+            "2026-11-27T16:31:13.9357151Z [PASS]",
+            "2026-11-27T16:31:13.9358458Z [PASS] invariant_INV01_requestPaymentsAreUniqueAcrossProposalsAndRetries",
+            "2026-11-27T16:31:13.9358980Z [PASS] invariant_INV02_everyPayoutHasValidGovernanceAndFinalRoles",
+            "2026-11-27T16:31:13.9359437Z [PASS] invariant_INV03_treasuryAndRecipientsMatchCommittedLedger",
+            "2026-11-27T16:31:13.9359930Z [PASS] invariant_INV04_snapshotWeightsAndTalliesRemainIndependentOfTokenChanges",
+            "2026-11-27T16:31:13.9377972Z Ran 9 test suites in 17.23s (21.26s CPU time): 182 tests passed, 0 failed, 0 skipped (182 total tests)"
+          ],
+          "steps": [
+            {
+              "number": 1,
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "number": 2,
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 3,
+              "name": "Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "number": 4,
+              "name": "Check exact-version regression",
+              "conclusion": "success"
+            },
+            {
+              "number": 5,
+              "name": "Install from the real public OCI fallback",
+              "conclusion": "success"
+            },
+            {
+              "number": 6,
+              "name": "Record real fallback and installed versions",
+              "conclusion": "success"
+            },
+            {
+              "number": 7,
+              "name": "Run unchanged format, build, contract tests and ABI fixture gates",
+              "conclusion": "success"
+            },
+            {
+              "number": 8,
+              "name": "Upload fallback evidence",
+              "conclusion": "success"
+            },
+            {
+              "number": 14,
+              "name": "Post Install from the real public OCI fallback",
+              "conclusion": "success"
+            },
+            {
+              "number": 15,
+              "name": "Post Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "number": 16,
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "number": 17,
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "skipped": []
+    }
+  ],
+  "be08Artifact": {
+    "id": 15215558819,
+    "name": "be08-fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+    "url": "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/actions/artifacts/15215558819/zip",
+    "sha256": "026f5cf81f1a70344a86ce8cabf75c29837f77ab4ad479cf6e5b3dd45eb3f0cb",
+    "digestMatchesGitHub": true,
+    "inventory": [
+      {
+        "path": "benchmark.json",
+        "bytes": 8212721,
+        "sha256": "33fa21b3c1c771bf417a0a01a073e429277a2c422d855b78ff9a632f500318f5"
+      },
+      {
+        "path": "live.json",
+        "bytes": 350258,
+        "sha256": "9c6ddc7c23b764d3bbf2b66b77cc8c4c0c27f4474c67afedc5fca550d56432d1"
+      },
+      {
+        "path": "logs/01-anvil-version.log",
+        "bytes": 191,
+        "sha256": "8a478cbfcb0c885031827392f73fd7803c510fdb301f1d80a9a4a461d5e7ed00"
+      },
+      {
+        "path": "logs/02-forge-version.log",
+        "bytes": 191,
+        "sha256": "98470f7c7b1ea6a4e752d57b4edbf31c3d84b11f35be78c7b7214ef3e5e3f634"
+      },
+      {
+        "path": "logs/03-postgres-identity.log",
+        "bytes": 294,
+        "sha256": "f525149ebb67dc2cb6046f172011cd55027d4ce7c44155e136b6dbb63c992622"
+      },
+      {
+        "path": "logs/04-create-fresh-databases.log",
+        "bytes": 880,
+        "sha256": "f890c9cb22c7d7856b36eac1da6127e89059b19edaaa29fdbcd6a12f9d461f28"
+      },
+      {
+        "path": "logs/05-be01-migrate.log",
+        "bytes": 1365,
+        "sha256": "90f359530daa39c1034966b3d175560fe96625d325e34291dbb55a702ceb22a7"
+      },
+      {
+        "path": "logs/06-be01-constraints.log",
+        "bytes": 307,
+        "sha256": "ea3fed4ff2930bdc93ca61ee57a40e4014fa867743aaa9788434bfe948ac4339"
+      },
+      {
+        "path": "logs/07-be02-storage.log",
+        "bytes": 7123,
+        "sha256": "fcccbfd9535c2f93eef6e7844de7d4c4714684695ac5ea698e488433fcff0e93"
+      },
+      {
+        "path": "logs/08-be03-checkpoint-crash.log",
+        "bytes": 7202,
+        "sha256": "55ae7adac7139483159317c5a6a6823cc6e1de2de1f73b0a829491f4527ff04e"
+      },
+      {
+        "path": "logs/09-be04-projection.log",
+        "bytes": 3918,
+        "sha256": "25e8ab03e6b337e2de54f74b810353694999b33a22820f39a48fb046b8944bda"
+      },
+      {
+        "path": "logs/10-be05-api.log",
+        "bytes": 2293,
+        "sha256": "4b8d1296dda89932794b280d2ae034fdc85a929009e5aef0d13b062761964e6d"
+      },
+      {
+        "path": "logs/12-typecheck.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "logs/11-be06-two-db.log",
+        "bytes": 522,
+        "sha256": "ee2f9fd7e20a9b4fcf290e1dda51a6bf01cbae9c8c5cad923fe9fa390a0d05d1"
+      },
+      {
+        "path": "logs/14-unit.log",
+        "bytes": 50191,
+        "sha256": "1b05d7449aafca36f4be302e85e5b06f59e407e1553637725ea40ef8bd34c992"
+      },
+      {
+        "path": "logs/13-build.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "logs/15-be07-db.log",
+        "bytes": 5763,
+        "sha256": "ea50120613872fce69266f37d26d96493de35d59bbea6a2ef932ea98eb3e1ed4"
+      },
+      {
+        "path": "logs/16-contracts.log",
+        "bytes": 26053,
+        "sha256": "57ce8bbe8c4640362107cba9356fe02fa1929596fbdb65579a8520375acfbb04"
+      },
+      {
+        "path": "logs/17-live-be07.log",
+        "bytes": 1683,
+        "sha256": "0f87bc6fd59358cf4b2ea8716ae53304b15949eeba7ed72cd61d65ae65e47a35"
+      },
+      {
+        "path": "logs/18-api-benchmark.log",
+        "bytes": 217,
+        "sha256": "1ee77d534303882ed15048b447a8811a803c31d8fb4b9011e3b8c567e0629935"
+      },
+      {
+        "path": "report.json",
+        "bytes": 55290,
+        "sha256": "0d8bc001cadd993d62f806d970ed9524abf5c25b5c98f45e5430c84509ec5112"
+      },
+      {
+        "path": "source.patch",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "tested-source.json",
+        "bytes": 37875,
+        "sha256": "bc33770dbe1a6ecd4e86a3c1e60969fed2478ae312b37a4eda142b1257eaf40c"
+      }
+    ]
+  },
+  "repositoryGates": {
+    "observedBranchProtected": false,
+    "appliedBranchRules": [],
+    "repositoryRulesets": [],
+    "protectionEndpointResult": "HTTP404; interpreted alongside branch protected=false and empty applied rules, not a bypass",
+    "processReviewRequirement": {
+      "source": "docs/tv4-checklist.md:6 before r3 banner / line10 after banner",
+      "requirement": "Each PR needs another person review"
+    },
+    "prState": {
+      "baseRefOid": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+      "headRefOid": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+      "mergeStateStatus": "CLEAN",
+      "mergeable": "MERGEABLE",
+      "reviewDecision": "",
+      "reviewRequests": [
+        {
+          "__typename": "User",
+          "login": "daongocuong"
+        }
+      ],
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:32:59Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241480",
+          "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+          "startedAt": "2026-11-27T16:30:22Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:31:17Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162609/job/140625240407",
+          "name": "Anonymous attestation, extraction and contract gates",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "Verify public Foundry fallback"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:45Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241568",
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "startedAt": "2026-11-27T16:30:22Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:31:02Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241507",
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:57Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241005",
+          "name": "BE04 projection semantics and atomic PostgreSQL publication",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:31:24Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241604",
+          "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+          "startedAt": "2026-11-27T16:30:22Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:31:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241587",
+          "name": "BE06 pinned-H rebuild and normalized compare",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:32:08Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241795",
+          "name": "BE07 recovery, RPC failures and native database regressions",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:48Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241498",
+          "name": "Frontend lint and production build",
+          "startedAt": "2026-11-27T16:30:23Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:36:26Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241833",
+          "name": "be08-release-gate / be08",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:33:12Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140625241663",
+          "name": "Container build, release validation and Compose smoke",
+          "startedAt": "2026-11-27T16:30:21Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:36:26Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46034162713/job/140628156304",
+          "name": "Publish tested release image set",
+          "startedAt": "2026-11-27T16:36:27Z",
+          "status": "COMPLETED",
+          "workflowName": "TV4 CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:40Z",
+          "conclusion": "NEUTRAL",
+          "detailsUrl": "https://app.netlify.com/projects/dao-budget-simulator/deploys/6b09b01a7c923cb5995c3b7f",
+          "name": "Header rules - dao-budget-simulator",
+          "startedAt": "2026-11-27T16:30:19Z",
+          "status": "COMPLETED",
+          "workflowName": ""
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:40Z",
+          "conclusion": "NEUTRAL",
+          "detailsUrl": "https://app.netlify.com/projects/dao-budget-simulator/deploys/6b09b01a7c923cb5995c3b7f",
+          "name": "Pages changed - dao-budget-simulator",
+          "startedAt": "2026-11-27T16:30:19Z",
+          "status": "COMPLETED",
+          "workflowName": ""
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-27T16:30:40Z",
+          "conclusion": "NEUTRAL",
+          "detailsUrl": "https://app.netlify.com/projects/dao-budget-simulator/deploys/6b09b01a7c923cb5995c3b7f",
+          "name": "Redirect rules - dao-budget-simulator",
+          "startedAt": "2026-11-27T16:30:19Z",
+          "status": "COMPLETED",
+          "workflowName": ""
+        },
+        {
+          "__typename": "StatusContext",
+          "context": "netlify/dao-budget-simulator/deploy-preview",
+          "startedAt": "2026-11-27T16:30:42Z",
+          "state": "SUCCESS",
+          "targetUrl": "https://deploy-preview-63--dao-budget-simulator.netlify.app"
+        }
+      ],
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/63"
+    },
+    "reviews": [],
+    "pendingUsers": [
+      "daongocuong"
+    ],
+    "inlineFindings": [],
+    "verdict": "NOT_READY_PENDING_SCOPED_PEER_REVIEW"
+  },
+  "continuation": {
+    "candidateBefore": "ff3ee48290f32b46fb1789c136bfd202cb176490",
+    "candidateDocsCommit": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+    "authoredPaths": [
+      "docs/test-plan.md",
+      "docs/tv4-checklist.md",
+      "docs/tv4-work-summary.md",
+      "docs/qa07-e2e.md",
+      "docs/evidence/2026-11-27-receiver-readiness.md",
+      "docs/evidence/2026-11-27-tv4-acceptance.md",
+      "docs/evidence/2026-11-27-handoff-drafts.md",
+      "docs/evidence/2026-11-27-r3-dev-merge-handoff.md"
+    ],
+    "productTestWorkflowChanged": false,
+    "newReviewRequests": [
+      "daongocuong"
+    ],
+    "oldPr60Pr61Closed": false,
+    "mergePerformed": false,
+    "autoMergeEnabled": false,
+    "workflowDispatched": false,
+    "ciRerunCount": 0
+  },
+  "artifactAudit": {
+    "nativeStatus": "PASS",
+    "nativeSuites": 13,
+    "commandsExit0": 18,
+    "sourceHashes": 292,
+    "sourceUnchangedThroughRun": true,
+    "emptyPatchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "load": {
+      "clients": 10,
+      "configuredDurationMs": 60000,
+      "proposals": 100,
+      "votes": 1000,
+      "successfulHttp": 32215,
+      "errorHttp": 0,
+      "independentNearestRankP95Ms": 29.594768999988446
+    },
+    "freshnessSamples": 20,
+    "loadFreshnessMaxMs": 2942.2920739999972,
+    "outageStatus": "PASS",
+    "liveBe07Status": "PASS",
+    "ciServiceOwnership": "CI_SERVICE_NOT_OWNED; runner does not stop/drop caller cluster"
+  }
+}

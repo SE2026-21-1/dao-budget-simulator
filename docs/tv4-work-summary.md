@@ -4,8 +4,8 @@ Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở m
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
 Nhánh bàn giao hiện hành: `tv4/acceptance-20261128`, từ evidence seal
 `16c0ab21bee2022bf478bc0fc2a10137ba8e68b3`; không nhập nhánh docs này vào candidate.
-PR63 candidate `4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a` trên Devd63842
-chưa merge vì scoped TV2 union/admin review còn pending.
+PR63 candidate `4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a` đã merge vào Dev
+bằng `e17ef61a8a51518005c38b0808cdc06fe7a68bbf`, giữ38commits sau scoped TV2 approval6096323116.
 `feature/tv4-operation`/PR5 là lịch sử, không nhập PR21/55/personal.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
@@ -17,14 +17,14 @@ thành phần chưa được triển khai.
 [Report theo source và giới hạn](evidence/2026-11-28-tv4-delivery.md),
 [machine state/Project persistence](evidence/2026-11-28-tv4-state.json).
 
-- Đã đăng [TV4 #42 signoff7234721032](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032), scoped technical PASS ở source896f93e/H22;78/78restart checksums,12HTTP200/6URLpairs/5digestpairs là kiểm độc lập đã seal27/11, không run mới. Gỡ receiver-not-ready/API-restart-missing; issue OPEN chờ nhóm disposition, không tác động receiver.
-- Review toàn relevant PR63 source/tests/workflow và fresh CI/reviews không finding mới. [Author audit7234792896](https://github.com/SE2026-21-1/dao-budget-simulator/pull/63#issuecomment-7234792896) không peer approval; CI46034162713/46034162609 SUCCESS trên actualmergecheckoutfe8df7cd, không PR60 proof. TV2 đã request một lần, chưa union/admin conclusion nên không merge/đóng PR60/61.
+- [#42 đã CLOSED/completed](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7235592526) sau TV4signoff7234721032/TV2backendPASS; không còn BE10 blocker hoặc chờ nhóm disposition. Hai source/run và exit-status/health limits giữ nguyên, không rerun/relabel/shutdown receiver.
+- [PR63 đã merge](evidence/2026-11-28-pr63-dev-merge.md) sau TV2 union/admin APPROVED6096323116: mergee17ef61a8a51518005c38b0808cdc06fe7a68bbf, hai parentsDevd63842+head4f6a396, giữ38commits và testedtreeae725609. PR60/61 tự MERGED/CLOSED, heads đã ở Dev; postmerge pushCI/actual checkouts ghi riêng trong report, không PR52/mainpromotion proof.
 - Đã đăng [PR62 COMMENT6096047429](https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429); unchanged d4a0fb5,144PASS lịch sử không rerun, live SKIP vì thiếu approved endpoint/instance/deployment/trusted runtime keccak/exact H/hash/numeric policy. Draft giữ nguyên.
 - Đã đăng scoped #19 acceptance, #40 HOLD acknowledgment và #44 aggregate; cập nhật tám issue bodies + PR52 description, giữ lịch sử nguyên vẹn. Project#1 qua authenticated browser: tám items × hai fields, reload kiểm; không đổi Done/quyền token/settings.
 - #41 local OptionB ACCEPTED, TV3 pinningP2 resolved COMMENT và TV1security/TV2BE08 scoped approvals giữ nguyên. Chỉ #19 provider/session/raw503, #40 receiver access/lifecycle, #20 deployment owner/public authorization + testnet và #44 group source/manifest/report/demo/video còn. Không request trùng hoặc rerun accepted campaigns.
 - Không source fix vì không tìm actionable defect mới; thay đổi lần này chỉ tài liệu/evidence. Không deploy/service action/receiver restart/Sepolia send/mainmerge/tag/release/staging#56. Historical FAIL/raw evidence và10Ready(single)N/A giữ nguyên.
 
-Các mục27/11 bên dưới là snapshot trước publication28/11; draft unposted không còn là next action cho các kết luận đã đăng.
+Snapshot [bàn giao trước merge](evidence/2026-11-28-tv4-delivery.md)/[Project trước closure](evidence/2026-11-28-tv4-state.json) giữ nguyên lịch sử; peer-pending và #42-open trong snapshot đã superseded bởi [merge/closure report](evidence/2026-11-28-pr63-dev-merge.md). Các mục27/11 bên dưới không phải next action hiện hành.
 
 ## Phạm vi hiện hành — 27/11/2026
 

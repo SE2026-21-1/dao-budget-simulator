@@ -8,13 +8,13 @@ Runner hẹp `scripts/check_qa07_e2e.mjs` tái sử dụng deployment/receipt/li
 
 ## Gate hiện hành — 28/11/2026
 
-- [#42 signoff TV4 đã đăng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032): scoped receiver API-only restart PASS; không còn receiver-not-ready/API-missing. Issue OPEN chờ nhóm; không restart receiver vì evidence đã seal.
+- [#42 đã CLOSED/completed](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7235592526) sau TV4signoff7234721032/TV2backendPASS; không còn chờ receiver hoặc nhóm disposition. Giữ hai source/run và exit/health limits; không restart receiver vì evidence đã seal.
 - [#19 visual/preflight/provenance accepted](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7234792353); chỉ provider interval trước blocked Submit đến guard settle, actual About/manifest cùng session và raw503+TV2logs còn thiếu. No-send vẫn inference, H26 version UNKNOWN; không full governance rerun.
 - [#40 readiness HOLD/runtime SKIP](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7234792567), không FAIL: clean sourcee8e443c đã TV2 duyệt, cần authorized isolated Windows/WSL inventory/owners/restoration + actual foreground serve transcript/exit, không tee/down/kill hoặc Linux substitute.
-- #41 local OptionB pipeline ACCEPTED và TV3 pinningP2 COMMENT6055560601 resolved; không đòi workerSQL/re-review cũ. PR63 source candidate4f6a396/Devd63842 CIactualcheckoutfe8df7cd SUCCESS nhưng TV2 union/admin peer pending; chưa merge, không chọn release source.
+- #41 local OptionB pipeline ACCEPTED và TV3 pinningP2 COMMENT6055560601 resolved; không đòi workerSQL/re-review cũ. PR63 được TV2union/admin APPROVED6096323116 và mergeDev bằng **e17ef61a8a51518005c38b0808cdc06fe7a68bbf**, giữ38commits; PR60/61 tựMERGED. [Actual pushDev postmerge CI](evidence/2026-11-28-pr63-dev-merge.md) khác PR52/mainpromotion và không tự chọn release/demo source.
 - [#44 current dependency summary](https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916): nhóm chọn exact approved source + manifest + report + demo + video; #20 owner/testnet vẫn BLOCKED, PR52 Draft. PR62 COMMENT/live SKIP không thành live RPC proof.
 
-[Bàn giao/source identities và Project](evidence/2026-11-28-tv4-delivery.md). Không đổi runner, chạy demo/receiver hoặc broadcast để tạo evidence lần này. Gate27/11 dưới đây giữ như snapshot trước khi đăng các kết luận28/11.
+[Bàn giao trước merge](evidence/2026-11-28-tv4-delivery.md) giữ nguyên lịch sử; [merge/closure/postmerge CI](evidence/2026-11-28-pr63-dev-merge.md) supersede peer-pending/#42-open. Không đổi runner, chạy lại demo/receiver hoặc broadcast để tạo proof; automatic CI chạy trên GitHub-owned isolated services, không receiver#42.
 
 ## Gate hiện hành — 27/11/2026
 

@@ -1,0 +1,216 @@
+SOURCE=7526e045753707599e98d08d69f1b64380027291
+CWD=/tmp/dao-tv4-issue40-fixes-review
+
+INITIAL COMBINED ATTEMPT — NOT PASS
+{
+  "name": "combined-126-deadline",
+  "command": "node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership,diagnostic-ownership,postgres-startup}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs",
+  "cwd": "/tmp/dao-tv4-issue40-fixes-review",
+  "startedAtUtc": "2026-11-28T14:37:06.741741+00:00",
+  "deadlineSeconds": 45,
+  "exitCode": null,
+  "outcome": "PYTHON_SUBPROCESS_TIMEOUT",
+  "counts": "UNKNOWN_NOT_INFERRED",
+  "rawOutputLimit": "Initial capture wrapper raised TimeoutExpired before emitting partial stdout/stderr; no fabricated raw output or count. Subsequent process snapshot found no matching review test processes."
+}
+
+START_UTC=2026-11-28T14:40:42.271129+00:00
+END_UTC=2026-11-28T14:40:49.123048+00:00
+COMMAND: node --test tests/be09-diagnostic-ownership.test.mjs
+EXIT_STATUS=0
+STDOUT:
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-ApuGwt/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API identity missing: actual runner failure branch makes zero HTTP attempts (733.371452ms)
+{"api":"reclaimed","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-KG8Ogw/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API reclaimed: actual failure branch never probes foreign/unowned listener (887.675912ms)
+{"api":"mismatch","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-wJrp8T/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API mismatch: actual failure branch never probes foreign/unowned listener (672.070647ms)
+{"api":"owned","postgres":true,"direct":false,"httpAttempts":2,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-XDJ71g/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 owned API diagnostics retain health/summary without frontend startup (781.401158ms)
+{"api":"missing","postgres":false,"direct":true,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct CLI with neither API nor PostgreSQL ownership stays offline (362.345996ms)
+{"api":"missing","postgres":false,"direct":false,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness diagnostic could not complete; logs retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-kelSbD/runs/unit/reports/readiness-timeout\nReadiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-kelSbD/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 runner preserves local logs and failure when PostgreSQL is unowned (206.267558ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct CLI cannot bypass API ownership with valid sealed metadata (381.26096ms)
+{"api":"owned","postgres":true,"direct":true,"httpAttempts":1,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct owned API stops probing after ownership changes during health (1063.082866ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"","stderr":"BE09 readiness diagnostic failed; check runtime files and output path.\n","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 diagnostic write failure does not hide startup failure (518.523639ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 diagnostic DB override cannot bypass private allocation (380.699551ms)
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness diagnostic could not complete; logs retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-BsJhfH/runs/unit/reports/readiness-timeout\nReadiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-BsJhfH/runs/unit/reports/readiness-timeout\n","stderr":"BE09 readiness diagnostic failed; check runtime files and output path.\n","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 actual runner keeps failure and local logs when diagnostic output fails (605.367057ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6761.49672
+
+STDERR:
+
+
+START_UTC=2026-11-28T14:40:49.125362+00:00
+END_UTC=2026-11-28T14:41:05.561560+00:00
+COMMAND: node --test tests/be09-postgres-startup.test.mjs
+EXIT_STATUS=0
+STDOUT:
+{"kind":"owned","pgCtlStatus":1,"startupStatus":1,"capturedBeforeExitCleanup":true,"stoppedByStartup":true,"continued":false,"explicitHarnessRecovery":false,"stdout":"{\"version\":1,\"root\":\"/tmp/dao-tv4-issue40-fixes-review\",\"stateRoot\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP\",\"runDir\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit\",\"runId\":\"unit\",\"pgdata\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\",\"label\":\"postgres\",\"pid\":651520,\"parentPid\":651500,\"startTicks\":\"3363839\",\"executable\":\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"argv\":[\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"-e\",\"\\n    const fs=require('node:fs');\\n    const data=process.env.F402_DATA;\\n    if(\\\"owned\\\"!=='missing-pid')fs.writeFileSync(data+'/postmaster.pid',process.pid+'\\\\n'+(\\\"owned\\\"==='wrong-data'?data+'/different':data)+'\\\\n');\\n    setTimeout(()=>process.exit(98),15000);\\n    process.send({ready:true});\\n  \",\"--\",\"-D\",\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\"],\"argvBytes\":\"L2hvbWUvcHRkdW5nLy5udm0vdmVyc2lvbnMvbm9kZS92MjQuMTUuMC9iaW4vbm9kZQAtZQAKICAgIGNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKICAgIGNvbnN0IGRhdGE9cHJvY2Vzcy5lbnYuRjQwMl9EQVRBOwogICAgaWYoIm93bmVkIiE9PSdtaXNzaW5nLXBpZCcpZnMud3JpdGVGaWxlU3luYyhkYXRhKycvcG9zdG1hc3Rlci5waWQnLHByb2Nlc3MucGlkKydcbicrKCJvd25lZCI9PT0nd3JvbmctZGF0YSc/ZGF0YSsnL2RpZmZlcmVudCc6ZGF0YSkrJ1xuJyk7CiAgICBzZXRUaW1lb3V0KCgpPT5wcm9jZXNzLmV4aXQoOTgpLDE1MDAwKTsKICAgIHByb2Nlc3Muc2VuZCh7cmVhZHk6dHJ1ZX0pOwogIAAtLQAtRAAvdG1wL2Rhby1idWRnZXQtaXNzdWU0MC1saWZlY3ljbGUtZjQwMi11bml0LUZxN2ZUUC9ydW5zL3VuaXQvcG9zdGdyZXMvZGF0YQA=\",\"bootId\":\"2c46d032-32d7-4d86-bb14-0a2426678836\",\"marker\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\",\"parentStartTicks\":\"3363820\"}\nPostgreSQL startup failed (exit 1); preserving status for owned-process cleanup.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: stopping authenticated private cluster\n{\"version\":1,\"root\":\"/tmp/dao-tv4-issue40-fixes-review\",\"stateRoot\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP\",\"runDir\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit\",\"runId\":\"unit\",\"pgdata\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\",\"label\":\"postgres\",\"pid\":651520,\"parentPid\":651500,\"startTicks\":\"3363839\",\"executable\":\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"argv\":[\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"-e\",\"\\n    const fs=require('node:fs');\\n    const data=process.env.F402_DATA;\\n    if(\\\"owned\\\"!=='missing-pid')fs.writeFileSync(data+'/postmaster.pid',process.pid+'\\\\n'+(\\\"owned\\\"==='wrong-data'?data+'/different':data)+'\\\\n');\\n    setTimeout(()=>process.exit(98),15000);\\n    process.send({ready:true});\\n  \",\"--\",\"-D\",\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\"],\"argvBytes\":\"L2hvbWUvcHRkdW5nLy5udm0vdmVyc2lvbnMvbm9kZS92MjQuMTUuMC9iaW4vbm9kZQAtZQAKICAgIGNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKICAgIGNvbnN0IGRhdGE9cHJvY2Vzcy5lbnYuRjQwMl9EQVRBOwogICAgaWYoIm93bmVkIiE9PSdtaXNzaW5nLXBpZCcpZnMud3JpdGVGaWxlU3luYyhkYXRhKycvcG9zdG1hc3Rlci5waWQnLHByb2Nlc3MucGlkKydcbicrKCJvd25lZCI9PT0nd3JvbmctZGF0YSc/ZGF0YSsnL2RpZmZlcmVudCc6ZGF0YSkrJ1xuJyk7CiAgICBzZXRUaW1lb3V0KCgpPT5wcm9jZXNzLmV4aXQoOTgpLDE1MDAwKTsKICAgIHByb2Nlc3Muc2VuZCh7cmVhZHk6dHJ1ZX0pOwogIAAtLQAtRAAvdG1wL2Rhby1idWRnZXQtaXNzdWU0MC1saWZlY3ljbGUtZjQwMi11bml0LUZxN2ZUUC9ydW5zL3VuaXQvcG9zdGdyZXMvZGF0YQA=\",\"bootId\":\"2c46d032-32d7-4d86-bb14-0a2426678836\",\"marker\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-Fq7fTP/runs/unit/postgres/data\",\"parentStartTicks\":\"3363820\"}\nPostgreSQL: stopped\n","stderr":"fixture: postmaster exists; pg_ctl wait result 1\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 timeout with capturable postmaster uses actual EXIT cleanup (1054.877344ms)
+{"kind":"owned","pgCtlStatus":37,"startupStatus":37,"capturedBeforeExitCleanup":true,"stoppedByStartup":true,"continued":false,"explicitHarnessRecovery":false,"stdout":"{\"version\":1,\"root\":\"/tmp/dao-tv4-issue40-fixes-review\",\"stateRoot\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW\",\"runDir\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit\",\"runId\":\"unit\",\"pgdata\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\",\"label\":\"postgres\",\"pid\":651667,\"parentPid\":651500,\"startTicks\":\"3363945\",\"executable\":\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"argv\":[\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"-e\",\"\\n    const fs=require('node:fs');\\n    const data=process.env.F402_DATA;\\n    if(\\\"owned\\\"!=='missing-pid')fs.writeFileSync(data+'/postmaster.pid',process.pid+'\\\\n'+(\\\"owned\\\"==='wrong-data'?data+'/different':data)+'\\\\n');\\n    setTimeout(()=>process.exit(98),15000);\\n    process.send({ready:true});\\n  \",\"--\",\"-D\",\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\"],\"argvBytes\":\"L2hvbWUvcHRkdW5nLy5udm0vdmVyc2lvbnMvbm9kZS92MjQuMTUuMC9iaW4vbm9kZQAtZQAKICAgIGNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKICAgIGNvbnN0IGRhdGE9cHJvY2Vzcy5lbnYuRjQwMl9EQVRBOwogICAgaWYoIm93bmVkIiE9PSdtaXNzaW5nLXBpZCcpZnMud3JpdGVGaWxlU3luYyhkYXRhKycvcG9zdG1hc3Rlci5waWQnLHByb2Nlc3MucGlkKydcbicrKCJvd25lZCI9PT0nd3JvbmctZGF0YSc/ZGF0YSsnL2RpZmZlcmVudCc6ZGF0YSkrJ1xuJyk7CiAgICBzZXRUaW1lb3V0KCgpPT5wcm9jZXNzLmV4aXQoOTgpLDE1MDAwKTsKICAgIHByb2Nlc3Muc2VuZCh7cmVhZHk6dHJ1ZX0pOwogIAAtLQAtRAAvdG1wL2Rhby1idWRnZXQtaXNzdWU0MC1saWZlY3ljbGUtZjQwMi11bml0LUJMRVBWVy9ydW5zL3VuaXQvcG9zdGdyZXMvZGF0YQA=\",\"bootId\":\"2c46d032-32d7-4d86-bb14-0a2426678836\",\"marker\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\",\"parentStartTicks\":\"3363820\"}\nPostgreSQL startup failed (exit 37); preserving status for owned-process cleanup.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: stopping authenticated private cluster\n{\"version\":1,\"root\":\"/tmp/dao-tv4-issue40-fixes-review\",\"stateRoot\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW\",\"runDir\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit\",\"runId\":\"unit\",\"pgdata\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\",\"label\":\"postgres\",\"pid\":651667,\"parentPid\":651500,\"startTicks\":\"3363945\",\"executable\":\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"argv\":[\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"-e\",\"\\n    const fs=require('node:fs');\\n    const data=process.env.F402_DATA;\\n    if(\\\"owned\\\"!=='missing-pid')fs.writeFileSync(data+'/postmaster.pid',process.pid+'\\\\n'+(\\\"owned\\\"==='wrong-data'?data+'/different':data)+'\\\\n');\\n    setTimeout(()=>process.exit(98),15000);\\n    process.send({ready:true});\\n  \",\"--\",\"-D\",\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\"],\"argvBytes\":\"L2hvbWUvcHRkdW5nLy5udm0vdmVyc2lvbnMvbm9kZS92MjQuMTUuMC9iaW4vbm9kZQAtZQAKICAgIGNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKICAgIGNvbnN0IGRhdGE9cHJvY2Vzcy5lbnYuRjQwMl9EQVRBOwogICAgaWYoIm93bmVkIiE9PSdtaXNzaW5nLXBpZCcpZnMud3JpdGVGaWxlU3luYyhkYXRhKycvcG9zdG1hc3Rlci5waWQnLHByb2Nlc3MucGlkKydcbicrKCJvd25lZCI9PT0nd3JvbmctZGF0YSc/ZGF0YSsnL2RpZmZlcmVudCc6ZGF0YSkrJ1xuJyk7CiAgICBzZXRUaW1lb3V0KCgpPT5wcm9jZXNzLmV4aXQoOTgpLDE1MDAwKTsKICAgIHByb2Nlc3Muc2VuZCh7cmVhZHk6dHJ1ZX0pOwogIAAtLQAtRAAvdG1wL2Rhby1idWRnZXQtaXNzdWU0MC1saWZlY3ljbGUtZjQwMi11bml0LUJMRVBWVy9ydW5zL3VuaXQvcG9zdGdyZXMvZGF0YQA=\",\"bootId\":\"2c46d032-32d7-4d86-bb14-0a2426678836\",\"marker\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-BLEPVW/runs/unit/postgres/data\",\"parentStartTicks\":\"3363820\"}\nPostgreSQL: stopped\n","stderr":"fixture: postmaster exists; pg_ctl wait result 37\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 nonstandard pg_ctl failure status survives authenticated cleanup (921.942764ms)
+{"kind":"unrelated-argv","pgCtlStatus":37,"startupStatus":37,"capturedBeforeExitCleanup":false,"stoppedByStartup":false,"continued":false,"explicitHarnessRecovery":false,"stdout":"PostgreSQL identity could not be captured; unverified processes are left untouched.\nPostgreSQL startup failed (exit 37); preserving status for owned-process cleanup.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-wnr8f4/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: no authenticated live cluster; left untouched\n","stderr":"fixture: postmaster exists; pg_ctl wait result 37\nBE09 ERROR: Cannot authenticate postgres child; see /tmp/dao-budget-issue40-lifecycle-f402-unit-wnr8f4/runs/unit/logs/postgres-identity.log\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 failure leaves unrelated-argv process untouched and preserves exit37 (3548.192569ms)
+{"kind":"wrong-data","pgCtlStatus":37,"startupStatus":37,"capturedBeforeExitCleanup":false,"stoppedByStartup":false,"continued":false,"explicitHarnessRecovery":false,"stdout":"PostgreSQL identity could not be captured; unverified processes are left untouched.\nPostgreSQL startup failed (exit 37); preserving status for owned-process cleanup.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-lt5F0L/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: no authenticated live cluster; left untouched\n","stderr":"fixture: postmaster exists; pg_ctl wait result 37\nBE09 ERROR: Cannot authenticate postgres child; see /tmp/dao-budget-issue40-lifecycle-f402-unit-lt5F0L/runs/unit/logs/postgres-identity.log\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 failure leaves wrong-data process untouched and preserves exit37 (3916.70406ms)
+{"kind":"missing-pid","pgCtlStatus":37,"startupStatus":37,"capturedBeforeExitCleanup":false,"stoppedByStartup":false,"continued":false,"explicitHarnessRecovery":false,"stdout":"PostgreSQL identity could not be captured; unverified processes are left untouched.\nPostgreSQL startup failed (exit 37); preserving status for owned-process cleanup.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-9dlY9C/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: no authenticated live cluster; left untouched\n","stderr":"fixture: postmaster exists; pg_ctl wait result 37\nhead: cannot open '/tmp/dao-budget-issue40-lifecycle-f402-unit-9dlY9C/runs/unit/postgres/data/postmaster.pid' for reading: No such file or directory\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 failure leaves missing-pid process untouched and preserves exit37 (493.717261ms)
+{"kind":"owned","pgCtlStatus":0,"startupStatus":0,"capturedBeforeExitCleanup":true,"stoppedByStartup":false,"continued":true,"explicitHarnessRecovery":false,"stdout":"{\"version\":1,\"root\":\"/tmp/dao-tv4-issue40-fixes-review\",\"stateRoot\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-UxVJ7o\",\"runDir\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-UxVJ7o/runs/unit\",\"runId\":\"unit\",\"pgdata\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-UxVJ7o/runs/unit/postgres/data\",\"label\":\"postgres\",\"pid\":652611,\"parentPid\":651500,\"startTicks\":\"3364831\",\"executable\":\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"argv\":[\"/home/ptdung/.nvm/versions/node/v24.15.0/bin/node\",\"-e\",\"\\n    const fs=require('node:fs');\\n    const data=process.env.F402_DATA;\\n    if(\\\"owned\\\"!=='missing-pid')fs.writeFileSync(data+'/postmaster.pid',process.pid+'\\\\n'+(\\\"owned\\\"==='wrong-data'?data+'/different':data)+'\\\\n');\\n    setTimeout(()=>process.exit(98),15000);\\n    process.send({ready:true});\\n  \",\"--\",\"-D\",\"/tmp/dao-budget-issue40-lifecycle-f402-unit-UxVJ7o/runs/unit/postgres/data\"],\"argvBytes\":\"L2hvbWUvcHRkdW5nLy5udm0vdmVyc2lvbnMvbm9kZS92MjQuMTUuMC9iaW4vbm9kZQAtZQAKICAgIGNvbnN0IGZzPXJlcXVpcmUoJ25vZGU6ZnMnKTsKICAgIGNvbnN0IGRhdGE9cHJvY2Vzcy5lbnYuRjQwMl9EQVRBOwogICAgaWYoIm93bmVkIiE9PSdtaXNzaW5nLXBpZCcpZnMud3JpdGVGaWxlU3luYyhkYXRhKycvcG9zdG1hc3Rlci5waWQnLHByb2Nlc3MucGlkKydcbicrKCJvd25lZCI9PT0nd3JvbmctZGF0YSc/ZGF0YSsnL2RpZmZlcmVudCc6ZGF0YSkrJ1xuJyk7CiAgICBzZXRUaW1lb3V0KCgpPT5wcm9jZXNzLmV4aXQoOTgpLDE1MDAwKTsKICAgIHByb2Nlc3Muc2VuZCh7cmVhZHk6dHJ1ZX0pOwogIAAtLQAtRAAvdG1wL2Rhby1idWRnZXQtaXNzdWU0MC1saWZlY3ljbGUtZjQwMi11bml0LVV4Vko3by9ydW5zL3VuaXQvcG9zdGdyZXMvZGF0YQA=\",\"bootId\":\"2c46d032-32d7-4d86-bb14-0a2426678836\",\"marker\":\"/tmp/dao-budget-issue40-lifecycle-f402-unit-UxVJ7o/runs/unit/postgres/data\",\"parentStartTicks\":\"3363820\"}\nFIXTURE_STARTUP_CONTINUED\n","stderr":"fixture: postmaster exists; pg_ctl wait result 0\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 successful startup still captures the owned postmaster (324.658574ms)
+{"kind":"unrelated-argv","pgCtlStatus":0,"startupStatus":1,"capturedBeforeExitCleanup":false,"stoppedByStartup":false,"continued":false,"explicitHarnessRecovery":false,"stdout":"PostgreSQL identity could not be captured; unverified processes are left untouched.\nSetup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-L1DzaN/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: no authenticated live cluster; left untouched\n","stderr":"fixture: postmaster exists; pg_ctl wait result 0\nBE09 ERROR: Cannot authenticate postgres child; see /tmp/dao-budget-issue40-lifecycle-f402-unit-L1DzaN/runs/unit/logs/postgres-identity.log\n","networkConnections":0,"databaseConnections":0}
+✔ F40-2 successful pg_ctl cannot authorize an unrelated postmaster (5822.863944ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16307.739211
+
+STDERR:
+
+
+START_UTC=2026-11-28T14:41:39.441458+00:00
+END_UTC=2026-11-28T14:42:03.192339+00:00
+COMMAND: node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs
+EXIT_STATUS=0
+STDOUT:
+✔ live environment comes from runtime metadata and deployment name, not inherited env or numeric database id (5.896019ms)
+✔ Vitest structured results distinguish complete pass, failure and skips (5.233409ms)
+✔ status passes all Node arguments and leaves run files and processes alone (1636.368539ms)
+✔ registration uses first indexed source while retaining earlier governance-token metadata (7.028991ms)
+✔ diagnostic reports distinct metadata, source and header failures (1.010769ms)
+✔ registration CLI persists first indexed block and all five role records (382.479471ms)
+✔ preflight accepts a clean arbitrary HEAD and configurable toolchain, and rejects dirty or invalid inputs (2796.607512ms)
+✔ source provenance captures the actual revision and hashes all runnable BE09 scripts (632.644809ms)
+✔ fresh terminal RPC override unset cannot replace persisted RPC (655.714894ms)
+✔ fresh terminal RPC override 18545 cannot replace persisted RPC (870.754954ms)
+✔ cross-run identity fails closed before fetch or process operations (475.592891ms)
+✔ source mismatch fails closed before fetch or process operations (679.18214ms)
+✔ malformed runtime fails closed before fetch or process operations (857.470338ms)
+✔ missing metadata fails closed before fetch or process operations (608.203244ms)
+✔ protected RPC fails closed before fetch or process operations (723.398253ms)
+✔ protected API fails closed before fetch or process operations (1084.040985ms)
+✔ cross-run artifact fails closed before fetch or process operations (1253.328207ms)
+✔ worker JSON RPC mismatch fails closed before fetch or process operations (1683.516334ms)
+✔ worker env RPC mismatch fails closed before fetch or process operations (1154.263365ms)
+✔ protected database fails closed before fetch or process operations (545.990796ms)
+✔ frontend mismatch fails closed before fetch or process operations (670.159408ms)
+✔ duplicate worker env fails closed before fetch or process operations (415.186414ms)
+✔ unsealed bytes fails closed before fetch or process operations (785.565062ms)
+✔ artifact symlink fails closed before fetch or process operations (508.934093ms)
+✔ stopped run with valid metadata cannot probe a reclaimed endpoint (861.70447ms)
+✔ runtime environment rejects malformed keys and duplicate overrides (7.087861ms)
+✔ source working-state mismatch prevents network before any ownership guard (576.780581ms)
+✔ verify rejects a stopped fixture before live tests, DB or report writes (4167.868443ms)
+✔ down on an old run leaves a different run API and Vite alive (10884.219223ms)
+✔ registration CLI propagates explicit RPC URL to every output (426.997056ms)
+▶ registration rejects malformed flags before any database interaction
+  ✔ missing RPC flag (224.92623ms)
+  ✔ missing RPC value (303.655423ms)
+  ✔ empty RPC value (481.227521ms)
+  ✔ unknown flag (267.239939ms)
+  ✔ unknown replacement (443.986852ms)
+  ✔ duplicate RPC flag (382.939683ms)
+  ✔ duplicate manifest flag (881.536821ms)
+  ✔ flag instead of value (350.757928ms)
+  ✔ missing runtime flag (437.271413ms)
+  ✔ unexpected positional value (280.964623ms)
+✔ registration rejects malformed flags before any database interaction (4068.596843ms)
+▶ registration rejects invalid RPC URLs and scopes before database interaction
+  ✔ protected default (832.127241ms)
+  ✔ protected API (681.698174ms)
+  ✔ protected PostgreSQL (616.630275ms)
+  ✔ unallocated port (305.204528ms)
+  ✔ API collision (227.484125ms)
+  ✔ database collision (314.499579ms)
+  ✔ frontend collision (278.920169ms)
+  ✔ trailing slash (237.966424ms)
+  ✔ zero padding (278.110966ms)
+  ✔ hostname (314.417435ms)
+  ✔ empty scope (275.306453ms)
+  ✔ unknown scope (307.075231ms)
+✔ registration rejects invalid RPC URLs and scopes before database interaction (4677.371513ms)
+▶ registration rejects noncanonical and symlink runtime paths before database interaction
+  ✔ symlink (227.975091ms)
+  ✔ dot segment (265.967974ms)
+  ✔ relative (202.929911ms)
+  ✔ missing (230.102916ms)
+✔ registration rejects noncanonical and symlink runtime paths before database interaction (929.335156ms)
+✔ ordinary registration accepts the explicit legacy RPC allocation (288.536488ms)
+✔ Issue40 registration rejects protected or inconsistent DB URLs before connection (949.508745ms)
+✔ RPC port defaults only when unset and normalizes leading zeros (10.280412ms)
+✔ RPC port rejects empty, nondecimal, out-of-range and service-collision values (3.613592ms)
+✔ RPC URL accepts only literal canonical loopback HTTP URLs (5.71249ms)
+✔ RPC allocation validates scope and fences issue40 to port 28545 (1.690884ms)
+✔ runner derives one canonical URL, scope=ordinary, input=unset (375.819381ms)
+✔ runner derives one canonical URL, scope=ordinary, input=00028545 (356.293024ms)
+✔ runner derives one canonical URL, scope=issue40, input=28545 (294.076122ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "" (266.457317ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: " " (338.909847ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "+28545" (277.02594ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "28545\n" (325.613703ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "0" (480.982939ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "65536" (362.207718ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "99999999999999999999" (320.771342ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "00000000000000000000" (226.973952ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "3300" (346.036673ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "55432" (588.825337ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "5173" (357.090177ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "18545" (474.458653ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "13300" (383.235997ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "55442" (284.220774ms)
+✔ Issue40 default18545 is refused, and generic state root cannot opt into Issue40 (195.794681ms)
+✔ Issue40 unset RPC refuses ordinary default before any state creation (209.45162ms)
+✔ foreground worker restart grace remains fail-closed: restart (42.424805ms)
+✔ foreground worker restart grace remains fail-closed: source-mismatch (69.847134ms)
+✔ foreground worker restart grace remains fail-closed: foreign-rpc (96.236879ms)
+✔ canonical paths validate future directories without creating anything (134.316678ms)
+✔ canonical paths reject state, run and PGDATA symlink components (38.689332ms)
+✔ owned loopback socket is authenticated without a network request; capture is exclusive (513.010297ms)
+✔ unrelated same-chain listener is rejected before any request (646.12435ms)
+✔ wildcard socket is not a loopback ownership gate (593.580815ms)
+✔ conflicting unrelated loopback socket rejects even when expected process owns the port (939.71967ms)
+✔ failed child bind cannot authenticate the unrelated listener (543.411438ms)
+✔ capture rejects wrong executable, parent, and substring marker (335.80043ms)
+✔ reused PID, altered start time and every identity component prohibit signals (617.867723ms)
+✔ all service markers are exact canonical tokens and postgres checks both postmaster lines (757.449343ms)
+✔ cleanup works without runtime metadata and after the owned listener disappears (515.177354ms)
+✔ identity and PID symlinks cannot authorize cleanup (270.271192ms)
+✔ CLI paths, capture, owned failure and guarded signal use the same API (666.93067ms)
+✔ identity symlinks and redirected canonical service files cannot authorize signals (103.006479ms)
+✔ postgres capture refuses a postmaster data-directory mismatch (130.656692ms)
+✔ only reparenting to init after the recorded parent exits remains owned (113.388413ms)
+✔ an external state ancestor cannot place a run inside the checkout (5.816982ms)
+✔ an owned listener on another loopback address cannot authenticate 127.0.0.1 (145.019449ms)
+✔ private postgres fast shutdown signals only its authenticated PID (111.231498ms)
+{"terminalOverride":"unset","status":1,"requests":[]}
+✔ status refuses incomplete/stopped run before any network, terminal override=undefined (1227.18629ms)
+{"terminalOverride":"18545","status":1,"requests":[]}
+✔ status refuses incomplete/stopped run before any network, terminal override=18545 (1359.512553ms)
+ℹ tests 108
+ℹ suites 0
+ℹ pass 108
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23605.55169
+
+STDERR:
+
+

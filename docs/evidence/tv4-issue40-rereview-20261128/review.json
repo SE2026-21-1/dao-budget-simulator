@@ -1,0 +1,501 @@
+{
+  "schema": 1,
+  "reviewer": "dung0611 / TV4",
+  "recordedAtUtc": "2026-11-28T14:48:19.910196+00:00",
+  "baseline": {
+    "sha": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+    "tree": "4e69dbc53de4c8c5a90a0fbeb32d1c423e3adb6c"
+  },
+  "previousReviewedSource": {
+    "sha": "ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26",
+    "tree": "9ef02abba03a1612a9b6ecfd2ac443214df326aa",
+    "disposition": "CHANGES REQUESTED; historical source only",
+    "immutableReviewCommit": "fc16e6d88366507af4d6016bef42b51a6b82a0fd"
+  },
+  "reviewedSource": {
+    "sha": "7526e045753707599e98d08d69f1b64380027291",
+    "parent": "dbedc9137ece2634d6439654c482f4fa5fe03d44",
+    "tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "branch": "tv3/issue40-rpc-isolation-20261128",
+    "checkout": "/tmp/dao-tv4-issue40-fixes-review",
+    "initialTrackedStatus": "CLEAN",
+    "afterChecksTrackedStatus": "CLEAN",
+    "sourceEditsByReviewer": false,
+    "dependencyPinsChanged": false,
+    "recursiveSubmodulePins": [
+      {
+        "path": "lib/forge-std",
+        "sha": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219"
+      },
+      {
+        "path": "lib/openzeppelin-contracts",
+        "sha": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+      },
+      {
+        "path": "lib/openzeppelin-contracts/lib/erc4626-tests",
+        "sha": "232ff9ba8194e406967f52ecc5cb52ed764209e9"
+      },
+      {
+        "path": "lib/openzeppelin-contracts/lib/forge-std",
+        "sha": "3b20d60d14b343ee4f908cb8079495c07f5e8981"
+      },
+      {
+        "path": "lib/openzeppelin-contracts/lib/halmos-cheatcodes",
+        "sha": "7328abe100445fc53885c21d0e713b95293cf14c"
+      }
+    ]
+  },
+  "toolchain": {
+    "node": {
+      "command": [
+        "node",
+        "--version"
+      ],
+      "stdout": "v24.15.0\n",
+      "exitCode": 0
+    },
+    "npm": {
+      "command": [
+        "npm",
+        "--version"
+      ],
+      "stdout": "11.12.1\n",
+      "exitCode": 0
+    },
+    "bash": {
+      "command": [
+        "bash",
+        "--version"
+      ],
+      "stdout": "GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)\nCopyright (C) 2022 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n\nThis is free software; you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "exitCode": 0
+    },
+    "forge": {
+      "command": [
+        "/home/ptdung/.foundry/bin/forge",
+        "--version"
+      ],
+      "stdout": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist\n",
+      "exitCode": 0
+    },
+    "anvil": {
+      "command": [
+        "/home/ptdung/.foundry/bin/anvil",
+        "--version"
+      ],
+      "stdout": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist\n",
+      "exitCode": 0
+    },
+    "cast": {
+      "command": [
+        "/home/ptdung/.foundry/bin/cast",
+        "--version"
+      ],
+      "stdout": "cast Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist\n",
+      "exitCode": 0
+    }
+  },
+  "producerPackets": [
+    {
+      "finding": "F40-1",
+      "publishingSource": "dbedc9137ece2634d6439654c482f4fa5fe03d44",
+      "packet": "tv3-f40-1-20261128",
+      "source": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "bytes": 16052,
+          "sha256": "755f7422af7371cf7ab68651465d013dadf65bf15fc7cca7f9c32526097bef97"
+        },
+        {
+          "path": "scripts/be09-diagnose.mjs",
+          "bytes": 11209,
+          "sha256": "755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343"
+        },
+        {
+          "path": "tests/be09-diagnostic-ownership.test.mjs",
+          "bytes": 15829,
+          "sha256": "1c6197efd411958770a0a02f72917c243ea87904e4d33e8961f088c3c671fe05"
+        }
+      ],
+      "payload": [
+        {
+          "path": "README.md",
+          "bytes": 11098,
+          "sha256": "886666ef0b9012a9a3d1c95dbfbd69d7f5b4c1002513048bb733d1a9903ae4fc"
+        },
+        {
+          "path": "SOURCE_SHA256SUMS.txt",
+          "bytes": 290,
+          "sha256": "3c093a78aa0424b87d00a2577e643f76a87407016df30b07744b516f2a48f391"
+        },
+        {
+          "path": "after-reproduction.txt",
+          "bytes": 693,
+          "sha256": "994a43e20954d1e2280bb29c0c91fdb29b1e440c0b2466a84e0e216f03f8bd54"
+        },
+        {
+          "path": "before-fix.txt",
+          "bytes": 1975,
+          "sha256": "c5548d2128d924286d4f5adeafe8dc2ea34a68ac98b59f80686b5f749a495932"
+        },
+        {
+          "path": "diff-whitespace.txt",
+          "bytes": 62,
+          "sha256": "17a5dac418084f60ccc59f5a0882415cf18d69295aea39561bbdbec46ae2eb8f"
+        },
+        {
+          "path": "focused-regressions.txt",
+          "bytes": 13619,
+          "sha256": "702fc2b9a4351813d84b83bf020bce5419fbb0303d19c564bae48b7ff7fb9317"
+        },
+        {
+          "path": "harness-initial-error.txt",
+          "bytes": 2263,
+          "sha256": "d01e8f0e41f3c34116d68975d55fce122b3a079ada9017a7bd17a99e8a02022e"
+        },
+        {
+          "path": "historical-integrity.txt",
+          "bytes": 507,
+          "sha256": "3af995799120495db5019dfb356e3d159883904bad00adc7d92b4d278c8fab44"
+        },
+        {
+          "path": "hygiene.txt",
+          "bytes": 349,
+          "sha256": "964114774034f38effa9c3e1361ce187a3690f8322420e85ac508599bd1a079c"
+        },
+        {
+          "path": "syntax.txt",
+          "bytes": 196,
+          "sha256": "314c1e0956e1363f94fec800bfa6b9f9f58153d3d347df12c222bb76fa6fa2b3"
+        },
+        {
+          "path": "toolchain.txt",
+          "bytes": 830,
+          "sha256": "0c1fb2ff9206f7eb6d8af1dba8e3770f319474fffdfbb32fda619f5a05470eab"
+        }
+      ],
+      "packetInventorySha256": "e11636fede91362e65743c39354b21c533252eeecd87edcc7ef9a49f9e39b491"
+    },
+    {
+      "finding": "F40-2",
+      "publishingSource": "7526e045753707599e98d08d69f1b64380027291",
+      "packet": "tv3-f40-2-20261128",
+      "source": [
+        {
+          "path": "scripts/be09-local.sh",
+          "bytes": 23208,
+          "sha256": "fc210f4efec3ddf6e7c86781cd3d431e14b654160dd6b98b3cb717a9f6f3efcd"
+        },
+        {
+          "path": "tests/be09-postgres-startup.test.mjs",
+          "bytes": 7076,
+          "sha256": "9e9bef2d3240058c4c2853175b8f6beb15dd85f9878c0c3898f38935d1b7f772"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "bytes": 16069,
+          "sha256": "1dbf53f0d4ebbc1b2168d0d704f8845cd9a4f80db69ecc214ba59f78f9b85740"
+        }
+      ],
+      "payload": [
+        {
+          "path": "README.md",
+          "bytes": 7506,
+          "sha256": "5587dfd48565d7eb4178b4eaf45f648e83593282714e81c01acb40bd44c8b1a6"
+        },
+        {
+          "path": "SOURCE_SHA256SUMS.txt",
+          "bytes": 282,
+          "sha256": "3c20ca222f7e5b3f3d257e649fc61242959e90cfe72c33afbf7a5e90e02f55c8"
+        },
+        {
+          "path": "after-reproduction.txt",
+          "bytes": 4569,
+          "sha256": "5210f1b79e33260dde77748d30dfb74167efa4ac837986cc2d71fd80c139551d"
+        },
+        {
+          "path": "before-fix.txt",
+          "bytes": 2080,
+          "sha256": "8a8b636ff8566d6d1dfc2a6c78b7da8d8657daa6e44650445d682a3f6a6dd0b5"
+        },
+        {
+          "path": "diff-whitespace.txt",
+          "bytes": 62,
+          "sha256": "514076f96426fc9309263eb92b285eaba0d2668673e272cb10d152b3ad5c01b3"
+        },
+        {
+          "path": "focused-regressions.txt",
+          "bytes": 28319,
+          "sha256": "bdaa4d4c7c57d9d4c695ac8865d14ede5334471dbc4ae0ca8e8ec189da151f97"
+        },
+        {
+          "path": "historical-integrity.txt",
+          "bytes": 514,
+          "sha256": "def942b970063bb9dce1705b625ff0aaf6f168cd29dba23bf0b3f43688f9c4d4"
+        },
+        {
+          "path": "hygiene.txt",
+          "bytes": 343,
+          "sha256": "f0977f88491e535d4bb37074cc7d2fa17808a1029a86e58c2897f6809466592d"
+        },
+        {
+          "path": "syntax.txt",
+          "bytes": 144,
+          "sha256": "02de0a30f2d67529bd291f76b452e3e19597f9c137c3b426d9cc1e63e75ea4fa"
+        },
+        {
+          "path": "toolchain.txt",
+          "bytes": 804,
+          "sha256": "0f0e9bb257feac31735585c959162d02a0b522b08ab1a12be852c71a9f4649b7"
+        }
+      ],
+      "packetInventorySha256": "2f56e7f3d695d0552f616466144ba4b2a49b4a8e8ad20a19828bebda952f827f"
+    }
+  ],
+  "currentSourceManifest": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 16069,
+      "sha256": "1dbf53f0d4ebbc1b2168d0d704f8845cd9a4f80db69ecc214ba59f78f9b85740"
+    },
+    {
+      "path": "docs/evidence/be09-20261106/local-status.test.mjs",
+      "bytes": 2271,
+      "sha256": "2edd4b3300f2a397667e3e216ab9c02385392d362ce816296a0cc0a8a73955c3"
+    },
+    {
+      "path": "docs/evidence/be09-20261106/readiness.test.mjs",
+      "bytes": 7160,
+      "sha256": "fa01486a35e29574980c7363de502b21d0ba81cf8e3758147c8350cb0aabb473"
+    },
+    {
+      "path": "docs/evidence/be09-20261106/toolchain-preflight.test.mjs",
+      "bytes": 5076,
+      "sha256": "07b59a12d095fed2ec2e08bb4b67c21be613d56fdd6bfe65dd319ad75b4d8dc5"
+    },
+    {
+      "path": "docs/issue40-restoration-b.md",
+      "bytes": 10601,
+      "sha256": "690d2f5a72373666f0e101450b3c3905fc28a781779f6cdab6a3206b4e76af7c"
+    },
+    {
+      "path": "scripts/be09-diagnose.mjs",
+      "bytes": 11209,
+      "sha256": "755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343"
+    },
+    {
+      "path": "scripts/be09-local.sh",
+      "bytes": 23208,
+      "sha256": "fc210f4efec3ddf6e7c86781cd3d431e14b654160dd6b98b3cb717a9f6f3efcd"
+    },
+    {
+      "path": "scripts/be09-metadata.mjs",
+      "bytes": 12196,
+      "sha256": "8f5bc42618bb0262952ffdfa6fab82c0ec18aa65abf817f5da10113a0baa244f"
+    },
+    {
+      "path": "scripts/be09-provenance.mjs",
+      "bytes": 1312,
+      "sha256": "6a0c22ea884be39ae746a4eb85ce17c5e077717d53890d0fcf5db59a29d9df2a"
+    },
+    {
+      "path": "scripts/be09-readiness.mjs",
+      "bytes": 2881,
+      "sha256": "e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda"
+    },
+    {
+      "path": "scripts/be09-register.mjs",
+      "bytes": 9170,
+      "sha256": "d15e6bed9cdd7be4ef196dcc2c36b434c12f46e6d559a60226d9a6d63c3b12f2"
+    },
+    {
+      "path": "scripts/be09-rpc.mjs",
+      "bytes": 1529,
+      "sha256": "94a98f7c5a65297ee0044e2f0f27b4806c4e91c62775faab6b49c1e8c6851f59"
+    },
+    {
+      "path": "scripts/be09-safety.mjs",
+      "bytes": 13916,
+      "sha256": "3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed"
+    },
+    {
+      "path": "scripts/be09-verify.mjs",
+      "bytes": 34243,
+      "sha256": "0fc2c3d71b643eaf44d767f41d87ef416fb56ff18384d9554694158dbf82dcfc"
+    },
+    {
+      "path": "tests/be09-diagnostic-ownership.test.mjs",
+      "bytes": 15829,
+      "sha256": "1c6197efd411958770a0a02f72917c243ea87904e4d33e8961f088c3c671fe05"
+    },
+    {
+      "path": "tests/be09-metadata.test.mjs",
+      "bytes": 8431,
+      "sha256": "9ddd5e2f55a2ba67c4a53e871619f9149971e25448bc3cc6c46603ee1c37dba7"
+    },
+    {
+      "path": "tests/be09-ownership.test.mjs",
+      "bytes": 4392,
+      "sha256": "bb48c0576d1b1668ce375fc10626ff039d587afefcc96c24b9766e6d6ebdc6b9"
+    },
+    {
+      "path": "tests/be09-postgres-startup.test.mjs",
+      "bytes": 7076,
+      "sha256": "9e9bef2d3240058c4c2853175b8f6beb15dd85f9878c0c3898f38935d1b7f772"
+    },
+    {
+      "path": "tests/be09-registration.test.mjs",
+      "bytes": 9418,
+      "sha256": "77921a834f3eb80085ab1420577783cf38814d2931e3ce1c3ceb44da9dc1d0a0"
+    },
+    {
+      "path": "tests/be09-rpc.test.mjs",
+      "bytes": 2934,
+      "sha256": "363937df5e4a55ddd8167094feb87fc4e76f1355499cc3108c07b5b569f24bef"
+    },
+    {
+      "path": "tests/be09-runner-allocation.test.mjs",
+      "bytes": 4136,
+      "sha256": "34e2d38ff5e27df88d815f7a41323b6c4c08718b7715e28a39c2df5f64fad2dc"
+    },
+    {
+      "path": "tests/be09-safety.test.mjs",
+      "bytes": 18912,
+      "sha256": "c6f92467bc3c8a24765f4e4fa55db75ecde59850550baad4e7e1be633bce7a31"
+    },
+    {
+      "path": "tests/be09-status-safety.test.mjs",
+      "bytes": 2527,
+      "sha256": "7058641e6deeeb4791ee97137d40498d26b6d3c57bcc2f041326dbb3d0bc1a1d"
+    }
+  ],
+  "historicalEvidence": {
+    "method": "Git blob object ID AND mode equality for every parent evidence path; prior actual 766-file byte comparison retained, not repeated or relabeled",
+    "ba386ddFilesUnchanged": 790,
+    "dbedc913FilesUnchanged": 802,
+    "currentTotalEvidenceFiles": 813,
+    "original18SourceBindingsUnchanged": true
+  },
+  "independentChecks": [
+    {
+      "name": "be09-diagnostic-ownership.test",
+      "file": "tests/be09-diagnostic-ownership.test.mjs",
+      "command": "node --test tests/be09-diagnostic-ownership.test.mjs",
+      "startedAtUtc": "2026-11-28T14:40:42.271129+00:00",
+      "finishedAtUtc": "2026-11-28T14:40:49.123048+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "be09-postgres-startup.test",
+      "file": "tests/be09-postgres-startup.test.mjs",
+      "command": "node --test tests/be09-postgres-startup.test.mjs",
+      "startedAtUtc": "2026-11-28T14:40:49.125362+00:00",
+      "finishedAtUtc": "2026-11-28T14:41:05.561560+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "baseline108",
+      "command": "node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs",
+      "startedAtUtc": "2026-11-28T14:41:39.441458+00:00",
+      "finishedAtUtc": "2026-11-28T14:42:03.192339+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "syntax",
+      "command": "bash -n scripts/be09-local.sh && node --check scripts/be09-diagnose.mjs && node --check tests/be09-diagnostic-ownership.test.mjs && node --check tests/be09-postgres-startup.test.mjs",
+      "startedAtUtc": "2026-11-28T14:42:03.193312+00:00",
+      "finishedAtUtc": "2026-11-28T14:42:03.402491+00:00",
+      "exitCode": 0
+    }
+  ],
+  "distinctPassingTests": [
+    {
+      "name": "be09-diagnostic-ownership.test",
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "be09-postgres-startup.test",
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "name": "baseline108",
+      "tests": 108,
+      "pass": 108,
+      "fail": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "pass": 126,
+    "fail": 0,
+    "skip": 0,
+    "method": "disjoint 108+11+7 file groups, not a successful combined invocation"
+  },
+  "combinedAttempt": {
+    "name": "combined-126-deadline",
+    "command": "node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership,diagnostic-ownership,postgres-startup}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs",
+    "cwd": "/tmp/dao-tv4-issue40-fixes-review",
+    "startedAtUtc": "2026-11-28T14:37:06.741741+00:00",
+    "deadlineSeconds": 45,
+    "exitCode": null,
+    "outcome": "PYTHON_SUBPROCESS_TIMEOUT",
+    "counts": "UNKNOWN_NOT_INFERRED",
+    "rawOutputLimit": "Initial capture wrapper raised TimeoutExpired before emitting partial stdout/stderr; no fabricated raw output or count. Subsequent process snapshot found no matching review test processes."
+  },
+  "additionalDiagnosticCommand": {
+    "command": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node --test --test-name-pattern='^F40-2 timeout with capturable' tests/be09-postgres-startup.test.mjs",
+    "exitCode": 0,
+    "pass": 1,
+    "countedInDistinctTotal": false,
+    "utcTimestamp": "not separately recorded",
+    "rawLogLimit": "Tool output observed; completed 7-test file raw log below is the durable coverage proof, not an invented copy of this diagnostic output."
+  },
+  "findings": [
+    {
+      "id": "F40-1",
+      "severity": "P1",
+      "status": "FIXED",
+      "scope": "scripts/be09-diagnose.mjs main: exact metadata and per-request API ownership; separate per-connect PostgreSQL guard"
+    },
+    {
+      "id": "F40-2",
+      "severity": "P2",
+      "status": "FIXED",
+      "scope": "scripts/be09-local.sh command_up: preserve pg_ctl status, capture guarded identity on both paths, existing EXIT cleanup only"
+    }
+  ],
+  "sourceDisposition": "TV4 SOURCE REVIEW APPROVED — EXACT DESCENDANT 7526e045753707599e98d08d69f1b64380027291",
+  "issueDisposition": "TV4 SOURCE REVIEW ACCEPTED — ISSUE40 RUNTIME HOLD",
+  "issueComment": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240899580",
+  "peerSourceApproval": "TV2 same SHA pending per comment7240864664; not substituted by TV4 or historical/design acceptance",
+  "githubActionsAtExactHead": [],
+  "runtimeAuthorization": "NOT GRANTED",
+  "actualEndpointAllocation": "NOT GRANTED",
+  "lifecycle": "SKIP",
+  "issueState": "OPEN/HOLD",
+  "projectUpdate": "NOT UPDATED: existing authenticated connector/Project scope limitation; no auth/settings change",
+  "remainingRuntimeGates": [
+    "TV2 independent source approval on same full SHA",
+    "receiver owner confirmation",
+    "actual four-port allocation",
+    "controller ownership",
+    "canonical checkout/state root/run/PGDATA/socket",
+    "approved temporary Windows control command/env/config/toolchain and actual executable/version proof",
+    "fresh process ownership/availability/route evidence",
+    "preregistered attempt",
+    "explicit execution permission"
+  ],
+  "limits": [
+    "Initial combined command wrapper deadline45s: not combined or CI PASS, cause not attributed, partial stdout unavailable",
+    "All completed tests retain original in-test assertions, timeouts, iterations and fixture concurrency; file grouping differs from combined scheduling",
+    "Real owned high-port listener/process fixtures and process signals; HTTP/DB intercepted and Node postmaster shim, no actual PG/Anvil/Windows/lifecycle acceptance",
+    "Check/use races are not atomically eliminated; malicious same-owner state/process tampering not proven impossible",
+    "No candidate/protected receiver endpoint query/bind, source fix, receiver/system PG/shared Windows task/WSL transport operation, Dev merge or Issue20/Sepolia work"
+  ]
+}

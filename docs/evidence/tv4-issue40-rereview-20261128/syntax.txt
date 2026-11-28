@@ -1,0 +1,9 @@
+SOURCE=7526e045753707599e98d08d69f1b64380027291
+START_UTC=2026-11-28T14:42:03.193312+00:00
+END_UTC=2026-11-28T14:42:03.402491+00:00
+COMMAND: bash -n scripts/be09-local.sh && node --check scripts/be09-diagnose.mjs && node --check tests/be09-diagnostic-ownership.test.mjs && node --check tests/be09-postgres-startup.test.mjs
+EXIT_STATUS=0
+STDOUT:
+
+STDERR:
+

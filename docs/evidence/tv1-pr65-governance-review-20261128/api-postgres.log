@@ -1,0 +1,84 @@
+
+> dao-budget-simulator@0.0.0 test:api
+> node --import tsx --test tests/api/server.test.mjs
+
+✖ six endpoints, exact data types, validation, and financial semantics (6032.8855ms)
+✖ verified heartbeat crosses the stale boundary and recovers without changing fixed-H data or cursors (6.3052ms)
+✖ BE07 requires an RPC verification timestamp, not a fresh checkpoint (0.8853ms)
+✖ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (0.7919ms)
+✖ BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases (1.1069ms)
+✖ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (1.0646ms)
+✖ BE05 on migrations 001–004 derives freshness from checkpoint and retained headers (0.6992ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6615.0734
+
+✖ failing tests:
+
+test at tests/api/server.test.mjs:182:1
+✖ six endpoints, exact data types, validation, and financial semantics (6032.8855ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:288:1
+✖ verified heartbeat crosses the stale boundary and recovers without changing fixed-H data or cursors (6.3052ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:340:1
+✖ BE07 requires an RPC verification timestamp, not a fresh checkpoint (0.8853ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:366:1
+✖ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (0.7919ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:473:1
+✖ BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases (1.1069ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:489:1
+✖ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (1.0646ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)
+
+test at tests/api/server.test.mjs:550:1
+✖ BE05 on migrations 001–004 derives freshness from checkpoint and retained headers (0.6992ms)
+  Error: Query read timeout
+      at /tmp/dao-pr65-tv1-review-8838cfd/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async seed (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:67:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-pr65-tv1-review-8838cfd/tests/api/server.test.mjs:165:3)
+      at async TestHook.run (node:internal/test_runner/test:1208:7)

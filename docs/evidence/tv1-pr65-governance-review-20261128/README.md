@@ -219,3 +219,9 @@ handoff công khai có exact SHA/results/limitations; không merge/dismiss revie
 
 Formal review submitted and read back: [APPROVED](https://github.com/SE2026-21-1/dao-budget-simulator/pull/65#pullrequestreview-6098730888),
 reviewer @nvdungmim, exact commit `8838cfd250583d87a608dbcf44c387b37e3dad22`, UTC 2026-11-28T15:31:09Z.
+
+Raw build/typecheck logs giữ nguyên blank line cuối do npm xuất ra. Strict staged
+`git diff --cached --check` trả2 vì đúng hai blank-at-EOF này; không sửa raw logs.
+Khi commit log evidence, chỉ tắt kiểm blank-at-EOF bằng command-local
+`git -c core.whitespace=-blank-at-eof diff --cached --check`; source diff check
+vẫn dùng cấu hình chuẩn và đã exit0. Không thay repository Git settings.

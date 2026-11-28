@@ -1,0 +1,18 @@
+validated response examples: 23
+✔ all 23 documented response examples validate against their endpoint/status (265.3464ms)
+✔ captured proposal example hashes, action, amount, timestamp window and demo quorum agree (16.1649ms)
+✔ seven source-supported states and operation/null variants fit the response schema (1.3082ms)
+✔ uint256 max remains exact decimal text; invalid states, types and identifiers are rejected (2.5542ms)
+✔ BUD Transfer nullable links, zero/self, numeric-string sums and accounting example are consistent (0.5601ms)
+✔ health 503 and data-error envelopes are distinct; status-specific error constraints reject wrong retryability (0.7206ms)
+✔ six endpoint parameter sets match source allowlists including detail path ID and no health pin (0.3012ms)
+non-list cursor descriptions: Returns treasury totals, proposal counts, verified governance configuration and up to five recent BUD transfers. When omitted, the block/hash pair selects the current publication or the cursor's snapshot. Returns one proposal as of the selected snapshot, including votes and optional Timelock operation. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.
+✔ runtime rejects unknown/repeated keys, wrong endpoint filters, IDs and non-list cursor without DB access (50.8047ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1045.0336

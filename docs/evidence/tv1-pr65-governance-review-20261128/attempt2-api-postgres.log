@@ -1,0 +1,19 @@
+
+> dao-budget-simulator@0.0.0 test:api
+> node --import tsx --test tests/api/server.test.mjs
+
+✔ six endpoints, exact data types, validation, and financial semantics (1742.2691ms)
+✔ verified heartbeat crosses the stale boundary and recovers without changing fixed-H data or cursors (74.3132ms)
+✔ BE07 requires an RPC verification timestamp, not a fresh checkpoint (19.1416ms)
+✔ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (655.3751ms)
+✔ BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases (210.8006ms)
+✔ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (358.2229ms)
+✔ BE05 on migrations 001–004 derives freshness from checkpoint and retained headers (105.6781ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4323.4237

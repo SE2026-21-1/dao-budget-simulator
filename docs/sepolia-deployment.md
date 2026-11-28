@@ -1,6 +1,21 @@
 # Sepolia — chuẩn bị chung và điều kiện triển khai
 
-## Trạng thái TV4 ngày 26/11/2026
+## Cập nhật phối hợp SC09 — 28/11/2026
+
+[TV4 dung0611 đã nhận deployment owner và operator, xác nhận source preparation](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-7240590072)
+**e17ef61a8a51518005c38b0808cdc06fe7a68bbf**. Current Dev sau PR64 là
+`f15f19252957d9ca37b424facdbb13afc8da0b05`; không tự đổi pin triển khai theo Dev.
+Security đã accepted trong phạm vi source không đổi, không yêu cầu review lại.
+
+Owner acceptance không là signer custody hoặc funded status. Chưa public map9,
+6custodian/exclusive-use/signing confirmations, caller signing path, native ETH
+funder/balances/nonce/actual-map estimates. Envelope0,12ETH (0,10bootstrap +0,02demo)
+và cap1gwei là planning, chưa final budget. **Chưa ký, chuyển ETH hoặc broadcast
+authorization**; cần explicit approval riêng của user và owner gắn final packet.
+Xem [SC09 source/data review](reviews/sc09-backend-data-review.md). Không chạy lại
+accepted campaign, đổi scripts hoặc mở rộng Issue19/40 trong cập nhật tài liệu này.
+
+## Trạng thái TV4 ngày 26/11/2026 — ghi nhận lịch sử
 
 Mạng đã chốt tại #20: Sepolia, chainId **11155111**, RPC public
 `https://ethereum-sepolia-rpc.publicnode.com`, **K=2**. Lượt này không được cấp
@@ -102,22 +117,22 @@ Partial renounce không có general recovery guarantee; có thể phải redeplo
 
 ## Checklist công khai trước khi gửi (#20)
 
-Owner được nhóm chỉ định, do TV2 `@daongocuong` phối hợp xác định; **không mặc
-định TV1/TV2 giữ signer**. Mỗi mục cần người xác nhận + evidence công khai,
+Owner/operator đã được TV4 `@dung0611` nhận, TV2 `@daongocuong` phối hợp packet;
+**không mặc định TV1/TV2/TV4 đang giữ signer**. Mỗi mục cần người xác nhận + evidence công khai,
 hoặc ghi chưa có + người xử lý; giữ yêu cầu #20 hiện có, không tạo request trùng:
 
-- [ ] Owner chọn **full approved SHA** tích hợp sau review, compiler/artifact/ABI
-      hashes cùng checkout; không tự lấy current HEAD/Dev/PR head làm lựa chọn.
+- [x] Owner/operator nhận trách nhiệm và chọn source preparation **e17ef61a8a51518005c38b0808cdc06fe7a68bbf**;
+      đây không phải final broadcast approval; compiler/artifact/ABI phải cùng checkout.
 - [ ] Chín địa chỉ public khác nhau: A/B/C/D/funding/deployer/caller/recipient/outsider.
 - [ ] Tên custodian **riêng từng signer** A/B/C/D/funding/deployer; xác nhận
       custody an toàn và exclusive-use trong lượt deployment.
-- [ ] Đường remote chung đã triển khai và review: signer bảo vệ, chainId guard,
+- [x] Đường remote chung đã triển khai và review: signer bảo vệ, chainId guard,
       receipt canonical K2, journal bền vững, nonce pending/latest/expected,
       dừng và reconcile khi send mơ hồ; không tự resend.
 - [ ] Native balances tại H/hash, estimates theo map thật và headroom; gas limit,
       fee cap từng transaction và tổng native budget **bằng số, có đơn vị**;
       người nạp gas và xác nhận đủ tiền cho từng signer.
-- [ ] Explicit broadcast authorization của owner gắn đúng full SHA/map,
+- [ ] Explicit broadcast authorization riêng của user **và** owner gắn đúng full SHA/map,
       Sepolia11155111/PublicNode/K2, numerical fee cap/budget và phạm vi campaign.
 
 Không yêu cầu hoặc công khai private key, seed, keystore, password, token hay

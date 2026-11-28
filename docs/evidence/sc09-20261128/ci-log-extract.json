@@ -1,0 +1,265 @@
+{
+  "reviewedSource": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "capturedAt": "2026-11-28T14:45:15.052716+00:00",
+  "logs": [
+    {
+      "jobId": 140997955872,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46151182866/job/140997955872",
+      "source": "GitHub job log fetched/read by TV1, not local test execution",
+      "capturedUtf8Bytes": 135786,
+      "capturedSha256": "db677991b923c2e5043d08fe19a44e051ba780a6927ff42a7e71d724dceb595d",
+      "excerpt": [
+        {
+          "line": 154,
+          "text": "2026-11-28T13:45:34.4167914Z f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 198,
+          "text": "2026-11-28T13:45:39.0697844Z f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 289,
+          "text": "2026-11-28T13:45:40.0609880Z   cache-key: contracts-f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 768,
+          "text": "2026-11-28T13:45:54.4690022Z Suite result: ok. 40 passed; 0 failed; 0 skipped; finished in 301.14ms (330.38ms CPU time)"
+        },
+        {
+          "line": 776,
+          "text": "2026-11-28T13:45:56.8245443Z  TreasuryAccountingInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)"
+        },
+        {
+          "line": 800,
+          "text": "2026-11-28T13:46:12.6664414Z  GovernanceInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)"
+        },
+        {
+          "line": 860,
+          "text": "2026-11-28T13:46:12.6689157Z Ran 9 test suites in 18.51s (21.68s CPU time): 182 tests passed, 0 failed, 0 skipped (182 total tests)"
+        },
+        {
+          "line": 942,
+          "text": "2026-11-28T13:46:40.8432030Z ℹ tests 67"
+        },
+        {
+          "line": 944,
+          "text": "2026-11-28T13:46:40.8432481Z ℹ pass 67"
+        },
+        {
+          "line": 945,
+          "text": "2026-11-28T13:46:40.8432628Z ℹ fail 0"
+        },
+        {
+          "line": 947,
+          "text": "2026-11-28T13:46:40.8433158Z ℹ skipped 0"
+        },
+        {
+          "line": 1271,
+          "text": "2026-11-28T13:47:06.9026953Z ℹ tests 32"
+        },
+        {
+          "line": 1273,
+          "text": "2026-11-28T13:47:06.9027557Z ℹ pass 32"
+        },
+        {
+          "line": 1274,
+          "text": "2026-11-28T13:47:06.9027775Z ℹ fail 0"
+        },
+        {
+          "line": 1276,
+          "text": "2026-11-28T13:47:06.9028257Z ℹ skipped 0"
+        },
+        {
+          "line": 1279,
+          "text": "2026-11-28T13:47:06.9059971Z SC06 verified: historical 5ba9371f735982c5ca7148a3cf4af07068525029; current f15f19252957d9ca37b424facdbb13afc8da0b05 (live generation, strict offline check and mutations)"
+        },
+        {
+          "line": 1304,
+          "text": "2026-11-28T13:47:28.9812412Z ℹ fail 0"
+        },
+        {
+          "line": 1306,
+          "text": "2026-11-28T13:47:28.9813112Z ℹ skipped 0"
+        },
+        {
+          "line": 1423,
+          "text": "2026-11-28T13:47:56.1899723Z {\"phase\":\"created\",\"H\":\"24\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1424,
+          "text": "2026-11-28T13:47:56.3355485Z {\"phase\":\"exact snapshot\",\"H\":\"28\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1425,
+          "text": "2026-11-28T13:47:56.3878929Z {\"phase\":\"empty Active block\",\"H\":\"31\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1426,
+          "text": "2026-11-28T13:47:57.1696407Z {\"phase\":\"exact deadline\",\"H\":\"41\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1427,
+          "text": "2026-11-28T13:47:57.2149797Z {\"phase\":\"empty result block\",\"H\":\"44\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1428,
+          "text": "2026-11-28T13:47:57.4793414Z {\"phase\":\"queued Waiting\",\"H\":\"48\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1429,
+          "text": "2026-11-28T13:47:57.5269715Z {\"phase\":\"empty Ready block\",\"H\":\"51\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 1430,
+          "text": "2026-11-28T13:47:57.7831010Z {\"phase\":\"executed plus zero requestId duplicate revert\",\"H\":\"55\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":2,\"disbursements\":1},\"balance\":\"9000000000000000000000\"}"
+        },
+        {
+          "line": 1431,
+          "text": "2026-11-28T13:47:58.3673453Z {\"phase\":\"underfunded execute reverted\",\"H\":\"63\",\"counts\":{\"proposals\":6,\"votes\":9,\"operations\":3,\"transfers\":2,\"disbursements\":1},\"balance\":\"9000000000000000000000\"}"
+        },
+        {
+          "line": 1432,
+          "text": "2026-11-28T13:47:58.6388444Z {\"phase\":\"funded retry succeeds\",\"H\":\"67\",\"counts\":{\"proposals\":6,\"votes\":9,\"operations\":3,\"transfers\":4,\"disbursements\":2},\"balance\":\"1000000000000000000000\"}"
+        },
+        {
+          "line": 1451,
+          "text": "2026-11-28T13:47:58.8982799Z   name: tv4-checks-f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 1472,
+          "text": "2026-11-28T13:47:59.5601929Z Uploading artifact: tv4-checks-f15f19252957d9ca37b424facdbb13afc8da0b05.zip"
+        },
+        {
+          "line": 1478,
+          "text": "2026-11-28T13:48:00.8005101Z Artifact tv4-checks-f15f19252957d9ca37b424facdbb13afc8da0b05 successfully finalized. Artifact ID 15266235750"
+        },
+        {
+          "line": 1479,
+          "text": "2026-11-28T13:48:00.8006260Z Artifact tv4-checks-f15f19252957d9ca37b424facdbb13afc8da0b05 has been successfully uploaded! Final size is 93621 bytes. Artifact ID is 15266235750"
+        }
+      ]
+    },
+    {
+      "jobId": 140997956463,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46151182866/job/140997956463",
+      "source": "GitHub job log fetched/read by TV1, not local test execution",
+      "capturedUtf8Bytes": 76117,
+      "capturedSha256": "b631d4c46e04b9ac5e9f666f20c13aa18220537a665d04a22cd08989b79f5bce",
+      "excerpt": [
+        {
+          "line": 214,
+          "text": "2026-11-28T13:45:41.6266347Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f15f19252957d9ca37b424facdbb13afc8da0b05:refs/remotes/origin/Dev"
+        },
+        {
+          "line": 216,
+          "text": "2026-11-28T13:45:42.5003439Z  * [new ref]         f15f19252957d9ca37b424facdbb13afc8da0b05 -> origin/Dev"
+        },
+        {
+          "line": 220,
+          "text": "2026-11-28T13:45:42.5075016Z f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 274,
+          "text": "2026-11-28T13:45:46.0767628Z f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 411,
+          "text": "2026-11-28T13:45:51.5280366Z   cache-key: be06-rebuild-compare-f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 654,
+          "text": "2026-11-28T13:46:03.7013658Z ℹ tests 5"
+        },
+        {
+          "line": 656,
+          "text": "2026-11-28T13:46:03.7014215Z ℹ pass 5"
+        },
+        {
+          "line": 657,
+          "text": "2026-11-28T13:46:03.7014450Z ℹ fail 0"
+        },
+        {
+          "line": 659,
+          "text": "2026-11-28T13:46:03.7014976Z ℹ skipped 0"
+        },
+        {
+          "line": 704,
+          "text": "2026-11-28T13:46:04.5209939Z ℹ tests 1"
+        },
+        {
+          "line": 706,
+          "text": "2026-11-28T13:46:04.5210897Z ℹ pass 1"
+        },
+        {
+          "line": 707,
+          "text": "2026-11-28T13:46:04.5211186Z ℹ fail 0"
+        },
+        {
+          "line": 709,
+          "text": "2026-11-28T13:46:04.5211984Z ℹ skipped 0"
+        },
+        {
+          "line": 729,
+          "text": "2026-11-28T13:46:04.6098730Z > node --import tsx scripts/check_be04_live.mjs --output reports/be06-live.json --be06"
+        },
+        {
+          "line": 731,
+          "text": "2026-11-28T13:46:08.4822245Z {\"phase\":\"created\",\"H\":\"24\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 732,
+          "text": "2026-11-28T13:46:08.6281391Z {\"phase\":\"exact snapshot\",\"H\":\"28\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 733,
+          "text": "2026-11-28T13:46:08.6678592Z {\"phase\":\"empty Active block\",\"H\":\"31\",\"counts\":{\"proposals\":5,\"votes\":0,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 734,
+          "text": "2026-11-28T13:46:09.4496656Z {\"phase\":\"exact deadline\",\"H\":\"41\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 735,
+          "text": "2026-11-28T13:46:09.4957123Z {\"phase\":\"empty result block\",\"H\":\"44\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":0,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 736,
+          "text": "2026-11-28T13:46:09.7604898Z {\"phase\":\"queued Waiting\",\"H\":\"48\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 737,
+          "text": "2026-11-28T13:46:09.8072756Z {\"phase\":\"empty Ready block\",\"H\":\"51\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":1,\"disbursements\":0},\"balance\":\"10000000000000000000000\"}"
+        },
+        {
+          "line": 738,
+          "text": "2026-11-28T13:46:10.0605281Z {\"phase\":\"executed plus zero requestId duplicate revert\",\"H\":\"55\",\"counts\":{\"proposals\":5,\"votes\":7,\"operations\":2,\"transfers\":2,\"disbursements\":1},\"balance\":\"9000000000000000000000\"}"
+        },
+        {
+          "line": 739,
+          "text": "2026-11-28T13:46:10.6571041Z {\"phase\":\"underfunded execute reverted\",\"H\":\"63\",\"counts\":{\"proposals\":6,\"votes\":9,\"operations\":3,\"transfers\":2,\"disbursements\":1},\"balance\":\"9000000000000000000000\"}"
+        },
+        {
+          "line": 740,
+          "text": "2026-11-28T13:46:10.9201190Z {\"phase\":\"funded retry succeeds\",\"H\":\"67\",\"counts\":{\"proposals\":6,\"votes\":9,\"operations\":3,\"transfers\":4,\"disbursements\":2},\"balance\":\"1000000000000000000000\"}"
+        },
+        {
+          "line": 743,
+          "text": "2026-11-28T13:46:15.0459209Z   name: be06-live-f15f19252957d9ca37b424facdbb13afc8da0b05"
+        },
+        {
+          "line": 766,
+          "text": "2026-11-28T13:46:15.5025046Z Uploading artifact: be06-live-f15f19252957d9ca37b424facdbb13afc8da0b05.zip"
+        },
+        {
+          "line": 772,
+          "text": "2026-11-28T13:46:15.9469601Z Artifact be06-live-f15f19252957d9ca37b424facdbb13afc8da0b05 successfully finalized. Artifact ID 15265597023"
+        },
+        {
+          "line": 773,
+          "text": "2026-11-28T13:46:15.9470367Z Artifact be06-live-f15f19252957d9ca37b424facdbb13afc8da0b05 has been successfully uploaded! Final size is 103064 bytes. Artifact ID is 15265597023"
+        }
+      ]
+    }
+  ],
+  "limitation": "Selected log excerpts only; current BE06 full artifact was not downloaded. Historical compare bytes are checked separately."
+}

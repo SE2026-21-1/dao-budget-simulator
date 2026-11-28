@@ -1,0 +1,305 @@
+{
+  "format": "sc09-source-and-documentation-review-v1",
+  "preparedAt": "2026-11-28T14:47:04.421198+00:00",
+  "reviewedSource": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "mainSource": "ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4",
+  "sepoliaPreparationSource": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "deploymentOwnerOperatorConfirmed": "dung0611",
+  "broadcastAuthorized": false,
+  "scope": "TV1 FR13/FR15 contract/data source and existing-evidence review; documentation delivery, not full backend/security re-audit.",
+  "dataReviewDisposition": "SC09 DATA REVIEW ACCEPTED — SCOPED TO REVIEWED SOURCE",
+  "peerAcceptance": "PENDING TV2/TV4 review of documentation PR",
+  "findings": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "newActionableProductionDefects": []
+  },
+  "sourceHashes": {
+    ".nvmrc": "b911698dc3cf3227d34d0ad6727f1c4408791203c9665de99ab959331a1fb07d",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "contracts/interfaces/ITreasury.sol": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+    "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+    "database/migrations/005_be07.sql": "490ee96446f4c4a8920f0f3af177a90772cbde50afd2df9de13da0c4f520e57e",
+    "docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md": "6cf47f823a4c785e7276bf787746184123bdfe4c4e99df45c2148efa9c2fa42a",
+    "docs/requirements/TV1_Cong_viec_Smart_Contracts.md": "ecdc1e83a520c32b918dbaf75de871056915c00b640c075278aad5a99ed921a8",
+    "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "indexer/abi-registry.ts": "ff4d3d0930b9f6a96d1d885ab55db5b626bd491afe2c5bd75f277f39dabe5dd0",
+    "indexer/ancillary-abi.ts": "db7256c7776c7b41071c727ca3c5b579d3cfe9c2fe4a9da7349b2c4c2f94ff05",
+    "indexer/api/main.ts": "99082e575492d4fb26b28c698fb41a7ee1f32c4c7437b1af912596c217dc1d68",
+    "indexer/api/server.ts": "935fc5bcb7aedc7408cf8963e720c91a19597f23fad986810cfdb385ddaff1c1",
+    "indexer/be06/cli.ts": "e156e45aab265c16f5993ff99620aae9b103f1c5ab7b78391965b1fb214173f2",
+    "indexer/be06/compare.ts": "0a58da3c272849a4891f4693fafb2cbce0a919e592896191b1dab7c6e593cf9b",
+    "indexer/be06/manifest.ts": "df32fddcd78ab1e68fa256ac1a536741bc86af43c1c5d6285ad52c2619179d67",
+    "indexer/be06/rebuild.ts": "0dba35e0f6d28100379bb516f924dd4abb9697154ce165d66636436d4758a9ac",
+    "indexer/cli.ts": "2b695bc873b1d0c3ba118e9a703f2b6783b6cc17e3d5504058580c3df125e2eb",
+    "indexer/config.ts": "74f0210b544026f5ea2a933f380006d2f4222be51c60e38ea81dc8facacee073",
+    "indexer/config/be06.manifest.example.json": "595c7b0511e6bed65c109ccf7dfcbf8cede74186ce93084836634d96d0cf82a5",
+    "indexer/config/example.json": "9eef6d16a3755f789acfe69c522a180bc5d9c9f1f5e2d73438c11456711286d0",
+    "indexer/config/example.metadata.sql": "2c46e30630a3758e6a8bbbf891a5f2961d114a12c496745bf23c915e2a3f5b1b",
+    "indexer/decoder.ts": "21127ada09e53561c0fd00e83c2d2886650a8b9d640150f2de6fc50c0f43c83e",
+    "indexer/errors.ts": "745861f561b7ca6eebd2a58e6e2bfae40ee33910b6278486a2ec18b8ceea7507",
+    "indexer/projection/chain.ts": "fa3537d422aa3672afd54b3cdacf382b9d457ce4b0514a8f7da3cee357a02fbe",
+    "indexer/projection/model.ts": "022e6c218bbbea75214afddb3f82cb906e816ef5432a5fbb9e0ebef05550d476",
+    "indexer/projection/projector.ts": "2ba889a43c2f749b5b56ba78a7af17eef57c431bd2469adb79bb7714cb94a504",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/recovery.ts": "330b99e7aaaad8d56bfd06ec5ed114360691aca27c4cb95873070eb9a9ba9418",
+    "indexer/rpc.ts": "2a0fa4bb5b4f994a0685550885c56e0633324d395a2f3635a977233df1065084",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "0b4e6a907942f702e4e0879e26a30cbd9b2fa7e2abc6fc8e9a2a306db6ded220",
+    "indexer/syncer.ts": "183a3df6b00afb89ce48d43ce238b21c9c85755a0a03099fdfcbfca6a124abd4",
+    "indexer/types.ts": "d966da34905f076f5909f60dfcac5e6ca8f2b2b1150b6d69189efe3bee6decfa",
+    "indexer/worker.ts": "a2206ff5c25fa351c7c5f32ea4c32bc1b7e0252eb6af54fe54d49945b612ee6e",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "scripts/check_roles_sepolia.mjs": "a290d1becf5c8d0433463de96c73f44f1bc9333a01b0e2dde6e03b2e85aaf5c9",
+    "scripts/check_sepolia_readonly.mjs": "3a33dad4c5f7a3d07a8bc64e6b44084376ad61b29268ebcb0b1f062761924964",
+    "scripts/deploy_sepolia.mjs": "65ece5976bc029ed237da7a758fd1fcce24d00ca13a66a35248d00418e2aff23",
+    "scripts/governance_local.mjs": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+    "scripts/governance_operations.mjs": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+    "scripts/governance_sepolia.mjs": "8324abad84f0d2df35459f865a10049c65183fc01f93ccfd5bf12c71c3e64fe0",
+    "scripts/preflight_sepolia.mjs": "079019bf119bccbe0e7d6c714e6061020aa7ff040f9937a671af2e13ec099676",
+    "scripts/receipt.mjs": "7ab45e22efc30b5102f69bbf63f60edc931647eb210d0200258967707147c246",
+    "scripts/sepolia_cli.mjs": "732032be012d7492afb6768d8c21740a3e44ada10067a02e6c4cecc6caf2c082",
+    "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+    "shared/abi/BudgetGovernor.json": "fff98f26ce17855e6382c7640df5af6b43a50b5468aeb462bfe21c7f7efe2829",
+    "shared/abi/BudgetToken.json": "974f92ba6741dd942f365ee9feccb587b97ae64358b25d64958e65f637829415",
+    "shared/abi/GovernanceToken.json": "91211941f2cbe2a03d463766120c8f3279c3d0a8ea50d3208a7ca4f417713113",
+    "shared/abi/ITreasury.json": "e7b113f5331f4fa333df39cb311b798aec6547ac7e63ee4ff491f2e6f4d48d08",
+    "shared/abi/TimelockController.json": "1e34d86f1cbac7e2c89ebe5f708b0769d5e5e1ca09e4bc1e75569065d8266fcc",
+    "shared/abi/Treasury.json": "9e0e4639138e606f25610ebff74ebc1b295c77e00374831545367149daa7a583",
+    "tests/attacks/GovernanceAttacks.t.sol": "55e2bf64369e8ccb50ede12537f1b6a786cf10eebd5893766f01dfdf0b1ed6b6",
+    "tests/integration/TimelockGovernance.t.sol": "085983b272896fdb2e76f4224fac2f32f1c4ac85d6b4c448f317150686a6c43a",
+    "tests/invariant/GovernanceInvariant.t.sol": "ade7898f3fb8d1f71e17571a1e6072c82d6340ab9e585af405fc1d2ab07e2846",
+    "tests/unit/BudgetGovernor.t.sol": "d3e980bac43e6609bf7a71207b294c12f864d406fb4ed8616e5e1b62bb0f6c8d",
+    "tests/unit/GovernanceToken.t.sol": "86f5ebbab8c826f89f3ab0423fd0627a9db6e79933fd4e79bdbcafcdad10a86f",
+    "tests/unit/Treasury.t.sol": "13fb908858e8fe8f7e9c126b2dc0b54075d5f0823a19eaec17b21f05b4d5d1fa"
+  },
+  "sourceEquivalence": {
+    "e17ToReviewedProductionScopeDiff": [],
+    "acceptedSecuritySource": "b186844d1ff19ef26dfd83a060e7584bb6e0c419",
+    "unchangedTransitiveRemoteModules": [
+      "scripts/check_roles_sepolia.mjs",
+      "scripts/check_sepolia_readonly.mjs",
+      "scripts/deploy_sepolia.mjs",
+      "scripts/governance_local.mjs",
+      "scripts/governance_operations.mjs",
+      "scripts/governance_sepolia.mjs",
+      "scripts/preflight_sepolia.mjs",
+      "scripts/receipt.mjs",
+      "scripts/sepolia_cli.mjs",
+      "scripts/smoke_lifecycle.mjs"
+    ]
+  },
+  "sameHEvidence": {
+    "sourceCommit": "e4c3ce4300dfb3e90a4e933508b2a403887aaaee",
+    "sourceHashesMatched": 33,
+    "compares": [
+      {
+        "file": "docs/evidence/be06-20261024/compare-h67.json",
+        "sha256": "0884576e66f15228eef2f8a38c2844f8182a609d516dd0165d6e1d67c937f3f0",
+        "result": "equal",
+        "mismatches": 0,
+        "block": "67",
+        "blockHash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7"
+      },
+      {
+        "file": "docs/evidence/be06-20261024/compare-after-head-73-at-h67.json",
+        "sha256": "0884576e66f15228eef2f8a38c2844f8182a609d516dd0165d6e1d67c937f3f0",
+        "result": "equal",
+        "mismatches": 0,
+        "block": "67",
+        "blockHash": "0x284bf374a1854c73a1819ec5dbad08cfe155d93319daa8a52f8fcca3b4f3edc7"
+      }
+    ],
+    "historicalMutationRecord": "docs/evidence/be06-20261024/mismatch-probe.json; inspected, not executed",
+    "currentCIArtifact": "15265597023; job log read, full artifact not downloaded",
+    "sealedPayloadChecksumsMatched": 14
+  },
+  "historicalAttackEvidence": {
+    "dispositionCommit": "faf10c7da67f53f1d918b5150c862e21af1b0d44",
+    "generatorCommit": "233e1193d5ce7aa399d5551b36916e74f16bbc66",
+    "campaigns": [
+      {
+        "sourceCommit": "3d539f141c5deca3ba3c3b2369fe8c891fcb64d7",
+        "cases": 184,
+        "counts": {
+          "PASS": 184,
+          "FAIL": 0,
+          "SKIP": 0,
+          "N/A": 0,
+          "BLOCKED": 0
+        },
+        "scenarioReceipts": 958,
+        "browserCheckpoints": 422
+      },
+      {
+        "sourceCommit": "03b86960e692ccbb87f265ca07ba84fe90864ff1",
+        "cases": 4,
+        "counts": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0,
+          "N/A": 0,
+          "BLOCKED": 0
+        },
+        "scenarioReceipts": 40,
+        "browserCheckpoints": 4
+      }
+    ],
+    "counts": {
+      "reachableCases": {
+        "PASS": 188,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 0,
+        "BLOCKED": 0
+      },
+      "preconditions": {
+        "PASS": 0,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 10,
+        "BLOCKED": 0
+      },
+      "total": {
+        "PASS": 188,
+        "FAIL": 0,
+        "SKIP": 0,
+        "N/A": 10,
+        "BLOCKED": 0
+      }
+    },
+    "sourceIndexSha256": "d1181fa0c13c44cbc7c5fb22e698cec9b9dec2b276f45e991291db18183dc933",
+    "rawArchiveSha256": "b70beafc358b7132671d099c8611b3af0d8447366fa5b5919c7a98cc8a3fb7af",
+    "integrityChecked": "index, raw archive and 3 generator hashes checked offline; no campaign rerun"
+  },
+  "currentCILogCounts": {
+    "sourceCommit": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+    "run": 46151182866,
+    "contractsJob": 140997955872,
+    "foundry": {
+      "pass": 182,
+      "fail": 0,
+      "skip": 0
+    },
+    "timelockIntegration": {
+      "pass": 40,
+      "includedInFoundry182": true
+    },
+    "sc06": {
+      "pass": 32,
+      "fail": 0,
+      "skip": 0
+    },
+    "governanceInvariant": {
+      "properties": 4,
+      "runs": 100,
+      "groupedHandlerCalls": 5000,
+      "reverts": 0,
+      "notFormalProof": true
+    },
+    "be06Job": 140997956463,
+    "be06Unit": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "be06DB": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "combinedBootstrapProvenanceSepoliaQA07": {
+      "pass": 67,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "whatIf": {
+    "pr": 62,
+    "sourceCommit": "d4a0fb563e66be951760167a6f62b246821dc17c",
+    "state": "DRAFT_NOT_MERGED",
+    "priorLogsVerified": {
+      "simulator.log": {
+        "sha256": "89bff9cd4e920413829c76636aee2184e77119df4c7bee9189e6a112b0f19c37",
+        "summary": [
+          "ℹ tests 146",
+          "ℹ pass 146",
+          "ℹ fail 0",
+          "ℹ skipped 0"
+        ]
+      },
+      "differential.log": {
+        "sha256": "207f230a86161f873754488ad3b417a7e23943e84104ec1abc006eca0b807124",
+        "summary": [
+          "ℹ tests 10",
+          "ℹ pass 10",
+          "ℹ fail 0",
+          "ℹ skipped 0"
+        ]
+      },
+      "foundry-ci.log": {
+        "sha256": "a39eabedf7de2ef0baaf7f6b80a3ca5f48771ae6f5548a98c73f951a6335b595",
+        "summary": [
+          "Ran 10 test suites in 45.78s (52.31s CPU time): 189 tests passed, 0 failed, 0 skipped (189 total tests)"
+        ]
+      }
+    },
+    "limits": [
+      "Foundry test VM differential is not live RPC/Anvil receipt evidence",
+      "Adapter tests use synthetic RPC; no approved live endpoint/pin run",
+      "No production API/frontend integration in reviewed Dev"
+    ]
+  },
+  "thisSC09Turn": {
+    "productTestsExecuted": 0,
+    "attackOrMutationCampaignsExecuted": 0,
+    "liveRpcCalls": 0,
+    "localChainTransactions": 0,
+    "sepoliaBroadcasts": 0,
+    "documentationChecks": "PASS; Mermaid automatic render SKIP"
+  },
+  "documentationChecks": {
+    "status": "PASS",
+    "markdownFilesParsedAndRendered": 6,
+    "relativeLinksAndAnchorsChecked": 149,
+    "namedSolidityTestsVerified": 24,
+    "documentedGovernorErrorsVerifiedAgainstSharedABI": 8,
+    "mermaidDiagrams": {
+      "count": 6,
+      "manualSourceSyntaxReview": "PASS",
+      "automaticRender": "SKIP",
+      "reason": "No Mermaid CLI/module available; no dependency installed."
+    },
+    "sourceSha256": {
+      "README.md": "e8bc0db03f7ef246d15e3b96dc7b46e2a4b44826053e4661e4feb670b8541150",
+      "docs/contracts.md": "2fc27938d73cfd6ca0d092651ddeb7ca13682df9922b3f43868f2d51a4667ae6",
+      "docs/sepolia-deployment.md": "508b25ca6b27b41da1857f6bdfb57ea472cff38a3bccf5689d4b81a165b9f553",
+      "docs/reviews/sc09-backend-data-review.md": "c92beb0387b532cec4432533faffac15125aaa289ed633f6b6f4a133a7815f3c",
+      "docs/report/tv1-smart-contracts.md": "3c040b0f6ab7ba13925e2d82b9527d09f622d086fd199d0cc4311647d1da9c24",
+      "docs/slides/tv1-smart-contracts.md": "01ec17d5a518b07e9f9ad3a3de4056d6d7bbd0e602e96bee347147350b080da7"
+    },
+    "scope": "Documentation structure/link/name/arithmetic checks only, not product tests.",
+    "gitDiffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "jsonWhitespaceSecretAndRunnerPathChecks": "PASS; existing documented /tmp examples are not treated as credentials or personal runner paths",
+    "documentedScriptPathsExist": "PASS"
+  },
+  "limitations": [
+    "Mermaid syntax reviewed manually; no renderer installed, automatic render SKIP",
+    "Historical evidence retained at original source; offline hashes do not prove independent blockchain provenance",
+    "Issue19 historical HTTP503 root cause remains UNKNOWN; accepted documented limitation",
+    "SC10 public map/signers/funder/actual-map estimates/final budget and explicit broadcast approval remain pending"
+  ],
+  "documentationCheckerSha256": "85721e72ffac98ba288bcc66112222e0930240d2177935c046ac58749e8c07fb"
+}

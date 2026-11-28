@@ -1,0 +1,177 @@
+{
+  "collectedAtUtc": "2026-11-28T15:58:14.540192+00:00",
+  "baseCommit": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "approvedDeploymentSource": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "toolkitTestedAsWorkingTree": true,
+  "toolkitSourceHashes": {
+    ".github/workflows/sepolia-account-preparation.yml": "130459cef7e74d615b9101eff435c7f0cbc4a05a03c93818f472274d6ce7477c",
+    "scripts/sepolia_account_preparation.mjs": "5cf5fc4a20222936844f9c6a5b1c3b1184a62d2e54f8e8092eaa321c09cc294e",
+    "scripts/prepare_sepolia_accounts.mjs": "94d27879179ca7b0406648c55a260ea1c46fba0f163e53d0744e2479a2d40098",
+    "scripts/validate_sepolia_accounts.mjs": "680efc08de7a255bb0e7bcea454ed2c1daff106ad12751dc1c1362f3d480b9c1",
+    "tests/helpers/sepolia-preparation-guard.mjs": "d8106ebc5a330314fd286534815c30b0b7e677974b4b08e5c4b65796d7967cdb",
+    "tests/sepolia-account-preparation.test.mjs": "2562029d1ef51fa05979bfb816497af19d94128019c43390e6900c8a49ea28d1",
+    "docs/sepolia-account-preparation.md": "fea4a4fe64077f7fb791aebfd0af03cdc25c93c39d0564910d1be9d2aeb920b4",
+    "docs/examples/sepolia-accounts.template.json": "6afe39ed47217f85f96ca7d57d7e06269d66b179a8762ee57ad1ed64844885b6"
+  },
+  "reviewedModuleComparison": {
+    "scripts/governance_sepolia.mjs": {
+      "sha256": "8324abad84f0d2df35459f865a10049c65183fc01f93ccfd5bf12c71c3e64fe0",
+      "matchesPinnedSource": true
+    },
+    "scripts/governance_local.mjs": {
+      "sha256": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+      "matchesPinnedSource": true
+    },
+    "scripts/governance_operations.mjs": {
+      "sha256": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+      "matchesPinnedSource": true
+    },
+    "scripts/receipt.mjs": {
+      "sha256": "7ab45e22efc30b5102f69bbf63f60edc931647eb210d0200258967707147c246",
+      "matchesPinnedSource": true
+    },
+    "scripts/deploy_sepolia.mjs": {
+      "sha256": "65ece5976bc029ed237da7a758fd1fcce24d00ca13a66a35248d00418e2aff23",
+      "matchesPinnedSource": true
+    },
+    "scripts/check_roles_sepolia.mjs": {
+      "sha256": "a290d1becf5c8d0433463de96c73f44f1bc9333a01b0e2dde6e03b2e85aaf5c9",
+      "matchesPinnedSource": true
+    },
+    "scripts/preflight_sepolia.mjs": {
+      "sha256": "079019bf119bccbe0e7d6c714e6061020aa7ff040f9937a671af2e13ec099676",
+      "matchesPinnedSource": true
+    },
+    "scripts/sepolia_cli.mjs": {
+      "sha256": "732032be012d7492afb6768d8c21740a3e44ada10067a02e6c4cecc6caf2c082",
+      "matchesPinnedSource": true
+    },
+    "scripts/check_sepolia_readonly.mjs": {
+      "sha256": "3a33dad4c5f7a3d07a8bc64e6b44084376ad61b29268ebcb0b1f062761924964",
+      "matchesPinnedSource": true
+    },
+    "scripts/smoke_lifecycle.mjs": {
+      "sha256": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+      "matchesPinnedSource": true
+    }
+  },
+  "packageLockSha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+  "dependencies": "reused existing node_modules; locked package bytes match e17ef61; no new dependencies",
+  "versions": {
+    "node": "v24.15.0",
+    "ethers": "6.17.0",
+    "castHelp": "1.8.5"
+  },
+  "results": {
+    "focusedFinal": {
+      "command": "node --test --test-reporter=tap tests/sepolia-account-preparation.test.mjs",
+      "exitCode": 0,
+      "pass": 22,
+      "fail": 0,
+      "skip": 0,
+      "log": "focused-verified.log"
+    },
+    "existingParser": {
+      "command": "node --import ./tests/helpers/sepolia-preparation-guard.mjs --test --test-name-pattern='^public role map locks chain, source, owner and distinct nonzero accounts$' tests/smoke/sepolia.test.mjs",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "syntax": {
+      "exitCode": 0,
+      "javascriptFiles": 5,
+      "bashDocumentationBlocks": 4
+    },
+    "workflowLint": {
+      "command": "actionlint -shellcheck= .github/workflows/sepolia-account-preparation.yml",
+      "exitCode": 0,
+      "shellcheck": "NOT RUN"
+    },
+    "sourceComparison": {
+      "exitCode": 0,
+      "reviewedModules": 10,
+      "matched": 10
+    },
+    "template": {
+      "jsonValid": true,
+      "deploymentValid": false,
+      "originalParserRejectedAsIntended": true
+    }
+  },
+  "priorAttempts": [
+    {
+      "log": "focused.log",
+      "exitCode": 1,
+      "pass": 0,
+      "fail": 1,
+      "note": "sandbox module-level failure; no case results"
+    },
+    {
+      "log": "focused-tap.log",
+      "exitCode": 1,
+      "pass": 0,
+      "fail": 1,
+      "note": "sandbox module-level failure; no case results"
+    },
+    {
+      "log": "focused-unsandboxed.log",
+      "exitCode": 1,
+      "pass": 19,
+      "fail": 2,
+      "note": "test harness Node extra stdio sockets not reopenable at /proc/self/fd; uppercase Crypto fixture branch missed"
+    },
+    {
+      "log": "focused-final.log",
+      "exitCode": 1,
+      "pass": 20,
+      "fail": 1,
+      "note": "ethers rejects forged address during decryption before loader address assertion; safe error classification fixed, assertion retained"
+    }
+  ],
+  "castInteractiveGeneration": {
+    "status": "NOT VERIFIED",
+    "helpExitCode": 0,
+    "agentDisposablePtyAttempts": [
+      {
+        "exitCode": 1,
+        "reason": "no usable controlling TTY"
+      },
+      {
+        "exitCode": -15,
+        "reason": "bounded wait terminated owned disposable process"
+      },
+      {
+        "exitCode": 1,
+        "reason": "No such device or address (os error 6)"
+      }
+    ],
+    "actualTV4WalletsCreated": 0
+  },
+  "safety": {
+    "networkAndSigningDeniedInFocusedChildren": true,
+    "productionSignersInvoked": false,
+    "actualWalletsForTV4": 0,
+    "fundingTransactions": 0,
+    "sepoliaRpcCalls": 0,
+    "signedTransactions": 0,
+    "broadcastTransactions": 0,
+    "privateKeysOrKeystoresCommitted": false
+  },
+  "notRun": [
+    "full Foundry",
+    "full deployment/security campaigns",
+    "BE09",
+    "MetaMask",
+    "live Sepolia balances/nonces/estimates",
+    "native Windows/NTFS ACL acceptance",
+    "live caller demo signing"
+  ],
+  "pr65Evidence": {
+    "remoteBranch": "docs/tv1-pr65-governance-review-20261128",
+    "remoteHead": "56426ee91f5993e6aacfb159f67de981c138d25a",
+    "inventoryFiles": 22,
+    "checksumsVerified": 21,
+    "comment": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/65#issuecomment-7241651232"
+  }
+}

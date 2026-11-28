@@ -1,0 +1,124 @@
+{
+  "collectedAtUtc": "2026-11-28T15:29:30.639510+00:00",
+  "sourceCommit": "8838cfd250583d87a608dbcf44c387b37e3dad22",
+  "base": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "mergeCandidate": "6f2efec65f8b3cb690d4ed2ff51b1ec066a4ac6f",
+  "node": "v24.15.0",
+  "postgresIndependent": "16.15",
+  "sourceHashes": {
+    ".github/workflows/ci.yml": "cbe407d4f9fc4d3168e9b1883296be4f3ac93fedf46c4710cae63731eb6d2cc2",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+    "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+    "database/migrations/005_be07.sql": "490ee96446f4c4a8920f0f3af177a90772cbde50afd2df9de13da0c4f520e57e",
+    "docs/api.md": "f23e3fb09924c3aafb9671894790823dd4bfae31c411b108aa5750293255bd15",
+    "docs/requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md": "6cf47f823a4c785e7276bf787746184123bdfe4c4e99df45c2148efa9c2fa42a",
+    "docs/requirements/TV1_Cong_viec_Smart_Contracts.md": "ecdc1e83a520c32b918dbaf75de871056915c00b640c075278aad5a99ed921a8",
+    "frontend/src/data/api.ts": "a2d423728ae2242b8cb4a0d91e59365c51e4671c4de0924177a43395a65934a5",
+    "indexer/api/documentation.ts": "bacf26516e3395a3220555bfa3053c14990c1fad26d5d7eea61aea3d7d76e31f",
+    "indexer/api/openapi.json": "73685884914c663209e17283a7dff392b86aa1e1c01537f55cae8bb33c617010",
+    "indexer/api/server.ts": "6229a807a0902e4f09ebc3f98630d4083b247b068bc2b265314c8d96db5a4c37",
+    "indexer/be06/compare.ts": "0a58da3c272849a4891f4693fafb2cbce0a919e592896191b1dab7c6e593cf9b",
+    "indexer/be06/rebuild.ts": "0dba35e0f6d28100379bb516f924dd4abb9697154ce165d66636436d4758a9ac",
+    "indexer/decoder.ts": "21127ada09e53561c0fd00e83c2d2886650a8b9d640150f2de6fc50c0f43c83e",
+    "indexer/projection/chain.ts": "fa3537d422aa3672afd54b3cdacf382b9d457ce4b0514a8f7da3cee357a02fbe",
+    "indexer/projection/model.ts": "022e6c218bbbea75214afddb3f82cb906e816ef5432a5fbb9e0ebef05550d476",
+    "indexer/projection/projector.ts": "2ba889a43c2f749b5b56ba78a7af17eef57c431bd2469adb79bb7714cb94a504",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/recovery.ts": "330b99e7aaaad8d56bfd06ec5ed114360691aca27c4cb95873070eb9a9ba9418",
+    "indexer/storage.ts": "0b4e6a907942f702e4e0879e26a30cbd9b2fa7e2abc6fc8e9a2a306db6ded220",
+    "package-lock.json": "d94981e7893c37325fc636eef749fad984bf163f24d38b6c776644af4af90c68",
+    "package.json": "7d13cb66b004ce2fe335857af9ac35beada38a58d7ecb30d7e3950a9acc70588",
+    "scripts/deploy_local.mjs": "a68b75811bd279d2fe6ce5e14529e95e208d085ce08caeef32b797e4c62c86f5",
+    "shared/abi/BudgetGovernor.json": "fff98f26ce17855e6382c7640df5af6b43a50b5468aeb462bfe21c7f7efe2829",
+    "shared/abi/BudgetToken.json": "974f92ba6741dd942f365ee9feccb587b97ae64358b25d64958e65f637829415",
+    "shared/abi/GovernanceToken.json": "91211941f2cbe2a03d463766120c8f3279c3d0a8ea50d3208a7ca4f417713113",
+    "shared/abi/ITreasury.json": "e7b113f5331f4fa333df39cb311b798aec6547ac7e63ee4ff491f2e6f4d48d08",
+    "shared/abi/TimelockController.json": "1e34d86f1cbac7e2c89ebe5f708b0769d5e5e1ca09e4bc1e75569065d8266fcc",
+    "shared/abi/Treasury.json": "9e0e4639138e606f25610ebff74ebc1b295c77e00374831545367149daa7a583",
+    "tests/api/contract.mjs": "38d777ffff7218e5724a66fc7a241217ae3d7d600cac092e5bf6608eb316866c",
+    "tests/api/documentation.test.mjs": "6f0781dd7d5e4bb4704a2bb4e1a004756cbc2b10d8be0809500393895b596529",
+    "tests/api/server.test.mjs": "eb9e1f8369099b19a0428cb39d905a2733daa1e233e5006d0242ad3c70a72d13",
+    "tests/integration/TimelockGovernance.t.sol": "085983b272896fdb2e76f4224fac2f32f1c4ac85d6b4c448f317150686a6c43a",
+    "tests/unit/BudgetGovernor.t.sol": "d3e980bac43e6609bf7a71207b294c12f864d406fb4ed8616e5e1b62bb0f6c8d"
+  },
+  "openzeppelin": {
+    "gitlink": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+    "sourceHashes": {
+      "contracts/governance/Governor.sol": "a9fd3f809dcefe364c19b83b9ca8389a6e4d50f9d38bbb7ebef10724be2f9b74",
+      "contracts/governance/TimelockController.sol": "4a5946a9ea4abbaef29225dc42da6c50c66bb13cae1b592607222599b0526f64",
+      "contracts/governance/extensions/GovernorCountingSimple.sol": "7b57caea0515e9121f2f2d64229b588609caab302eac01909c9d8361ae212554",
+      "contracts/governance/extensions/GovernorVotes.sol": "7df898e3e295914434fde0a7dbc890a5539fe2b61f2cbce6540d69014d416bcf",
+      "contracts/governance/extensions/GovernorVotesQuorumFraction.sol": "e7005800451ae5d1a678cb85acd4bfbc5ac80117b2dbdb49ebae98b81bd723d3"
+    }
+  },
+  "independent": {
+    "npmCi": {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    "docs": {
+      "command": "npm run test:api:docs",
+      "exitCode": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "apiInitial": {
+      "command": "npm run test:api",
+      "exitCode": 1,
+      "pass": 0,
+      "fail": 7,
+      "skip": 0,
+      "failure": "shared before-hook migration Query read timeout; no individual case assertions executed"
+    },
+    "apiRetry": {
+      "command": "npm run test:api",
+      "exitCode": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "environment": "fresh disposable PG16 loopback; fsync/synchronous_commit/full_page_writes disabled for local test only; tests/assertions/timeouts unchanged"
+    },
+    "reviewProbes": {
+      "command": "node --import tsx --test /tmp/dao-pr65-tv1-evidence/targeted.test.mjs",
+      "exitCode": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "responseExamplesValidated": 23
+    }
+  },
+  "diffChecks": {
+    "whitespaceExit": 0,
+    "protectedSubtreesExit": 0,
+    "mergeCandidateSameTreeExit": 0,
+    "preservedExistingAssertions": true
+  },
+  "notRun": [
+    "full Foundry",
+    "attack/invariant",
+    "BE06 full campaign",
+    "BE08 full campaign",
+    "MetaMask",
+    "Docker/browser acceptance",
+    "Sepolia RPC/sign/broadcast"
+  ],
+  "findingIds": [
+    "F65-TV1-01"
+  ],
+  "disposition": "APPROVE scoped to TV1 governance/API contract semantics"
+}

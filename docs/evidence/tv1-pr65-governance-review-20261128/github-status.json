@@ -1,0 +1,987 @@
+{
+  "observedAt": "2026-11-28T15:26:31.318Z",
+  "repository": "SE2026-21-1/dao-budget-simulator",
+  "number": 65,
+  "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/65",
+  "state": "open",
+  "draft": false,
+  "author": "daongocuong",
+  "head": "8838cfd250583d87a608dbcf44c387b37e3dad22",
+  "base": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "mergeCandidate": "6f2efec65f8b3cb690d4ed2ff51b1ec066a4ac6f",
+  "mergeable": true,
+  "mergeableState": "clean",
+  "commits": [
+    {
+      "sha": "8838cfd250583d87a608dbcf44c387b37e3dad22",
+      "subject": "feat(api): serve OpenAPI spec and offline Swagger UI"
+    }
+  ],
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "docs/api.md",
+      "status": "modified",
+      "additions": 55,
+      "deletions": 20
+    },
+    {
+      "path": "indexer/api/documentation.ts",
+      "status": "added",
+      "additions": 55,
+      "deletions": 0
+    },
+    {
+      "path": "indexer/api/openapi.json",
+      "status": "added",
+      "additions": 2949,
+      "deletions": 0
+    },
+    {
+      "path": "indexer/api/server.ts",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0
+    },
+    {
+      "path": "package-lock.json",
+      "status": "modified",
+      "additions": 229,
+      "deletions": 1
+    },
+    {
+      "path": "package.json",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 1
+    },
+    {
+      "path": "tests/api/contract.mjs",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0
+    },
+    {
+      "path": "tests/api/documentation.test.mjs",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0
+    },
+    {
+      "path": "tests/api/server.test.mjs",
+      "status": "modified",
+      "additions": 11,
+      "deletions": 2
+    }
+  ],
+  "priorReviews": [],
+  "priorThreads": [],
+  "comments": [
+    {
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/65#issuecomment-7240706762",
+      "author": "netlify[bot]",
+      "createdAt": "2026-11-28T14:29:16Z",
+      "body": "### <span aria-hidden=\"true\">✅</span> Deploy Preview for *dao-budget-simulator* ready!\n\n\n|  Name | Link |\n|:-:|------------------------|\n|<span aria-hidden=\"true\">🔨</span> Latest commit | 8838cfd250583d87a608dbcf44c387b37e3dad22 |\n|<span aria-hidden=\"true\">🔍</span> Latest deploy log | https://app.netlify.com/projects/dao-budget-simulator/deploys/6b0ae539bacc2cfd60abe272 |\n|<span aria-hidden=\"true\">😎</span> Deploy Preview | [https://deploy-preview-65--dao-budget-simulator.netlify.app](https://deploy-preview-65--dao-budget-simulator.netlify.app) |\n|<span aria-hidden=\"true\">📱</span> Preview on mobile | <details><summary> Toggle QR Code... </summary><br /><br />![QR Code](https://app.netlify.com/qr-code/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJodHRwczovL2RlcGxveS1wcmV2aWV3LTY1LS1kYW8tYnVkZ2V0LXNpbXVsYXRvci5uZXRsaWZ5LmFwcCJ9.zB_giV6oYSEyyYUKDr5hTATIPuY9qFzeNGb8Gg9aqWo)<br /><br />_Use your smartphone camera to open QR code link._</details> |\n|<span aria-hidden=\"true\">🤖</span> Make changes | [Run an agent on this branch](https://app.netlify.com/projects/dao-budget-simulator/agent-runs#DctBDoMgEEDRu8y6RJhGansDjzHAgE1UJog2jfHusvuL90-Qkhep8AF4gCu0-ql1ZKp74a4eqLLwSvJV249S4qJQozUGh-YDy5z_Y2iHdZq4f74deY8-BqvJMb4Qrhs) |\n---\n<!-- [dao-budget-simulator Preview](https://deploy-preview-65--dao-budget-simulator.netlify.app) -->\n_To edit notification comments on pull requests, go to your [Netlify project configuration](https://app.netlify.com/projects/dao-budget-simulator/configuration/notifications#deploy-notifications)._"
+    }
+  ],
+  "runs": [
+    {
+      "id": 46154892017,
+      "name": "TV4 CI",
+      "headSha": "8838cfd250583d87a608dbcf44c387b37e3dad22",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017",
+      "createdAt": "2026-11-28T14:29:13Z",
+      "updatedAt": "2026-11-28T14:35:21Z",
+      "jobs": [
+        {
+          "id": 141009272290,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272290",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout BE02 implementation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Typecheck BE02 source and tests",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build BE02",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check BE02 synthetic RPC and decoder behavior",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check BE02 storage and host CLI against isolated PostgreSQL",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record BE02 scope, exact revision and tool versions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE02 evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout BE02 implementation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272420,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272420",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout BE01 schema and fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check offline API fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check migration and constraints in isolated PostgreSQL",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record BE01 scope and versions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE01 evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout BE01 schema and fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272439,
+          "name": "Frontend lint and production build",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272439",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout integrated frontend and canonical BE01 fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked frontend dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Lint frontend",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Typecheck and build production frontend",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record frontend scope and versions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload frontend build and evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout integrated frontend and canonical BE01 fixtures",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272455,
+          "name": "BE06 pinned-H rebuild and normalized compare",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272455",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build and test BE06",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Create disposable BE06 databases",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test BE06 against isolated PostgreSQL",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run fresh Anvil and PostgreSQL rebuild/compare acceptance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE06 live evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272460,
+          "name": "BE04 projection semantics and atomic PostgreSQL publication",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272460",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck && npm run build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:be04",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:be04:db",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272475,
+          "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272475",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned Foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js for live receipt verification",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked smoke dependencies",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build, format, tests and ABI fixture",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify bootstrap authority and recursive dependency provenance",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify historical SC06 provenance and fresh integration quorum mutations",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify interrupted smoke cleans owned processes and files",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exercise Treasury transactions and BE02 live receipt decoding",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exercise final roles, live governance ingestion, restart and raw replay",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reconcile BE04 projections with live governance at confirmed H",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record scope of checks",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload check evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js for live receipt verification",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Install pinned Foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272504,
+          "name": "BE07 recovery, RPC failures and native database regressions",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272504",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272511,
+          "name": "Container build, release validation and Compose smoke",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272511",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci && forge build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify release rejection cases",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build all application images without deployment secrets",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Smoke real services and preserve PostgreSQL data across recreation",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Save the exact tested image set",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "status": "completed",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272541,
+          "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272541",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck && npm run build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:api:db",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:api:docs",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge test --match-path tests/unit/OperationAbiCompatibility.t.sol",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run fresh Anvil, PostgreSQL and HTTP API integration",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE05 live evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141009272557,
+          "name": "be08-release-gate / be08",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141009272557",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v7.0.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run mkdir -p reports && forge build",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Current migrations, DB/crash/reorg/rebuild, contracts and 10-client benchmark",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v7.0.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 141010949211,
+          "name": "Publish tested release image set",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892017/job/141010949211",
+          "steps": []
+        }
+      ]
+    },
+    {
+      "id": 46154892109,
+      "name": "Verify public Foundry fallback",
+      "headSha": "8838cfd250583d87a608dbcf44c387b37e3dad22",
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892109",
+      "createdAt": "2026-11-28T14:29:13Z",
+      "updatedAt": "2026-11-28T14:30:15Z",
+      "jobs": [
+        {
+          "id": 141009272216,
+          "name": "Anonymous attestation, extraction and contract gates",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46154892109/job/141009272216",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Python",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check exact-version regression",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install from the real public OCI fallback",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record real fallback and installed versions",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run unchanged format, build, contract tests and ABI fixture gates",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload fallback evidence",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Install from the real public OCI fallback",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Python",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+[
+  {
+    "command": [
+      "/tmp/dao-what-if-pg-root/usr/lib/postgresql/16/bin/initdb",
+      "-D",
+      "/tmp/dao-pr65-tv1-evidence/pg-data",
+      "-L",
+      "/tmp/dao-what-if-pg-root/usr/share/postgresql/16",
+      "-A",
+      "trust",
+      "--no-locale",
+      "-E",
+      "UTF8"
+    ],
+    "exitCode": 0,
+    "log": "pg-init.log",
+    "at": "2026-11-28T15:22:48.375221+00:00"
+  },
+  {
+    "command": [
+      "/tmp/dao-what-if-pg-root/usr/lib/postgresql/16/bin/pg_ctl",
+      "-D",
+      "/tmp/dao-pr65-tv1-evidence/pg-data",
+      "-l",
+      "/tmp/dao-pr65-tv1-evidence/pg-server.log",
+      "-o",
+      "-h 127.0.0.1 -p 47111 -k /tmp/dao-pr65-tv1-evidence/pg-socket -c shared_buffers=16MB -c max_connections=20",
+      "-w",
+      "start"
+    ],
+    "exitCode": 0,
+    "log": "pg-start.log",
+    "at": "2026-11-28T15:22:49.021177+00:00"
+  },
+  {
+    "command": [
+      "/tmp/dao-what-if-pg-root/usr/lib/postgresql/16/bin/createdb",
+      "-h",
+      "127.0.0.1",
+      "-p",
+      "47111",
+      "tv4_be05_pr65_tv1"
+    ],
+    "exitCode": 0,
+    "log": "pg-createdb.log",
+    "at": "2026-11-28T15:22:51.175230+00:00"
+  },
+  {
+    "command": [
+      "/tmp/dao-what-if-pg-root/usr/lib/postgresql/16/bin/psql",
+      "-h",
+      "127.0.0.1",
+      "-p",
+      "47111",
+      "-d",
+      "tv4_be05_pr65_tv1",
+      "-XAtc",
+      "select version()"
+    ],
+    "exitCode": 0,
+    "log": "pg-version.log",
+    "at": "2026-11-28T15:22:51.349579+00:00"
+  },
+  {
+    "command": [
+      "npm",
+      "run",
+      "test:api"
+    ],
+    "exitCode": 1,
+    "log": "api-postgres.log",
+    "at": "2026-11-28T15:22:58.155721+00:00"
+  },
+  {
+    "command": [
+      "/tmp/dao-what-if-pg-root/usr/lib/postgresql/16/bin/pg_ctl",
+      "-D",
+      "/tmp/dao-pr65-tv1-evidence/pg-data",
+      "-m",
+      "fast",
+      "-w",
+      "stop"
+    ],
+    "exitCode": 0,
+    "log": "pg-stop.log",
+    "at": "2026-11-28T15:22:59.964913+00:00"
+  }
+]

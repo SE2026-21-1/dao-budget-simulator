@@ -1,0 +1,17 @@
+{
+  "format": "dao-budget-sepolia-accounts-v1",
+  "chainId": "11155111",
+  "approvedSourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "signerOwner": null,
+  "accounts": {
+    "A": null,
+    "B": null,
+    "C": null,
+    "D": null,
+    "funding": null,
+    "deployer": null,
+    "caller": null,
+    "recipient": null,
+    "outsider": null
+  }
+}

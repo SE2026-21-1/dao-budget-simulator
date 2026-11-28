@@ -1,0 +1,38 @@
+name: SC10 offline account preparation
+on:
+  pull_request:
+    branches: [Dev]
+    paths:
+      - 'scripts/*sepolia_accounts.mjs'
+      - 'scripts/sepolia_account_preparation.mjs'
+      - 'tests/sepolia-account-preparation.test.mjs'
+      - 'tests/helpers/sepolia-preparation-guard.mjs'
+      - 'docs/sepolia-account-preparation.md'
+      - 'docs/examples/sepolia-accounts.template.json'
+      - '.github/workflows/sepolia-account-preparation.yml'
+      - 'package*.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-account-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Fetch only the immutable deployment preparation source
+        run: git fetch --no-tags --depth=1 origin e17ef61a8a51518005c38b0808cdc06fe7a68bbf
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check CLI syntax
+        run: |
+          node --check scripts/sepolia_account_preparation.mjs
+          node --check scripts/prepare_sepolia_accounts.mjs
+          node --check scripts/validate_sepolia_accounts.mjs
+      - name: Test disposable encrypted wallets with network and signing denied
+        run: node --test tests/sepolia-account-preparation.test.mjs

@@ -1,7 +1,7 @@
 # API đọc DAO Budget Simulator — hợp đồng BE01/BE05 cho TV3
 
-**BE05 triển khai sáu endpoint đọc bên dưới.** TV1/TV3 vẫn cần review clock/quorum,
-salt, shape và cách dùng cursor trước khi chốt hợp đồng consumer. BE04 có
+**BE05 triển khai sáu endpoint đọc bên dưới.** Bản [OpenAPI 3.0.3](../indexer/api/openapi.json)
+mô tả contract HTTP đang chạy. BE04 có
 [projection publication tại H](be04.md); BE05 chỉ phục vụ publication đã commit.
 BE02/BE03 cung cấp raw storage/checkpoint; raw checkpoint không được dùng để gắn
 nhãn cho projection BE04 cũ.
@@ -18,8 +18,8 @@ Tất cả endpoint dưới đây là `GET`, trả JSON UTF-8, không yêu cầu
 | Quy ước | Ý nghĩa |
 |---|---|
 | Base path | `/api`; API chỉ đọc |
-| `chainId` | Chuỗi số nguyên thập phân, bắt buộc để tránh đọc nhầm mạng |
-| `deploymentId` | Mã deployment do cấu hình nhóm cấp, bắt buộc; không tự chọn bản deploy mới nhất |
+| `chainId` | UInt256 thập phân canonical, lớn hơn 0, bắt buộc |
+| `deploymentId` | Tên deployment chính xác, dài 1–128 ký tự, không có khoảng trắng ở hai đầu hoặc ký tự điều khiển U+0000–U+001F. Bắt buộc |
 | `asOfBlock` | Block H của snapshot nhất quán; chuỗi số nguyên |
 | `asOfBlockHash` | Hash canonical tại H; dùng kèm `asOfBlock` để ghim cùng nhánh chain |
 | `snapshotRevision` | Phiên bản dữ liệu phục vụ, đổi khi rebuild/reorg làm mất tính hợp lệ của snapshot |
@@ -53,8 +53,8 @@ và chờ TV1/TV3 chốt cách cung cấp raw hex, không trả text đã sửa 
 
 Request đầu tiên truyền `chainId`, `deploymentId`; nếu không có H, server chọn
 publication BE04 mới nhất đã commit. Client nên giữ cả `asOfBlock` và
-`asOfBlockHash` để ghim các endpoint trong một lượt xem. `asOfBlockHash` không
-được đứng một mình. API không gọi RPC để chọn H và không đọc raw checkpoint cao
+`asOfBlockHash` để ghim các endpoint trong một lượt xem. Khi ghim, phải gửi cả
+hai tham số. API không gọi RPC để chọn H và không đọc raw checkpoint cao
 hơn rồi gắn nhãn cho projection cũ.
 Frontend dùng lại cả H/hash cho summary, list, detail, votes và transfers của
 cùng lượt xem. H phải thuộc deployment và còn dữ liệu lịch sử để phục vụ.
@@ -138,16 +138,16 @@ List, votes và transfers dùng `limit` mặc định 20, phạm vi 1–100, cù
 - Cursor giữ chain/deployment, H/hash/revision, endpoint, bộ lọc chuẩn hóa,
   limit, thứ tự và khóa mục cuối. Trang kế dùng phép so sánh nhỏ hơn tuple cuối;
   giữ nguyên bộ lọc/limit/scope, không tự chuyển sang checkpoint mới.
-- Server phải xác thực cursor trước khi dùng; bản triển khai có thể dùng HMAC
-  hoặc token lưu phía server. Base64url trong fixture là token minh họa **chưa ký**,
-  không phải cơ chế tin cậy để sao chép vào production.
+- Server kiểm chữ ký HMAC-SHA256 và hạn dùng của cursor trước khi truy vấn.
+  Token base64url trong fixture chỉ dùng để minh họa, không gửi vào API live.
 - Cursor malformed/hết hạn/không xác thực trả 400 `INVALID_CURSOR`.
   Thay H, deployment, endpoint, filter hoặc limit trả 400 `CURSOR_CONTEXT_MISMATCH`.
   Hash bị reorg hoặc revision bị rebuild thay thế trả 409 `SNAPSHOT_INVALIDATED`;
   frontend bỏ cursor và tải lại từ trang đầu.
-- H lớn hơn checkpoint hoặc chưa rebuild đủ trả 503 `DATA_NOT_READY`;
-  H ngoài cửa sổ lịch sử trả 409 `SNAPSHOT_UNAVAILABLE`. Không trả trang hiện tại
-  dưới nhãn một H cũ không còn dựng được.
+- H lớn hơn publication trả 503 `DATA_NOT_READY`. Nếu cặp H/hash không còn
+  xác minh được bằng header đã index, API trả 409 `SNAPSHOT_INVALIDATED`.
+  Nếu H/hash còn canonical nhưng nằm ngoài publication hiện tại và không còn
+  bản đọc hợp lệ đã lưu, API trả 409 `SNAPSHOT_UNAVAILABLE`.
 
 ## 3. Các endpoint
 
@@ -196,8 +196,7 @@ không tồn tại trả 404. Các trang chuẩn là
 [trang 3](../fixtures/api/proposals-page-3.json).
 
 200 trả envelope + `data: Proposal[]` + pagination. Shape Proposal đầy đủ giống
-detail để TV3 dùng chung kiểu dữ liệu; đây là lựa chọn BE01 chờ TV3 review về
-dung lượng response.
+detail để TV3 dùng chung kiểu dữ liệu.
 
 ### GET /api/proposals/:id
 
@@ -300,8 +299,11 @@ thất bại nên health không tự probe hay khẳng định RPC hiện tại 
 503 nếu không có checkpoint đáng tin cậy, database down, metadata deployment không
 được xác minh hoặc phải rebuild; `data.status: "unavailable"`.
 `data.database` là `up|down`, `data.indexer` là `synced|lagging|not_ready`.
-Các trường bổ sung trong fixture giải thích tình trạng vận hành. Health 503 vẫn
-trả envelope health, còn endpoint dữ liệu 503 dùng envelope lỗi dưới đây.
+Khi DB đọc được, health có thêm trạng thái và block publication, projection lag,
+raw decode counters và số ancillary events đã bỏ qua. `recoveryStatus` có trên
+đường đọc dùng recovery metadata. Khi DB không đọc được, response rút gọn thành
+`{ "context": null, "data": { "status": "unavailable", "database": "down", "indexer": "not_ready", "publication": "not_ready" } }`.
+Health 503 dùng envelope health. Endpoint dữ liệu 503 dùng envelope lỗi dưới đây.
 Không lộ connection string, secret RPC hoặc stack trace.
 
 ## 4. Lỗi có cấu trúc
@@ -329,11 +331,24 @@ không đồng thời trả `data` trong envelope lỗi. Health là ngoại lệ
 | 400 | `INVALID_ARGUMENT` | Sửa query thiếu/sai, state/direction/limit không hợp lệ, tham số không hỗ trợ |
 | 400 | `INVALID_CURSOR` | Bỏ cursor lỗi/hết hạn, tải trang đầu |
 | 400 | `CURSOR_CONTEXT_MISMATCH` | Giữ scope/filter/limit của cursor hoặc bắt đầu lại |
+| 403 | `INVALID_ARGUMENT` | Nếu cấu hình CORS allowlist, origin gửi đến phải khớp một origin đã cấu hình |
 | 404 | `DEPLOYMENT_NOT_FOUND` | Chọn cấu hình chain/deployment hợp lệ |
 | 404 | `PROPOSAL_NOT_FOUND` | Hiển thị không tìm thấy tại H đang xem |
 | 409 | `SNAPSHOT_INVALIDATED` | Chain reorg/rebuild: tải lại toàn bộ màn hình từ snapshot mới |
-| 409 | `SNAPSHOT_UNAVAILABLE` | H ngoài lịch sử còn lưu: chọn checkpoint có thể phục vụ |
+| 409 | `SNAPSHOT_UNAVAILABLE` | Snapshot đã ghim hết hạn hoặc bản đọc tại H/hash còn canonical không được lưu: chọn checkpoint có thể phục vụ |
 | 503 | `DATA_NOT_READY` | Đang đồng bộ/chưa có checkpoint/đang đối soát: hiện loading hoặc lỗi có thể retry |
+
+| GET | Lỗi có thể trả |
+|---|---|
+| `/api/summary` | 400 query, 403 origin, 404 deployment, 409 snapshot, 503 publication/DB |
+| `/api/proposals` | Như summary, thêm 400 ID/filter/pagination/cursor |
+| `/api/proposals/:id` | Như summary, thêm 400 ID và 404 proposal |
+| `/api/proposals/:id/votes` | Như detail, thêm 400 pagination/cursor |
+| `/api/treasury/transfers` | Như summary, thêm 400 ID/filter/pagination/cursor. ID hợp lệ chưa có chuyển tiền trả trang rỗng |
+| `/api/health` | 400 scope/query, 403 origin, 404 deployment, 503 health unavailable. Health không trả 409 |
+
+Query lạ, lặp hoặc không được endpoint hỗ trợ trả 400. Server trả 204 cho
+`OPTIONS` hợp lệ và 405 cho method khác ngoài GET/OPTIONS, sau kiểm tra origin.
 
 `retryable: true` nghĩa có thể thử lại sau khi pipeline phục hồi; 400/404 mặc định
 false; 409 cần bỏ snapshot/cursor cũ trước khi thử lại. Các tình huống rỗng và
@@ -380,11 +395,13 @@ Hash input/proposalId của 45 proposal và operationId/salt vẫn giữ nguyên
 
 ## 7. Chạy API BE05
 
-Chạy migration 004 một lần sau BE01–BE04 trên database đã cấu hình deployment
-và có publication BE04:
+Chạy ở root repository trên database dành cho deployment đã cấu hình. Với
+database mới, áp dụng các migration 001–005 theo thứ tự, đăng ký deployment và
+chạy worker đến khi có publication BE04. Xem [README](../README.md) và
+[BE07](be07.md). Nếu database đã có 001–003, áp dụng các migration còn thiếu
+004 và 005 một lần theo thứ tự.
 
 ```sh
-psql -X -v ON_ERROR_STOP=1 "$DATABASE_URL" -f database/migrations/004_be05_api.sql
 npm ci
 export API_CURSOR_SECRET="$(openssl rand -hex 32)"
 npm run api
@@ -395,6 +412,24 @@ npm run api
 `API_CORS_ORIGINS` (các origin chính xác, phân tách bằng dấu phẩy). API không tự
 nạp `.env`. Pool giới hạn thời gian kết nối/truy vấn; SIGINT/SIGTERM đóng HTTP
 server và pool.
+
+### Swagger UI và OpenAPI
+
+- Swagger UI ở [http://127.0.0.1:3000/docs](http://127.0.0.1:3000/docs). Route này chuyển tới `/docs/`.
+- Spec JSON ở [http://127.0.0.1:3000/openapi.json](http://127.0.0.1:3000/openapi.json).
+- Mở GET **Pipeline health**, bấm **Try it out**, nhập `chainId` và `deploymentId`
+  của deployment đang chạy rồi bấm **Execute**. Với **List proposals**, lấy
+  `proposalId` từ response để thử detail/votes. Giá trị `qa07-e2e` trong spec là
+  tên của stack demo QA07. Thay bằng tên deployment thực tế khi chạy stack khác.
+- UI tải JavaScript, CSS và spec từ API origin. Spec dùng server `/` để chọn đúng
+  origin hiện hành. UI dùng được khi đã cài dependencies và không có internet.
+  Trong Compose, truy cập cổng của service API. Cấu hình
+  [Anvil demo](../deploy/anvil-demo/compose.yml) công bố API ở loopback cổng 3000.
+
+Khi contract HTTP thay đổi, cập nhật [spec nguồn duy nhất](../indexer/api/openapi.json)
+cùng code. Chạy `npm run test:api:docs` để kiểm OpenAPI, ví dụ và asset route,
+sau đó chạy `npm run test:api` với PostgreSQL test riêng như README. Suite API
+đối chiếu các response runtime với schema trong spec đang phục vụ.
 
 Ví dụ đủ sáu endpoint:
 

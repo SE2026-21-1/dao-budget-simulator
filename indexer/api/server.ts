@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { AbiCoder, keccak256, toUtf8Bytes } from 'ethers';
 import type { Pool, PoolClient } from 'pg';
+import { serveApiDocs } from './documentation.js';
 
 const UINT256_MAX = (1n << 256n) - 1n;
 const STATES = new Set(['Pending', 'Active', 'Succeeded', 'Defeated', 'Queued', 'Executed', 'Canceled']);
@@ -685,6 +686,7 @@ export function createApiServer(options: ServerOptions): Server {
     if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
     if (req.method !== 'GET') { send(res, 405, { context: null, error: { code: 'INVALID_ARGUMENT', message: 'Chỉ hỗ trợ GET.', details: {}, retryable: false } }); return; }
     try {
+      if (await serveApiDocs(req.url, res)) return;
       const { url, query } = parseRequest(req);
       const route = url.pathname;
       const voteMatch = route.match(/^\/api\/proposals\/([^/]+)\/votes$/);

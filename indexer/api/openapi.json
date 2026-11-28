@@ -1,0 +1,2949 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "DAO Budget Simulator API",
+    "version": "1.0.0",
+    "description": "Read API for an indexed DAO deployment. Use the chain ID and deployment name from your running environment. Example `qa07-e2e` is the isolated QA07 demo scope. No authentication is required. Unknown/repeated query keys are rejected. API routes accept GET and CORS preflight OPTIONS; other methods receive 405. Responses use canonical decimal strings for on-chain quantities (timestamps are seconds since Unix epoch), not JavaScript numbers. Cursor tokens are signed and tied to the snapshot and request, with a default lifetime of 900 seconds (configurable 60–86400)."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Overview"
+    },
+    {
+      "name": "Proposals"
+    },
+    {
+      "name": "Treasury"
+    },
+    {
+      "name": "Operations"
+    }
+  ],
+  "paths": {
+    "/api/summary": {
+      "get": {
+        "operationId": "getSummary",
+        "tags": [
+          "Overview"
+        ],
+        "summary": "Deployment summary",
+        "description": "Returns treasury totals, proposal counts, verified governance configuration and up to five recent BUD transfers. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          },
+          {
+            "$ref": "#/components/parameters/Block"
+          },
+          {
+            "$ref": "#/components/parameters/BlockHash"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "25",
+                    "asOfBlockHash": "0xdf1ea17a90cb303c6982360617e968778c1e2948ef8d677409692b2fb80b6f91",
+                    "asOfTimestamp": "1800000150",
+                    "snapshotRevision": "d173d7f0-2e71-4cf5-8071-af4ee5e6dc2c",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "27",
+                      "confirmedBlock": "25",
+                      "indexedBlock": "25",
+                      "publicationBlock": "25",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T14:13:31.641Z",
+                      "lastRpcCheckAt": "2026-11-28T14:13:31.642+00:00",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": {
+                    "treasury": {
+                      "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                      "token": {
+                        "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                        "symbol": "BUD",
+                        "decimals": 18
+                      },
+                      "balance": "10000000000000000000000",
+                      "totalIn": "10000000000000000000000",
+                      "totalOut": "0"
+                    },
+                    "proposalCounts": {
+                      "total": 2,
+                      "byState": {
+                        "Pending": 0,
+                        "Active": 2,
+                        "Succeeded": 0,
+                        "Defeated": 0,
+                        "Queued": 0,
+                        "Executed": 0,
+                        "Canceled": 0
+                      }
+                    },
+                    "governance": {
+                      "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+                      "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+                      "govToken": {
+                        "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                        "symbol": "GOV",
+                        "decimals": 18
+                      },
+                      "clockMode": "mode=timestamp",
+                      "proposalThreshold": "50000000000000000000",
+                      "votingDelay": "60",
+                      "votingPeriod": "300",
+                      "timelockDelay": "120",
+                      "quorumNumerator": "20",
+                      "quorumDenominator": "100",
+                      "totalSupply": "1000000000000000000000"
+                    },
+                    "recentActivity": [
+                      {
+                        "type": "Transfer",
+                        "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                        "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                        "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                        "amount": "10000000000000000000000",
+                        "logIndex": "0",
+                        "blockHash": "0x2e04bf79ddccbd4bca0d17759f2fe31f682115ce8bf7dbb4c1380c2ab59775d3",
+                        "direction": "in",
+                        "requestId": null,
+                        "proposalId": null,
+                        "blockNumber": "19",
+                        "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                        "transactionIndex": "0"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/DeploymentNotFound"
+          },
+          "409": {
+            "description": "SNAPSHOT_INVALIDATED after a canonical hash, scope or revision change. SNAPSHOT_UNAVAILABLE when the requested snapshot is absent or its stored read view expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "SNAPSHOT_INVALIDATED",
+                                "SNAPSHOT_UNAVAILABLE"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "error": {
+                    "code": "SNAPSHOT_INVALIDATED",
+                    "message": "Hash yêu cầu không còn canonical tại H.",
+                    "details": {},
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/DataNotReady"
+          }
+        }
+      }
+    },
+    "/api/proposals": {
+      "get": {
+        "operationId": "listProposals",
+        "tags": [
+          "Proposals"
+        ],
+        "summary": "List proposals",
+        "description": "Returns full proposal records ordered newest first. state and proposalId filters combine with AND. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          },
+          {
+            "$ref": "#/components/parameters/Block"
+          },
+          {
+            "$ref": "#/components/parameters/BlockHash"
+          },
+          {
+            "$ref": "#/components/parameters/State"
+          },
+          {
+            "$ref": "#/components/parameters/ProposalId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalsResponse"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": [],
+                  "pagination": {
+                    "limit": 20,
+                    "totalCount": 0,
+                    "nextCursor": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter); INVALID_PROPOSAL_ID; INVALID_CURSOR (invalid signature, expired token or invalid tuple); CURSOR_CONTEXT_MISMATCH (endpoint, scope, filter, limit or explicit pin changed).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT",
+                                "INVALID_PROPOSAL_ID",
+                                "INVALID_CURSOR",
+                                "CURSOR_CONTEXT_MISMATCH"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/DeploymentNotFound"
+          },
+          "409": {
+            "description": "SNAPSHOT_INVALIDATED after a canonical hash, scope or revision change or when a valid cursor meets a blocked publication. SNAPSHOT_UNAVAILABLE when the requested snapshot is absent or its stored read view expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "SNAPSHOT_INVALIDATED",
+                                "SNAPSHOT_UNAVAILABLE"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "error": {
+                    "code": "SNAPSHOT_INVALIDATED",
+                    "message": "Hash yêu cầu không còn canonical tại H.",
+                    "details": {},
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/DataNotReady"
+          }
+        }
+      }
+    },
+    "/api/proposals/{id}": {
+      "get": {
+        "operationId": "getProposal",
+        "tags": [
+          "Proposals"
+        ],
+        "summary": "Proposal detail",
+        "description": "Returns one proposal as of the selected snapshot, including votes and optional Timelock operation. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          },
+          {
+            "$ref": "#/components/parameters/Block"
+          },
+          {
+            "$ref": "#/components/parameters/BlockHash"
+          },
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalResponse"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "25",
+                    "asOfBlockHash": "0xdf1ea17a90cb303c6982360617e968778c1e2948ef8d677409692b2fb80b6f91",
+                    "asOfTimestamp": "1800000150",
+                    "snapshotRevision": "d173d7f0-2e71-4cf5-8071-af4ee5e6dc2c",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "27",
+                      "confirmedBlock": "25",
+                      "indexedBlock": "25",
+                      "publicationBlock": "25",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T14:13:31.641Z",
+                      "lastRpcCheckAt": "2026-11-28T14:13:31.642+00:00",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": {
+                    "body": "Local isolated Swagger contract check.",
+                    "state": "Active",
+                    "title": "OpenAPI demo 1",
+                    "votes": {
+                      "for": "400000000000000000000",
+                      "quorum": "200000000000000000000",
+                      "abstain": "0",
+                      "against": "0"
+                    },
+                    "amount": "1000000000000000000",
+                    "values": [
+                      "0"
+                    ],
+                    "created": {
+                      "logIndex": "0",
+                      "blockHash": "0x3285a7db0e6b0e55a6343a30aa5839f9107ddc7fe3f00fbabb832bc1f9871271",
+                      "blockNumber": "22",
+                      "transactionHash": "0xeb98f963eb551d3e499f700b33fc8f3163a77c612a203aaf0c6f4f13809b0a18",
+                      "transactionIndex": "0"
+                    },
+                    "targets": [
+                      "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+                    ],
+                    "deadline": "1800000445",
+                    "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+                    "snapshot": "1800000145",
+                    "calldatas": [
+                      "0x6664ac91dc20fb17d0eaea7320765220a65bc53ceb45d3f1296bd59ab2edffa8d35b7cf100000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000000000de0b6b3a7640000"
+                    ],
+                    "operation": null,
+                    "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                    "requestId": "0xdc20fb17d0eaea7320765220a65bc53ceb45d3f1296bd59ab2edffa8d35b7cf1",
+                    "proposalId": "113593197261888049700489308459435128251472700080815561645239523415114365959783",
+                    "description": "{\"version\":1,\"title\":\"OpenAPI demo 1\",\"body\":\"Local isolated Swagger contract check.\"}",
+                    "stateSource": "contract",
+                    "transactions": {
+                      "queued": null,
+                      "created": "0xeb98f963eb551d3e499f700b33fc8f3163a77c612a203aaf0c6f4f13809b0a18",
+                      "canceled": null,
+                      "executed": null
+                    },
+                    "descriptionHash": "0x712f8b71fcc24cab825c1a6bb41e0a66441218cc5229474c262feb934a2a0677"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter); INVALID_PROPOSAL_ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT",
+                                "INVALID_PROPOSAL_ID"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "description": "DEPLOYMENT_NOT_FOUND for an unknown chain/deployment, or PROPOSAL_NOT_FOUND when the proposal is absent at H.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "DEPLOYMENT_NOT_FOUND",
+                                "PROPOSAL_NOT_FOUND"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_INVALIDATED after a canonical hash, scope or revision change. SNAPSHOT_UNAVAILABLE when the requested snapshot is absent or its stored read view expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "SNAPSHOT_INVALIDATED",
+                                "SNAPSHOT_UNAVAILABLE"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "error": {
+                    "code": "SNAPSHOT_INVALIDATED",
+                    "message": "Hash yêu cầu không còn canonical tại H.",
+                    "details": {},
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/DataNotReady"
+          }
+        }
+      }
+    },
+    "/api/proposals/{id}/votes": {
+      "get": {
+        "operationId": "listProposalVotes",
+        "tags": [
+          "Proposals"
+        ],
+        "summary": "List votes for a proposal",
+        "description": "Returns votes newest first. A known proposal with no votes returns an empty page. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          },
+          {
+            "$ref": "#/components/parameters/Block"
+          },
+          {
+            "$ref": "#/components/parameters/BlockHash"
+          },
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VotesResponse"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": [],
+                  "pagination": {
+                    "limit": 20,
+                    "totalCount": 0,
+                    "nextCursor": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter); INVALID_PROPOSAL_ID; INVALID_CURSOR (invalid signature, expired token or invalid tuple); CURSOR_CONTEXT_MISMATCH (endpoint, scope, filter, limit or explicit pin changed).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT",
+                                "INVALID_PROPOSAL_ID",
+                                "INVALID_CURSOR",
+                                "CURSOR_CONTEXT_MISMATCH"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "description": "DEPLOYMENT_NOT_FOUND for an unknown chain/deployment, or PROPOSAL_NOT_FOUND when the proposal is absent at H.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "DEPLOYMENT_NOT_FOUND",
+                                "PROPOSAL_NOT_FOUND"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_INVALIDATED after a canonical hash, scope or revision change or when a valid cursor meets a blocked publication. SNAPSHOT_UNAVAILABLE when the requested snapshot is absent or its stored read view expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "SNAPSHOT_INVALIDATED",
+                                "SNAPSHOT_UNAVAILABLE"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "error": {
+                    "code": "SNAPSHOT_INVALIDATED",
+                    "message": "Hash yêu cầu không còn canonical tại H.",
+                    "details": {},
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/DataNotReady"
+          }
+        }
+      }
+    },
+    "/api/treasury/transfers": {
+      "get": {
+        "operationId": "listTreasuryTransfers",
+        "tags": [
+          "Treasury"
+        ],
+        "summary": "List treasury transfers",
+        "description": "Returns only BUD transfers involving Treasury, newest first. Filters combine with AND. Self transfers do not increase treasury inflow or outflow. When omitted, the block/hash pair selects the current publication or the cursor's snapshot.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          },
+          {
+            "$ref": "#/components/parameters/Block"
+          },
+          {
+            "$ref": "#/components/parameters/BlockHash"
+          },
+          {
+            "$ref": "#/components/parameters/Direction"
+          },
+          {
+            "$ref": "#/components/parameters/ProposalId"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot available.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransfersResponse"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": [],
+                  "pagination": {
+                    "limit": 20,
+                    "totalCount": 0,
+                    "nextCursor": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter); INVALID_PROPOSAL_ID; INVALID_CURSOR (invalid signature, expired token or invalid tuple); CURSOR_CONTEXT_MISMATCH (endpoint, scope, filter, limit or explicit pin changed).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT",
+                                "INVALID_PROPOSAL_ID",
+                                "INVALID_CURSOR",
+                                "CURSOR_CONTEXT_MISMATCH"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/DeploymentNotFound"
+          },
+          "409": {
+            "description": "SNAPSHOT_INVALIDATED after a canonical hash, scope or revision change or when a valid cursor meets a blocked publication. SNAPSHOT_UNAVAILABLE when the requested snapshot is absent or its stored read view expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "SNAPSHOT_INVALIDATED",
+                                "SNAPSHOT_UNAVAILABLE"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "error": {
+                    "code": "SNAPSHOT_INVALIDATED",
+                    "message": "Hash yêu cầu không còn canonical tại H.",
+                    "details": {},
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/DataNotReady"
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "operationId": "getHealth",
+        "tags": [
+          "Operations"
+        ],
+        "summary": "Pipeline health",
+        "description": "Reports current PostgreSQL, indexer and publication readiness. A usable publication can be degraded. Does not probe the RPC.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ChainId"
+          },
+          {
+            "$ref": "#/components/parameters/DeploymentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publication ready (ok or degraded).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthReady"
+                },
+                "example": {
+                  "context": {
+                    "chainId": "31337",
+                    "deploymentId": "qa07-e2e",
+                    "asOfBlock": "24",
+                    "asOfBlockHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+                    "asOfTimestamp": "1800000060",
+                    "snapshotRevision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+                    "dataKind": "chain",
+                    "sync": {
+                      "status": "synced",
+                      "headBlock": "26",
+                      "confirmedBlock": "24",
+                      "indexedBlock": "24",
+                      "publicationBlock": "24",
+                      "lagBlocks": "0",
+                      "lagSeconds": "0",
+                      "confirmations": "2",
+                      "lastIndexedAt": "2026-11-28T10:18:46Z",
+                      "lastRpcCheckAt": "2026-11-28T10:18:46Z",
+                      "recoveryStatus": "ready"
+                    }
+                  },
+                  "data": {
+                    "status": "ok",
+                    "database": "up",
+                    "indexer": "synced",
+                    "publication": "ready",
+                    "recoveryStatus": "ready",
+                    "projectionStatus": "current",
+                    "publicationBlock": "24",
+                    "projectionLagBlocks": "0",
+                    "rawDecodeComplete": true,
+                    "rawDecodeIssues": {
+                      "unknownTopics": 0,
+                      "decodeErrors": 0
+                    },
+                    "ignoredAncillaryEvents": 16
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_ARGUMENT (invalid, unknown or repeated query parameter).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "properties": {
+                        "error": {
+                          "properties": {
+                            "code": {
+                              "enum": [
+                                "INVALID_ARGUMENT"
+                              ]
+                            },
+                            "retryable": {
+                              "enum": [
+                                false
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "example": {
+                  "context": null,
+                  "error": {
+                    "code": "INVALID_ARGUMENT",
+                    "message": "Query parameter không được hỗ trợ hoặc bị lặp.",
+                    "details": {
+                      "field": "unexpected"
+                    },
+                    "retryable": false
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/DeploymentNotFound"
+          },
+          "503": {
+            "description": "Database unavailable, or the deployment has no trustworthy publication (including recovery or rebuild). This is a health envelope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthUnavailable"
+                },
+                "example": {
+                  "context": null,
+                  "data": {
+                    "status": "unavailable",
+                    "database": "down",
+                    "indexer": "not_ready",
+                    "publication": "not_ready"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "ChainId": {
+        "name": "chainId",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,77}$"
+        },
+        "description": "Positive canonical decimal uint256. Choose the chain of the indexed deployment. The server also checks the exact upper bound 2^256-1.",
+        "example": "31337"
+      },
+      "DeploymentId": {
+        "name": "deploymentId",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^(?![\\s\\S]*[\\u0000-\\u001f])\\S(?:[\\s\\S]*\\S)?(?![\\s\\S])"
+        },
+        "description": "Exact deployment name (not the internal database ID). No surrounding whitespace or control characters U+0000–U+001F. The server measures the 128-character cap in UTF-16 code units.",
+        "example": "qa07-e2e"
+      },
+      "Block": {
+        "name": "asOfBlock",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 78,
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "description": "Snapshot block as canonical decimal uint256. Required when asOfBlockHash is supplied. The server also checks the exact upper bound 2^256-1."
+      },
+      "BlockHash": {
+        "name": "asOfBlockHash",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/Hash32"
+        },
+        "description": "Canonical hash at asOfBlock. Required when asOfBlock is supplied."
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "description": "Page size in canonical decimal notation."
+      },
+      "Cursor": {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/Cursor"
+        },
+        "description": "Use nextCursor as-is. Keep endpoint, chain, deployment, filters, limit and any explicit snapshot pin unchanged."
+      },
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "maxLength": 78,
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "description": "Canonical decimal Governor proposal ID (uint256, no leading zeros). Copy a proposalId from the list. The server also checks the exact upper bound 2^256-1."
+      },
+      "ProposalId": {
+        "name": "proposalId",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "maxLength": 78,
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        "description": "Exact canonical decimal proposal ID (uint256). A valid ID without matches returns an empty page. The server also checks the exact upper bound 2^256-1."
+      },
+      "State": {
+        "name": "state",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "Pending",
+            "Active",
+            "Succeeded",
+            "Defeated",
+            "Queued",
+            "Executed",
+            "Canceled"
+          ]
+        },
+        "description": "Case-sensitive proposal state at the snapshot."
+      },
+      "Direction": {
+        "name": "direction",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "in",
+            "out",
+            "self"
+          ]
+        },
+        "description": "Transfer direction relative to Treasury."
+      }
+    },
+    "responses": {
+      "OriginDenied": {
+        "description": "Origin header is outside the configured CORS allowlist, when the list is enabled. Code INVALID_ARGUMENT.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            "INVALID_ARGUMENT"
+                          ]
+                        },
+                        "retryable": {
+                          "enum": [
+                            false
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "DeploymentNotFound": {
+        "description": "DEPLOYMENT_NOT_FOUND: the chain/deployment pair is not registered.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            "DEPLOYMENT_NOT_FOUND"
+                          ]
+                        },
+                        "retryable": {
+                          "enum": [
+                            false
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "DataNotReady": {
+        "description": "DATA_NOT_READY: publication is absent, recovering, requires rebuild, has inconsistent data or metadata, or requested H exceeds publication. PostgreSQL read failure can also cause this response.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Error"
+                },
+                {
+                  "properties": {
+                    "error": {
+                      "properties": {
+                        "code": {
+                          "enum": [
+                            "DATA_NOT_READY"
+                          ]
+                        },
+                        "retryable": {
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "example": {
+              "context": null,
+              "error": {
+                "code": "DATA_NOT_READY",
+                "message": "Dịch vụ dữ liệu hiện không khả dụng.",
+                "details": {},
+                "retryable": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "DecimalUint": {
+        "type": "string",
+        "pattern": "^(0|[1-9][0-9]*)$",
+        "description": "Unsigned integer serialized as canonical decimal text. Amounts and vote weights are in token base units. Block heights, log indices and Governor timestamps also use decimal strings."
+      },
+      "Hash32": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{64}$"
+      },
+      "Address": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{40}$"
+      },
+      "Cursor": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+        "description": "Opaque signed cursor returned as pagination.nextCursor. Do not construct or edit it."
+      },
+      "RecoveryStatus": {
+        "type": "string",
+        "enum": [
+          "unverified",
+          "ready",
+          "recovering",
+          "replaying",
+          "rebuild_required"
+        ]
+      },
+      "Sync": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status",
+          "headBlock",
+          "confirmedBlock",
+          "indexedBlock",
+          "lagBlocks",
+          "lagSeconds",
+          "confirmations",
+          "lastIndexedAt"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "synced",
+              "lagging",
+              "not_ready"
+            ]
+          },
+          "headBlock": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "confirmedBlock": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "indexedBlock": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "lagBlocks": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "lagSeconds": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "confirmations": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "lastIndexedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "publicationBlock": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "lastRpcCheckAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "recoveryStatus": {
+            "$ref": "#/components/schemas/RecoveryStatus"
+          }
+        }
+      },
+      "ReadyContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chainId",
+          "deploymentId",
+          "asOfBlock",
+          "asOfBlockHash",
+          "asOfTimestamp",
+          "snapshotRevision",
+          "dataKind",
+          "sync"
+        ],
+        "properties": {
+          "chainId": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "deploymentId": {
+            "type": "string"
+          },
+          "asOfBlock": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "asOfBlockHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "asOfTimestamp": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "snapshotRevision": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dataKind": {
+            "type": "string",
+            "enum": [
+              "chain"
+            ]
+          },
+          "sync": {
+            "$ref": "#/components/schemas/Sync"
+          }
+        }
+      },
+      "NotReadyContext": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chainId",
+          "deploymentId",
+          "asOfBlock",
+          "asOfBlockHash",
+          "asOfTimestamp",
+          "snapshotRevision",
+          "dataKind",
+          "sync"
+        ],
+        "properties": {
+          "chainId": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "deploymentId": {
+            "type": "string"
+          },
+          "asOfBlock": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              null
+            ]
+          },
+          "asOfBlockHash": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              null
+            ]
+          },
+          "asOfTimestamp": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              null
+            ]
+          },
+          "snapshotRevision": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dataKind": {
+            "type": "string",
+            "enum": [
+              "chain"
+            ]
+          },
+          "sync": {
+            "$ref": "#/components/schemas/Sync"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "limit",
+          "totalCount",
+          "nextCursor"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "nextCursor": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Cursor"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "Operation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operationId",
+          "queuedAt",
+          "eta",
+          "status",
+          "predecessor",
+          "salt"
+        ],
+        "properties": {
+          "operationId": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "queuedAt": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "eta": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Waiting",
+              "Ready",
+              "Done",
+              "Canceled"
+            ]
+          },
+          "predecessor": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "salt": {
+            "$ref": "#/components/schemas/Hash32"
+          }
+        }
+      },
+      "Proposal": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "proposalId",
+          "requestId",
+          "proposer",
+          "recipient",
+          "amount",
+          "description",
+          "descriptionHash",
+          "title",
+          "body",
+          "targets",
+          "values",
+          "calldatas",
+          "snapshot",
+          "deadline",
+          "state",
+          "stateSource",
+          "votes",
+          "operation",
+          "created",
+          "transactions"
+        ],
+        "properties": {
+          "proposalId": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "proposer": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "recipient": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "description": {
+            "type": "string",
+            "description": "Exact UTF-8 text used to compute descriptionHash and proposalId."
+          },
+          "descriptionHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "body": {
+            "type": "string",
+            "nullable": true
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "0"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "calldatas": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^0x(?:[0-9a-fA-F]{2})*$"
+            },
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "deadline": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "Pending",
+              "Active",
+              "Succeeded",
+              "Defeated",
+              "Queued",
+              "Executed",
+              "Canceled"
+            ]
+          },
+          "stateSource": {
+            "type": "string",
+            "enum": [
+              "contract"
+            ]
+          },
+          "votes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "against",
+              "for",
+              "abstain",
+              "quorum"
+            ],
+            "properties": {
+              "against": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "for": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "abstain": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "quorum": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/DecimalUint"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "operation": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Operation"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "created": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "blockNumber",
+              "blockHash",
+              "transactionHash",
+              "transactionIndex",
+              "logIndex"
+            ],
+            "properties": {
+              "blockNumber": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "blockHash": {
+                "$ref": "#/components/schemas/Hash32"
+              },
+              "transactionHash": {
+                "$ref": "#/components/schemas/Hash32"
+              },
+              "transactionIndex": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "logIndex": {
+                "$ref": "#/components/schemas/DecimalUint"
+              }
+            }
+          },
+          "transactions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "created",
+              "queued",
+              "executed",
+              "canceled"
+            ],
+            "properties": {
+              "created": {
+                "$ref": "#/components/schemas/Hash32"
+              },
+              "queued": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Hash32"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              },
+              "executed": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Hash32"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              },
+              "canceled": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Hash32"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Vote": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blockNumber",
+          "blockHash",
+          "transactionHash",
+          "transactionIndex",
+          "logIndex",
+          "proposalId",
+          "voter",
+          "support",
+          "weight",
+          "reason"
+        ],
+        "properties": {
+          "blockNumber": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "blockHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "transactionHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "transactionIndex": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "logIndex": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "proposalId": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "voter": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "support": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2
+            ],
+            "description": "0 Against, 1 For, 2 Abstain."
+          },
+          "weight": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "Transfer": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blockNumber",
+          "blockHash",
+          "transactionHash",
+          "transactionIndex",
+          "logIndex",
+          "token",
+          "from",
+          "to",
+          "amount",
+          "direction",
+          "proposalId",
+          "requestId"
+        ],
+        "properties": {
+          "blockNumber": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "blockHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "transactionHash": {
+            "$ref": "#/components/schemas/Hash32"
+          },
+          "transactionIndex": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "logIndex": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "token": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "from": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "to": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/DecimalUint"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "in",
+              "out",
+              "self"
+            ]
+          },
+          "proposalId": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "requestId": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Hash32"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "Summary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "treasury",
+          "proposalCounts",
+          "governance",
+          "recentActivity"
+        ],
+        "properties": {
+          "treasury": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "address",
+              "token",
+              "balance",
+              "totalIn",
+              "totalOut"
+            ],
+            "properties": {
+              "address": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "token": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "address",
+                  "symbol",
+                  "decimals"
+                ],
+                "properties": {
+                  "address": {
+                    "$ref": "#/components/schemas/Address"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "enum": [
+                      "BUD"
+                    ]
+                  },
+                  "decimals": {
+                    "type": "integer",
+                    "enum": [
+                      18
+                    ]
+                  }
+                }
+              },
+              "balance": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "totalIn": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "totalOut": {
+                "$ref": "#/components/schemas/DecimalUint"
+              }
+            }
+          },
+          "proposalCounts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "total",
+              "byState"
+            ],
+            "properties": {
+              "total": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "byState": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "Pending",
+                  "Active",
+                  "Succeeded",
+                  "Defeated",
+                  "Queued",
+                  "Executed",
+                  "Canceled"
+                ],
+                "properties": {
+                  "Pending": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Active": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Succeeded": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Defeated": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Queued": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Executed": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "Canceled": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          },
+          "governance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "governor",
+              "timelock",
+              "govToken",
+              "clockMode",
+              "proposalThreshold",
+              "votingDelay",
+              "votingPeriod",
+              "timelockDelay",
+              "quorumNumerator",
+              "quorumDenominator",
+              "totalSupply"
+            ],
+            "properties": {
+              "governor": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "timelock": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "govToken": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "address",
+                  "symbol",
+                  "decimals"
+                ],
+                "properties": {
+                  "address": {
+                    "$ref": "#/components/schemas/Address"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "enum": [
+                      "GOV"
+                    ]
+                  },
+                  "decimals": {
+                    "type": "integer",
+                    "enum": [
+                      18
+                    ]
+                  }
+                }
+              },
+              "clockMode": {
+                "type": "string",
+                "enum": [
+                  "mode=timestamp"
+                ]
+              },
+              "proposalThreshold": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "votingDelay": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "votingPeriod": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "timelockDelay": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "quorumNumerator": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "quorumDenominator": {
+                "$ref": "#/components/schemas/DecimalUint"
+              },
+              "totalSupply": {
+                "$ref": "#/components/schemas/DecimalUint"
+              }
+            }
+          },
+          "recentActivity": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "blockNumber",
+                "blockHash",
+                "transactionHash",
+                "transactionIndex",
+                "logIndex",
+                "token",
+                "from",
+                "to",
+                "amount",
+                "direction",
+                "proposalId",
+                "requestId"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "Transfer"
+                  ]
+                },
+                "blockNumber": {
+                  "$ref": "#/components/schemas/DecimalUint"
+                },
+                "blockHash": {
+                  "$ref": "#/components/schemas/Hash32"
+                },
+                "transactionHash": {
+                  "$ref": "#/components/schemas/Hash32"
+                },
+                "transactionIndex": {
+                  "$ref": "#/components/schemas/DecimalUint"
+                },
+                "logIndex": {
+                  "$ref": "#/components/schemas/DecimalUint"
+                },
+                "token": {
+                  "$ref": "#/components/schemas/Address"
+                },
+                "from": {
+                  "$ref": "#/components/schemas/Address"
+                },
+                "to": {
+                  "$ref": "#/components/schemas/Address"
+                },
+                "amount": {
+                  "$ref": "#/components/schemas/DecimalUint"
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "in",
+                    "out",
+                    "self"
+                  ]
+                },
+                "proposalId": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DecimalUint"
+                    },
+                    {
+                      "type": "object",
+                      "nullable": true,
+                      "enum": [
+                        null
+                      ]
+                    }
+                  ]
+                },
+                "requestId": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Hash32"
+                    },
+                    {
+                      "type": "object",
+                      "nullable": true,
+                      "enum": [
+                        null
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "maxItems": 5
+          }
+        }
+      },
+      "HealthReady": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "database",
+              "publicationBlock",
+              "rawDecodeComplete",
+              "rawDecodeIssues",
+              "ignoredAncillaryEvents",
+              "status",
+              "indexer",
+              "publication",
+              "projectionStatus",
+              "projectionLagBlocks"
+            ],
+            "properties": {
+              "database": {
+                "type": "string",
+                "enum": [
+                  "up"
+                ]
+              },
+              "recoveryStatus": {
+                "$ref": "#/components/schemas/RecoveryStatus"
+              },
+              "publicationBlock": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/DecimalUint"
+                  },
+                  {
+                    "type": "object",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              },
+              "rawDecodeComplete": {
+                "type": "boolean"
+              },
+              "rawDecodeIssues": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "unknownTopics",
+                  "decodeErrors"
+                ],
+                "properties": {
+                  "unknownTopics": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "decodeErrors": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
+              "ignoredAncillaryEvents": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "ok",
+                  "degraded"
+                ]
+              },
+              "indexer": {
+                "type": "string",
+                "enum": [
+                  "synced",
+                  "lagging"
+                ]
+              },
+              "publication": {
+                "type": "string",
+                "enum": [
+                  "ready"
+                ]
+              },
+              "projectionStatus": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "lagging"
+                ]
+              },
+              "projectionLagBlocks": {
+                "$ref": "#/components/schemas/DecimalUint"
+              }
+            }
+          }
+        }
+      },
+      "HealthUnavailable": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "context",
+              "data"
+            ],
+            "properties": {
+              "context": {
+                "$ref": "#/components/schemas/NotReadyContext"
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "database",
+                  "publicationBlock",
+                  "rawDecodeComplete",
+                  "rawDecodeIssues",
+                  "ignoredAncillaryEvents",
+                  "status",
+                  "indexer",
+                  "publication",
+                  "projectionStatus",
+                  "projectionLagBlocks"
+                ],
+                "properties": {
+                  "database": {
+                    "type": "string",
+                    "enum": [
+                      "up"
+                    ]
+                  },
+                  "recoveryStatus": {
+                    "$ref": "#/components/schemas/RecoveryStatus"
+                  },
+                  "publicationBlock": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/DecimalUint"
+                      },
+                      {
+                        "type": "object",
+                        "nullable": true,
+                        "enum": [
+                          null
+                        ]
+                      }
+                    ]
+                  },
+                  "rawDecodeComplete": {
+                    "type": "boolean"
+                  },
+                  "rawDecodeIssues": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "unknownTopics",
+                      "decodeErrors"
+                    ],
+                    "properties": {
+                      "unknownTopics": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "decodeErrors": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "ignoredAncillaryEvents": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "unavailable"
+                    ]
+                  },
+                  "indexer": {
+                    "type": "string",
+                    "enum": [
+                      "not_ready"
+                    ]
+                  },
+                  "publication": {
+                    "type": "string",
+                    "enum": [
+                      "not_ready"
+                    ]
+                  },
+                  "projectionStatus": {
+                    "type": "string",
+                    "enum": [
+                      "not_ready"
+                    ]
+                  },
+                  "projectionLagBlocks": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "context",
+              "data"
+            ],
+            "properties": {
+              "context": {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              },
+              "data": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "database",
+                  "indexer",
+                  "publication"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "unavailable"
+                    ]
+                  },
+                  "database": {
+                    "type": "string",
+                    "enum": [
+                      "down"
+                    ]
+                  },
+                  "indexer": {
+                    "type": "string",
+                    "enum": [
+                      "not_ready"
+                    ]
+                  },
+                  "publication": {
+                    "type": "string",
+                    "enum": [
+                      "not_ready"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "error"
+        ],
+        "properties": {
+          "context": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReadyContext"
+              },
+              {
+                "$ref": "#/components/schemas/NotReadyContext"
+              },
+              {
+                "type": "object",
+                "nullable": true,
+                "enum": [
+                  null
+                ]
+              }
+            ]
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message",
+              "details",
+              "retryable"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_ARGUMENT",
+                  "INVALID_PROPOSAL_ID",
+                  "INVALID_CURSOR",
+                  "CURSOR_CONTEXT_MISMATCH",
+                  "DEPLOYMENT_NOT_FOUND",
+                  "PROPOSAL_NOT_FOUND",
+                  "SNAPSHOT_INVALIDATED",
+                  "SNAPSHOT_UNAVAILABLE",
+                  "DATA_NOT_READY"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "retryable": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Summary"
+          }
+        }
+      },
+      "ProposalsResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Proposal"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "ProposalResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Proposal"
+          }
+        }
+      },
+      "VotesResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vote"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "TransfersResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "context",
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ReadyContext"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transfer"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      }
+    }
+  }
+}

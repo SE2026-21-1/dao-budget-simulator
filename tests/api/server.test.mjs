@@ -4,6 +4,7 @@ import { after, before, test } from 'node:test';
 import pg from 'pg';
 import { AbiCoder, id, keccak256, toUtf8Bytes } from 'ethers';
 import { createApiServer } from '../../indexer/api/server.ts';
+import { responseValidator } from './contract.mjs';
 
 const { Pool } = pg;
 const secret = 'be05-local-test-secret-012345678901234567890123456789';
@@ -28,6 +29,7 @@ let snapshotRevision;
 let oldProposalCursor;
 let proposalIds = [];
 let businessBefore;
+let validateResponse;
 const coder = AbiCoder.defaultAbiCoder();
 
 function databaseUrl() {
@@ -149,8 +151,12 @@ function apiUrl(path, params = {}) {
   return `${base}${path}?${search}`;
 }
 async function get(path, params = {}) {
-  const response = await fetch(apiUrl(path, params));
-  return { status: response.status, body: await response.json() };
+  const url = new URL(apiUrl(path, params));
+  const response = await fetch(url);
+  const body = await response.json();
+  const contractPath = url.pathname.replace(/^\/api\/proposals\/[^/]+/, '/api/proposals/{id}');
+  validateResponse(contractPath, response.status, body);
+  return { status: response.status, body };
 }
 
 before(async () => {
@@ -163,6 +169,9 @@ before(async () => {
   server = createApiServer({ pool, cursorSecret: secret, snapshotTtlSeconds: 900 });
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
   base = `http://127.0.0.1:${server.address().port}/api`;
+  const contract = await fetch(new URL('/openapi.json', base));
+  assert.equal(contract.status, 200);
+  validateResponse = await responseValidator(await contract.json());
 });
 
 after(async () => {

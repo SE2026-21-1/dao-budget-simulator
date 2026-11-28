@@ -1,0 +1,27 @@
+Run ID: TV3-issue19-readiness-20261128T094833Z
+Scope: environment inspection, not a live wallet run
+2026-11-28T09:49:59Z
+v24.15.0
+11.12.1
+
+WSL listeners (read-only):
+LISTEN 0      200        127.0.0.1:5432      0.0.0.0:*   
+
+Windows Chrome debug capability (no command line/profile contents):
+{"ProcessId":32612,"RemoteDebugging":false,"CustomProfile":false}
+
+Windows local test listeners (read-only):
+[]
+
+Retained candidate logs: size/mtime only, not historical request correlation:
+/mnt/d/DAO-Budget-Simulator/.local-tv3/postgres.log | bytes=45480 | modified=2026-11-08 19:36:56.888524900 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/user/api.stdout.log | bytes=49 | modified=2026-11-04 16:30:40.015557800 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/user/api.stderr.log | bytes=0 | modified=2026-11-04 16:30:39.653575400 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/user/worker.stdout.log | bytes=102 | modified=2026-11-04 16:30:40.279647300 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/user/worker.stderr.log | bytes=95 | modified=2026-11-04 16:30:40.280649500 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/v2/api.stdout.log | bytes=49 | modified=2026-11-08 17:52:26.639131300 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/v2/api.stderr.log | bytes=0 | modified=2026-11-08 17:52:21.404921100 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/v2/worker.stdout.log | bytes=3136002 | modified=2026-11-08 19:36:56.401574000 +0700
+/mnt/d/DAO-Budget-Simulator/.local-tv3/v2/worker.stderr.log | bytes=0 | modified=2026-11-08 17:52:21.391910300 +0700
+
+Completed environment inspection

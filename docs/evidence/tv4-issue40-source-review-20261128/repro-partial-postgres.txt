@@ -1,0 +1,11 @@
+TV4 independent source review; exact descendant ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26
+STARTED_AT_UTC=2026-11-28T13:31:45.214767+00:00
+FINISHED_AT_UTC=2026-11-28T13:31:45.781763+00:00
+CWD=/tmp/dao-tv4-issue40-source-review
+SHELL=bash -o pipefail -c
+COMMAND=node /tmp/tv4-20261128/Issue40OwnershipReview-partial-pg-repro.mjs /tmp/dao-tv4-issue40-source-review
+EXIT_CODE=0
+--- STDOUT (verbatim stream) ---
+{"startupStatus":1,"missingPidAndIdentity":true,"fixtureSurvivesAutomaticCleanup":true,"explicitReviewerRecovery":"authenticated SIGINT"}
+
+--- STDERR (verbatim stream) ---

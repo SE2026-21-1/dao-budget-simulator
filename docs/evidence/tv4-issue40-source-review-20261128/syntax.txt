@@ -1,0 +1,10 @@
+TV4 independent source review; exact descendant ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26
+STARTED_AT_UTC=2026-11-28T13:31:43.300931+00:00
+FINISHED_AT_UTC=2026-11-28T13:31:44.471507+00:00
+CWD=/tmp/dao-tv4-issue40-source-review
+SHELL=bash -o pipefail -c
+COMMAND=bash -n scripts/be09-local.sh && for f in scripts/be09-{rpc,safety,metadata,readiness,register,verify,provenance}.mjs tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs; do node --check "$f" || exit; done
+EXIT_CODE=0
+--- STDOUT (verbatim stream) ---
+
+--- STDERR (verbatim stream) ---

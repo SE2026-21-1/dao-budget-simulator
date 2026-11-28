@@ -1,0 +1,427 @@
+{
+  "recordedAtUtc": "2026-11-28T13:36:27.998630+00:00",
+  "reviewer": "dung0611 / TV4",
+  "source": {
+    "baseline": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+    "baselineTree": "4e69dbc53de4c8c5a90a0fbeb32d1c423e3adb6c",
+    "descendant": "ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26",
+    "descendantTree": "9ef02abba03a1612a9b6ecfd2ac443214df326aa",
+    "directParentMatches": true,
+    "branch": "tv3/issue40-rpc-isolation-20261128",
+    "reviewCheckout": "/tmp/dao-tv4-issue40-source-review",
+    "initialStatus": "clean",
+    "productionEdits": false,
+    "repositoryGuidance": "AGENTS.md read on exact baseline lineage",
+    "dependencyLockfilesUnchanged": true,
+    "outsideIntegratedDevAncestry": true
+  },
+  "toolchain": {
+    "node": {
+      "path": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+      "version": "v24.15.0"
+    },
+    "npm": {
+      "path": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/npm",
+      "version": "11.12.1"
+    },
+    "bash": {
+      "path": "/usr/bin/bash",
+      "version": "5.3.0(1)-release"
+    },
+    "forgeAnvil": {
+      "version": "1.8.5",
+      "commit": "51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f"
+    },
+    "postgresql": "18.4 required by source; binaries not on reviewer PATH; no real PostgreSQL/preflight/lifecycle run",
+    "dependencyInstall": {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund --cache /tmp/tv4-20261128/issue40-npm-cache",
+      "exit": 0,
+      "packages": 30
+    },
+    "submodules": {
+      "lib/forge-std": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219",
+      "lib/openzeppelin-contracts": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+      "lib/openzeppelin-contracts/lib/erc4626-tests": "232ff9ba8194e406967f52ecc5cb52ed764209e9",
+      "lib/openzeppelin-contracts/lib/forge-std": "3b20d60d14b343ee4f908cb8079495c07f5e8981",
+      "lib/openzeppelin-contracts/lib/halmos-cheatcodes": "7328abe100445fc53885c21d0e713b95293cf14c"
+    }
+  },
+  "integrity": {
+    "source": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "bytes": 16031,
+        "sha256": "3d3c5c8b8b046249fb8c36bc646bb04fe98d4d0359826aabe6b522d8be2daf69"
+      },
+      {
+        "path": "scripts/be09-local.sh",
+        "bytes": 22646,
+        "sha256": "a59b247b048ab57ef2768d8c8f559648ddc7c9fa0c2748d68de6fefe970bef79"
+      },
+      {
+        "path": "scripts/be09-rpc.mjs",
+        "bytes": 1529,
+        "sha256": "94a98f7c5a65297ee0044e2f0f27b4806c4e91c62775faab6b49c1e8c6851f59"
+      },
+      {
+        "path": "scripts/be09-safety.mjs",
+        "bytes": 13916,
+        "sha256": "3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed"
+      },
+      {
+        "path": "scripts/be09-metadata.mjs",
+        "bytes": 12196,
+        "sha256": "8f5bc42618bb0262952ffdfa6fab82c0ec18aa65abf817f5da10113a0baa244f"
+      },
+      {
+        "path": "scripts/be09-readiness.mjs",
+        "bytes": 2881,
+        "sha256": "e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda"
+      },
+      {
+        "path": "scripts/be09-register.mjs",
+        "bytes": 9170,
+        "sha256": "d15e6bed9cdd7be4ef196dcc2c36b434c12f46e6d559a60226d9a6d63c3b12f2"
+      },
+      {
+        "path": "scripts/be09-verify.mjs",
+        "bytes": 34243,
+        "sha256": "0fc2c3d71b643eaf44d767f41d87ef416fb56ff18384d9554694158dbf82dcfc"
+      },
+      {
+        "path": "scripts/be09-provenance.mjs",
+        "bytes": 1312,
+        "sha256": "6a0c22ea884be39ae746a4eb85ce17c5e077717d53890d0fcf5db59a29d9df2a"
+      },
+      {
+        "path": "tests/be09-rpc.test.mjs",
+        "bytes": 2934,
+        "sha256": "363937df5e4a55ddd8167094feb87fc4e76f1355499cc3108c07b5b569f24bef"
+      },
+      {
+        "path": "tests/be09-registration.test.mjs",
+        "bytes": 9418,
+        "sha256": "77921a834f3eb80085ab1420577783cf38814d2931e3ce1c3ceb44da9dc1d0a0"
+      },
+      {
+        "path": "tests/be09-runner-allocation.test.mjs",
+        "bytes": 4136,
+        "sha256": "34e2d38ff5e27df88d815f7a41323b6c4c08718b7715e28a39c2df5f64fad2dc"
+      },
+      {
+        "path": "tests/be09-metadata.test.mjs",
+        "bytes": 8431,
+        "sha256": "9ddd5e2f55a2ba67c4a53e871619f9149971e25448bc3cc6c46603ee1c37dba7"
+      },
+      {
+        "path": "tests/be09-status-safety.test.mjs",
+        "bytes": 2527,
+        "sha256": "7058641e6deeeb4791ee97137d40498d26b6d3c57bcc2f041326dbb3d0bc1a1d"
+      },
+      {
+        "path": "tests/be09-safety.test.mjs",
+        "bytes": 18912,
+        "sha256": "c6f92467bc3c8a24765f4e4fa55db75ecde59850550baad4e7e1be633bce7a31"
+      },
+      {
+        "path": "tests/be09-ownership.test.mjs",
+        "bytes": 4392,
+        "sha256": "bb48c0576d1b1668ce375fc10626ff039d587afefcc96c24b9766e6d6ebdc6b9"
+      },
+      {
+        "path": "docs/evidence/be09-20261106/local-status.test.mjs",
+        "bytes": 2271,
+        "sha256": "2edd4b3300f2a397667e3e216ab9c02385392d362ce816296a0cc0a8a73955c3"
+      },
+      {
+        "path": "docs/evidence/be09-20261106/toolchain-preflight.test.mjs",
+        "bytes": 5076,
+        "sha256": "07b59a12d095fed2ec2e08bb4b67c21be613d56fdd6bfe65dd319ad75b4d8dc5"
+      },
+      {
+        "path": "docs/evidence/be09-20261106/readiness.test.mjs",
+        "bytes": 7160,
+        "sha256": "fa01486a35e29574980c7363de502b21d0ba81cf8e3758147c8350cb0aabb473"
+      },
+      {
+        "path": "docs/issue40-restoration-b.md",
+        "bytes": 10601,
+        "sha256": "690d2f5a72373666f0e101450b3c3905fc28a781779f6cdab6a3206b4e76af7c"
+      }
+    ],
+    "packet": [
+      {
+        "path": "README.md",
+        "bytes": 11470,
+        "sha256": "1983352605bffb069e612e4477cebba5a21188c6bb9b30747541967d0f5a8858"
+      },
+      {
+        "path": "SOURCE_SHA256SUMS.txt",
+        "bytes": 1942,
+        "sha256": "e558fc5068b892a203a002e44cc2774a1b01ffa556f55823f1c12efa2b2e6de9"
+      },
+      {
+        "path": "before-bind-race-reproduction.txt",
+        "bytes": 2722,
+        "sha256": "3896b9bf295a3e2753fa6ac32ffb425d37fa274f1a36f73c0f858775fcaf78b8"
+      },
+      {
+        "path": "before-bind-race.txt",
+        "bytes": 1488,
+        "sha256": "d508b6077bf24ffbfeb7b1cf234ff5b9c851a4e91c753e697b2887cf6d2a12ad"
+      },
+      {
+        "path": "before-registration-metadata.txt",
+        "bytes": 527,
+        "sha256": "ade90106dcf3bd0aa20c18fdee8db453e09c8d5e363f0e8bfd5a073818a40d6e"
+      },
+      {
+        "path": "before-registration.txt",
+        "bytes": 1979,
+        "sha256": "3389dbb5e17642c44cf8e6d4136c963932be85952d77ab2659a8cd4ac6da772a"
+      },
+      {
+        "path": "before-status.txt",
+        "bytes": 2334,
+        "sha256": "2878df2bff0f09d5d1ff0dc1958214ed5469a9a9860652c376934beff46ef3be"
+      },
+      {
+        "path": "focused-tests-final.txt",
+        "bytes": 9038,
+        "sha256": "5db15489873ccdcb34ed450d3b6efdac9582e1ecfb78ea625c97742e3d7ef30c"
+      },
+      {
+        "path": "focused-tests-publication.txt",
+        "bytes": 9145,
+        "sha256": "ccd4568d3d2390e352efee406c7c3bcb66848ea5e3ecf93de438fa900a9d8d6b"
+      },
+      {
+        "path": "focused-tests.txt",
+        "bytes": 8770,
+        "sha256": "2d4ae76913eabc59348e34ad538bf3c10a83f75a8d9c1608880d753178f9fdee"
+      },
+      {
+        "path": "hygiene-publication.txt",
+        "bytes": 934,
+        "sha256": "07d56c5523ea53d0fd02e7ca4db7a88f9d14b6821fac627216f7b967a675daaf"
+      },
+      {
+        "path": "hygiene.txt",
+        "bytes": 589,
+        "sha256": "b946a3fb199bc7abcdf03ad04211f991f56641f4d444d0ddd266334efe50b17d"
+      },
+      {
+        "path": "root-build-publication.txt",
+        "bytes": 125,
+        "sha256": "6867c238d2e96c31ea7950499ae99f6b8ff923876a68d597bfaa2caefcf52b87"
+      },
+      {
+        "path": "root-build.txt",
+        "bytes": 125,
+        "sha256": "2b4f73abd9f973410e46efc1f4d9c930ece1dc0ba12e99b4ebf30887cfd53188"
+      },
+      {
+        "path": "root-typecheck-publication.txt",
+        "bytes": 119,
+        "sha256": "e6ec9d5755808aadca88e2daf66bb2a0ed32811d22e71e095bbe8fd4efe0d04e"
+      },
+      {
+        "path": "root-typecheck.txt",
+        "bytes": 119,
+        "sha256": "ad81a95c883dcf2e0622cc7f441f142e14793086cb9be644c81b9b8652937071"
+      },
+      {
+        "path": "syntax-final.txt",
+        "bytes": 457,
+        "sha256": "beec4ab198e689f8dabd6ffa513676b0e311428f4f82814291eb55d3eb78ad57"
+      },
+      {
+        "path": "syntax-publication.txt",
+        "bytes": 457,
+        "sha256": "e6c03a701b6e5798683ad49e4eeefd25c848baa98f3f74e056ae0a42a2001953"
+      },
+      {
+        "path": "syntax.txt",
+        "bytes": 457,
+        "sha256": "a77ac4d5ec7d7ec44f59763ead0fb2dd1723cc88baaa9f1c57d914f4a14b1499"
+      },
+      {
+        "path": "toolchain.txt",
+        "bytes": 1073,
+        "sha256": "3655e6e2e361f55b374f37db79291effa1b6495038ebf56f7d16a6a210dc4adf"
+      }
+    ],
+    "packetInventorySha256": "1219ee02a77289c4c91afc6cc0e0d54a6d63c3b90e01cb147e65533f77cbdb4e",
+    "historical766ByteIdenticalByBlobAndMode": true,
+    "historicalBaselineFiles": 769,
+    "migratedExecutableTests": [
+      "docs/evidence/be09-20261106/local-status.test.mjs",
+      "docs/evidence/be09-20261106/readiness.test.mjs",
+      "docs/evidence/be09-20261106/toolchain-preflight.test.mjs"
+    ],
+    "retainedHistoricalFiles": 766,
+    "historicalActualBytesCompared": 766,
+    "historicalByteCatalogSha256": "79772b0d771d0f6e09d9117111f6bb7d1d4e7d6ccc86cadc0d6a6b6b251da91a"
+  },
+  "independentExecutions": [
+    {
+      "name": "focused-regressions",
+      "command": "node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs",
+      "cwd": "/tmp/dao-tv4-issue40-source-review",
+      "shell": "bash -o pipefail -c",
+      "startedAtUtc": "2026-11-28T13:31:28.177556+00:00",
+      "finishedAtUtc": "2026-11-28T13:31:43.300056+00:00",
+      "exitCode": 0,
+      "rawLog": "focused-regressions.txt"
+    },
+    {
+      "name": "syntax",
+      "command": "bash -n scripts/be09-local.sh && for f in scripts/be09-{rpc,safety,metadata,readiness,register,verify,provenance}.mjs tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs; do node --check \"$f\" || exit; done",
+      "cwd": "/tmp/dao-tv4-issue40-source-review",
+      "shell": "bash -o pipefail -c",
+      "startedAtUtc": "2026-11-28T13:31:43.300931+00:00",
+      "finishedAtUtc": "2026-11-28T13:31:44.471507+00:00",
+      "exitCode": 0,
+      "rawLog": "syntax.txt"
+    },
+    {
+      "name": "repro-diagnostic",
+      "command": "node /tmp/tv4-20261128/Issue40MetadataReview-repro.mjs /tmp/dao-tv4-issue40-source-review",
+      "cwd": "/tmp/dao-tv4-issue40-source-review",
+      "shell": "bash -o pipefail -c",
+      "startedAtUtc": "2026-11-28T13:31:44.472020+00:00",
+      "finishedAtUtc": "2026-11-28T13:31:45.212072+00:00",
+      "exitCode": 0,
+      "rawLog": "repro-diagnostic.txt"
+    },
+    {
+      "name": "repro-partial-postgres",
+      "command": "node /tmp/tv4-20261128/Issue40OwnershipReview-partial-pg-repro.mjs /tmp/dao-tv4-issue40-source-review",
+      "cwd": "/tmp/dao-tv4-issue40-source-review",
+      "shell": "bash -o pipefail -c",
+      "startedAtUtc": "2026-11-28T13:31:45.214767+00:00",
+      "finishedAtUtc": "2026-11-28T13:31:45.781763+00:00",
+      "exitCode": 0,
+      "rawLog": "repro-partial-postgres.txt"
+    }
+  ],
+  "regressionSummary": {
+    "files": 11,
+    "nodeTotalIncludingNestedTests": 108,
+    "pass": 108,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0,
+    "nodeDurationMs": 14774.858915,
+    "syntax": {
+      "shellFiles": 1,
+      "javascriptFiles": 18,
+      "exit": 0
+    }
+  },
+  "reproductionObservations": {
+    "F40-1": {
+      "result": "REPRODUCED_IN_OFFLINE_SHIMS",
+      "actualMetadataValidation": true,
+      "missingApiIdentity": true,
+      "mockedReadinessAndPostgresOwnership": true,
+      "attemptedApiRequests": [
+        "http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=be09-local-20261128T120000Z-0123456789ab",
+        "http://127.0.0.1:3300/api/summary?chainId=31337&deploymentId=be09-local-20261128T120000Z-0123456789ab"
+      ],
+      "attemptedDbConnections": 2,
+      "realNetworkConnections": 0,
+      "realDatabaseConnections": 0,
+      "serviceStarts": 0,
+      "signals": 0
+    },
+    "F40-2": {
+      "startupStatus": 1,
+      "missingPidAndIdentity": true,
+      "fixtureSurvivesAutomaticCleanup": true,
+      "explicitReviewerRecovery": "authenticated SIGINT"
+    },
+    "interpretation": "Harness exit0 asserts bug reproduction, not sourcePASS. Diagnostic calls intercepted before I/O; PostgreSQL timeout modeled with shim + private Node fixture, not real PG."
+  },
+  "findings": [
+    {
+      "id": "F40-1",
+      "severity": "P1",
+      "blocking": true,
+      "path": "scripts/be09-local.sh",
+      "lines": "310-320 (316)",
+      "callee": "scripts/be09-diagnose.mjs:77-89",
+      "invariant": "no API probe without live exact-run ownership",
+      "reproduction": "repro-diagnostic",
+      "harnessExit": 0,
+      "actualAttemptedApiRequests": 2,
+      "realNetworkConnections": 0,
+      "minimalFix": "Guard/skip diagnostic HTTP when API unowned; preserve authenticated offline/DB-only diagnostics and add failure-branch regression."
+    },
+    {
+      "id": "F40-2",
+      "severity": "P2",
+      "blocking": true,
+      "path": "scripts/be09-local.sh",
+      "lines": "265-270;cleanup123-143",
+      "invariant": "authenticate capturable private postmaster on pg_ctl failure before cleanup",
+      "reproduction": "repro-partial-postgres",
+      "harnessExit": 0,
+      "startupShimExit": 1,
+      "fixtureSurvivesAutomaticCleanup": true,
+      "explicitReviewerRecovery": "authenticated SIGINT to own Node fixture",
+      "minimalFix": "Handle pg_ctl nonzero, attempt existing full canonical identity capture before propagating original failure; keep unknown untouched; add partial-startup regression."
+    }
+  ],
+  "disposition": {
+    "sourceReview": "CHANGES_REQUESTED",
+    "commentId": 7240016843,
+    "commentUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240016843",
+    "issueState": "OPEN/HOLD",
+    "runtime": "SKIP",
+    "actualAllocationGranted": false,
+    "runtimeAuthorizationGranted": false,
+    "tv2SourceApprovalStillRequired": true,
+    "reviewCompleted": true
+  },
+  "remainingGates": [
+    "TV3 fixes F40-1/F40-2 with focused regressions and new sealed full descendant",
+    "TV2 and TV4 accept same full descendant SHA",
+    "receiver owner/controller confirmation and actual four-port allocation",
+    "canonical checkout/state root/PGDATA/private socket",
+    "approved Windows foreground control fullSHA/lockfile/config/actual Node+npm executable versions",
+    "fresh Windows+WSL availability/ownership/route evidence",
+    "preregistered attempt and explicit execution permission"
+  ],
+  "project": {
+    "status": "NOT_UPDATED",
+    "reason": "Existing authenticated browser relay unavailable; API token lacks project scope; no permissions/authentication changes",
+    "retriedThisReview": false
+  },
+  "runtimeOperations": [],
+  "fixtures": "108 suite uses own Linux highport60000-64999/process/proc fixtures plus mocked fetch/metadata/grace and PostgreSQL shims. Reviewer diagnostic uses no sockets; reviewer partialPG uses own direct Node child and authenticated SIGINT, no database/listener. No protected/candidate endpoint contact.",
+  "ci": {
+    "hookCommandUpdated": true,
+    "runsAtExactDescendant": [],
+    "dispatchRequested": false,
+    "passClaimed": false
+  },
+  "rootTypecheckBuild": "not rerun: no TypeScript/frontend delta; user-required focused regression and syntax cover changed JS/shell tooling",
+  "restorationB": "14-step design retained with conditions; no Windows control executed or literal tool/config approval granted",
+  "priorAcceptancesRetained": [
+    "Windows/WSL inventory access",
+    "readiness evidence",
+    "approved baseline preflight",
+    "conditional RPC isolation/restoration B design",
+    "implementation permission"
+  ],
+  "unrelatedScopeUntouched": [
+    "Issue20/Sepolia",
+    "PR64 source/review",
+    "live MetaMask",
+    "historical503 investigation",
+    "BE06/BE08/BE09/governance campaigns",
+    "OpenStack staging",
+    "main/tag/release"
+  ]
+}

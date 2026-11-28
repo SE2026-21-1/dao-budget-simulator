@@ -1,0 +1,11 @@
+TV4 independent source review; exact descendant ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26
+STARTED_AT_UTC=2026-11-28T13:31:44.472020+00:00
+FINISHED_AT_UTC=2026-11-28T13:31:45.212072+00:00
+CWD=/tmp/dao-tv4-issue40-source-review
+SHELL=bash -o pipefail -c
+COMMAND=node /tmp/tv4-20261128/Issue40MetadataReview-repro.mjs /tmp/dao-tv4-issue40-source-review
+EXIT_CODE=0
+--- STDOUT (verbatim stream) ---
+{"result":"REPRODUCED_IN_OFFLINE_SHIMS","actualMetadataValidation":true,"missingApiIdentity":true,"mockedReadinessAndPostgresOwnership":true,"attemptedApiRequests":["http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=be09-local-20261128T120000Z-0123456789ab","http://127.0.0.1:3300/api/summary?chainId=31337&deploymentId=be09-local-20261128T120000Z-0123456789ab"],"attemptedDbConnections":2,"realNetworkConnections":0,"realDatabaseConnections":0,"serviceStarts":0,"signals":0}
+
+--- STDERR (verbatim stream) ---

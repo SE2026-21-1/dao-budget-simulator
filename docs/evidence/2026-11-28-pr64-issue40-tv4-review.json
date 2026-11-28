@@ -1,0 +1,1440 @@
+{
+  "recordedAtUtc": "2026-11-28T11:55:37.758108+00:00",
+  "reviewer": "dung0611 / TV4",
+  "scope": "PR64 immutable source/tooling/producer bytes; Issue40 supplied readiness bytes and conditional design only",
+  "pr64": {
+    "servedSource": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+    "runId": "TV3-MM-boundary-20261128T100609709Z",
+    "checksums": {
+      "tv3-issue19-20261128": {
+        "payloadCount": 13,
+        "checksumInventorySha256": "e959f7586a6c03599356388b5286dfcdc68361f13e3b897a9404431f06ec83f2",
+        "inventory": [
+          {
+            "path": "README.md",
+            "bytes": 10829,
+            "sha256": "7e0906327b75c80cc95ce47305d5d1290df34dd9d046c531e85af714c7fd5bb2"
+          },
+          {
+            "path": "dev-ci.json",
+            "bytes": 205,
+            "sha256": "34c0491ed9690d108c18ea196263aa9926de6bb3aff1b0af24167c5a2a33e02e"
+          },
+          {
+            "path": "environment.txt",
+            "bytes": 1576,
+            "sha256": "66d53bb98c81ef25d1fd1c45f588c0789acbca8c33e3e3520a48744b342fdca0"
+          },
+          {
+            "path": "frontend-lint.txt",
+            "bytes": 1984,
+            "sha256": "a769fe8d10e63e433ea40b1be19787c956ad9939668936f593ff595baf0f02c4"
+          },
+          {
+            "path": "frontend-production-build.txt",
+            "bytes": 1518,
+            "sha256": "fef1c4d1af07f14a8f2384937d76b9a6529373190dc326911c5aac6352aa83aa"
+          },
+          {
+            "path": "frontend-targeted-tests.txt",
+            "bytes": 672,
+            "sha256": "c038ef276c9acbd10785d19a3af442382508efff3d7daff2c3316135577f046d"
+          },
+          {
+            "path": "pr63.json",
+            "bytes": 239,
+            "sha256": "3f4fdc45b16bfead1a8167a6ccf9c5f9dfdafaaa58434b13c152842d298ed137"
+          },
+          {
+            "path": "qa07-snapshot-tests.txt",
+            "bytes": 2329,
+            "sha256": "5e1fe2e76027cda51501d22fdf3d6d0e405b5f194135f9277f9d8016ad019c83"
+          },
+          {
+            "path": "record.json",
+            "bytes": 5053,
+            "sha256": "e0fc84e09dab05a4ef7b51c995e441aac3b9117ce6a3cc83db2efc057779a7ae"
+          },
+          {
+            "path": "root-typecheck.txt",
+            "bytes": 147,
+            "sha256": "2c72a1ebe4728406c639dcb7d2deacfb4709cc50fa2012b4fd1408b8a9ee1c17"
+          },
+          {
+            "path": "tv2-503-investigation.json",
+            "bytes": 3126,
+            "sha256": "a723bdf855655c748100392d7a9ee528394596fb5222742d34ffd38829164c17"
+          },
+          {
+            "path": "tv4-acceptance.json",
+            "bytes": 2309,
+            "sha256": "bab36b0818cca8b20f4907196a139d1daa30731c25c1cf18de0282503a892e07"
+          },
+          {
+            "path": "verification.json",
+            "bytes": 2490,
+            "sha256": "f1b182796f764fed5c6349ce42d1a7ed70dd67a72847da1ae9f5f4a9bf21d015"
+          }
+        ]
+      },
+      "tv3-issue19-live-20261128": {
+        "payloadCount": 42,
+        "checksumInventorySha256": "e1651c331e3b09b98fe629054926948a193739ac84f23d2d80ebeb14b13a0ef7",
+        "inventory": [
+          {
+            "path": "A-draft.json",
+            "bytes": 3036,
+            "sha256": "bdd277e32585753f590ccf5a6cf26cf0ffe1e66db37104f6653678ca6bcc8819"
+          },
+          {
+            "path": "A-draft.png",
+            "bytes": 192328,
+            "sha256": "49c24affaef4da37a5ec58f0a1129201dd2713fc83a96cdb7c958723911be799"
+          },
+          {
+            "path": "A-return.json",
+            "bytes": 3139,
+            "sha256": "ab8d9070eeaecccc166f13524e395c50512761b2e96355ce8d88fdcc11862122"
+          },
+          {
+            "path": "B-before-submit.json",
+            "bytes": 3032,
+            "sha256": "fd38a2b1121a18b4e078006f4e87b08ecbe515a462c85adaafc92eb47fdf858d"
+          },
+          {
+            "path": "B-blocked.json",
+            "bytes": 3162,
+            "sha256": "7ea5a53b72b9a6693b080fcc5a21bce9c20145a9886c23bf91dd9dfa8857240a"
+          },
+          {
+            "path": "B-blocked.webp",
+            "bytes": 72764,
+            "sha256": "db2e3086d1ac03ccb0d0ec942d397ccb7f3038244acb695b0cf66e0fd7b92ac8"
+          },
+          {
+            "path": "README.md",
+            "bytes": 15621,
+            "sha256": "80932d361d49ad64222e1c3e763a76de1a6d00497d32d077f19f3af6bb6edd28"
+          },
+          {
+            "path": "anvil.stderr.log.gz",
+            "bytes": 37,
+            "sha256": "0bc1e05639d7fcedfc634c060de2b092f6d4bde6b535e3edbd46e783d8e92eb1"
+          },
+          {
+            "path": "anvil.stdout.log.gz",
+            "bytes": 37,
+            "sha256": "e2025ebf0c90aec4bddbd373b1b7537c373a020dc8a327d4e3af18b4332d6e96"
+          },
+          {
+            "path": "backend-state.json",
+            "bytes": 1029,
+            "sha256": "e1509325682e0ae41576e7165af5d1b88b51673c3c43adb2b238da5bc884d920"
+          },
+          {
+            "path": "capture-finished.json",
+            "bytes": 336,
+            "sha256": "6e843eda3db190ac46c45d7638fe99fdc63feec3724cea73869a148033126152"
+          },
+          {
+            "path": "check-frontend-lint.txt",
+            "bytes": 1984,
+            "sha256": "09770869400b9bfcec38b8ed2b08caf02ea78905164336dd2061007f71271a07"
+          },
+          {
+            "path": "check-frontend-production-build.txt",
+            "bytes": 1518,
+            "sha256": "2847d1f358af6e55d9290af79d1dd3152c34ee5d9ebb3daa6163589631b28430"
+          },
+          {
+            "path": "check-frontend-targeted-tests.txt",
+            "bytes": 672,
+            "sha256": "05872a4c344898761e0a8ce6ccbeed329bc5d38cc768167782a7200dfc0c05e6"
+          },
+          {
+            "path": "check-observer-and-qa07-tests.txt",
+            "bytes": 2782,
+            "sha256": "2ab76740096082e5eade156b709c7abcfc71a6f84d90088b8803088c25a36c23"
+          },
+          {
+            "path": "check-root-typecheck.txt",
+            "bytes": 147,
+            "sha256": "e6cb0169a5633259f4fd021ef73a50e35ab9a497d88421c087605dba7d3fe45f"
+          },
+          {
+            "path": "extension-release.json",
+            "bytes": 420,
+            "sha256": "0033c138a4e3ca119f7e28bf156ec967f07eb9aade68605e27873124c7b87d79"
+          },
+          {
+            "path": "handoff.json",
+            "bytes": 1253,
+            "sha256": "930e96b7c53ec2b6bc45c6933ef01d0a4ba63c3b423376c381d45c02fb6e3b65"
+          },
+          {
+            "path": "http-direct-api.json",
+            "bytes": 3117,
+            "sha256": "d050d96e529415590e9fc28dbc320216b7dbe8db9288c474ab4a9535c99fb76d"
+          },
+          {
+            "path": "http-probe.json",
+            "bytes": 6309,
+            "sha256": "bbbbbb97313da9d3d8142aa5bfd73e4720e87a75f78167567a0c2e17ecad2663"
+          },
+          {
+            "path": "http.jsonl",
+            "bytes": 279119,
+            "sha256": "f5677e177784a87323e32603232dc393186e56b30b27447002c739670529738e"
+          },
+          {
+            "path": "identity.json",
+            "bytes": 1256,
+            "sha256": "20e27b204f24829026d1f5cde9759af6c16e6c069b9bf076549c183ef9edbd46"
+          },
+          {
+            "path": "installed-extension-manifest.json",
+            "bytes": 3612,
+            "sha256": "838aa13ba279886a7446048c2f28e0fbfb473418a78f8ef702944c12d554cf58"
+          },
+          {
+            "path": "installed-extension.png",
+            "bytes": 66679,
+            "sha256": "cc0be124ed2c61991aab6b633e5c81b23d5f31a055a3754016ff369028681c0b"
+          },
+          {
+            "path": "manifest.json",
+            "bytes": 100121,
+            "sha256": "0a8637a9cda0de5a70f5b958a68c7f3010c3836a62f6c537ead2c6bf7df52a5c"
+          },
+          {
+            "path": "postgres.stderr.log.gz",
+            "bytes": 823,
+            "sha256": "abe681d7bc86298e0ddb708042290ab8f60681eb208b713190d4f4a60e0aa868"
+          },
+          {
+            "path": "postgres.stdout.log.gz",
+            "bytes": 40,
+            "sha256": "bbbf66e08778633713c8542ab558efd74d5d58d8557108f4063062abc82b2fa8"
+          },
+          {
+            "path": "preparation-fixture.json",
+            "bytes": 4859,
+            "sha256": "71df40985ec5a58982e22fd467e92da162ffe297fa396389efc212be097a5a62"
+          },
+          {
+            "path": "provider-final.json",
+            "bytes": 33082,
+            "sha256": "9a584a96cf7df3f0adcf709779d8e4f1d148e450f4bc581cd54821fd64c2240d"
+          },
+          {
+            "path": "provider-interval-final.json",
+            "bytes": 32796,
+            "sha256": "d73bb62ebb4925930c6397133a399623ecd6d6b7c10cbcab56f6374d3f4986cf"
+          },
+          {
+            "path": "provider-trace.jsonl",
+            "bytes": 24860,
+            "sha256": "f2aa6559392915372250b962704d741c7a4587782d654d6eba425a410dd271c4"
+          },
+          {
+            "path": "rpc-after-return.json",
+            "bytes": 13004,
+            "sha256": "55fa7c61f15c619c81376dcde4c2252eeae902f39ff1b1d4a59ad92f5a8c2992"
+          },
+          {
+            "path": "rpc-after-submit.json",
+            "bytes": 13004,
+            "sha256": "fbc9a5b181f714c5ae18fdb4e861054b95132daf3755cc087076f8de5adbe5d5"
+          },
+          {
+            "path": "rpc-before.json",
+            "bytes": 13004,
+            "sha256": "f6d01a5c6886bd011c61e0224e507fd225771da11a9923a30f62cb15d9fb6969"
+          },
+          {
+            "path": "run.json",
+            "bytes": 1978,
+            "sha256": "367f85e15a2f01d5b6d091148e40b770392eba190239020593ac3d4792e696b5"
+          },
+          {
+            "path": "runtime-observations.json",
+            "bytes": 3867,
+            "sha256": "af9b6fe7f5c05e9de09bde26859e79b9d464f3466f4675960cdadcdbdd89552a"
+          },
+          {
+            "path": "stack-report.json.gz",
+            "bytes": 280652,
+            "sha256": "b5948d97acab70218973dcd75c0f94b2a4efd3e25a712790ddd41d9cbc8b33ef"
+          },
+          {
+            "path": "verification.json",
+            "bytes": 3862,
+            "sha256": "ee527bb0ed92be799d4ee7080bda54b02440d5fba3e655ea04f85ac15ab8a8ce"
+          },
+          {
+            "path": "vite.stderr.log.gz",
+            "bytes": 36,
+            "sha256": "610ef9199851884d6f863c5c8487b7b1b6a4ba4539f9493213c2e807b72398d3"
+          },
+          {
+            "path": "vite.stdout.log.gz",
+            "bytes": 165,
+            "sha256": "51524d90e077dbe031b07c123ec94c97c7248cf7ee9f97c4ca0c0cfd84b7f37a"
+          },
+          {
+            "path": "worker.stderr.log.gz",
+            "bytes": 38,
+            "sha256": "53753589d2c0299170e256a4852b8ee6da2faba158afbbddd569c5331a7ab17c"
+          },
+          {
+            "path": "worker.stdout.log.gz",
+            "bytes": 8137,
+            "sha256": "07ea3764bd470d382c32b57c84fee1e9803a29de8dd1d5fa35215da893966ba0"
+          }
+        ]
+      }
+    },
+    "sourceHashesVerified": 94,
+    "traceEntries": 78,
+    "interval": {
+      "firstSequence": 52,
+      "lastSequence": 77,
+      "entries": 26,
+      "start": "2026-11-28T10:15:39.776Z",
+      "end": "2026-11-28T10:17:42.867Z",
+      "beforeSubmit": "2026-11-28T10:16:19.922Z",
+      "guardSettled": "2026-11-28T10:16:20.263Z",
+      "sendRequests": 0,
+      "wholeSessionSendRequests": 2,
+      "coverage": [
+        {
+          "id": "provider-1",
+          "installed": true,
+          "stillWrapped": true
+        }
+      ]
+    },
+    "manifestSha256": "0a8637a9cda0de5a70f5b958a68c7f3010c3836a62f6c537ead2c6bf7df52a5c",
+    "extensionIdentity": {
+      "runId": "TV3-MM-boundary-20261128T100609709Z",
+      "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "at": "2026-11-28T10:06:21.436Z",
+      "extension": {
+        "id": "oamaibdaigjnbdconjppnkfdcacinpgn",
+        "name": "MetaMask",
+        "version": "13.58.0",
+        "path": "/tmp/issue19-metamask-release/extension",
+        "state": "ENABLED",
+        "location": "UNPACKED"
+      },
+      "browserVersion": {
+        "version": "150.0.7871.24 (Official Build) (64-bit) ",
+        "useragent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+        "profile_path": "/home/chung2k5/.config/google-chrome-for-testing/Default",
+        "executable_path": "/home/chung2k5/.omp/puppeteer/chrome/linux-150.0.7871.24/chrome-linux64/chrome",
+        "command_line": "/home/chung2k5/.omp/puppeteer/chrome/linux-150.0.7871.24/chrome-linux64/chrome --disable-extensions-except=/tmp/issue19-metamask-release/extension --load-extension=/tmp/issue19-metamask-release/extension --allow-file-access-from-files --remote-debugging-port=37039 --ozone-platform=x11 --flag-switches-begin --flag-switches-end"
+      },
+      "browser": "Chrome/150.0.7871.24",
+      "transport": "owned isolated Chromium, official stable unpacked MetaMask; not a user/CWS profile"
+    },
+    "retainedRequestId": "0x75299a818f18ce4b86ffdf69d62f9b02649919f6a0913504dd1341fd9a59f0e3",
+    "http": {
+      "responses200": 158,
+      "requestsAborted": 2,
+      "historical503Cause": "UNKNOWN"
+    },
+    "limits": [
+      "new run H26 is not historical H26",
+      "screenshot recovered after guard, not continuous video",
+      "profile/ownership producer corroboration, not remote attestation",
+      "no historical503 packet or causal fix",
+      "observer general-tool findings assessed separately"
+    ],
+    "prHead": "08c693ec433e6dd66be2293bdb2e8d07938ab471",
+    "chainHead": {
+      "number": "0x1a",
+      "hash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0"
+    },
+    "ci": [
+      {
+        "id": 46135418396,
+        "event": "pull_request",
+        "head": "08c693ec433e6dd66be2293bdb2e8d07938ab471",
+        "conclusion": "success",
+        "attempt": 1,
+        "jobs": [
+          {
+            "id": 140949529598,
+            "name": "BE01 fixtures and PostgreSQL constraints",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout BE01 schema and fixtures",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check offline API fixtures",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check migration and constraints in isolated PostgreSQL",
+                "conclusion": "success"
+              },
+              {
+                "name": "Record BE01 scope and versions",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload BE01 evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout BE01 schema and fixtures",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529716,
+            "name": "be08-release-gate / be08",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Initialize containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-python@v7.0.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run mkdir -p reports && forge build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Current migrations, DB/crash/reorg/rebuild, contracts and 10-client benchmark",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/upload-artifact@v7.0.2",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-python@v7.0.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Stop containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529727,
+            "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Python",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install pinned Foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Node.js for live receipt verification",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install locked smoke dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build, format, tests and ABI fixture",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify bootstrap authority and recursive dependency provenance",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify historical SC06 provenance and fresh integration quorum mutations",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify interrupted smoke cleans owned processes and files",
+                "conclusion": "success"
+              },
+              {
+                "name": "Exercise Treasury transactions and BE02 live receipt decoding",
+                "conclusion": "success"
+              },
+              {
+                "name": "Exercise final roles, live governance ingestion, restart and raw replay",
+                "conclusion": "success"
+              },
+              {
+                "name": "Reconcile BE04 projections with live governance at confirmed H",
+                "conclusion": "success"
+              },
+              {
+                "name": "Record scope of checks",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload check evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Node.js for live receipt verification",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Install pinned Foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Python",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529798,
+            "name": "BE02 TypeScript and isolated PostgreSQL storage",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout BE02 implementation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install locked dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Typecheck BE02 source and tests",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build BE02",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check BE02 synthetic RPC and decoder behavior",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check BE02 storage and host CLI against isolated PostgreSQL",
+                "conclusion": "success"
+              },
+              {
+                "name": "Record BE02 scope, exact revision and tool versions",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload BE02 evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout BE02 implementation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529809,
+            "name": "BE04 projection semantics and atomic PostgreSQL publication",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm run typecheck && npm run build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm run test:be04",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm run test:be04:db",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529832,
+            "name": "Container build, release validation and Compose smoke",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci && forge build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify release rejection cases",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build all application images without deployment secrets",
+                "conclusion": "success"
+              },
+              {
+                "name": "Smoke real services and preserve PostgreSQL data across recreation",
+                "conclusion": "success"
+              },
+              {
+                "name": "Save the exact tested image set",
+                "conclusion": "skipped"
+              },
+              {
+                "name": "Run actions/upload-artifact@v7.0.2",
+                "conclusion": "skipped"
+              },
+              {
+                "name": "Post Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529842,
+            "name": "Frontend lint and production build",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout integrated frontend and canonical BE01 fixtures",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install locked frontend dependencies",
+                "conclusion": "success"
+              },
+              {
+                "name": "Lint frontend",
+                "conclusion": "success"
+              },
+              {
+                "name": "Typecheck and build production frontend",
+                "conclusion": "success"
+              },
+              {
+                "name": "Record frontend scope and versions",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload frontend build and evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Node.js",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout integrated frontend and canonical BE01 fixtures",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529843,
+            "name": "BE07 recovery, RPC failures and native database regressions",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Initialize containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run forge build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/upload-artifact@v7.0.2",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Stop containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529851,
+            "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm run typecheck && npm run build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm run test:api:db",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run forge build",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run forge test --match-path tests/unit/OperationAbiCompatibility.t.sol",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run fresh Anvil, PostgreSQL and HTTP API integration",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload BE05 live evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@v7.0.1",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140949529864,
+            "name": "BE06 pinned-H rebuild and normalized compare",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Initialize containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run npm ci",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Build and test BE06",
+                "conclusion": "success"
+              },
+              {
+                "name": "Create disposable BE06 databases",
+                "conclusion": "success"
+              },
+              {
+                "name": "Test BE06 against isolated PostgreSQL",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run fresh Anvil and PostgreSQL rebuild/compare acceptance",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload BE06 live evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run ./.github/actions/install-foundry",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/setup-node@v7.1.0",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Stop containers",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          },
+          {
+            "id": 140951121900,
+            "name": "Publish tested release image set",
+            "conclusion": "skipped",
+            "steps": []
+          }
+        ],
+        "sampleJobLog": {
+          "id": 140949529598,
+          "bytes": 27693,
+          "sha256": "42163041e3d0accc2cd0c03b355be1cfffd7f95deb8e0aaa000eee62bea232cb",
+          "checkoutExcerpt": [
+            "2026-11-28T10:29:39.7213049Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-28T10:29:39.7245054Z 5a53a40114560e58269ceb4eba8088ca5c9fb24a",
+            "2026-11-28T10:29:39.7325887Z ##[group]Removing auth",
+            "2026-11-28T10:29:39.7326667Z Removing SSH command configuration"
+          ]
+        }
+      },
+      {
+        "id": 46135418339,
+        "event": "pull_request",
+        "head": "08c693ec433e6dd66be2293bdb2e8d07938ab471",
+        "conclusion": "success",
+        "attempt": 1,
+        "jobs": [
+          {
+            "id": 140949528860,
+            "name": "Anonymous attestation, extraction and contract gates",
+            "conclusion": "success",
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Set up Python",
+                "conclusion": "success"
+              },
+              {
+                "name": "Check exact-version regression",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install from the real public OCI fallback",
+                "conclusion": "success"
+              },
+              {
+                "name": "Record real fallback and installed versions",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run unchanged format, build, contract tests and ABI fixture gates",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload fallback evidence",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Install from the real public OCI fallback",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Set up Python",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Checkout with pinned submodules",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ],
+        "sampleJobLog": {
+          "id": 140949528860,
+          "bytes": 82849,
+          "sha256": "5d29c7145b6cb270d1fec748b52d56a7528deb7f6301e4efdce5ab08ef642f6e",
+          "checkoutExcerpt": [
+            "2026-11-28T10:29:49.6716493Z [command]/usr/bin/git log -1 --format=%H",
+            "2026-11-28T10:29:49.6735474Z 5a53a40114560e58269ceb4eba8088ca5c9fb24a",
+            "2026-11-28T10:29:49.6743820Z ##[group]Removing auth",
+            "2026-11-28T10:29:49.6744193Z Removing SSH command configuration"
+          ]
+        }
+      }
+    ],
+    "ciMergeCheckout": "5a53a40114560e58269ceb4eba8088ca5c9fb24a",
+    "tree": "5405194d724aa400d21a257fbba606fd67fe34cc",
+    "githubReview": {
+      "id": 6097608003,
+      "state": "CHANGES_REQUESTED",
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003"
+    },
+    "toolingFinding": {
+      "priority": "P2",
+      "path": "scripts/qa07_provider_observer.mjs",
+      "line": 9,
+      "reproduction": {
+        "node": "v24.15.0",
+        "originalProviderCalls": 0,
+        "sameProviderError": false,
+        "error": "TypeError: Do not know how to serialize a BigInt"
+      },
+      "invalidatesSubmittedInterval": false
+    },
+    "issue19Acceptance": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522"
+  },
+  "issue40": {
+    "readinessIntegrity": "ACCEPTED",
+    "inventoryAccess": "RESOLVED_SCOPED_SNAPSHOT",
+    "runtime": "SKIP",
+    "readiness": "HOLD_ALLOCATION_SOURCE_OWNER_EXECUTION",
+    "isolationDesign": "APPROVE_WITH_CONDITIONS_LOGICAL_ONLY_UNCHANGED_TRANSPORT",
+    "restorationDesign": "B_TEMPORARY_OWNED_FOREGROUND_WINDOWS_CONTROL_CONDITIONAL",
+    "allocationGranted": false,
+    "runtimePermissionGranted": false,
+    "protectedEndpoints": [
+      "18545",
+      "13300",
+      "55442",
+      "5432"
+    ],
+    "immutableReadinessGist": "https://gist.github.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/c597eb59bb07a0cad6434b3b8c68223af509f1b3",
+    "immutableProposalGist": "https://gist.github.com/LangXiTrum2005/3ed0409ca2fbc7e950401733480dc163/16997764955d4c15bfa42a47c1f86deb73036a6e",
+    "byteAudit": {
+      "gist_files": [
+        {
+          "group": "readiness",
+          "name": "ARCHIVE.sha256",
+          "bytes": 108,
+          "sha256": "f61c2acee166357fcd681d9f8de34b42cc34f3bff791b95465b49c3f2fa0ea00",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/raw/688ff69413936dffc6683bdb87e42e29dfd54651/ARCHIVE.sha256"
+        },
+        {
+          "group": "readiness",
+          "name": "REPORT.md",
+          "bytes": 7157,
+          "sha256": "93d259cd30b6131c8b6a4d9f28429d37edb8c6688d80ae3560ee83ba844a5af7",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/raw/f8e287e78f9aa096ed5ce99b7bb622584692ecee/REPORT.md"
+        },
+        {
+          "group": "readiness",
+          "name": "SHA256SUMS",
+          "bytes": 1201,
+          "sha256": "95cacc20e4326bb92c857f1652717e57133a4c552114da1ec6148a216cb6c963",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/raw/4a5319771c14186dfbdc02ed9b3fc4e084db57d5/SHA256SUMS"
+        },
+        {
+          "group": "readiness",
+          "name": "issue40-readiness-20261128T103545Z.tar.gz.base64",
+          "bytes": 13779,
+          "sha256": "b5f723a981d3a1b0a17d382967c27322e2f4e21be67f0c55af7896960c3f1763",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/raw/73839c94913e68308adf10040d499d53114746d5/issue40-readiness-20261128T103545Z.tar.gz.base64"
+        },
+        {
+          "group": "readiness",
+          "name": "registration.json",
+          "bytes": 2892,
+          "sha256": "c7615fce964795b1919b9045c57bda4a00a0587d0169e828cbf6a2190a9c6929",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/60acbb25b9e86dd24bc1ddc64f61f709/raw/cfd74b872ee74567cd957d1aad26a0512da0124a/registration.json"
+        },
+        {
+          "group": "proposal",
+          "name": "ISOLATION-PROPOSAL.md",
+          "bytes": 11380,
+          "sha256": "eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/3ed0409ca2fbc7e950401733480dc163/raw/b3676ff68dc68e386c09f2e5c24ca3813942a8f2/ISOLATION-PROPOSAL.md"
+        },
+        {
+          "group": "proposal",
+          "name": "ISOLATION-PROPOSAL.sha256",
+          "bytes": 88,
+          "sha256": "3312cad534c65b542c0abdcea760928a4dd319de6dac483f954ef5c93e91a303",
+          "utf8": true,
+          "raw_url": "https://gist.githubusercontent.com/LangXiTrum2005/3ed0409ca2fbc7e950401733480dc163/raw/7f7feaf67ad395c81abe1233a9bf27ec8e1810ac/ISOLATION-PROPOSAL.sha256"
+        }
+      ],
+      "tar_members": [
+        {
+          "name": "REPORT.md",
+          "size": 7157,
+          "type": "file",
+          "mode": "0o644"
+        },
+        {
+          "name": "registration.json",
+          "size": 2892,
+          "type": "file",
+          "mode": "0o644"
+        },
+        {
+          "name": "inventory.ps1",
+          "size": 2223,
+          "type": "file",
+          "mode": "0o644"
+        },
+        {
+          "name": "windows-baseline.json",
+          "size": 11009,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-baseline.stderr",
+          "size": 0,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-baseline.exit",
+          "size": 2,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-file-policy.stderr",
+          "size": 397,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-file-policy.exit",
+          "size": 2,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "wsl-baseline.txt",
+          "size": 3428,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-http-baseline.txt",
+          "size": 160,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "windows-http-baseline.exit",
+          "size": 2,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "source-toolchain.txt",
+          "size": 1803,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "preflight.txt",
+          "size": 345,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "pr64.json",
+          "size": 2138,
+          "type": "file",
+          "mode": "0o600"
+        },
+        {
+          "name": "SHA256SUMS",
+          "size": 1201,
+          "type": "file",
+          "mode": "0o600"
+        }
+      ],
+      "archive_sha256": "064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241",
+      "archive_bytes": 10199,
+      "regular_files": 15,
+      "payload_checksums": [
+        {
+          "name": "REPORT.md",
+          "sha256": "93d259cd30b6131c8b6a4d9f28429d37edb8c6688d80ae3560ee83ba844a5af7",
+          "bytes": 7157
+        },
+        {
+          "name": "registration.json",
+          "sha256": "c7615fce964795b1919b9045c57bda4a00a0587d0169e828cbf6a2190a9c6929",
+          "bytes": 2892
+        },
+        {
+          "name": "inventory.ps1",
+          "sha256": "772ab664f573f83115edc42d81054034bfddb1556be3437a90ed6813a18d41fd",
+          "bytes": 2223
+        },
+        {
+          "name": "windows-baseline.json",
+          "sha256": "5b38c907201b0c6e907d88886c3eceb05b1f770c2f44e006a7b79536d2821a5e",
+          "bytes": 11009
+        },
+        {
+          "name": "windows-baseline.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "name": "windows-baseline.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "name": "windows-file-policy.stderr",
+          "sha256": "b9bbe592f52ffa817425c77110b8c9b4f376aefbbe0e44b0c21b59641272a5a4",
+          "bytes": 397
+        },
+        {
+          "name": "windows-file-policy.exit",
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+          "bytes": 2
+        },
+        {
+          "name": "wsl-baseline.txt",
+          "sha256": "28e0926b58744b40b34140baab588a41c081cfdccecaada03804e4fd144f36bd",
+          "bytes": 3428
+        },
+        {
+          "name": "windows-http-baseline.txt",
+          "sha256": "97f8f39b5773d706095d3fd2a6f9856a34a21505ed1ccaa1173fc9dfe0b1345f",
+          "bytes": 160
+        },
+        {
+          "name": "windows-http-baseline.exit",
+          "sha256": "10159baf262b43a92d95db59dae1f72c645127301661e0a3ce4e38b295a97c58",
+          "bytes": 2
+        },
+        {
+          "name": "source-toolchain.txt",
+          "sha256": "20aec00ac22b5892175017d1ea34d244b07688d64497ce3be1700a5aa7f5a220",
+          "bytes": 1803
+        },
+        {
+          "name": "preflight.txt",
+          "sha256": "0ce45cd19ae66932ddd48da8c4030c58696812eef9e013055b3755420ae2b58f",
+          "bytes": 345
+        },
+        {
+          "name": "pr64.json",
+          "sha256": "5f521f6f870e4dbc0eaccd83aaf99286fef390ae3a55c573f04587d72f86fa07",
+          "bytes": 2138
+        }
+      ],
+      "total_uncompressed_bytes": 32759,
+      "manifest_same_as_gist": true,
+      "proposal_sha256": "eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823"
+    },
+    "reviewUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366",
+    "tv2ConditionalDecision": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238386171",
+    "baselineSource": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+    "findings": [
+      "registration has executable readiness.test.mjs caller to migrate",
+      "status must use exact-run validated persisted RPC, never new-shell/default18545",
+      "28545 absent Windows inventory filter",
+      "Windows toolchain declared, raw executable/version proof required",
+      "ownership/bind-race/canonical-root conditions remain full-descendant gates"
+    ]
+  },
+  "projectConfirmed": {
+    "project": "https://github.com/orgs/SE2026-21-1/projects/1",
+    "readback": "actual reload followed by DOM read; no optimistic-only claim",
+    "items": [
+      {
+        "acceptance": "Bị chặn",
+        "dependencies": "28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:5991633102",
+        "status": "Blocked"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dependencies": "28/11 #40HOLD/runtimeSKIP;accessRESOLVED;restorationBconditionaldesign;noallocation/launch. 28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:6235491322",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dependencies": "28/11 #41localpipelineACCEPTED;no workerSQL/rerun. 28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:6235492657",
+        "status": "Blocked"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dependencies": "28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:5945304278",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dependencies": "28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:5945305236",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dependencies": "28/11 TV4 ACCEPTED scoped #19providerinterval+same-sessionidentity:13+42checksums,94sourcehashes,78trace=finalsnapshot,52-77nosend;2preparationsends keptoutside. PR64head08c693e REQUEST_CHANGES6097608003 for reproduced observerP2(serialization prevents originalprovidercall), not livepacketFAIL. Historical503packet/logsMISSINGinsearchedscope/rootcauseUNKNOWN;current-runbackendACCEPTED7238649288,groupdispositionpending,no oldpacket/governance rerun. #40inventoryaccessRESOLVED,14/14readinessaccepted; conditionalisolation+restorationB DESIGNONLY, ownerallocation/full-descendant/safetyguards/controlbaseline/execution gates stillHOLD/runtimeSKIP. #41localpipelineaccepted,#42closed,PR63merged;no broadcast/mainrelease.",
+        "evidence": "TV4 PR64review https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097608003 ; scoped #19acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522 ; #40readiness/design/restorationB https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7238797366 . Producte17ef61/PR64evidence08c693e/runTV3-MM-boundary-20261128T100609709Z. #40archive064076540ad1eb028ffb112131eef3ef571266691bad6992cbc3da29f9660241;proposal eaae6f129074d5ec8c72ae1e01be21cafd60a8670c0882be054d4ddc8cdb0823.",
+        "id": "issue:6235520839",
+        "status": "Blocked"
+      }
+    ]
+  },
+  "issueBodiesUpdated": [
+    19,
+    40,
+    41,
+    6,
+    7,
+    44
+  ],
+  "issuesClosed": [],
+  "sourceFixesAuthored": [],
+  "runtimeActions": [],
+  "runtimeCampaignsRerun": [],
+  "repositoryChanges": "four shared docs + new review Markdown and JSON, evidence branch only",
+  "finalVerificationCommands": {
+    "observer": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node --test tests/smoke/qa07-provider-observer.test.mjs at immutable08c693ec433e6dd66be2293bdb2e8d07938ab471",
+    "documentation": "TV4_PR64_ISSUE40_DOC_CHECK: selected draft whitespace/conflict/secret/relative-link/JSON/source-binding check; results in delivery chat"
+  },
+  "limits": [
+    "scoped packet ACCEPTED is not whole Issue19 closure",
+    "REQUEST_CHANGES for reproduced observer serialization does not invalidate submitted interval",
+    "Issue40 design approval is not endpoint allocation/runtime permission",
+    "two sampled CI job logs only; all job/step metadata reviewed",
+    "no old503 reconstruction or accepted campaign rerun",
+    "Windows28545 absent inventory filter; Windows version declared not executable proof",
+    "temporary Windows control design is not original task recovery"
+  ]
+}

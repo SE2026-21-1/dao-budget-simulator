@@ -1,0 +1,119 @@
+{
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "approvedSecurityReviewCommit": "b186844d1ff19ef26dfd83a060e7584bb6e0c419",
+  "files": [
+    {
+      "path": "scripts/deploy_sepolia.mjs",
+      "sha256": "65ece5976bc029ed237da7a758fd1fcce24d00ca13a66a35248d00418e2aff23",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/governance_sepolia.mjs",
+      "sha256": "8324abad84f0d2df35459f865a10049c65183fc01f93ccfd5bf12c71c3e64fe0",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/sepolia_cli.mjs",
+      "sha256": "732032be012d7492afb6768d8c21740a3e44ada10067a02e6c4cecc6caf2c082",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/check_roles_sepolia.mjs",
+      "sha256": "a290d1becf5c8d0433463de96c73f44f1bc9333a01b0e2dde6e03b2e85aaf5c9",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/preflight_sepolia.mjs",
+      "sha256": "079019bf119bccbe0e7d6c714e6061020aa7ff040f9937a671af2e13ec099676",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/check_sepolia_readonly.mjs",
+      "sha256": "3a33dad4c5f7a3d07a8bc64e6b44084376ad61b29268ebcb0b1f062761924964",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "tests/smoke/sepolia.test.mjs",
+      "sha256": "47b228a1f61a78a0e15e63c6cb1bf2650c4d1c5f56f037f56f09fee2f8a2416d",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/governance_local.mjs",
+      "sha256": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "foundry.toml",
+      "sha256": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "foundry.lock",
+      "sha256": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": ".gitmodules",
+      "sha256": "3200b88c8155c381e6b88add98c68708b83bf124618c3aa9f79312ea145427f2",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "sameAsApprovedB186844": true
+    }
+  ],
+  "contractAbiDependencyDiff": [],
+  "transitiveSharedModuleComparison": [
+    {
+      "path": "scripts/check_roles_sepolia.mjs",
+      "sha256": "a290d1becf5c8d0433463de96c73f44f1bc9333a01b0e2dde6e03b2e85aaf5c9",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/check_sepolia_readonly.mjs",
+      "sha256": "3a33dad4c5f7a3d07a8bc64e6b44084376ad61b29268ebcb0b1f062761924964",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/deploy_sepolia.mjs",
+      "sha256": "65ece5976bc029ed237da7a758fd1fcce24d00ca13a66a35248d00418e2aff23",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/governance_local.mjs",
+      "sha256": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/governance_operations.mjs",
+      "sha256": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/governance_sepolia.mjs",
+      "sha256": "8324abad84f0d2df35459f865a10049c65183fc01f93ccfd5bf12c71c3e64fe0",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/preflight_sepolia.mjs",
+      "sha256": "079019bf119bccbe0e7d6c714e6061020aa7ff040f9937a671af2e13ec099676",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/receipt.mjs",
+      "sha256": "7ab45e22efc30b5102f69bbf63f60edc931647eb210d0200258967707147c246",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/sepolia_cli.mjs",
+      "sha256": "732032be012d7492afb6768d8c21740a3e44ada10067a02e6c4cecc6caf2c082",
+      "sameAsApprovedB186844": true
+    },
+    {
+      "path": "scripts/smoke_lifecycle.mjs",
+      "sha256": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+      "sameAsApprovedB186844": true
+    }
+  ]
+}

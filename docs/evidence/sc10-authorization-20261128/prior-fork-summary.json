@@ -1,0 +1,65 @@
+{
+  "status": "DISPOSABLE_FORK_PREPARATION_PASS_NOT_TESTNET",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "broadcastTransactions": 0,
+  "limitations": [
+    "No signer/gas permission or testnet deployment. Fork impersonation and balance overrides are disposable only.",
+    "Fork uses pinned Sepolia state with Anvil Osaka execution, not proof of future remote gas accounting.",
+    "No real-time Executed/Defeated, extension wallet, backend or UI acceptance."
+  ],
+  "anchor": {
+    "height": "12229626",
+    "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+    "timestamp": "1795863480"
+  },
+  "ownerApprovedAddresses": false,
+  "forkExit": {
+    "code": 0,
+    "signal": null
+  },
+  "receiptCount": 17,
+  "transactionCount": 17,
+  "forkGas": {
+    "approvedMaxFeePerGas": "1000000000000",
+    "approvedMaxTotalCost": "1000000000000000000000",
+    "conservativeCommittedCost": "11256738090874567",
+    "totalGasUsed": "9371009"
+  },
+  "roleAudits": {
+    "preRenounceRoleCheck": {
+      "stage": "bootstrap",
+      "height": "12229654",
+      "blockHash": "0x9b08915a3e5f5bb840418f6baacb98fb498965c95c216ea3b58ab7ee741a3c01",
+      "confirmations": "2",
+      "finality": "K=2 descendants, not consensus finality",
+      "tipCheck": {
+        "height": "12229656",
+        "blockHash": "0xdf79867f9d785994e7c19a09fcd831f6f560cb45c46cb956e3f4bcd9b1b1a9b5"
+      }
+    },
+    "preFundingRoleCheck": {
+      "stage": "final",
+      "height": "12229660",
+      "blockHash": "0xb09f77ace9378f578e97222422708766b285c0c3f4ce471c2650ab6f19a464bb",
+      "confirmations": "2",
+      "finality": "K=2 descendants, not consensus finality",
+      "tipCheck": {
+        "height": "12229662",
+        "blockHash": "0xfc3f857dc54036f5b43369cc6b92a22b3902aef8add2b0b13219f2869105ae0e"
+      }
+    },
+    "roleCheck": {
+      "stage": "final",
+      "height": "12229675",
+      "blockHash": "0xb8eb21849bdcf8507185ff7369252d37199d8d08d0f10c7aa5063f8e9f0c22ae",
+      "confirmations": "2",
+      "finality": "K=2 descendants, not consensus finality",
+      "tipCheck": {
+        "height": "12229677",
+        "blockHash": "0x10a77cf9b8c8da19c9b60399d3d08304b3103f6dbc51bc2dbd052a8919d00693"
+      }
+    }
+  },
+  "rawReportSha256": "2edb397a4c2b7616f78f745f8c2f5021fa9f230457e176e791ab47963db20e86",
+  "rawManifestSha256": "54e251a78cfe558e4e429e078da8f3d24493c50bf194e1c4775aa36deb3c5a11"
+}

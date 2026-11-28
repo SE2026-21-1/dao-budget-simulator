@@ -1,0 +1,33 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "exitCode": 0,
+    "seconds": 7.53
+  },
+  {
+    "name": "abi-tests",
+    "command": [
+      "python3",
+      "tests/test_sc06_abi.py"
+    ],
+    "exitCode": 0,
+    "seconds": 1.84
+  },
+  {
+    "name": "targeted-contracts",
+    "command": [
+      "forge",
+      "test",
+      "--match-path",
+      "tests/integration/TimelockGovernance.t.sol",
+      "-vv"
+    ],
+    "exitCode": 0,
+    "seconds": 1.81
+  }
+]

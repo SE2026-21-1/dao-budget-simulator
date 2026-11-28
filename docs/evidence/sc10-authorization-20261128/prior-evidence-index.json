@@ -1,0 +1,60 @@
+{
+  "preservedAt": "2026-11-28T11:20:37.557332+00:00",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "historicalManifestSha256": "e7053ef8fa7d5d1de95e602e56b65716aa56c3986efc65aaa2fbf5b6dc8640ed",
+  "historicalHashes": {
+    "decision-reply.template.txt": "82bae59b06cc374ea020e6a8b9cbf7c00f7f5e566754f8abe47732ad73df854f",
+    "budget-draft.json": "252e805c2e71180ebc8b7f75fbfb5683c338caff933ed221744904430b166dea",
+    "disposable-fork-preflight.json.fork.json": "54e251a78cfe558e4e429e078da8f3d24493c50bf194e1c4775aa36deb3c5a11",
+    "sepolia-readonly-ready.json": "11a88d127775fd67c6cef70f909bd673ae5f560c74f58b868d9b054e26ab9758",
+    "source-comparison.json": "11c35d1fdbe8afba94f46534fc95891ca789a1990e1f46b28392f1c0ce9ce6f6",
+    "github-context.json": "6c2095a5ff4e1e01922ebd3a930676d1f996fa9c30f82c8a6c988a94b185f634",
+    "remote-constructor-estimates.log": "5dbe00ba4d871a061a17f1dad84bef36df8aac692d56ce14c75379ff49d5f1b8",
+    "github-contracts.log": "8384e045133877d9317651dce63e7f926026d04dcef9d526fa3b9eaaea098d4f",
+    "build.log": "baedd585bdf62609f92f1afe0dae341f6696ce6b9d173332eff10869224d0350",
+    "accounts.pending.json": "8f6a8e0568284a7883d31d5a747d8b46037527d3078622dac792ab5b103b908a",
+    "targeted-contracts.log": "d16c7b7a21caaeca696cb91f605b08d565064d9446239e575dd86821e6c29491",
+    "typecheck.log": "fad9e6640b3c4e960bbb1d1c1cabff39e773190d0537faeb48b36812a01f6a24",
+    "remote-constructor-estimates.json": "690e668820925863751a171b7d4f59b49cbe2fca36d3101a36d1ce31f74f91ef",
+    "sepolia-readonly.json": "342914dcb415022617ebe5b0648edba5862a6a1b0e09c6a60c3ca61da5755d73",
+    "authorization-draft.json": "795e461003ecca961441e3fba35a20caca0b4e1050cc086757d59294736b4acf",
+    "local-checks.json": "76c7368ed7f989d8f0884f7808cee92f9fead41dfc57ae1b27437a59c38611e6",
+    "disposable-fork-preflight.log": "fa82b9edba2ea5e70ee73cc2433bbee744baae0f8076004e8de27a0afdf45d2f",
+    "github-postmerge-jobs.json": "4164c9d4534dd69e4aa55b4ef7f65cbac6cc1977ad978896c94295c03d611d51",
+    "readiness-report.txt": "1f733287c7f080ec7d965e4a48490c1b8bfcf36fb3bd33f3d23bbcfa57166c18",
+    "estimate-readonly.mjs": "3fa7c48a76596eae1e877cacae20d6b7be6aaeb23355c74fa1ebb49de30abdb8",
+    "abi.log": "d43903b60950019edda14abf1e0f0baf176ef054aebdef2caa7272c2e7763754",
+    "solidity-format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "disposable-fork-preflight.json": "2edb397a4c2b7616f78f745f8c2f5021fa9f230457e176e791ab47963db20e86",
+    "abi-tests.log": "e04b881b57d5d4ca3ace79c02f0452f4e168145a6c7494fd6a518f25febd2ec7",
+    "protocol-gas-interpretation.txt": "a280958846255469296b17fdc73481e4275d89dabc1a6fcf23501c0e55d6b564",
+    "targeted-checks.json": "bc6a556e35bd7f7ef3a72d9aa6767b9fa5c5c768fbbd56f86e01faf6384e48b8"
+  },
+  "sanitizedLogs": {
+    "prior-abi-tests.txt": {
+      "originalSha256": "e04b881b57d5d4ca3ace79c02f0452f4e168145a6c7494fd6a518f25febd2ec7",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    },
+    "prior-abi.txt": {
+      "originalSha256": "d43903b60950019edda14abf1e0f0baf176ef054aebdef2caa7272c2e7763754",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    },
+    "prior-build.txt": {
+      "originalSha256": "baedd585bdf62609f92f1afe0dae341f6696ce6b9d173332eff10869224d0350",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    },
+    "prior-solidity-format.txt": {
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    },
+    "prior-targeted-contracts.txt": {
+      "originalSha256": "d16c7b7a21caaeca696cb91f605b08d565064d9446239e575dd86821e6c29491",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    },
+    "prior-typecheck.txt": {
+      "originalSha256": "fad9e6640b3c4e960bbb1d1c1cabff39e773190d0537faeb48b36812a01f6a24",
+      "sanitization": "Replace personal HOME path with literal $HOME; preserve every test outcome and warning."
+    }
+  },
+  "note": "Only selected required results are copied. Historical /tmp reports are unchanged. Hashes identify evidence, not independent blockchain provenance."
+}

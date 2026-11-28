@@ -1,0 +1,52 @@
+{
+  "checkedAt": "2026-11-28T11:20:36.907Z",
+  "network": "Sepolia",
+  "client": {
+    "file": "params/config.go",
+    "ref": "v1.17.7",
+    "extract": [
+      {
+        "line": 77,
+        "text": "\tSepoliaChainConfig = &ChainConfig{"
+      },
+      {
+        "line": 78,
+        "text": "\t\tChainID:                 big.NewInt(11155111),"
+      },
+      {
+        "line": 102,
+        "text": "\t\tAmsterdamTime:           newUint64(1791294816),"
+      }
+    ],
+    "sourceUrl": "https://github.com/ethereum/go-ethereum/blob/v1.17.7/params/config.go",
+    "commit": "3d858f858a458effb2a563788aedf1fe65e1f0d3",
+    "immutableUrl": "https://github.com/ethereum/go-ethereum/blob/3d858f858a458effb2a563788aedf1fe65e1f0d3/params/config.go#L77"
+  },
+  "executionGasCap": "16777216",
+  "totalTransactionGasCap": "4294967295",
+  "activationTimestamp": "1791294816",
+  "sources": [
+    {
+      "url": "https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement",
+      "finding": "Sepolia activation 2026-10-06 13:53:36 UTC; includes EIP-8037/8038."
+    },
+    {
+      "url": "https://eips.ethereum.org/EIPS/eip-8037",
+      "finding": "Execution cap differs from total tx.gas; per-dimension block availability and intrinsic gas checks remain mandatory.",
+      "statusAtInspection": "Last Call; chain activation independently checked in Geth config and EF schedule."
+    },
+    {
+      "url": "https://eips.ethereum.org/EIPS/eip-7825",
+      "finding": "Original 2^24 transaction cap must be interpreted with active EIP-8037."
+    },
+    {
+      "url": "https://github.com/ethereum/go-ethereum/releases/tag/v1.17.7",
+      "finding": "Sepolia Amsterdam support; miner accounts for execution and state gas."
+    }
+  ],
+  "limitations": [
+    "PublicNode RPC is one provider, not independent consensus verification.",
+    "Read-only calls bypass signed transaction admission and do not prove builder inclusion.",
+    "Neither execution/state gas breakdown nor actual-wallet campaign sufficiency has been measured."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-28T11:20:37.083Z",
+  "deploymentSource": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "pr63": {
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/63",
+    "merged": true,
+    "mergedAt": "2026-11-28T07:43:40Z",
+    "mergeCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+    "head": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a"
+  },
+  "workflows": [
+    {
+      "id": 46122529051,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46122529051",
+      "headSha": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "updatedAt": "2026-11-28T07:50:44Z"
+    },
+    {
+      "id": 46122528925,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46122528925",
+      "headSha": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "updatedAt": "2026-11-28T07:44:33Z"
+    }
+  ]
+}

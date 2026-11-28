@@ -1,0 +1,97 @@
+{
+  "runUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46122529051",
+  "jobId": 140909935478,
+  "originalLogSha256": "8384e045133877d9317651dce63e7f926026d04dcef9d526fa3b9eaaea098d4f",
+  "totalLines": 1525,
+  "extract": [
+    {
+      "line": 151,
+      "text": "2026-11-28T07:43:50.6299553Z e17ef61a8a51518005c38b0808cdc06fe7a68bbf"
+    },
+    {
+      "line": 194,
+      "text": "2026-11-28T07:43:54.7827065Z [command]/usr/bin/git log -1 --format=%H"
+    },
+    {
+      "line": 195,
+      "text": "2026-11-28T07:43:54.7864341Z e17ef61a8a51518005c38b0808cdc06fe7a68bbf"
+    },
+    {
+      "line": 286,
+      "text": "2026-11-28T07:43:55.4882429Z   cache-key: contracts-e17ef61a8a51518005c38b0808cdc06fe7a68bbf"
+    },
+    {
+      "line": 688,
+      "text": "2026-11-28T07:44:13.1809591Z  TreasuryAccountingInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)"
+    },
+    {
+      "line": 797,
+      "text": "2026-11-28T07:44:35.6778898Z  GovernanceInvariantTest invariants (runs: 100, calls: 5000, reverts: 0)"
+    },
+    {
+      "line": 857,
+      "text": "2026-11-28T07:44:35.6806020Z Ran 9 test suites in 26.00s (33.29s CPU time): 182 tests passed, 0 failed, 0 skipped (182 total tests)"
+    },
+    {
+      "line": 939,
+      "text": "2026-11-28T07:45:08.6163898Z ℹ tests 67"
+    },
+    {
+      "line": 941,
+      "text": "2026-11-28T07:45:08.6164515Z ℹ pass 67"
+    },
+    {
+      "line": 942,
+      "text": "2026-11-28T07:45:08.6164686Z ℹ fail 0"
+    },
+    {
+      "line": 944,
+      "text": "2026-11-28T07:45:08.6165062Z ℹ skipped 0"
+    },
+    {
+      "line": 1268,
+      "text": "2026-11-28T07:45:38.9063139Z ℹ tests 32"
+    },
+    {
+      "line": 1270,
+      "text": "2026-11-28T07:45:38.9063782Z ℹ pass 32"
+    },
+    {
+      "line": 1271,
+      "text": "2026-11-28T07:45:38.9064393Z ℹ fail 0"
+    },
+    {
+      "line": 1273,
+      "text": "2026-11-28T07:45:38.9064999Z ℹ skipped 0"
+    },
+    {
+      "line": 1276,
+      "text": "2026-11-28T07:45:38.9101527Z SC06 verified: historical 5ba9371f735982c5ca7148a3cf4af07068525029; current e17ef61a8a51518005c38b0808cdc06fe7a68bbf (live generation, strict offline check and mutations)"
+    },
+    {
+      "line": 1301,
+      "text": "2026-11-28T07:46:01.2407317Z ℹ fail 0"
+    },
+    {
+      "line": 1303,
+      "text": "2026-11-28T07:46:01.2407688Z ℹ skipped 0"
+    },
+    {
+      "line": 1448,
+      "text": "2026-11-28T07:46:36.1815122Z   name: tv4-checks-e17ef61a8a51518005c38b0808cdc06fe7a68bbf"
+    },
+    {
+      "line": 1469,
+      "text": "2026-11-28T07:46:36.5132460Z Uploading artifact: tv4-checks-e17ef61a8a51518005c38b0808cdc06fe7a68bbf.zip"
+    },
+    {
+      "line": 1475,
+      "text": "2026-11-28T07:46:37.0071875Z Artifact tv4-checks-e17ef61a8a51518005c38b0808cdc06fe7a68bbf successfully finalized. Artifact ID 15254515793"
+    },
+    {
+      "line": 1476,
+      "text": "2026-11-28T07:46:37.0073238Z Artifact tv4-checks-e17ef61a8a51518005c38b0808cdc06fe7a68bbf has been successfully uploaded! Final size is 93642 bytes. Artifact ID is 15254515793"
+    }
+  ],
+  "attribution": "GitHub CI log, independently inspected; not a new local execution."
+}

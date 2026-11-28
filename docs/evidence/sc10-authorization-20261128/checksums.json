@@ -1,0 +1,32 @@
+{
+  "format": "sc10-sanitized-packet-sha256-v1",
+  "sealedAt": "2026-11-28T11:23:41.794099+00:00",
+  "deploymentSourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "broadcastAuthorized": false,
+  "files": {
+    "README.md": "6bf17703e5474b4d970199b6e09be84348b353839eca1ef3048beab78430d380",
+    "accounts.pending.json": "8f6a8e0568284a7883d31d5a747d8b46037527d3078622dac792ab5b103b908a",
+    "authorization-draft.json": "a21551cc1abda34c172a12ccb476516225d27dba0f12a7b5ba9131014a6b08a2",
+    "budget-draft.json": "f80fb77a1055bdddb21b02c947aa3dc4a8bf9742dbede67c3a859dc1137bf337",
+    "github-status.json": "1ec61dd8b99417e255a6ee322ac2417b998965768cb6caf3157ecd5b1b5249a7",
+    "governor-readonly.json": "0da14bc1c8c50ab5b37846356ff35863bf4142882109cf8ecb67addc455e710c",
+    "prior-abi-tests.txt": "e04b881b57d5d4ca3ace79c02f0452f4e168145a6c7494fd6a518f25febd2ec7",
+    "prior-abi.txt": "d43903b60950019edda14abf1e0f0baf176ef054aebdef2caa7272c2e7763754",
+    "prior-build.txt": "0c95fbff94144f96045d2adb67729d158b663281669761dd044e6304096aa6c8",
+    "prior-ci-log-extract.json": "991cc80428d3a8cedd215697885bb7539b21296557408c7e0035c1bd9e8dde71",
+    "prior-constructor-estimates.json": "62da8abf05db7dece459fc0be5f9ec7eebad6a61c1f68e4ccc108b3ce9ed151a",
+    "prior-evidence-index.json": "653bc15499efe94b1f86b86c0df1c28a37e6b2060f3beff68bb94399fc05feda",
+    "prior-fork-summary.json": "1fb3887bd20776b33c7b89d5ecb36185944702411947d5b68bc01048854288e3",
+    "prior-local-checks.json": "76c7368ed7f989d8f0884f7808cee92f9fead41dfc57ae1b27437a59c38611e6",
+    "prior-readonly-environment-failure.json": "342914dcb415022617ebe5b0648edba5862a6a1b0e09c6a60c3ca61da5755d73",
+    "prior-readonly-success.json": "11a88d127775fd67c6cef70f909bd673ae5f560c74f58b868d9b054e26ab9758",
+    "prior-solidity-format.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prior-targeted-checks.json": "bc6a556e35bd7f7ef3a72d9aa6767b9fa5c5c768fbbd56f86e01faf6384e48b8",
+    "prior-targeted-contracts.txt": "97916c89d11fb458f9dffbc4ffdd55143fb0b3bd2a2f54291b6f04b11fd64b98",
+    "prior-typecheck.txt": "fad9e6640b3c4e960bbb1d1c1cabff39e773190d0537faeb48b36812a01f6a24",
+    "probe-governor-readonly.mjs": "e935267ffa0ffbe94bcaf119d44a6311099c5531957382c9121e8f04d2f4a8b8",
+    "protocol-sources.json": "124333d6e6445e2517c584e8045efb4c5f42e35a73410555207118617c53ed8c",
+    "source-comparison.json": "11c35d1fdbe8afba94f46534fc95891ca789a1990e1f46b28392f1c0ce9ce6f6"
+  },
+  "note": "Self-excluded; file integrity only, not independent blockchain provenance."
+}

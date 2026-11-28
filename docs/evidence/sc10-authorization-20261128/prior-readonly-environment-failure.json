@@ -1,0 +1,13 @@
+{
+  "format": "dao-budget-sepolia-readonly-v1",
+  "status": "FAIL",
+  "startedAt": "2026-11-28T10:57:18.631Z",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "chainId": "11155111",
+  "confirmations": 2,
+  "broadcasts": 0,
+  "broadcastAuthorized": false,
+  "scope": "Public Sepolia RPC capability and local compiler provenance only; not deployment, role audit, gas-budget or testnet acceptance.",
+  "error": "Run git submodule update --init --recursive: every dependency must match its pinned revision before loading compiler artifacts",
+  "finishedAt": "2026-11-28T10:57:18.725Z"
+}

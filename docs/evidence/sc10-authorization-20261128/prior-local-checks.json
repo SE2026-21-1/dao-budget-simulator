@@ -1,0 +1,30 @@
+[
+  {
+    "name": "build",
+    "command": [
+      "forge",
+      "build"
+    ],
+    "exitCode": 0,
+    "seconds": 21.25
+  },
+  {
+    "name": "solidity-format",
+    "command": [
+      "forge",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0,
+    "seconds": 0.03
+  },
+  {
+    "name": "abi",
+    "command": [
+      "python3",
+      "scripts/check_sc06_abi.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.38
+  }
+]

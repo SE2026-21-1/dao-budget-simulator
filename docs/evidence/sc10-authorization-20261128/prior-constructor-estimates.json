@@ -1,0 +1,97 @@
+{
+  "format": "sc10-readonly-synthetic-cost-v1",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "status": "READ_ONLY_SYNTHETIC_ESTIMATES_PASS_NOT_DEPLOYMENT",
+  "remoteBroadcasts": 0,
+  "ownerApproved": false,
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "startedAt": "2026-11-28T11:00:57.636Z",
+  "finishedAt": "2026-11-28T11:01:00.645Z",
+  "anchor": {
+    "height": "12229626",
+    "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+    "gasLimit": "200000000",
+    "baseFeePerGas": "12"
+  },
+  "estimates": [
+    {
+      "contract": "GOV",
+      "syntheticPredictedAddress": "0xea91Ad16d2B6eC90FE255a49Dfd6e2f47304dE88",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 9860,
+      "estimate": "11865474",
+      "gasLimitWith20Percent": "14238569",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "BUD",
+      "syntheticPredictedAddress": "0xACD8D3C8F27ec64d3E8F7Ae5395d33B08Eb29590",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 2773,
+      "estimate": "3422948",
+      "gasLimitWith20Percent": "4107538",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Treasury",
+      "syntheticPredictedAddress": "0x0df21e63812E47fa47765061c3D74dD992e494C2",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 2573,
+      "estimate": "3515492",
+      "gasLimitWith20Percent": "4218591",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Timelock",
+      "syntheticPredictedAddress": "0xED93cC615269127aDD7dfB2A32Ac54AaE346F818",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 7663,
+      "estimate": "10780488",
+      "gasLimitWith20Percent": "12936586",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Governor",
+      "syntheticPredictedAddress": "0xaA242672590B032557d47AA69841da351593fF67",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 21564,
+      "estimate": "29437589",
+      "gasLimitWith20Percent": "35325107",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": false
+    }
+  ],
+  "limitations": [
+    "Synthetic public role map from the existing TV4 preflight, not owner wallets.",
+    "Read-only RPC state overrides simulate deployed dependencies; no signing or on-chain state changes.",
+    "Constructor estimates only. Actual-map bootstrap transactions and demo costs still require owner input.",
+    "eth_gasPrice is a current quote, not a price fixed by the historical estimation block."
+  ],
+  "syntheticAccounts": {
+    "A": "0x0000000000000000000000000000000000001001",
+    "B": "0x0000000000000000000000000000000000001002",
+    "C": "0x0000000000000000000000000000000000001003",
+    "D": "0x0000000000000000000000000000000000001004",
+    "funding": "0x0000000000000000000000000000000000001005",
+    "deployer": "0x0000000000000000000000000000000000001006",
+    "caller": "0x0000000000000000000000000000000000001007",
+    "recipient": "0x0000000000000000000000000000000000001008",
+    "outsider": "0x0000000000000000000000000000000000001009"
+  },
+  "diagnosticMeaning": "naiveTotalAtMostOldOsakaCap is an arithmetic comparison only, not an active Amsterdam transaction-validity test.",
+  "feeQuote": {
+    "observedAt": "2026-11-28T11:01:00.016Z",
+    "gasPrice": "14",
+    "priorityFee": "2"
+  },
+  "sourceRawSha256": "690e668820925863751a171b7d4f59b49cbe2fca36d3101a36d1ce31f74f91ef"
+}

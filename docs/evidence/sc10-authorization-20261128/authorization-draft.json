@@ -1,0 +1,208 @@
+{
+  "format": "dao-budget-sc10-authorization-draft-v1",
+  "preparedAt": "2026-11-28T11:04:30.036705+00:00",
+  "status": "PRELIMINARY_DECISIONS_RECORDED_NOT_AUTHORIZED",
+  "proposedSourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "sourceAlreadyOwnerApproved": false,
+  "network": {
+    "chainId": "11155111",
+    "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+    "confirmations": "2",
+    "genesisHash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9"
+  },
+  "deploymentOwner": {
+    "proposedGitHubLogin": "dung0611",
+    "appointmentDecisionBy": "nvdungmim/group lead",
+    "appointed": false,
+    "ownerAccepted": false,
+    "candidateSelectedByUser": true,
+    "appointmentStatus": "CANDIDATE_PENDING_TV4_ACCEPTANCE"
+  },
+  "sourceReview": {
+    "acceptedSecurityCommit": "b186844d1ff19ef26dfd83a060e7584bb6e0c419",
+    "reviewUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460",
+    "sameSourceBytesConfirmed": true,
+    "doNotReopenUnchangedAcceptedReview": true
+  },
+  "roles": {
+    "A": {
+      "gov": "400",
+      "bud": "0",
+      "function": "Self-delegate; proposer; vote For on successful proposal",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "B": {
+      "gov": "300",
+      "bud": "0",
+      "function": "Self-delegate; vote For with A (700 total)",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "C": {
+      "gov": "200",
+      "bud": "0",
+      "function": "Self-delegate; independent demo/negative scenarios",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "D": {
+      "gov": "100",
+      "bud": "0",
+      "function": "Self-delegate; only For vote on Defeated proposal (100 < quorum 200)",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "funding": {
+      "gov": "0",
+      "bud": "20000 at construction; transfer 10000 to Treasury",
+      "function": "BUD initialHolder and seed transfer; not an on-chain admin",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "deployer": {
+      "gov": "0",
+      "bud": "0",
+      "function": "Five contract creations, grants, two renounces; no final privileged roles",
+      "needsDeploymentSigner": true,
+      "publicAddress": null
+    },
+    "caller": {
+      "gov": "0",
+      "bud": "0",
+      "function": "Ordinary EOA requests Governor queue/execute; separate later signing and ETH needed",
+      "needsDeploymentSigner": false,
+      "publicAddress": null
+    },
+    "recipient": {
+      "gov": "0",
+      "bud": "1000 after successful demo",
+      "function": "Receives BUD; no deployment signing or ETH needed",
+      "needsDeploymentSigner": false,
+      "publicAddress": null
+    },
+    "outsider": {
+      "gov": "0",
+      "bud": "0",
+      "function": "Unauthorized actor for negative scenarios; no deployment signing",
+      "needsDeploymentSigner": false,
+      "publicAddress": null
+    }
+  },
+  "signers": [
+    {
+      "role": "A",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    },
+    {
+      "role": "B",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    },
+    {
+      "role": "C",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    },
+    {
+      "role": "D",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    },
+    {
+      "role": "funding",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    },
+    {
+      "role": "deployer",
+      "proposedCustodian": "dung0611 ONLY IF appointed and explicitly accepts dedicated demo-account custody",
+      "custodianConfirmed": false,
+      "publicAddress": null,
+      "exclusiveCampaignUseConfirmed": false,
+      "keystorePasswordFdPolicy": "Encrypted JSON keystore on owner workstation; inherited FD >=3; no password in argv/env/logs"
+    }
+  ],
+  "signingLimitations": [
+    "Current CLI decrypts six keystores in one trusted local process; it is not multi-party remote or hardware-wallet signing.",
+    "The caller is not one of the six deployment signers, but needs a separately controlled signing path and native gas for later queue/execute.",
+    "No private keys, mnemonics, keystore data, passwords, or signed raw transactions belong in this public packet."
+  ],
+  "feeBudgetProposal": {
+    "ownerApproved": false,
+    "maxFeePerGasWei": "1000000000",
+    "deploymentMaxTotalCostWei": "100000000000000000",
+    "deploymentBudgetEth": "0.10",
+    "demoAndFundingReserveEth": "0.02",
+    "totalPlanningEnvelopeEth": "0.12",
+    "remainingGasAtFeeCapAfterConstructorLimits": "29173609",
+    "userAcceptedForPlanning": true,
+    "finalBudgetApproved": false,
+    "transactionFeeModel": "Legacy type 0 gasPrice; CLI max-fee-wei caps eth_gasPrice, not an EIP-1559 type-2 maxFeePerGas."
+  },
+  "nativeFunder": null,
+  "actualMapBalancesAtH": null,
+  "actualMapGasEstimates": null,
+  "requiredDecisions": [
+    "TV4 explicitly accepts deployment ownership and proposed full source SHA",
+    "TV4 provides nine distinct public accounts and confirms six signer custodians/exclusive campaign use/secure local signing path",
+    "TV2 checks public account-map consistency and coordinates packet sign-off without presumed signer custody",
+    "TV4 identifies native funder and supplies actual-map gas estimates with headroom, per-sender nonce/balances at canonical H/hash",
+    "User and owner approve final fee/budget packet, then separately approve broadcast binding SHA/map/network/K2/fees/transaction scope/journal policy"
+  ],
+  "broadcastAuthorization": {
+    "userApproved": false,
+    "ownerApproved": false,
+    "allowedNow": false,
+    "note": "This draft and Issue20 coordination are not explicit broadcast authorization."
+  },
+  "plannedTransactions": {
+    "deploymentBootstrap": 17,
+    "demoExecutedAndDefeated": 7,
+    "nativeFundingTransactions": "Separate, not yet estimated or authorized"
+  },
+  "postDeploymentEvidence": [
+    "Canonical five-contract manifest with creation transactions/blocks and ABI/compiler/runtime identities",
+    "Pre-renounce, pre-funding and final role/operation audits at K2 and tip",
+    "Actual real-time Executed receipt: A+B=700 For, payout 1000 BUD, Treasury 9000 BUD",
+    "Actual real-time Defeated proposal: D=100 For, quorum 200 not reached",
+    "All receipts/logs/proposalId/requestId/operationId/balances cross-checked at canonical H/hash",
+    "Defeated has no automatic transition transaction: retain creation/vote receipts and Governor.state()/quorum/proposalVotes after real deadline at canonical H/hash; no Timelock operation should exist for that proposal."
+  ],
+  "outOfScopeUntouched": [
+    "Issue19 wallet/API/UI integration",
+    "Issue40 receiver lifecycle/access",
+    "Dev/main promotion, PR merge, production Solidity changes"
+  ],
+  "updatedAt": "2026-11-28T11:20:37.557332+00:00",
+  "preliminaryUserDecisions": {
+    "recordedAt": "2026-11-28T11:20:37.557332+00:00",
+    "decisionMaker": "nvdungmim",
+    "candidateOwnerSelected": true,
+    "proposedSourceSelected": true,
+    "networkRpcKSelected": true,
+    "planningEnvelopeEth": "0.12",
+    "deploymentBootstrapEth": "0.10",
+    "demoReserveEth": "0.02",
+    "gasPriceCapWei": "1000000000",
+    "finalBudgetApproved": false,
+    "broadcastAuthorized": false,
+    "basis": "User explicitly selected preliminary proposals; owner acceptance and final authorization remain pending."
+  }
+}

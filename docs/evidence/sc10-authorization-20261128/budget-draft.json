@@ -1,0 +1,99 @@
+{
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "anchor": {
+    "height": "12229626",
+    "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+    "gasLimit": "200000000",
+    "baseFeePerGas": "12"
+  },
+  "remoteConstructorEstimates": [
+    {
+      "contract": "GOV",
+      "syntheticPredictedAddress": "0xea91Ad16d2B6eC90FE255a49Dfd6e2f47304dE88",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 9860,
+      "estimate": "11865474",
+      "gasLimitWith20Percent": "14238569",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "BUD",
+      "syntheticPredictedAddress": "0xACD8D3C8F27ec64d3E8F7Ae5395d33B08Eb29590",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 2773,
+      "estimate": "3422948",
+      "gasLimitWith20Percent": "4107538",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Treasury",
+      "syntheticPredictedAddress": "0x0df21e63812E47fa47765061c3D74dD992e494C2",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 2573,
+      "estimate": "3515492",
+      "gasLimitWith20Percent": "4218591",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Timelock",
+      "syntheticPredictedAddress": "0xED93cC615269127aDD7dfB2A32Ac54AaE346F818",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 7663,
+      "estimate": "10780488",
+      "gasLimitWith20Percent": "12936586",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": true
+    },
+    {
+      "contract": "Governor",
+      "syntheticPredictedAddress": "0xaA242672590B032557d47AA69841da351593fF67",
+      "inputKind": "compiled creation bytecode + real constructor ABI with synthetic account/dependency addresses",
+      "creationBytes": 21564,
+      "estimate": "29437589",
+      "gasLimitWith20Percent": "35325107",
+      "fitsBlockGasLimit": true,
+      "status": "READ_ONLY_SYNTHETIC_ESTIMATE_PASS",
+      "naiveTotalAtMostOldOsakaCap": false
+    }
+  ],
+  "remoteConstructorEstimateSum": "59021991",
+  "remoteConstructorGasLimitSumWith20Percent": "70826391",
+  "observedGasPriceWei": "14",
+  "observedFeeQuoteTime": "2026-11-28T11:01:00.016Z",
+  "constructorCostAtObservedQuoteWei": "991569474",
+  "constructorCostAtObservedQuoteEth": "0.000000000991569474",
+  "constructorWorstCaseAtProposed1GweiEth": "0.070826391",
+  "forkFull17GasUsed": "9371009",
+  "forkOnlyOther12GasUsed": "739288",
+  "proposal": {
+    "ownerApproved": false,
+    "maxFeePerGasWei": "1000000000",
+    "deploymentMaxTotalCostWei": "100000000000000000",
+    "deploymentBudgetEth": "0.10",
+    "demoAndFundingReserveEth": "0.02",
+    "totalPlanningEnvelopeEth": "0.12",
+    "remainingGasAtFeeCapAfterConstructorLimits": "29173609",
+    "userAcceptedForPlanning": true,
+    "finalBudgetApproved": false,
+    "transactionFeeModel": "Legacy type 0 gasPrice; CLI max-fee-wei caps eth_gasPrice, not an EIP-1559 type-2 maxFeePerGas."
+  },
+  "limits": [
+    "This is a proposed ceiling, not an owner approval or actual-map sufficiency proof.",
+    "Do not combine fork Osaka gas and remote Glamsterdam gas as one verified estimate.",
+    "The additional 12 bootstrap transactions, demo transactions and native funding costs remain unestimated on the actual public map.",
+    "Actual implementation signs legacy type-0 gasPrice transactions; --max-fee-wei caps eth_gasPrice and does not set a type-2 maxFeePerGas.",
+    "The naive fitsEip7825TransactionCap field in the raw estimator compares total gas to the older Osaka single-dimension cap only. Under EIP-8037 the execution cap excludes state gas; Governor total gas above 2^24 is not by itself an invalidity finding."
+  ],
+  "protocolSources": [
+    "https://eips.ethereum.org/EIPS/eip-8037",
+    "https://blog.ethereum.org/2026/09/17/glamsterdam-testnet-announcement"
+  ],
+  "interpretation": "TOTAL gas >= 2^24 does not itself fail active EIP-8037 execution-only cap; do not infer actual transaction admission from estimates."
+}

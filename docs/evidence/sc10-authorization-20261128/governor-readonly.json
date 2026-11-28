@@ -1,0 +1,1135 @@
+{
+  "format": "sc10-governor-readonly-gas-v1",
+  "proposedDeploymentSource": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "runnerCheckoutRevision": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "runnerSha256": "e935267ffa0ffbe94bcaf119d44a6311099c5531957382c9121e8f04d2f4a8b8",
+  "startedAt": "2026-11-28T11:18:58.255Z",
+  "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+  "status": "READ_ONLY_SYNTHETIC_CONSTRUCTOR_PASS_NOT_DEPLOYMENT",
+  "remoteBroadcasts": 0,
+  "ownerApprovedAddresses": false,
+  "requests": [
+    {
+      "method": "eth_chainId",
+      "calledAt": "2026-11-28T11:18:58.256Z",
+      "paramsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "params": [],
+      "result": "0xaa36a7"
+    },
+    {
+      "method": "eth_getBlockByNumber",
+      "calledAt": "2026-11-28T11:18:58.575Z",
+      "paramsSha256": "5ce37a00f21a30938690a296bd4f9488055b18131ba904554542d10e81099360",
+      "params": [
+        "0x0",
+        false
+      ],
+      "result": {
+        "baseFeePerGas": "0x3b9aca00",
+        "difficulty": "0x20000",
+        "extraData": "0x5365706f6c69612c20417468656e732c204174746963612c2047726565636521",
+        "gasLimit": "0x1c9c380",
+        "gasUsed": "0x0",
+        "hash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "miner": "0x0000000000000000000000000000000000000000",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "nonce": "0x0000000000000000",
+        "number": "0x0",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0x225",
+        "stateRoot": "0x5eb6e371a698b8d68f665192350ffcecbbbf322916f4b51bd79bb6887da3f494",
+        "timestamp": "0x6159af19",
+        "transactions": [],
+        "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "uncles": []
+      }
+    },
+    {
+      "method": "eth_blockNumber",
+      "calledAt": "2026-11-28T11:18:58.849Z",
+      "paramsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "params": [],
+      "result": "0xba9c59"
+    },
+    {
+      "method": "eth_getBlockByNumber",
+      "calledAt": "2026-11-28T11:18:58.980Z",
+      "paramsSha256": "b535d04932fdf613ded8661c9cd9e655b5b5e50863b3e6e5f2f3f36a57ab6170",
+      "params": [
+        "0xba9bfa",
+        false
+      ],
+      "result": {
+        "baseFeePerGas": "0xc",
+        "blobGasUsed": "0x180000",
+        "blockAccessListHash": "0x30750c7246b2e932841e4f05804651d8cd2cbb0458f3704f8a20e894f5d1089b",
+        "difficulty": "0x0",
+        "excessBlobGas": "0xced554f",
+        "extraData": "0x6275696c6465722e6e666c6169672e657468",
+        "gasLimit": "0xbebc200",
+        "gasUsed": "0x3902f20",
+        "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+        "logsBloom": "0x08a744186192f378d6d41c02d310111a8a8a0f90a0a9c4c9719a4204c568905a0518502c42292e949a3801227b95438caa114860529620a5182096c8b8e57e417640c1a1c8cc3a186460c28ee319cc200551f27800262402202b044a84c274614b1a35c353d00087e00048008200882c203878c40066000420304290516bcc02936a690029d64609f808880e1014000c00e838096924144858bd6843904282311200ac023a0008881f20876c0308c14080d239512676c48849e142a612d0802422790183b5aa3032810b141f4912042f51230063170764f00031caec01c07160cc30012b13a481b6a020840c27006dd299000746386bd86b048a61580ae80008",
+        "miner": "0x8f614cdb61e37b6f18d9705942c93fa86b04d711",
+        "mixHash": "0xc2731d5965a593e3c4cb08c84e1bf11c5703ff882d693e1d1dc0654c72ba6929",
+        "nonce": "0x0000000000000000",
+        "number": "0xba9bfa",
+        "parentBeaconBlockRoot": "0xff9c6be5ea3987330929dac9e4a29fe704e26a85247b77b10d4bdaee8f896c2f",
+        "parentHash": "0xef8ef5e0f44a78021ea598bf165225e6b8d36550495dbe0242e4bc8416550ffa",
+        "receiptsRoot": "0xd621af823841c929b44ab8af603019581da83c37a413d3133d6494300f4d256b",
+        "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0xf01a",
+        "slotNumber": "0xb22f32",
+        "stateRoot": "0x1e1fb6c3091746f36564b4d8d069b6089418a733d93ffa5c092799860d1ee028",
+        "timestamp": "0x6b0ab3b8",
+        "transactions": [
+          "0xdfd6cf20089c0f9180e324ca023ea108d1e5cee60ca69d13e01d46445e575789",
+          "0x5c266a83eb2a21581e55be889c8b8780f0334d3f6aea710c0ba1076280994c74",
+          "0x7d855e83703e46a4fc357f6a9f41d75db7ce9774d1d2c981d59d32a4082f081f",
+          "0x1d1c1ad91ad41a250741fd17a979bcc3f6cc91217380f849962d7f13d3fc1435",
+          "0xb5e03e4eb5de16cfb39b57985d226d7f67129e242f6b4bf5d36c41225e2e52f8",
+          "0xd653199da523c5b45963a7e3c80ad3e2763a687a408faca55564b99183ebff3d",
+          "0xe36c4ffd33f395d1a87e822e938db534203e2335b064ec598e5f95b085fcd9db",
+          "0x62bbb0e63f0782c21cfcbcc832b4f819b7d21d4c81d4bb652060d396b542d80a",
+          "0x6a6173ee2a1e69595b78b58950fc7dfdeb9bc082f76d2b43b49f0d65cadfd4e3",
+          "0x1b9e1e6d99c29eea4222b69bb4f05549977aa0495d00e62f3d9463682594cb8d",
+          "0x96e9e1ed7403b761c391fe6cc1faf34083e3d6b98995388b8ff55f21d9f4171c",
+          "0x3b56d08de27882f838cde1d21be0455e83d881dc29962e532f0548f7c0fa7250",
+          "0xcb60c70be6ba86479c72a52f88d15d23345981837fdbb24ba34660bd3753082a",
+          "0x6ba7316a25a97d49998b4220212666b2a96c3d2049012f61cf96ab6fcf1a4a41",
+          "0x7a67a9610e4fdd9e701f4c01e75e00ba5843ff639d6faf05dbee5da28e044877",
+          "0xcdbe193300b4f14d751f861136a04a051ca43ff62ba0fa1e63d6d528de566edb",
+          "0x64e50346d0c92a66f26c421e9ce0f678a6987b61bcc0a9650973f8345ecec365",
+          "0xe3a0b28e5ebfa592ed035a56a27315ba069f4f8041d9fcfaed792b37d9aa2110",
+          "0x4be0054ac056d9186deedfe0ee3ec68a0f680263a6b9cbfa4b1d7f03b9810467",
+          "0xf43bc95bb648504adcb2c8a3b385dabfa8daeff4795d5d72fada15c008f7d3c0",
+          "0x950f8bf4bc89fbae7006ccf24ef4fa4cb610e1f828e72c296bfa25b4510c428f",
+          "0x30b620c6f5593afcc3ce301f30fd96a025faba4d70ae0de1a78f7580fcb3ceac",
+          "0x74ad6bf7d40bdcff293e48b332d513b10235496f41d95ec6c7387a479913070e",
+          "0x82bbd8acdbff3f19772cf29a045a25fdedfa9cf5d341ab39a87e62c32d024776",
+          "0x84cfcc0c71ab263e302f6837752bfeafd592048d722d41ba219e0c7dbfbf156c",
+          "0x3a62aef92ea0783a7b999a70b9267f77a19b632bf1dd76d8502e2ef69d5045ed",
+          "0xcd89986b5a14f45d262f386f0b923b3d5c7acdaa729723fb12e9176350125077",
+          "0x6feec349f9547b56fa048a74320e22985528073e7865b159af80888e14e81de5",
+          "0xcc0e7769cce764162f3aaef503fa96e09d6f63656e6d455e5306e7f6449d3ab3",
+          "0x7a797ad7ce03bed6fdff97f5106b4784e7b394294d1095e409dd2b09e8856821",
+          "0xf768a41d5ba6aa4732a7b4095acbc488676161b227b20f5aac26bffa77e93aed",
+          "0xab75b5458ae4c2451fa5f469cd39579357bb33a020f494eeae951ee99ecd3b26",
+          "0xe55ce1cfa4953301ff1d1bc84b8d5e025089fba62281593df1be70558ec8f4cb",
+          "0x3f293ec074270efb5d756cc954b09b2b12004192c189fd2bd4504035628d2f89",
+          "0x08e80b4b91c68030f90573330208cbe04968883a5b4d8660e20821abaffe142e",
+          "0x01b2f87227caf38231f89a79520a88e2a0e5623a13e7f48ee6e9c95e1a0ecc0f",
+          "0xeb43a960e26731943feaa18318092edc66b0eeca3b17e68d9e401d10399ccf29",
+          "0x9a5a7fa9870ccf1b901d55aa94c209f5b4f8545ca8498328f98fc8f5d08f0790",
+          "0x41ae36ebf9912aba1ca098bf41ac560b2fbf1f642c906cb464b0f2210a4d1ae3",
+          "0xa2bc1d529fc1bfb82ea85c15e261a016cdb032f5c8c030ed4f5f8fde04321a83",
+          "0xc494203d1e4ba24cb06d78cc381240f1e4b0e26ddd6501d9387ddeb9ce04d504",
+          "0x967e7143d06a27ed0682947dd8f69fc1a3a08015d620839e5960b723f52e98fb",
+          "0xb1f8c78f2bb40ae57a0d07a4e6594b81fc210ed73750696aade91db45e61c3b8",
+          "0x47084cf1cdd0628f733adda492a84038d56fe66bac22fad8a6a2b0b7f467b4e3",
+          "0xce1d56be9951277b9d2538b0e3506cf593d6ba745ef7d401851f3837d7be8cd1",
+          "0x2e645d541cd563cee2371219599613afc7ebe204410fd652c065a73e5dbdae47",
+          "0x7bb7d7948e0464f3e9e773f391cabe093ae6393291079841de3fc17574c7fae4",
+          "0x7494ba897ef25c84c7fc90a388bc8aa1beb21004712a132f8262dc3dec4bb080",
+          "0x104bee5c40459af81110981d836464a3d86f12d230b9a808db1d4d12f0b2c883",
+          "0x54930ab301b9cdabd4f46ca7aa94aae46a2acb3979f433c59067badee8508c6b",
+          "0x93c59462dfe2a77bbee183902be0a448a98bdab3bc720809ee23c27691658f78",
+          "0xcddd728c3e4b31b764bed65fce913e0f765b366125244be391efc2ba2d0ee5f0",
+          "0x71b8d14d4a2cf40de66365df2c74d64cdb87cb27b0ccd147eb54d7f86055763a",
+          "0xe1d3f97205b8dc60d7823dfe017700700c2a637bbab5d63b096728ceb19371c0",
+          "0x7c23ff234014f4271467285083dc3a0e17bd46ffcfa1a8177d1e5c4b260b2f62",
+          "0xc969cbefeb4736b94a78a4e4081485306678982186cfd13ca4ea5245bde10bcb",
+          "0x7a9891bc9b61736165cc05ea14333eb63ef796c846edfbab7c047551fdbf2602",
+          "0x5db1a11d861a4520631fc2853fa21020417a2a71b39abc4eff066aca8490f245",
+          "0xd8d2678b479635365fbf0cca530da13d929706082058a1ef1a2e8a98f71adda7",
+          "0x64df30d320e5dc55378ef94208c13fd6c37e9b4538ba5240616af405dbb9effc",
+          "0xe94c78aae888bf1fc571be252facec27074453ebe05bc855bb1635796803640d",
+          "0xf5d716f672f82d8cab42a709d791a30fcc6aa5a7c8d514d967163d135e4cd9c8",
+          "0xd212163b140c99a212c212cf3035aebb827660af10bdd495adb0cd38ef226a8c",
+          "0x04ec13fe8160beef0660b391426626dceecb7de3e17cf09896da8623ae3a257d",
+          "0x81be66b05a46bea9d5ca36ed4c230de8f6fd94e8cc2bb5c577034034c39c5b9d",
+          "0x915ce0dd1b83a05e053a09c9fef906d5f0d9466539f84ee161bb62078070edb5",
+          "0xf205bc3496e3c7db2617efa7b31a0881bf42c99791e60cace4acac8471558224",
+          "0x888846d6137b19a5112d2da77ac9ad8c8cef7cbf56882184ca674f5a1603c56a",
+          "0x0160771d3dfb26ec15fe7f35de27fa3dda2fd9c7a8f7f3c0058b1dafac66c5fc",
+          "0x47aaf398d407a2aa0bd3bc429d7273e2358b21f575f8f2077f28ded653db364c",
+          "0xa5f3becedf6bd328b1cbc643787963653665af72607f56be7fefc13af67eeae2",
+          "0xaf5c55dc21efcaf55b74d952f1d31c0fca6b35c336de9fcdde5c4e8bc976f10b",
+          "0x05c3d783e2a4f6c6362fcc8e3a56f594ba6f5aceede0fb4a5ee2b481ac97d95e",
+          "0x5e28299878d0664177e36f7c12fbee65373ca0e25e5c67c2d9af1b16058e8bdc",
+          "0x9a32ca73d4293d635d9cce203c946d8937cdca98e95c61347c1536c46193b152",
+          "0xc94eae477ec1d6b53e7eeb4b4ef844e367ddedfad47dd38dfa3b857c1cbeb789",
+          "0xd02d37fe96d28a03735270d09c5adf29c54b2fff6d0422c0a94d2bff5b5d5f3b"
+        ],
+        "transactionsRoot": "0xc9e20cce4a9e0c1fd97e16f37dd7e4cb3bfd3bbe8ae03294ce8d7d703a3426ff",
+        "uncles": [],
+        "withdrawals": [
+          {
+            "index": "0x8cf3f08",
+            "validatorIndex": "0x10000000000",
+            "address": "0x9b984d5a03980d8dc0a24506c968465424c81dbe",
+            "amount": "0x38ce53f"
+          },
+          {
+            "index": "0x8cf3f09",
+            "validatorIndex": "0x620",
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x36f85"
+          },
+          {
+            "index": "0x8cf3f0a",
+            "validatorIndex": "0x621",
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f0b",
+            "validatorIndex": "0x625",
+            "address": "0xbeefd32838d5762ff55395a7beebef6e8528c64f",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f0c",
+            "validatorIndex": "0x827",
+            "address": "0x4fdf12fce113458b66d9a4fe72445ece9f35923b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f0d",
+            "validatorIndex": "0x62",
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f0e",
+            "validatorIndex": "0x63",
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f0f",
+            "validatorIndex": "0x190",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x36f85"
+          },
+          {
+            "index": "0x8cf3f10",
+            "validatorIndex": "0x191",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f11",
+            "validatorIndex": "0x192",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x36f85"
+          },
+          {
+            "index": "0x8cf3f12",
+            "validatorIndex": "0x193",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f13",
+            "validatorIndex": "0x194",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f14",
+            "validatorIndex": "0x195",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f15",
+            "validatorIndex": "0x196",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f16",
+            "validatorIndex": "0x197",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          },
+          {
+            "index": "0x8cf3f17",
+            "validatorIndex": "0x198",
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7"
+          }
+        ],
+        "withdrawalsRoot": "0xee3aadcffe77597e340303a1cb359796a0567b43995ddcb043c7d1328030e0c5"
+      }
+    },
+    {
+      "method": "eth_getTransactionCount",
+      "calledAt": "2026-11-28T11:18:59.342Z",
+      "paramsSha256": "f5c659b3131e85ec420d978dfbd09d84181041e9feaf94db4f6c570330f2cff9",
+      "params": [
+        "0x0000000000000000000000000000000000001006",
+        "0xba9bfa"
+      ],
+      "result": "0x0"
+    },
+    {
+      "method": "eth_getCode",
+      "calledAt": "2026-11-28T11:18:59.450Z",
+      "paramsSha256": "69c60226d029287d287250fa5ec66e95b809d5e08dbf94ac705fc875e2a5ef6e",
+      "params": [
+        "0xaA242672590B032557d47AA69841da351593fF67",
+        "0xba9bfa"
+      ],
+      "result": "0x"
+    },
+    {
+      "method": "eth_estimateGas",
+      "calledAt": "2026-11-28T11:18:59.600Z",
+      "paramsSha256": "b93bf5952a1f220ad98a98cacb49812e12af103ea10314584b627e0f6c6ae959",
+      "request": {
+        "transaction": {
+          "from": "0x0000000000000000000000000000000000001006",
+          "data": {
+            "bytes": 21564,
+            "keccak256": "0x34c7a6618babf72e236590853289ef3f3c9254cd50d9271aa5ebe4291e8fd0bf"
+          },
+          "value": "0x0",
+          "nonce": "0x4"
+        },
+        "block": "0xba9bfa",
+        "overrides": {
+          "0x0000000000000000000000000000000000001006": {
+            "balance": "0x3635c9adc5dea00000",
+            "nonce": "0x4"
+          },
+          "0xea91Ad16d2B6eC90FE255a49Dfd6e2f47304dE88": {
+            "code": {
+              "bytes": 6787,
+              "keccak256": "0xbc5eda427bd0338aacf72f0a5f9d67e36f0b1d1a6d825abd70a30f5d8038b703"
+            }
+          },
+          "0xACD8D3C8F27ec64d3E8F7Ae5395d33B08Eb29590": {
+            "code": {
+              "bytes": 1764,
+              "keccak256": "0x84fb5b3e9eac29c95b4ef1a08835480f494b367bdb3e8d67e279500b4e61eabd"
+            }
+          },
+          "0x0df21e63812E47fa47765061c3D74dD992e494C2": {
+            "code": {
+              "bytes": 2041,
+              "keccak256": "0xb7dcd3d5771a1ee4f23397118e4160023753bd65731a9b510705ee17127d8089"
+            }
+          },
+          "0xED93cC615269127aDD7dfB2A32Ac54AaE346F818": {
+            "code": {
+              "bytes": 6553,
+              "keccak256": "0xdbbc87018530b06f594bd3f0400a2fc31de7413378ebbc98e032144e4e624b34"
+            }
+          }
+        }
+      },
+      "result": "0x1c12e95"
+    },
+    {
+      "method": "eth_call",
+      "calledAt": "2026-11-28T11:18:59.799Z",
+      "paramsSha256": "1c54fcb6998874789e747f73cca6db67398773057640a7233d7a84dd03b3a0e4",
+      "request": {
+        "transaction": {
+          "from": "0x0000000000000000000000000000000000001006",
+          "data": {
+            "bytes": 21564,
+            "keccak256": "0x34c7a6618babf72e236590853289ef3f3c9254cd50d9271aa5ebe4291e8fd0bf"
+          },
+          "value": "0x0",
+          "nonce": "0x4",
+          "gas": "0x1000000"
+        },
+        "block": "0xba9bfa",
+        "overrides": {
+          "0x0000000000000000000000000000000000001006": {
+            "balance": "0x3635c9adc5dea00000",
+            "nonce": "0x4"
+          },
+          "0xea91Ad16d2B6eC90FE255a49Dfd6e2f47304dE88": {
+            "code": {
+              "bytes": 6787,
+              "keccak256": "0xbc5eda427bd0338aacf72f0a5f9d67e36f0b1d1a6d825abd70a30f5d8038b703"
+            }
+          },
+          "0xACD8D3C8F27ec64d3E8F7Ae5395d33B08Eb29590": {
+            "code": {
+              "bytes": 1764,
+              "keccak256": "0x84fb5b3e9eac29c95b4ef1a08835480f494b367bdb3e8d67e279500b4e61eabd"
+            }
+          },
+          "0x0df21e63812E47fa47765061c3D74dD992e494C2": {
+            "code": {
+              "bytes": 2041,
+              "keccak256": "0xb7dcd3d5771a1ee4f23397118e4160023753bd65731a9b510705ee17127d8089"
+            }
+          },
+          "0xED93cC615269127aDD7dfB2A32Ac54AaE346F818": {
+            "code": {
+              "bytes": 6553,
+              "keccak256": "0xdbbc87018530b06f594bd3f0400a2fc31de7413378ebbc98e032144e4e624b34"
+            }
+          }
+        }
+      },
+      "error": "eth_call: {\"code\":-32000,\"message\":\"contract creation code storage out of gas\"}"
+    },
+    {
+      "method": "eth_call",
+      "calledAt": "2026-11-28T11:19:00.034Z",
+      "paramsSha256": "bacd5b2bd41593f5fbc774e79862a407f0026237171d8f80a8d999f2dbfd2ad3",
+      "request": {
+        "transaction": {
+          "from": "0x0000000000000000000000000000000000001006",
+          "data": {
+            "bytes": 21564,
+            "keccak256": "0x34c7a6618babf72e236590853289ef3f3c9254cd50d9271aa5ebe4291e8fd0bf"
+          },
+          "value": "0x0",
+          "nonce": "0x4",
+          "gas": "0x21b04b3"
+        },
+        "block": "0xba9bfa",
+        "overrides": {
+          "0x0000000000000000000000000000000000001006": {
+            "balance": "0x3635c9adc5dea00000",
+            "nonce": "0x4"
+          },
+          "0xea91Ad16d2B6eC90FE255a49Dfd6e2f47304dE88": {
+            "code": {
+              "bytes": 6787,
+              "keccak256": "0xbc5eda427bd0338aacf72f0a5f9d67e36f0b1d1a6d825abd70a30f5d8038b703"
+            }
+          },
+          "0xACD8D3C8F27ec64d3E8F7Ae5395d33B08Eb29590": {
+            "code": {
+              "bytes": 1764,
+              "keccak256": "0x84fb5b3e9eac29c95b4ef1a08835480f494b367bdb3e8d67e279500b4e61eabd"
+            }
+          },
+          "0x0df21e63812E47fa47765061c3D74dD992e494C2": {
+            "code": {
+              "bytes": 2041,
+              "keccak256": "0xb7dcd3d5771a1ee4f23397118e4160023753bd65731a9b510705ee17127d8089"
+            }
+          },
+          "0xED93cC615269127aDD7dfB2A32Ac54AaE346F818": {
+            "code": {
+              "bytes": 6553,
+              "keccak256": "0xdbbc87018530b06f594bd3f0400a2fc31de7413378ebbc98e032144e4e624b34"
+            }
+          }
+        }
+      },
+      "result": {
+        "bytes": 18279,
+        "keccak256": "0xfe63149bd8e0c5aa61698255c38dafecf95f5efbc495f742a206e86112938819"
+      }
+    },
+    {
+      "method": "eth_gasPrice",
+      "calledAt": "2026-11-28T11:19:00.278Z",
+      "paramsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "params": [],
+      "result": "0xf"
+    },
+    {
+      "method": "eth_getBlockByNumber",
+      "calledAt": "2026-11-28T11:19:00.376Z",
+      "paramsSha256": "b535d04932fdf613ded8661c9cd9e655b5b5e50863b3e6e5f2f3f36a57ab6170",
+      "params": [
+        "0xba9bfa",
+        false
+      ],
+      "result": {
+        "baseFeePerGas": "0xc",
+        "blobGasUsed": "0x180000",
+        "blockAccessListHash": "0x30750c7246b2e932841e4f05804651d8cd2cbb0458f3704f8a20e894f5d1089b",
+        "difficulty": "0x0",
+        "excessBlobGas": "0xced554f",
+        "extraData": "0x6275696c6465722e6e666c6169672e657468",
+        "gasLimit": "0xbebc200",
+        "gasUsed": "0x3902f20",
+        "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+        "logsBloom": "0x08a744186192f378d6d41c02d310111a8a8a0f90a0a9c4c9719a4204c568905a0518502c42292e949a3801227b95438caa114860529620a5182096c8b8e57e417640c1a1c8cc3a186460c28ee319cc200551f27800262402202b044a84c274614b1a35c353d00087e00048008200882c203878c40066000420304290516bcc02936a690029d64609f808880e1014000c00e838096924144858bd6843904282311200ac023a0008881f20876c0308c14080d239512676c48849e142a612d0802422790183b5aa3032810b141f4912042f51230063170764f00031caec01c07160cc30012b13a481b6a020840c27006dd299000746386bd86b048a61580ae80008",
+        "miner": "0x8f614cdb61e37b6f18d9705942c93fa86b04d711",
+        "mixHash": "0xc2731d5965a593e3c4cb08c84e1bf11c5703ff882d693e1d1dc0654c72ba6929",
+        "nonce": "0x0000000000000000",
+        "number": "0xba9bfa",
+        "parentBeaconBlockRoot": "0xff9c6be5ea3987330929dac9e4a29fe704e26a85247b77b10d4bdaee8f896c2f",
+        "parentHash": "0xef8ef5e0f44a78021ea598bf165225e6b8d36550495dbe0242e4bc8416550ffa",
+        "receiptsRoot": "0xd621af823841c929b44ab8af603019581da83c37a413d3133d6494300f4d256b",
+        "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0xf01a",
+        "slotNumber": "0xb22f32",
+        "stateRoot": "0x1e1fb6c3091746f36564b4d8d069b6089418a733d93ffa5c092799860d1ee028",
+        "timestamp": "0x6b0ab3b8",
+        "transactions": [
+          "0xdfd6cf20089c0f9180e324ca023ea108d1e5cee60ca69d13e01d46445e575789",
+          "0x5c266a83eb2a21581e55be889c8b8780f0334d3f6aea710c0ba1076280994c74",
+          "0x7d855e83703e46a4fc357f6a9f41d75db7ce9774d1d2c981d59d32a4082f081f",
+          "0x1d1c1ad91ad41a250741fd17a979bcc3f6cc91217380f849962d7f13d3fc1435",
+          "0xb5e03e4eb5de16cfb39b57985d226d7f67129e242f6b4bf5d36c41225e2e52f8",
+          "0xd653199da523c5b45963a7e3c80ad3e2763a687a408faca55564b99183ebff3d",
+          "0xe36c4ffd33f395d1a87e822e938db534203e2335b064ec598e5f95b085fcd9db",
+          "0x62bbb0e63f0782c21cfcbcc832b4f819b7d21d4c81d4bb652060d396b542d80a",
+          "0x6a6173ee2a1e69595b78b58950fc7dfdeb9bc082f76d2b43b49f0d65cadfd4e3",
+          "0x1b9e1e6d99c29eea4222b69bb4f05549977aa0495d00e62f3d9463682594cb8d",
+          "0x96e9e1ed7403b761c391fe6cc1faf34083e3d6b98995388b8ff55f21d9f4171c",
+          "0x3b56d08de27882f838cde1d21be0455e83d881dc29962e532f0548f7c0fa7250",
+          "0xcb60c70be6ba86479c72a52f88d15d23345981837fdbb24ba34660bd3753082a",
+          "0x6ba7316a25a97d49998b4220212666b2a96c3d2049012f61cf96ab6fcf1a4a41",
+          "0x7a67a9610e4fdd9e701f4c01e75e00ba5843ff639d6faf05dbee5da28e044877",
+          "0xcdbe193300b4f14d751f861136a04a051ca43ff62ba0fa1e63d6d528de566edb",
+          "0x64e50346d0c92a66f26c421e9ce0f678a6987b61bcc0a9650973f8345ecec365",
+          "0xe3a0b28e5ebfa592ed035a56a27315ba069f4f8041d9fcfaed792b37d9aa2110",
+          "0x4be0054ac056d9186deedfe0ee3ec68a0f680263a6b9cbfa4b1d7f03b9810467",
+          "0xf43bc95bb648504adcb2c8a3b385dabfa8daeff4795d5d72fada15c008f7d3c0",
+          "0x950f8bf4bc89fbae7006ccf24ef4fa4cb610e1f828e72c296bfa25b4510c428f",
+          "0x30b620c6f5593afcc3ce301f30fd96a025faba4d70ae0de1a78f7580fcb3ceac",
+          "0x74ad6bf7d40bdcff293e48b332d513b10235496f41d95ec6c7387a479913070e",
+          "0x82bbd8acdbff3f19772cf29a045a25fdedfa9cf5d341ab39a87e62c32d024776",
+          "0x84cfcc0c71ab263e302f6837752bfeafd592048d722d41ba219e0c7dbfbf156c",
+          "0x3a62aef92ea0783a7b999a70b9267f77a19b632bf1dd76d8502e2ef69d5045ed",
+          "0xcd89986b5a14f45d262f386f0b923b3d5c7acdaa729723fb12e9176350125077",
+          "0x6feec349f9547b56fa048a74320e22985528073e7865b159af80888e14e81de5",
+          "0xcc0e7769cce764162f3aaef503fa96e09d6f63656e6d455e5306e7f6449d3ab3",
+          "0x7a797ad7ce03bed6fdff97f5106b4784e7b394294d1095e409dd2b09e8856821",
+          "0xf768a41d5ba6aa4732a7b4095acbc488676161b227b20f5aac26bffa77e93aed",
+          "0xab75b5458ae4c2451fa5f469cd39579357bb33a020f494eeae951ee99ecd3b26",
+          "0xe55ce1cfa4953301ff1d1bc84b8d5e025089fba62281593df1be70558ec8f4cb",
+          "0x3f293ec074270efb5d756cc954b09b2b12004192c189fd2bd4504035628d2f89",
+          "0x08e80b4b91c68030f90573330208cbe04968883a5b4d8660e20821abaffe142e",
+          "0x01b2f87227caf38231f89a79520a88e2a0e5623a13e7f48ee6e9c95e1a0ecc0f",
+          "0xeb43a960e26731943feaa18318092edc66b0eeca3b17e68d9e401d10399ccf29",
+          "0x9a5a7fa9870ccf1b901d55aa94c209f5b4f8545ca8498328f98fc8f5d08f0790",
+          "0x41ae36ebf9912aba1ca098bf41ac560b2fbf1f642c906cb464b0f2210a4d1ae3",
+          "0xa2bc1d529fc1bfb82ea85c15e261a016cdb032f5c8c030ed4f5f8fde04321a83",
+          "0xc494203d1e4ba24cb06d78cc381240f1e4b0e26ddd6501d9387ddeb9ce04d504",
+          "0x967e7143d06a27ed0682947dd8f69fc1a3a08015d620839e5960b723f52e98fb",
+          "0xb1f8c78f2bb40ae57a0d07a4e6594b81fc210ed73750696aade91db45e61c3b8",
+          "0x47084cf1cdd0628f733adda492a84038d56fe66bac22fad8a6a2b0b7f467b4e3",
+          "0xce1d56be9951277b9d2538b0e3506cf593d6ba745ef7d401851f3837d7be8cd1",
+          "0x2e645d541cd563cee2371219599613afc7ebe204410fd652c065a73e5dbdae47",
+          "0x7bb7d7948e0464f3e9e773f391cabe093ae6393291079841de3fc17574c7fae4",
+          "0x7494ba897ef25c84c7fc90a388bc8aa1beb21004712a132f8262dc3dec4bb080",
+          "0x104bee5c40459af81110981d836464a3d86f12d230b9a808db1d4d12f0b2c883",
+          "0x54930ab301b9cdabd4f46ca7aa94aae46a2acb3979f433c59067badee8508c6b",
+          "0x93c59462dfe2a77bbee183902be0a448a98bdab3bc720809ee23c27691658f78",
+          "0xcddd728c3e4b31b764bed65fce913e0f765b366125244be391efc2ba2d0ee5f0",
+          "0x71b8d14d4a2cf40de66365df2c74d64cdb87cb27b0ccd147eb54d7f86055763a",
+          "0xe1d3f97205b8dc60d7823dfe017700700c2a637bbab5d63b096728ceb19371c0",
+          "0x7c23ff234014f4271467285083dc3a0e17bd46ffcfa1a8177d1e5c4b260b2f62",
+          "0xc969cbefeb4736b94a78a4e4081485306678982186cfd13ca4ea5245bde10bcb",
+          "0x7a9891bc9b61736165cc05ea14333eb63ef796c846edfbab7c047551fdbf2602",
+          "0x5db1a11d861a4520631fc2853fa21020417a2a71b39abc4eff066aca8490f245",
+          "0xd8d2678b479635365fbf0cca530da13d929706082058a1ef1a2e8a98f71adda7",
+          "0x64df30d320e5dc55378ef94208c13fd6c37e9b4538ba5240616af405dbb9effc",
+          "0xe94c78aae888bf1fc571be252facec27074453ebe05bc855bb1635796803640d",
+          "0xf5d716f672f82d8cab42a709d791a30fcc6aa5a7c8d514d967163d135e4cd9c8",
+          "0xd212163b140c99a212c212cf3035aebb827660af10bdd495adb0cd38ef226a8c",
+          "0x04ec13fe8160beef0660b391426626dceecb7de3e17cf09896da8623ae3a257d",
+          "0x81be66b05a46bea9d5ca36ed4c230de8f6fd94e8cc2bb5c577034034c39c5b9d",
+          "0x915ce0dd1b83a05e053a09c9fef906d5f0d9466539f84ee161bb62078070edb5",
+          "0xf205bc3496e3c7db2617efa7b31a0881bf42c99791e60cace4acac8471558224",
+          "0x888846d6137b19a5112d2da77ac9ad8c8cef7cbf56882184ca674f5a1603c56a",
+          "0x0160771d3dfb26ec15fe7f35de27fa3dda2fd9c7a8f7f3c0058b1dafac66c5fc",
+          "0x47aaf398d407a2aa0bd3bc429d7273e2358b21f575f8f2077f28ded653db364c",
+          "0xa5f3becedf6bd328b1cbc643787963653665af72607f56be7fefc13af67eeae2",
+          "0xaf5c55dc21efcaf55b74d952f1d31c0fca6b35c336de9fcdde5c4e8bc976f10b",
+          "0x05c3d783e2a4f6c6362fcc8e3a56f594ba6f5aceede0fb4a5ee2b481ac97d95e",
+          "0x5e28299878d0664177e36f7c12fbee65373ca0e25e5c67c2d9af1b16058e8bdc",
+          "0x9a32ca73d4293d635d9cce203c946d8937cdca98e95c61347c1536c46193b152",
+          "0xc94eae477ec1d6b53e7eeb4b4ef844e367ddedfad47dd38dfa3b857c1cbeb789",
+          "0xd02d37fe96d28a03735270d09c5adf29c54b2fff6d0422c0a94d2bff5b5d5f3b"
+        ],
+        "transactionsRoot": "0xc9e20cce4a9e0c1fd97e16f37dd7e4cb3bfd3bbe8ae03294ce8d7d703a3426ff",
+        "uncles": [],
+        "withdrawals": [
+          {
+            "address": "0x9b984d5a03980d8dc0a24506c968465424c81dbe",
+            "amount": "0x38ce53f",
+            "index": "0x8cf3f08",
+            "validatorIndex": "0x10000000000"
+          },
+          {
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x36f85",
+            "index": "0x8cf3f09",
+            "validatorIndex": "0x620"
+          },
+          {
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f0a",
+            "validatorIndex": "0x621"
+          },
+          {
+            "address": "0xbeefd32838d5762ff55395a7beebef6e8528c64f",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f0b",
+            "validatorIndex": "0x625"
+          },
+          {
+            "address": "0x4fdf12fce113458b66d9a4fe72445ece9f35923b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f0c",
+            "validatorIndex": "0x827"
+          },
+          {
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f0d",
+            "validatorIndex": "0x62"
+          },
+          {
+            "address": "0xf97e180c050e5ab072211ad2c213eb5aee4df134",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f0e",
+            "validatorIndex": "0x63"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x36f85",
+            "index": "0x8cf3f0f",
+            "validatorIndex": "0x190"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f10",
+            "validatorIndex": "0x191"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x36f85",
+            "index": "0x8cf3f11",
+            "validatorIndex": "0x192"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f12",
+            "validatorIndex": "0x193"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f13",
+            "validatorIndex": "0x194"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f14",
+            "validatorIndex": "0x195"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f15",
+            "validatorIndex": "0x196"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f16",
+            "validatorIndex": "0x197"
+          },
+          {
+            "address": "0x25c4a76e7d118705e7ea2e9b7d8c59930d8acd3b",
+            "amount": "0x32ca7",
+            "index": "0x8cf3f17",
+            "validatorIndex": "0x198"
+          }
+        ],
+        "withdrawalsRoot": "0xee3aadcffe77597e340303a1cb359796a0567b43995ddcb043c7d1328030e0c5"
+      }
+    },
+    {
+      "method": "eth_chainId",
+      "calledAt": "2026-11-28T11:19:00.497Z",
+      "paramsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "params": [],
+      "result": "0xaa36a7"
+    },
+    {
+      "method": "eth_getBlockByNumber",
+      "calledAt": "2026-11-28T11:19:00.591Z",
+      "paramsSha256": "5ce37a00f21a30938690a296bd4f9488055b18131ba904554542d10e81099360",
+      "params": [
+        "0x0",
+        false
+      ],
+      "result": {
+        "baseFeePerGas": "0x3b9aca00",
+        "difficulty": "0x20000",
+        "extraData": "0x5365706f6c69612c20417468656e732c204174746963612c2047726565636521",
+        "gasLimit": "0x1c9c380",
+        "gasUsed": "0x0",
+        "hash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "miner": "0x0000000000000000000000000000000000000000",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "nonce": "0x0000000000000000",
+        "number": "0x0",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0x225",
+        "stateRoot": "0x5eb6e371a698b8d68f665192350ffcecbbbf322916f4b51bd79bb6887da3f494",
+        "timestamp": "0x6159af19",
+        "transactions": [],
+        "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "uncles": []
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "governor_total_gas_limits",
+      "result": "PASS"
+    },
+    {
+      "name": "old_total_cap",
+      "gas": "16777216",
+      "expectedSuccess": false,
+      "observedSuccess": false,
+      "error": "eth_call: {\"code\":-32000,\"message\":\"contract creation code storage out of gas\"}",
+      "result": "PASS"
+    },
+    {
+      "name": "estimate_plus_headroom",
+      "gas": "35325107",
+      "expectedSuccess": true,
+      "observedSuccess": true,
+      "runtimeBytes": 18279,
+      "runtimeKeccak256": "0xfe63149bd8e0c5aa61698255c38dafecf95f5efbc495f742a206e86112938819",
+      "runtimeMatchesCompilerOutsideImmutables": true,
+      "result": "PASS"
+    },
+    {
+      "name": "canonical_anchor_and_network_rechecked",
+      "result": "PASS"
+    }
+  ],
+  "limitations": [
+    "All account and dependency addresses are synthetic; overrides exist only for RPC simulation.",
+    "Dependency runtime templates have compiler placeholder immutables and no historical storage. They are adequate for Governor constructor calls clock/CLOCK_MODE only; this is not full bootstrap simulation.",
+    "eth_call/estimate success is not txpool admission, builder inclusion, signing, or an actual deployment receipt.",
+    "Total-gas success does not measure execution/state gas separately. Protocol interpretation also relies on cited fork specifications.",
+    "No actual account-map estimates, native balances, owner acceptance or broadcast authorization."
+  ],
+  "anchor": {
+    "height": "12229626",
+    "hash": "0x3bfb1b7ab7d6730896c6450ad563c60edffb6a1e90ebd7b9dc0fa395d4e9b4a2",
+    "timestamp": "1795863480",
+    "gasLimit": "200000000",
+    "observedHead": "12229721"
+  },
+  "artifactProvenance": {
+    "GOV": {
+      "path": "out/GovernanceToken.sol/GovernanceToken.json",
+      "sha256": "0939fa6b4718d9a65ebd4bfbce7ef24e351e8f34ad4061647e1d54916ba9db87",
+      "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b",
+      "creationBytecodeSha256": "2d0a64b294a64de7032b27842011f6bcb1da9c0d5a0799f1710aa0009f0cd8bd",
+      "runtimeBytecodeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+      "compiler": {
+        "version": "0.8.37+commit.f401782d"
+      },
+      "settings": {
+        "remappings": [
+          "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+          "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+          "forge-std/=lib/forge-std/src/",
+          "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+          "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+        ],
+        "optimizer": {
+          "enabled": true,
+          "runs": 200
+        },
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "compilationTarget": {
+          "contracts/GovernanceToken.sol": "GovernanceToken"
+        },
+        "evmVersion": "osaka",
+        "libraries": {}
+      },
+      "compilerSourceNormalizations": {},
+      "immutableReferences": {
+        "52823": [
+          {
+            "start": 4191,
+            "length": 32
+          }
+        ],
+        "52825": [
+          {
+            "start": 4149,
+            "length": 32
+          }
+        ],
+        "52827": [
+          {
+            "start": 4107,
+            "length": 32
+          }
+        ],
+        "52829": [
+          {
+            "start": 4272,
+            "length": 32
+          }
+        ],
+        "52831": [
+          {
+            "start": 4312,
+            "length": 32
+          }
+        ],
+        "52834": [
+          {
+            "start": 2313,
+            "length": 32
+          }
+        ],
+        "52837": [
+          {
+            "start": 2358,
+            "length": 32
+          }
+        ]
+      }
+    },
+    "BUD": {
+      "path": "out/BudgetToken.sol/BudgetToken.json",
+      "sha256": "3206a32cb3b9c45bd34a3bb6d07f99adf0324bfaee38209f2a7d065382b8a06f",
+      "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8",
+      "creationBytecodeSha256": "107e4a45d21b2fff6f1047320ef818007c9463df38fb084ec70438cafad25eaa",
+      "runtimeBytecodeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+      "compiler": {
+        "version": "0.8.37+commit.f401782d"
+      },
+      "settings": {
+        "remappings": [
+          "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+          "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+          "forge-std/=lib/forge-std/src/",
+          "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+          "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+        ],
+        "optimizer": {
+          "enabled": true,
+          "runs": 200
+        },
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "compilationTarget": {
+          "contracts/BudgetToken.sol": "BudgetToken"
+        },
+        "evmVersion": "osaka",
+        "libraries": {}
+      },
+      "compilerSourceNormalizations": {},
+      "immutableReferences": {}
+    },
+    "Treasury": {
+      "path": "out/Treasury.sol/Treasury.json",
+      "sha256": "5db02f7586c88f478906e9f28b8d9f18c398b7d16ba2419d6525c03a3ee05685",
+      "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b",
+      "creationBytecodeSha256": "405a297700667b2b8ebf9c094b2097f610074d0a4117224ac49a28e383f0e985",
+      "runtimeBytecodeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+      "compiler": {
+        "version": "0.8.37+commit.f401782d"
+      },
+      "settings": {
+        "remappings": [
+          "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+          "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+          "forge-std/=lib/forge-std/src/",
+          "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+          "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+        ],
+        "optimizer": {
+          "enabled": true,
+          "runs": 200
+        },
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "compilationTarget": {
+          "contracts/Treasury.sol": "Treasury"
+        },
+        "evmVersion": "osaka",
+        "libraries": {}
+      },
+      "compilerSourceNormalizations": {},
+      "immutableReferences": {
+        "674": [
+          {
+            "start": 440,
+            "length": 32
+          },
+          {
+            "start": 876,
+            "length": 32
+          },
+          {
+            "start": 1074,
+            "length": 32
+          }
+        ]
+      }
+    },
+    "Timelock": {
+      "path": "out/TimelockController.sol/TimelockController.json",
+      "sha256": "7ab1952cfff5622abde02b0df708828a576835edbe8bd7f8e9f8eeb6b7b488c5",
+      "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa",
+      "creationBytecodeSha256": "2d7968b117f06dee277bc09016635119ccb3dae7b19cbb188eada385aabc2315",
+      "runtimeBytecodeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+      "compiler": {
+        "version": "0.8.37+commit.f401782d"
+      },
+      "settings": {
+        "remappings": [
+          "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+          "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+          "forge-std/=lib/forge-std/src/",
+          "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+          "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+        ],
+        "optimizer": {
+          "enabled": true,
+          "runs": 200
+        },
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "compilationTarget": {
+          "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol": "TimelockController"
+        },
+        "evmVersion": "osaka",
+        "libraries": {}
+      },
+      "compilerSourceNormalizations": {},
+      "immutableReferences": {}
+    },
+    "Governor": {
+      "path": "out/BudgetGovernor.sol/BudgetGovernor.json",
+      "sha256": "4f736ebeb43a104c6d8d041aafeb2dfaf4497b7965aa7bcd9d04298229e0a4be",
+      "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752",
+      "creationBytecodeSha256": "b368c86b1e1e79b7254e5546cf81537d6c7a5dbd948b5172a16dccd5a34a6291",
+      "runtimeBytecodeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+      "compiler": {
+        "version": "0.8.37+commit.f401782d"
+      },
+      "settings": {
+        "remappings": [
+          "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+          "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+          "forge-std/=lib/forge-std/src/",
+          "halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/",
+          "openzeppelin-contracts/=lib/openzeppelin-contracts/"
+        ],
+        "optimizer": {
+          "enabled": true,
+          "runs": 200
+        },
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "compilationTarget": {
+          "contracts/BudgetGovernor.sol": "BudgetGovernor"
+        },
+        "evmVersion": "osaka",
+        "libraries": {}
+      },
+      "compilerSourceNormalizations": {},
+      "immutableReferences": {
+        "37": [
+          {
+            "start": 1615,
+            "length": 32
+          },
+          {
+            "start": 7115,
+            "length": 32
+          },
+          {
+            "start": 7628,
+            "length": 32
+          }
+        ],
+        "47441": [
+          {
+            "start": 2574,
+            "length": 32
+          },
+          {
+            "start": 3702,
+            "length": 32
+          },
+          {
+            "start": 4675,
+            "length": 32
+          },
+          {
+            "start": 8022,
+            "length": 32
+          },
+          {
+            "start": 8624,
+            "length": 32
+          }
+        ],
+        "52823": [
+          {
+            "start": 12414,
+            "length": 32
+          }
+        ],
+        "52825": [
+          {
+            "start": 12372,
+            "length": 32
+          }
+        ],
+        "52827": [
+          {
+            "start": 12330,
+            "length": 32
+          }
+        ],
+        "52829": [
+          {
+            "start": 12495,
+            "length": 32
+          }
+        ],
+        "52831": [
+          {
+            "start": 12535,
+            "length": 32
+          }
+        ],
+        "52834": [
+          {
+            "start": 7790,
+            "length": 32
+          }
+        ],
+        "52837": [
+          {
+            "start": 7834,
+            "length": 32
+          }
+        ]
+      }
+    }
+  },
+  "sourceHashes": {
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "scripts/governance_local.mjs": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+    "scripts/governance_operations.mjs": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+    "scripts/deploy_local.mjs": "a68b75811bd279d2fe6ce5e14529e95e208d085ce08caeef32b797e4c62c86f5",
+    "scripts/check_roles.mjs": "ef834dc8a4b2e3bd524e2b7e0255b8286b1e364e005c59a78db43e7aa71232fc",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "lib/openzeppelin-contracts/contracts/governance/utils/IVotes.sol": "5876ce02c2f959a2b94a46735c8e4f9b717c645c9a47c72bc6e6ed1c659225e7",
+    "lib/openzeppelin-contracts/contracts/governance/utils/Votes.sol": "feded838fdab8e52e1a3352f95dd7e63311b2c079f2293bda17633fbefda6d96",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC5267.sol": "f89772d2d4fafcbef8b73bb10ee9a3373edec2eedb2f1b302320915b351dc3d1",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC5805.sol": "2b1e317a9ad0303948d00cfee78c42f99f7558c8d2002a7c63f04d2b70324cac",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC6372.sol": "b82e19cde1eaa6c179ac49ba38db89d8cf291522e3c7b90cc2dd327df2e6cc4d",
+    "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol": "df936240c9a5d342582cbda70dd773b1c1d0e0dda3042b1c17b902ef0c36827b",
+    "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol": "9f906af4cba6e7e091dc12d45e6687e1239cf82d17678198424250fd64ab96bd",
+    "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol": "01b6f5c4fa45fd38822b286ecef6daf983d27306dd6362496fa71b3e4600b72c",
+    "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol": "f2a0c9b7b4b67cec3ae19dad94454da68da553512f22e4eaf39c46447e11815a",
+    "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol": "0b7132f17d14d1d84b41b0bb429be62dafdff00fd3470f68724d8018eb07f57a",
+    "lib/openzeppelin-contracts/contracts/utils/Context.sol": "847fda5460fee70f56f4200f59b82ae622bb03c79c77e67af010e31b7e2cc5b6",
+    "lib/openzeppelin-contracts/contracts/utils/Nonces.sol": "9b4cbb85d1f5053c744e83302538eb643a713ffd14bc37665b224f1c66529339",
+    "lib/openzeppelin-contracts/contracts/utils/Panic.sol": "270fc8401c1a13fae6a7a4a2dd6e381b95d658896701e51f0d3e2688acab3dec",
+    "lib/openzeppelin-contracts/contracts/utils/ShortStrings.sol": "542d5dfe5e4375d83f2e3b5246b2d0d7507406a4b582844dbc73bd31ed2faa83",
+    "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol": "75704538dcb223239280c6726d9a31cf769a7816718517c997fc7d63bdb70778",
+    "lib/openzeppelin-contracts/contracts/utils/Strings.sol": "2db7d21151644c57f75ed3ab55e87f3cf7fbf587a65345650fd740e2cfd50be3",
+    "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol": "0964ddd02f4a7a8cf9ba130e3aeead588ca3d425d5bc13cc4221358c69108ed0",
+    "lib/openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol": "c20e0789a53610b2551058e0bd556dcd2caa20a7457348c3c73df037fba88861",
+    "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol": "936a89f512d5da84b0896b66d2398f2bea9eefdf2afa788af5265fcd74302693",
+    "lib/openzeppelin-contracts/contracts/utils/math/Math.sol": "92fee281fd46a1b058b190cf21d6b1a528f0433a907850ae1c9bcf36c5c0cd98",
+    "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol": "9769274bf53f26a7c7896c526ea1980dc9bea5bf5c2a5fd04870008c4afc1de9",
+    "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol": "1ed50b1056af886752f0fb48a0165d381e69bb4a4b18b893b066dc144a7e08d7",
+    "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol": "d908ee19a12ef183693ba9635c4bd5ec902614c493fb7967898de286218e42f7",
+    "lib/openzeppelin-contracts/contracts/utils/types/Time.sol": "79534431c3934b23eafab9d02bda493cfc2ae383ba117a7c9698750c2e4845f1",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "contracts/interfaces/ITreasury.sol": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+    "lib/openzeppelin-contracts/contracts/access/AccessControl.sol": "93c8ebfe7b36ef4d180f1660a5a741125691957726209720af476fdd5c7bac43",
+    "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol": "140304b7e99d517c57a13f391dfd3b550ca633a507f7b2af130f391b6cd89cc5",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC1363.sol": "9c3a75a925a6dac9e88b03cddc58d42fe3131b0aaaad84408521f3f7af2f991b",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol": "dfb3f56fa928a7c6cae41a7ce2c86b9210fa18d33fa26389099d66a0fa790368",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol": "0158e2d3e0e28bedd99eec13dcf1a8aa3a70a5b7e4bb2ad709609c95fcc740d1",
+    "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol": "ac1fd9fa99b194a8db8dfa9ae8e3ff44feaa8f16668241fd2b66ae8b47d7c082",
+    "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol": "61a2b12c96857aaa35f48aeda67a4281637a42494c0b3795be0ae976aa7b3793",
+    "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": "9055c2994b37dea1a41b7b7926dcb510f05dbe2540b0aafc5fbee9558fffd0ca",
+    "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol": "4a5946a9ea4abbaef29225dc42da6c50c66bb13cae1b592607222599b0526f64",
+    "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol": "3df310870e0187a59020ea48e910ed2693778b1f758b57b97a47365d74b92af5",
+    "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol": "08dbc044feab0e187a81a52142f907be598ecca0d35311766a346343af7b18af",
+    "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol": "eafee3ffdc7cb2fba4bf6bd16fb28f8e5b4679742e81c2ad42a1b1df5c179feb",
+    "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol": "fa1e231eedfd128232d8f34e9599165fb302c9dee5e58ef009f3b99f7e5d930d",
+    "lib/openzeppelin-contracts/contracts/utils/Address.sol": "f1a9255dbc40cf9ae7c786abed3b022691a9d24bca0c7f05dc60e63421d405ab",
+    "lib/openzeppelin-contracts/contracts/utils/Errors.sol": "0704b9d6c032cca8512a3bc3f30f49f86f1f03102d2896a3d23e794b82efea66",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "lib/openzeppelin-contracts/contracts/governance/Governor.sol": "a9fd3f809dcefe364c19b83b9ca8389a6e4d50f9d38bbb7ebef10724be2f9b74",
+    "lib/openzeppelin-contracts/contracts/governance/IGovernor.sol": "bc307a91cdad776b3219637649f6c89a9fae7099e9d0d2ab07c4fd3f31553a31",
+    "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingSimple.sol": "7b57caea0515e9121f2f2d64229b588609caab302eac01909c9d8361ae212554",
+    "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSettings.sol": "bff3837e8deb8411352a71e43a0706d266b3dce29ef6fb5ce810af87eae3dbf7",
+    "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol": "1ceb0775536e4fbfbe2338f38f2d6fd5d44b126e5cd264a2a3b4e9d2746fd61d",
+    "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol": "7df898e3e295914434fde0a7dbc890a5539fe2b61f2cbce6540d69014d416bcf",
+    "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol": "e7005800451ae5d1a678cb85acd4bfbc5ac80117b2dbdb49ebae98b81bd723d3",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol": "2d17bba201aa2f9c55e317315b872272a60361848dfceb6b1e77081265c79a27",
+    "lib/openzeppelin-contracts/contracts/interfaces/IERC7913.sol": "f66aad4249885b0f11369bfa825dded60aa4baa0d76d9becdac9daa48c350350",
+    "lib/openzeppelin-contracts/contracts/utils/Bytes.sol": "b8ecad25855c07fe0c65cffaf19c1517751b2837640f8a144ab26d5bf4e6f741",
+    "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol": "df1954739f18679bae60450ccf2437a29a32a33e65756c1ec08e0f358c806246",
+    "lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol": "463c51e14acbb0b9afef3f1f6903203cce5798fb168742ccd7e049e0397b2184"
+  },
+  "syntheticAccounts": {
+    "A": "0x0000000000000000000000000000000000001001",
+    "B": "0x0000000000000000000000000000000000001002",
+    "C": "0x0000000000000000000000000000000000001003",
+    "D": "0x0000000000000000000000000000000000001004",
+    "funding": "0x0000000000000000000000000000000000001005",
+    "deployer": "0x0000000000000000000000000000000000001006",
+    "caller": "0x0000000000000000000000000000000000001007",
+    "recipient": "0x0000000000000000000000000000000000001008",
+    "outsider": "0x0000000000000000000000000000000000001009"
+  },
+  "governor": {
+    "predictedAddress": "0xaA242672590B032557d47AA69841da351593fF67",
+    "creationBytes": 21564,
+    "initcodeKeccak256": "0x34c7a6618babf72e236590853289ef3f3c9254cd50d9271aa5ebe4291e8fd0bf",
+    "estimate": "29437589",
+    "gasLimitWith20Percent": "35325107",
+    "runtimeTemplateBytes": 18279
+  },
+  "feeQuote": {
+    "observedAt": "2026-11-28T11:19:00.278Z",
+    "gasPriceWei": "15"
+  },
+  "finishedAt": "2026-11-28T11:19:00.703Z"
+}

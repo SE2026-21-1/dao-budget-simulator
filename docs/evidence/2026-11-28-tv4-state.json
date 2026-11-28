@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-28",
+  "actor": "dung0611",
+  "kind": "acceptance-and-status-update-not-runtime-run",
+  "refs": {
+    "Dev": "d63842ae50dc9a29a42529ce7cd08ca7c569759e",
+    "main": "ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4",
+    "pr63": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+    "pr60": "24f66b6cae0f13651c622625adcc687e6d11fffd",
+    "pr61": "cba8b6c9eda65959d82250441b8eed131a1a5044",
+    "pr62": "d4a0fb563e66be951760167a6f62b246821dc17c"
+  },
+  "pr63": {
+    "verdict": "NOT_MERGED_PEER_REVIEW_PENDING",
+    "reviews": 0,
+    "threads": 0,
+    "requestedReviewers": [
+      "daongocuong"
+    ],
+    "eventHead": "4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a",
+    "historicalLogBackedCheckout": "fe8df7cd1019d01b38f5f71a0a78865127c29f80",
+    "runs": [
+      {
+        "id": 46034162713,
+        "attempt": 1,
+        "conclusion": "success",
+        "jobsSuccess": 10,
+        "jobsSkipped": 1
+      },
+      {
+        "id": 46034162609,
+        "attempt": 1,
+        "conclusion": "success",
+        "jobsSuccess": 1,
+        "jobsSkipped": 0
+      }
+    ],
+    "artifact": {
+      "id": 15215558819,
+      "sha256": "026f5cf81f1a70344a86ce8cabf75c29837f77ab4ad479cf6e5b3dd45eb3f0cb",
+      "redownloaded": false
+    },
+    "sourceFindings": [],
+    "mergeSha": null,
+    "postMergeCI": null
+  },
+  "posts": {
+    "issue42Signoff": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032",
+    "issue19": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7234792353",
+    "issue40": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7234792567",
+    "pr63AuthorAudit": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/63#issuecomment-7234792896",
+    "pr62Review": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429",
+    "issue44": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916"
+  },
+  "issuesUpdated": [
+    6,
+    7,
+    19,
+    20,
+    40,
+    41,
+    42,
+    44
+  ],
+  "issuesClosed": [],
+  "draftPRsPreserved": [
+    52,
+    62
+  ],
+  "project": {
+    "url": "https://github.com/orgs/SE2026-21-1/projects/1/views/2",
+    "route": "authenticated relay browser; token lacks read:project; no scope changes",
+    "fieldsUpdated": [
+      "Bằng chứng / SHA",
+      "Phụ thuộc / cần xác nhận"
+    ],
+    "persistence": "Actual UI edits, reload then await table and read all eight rows; no scripted state/API mutation",
+    "rows": [
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dep": "28/11 In review/PARTIAL. #42 TV4 scoped API-only PASS signed7234721032 (source896f93e/H22), no receiver-not-ready/API-missing blocker. #41 local OptionB ACCEPTED7155604461; TV3 pinningP2 COMMENT6055560601 resolved. PR63 head4f6a396/baseDev d63842 CI46034162713+46034162609 SUCCESS, actualcheckout fe8df7c; awaiting sole TV2 union/admin/decoder/storage review, not old BE08 approval. Remain #19 provider-boundary/sessionidentity/raw503, #40 access/ownership+WindowsWSL lifecycle, #20 owner/testnet, #44 group exact source/manifest/report/demo/video. PR62 live SKIP; no merge/release.",
+        "ev": "PR63 source4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a; actualDev d63842ae50dc9a29a42529ce7cd08ca7c569759e; CI checkoutfe8df7cd1019d01b38f5f71a0a78865127c29f80. CI/evidence https://github.com/SE2026-21-1/dao-budget-simulator/blob/16c0ab21bee2022bf478bc0fc2a10137ba8e68b3/docs/evidence/2026-11-27-pr63-merge-readiness.md . #42 signoff https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032 . PR62 COMMENT https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429 (historical144PASS, liveSKIP).",
+        "id": "5945304278",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dep": "28/11 In review/PARTIAL; 10Ready(single)N/A, historicalFAIL preserved. #42 TV4 scoped API-only PASS signed7234721032 (source896f93e/H22), no receiver-not-ready/API-missing blocker. #41 local OptionB ACCEPTED7155604461; TV3 pinningP2 COMMENT6055560601 resolved. PR63 head4f6a396/baseDev d63842 CI46034162713+46034162609 SUCCESS, actualcheckout fe8df7c; awaiting sole TV2 union/admin/decoder/storage review, not old BE08 approval. Remain #19 provider-boundary/sessionidentity/raw503, #40 access/ownership+WindowsWSL lifecycle, #20 owner/testnet, #44 group exact source/manifest/report/demo/video. PR62 live SKIP; no merge/release.",
+        "ev": "PR63 source4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a; actualDev d63842ae50dc9a29a42529ce7cd08ca7c569759e; CI checkoutfe8df7cd1019d01b38f5f71a0a78865127c29f80. CI/evidence https://github.com/SE2026-21-1/dao-budget-simulator/blob/16c0ab21bee2022bf478bc0fc2a10137ba8e68b3/docs/evidence/2026-11-27-pr63-merge-readiness.md . #42 signoff https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032 . PR62 COMMENT https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429 (historical144PASS, liveSKIP).",
+        "id": "5945305236",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dep": "28/11 OPEN/PARTIAL. B-active/error/draft visual+preflight7/7/provenance ACCEPTED; no resubmit/governance rerun. Still continuous selected-provider interval before Submit through guard settle(method/time/accounts/from), same-session About/manifest identity, raw proposals503 URL/headers/body/UTC/context+TV2logs. No-popup/nonce/head/pool only inference no-send, not proof provider never called. H26versionUNKNOWN/imageMISSING; newrun13.58.0 producer-declared,503causeUNKNOWN. TV4 conclusion7234792353.",
+        "ev": "Evidence887c5ecafd79feaf64956b8e05e9d16576404d84 unchanged8files; historical7/7checksums retained, product4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44/H19. Scoped TV4 acceptance https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7234792353 ; provenance7184879061 accepted. No new receiver/browser run.",
+        "id": "5991633102",
+        "status": "Blocked"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dep": "28/11 BLOCKED owner/testnet; no new owner packet. GroupLeadTV1/nvdungmim appoints deploymentowner; owner supplies fullapprovedSHA/map9publicaddresses/custody+exclusiveuse+reviewedsigningpath6signers/numericgas+feebudget+funder/explicitbroadcastauthorization. Existing request pending, no duplicate ping or secret. Security APPROVED retained, not testnetPASS or permission to send. Live testnetSKIP/0broadcast this assignment.",
+        "ev": "TV1security review6037012460 onb186844 remains scoped, unchanged signing/receipt/journal source inPR63. Owner request6878135785/7093831057 retained. Current dependency summary https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916 ; local #42 bootstrap approval7207030810 is NOT Sepolia/deploymentowner appointment.",
+        "id": "5991633332",
+        "status": "Blocked"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dep": "28/11 Readiness HOLD/runtime SKIP, not runnerFAIL. BE09 offline ACCEPTED/historical lifecycle PARTIAL. Clean approvede8e443c already confirmedTV2, no source approval repeat. TV3+receiverowner need authorized isolated Windows/WSL host inventory, ports/task/process/transport ownership and restoration baseline. Require before/after PID+starttime/listeners, Windows task/transport/Vite original-state restoration, HTTP recovery, raw foreground serve transcript+actual serve exit(not tee/down/kill). No LinuxTV4 substitute or #42 shutdown.",
+        "ev": "Clean sourcee8e443c6986a17c46e9ac4fba41c4fe3fa88eff0; existing narrowOptionB7184789349/TV2source7206416095. TV4 HOLD acknowledgment https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7234792567 ; latest receiver7221841931/7222076540 no runnable ownership. #42seal/signoff7234721032 does not authorize stopping its receiver.",
+        "id": "6235491322",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dep": "28/11 Local OptionB receipt-workerSQL-API-UI ACCEPTED7155604461; no pendingworkerSQL/TV4pipeline signoff or JSON reextraction/governance rerun. Whole issue OPEN/PARTIAL only #19providerboundary/sessionidentity/raw503 and #40access/ownership+lifecycle. B-active/provenance ACCEPTED, #42scopedrestart PASS on separate source/run; no relabel pipeline/testnet/release.",
+        "ev": "Product6766e5ee2d8c466542687cbeb09677c4d11e5463/H52/hash6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66/revisionae1ae7f2-48f8-4847-af12-b20988a382c9. SQLqueryH58 not publicationH52. Accepted https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461 ; dependencies https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916",
+        "id": "6235492657",
+        "status": "Blocked"
+      },
+      {
+        "acceptance": "Kiểm tra một phần",
+        "dep": "28/11 TV4 technical PASS scoped API-only restart, signoff7234721032; receiver-not-ready/API-missing blockers removed.12HTTP200/6URLpairs/5digestpairsMATCH,TTL/checkpoint/canonical/process isolation. BE06 accepted historical source4cba99a/H24 retained; no rerun. Issue OPEN/In review only group/TV2/TV1 final disposition, not new technical receiver gate. TERMcommandexit0 not oldAPIterminationstatus; newAPIterminationN/A at capture. Seal no shutdown permission.",
+        "ev": "TV4 signoff https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032 ; immutable report/inventory https://github.com/SE2026-21-1/dao-budget-simulator/blob/73617327ba6c6244120ff13b4da948aa7ff44042/docs/evidence/2026-11-27-r2-issue42.md ; product896f93ea282d76fa72339a97ea12339240c16da4/runapi-restart-attempt-20261127T134827+0700/H22/hash3b9fd152...94c8/revisionedc6f818...db90.78/78restart+37/37supplement+34/34actualmetadata historicalchecksumPASS.",
+        "id": "6235493824",
+        "status": "In review"
+      },
+      {
+        "acceptance": "Bị chặn",
+        "dep": "28/11 NOT RELEASE-READY/Blocked. #42technical scopedPASS signed7234721032, #41localpipelineACCEPTED; #19B-active/provenance ACCEPTED, only boundary/session/raw503 remain; #40accessHOLD/lifecycleSKIP; #20appointedowner/publicSHA-map9-custody6-numericbudget-auth+actualtestnet absent. PR634f6a396/Devd63842 CI success actualcheckoutfe8df7c, TV2union/adminreview pending once. TV3pinningP2 resolvedCOMMENT6055560601, no reviewrepeat. Group selects exactsource/manifest/report/demo/video. PR52Draft; no main/tag/release/rollout.",
+        "ev": "Current summary https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916 ; PR63audit https://github.com/SE2026-21-1/dao-budget-simulator/pull/63#issuecomment-7234792896 ; #42signoff7234721032; PR62COMMENT6096047429 historical144PASS/liveSKIP. PR63 source4f6a3968e9538e1a17fd95c38284c02b2b0c9e3a; actualDev d63842ae50dc9a29a42529ce7cd08ca7c569759e; CI checkoutfe8df7cd1019d01b38f5f71a0a78865127c29f80. CI/evidence https://github.com/SE2026-21-1/dao-budget-simulator/blob/16c0ab21bee2022bf478bc0fc2a10137ba8e68b3/docs/evidence/2026-11-27-pr63-merge-readiness.md . #42 signoff https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032 . PR62 COMMENT https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429 (historical144PASS, liveSKIP).",
+        "id": "6235520839",
+        "status": "Blocked"
+      }
+    ]
+  },
+  "runtime": {
+    "testsRun": [],
+    "receiverActions": [],
+    "livePr62": "SKIP_MISSING_APPROVED_INPUTS",
+    "sepoliaBroadcasts": 0,
+    "deployments": 0
+  }
+}

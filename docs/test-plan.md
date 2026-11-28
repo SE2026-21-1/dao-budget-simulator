@@ -1,8 +1,20 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
-Ngày đối chiếu hiện hành: **27/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
+Ngày đối chiếu hiện hành: **28/11/2026**; [signoff, source/CI/review và dependency hiện hành](evidence/2026-11-28-tv4-delivery.md) bổ sung ma trận §6. Tiêu chí TC/setup và evidence 20–22/10 giữ làm lịch sử, không phải runtime hiện tại. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
+
+## Delta nghiệm thu — 28/11/2026
+
+| Phạm vi | Kết luận hiện hành | Còn thiếu |
+|---|---|---|
+| #42 | [TV4 signoff7234721032](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032): scoped API-only restart PASS;78/78,12HTTP200,6URLpairs,5digestpairs; source896f93e/H22, không run mới | Nhóm chốt disposition toàn issue; không còn receiver-not-ready/API-missing |
+| PR63 | head4f6a396/baseDevd63842; CI46034162713/46034162609 SUCCESS, actualcheckoutfe8df7cd; full relevant source audit không finding mới | TV2 union/admin/decoder/storage peer review đã request, chưa nộp; chưa merge |
+| PR62 | [TV4 COMMENT6096047429](https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429), unchanged d4a0fb5;144PASS lịch sử, không rerun | Draft; live SKIP: approved endpoint/instance/runtime keccak/H/hash/numeric policy |
+| #19/#40 | B-active/preflight7/7/provenance ACCEPTED; #40 readiness HOLD/runtime SKIP, không FAIL | #19 provider interval/session identity/raw503+TV2logs; #40 authorized isolated Windows/WSL inventory/lifecycle/restoration/actual serve exit |
+| #41/#6/#7/#20/#44 | Local OptionB ACCEPTED, không chờ workerSQL; #6/#7 In review/PARTIAL; #20 BLOCKED; #44 NOT RELEASE-READY | Owner/testnet và nhóm chọn exact source/manifest/report/demo/video; PR52 vẫn Draft |
+
+Không cộng các CI tiers lặp thành unique-test total hoặc gán runtime9417d4ce/receiver896f93e thành PR63head/evidenceHEAD. Giữ10Ready(single) **N/A**, historical FAIL/raw evidence và #18/#36/BE06/bounded invariants accepted. [Project#1 state sau reload](evidence/2026-11-28-tv4-state.json) ghi tám items × hai fields; không item nào được đổi Done.
 
 ## 1. Ranh giới bằng chứng hiện tại
 

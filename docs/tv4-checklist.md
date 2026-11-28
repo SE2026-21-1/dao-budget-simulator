@@ -5,6 +5,19 @@ TV4 chịu trách nhiệm chính về invariant/attack/E2E, deploy/seed/demo,
 CI, check-roles và tổng hợp evidence. Mỗi thành viên vẫn viết test/tài liệu phần mình.
 TV1 review deployment; TV4 review logic chi tiền của TV1. Mỗi PR cần người khác review.
 
+## Kết luận hiện hành — 28/11/2026
+
+- [x] [TV4 signoff #42 đã đăng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7234721032): scoped API-only restart PASS source896f93e/H22,78/78restart checksums/12HTTP200/6URLpairs/5digestpairs; bỏ blocker receiver cũ. TERM command exit0 không phải oldAPI termination status; newAPI còn chạy tại capture nên termination N/A. Issue OPEN chỉ chờ nhóm chốt.
+- [x] [PR63 author source/CI audit](https://github.com/SE2026-21-1/dao-budget-simulator/pull/63#issuecomment-7234792896): complete relevant diff, không finding mới; exacthead4f6a396/baseDevd63842/actualCIcheckoutfe8df7cd, hai workflows SUCCESS. Không self-approval.
+- [ ] PR63 TV2 union/admin/decoder/storage peer conclusion còn thiếu; sole request đã pending, không gửi trùng hoặc lấy BE08 approval cũ thay thế. Chưa merge; PR60/61 giữ mở, không replay implementation.
+- [x] [PR62 TV4 COMMENT](https://github.com/SE2026-21-1/dao-budget-simulator/pull/62#pullrequestreview-6096047429) đúng unchanged d4a0fb5, giữ144PASS lịch sử; live SKIP, Draft không đổi.
+- [x] [#19 scoped visual/preflight/provenance accepted](https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7234792353), không nộp lại7/7; chỉ provider interval/session About-manifest/raw503+TV2logs còn thiếu.
+- [ ] [#40 access/ownership HOLD, runtime SKIP](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7234792567): sourcee8e443c đã TV2 duyệt; cần authorized isolated Windows/WSL inventory/lifecycle/restoration/raw foreground serve actual exit; không đụng receiver#42.
+- [x] Tám issue bodies #6/#7/#19/#20/#40/#41/#42/#44 và PR52 description đã đồng bộ, giữ nguyên lịch sử trong superseded details. [Project#1 tám items × evidence/dependency fields đã reload kiểm](evidence/2026-11-28-tv4-state.json); #6/#7 In review/PARTIAL, không Done.
+- [ ] [#20 owner/testnet, #44 group exact source/manifest/report/demo/video](https://github.com/SE2026-21-1/dao-budget-simulator/issues/44#issuecomment-7234810916) còn BLOCKED; không secret/broadcast/mainmerge/tag/release. #41 local OptionB ACCEPTED; #18/#36/BE06/bounded invariants và10Ready(single)N/A giữ nguyên.
+
+[Bàn giao và giới hạn](evidence/2026-11-28-tv4-delivery.md). Các kết luận27/11 bên dưới là snapshot trước khi đăng signoff/review, không yêu cầu đăng lại draft hoặc mở lại phần đã accepted.
+
 ## Phạm vi hiện hành — 27/11/2026
 
 - Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),

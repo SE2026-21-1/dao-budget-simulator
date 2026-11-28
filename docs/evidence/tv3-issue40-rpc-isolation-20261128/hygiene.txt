@@ -1,0 +1,6 @@
+2026-11-28T12:56:28Z
+COMMAND: node --input-type=module (scoped hygiene + immutable-baseline evidence comparison; implementation below in terminal transcript)
+PASS scoped hygiene: 20 source/test/CI/runbook files + 14 packet files; raw trailing-whitespace lines preserved=3.
+PASS historical exact bytes: 766/766 baseline docs/evidence files unchanged, excluding only 3 explicitly migrated executable test sources; no sealed results changed.
+Secret-pattern scan is limited, not proof of absence of every secret. No protected/candidate runtime endpoint was probed by this check.
+EXIT_STATUS=0

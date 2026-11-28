@@ -1,0 +1,26 @@
+2026-11-28T12:52:40Z
+Baseline: e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0
+Tree: 4e69dbc53de4c8c5a90a0fbeb32d1c423e3adb6c
+Initial status: clean before edits
+Branch: tv3/issue40-rpc-isolation-20261128
+/home/chung2k5/.local/bin/node
+/home/chung2k5/.local/bin/npm
+/usr/bin/bash
+v24.15.0
+11.12.1
+GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2025 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+anvil Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+forge Version: 1.8.5
+Commit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f
+Build Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)
+Build Profile: dist
+pg_ctl (PostgreSQL) 18.4 (Ubuntu 18.4-1.pgdg26.04+1)
+Dependencies: npm ci --ignore-scripts --no-audit --no-fund --cache /tmp/tv3-issue40-npm-cache (exit0,30 packages)

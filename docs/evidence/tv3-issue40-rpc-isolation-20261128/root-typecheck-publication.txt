@@ -1,0 +1,8 @@
+2026-11-28T12:58:16Z
+COMMAND: npm run typecheck
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+EXIT_STATUS=0

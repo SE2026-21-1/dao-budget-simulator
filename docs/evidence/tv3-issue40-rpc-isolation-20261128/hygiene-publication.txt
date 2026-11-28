@@ -1,0 +1,24 @@
+2026-11-28T12:58:56Z
+COMMAND: scoped publication hygiene and source inventory check
+PASS 39 scoped files: conflicts, source/docs whitespace, final newline, limited secret-pattern scan. Raw output whitespace preserved.
+EXIT_STATUS=0
+.github/workflows/ci.yml: OK
+scripts/be09-local.sh: OK
+scripts/be09-rpc.mjs: OK
+scripts/be09-safety.mjs: OK
+scripts/be09-metadata.mjs: OK
+scripts/be09-readiness.mjs: OK
+scripts/be09-register.mjs: OK
+scripts/be09-verify.mjs: OK
+scripts/be09-provenance.mjs: OK
+tests/be09-rpc.test.mjs: OK
+tests/be09-registration.test.mjs: OK
+tests/be09-runner-allocation.test.mjs: OK
+tests/be09-metadata.test.mjs: OK
+tests/be09-status-safety.test.mjs: OK
+tests/be09-safety.test.mjs: OK
+tests/be09-ownership.test.mjs: OK
+docs/evidence/be09-20261106/local-status.test.mjs: OK
+docs/evidence/be09-20261106/toolchain-preflight.test.mjs: OK
+docs/evidence/be09-20261106/readiness.test.mjs: OK
+docs/issue40-restoration-b.md: OK

@@ -1,0 +1,49 @@
+2026-11-28T12:38:26Z
+source=e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0
+tree=4e69dbc53de4c8c5a90a0fbeb32d1c423e3adb6c
+v24.15.0
+11.12.1
+COMMAND: node --test tests/be09-status-safety.test.mjs
+{"terminalOverride":"unset","status":1,"requests":["\"http://127.0.0.1:18545\"","\"http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=test\"","\"http://127.0.0.1:5173/\""]}
+✖ status refuses incomplete/stopped run before any network, terminal override=undefined (164.339105ms)
+{"terminalOverride":"18545","status":1,"requests":["\"http://127.0.0.1:18545\"","\"http://127.0.0.1:3300/api/health?chainId=31337&deploymentId=test\"","\"http://127.0.0.1:5173/\""]}
+✖ status refuses incomplete/stopped run before any network, terminal override=18545 (145.804005ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 379.402011
+
+✖ failing tests:
+
+test at tests/be09-status-safety.test.mjs:12:3
+✖ status refuses incomplete/stopped run before any network, terminal override=undefined (164.339105ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: stopped/malformed metadata must not cause any request
+      at async TestContext.<anonymous> (file:///home/chung2k5/dao-issue40-rpc-isolation-20261128/tests/be09-status-safety.test.mjs:31:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'ENOENT' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/be09-status-safety.test.mjs:12:3
+✖ status refuses incomplete/stopped run before any network, terminal override=18545 (145.804005ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: stopped/malformed metadata must not cause any request
+      at async TestContext.<anonymous> (file:///home/chung2k5/dao-issue40-rpc-isolation-20261128/tests/be09-status-safety.test.mjs:31:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'ENOENT' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+EXIT_STATUS=1

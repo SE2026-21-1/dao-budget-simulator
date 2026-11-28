@@ -1,0 +1,44 @@
+UTC 2026-11-28T12:40:29.429Z
+baseline e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0 scripts/be09-local.sh
+toolchain v24.15.0 GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)
+unrelated ephemeral listener 32981 candidate child exit 1
+stdout:
+Usage: bash scripts/be09-local.sh <preflight|up|serve|verify|status|down>
+
+Optional:
+  BE09_STATE_ROOT  External writable state directory
+  BE09_RUN_DIR     Select a specific run for verify/status/down
+  BE09_NODE_DIR    Directory containing node and npm (otherwise PATH)
+  BE09_FOUNDRY_DIR Directory containing forge and anvil (otherwise PATH)
+  BE09_PG_DIR      Directory containing PostgreSQL binaries (otherwise PATH)
+  BE09_LD_LIBRARY_PATH  Additional dynamic-library directories
+
+Default URLs: RPC http://127.0.0.1:18545, API http://127.0.0.1:3300,
+frontend http://127.0.0.1:5173, PostgreSQL 127.0.0.1:55432.
+Anvil chainId 31337 ready
+
+stderr:
+
+original wait_rpc exit 0
+mock fetch calls:
+http://127.0.0.1:32981
+
+actual fixture HTTP requests 0
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: RPC gate must reject dead candidate child and unrelated same-chain listener before fetching
+    at file:///tmp/tv3-40-before-rpc.mjs:39:10
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 0,
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
+
+reproduction exit=1

@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import { spawn, spawnSync } from 'node:child_process';
+import { once } from 'node:events';
+import { createServer } from 'node:http';
+import { readFileSync, writeFileSync } from 'node:fs';
+const root = '/home/chung2k5/dao-issue40-rpc-isolation-20261128';
+const revision = 'e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0';
+const original = spawnSync('git', ['show', `${revision}:scripts/be09-local.sh`], { cwd: root, encoding: 'utf8' });
+assert.equal(original.status, 0, original.stderr);
+writeFileSync('/tmp/tv3-40-original-runner.sh', original.stdout);
+writeFileSync('/tmp/tv3-40-before-fetch.cjs', `const fs=require('node:fs'); global.fetch=async(url)=>{fs.appendFileSync('/tmp/tv3-40-before-requests.log',String(url)+'\\n');return {ok:true,json:async()=>({result:'0x7a69'})}};`);
+writeFileSync('/tmp/tv3-40-before-requests.log', '');
+let requests = 0;
+const reserved = new Set([18545,13300,55442,5432,28545,3300,55432,5173]);
+let server;
+let port;
+for (;;) {
+  server = createServer((req,res) => { requests++; res.end(JSON.stringify({result:'0x7a69'})); });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  port = server.address().port;
+  if (!reserved.has(port)) break;
+  await new Promise(resolve => server.close(resolve));
+}
+try {
+  const failed = spawn(process.execPath, ['-e', `require('node:net').createServer().once('error',()=>process.exit(1)).listen(${port},'127.0.0.1')`]);
+  const [childExit] = await once(failed, 'exit');
+  console.log('UTC', new Date().toISOString());
+  console.log('baseline', revision, 'scripts/be09-local.sh');
+  console.log('toolchain', process.version, spawnSync('bash',['--version'],{encoding:'utf8'}).stdout.split('\n')[0]);
+  console.log('unrelated ephemeral listener', port, 'candidate child exit', childExit);
+  assert.equal(childExit, 1);
+  const result = spawnSync('bash', ['-c', `git() { command git -C "$TEST_ROOT" "\${@:3}"; }; source /tmp/tv3-40-original-runner.sh help; NODE_BIN="$TEST_NODE"; wait_rpc "http://127.0.0.1:$TEST_PORT"`], {env:{...process.env, TEST_ROOT:root, TEST_NODE:process.execPath, TEST_PORT:String(port), NODE_OPTIONS:'--require=/tmp/tv3-40-before-fetch.cjs'},encoding:'utf8'});
+  console.log('stdout:\n'+result.stdout);
+  console.log('stderr:\n'+result.stderr);
+  console.log('original wait_rpc exit', result.status);
+  console.log('mock fetch calls:\n'+readFileSync('/tmp/tv3-40-before-requests.log','utf8'));
+  console.log('actual fixture HTTP requests', requests);
+  assert.equal(requests, 0);
+  assert.notEqual(result.status, 0, 'RPC gate must reject dead candidate child and unrelated same-chain listener before fetching');
+} finally {
+  await new Promise(resolve => server.close(resolve));
+}

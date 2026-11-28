@@ -14,10 +14,10 @@ test('preflight accepts a clean arbitrary HEAD and configurable toolchain, and r
   await mkdir(join(repo, 'scripts'), { recursive: true });
   await mkdir(tools); await mkdir(home);
   const runner = await readFile('scripts/be09-local.sh', 'utf8');
-  await writeFile(join(repo, 'scripts', 'be09-local.sh'), runner);
+  for (const file of sourceFiles) await writeFile(join(repo, file), await readFile(file));
   const git = (...args) => execFileSync('git', args, { cwd: repo, stdio: 'ignore' });
   git('init', '-q');
-  git('add', 'scripts/be09-local.sh');
+  git('add', 'scripts');
   git('-c', 'user.name=Preflight Test', '-c', 'user.email=preflight@example.invalid', 'commit', '-qm', 'fixture');
   const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repo, encoding: 'utf8' }).trim();
   const binaries = { node: 'v24.15.0', npm: '11.12.1', forge: 'forge Version: 1.8.5', anvil: 'anvil Version: 1.8.5',
@@ -54,7 +54,7 @@ test('preflight accepts a clean arbitrary HEAD and configurable toolchain, and r
 
   const run = join(home, '.local', 'state', 'dao-budget-be09', 'runs', 'test-run');
   await mkdir(run, { recursive: true });
-  const status = call('status');
+  const status = call('status', { BE09_NODE_DIR: dirname(process.execPath) });
   assert.match(status.stdout, /BE09 run directory:/);
   assert.ok(status.stdout.includes(run), 'Default state directory must use the current HOME');
 });

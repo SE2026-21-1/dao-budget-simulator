@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { captureProcess } from '../scripts/be09-safety.mjs';
+import { initializeRun } from '../scripts/be09-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const runner = join(root, 'scripts/be09-local.sh');
@@ -22,6 +24,11 @@ test('down on an old run leaves a different run API and Vite alive', async () =>
     await mkdir(join(oldRun, 'pids'), { recursive: true });
     await mkdir(join(newRun, 'pids'), { recursive: true });
     await mkdir(pgBin);
+    for (const runDir of [oldRun, newRun]) {
+      await writeFile(join(runDir, 'run-id'), runDir === oldRun ? 'old\n' : 'new\n');
+      await initializeRun({ root, stateRoot: state, runDir, scope: 'ordinary',
+        rpcUrl: 'http://127.0.0.1:18545' });
+    }
     const pgCtl = join(pgBin, 'pg_ctl');
     await writeFile(pgCtl, '#!/bin/sh\nexit 1\n');
     await chmod(pgCtl, 0o700);
@@ -35,8 +42,11 @@ test('down on an old run leaves a different run API and Vite alive', async () =>
         `--env-file=${envFile}`, '-e', 'setInterval(() => {}, 1000)', join(root, script),
       ], { stdio: 'ignore' });
       children.push(child);
+      await once(child, 'spawn');
       await writeFile(join(oldRun, 'pids', `${label}.pid`), `${child.pid}\n`);
       await writeFile(join(newRun, 'pids', `${label}.pid`), `${child.pid}\n`);
+      await captureProcess({ runDir: newRun, label, pid: child.pid,
+        executable: process.execPath, marker: envFile, parentPid: process.pid });
     }
     async function runCommand(action, run) {
       return await new Promise((resolveRun, rejectRun) => {
@@ -58,6 +68,7 @@ test('down on an old run leaves a different run API and Vite alive', async () =>
     const newStatus = await runCommand('status', newRun);
     assert.match(newStatus.stdout, /HTTP API: LIVE/);
     assert.match(newStatus.stdout, /Frontend Vite: LIVE/);
+    assert.equal(newStatus.status, 1, 'Partial metadata must not pass the status network gate');
     const down = await runCommand('down', oldRun);
     assert.equal(down.status, 0, down.stderr);
     for (const child of children) {

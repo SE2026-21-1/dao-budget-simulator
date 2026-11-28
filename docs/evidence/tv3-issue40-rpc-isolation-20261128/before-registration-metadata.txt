@@ -1,0 +1,9 @@
+UTC=2026-11-28T12:39:37Z
+cwd=/home/chung2k5/dao-issue40-rpc-isolation-20261128
+source_commit=e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0
+043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e  scripts/be09-register.mjs
+7584c5737ef596ecca2b09675f051c56386e9843376221a65c97897205e2a24a  tests/be09-registration.test.mjs
+node_path=/home/chung2k5/.local/bin/node
+v24.15.0
+command=node --test --test-name-pattern="^registration CLI propagates explicit RPC URL to every output$" tests/be09-registration.test.mjs
+exit_status=1

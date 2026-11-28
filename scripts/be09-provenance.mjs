@@ -4,7 +4,8 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const sourceFiles = ['scripts/be09-local.sh', 'scripts/be09-seed.mjs', 'scripts/be09-register.mjs',
-  'scripts/be09-diagnose.mjs', 'scripts/be09-verify.mjs', 'scripts/be09-live-test.mjs', 'scripts/be09-provenance.mjs'];
+  'scripts/be09-diagnose.mjs', 'scripts/be09-verify.mjs', 'scripts/be09-live-test.mjs', 'scripts/be09-provenance.mjs',
+  'scripts/be09-rpc.mjs', 'scripts/be09-safety.mjs', 'scripts/be09-metadata.mjs', 'scripts/be09-readiness.mjs'];
 
 export async function sourceProvenance(root, sourceCommit) {
   if (!/^[0-9a-f]{40,64}$/.test(sourceCommit)) throw new Error('Expected a full Git source revision.');

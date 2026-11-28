@@ -1,0 +1,8 @@
+2026-11-28T12:52:38Z
+COMMAND: npm run build
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+
+EXIT_STATUS=0

@@ -2,15 +2,17 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { closeSync, openSync } from 'node:fs';
-import { chmod, readFile, writeFile } from 'node:fs/promises';
+import { chmod, readFile, realpath, unlink, writeFile } from 'node:fs/promises';
 import { execFileSync, spawn, spawnSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { setTimeout as sleep } from 'node:timers/promises';
 import pg from 'pg';
 import { Interface, id, toQuantity } from 'ethers';
 import { classifyLiveTest, liveTestEnvironment } from './be09-live-test.mjs';
 import { sourceProvenance } from './be09-provenance.mjs';
+import { validateRun, assertRunLive } from './be09-metadata.mjs';
+import { assertOwnedProcess, captureProcess, signalOwnedProcess } from './be09-safety.mjs';
 
 const root = resolve(new URL('..', import.meta.url).pathname);
 const params = process.argv.slice(2);
@@ -28,15 +30,14 @@ const report = {
   endpoints: [], contractComparison: null, workerRestart: null, cors: null, liveTest: null, stageErrors: [], error: null,
 };
 
-function readEnvFile(content) {
-  const result = {};
-  for (const line of content.split(/\r?\n/)) {
-    if (!line || line.startsWith('#')) continue;
-    const index = line.indexOf('=');
-    if (index < 1) throw new Error('Malformed runtime environment file.');
-    result[line.slice(0, index)] = line.slice(index + 1);
+async function checkedRuntime(runtime, requireWorker = true) {
+  const data = await validateRun({ root, stateRoot: process.env.BE09_STATE_ROOT ?? dirname(dirname(runtime.runtimeDir)), runDir: runtime.runtimeDir, scope: process.env.BE09_SCOPE });
+  assert.deepEqual(runtime, data.runtime, 'Caller runtime differs from authenticated artifacts');
+  if (requireWorker) await assertRunLive(data);
+  else {
+    for (const [label, port] of [['anvil', Number(new URL(runtime.urls.rpc).port)], ['postgres', 55432], ['api', 3300], ['frontend', 5173]]) await assertOwnedProcess({ runDir: runtime.runtimeDir, label, port });
   }
-  return result;
+  return data;
 }
 
 async function rpc(url, method, args) {
@@ -291,11 +292,9 @@ async function procCommand(pid) {
   catch { return ''; }
 }
 async function assertWorkerOwned(pidFile, configPath) {
-  const pid = Number((await readFile(pidFile, 'utf8')).trim());
-  assert.ok(Number.isSafeInteger(pid) && pid > 1);
-  const command = await procCommand(pid);
-  if (!command.includes(configPath) || !command.includes('--worker')) throw new BlockedError('Worker PID is not alive or does not belong to this BE09 run.');
-  return pid;
+  const runDir = dirname(dirname(pidFile));
+  assert.equal(configPath, resolve(runDir, 'indexer-config.json'));
+  return (await assertOwnedProcess({ runDir, label: 'worker' })).pid;
 }
 async function waitWorkerGone(pid, configPath, timeoutMs = 12000) {
   const until = Date.now() + timeoutMs;
@@ -307,7 +306,7 @@ async function waitWorkerGone(pid, configPath, timeoutMs = 12000) {
   }
   throw new Error('Worker did not stop after SIGTERM.');
 }
-function startWorker(runtimeDir, logPath, pidPath, configPath, env) {
+async function startWorker(runtimeDir, logPath, pidPath, configPath, env) {
   const log = openSync(logPath, 'a');
   const child = spawn(process.execPath, [`--env-file=${resolve(runtimeDir, 'worker.env')}`, '--import', 'tsx', 'indexer/cli.ts',
     '--config', configPath, '--worker'], { cwd: root, detached: true, stdio: ['ignore', log, log],
@@ -316,16 +315,23 @@ function startWorker(runtimeDir, logPath, pidPath, configPath, env) {
   closeSync(log);
   child.unref();
   if (!child.pid) throw new Error('Could not start the replacement worker process.');
-  return writeFile(pidPath, `${child.pid}\n`, { mode: 0o600 }).then(() => chmod(pidPath, 0o600)).then(() => child.pid);
+  await writeFile(pidPath, `${child.pid}\n`, { mode: 0o600 });
+  await chmod(pidPath, 0o600);
+  await unlink(resolve(runtimeDir, 'pids/worker.identity.json'));
+  await captureProcess({ runDir: runtimeDir, label: 'worker', pid: child.pid, executable: process.execPath, marker: configPath, parentPid: process.pid });
+  return child.pid;
 }
 
 async function restartWorker(runtime, env, pool, before) {
+  const checked = await checkedRuntime(runtime);
+  assert.deepEqual(env, checked.env, 'Worker restart environment differs from persisted runtime');
   const pidFile = resolve(runtime.runtimeDir, 'pids/worker.pid');
   const pid = await assertWorkerOwned(pidFile, runtime.indexerConfig);
   const logPath = resolve(runtime.runtimeDir, 'logs/worker.log');
   const oldLogSize = (await readFile(logPath).catch(() => Buffer.alloc(0))).length;
-  process.kill(pid, 'SIGTERM');
+  await signalOwnedProcess({ runDir: runtime.runtimeDir, label: 'worker', signal: 'SIGTERM' });
   await waitWorkerGone(pid, runtime.indexerConfig);
+  await checkedRuntime(runtime, false);
   const newPid = await startWorker(runtime.runtimeDir, logPath, pidFile, runtime.indexerConfig, env);
   const until = Date.now() + 30000;
   let after, publicationObserved = false;
@@ -346,6 +352,8 @@ async function restartWorker(runtime, env, pool, before) {
 }
 
 export async function runLiveTest(runtime, env, reportDir) {
+  const checked = await checkedRuntime(runtime);
+  assert.deepEqual(env, checked.env, 'Live test environment differs from persisted runtime');
   const names = ['BE05_LIVE_API_URL', 'BE05_LIVE_CHAIN_ID', 'BE05_LIVE_DEPLOYMENT_ID', 'BE05_LIVE_RPC_URL'];
   const testEnv = liveTestEnvironment(runtime);
   const jsonPath = resolve(reportDir, 'frontend-api-live-test.vitest.json');
@@ -397,6 +405,15 @@ async function worktreeEvidence() {
 }
 
 async function main() {
+  // Validate report containment before even failure-report writes.
+  const selectedRun = getOption('--runtime');
+  const selectedReport = getOption('--report');
+  assert.equal(selectedRun, resolve(selectedRun));
+  assert.equal(selectedReport, resolve(selectedReport));
+  assert.equal(await realpath(selectedReport), selectedReport);
+  assert.equal(dirname(selectedReport), resolve(selectedRun, 'reports'));
+  const validated = await validateRun({ root, stateRoot: process.env.BE09_STATE_ROOT ?? dirname(dirname(selectedRun)), runDir: selectedRun, scope: process.env.BE09_SCOPE });
+  await assertRunLive(validated);
   let pool;
   let runDir;
   let reportDir;
@@ -405,10 +422,9 @@ async function main() {
     assert.equal(params.length, 4, 'Usage: be09-verify.mjs --runtime <run-dir> --report <report-dir>');
     runDir = resolve(getOption('--runtime'));
     reportDir = resolve(getOption('--report'));
-    const runtime = JSON.parse(await readFile(resolve(runDir, 'runtime.json'), 'utf8'));
-    const manifest = JSON.parse(await readFile(runtime.manifest, 'utf8'));
-    const seed = JSON.parse(await readFile(runtime.seedReport, 'utf8'));
-    env = readEnvFile(await readFile(resolve(runDir, 'runtime.env'), 'utf8'));
+    const { runtime, manifest, seed } = validated;
+    const checked = validated;
+    env = checked.env;
     report.sourceCommit = runtime.sourceCommit;
     report.worktree = await worktreeEvidence();
     report.chainId = runtime.chainId;
@@ -426,12 +442,14 @@ async function main() {
     } catch (error) { addStageError('frontend-live-test', error, env); }
 
     const conn = env.DATABASE_URL;
+    await checkedRuntime(runtime);
     if (!conn) throw new BlockedError('Runtime database URL is missing.');
     pool = new pg.Pool({ connectionString: conn, max: 2, connectionTimeoutMillis: 3000 });
     try { await pool.query('SELECT 1'); }
     catch (error) { addStageError('postgres', new BlockedError(`Isolated PostgreSQL is unavailable: ${error.message}`), env); }
 
     let api;
+    await checkedRuntime(runtime);
     try {
       api = await apiChecks(runtime, seed, manifest);
     } catch (error) { addStageError('api-endpoints', error, env); }
@@ -441,6 +459,7 @@ async function main() {
     }
 
     try {
+      await checkedRuntime(runtime);
       const corsResponse = await fetch(`${runtime.urls.api}/api/health?chainId=${runtime.chainId}&deploymentId=${encodeURIComponent(runtime.deploymentName)}`,
         { method: 'OPTIONS', headers: { origin: runtime.urls.frontend } });
       report.cors = { preflightHttpStatus: corsResponse.status,

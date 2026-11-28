@@ -75,10 +75,14 @@ test('registration CLI persists first indexed block and all five role records', 
     export default {Pool};`;
   await writeFile(shim, `import {registerHooks} from 'node:module';
     registerHooks({resolve(specifier, context, next) { if (specifier === 'pg') return {url: 'data:text/javascript,' + encodeURIComponent(${JSON.stringify(pgModule)}), shortCircuit: true}; return next(specifier, context); }});`);
-  const env = { ...process.env, BE09_DATABASE_URL: 'postgresql://example.invalid/test', BE09_TEST_CALLS: callsPath };
+  const rpcUrl = 'http://127.0.0.1:28545';
+  const env = { ...process.env, BE09_DATABASE_URL: 'postgresql://be09@127.0.0.1:55432/dao_budget_be09', BE09_TEST_CALLS: callsPath,
+    BE09_SCOPE: 'issue40' };
   delete env.NODE_TEST_CONTEXT;
-  await promisify(execFile)(process.execPath, ['--import', shim, 'scripts/be09-register.mjs', '--manifest', manifestPath,
-    '--runtime', dir, '--deployment-name', 'be09-local-20261106T103724Z-123456789abc', '--seed-report', seedPath], { env });
+  const { stdout } = await promisify(execFile)(process.execPath, ['--import', shim, 'scripts/be09-register.mjs', '--manifest', manifestPath,
+    '--runtime', dir, '--deployment-name', 'be09-local-20261106T103724Z-123456789abc', '--seed-report', seedPath,
+    '--rpc-url', rpcUrl], { env });
+  assert.equal(JSON.parse(stdout).rpcUrl, rpcUrl);
   const calls = (await readFile(callsPath, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
   assert.equal(calls.find(call => call.sql.includes('INSERT INTO deployments')).params[2], '2');
   const roleCalls = calls.filter(call => call.sql.includes('INSERT INTO deployment_contracts'));
@@ -86,5 +90,12 @@ test('registration CLI persists first indexed block and all five role records', 
   assert.equal(roleCalls.find(call => call.params[2] === 'governance_token').params[4], '1');
   const saved = JSON.parse(await readFile(join(dir, 'indexer-config.json'), 'utf8'));
   assert.equal(saved.fromBlock, '2');
+  assert.equal(saved.rpcUrl, rpcUrl);
+  assert.equal(JSON.parse(await readFile(join(dir, 'runtime.json'), 'utf8')).urls.rpc, rpcUrl);
+  const runtimeEnv = await readFile(join(dir, 'runtime.env'), 'utf8');
+  assert.ok(runtimeEnv.split('\n').includes(`RPC_URL=${rpcUrl}`));
+  assert.ok(runtimeEnv.split('\n').includes(`BE05_LIVE_RPC_URL=${rpcUrl}`));
+  assert.ok((await readFile(join(dir, 'worker.env'), 'utf8')).split('\n').includes(`RPC_URL=${rpcUrl}`));
+  assert.ok((await readFile(join(dir, 'frontend.env'), 'utf8')).split('\n').includes(`VITE_RPC_URL=${rpcUrl}`));
   assert.deepEqual(saved.contracts.map(item => item.role).sort(), indexed.map(([, role]) => role).sort());
 });

@@ -1,0 +1,104 @@
+{
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "toolingBaseCommit": "9f11296667f75c7f4fa3860a2fddc471d13e9e22",
+  "startedAt": "2026-11-28T10:25:21.838Z",
+  "commands": [
+    {
+      "name": "observer-and-qa07-tests",
+      "command": "node --test tests/smoke/qa07-provider-observer.test.mjs tests/smoke/qa07-snapshot.test.mjs",
+      "startedAt": "2026-11-28T10:25:21.838Z",
+      "finishedAt": "2026-11-28T10:25:21.978Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "check-observer-and-qa07-tests.txt"
+    },
+    {
+      "name": "frontend-targeted-tests",
+      "command": "npm --prefix frontend test -- src/chain/wallet.test.tsx src/chain/walletProviders.test.ts src/chain/transactions.test.ts src/data/api.test.ts src/data/api.integration.test.ts",
+      "startedAt": "2026-11-28T10:25:21.979Z",
+      "finishedAt": "2026-11-28T10:25:24.163Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "check-frontend-targeted-tests.txt"
+    },
+    {
+      "name": "frontend-lint",
+      "command": "npm --prefix frontend run lint",
+      "startedAt": "2026-11-28T10:25:24.164Z",
+      "finishedAt": "2026-11-28T10:25:24.411Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "check-frontend-lint.txt"
+    },
+    {
+      "name": "root-typecheck",
+      "command": "npm run typecheck",
+      "startedAt": "2026-11-28T10:25:24.411Z",
+      "finishedAt": "2026-11-28T10:25:27.275Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "check-root-typecheck.txt"
+    },
+    {
+      "name": "frontend-production-build",
+      "command": "npm --prefix frontend run build",
+      "startedAt": "2026-11-28T10:25:27.276Z",
+      "finishedAt": "2026-11-28T10:25:34.316Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "check-frontend-production-build.txt"
+    }
+  ],
+  "toolingHashes": {
+    "scripts/qa07_provider_observer.mjs": "2f710068ccdd3dc20e55611fc458240c6169b8afa2c1de94ee8d5b632cebe952",
+    "scripts/qa07_live_capture.mjs": "068d5a1e0d591e84d9b60f535609542c8ac0cda773f7f674341b23638f153e5b",
+    "scripts/qa07_capture_state.mjs": "2a0f0028a0b8dfdafa7399fc299c869ddb886804c661a719000342c1a0445dbc"
+  },
+  "liveEvidence": {
+    "status": "PASS_SCOPED_ASSERTIONS_PENDING_TV4_REVIEW",
+    "providerEntries": 78,
+    "interval": {
+      "startSequence": 52,
+      "endSequence": 77,
+      "startedAt": "2026-11-28T10:15:39.776Z",
+      "finishedAt": "2026-11-28T10:17:42.867Z",
+      "entries": 26,
+      "sendRequests": 0,
+      "beforeSubmit": "2026-11-28T10:16:19.922Z",
+      "guardSettled": "2026-11-28T10:16:20.263Z"
+    },
+    "accountA": "0x9b524d3a18716b0607504761ed2eb061932c9527",
+    "accountB": "0x729b025adae5aca996c1e13b091fbacf293b89d5",
+    "head": {
+      "number": "0x1a",
+      "hash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0"
+    },
+    "requestId": "0x75299a818f18ce4b86ffdf69d62f9b02649919f6a0913504dd1341fd9a59f0e3",
+    "retainedDraft": true,
+    "sourceHashesVerified": 94,
+    "extensionId": "oamaibdaigjnbdconjppnkfdcacinpgn",
+    "extensionVersion": "13.58.0.0",
+    "versionName": "13.58.0",
+    "browserResponses200": 158,
+    "browserRequestsAborted": 2
+  },
+  "safety": {
+    "status": "PASS",
+    "flagged": [],
+    "limitation": "Common credential patterns only; no browser profile/vault included, not an exhaustive secret detector"
+  },
+  "historical503": {
+    "status": "UNKNOWN",
+    "new503Observed": false,
+    "newProbesExplainHistoricalRequest": false,
+    "remainingOwner": "TV2 original packet/log retention and TV4 independent classification"
+  },
+  "finishedAt": "2026-11-28T10:25:34.458Z",
+  "overall": "PASS_SCOPED_LIVE_AND_STATIC_PENDING_REVIEW"
+}

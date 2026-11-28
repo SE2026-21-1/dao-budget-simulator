@@ -1,0 +1,22 @@
+{
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "at": "2026-11-28T10:06:21.436Z",
+  "extension": {
+    "id": "oamaibdaigjnbdconjppnkfdcacinpgn",
+    "name": "MetaMask",
+    "version": "13.58.0",
+    "path": "/tmp/issue19-metamask-release/extension",
+    "state": "ENABLED",
+    "location": "UNPACKED"
+  },
+  "browserVersion": {
+    "version": "150.0.7871.24 (Official Build) (64-bit) ",
+    "useragent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "profile_path": "/home/chung2k5/.config/google-chrome-for-testing/Default",
+    "executable_path": "/home/chung2k5/.omp/puppeteer/chrome/linux-150.0.7871.24/chrome-linux64/chrome",
+    "command_line": "/home/chung2k5/.omp/puppeteer/chrome/linux-150.0.7871.24/chrome-linux64/chrome --disable-extensions-except=/tmp/issue19-metamask-release/extension --load-extension=/tmp/issue19-metamask-release/extension --allow-file-access-from-files --remote-debugging-port=37039 --ozone-platform=x11 --flag-switches-begin --flag-switches-end"
+  },
+  "browser": "Chrome/150.0.7871.24",
+  "transport": "owned isolated Chromium, official stable unpacked MetaMask; not a user/CWS profile"
+}

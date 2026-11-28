@@ -1,0 +1,43 @@
+{
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "scope": "Original in-process API listener, no frontend transport proxy; new read-only measurement only",
+  "exchanges": [
+    {
+      "startedAt": "2026-11-28T10:19:07.666Z",
+      "finishedAt": "2026-11-28T10:19:07.828Z",
+      "url": "http://127.0.0.1:36223/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "headers": {
+        "cache-control": "no-store",
+        "connection": "keep-alive",
+        "content-length": "837",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sat, 28 Nov 2026 10:19:07 GMT",
+        "keep-alive": "timeout=5",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "{\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"qa07-e2e\",\"asOfBlock\":\"24\",\"asOfBlockHash\":\"0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9\",\"asOfTimestamp\":\"1800000631\",\"snapshotRevision\":\"323ce374-f4e4-4d20-986b-020cb3d7c2b0\",\"dataKind\":\"chain\",\"sync\":{\"status\":\"synced\",\"headBlock\":\"26\",\"confirmedBlock\":\"24\",\"indexedBlock\":\"24\",\"publicationBlock\":\"24\",\"lagBlocks\":\"0\",\"lagSeconds\":\"0\",\"confirmations\":\"2\",\"lastIndexedAt\":\"2026-11-28T10:19:07.774Z\",\"lastRpcCheckAt\":\"2026-11-28T17:19:07.774+07:00\",\"recoveryStatus\":\"ready\"}},\"data\":{\"status\":\"ok\",\"database\":\"up\",\"indexer\":\"synced\",\"publication\":\"ready\",\"recoveryStatus\":\"ready\",\"projectionStatus\":\"current\",\"publicationBlock\":\"24\",\"projectionLagBlocks\":\"0\",\"rawDecodeComplete\":true,\"rawDecodeIssues\":{\"unknownTopics\":0,\"decodeErrors\":0},\"ignoredAncillaryEvents\":16}}"
+    },
+    {
+      "startedAt": "2026-11-28T10:19:07.835Z",
+      "finishedAt": "2026-11-28T10:19:07.872Z",
+      "url": "http://127.0.0.1:36223/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "headers": {
+        "cache-control": "no-store",
+        "connection": "keep-alive",
+        "content-length": "614",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Sat, 28 Nov 2026 10:19:07 GMT",
+        "keep-alive": "timeout=5",
+        "x-content-type-options": "nosniff"
+      },
+      "body": "{\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"qa07-e2e\",\"asOfBlock\":\"24\",\"asOfBlockHash\":\"0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9\",\"asOfTimestamp\":\"1800000631\",\"snapshotRevision\":\"323ce374-f4e4-4d20-986b-020cb3d7c2b0\",\"dataKind\":\"chain\",\"sync\":{\"status\":\"synced\",\"headBlock\":\"26\",\"confirmedBlock\":\"24\",\"indexedBlock\":\"24\",\"publicationBlock\":\"24\",\"lagBlocks\":\"0\",\"lagSeconds\":\"0\",\"confirmations\":\"2\",\"lastIndexedAt\":\"2026-11-28T10:19:07.774Z\",\"lastRpcCheckAt\":\"2026-11-28T17:19:07.774+07:00\",\"recoveryStatus\":\"ready\"}},\"data\":[],\"pagination\":{\"limit\":20,\"totalCount\":0,\"nextCursor\":null}}"
+    }
+  ]
+}

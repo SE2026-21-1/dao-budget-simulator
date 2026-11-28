@@ -1,0 +1,38 @@
+2026-11-28T12:26:13Z
+source=08c693ec433e6dd66be2293bdb2e8d07938ab471
+2f710068ccdd3dc20e55611fc458240c6169b8afa2c1de94ee8d5b632cebe952  scripts/qa07_provider_observer.mjs
+v24.15.0
+11.12.1
+COMMAND: node --test --test-name-pattern="P2 BigInt" tests/smoke/qa07-observer-failures.test.mjs
+{"originalProviderCalls":0,"sameProviderError":false,"errorName":"TypeError","message":"Do not know how to serialize a BigInt"}
+✖ P2 BigInt request reaches original once and preserves provider rejection (5.903005ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.092058
+
+✖ failing tests:
+
+test at tests/smoke/qa07-observer-failures.test.mjs:24:1
+✖ P2 BigInt request reaches original once and preserves provider rejection (5.903005ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///home/chung2k5/dao-issue19-evidence-20261128/tests/smoke/qa07-observer-failures.test.mjs:38:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+EXIT_STATUS=1

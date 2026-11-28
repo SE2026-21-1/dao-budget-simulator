@@ -1,0 +1,91 @@
+{
+  "runId": "TV3-issue19-readiness-20261128T094833Z",
+  "startedAt": "2026-11-28T09:48:33Z",
+  "runKind": "READ_ONLY_ENVIRONMENT_AND_SOURCE_REVIEW_NOT_LIVE_WALLET",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "branch": "tv3/issue19-evidence-20261128",
+  "issue": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19",
+  "currentCriteria": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7234792353",
+  "beforeStatus": "OPEN/PARTIAL",
+  "afterStatus": "OPEN/PARTIAL_PENDING_TV4_INDEPENDENT_REVIEW",
+  "acceptedScopesNotResubmitted": ["B-active visual/preflight 7/7", "source/run/manifest/handoff provenance"],
+  "productChanges": [],
+  "newLiveRun": {
+    "status": "BLOCKED",
+    "chainId": null,
+    "deploymentManifest": null,
+    "extensionId": null,
+    "extensionVersion": null,
+    "browserProfile": null,
+    "walletSessionId": null,
+    "accountA": null,
+    "accountB": null,
+    "nonceBefore": null,
+    "nonceAfter": null,
+    "draftRequestId": null,
+    "providerTrace": null,
+    "screenshots": [],
+    "reason": "No controllable real extension session: no local relay; existing Windows Chrome has no remote debugging. No listeners at checked local app/API/RPC ports. No wallet profile or vault was accessed."
+  },
+  "browserToolObservations": [
+    {
+      "action": "browser.targets()",
+      "result": "ToolError: No pages to adopt here (the browser would be managed Chromium (headless)): targets exist only inside a Tern pane (its browser blocks), with the omp relay (app: relay or the browser.relay setting), or at a CDP endpoint (app: http://127.0.0.1:9222 or the browser.cdpUrl setting).",
+      "limitation": "No existing real session was adopted; not a wallet test."
+    },
+    {
+      "action": "browser.targets({app: 'relay'})",
+      "result": "ToolError: No local omp browser relay found. Open Chrome with the omp extension, or configure browser.relayUrl.",
+      "limitation": "Tool error transcribed from this session; not an HTTP response or page capture."
+    }
+  ],
+  "blockers": {
+    "providerBoundary": {
+      "status": "BLOCKED",
+      "directNoSendEvidence": false,
+      "noSendConclusion": "NOT_ESTABLISHED_FOR_A_NEW_LIVE_INTERVAL",
+      "owner": "TV3 / authorized receiver and test-wallet operator",
+      "required": ["Observer installed before app provider acquisition/binding", "Selected-provider identity and positive control coverage", "Continuous UTC/method/accounts/chain/from interval before Submit through guard/UI settle", "A-to-B-to-A retained draft/requestId and account nonce/head/pool bindings"]
+    },
+    "sameSessionIdentity": {
+      "status": "BLOCKED",
+      "historicalH26Version": "UNKNOWN",
+      "historicalH26BActiveImage": "MISSING",
+      "historicalH19Version": "13.58.0 PRODUCER_DECLARED_NOT_INDEPENDENTLY_CAPTURED",
+      "required": ["Actual About or installed extension-manifest capture in the new account-switch session", "Exact extension ID/version and browser profile/session bound to run/source/chain/deployment manifest"]
+    },
+    "http503": {
+      "status": "MISSING_IN_SEARCHED_LOCATIONS_DEPENDENCY_TV2",
+      "historicalCause": "UNKNOWN",
+      "historicalRunId": "TV3-MM-negative-20261126-4cba99a0",
+      "historicalSourceCommit": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+      "historicalChainId": 31337,
+      "historicalDeploymentLabel": "tv3-local-0xa6c8b5",
+      "rawRequestUrl": null,
+      "rawResponseHeaders": null,
+      "rawResponseBody": null,
+      "requestTimestamp": null,
+      "requestId": null,
+      "correlatedTv2Logs": null,
+      "candidateLookupTimestampsNotRequestTimestamps": ["2026-11-26T16:40:14.3193375Z", "2026-11-26T16:41:54.5152071Z", "2026-11-26T16:44:45.2779748Z"],
+      "owner": "TV2 daongocuong (API/worker/PG retention and classification), TV3 (retained Network/HAR)",
+      "required": ["Exact original URL/query, UTC, HTTP status/headers/body/context", "Raw health and publication/recovery/checkpoint state in matching interval", "Sanitized API/worker/PG logs with request/correlation IDs if available", "Explicit MISSING if originals were not retained; new isolated probes are not historical root-cause proof"]
+    }
+  },
+  "dependencyInstall": {
+    "command": "npm ci --no-audit --no-fund && npm --prefix frontend ci --no-audit --no-fund",
+    "exitCode": 0,
+    "node": "v24.15.0",
+    "npm": "11.12.1"
+  },
+  "actualVerification": "verification.json",
+  "payloadChecksums": "SHA256SUMS.txt",
+  "prohibitedActionsPerformed": [],
+  "limitations": [
+    "No new wallet run, provider trace, MetaMask identity capture or nonce comparison was possible.",
+    "No historical packet or correlated logs were found in the documented search scope; this does not prove absence elsewhere.",
+    "Static source and mocked regression results do not replace real extension evidence.",
+    "Existing Dev CI is source-bound and not CI of the subsequent evidence-only commit.",
+    "No full governance rerun, Sepolia broadcast, issue closure, PR merge or main promotion."
+  ]
+}

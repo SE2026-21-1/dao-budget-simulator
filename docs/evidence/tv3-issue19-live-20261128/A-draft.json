@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-28T10:15:40.254Z",
+  "accounts": [
+    "0x9b524d3a18716b0607504761ed2eb061932c9527",
+    "0x729b025adae5aca996c1e13b091fbacf293b89d5"
+  ],
+  "chainId": "0x7a69",
+  "fields": {
+    "title": "TV3 continuous provider interval 20261128",
+    "body": "Local-only account-switch evidence: retain this draft and block the zero-vote account before signing.",
+    "recipient": "0x729b025adae5aca996c1e13b091fbacf293b89d5",
+    "amount": "1"
+  },
+  "review": "Kiểm tra trước khi ký\n\nTiêu đề: TV3 continuous provider interval 20261128\n\nMô tả: Local-only account-switch evidence: retain this draft and block the zero-vote account before signing.\n\nNgười nhận: 0x729b025adae5aca996c1e13b091fbacf293b89d5\n\nSố tiền: 1 BUD\n\nRequest ID: 0x75299a818f18ce4b86ffdf69d62f9b02649919f6a0913504dd1341fd9a59f0e3\n\nNative value: 0 ETH\n\nPhí gas được ví hiển thị trước khi bạn xác nhận chữ ký.\n\nChỉnh sửa",
+  "submitDisabled": false,
+  "body": "Đến nội dung chính\nDAO Budget Simulator\nTổng quan\nĐề xuất\nTạo đề xuất\nTreasury\nGovernance\nĐã kết nối\n0x9b52…9527\nDAO Budget Simulator\nQA07 isolated Local Anvil\nTổng quan\nĐề xuất\nTạo đề xuất\nTreasury\nGovernance\n\nVí & quyền biểu quyết\n\nVí: MetaMask\n\n0x9b524…c9527\n\nChain: 31337 ✓\n\nSố dư: 400 GOV\n\nVoting power: 400 GOV\n\nDelegate: 0x9b524…C9527\n\nSelf-delegate\nẨn tài khoản\nGiao dịch đã được xác nhận.\n\nTx: 0x67da8c28577459b140faa3674b115a87b06ead143ff6b57596973ba23db364d1\n\nDAO\nMinh bạch từng đề xuất.\n\nKhám phá ngân sách và cùng cộng đồng đưa ra quyết định.\n\nDữ liệu API\nĐang đọc API TV2 theo deployment đã cấu hình.\nSystem status\n\nAPI, dữ liệu xuất bản và kết nối ví\n\nKiểm tra lại\nAPI\nConnected\nDatabase\nup\nIndexer\nsynced\nPublication\nready\nWallet\nConnected\nNetwork\nCorrect\n\nĐộ trễ indexer: 0 block. Độ trễ projection: 0 block.\n\n← Danh sách đề xuất\nĐề xuất chi ngân sách\n\nMột đề xuất tương ứng với một khoản chi BUD tới một địa chỉ nhận.\n\nThông tin khoản chi\nTải dữ liệu mới nhất\nTiêu đề · 5–120 ký tự\nMô tả · 20–2.000 ký tự\nĐịa chỉ nhận\nSố tiền BUD\nKiểm tra trước khi ký\n\nTiêu đề: TV3 continuous provider interval 20261128\n\nMô tả: Local-only account-switch evidence: retain this draft and block the zero-vote account before signing.\n\nNgười nhận: 0x729b025adae5aca996c1e13b091fbacf293b89d5\n\nSố tiền: 1 BUD\n\nRequest ID: 0x75299a818f18ce4b86ffdf69d62f9b02649919f6a0913504dd1341fd9a59f0e3\n\nNative value: 0 ETH\n\nPhí gas được ví hiển thị trước khi bạn xác nhận chữ ký.\n\nChỉnh sửa\nKý và tạo đề xuất\nDAO Budget Simulator · Giao diện đang phát triển",
+  "coverage": [
+    {
+      "id": "provider-1",
+      "installed": true,
+      "stillWrapped": true
+    }
+  ]
+}

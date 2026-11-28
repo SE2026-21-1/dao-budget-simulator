@@ -1,0 +1,29 @@
+{
+  "format": "qa07-public-handoff-v1",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "chainId": "31337",
+  "deploymentId": "qa07-e2e",
+  "confirmations": 2,
+  "frontendUrl": "http://127.0.0.1:36453",
+  "apiUrl": "http://127.0.0.1:41191",
+  "rpcUrl": "http://127.0.0.1:39545",
+  "contracts": {
+    "GOV": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+    "BUD": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+    "Treasury": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+    "Timelock": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+    "Governor": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+  },
+  "accounts": {
+    "A": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+    "B": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    "C": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+    "D": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+    "funding": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+    "deployer": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+    "caller": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+    "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+    "outsider": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f"
+  },
+  "manifestSha256": "0a8637a9cda0de5a70f5b958a68c7f3010c3836a62f6c537ead2c6bf7df52a5c"
+}

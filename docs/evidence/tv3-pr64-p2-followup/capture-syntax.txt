@@ -1,0 +1,4 @@
+2026-11-28T12:27:20Z
+COMMAND: node --check scripts/qa07_live_capture.mjs
+
+EXIT_STATUS=0

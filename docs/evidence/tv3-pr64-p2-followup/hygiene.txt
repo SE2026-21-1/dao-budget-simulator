@@ -1,0 +1,11 @@
+2026-11-28T12:28:29Z
+COMMAND: node --input-type=module (scoped hygiene scan; raw logs preserved verbatim)
+PASS 13 scoped files: conflict/secret-pattern scan; source/docs whitespace clean. Raw log trailing-whitespace lines preserved: 3. Pattern scan is not a guarantee of absence of all secrets.
+Scope: two observer/capture scripts, one mock regression file, separate follow-up evidence only; no production frontend/backend/contracts edits in reviewed commit draft.
+EXIT_STATUS=0
+SOURCE_IDENTITIES
+d93cad7afa618a7ad6dfb6ea83c7a8755873e56a47e47f07e611ec7fecd12490  scripts/qa07_provider_observer.mjs
+7e1b702864a60f97f6c9ab5991e8c169cb8dfd14ad78262ac2edc9731b1ecf89  scripts/qa07_live_capture.mjs
+a6be1251c2e098a7adc11d8a53849d0058aa23821ac64108f6cd6f2f0858f437  tests/smoke/qa07-observer-failures.test.mjs
+e959f7586a6c03599356388b5286dfcdc68361f13e3b897a9404431f06ec83f2  docs/evidence/tv3-issue19-20261128/SHA256SUMS.txt
+e1651c331e3b09b98fe629054926948a193739ac84f23d2d80ebeb14b13a0ef7  docs/evidence/tv3-issue19-live-20261128/SHA256SUMS.txt

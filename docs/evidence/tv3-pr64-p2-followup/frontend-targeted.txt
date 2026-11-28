@@ -1,0 +1,17 @@
+2026-11-28T12:27:08Z
+COMMAND: npm --prefix frontend test -- src/chain/wallet.test.tsx src/chain/walletProviders.test.ts src/chain/transactions.test.ts src/chain/governanceActions.test.ts src/data/api.test.ts src/data/api.integration.test.ts src/components/WalletPanel.test.tsx
+
+> frontend@0.0.0 test
+> vitest run src/chain/wallet.test.tsx src/chain/walletProviders.test.ts src/chain/transactions.test.ts src/chain/governanceActions.test.ts src/data/api.test.ts src/data/api.integration.test.ts src/components/WalletPanel.test.tsx
+
+
+ RUN  v4.1.12 /home/chung2k5/dao-issue19-evidence-20261128/frontend
+
+
+ Test Files  7 passed (7)
+      Tests  66 passed (66)
+   Start at  19:27:09
+   Duration  1.46s (transform 1.11s, setup 0ms, import 3.90s, tests 576ms, environment 1.48s)
+
+
+EXIT_STATUS=0

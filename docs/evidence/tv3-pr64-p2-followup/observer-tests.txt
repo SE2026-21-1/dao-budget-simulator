@@ -1,0 +1,37 @@
+2026-11-28T12:27:08Z
+COMMAND: node --test tests/smoke/qa07-provider-observer.test.mjs tests/smoke/qa07-observer-failures.test.mjs
+{"originalProviderCalls":1,"sameProviderError":true,"errorName":"Error","message":"provider-owned refusal"}
+✔ P2 BigInt request reaches original once and preserves provider rejection (6.186999ms)
+✔ BigInt request preserves success identity and exact payload without retry (1.282ms)
+✔ non-serializable BigInt result retains exact identity (1.1759ms)
+✔ non-serializable circular result retains exact identity (1.2709ms)
+✔ non-serializable throwing toJSON result retains exact identity (1.9306ms)
+✔ provider-owned error survives synchronous throw and non-serializable data (3.132299ms)
+✔ provider-owned error survives asynchronous rejection and non-serializable data (1.5125ms)
+✔ sink throw cannot reject, retry or mutate a successful provider request (7.7805ms)
+✔ sink reject cannot reject, retry or mutate a successful provider request (2.0847ms)
+✔ sink missing cannot reject, retry or mutate a successful provider request (2.5633ms)
+✔ sink getter cannot reject, retry or mutate a successful provider request (1.569ms)
+✔ sink one-record cannot reject, retry or mutate a successful provider request (1.6907ms)
+✔ accountsChanged serialization and sink failures preserve application listeners and payload (1.4068ms)
+✔ chainChanged serialization and sink failures preserve application listeners and payload (1.079999ms)
+✔ connect serialization and sink failures preserve application listeners and payload (1.0325ms)
+✔ disconnect serialization and sink failures preserve application listeners and payload (1.0775ms)
+✔ throwing request metadata getter cannot prevent original invocation (1.1455ms)
+✔ pending sink delivery is not reported complete; a later rejection remains explicit (5.4442ms)
+✔ JSON-safe request/response sequence and successful delivery remain complete (2.677299ms)
+✔ rejected sink preserves the original provider rejection (1.8904ms)
+✔ records requests through the function cached after discovery, including sender after account switch (5.991599ms)
+✔ preserves exact real result and thrown error while redacting signing payloads (1.9207ms)
+✔ reports immutable provider as uncovered instead of treating its empty trace as no-send (1.0255ms)
+✔ detects wrapper replacement so later zero entries cannot claim continuous coverage (0.9828ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.394988
+
+EXIT_STATUS=0

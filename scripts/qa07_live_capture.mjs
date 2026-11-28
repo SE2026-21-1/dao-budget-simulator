@@ -32,6 +32,7 @@ const saveLine = (name, data) => {
   const job = appendFile(join(output, name), JSON.stringify(data) + '\n');
   writes.add(job);
   job.catch(error => { console.error(`EVIDENCE_WRITE_FAILURE ${error.message}`); process.exitCode = 1; }).finally(() => writes.delete(job));
+  return job;
 };
 const page = await browser.newPage();
 await page.setViewport({ width: 1366, height: 900 });

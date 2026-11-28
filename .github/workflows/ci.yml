@@ -212,6 +212,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck && npm run build
       - run: npm run test:api:db
+      - run: npm run test:api:docs
       - uses: ./.github/actions/install-foundry
       - run: forge build
       - run: forge test --match-path tests/unit/OperationAbiCompatibility.t.sol

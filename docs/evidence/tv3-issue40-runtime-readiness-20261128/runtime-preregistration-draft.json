@@ -1,0 +1,231 @@
+{
+  "document_kind": "Issue40 runtime preregistration DRAFT, documentation only, not runner input or run-identity metadata",
+  "format": "tv3-issue40-runtime-authorization-draft-v1",
+  "issue": 40,
+  "reviewed_source": {
+    "sha": "7526e045753707599e98d08d69f1b64380027291",
+    "tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "branch": "tv3/issue40-rpc-isolation-20261128",
+    "branch_head_observed": "7526e045753707599e98d08d69f1b64380027291",
+    "status": "TV4 SOURCE APPROVED / TV2 SOURCE APPROVAL PENDING",
+    "tv4": {
+      "status": "APPROVED",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240899580",
+      "reviewed_sha": "7526e045753707599e98d08d69f1b64380027291"
+    },
+    "tv2": {
+      "status": "PENDING",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240864664",
+      "approved_sha": null,
+      "note": "Handoff requests same-head review; not source approval."
+    },
+    "ancestry": [
+      "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+      "ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26",
+      "dbedc9137ece2634d6439654c482f4fa5fe03d44",
+      "7526e045753707599e98d08d69f1b64380027291"
+    ]
+  },
+  "approved_source_sha": null,
+  "source_tree_sha": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+  "receiver_owner": "TV3 (@LangXiTrum2005)",
+  "runtime_controller": "TV3 (@LangXiTrum2005)",
+  "windows_control_owner": "TV3 (@LangXiTrum2005)",
+  "operation_window": null,
+  "four_port_allocation": [
+    {
+      "service": "Anvil RPC",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 28545,
+      "consumer": "WSL deployment/indexer/API/frontend; future Windows read-only reachability",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Backend API",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 3300,
+      "consumer": "WSL frontend; future Windows read-only reachability",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Private PostgreSQL",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 55432,
+      "consumer": "Issue40 migrations/registration/indexer/API only",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Vite",
+      "host_namespace": "Windows temporary control, then WSL Ubuntu, then Windows control; never concurrent",
+      "listen_address": "127.0.0.1",
+      "port": 5173,
+      "consumer": "Windows curl control and WSL frontend, sequential exclusive ownership",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    }
+  ],
+  "canonical_checkout": "/home/chung2k5/dao-budget-issue40-runtime-7526e04",
+  "windows_checkout": "D:\\DAO-Issue40-7526e04",
+  "canonical_state_root": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01",
+  "attempt_directory": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>",
+  "pgdata": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/postgres/data",
+  "socket_directory": "/tmp/dao-be09-<actual-run-id>-pg",
+  "approved_attempt_label": "issue40-lifecycle-01",
+  "runtime_run_id": null,
+  "deployment_id": null,
+  "deployment_name": null,
+  "manifest_sha256": null,
+  "transaction_hash": null,
+  "expected_chain_id": 31337,
+  "confirmation_configuration": {
+    "manifest_confirmations": "2",
+    "indexer_confirmations": 2,
+    "source_reference": "scripts/be09-register.mjs K=2 guard and generated indexer configuration"
+  },
+  "expected_endpoints": {
+    "rpc": "http://127.0.0.1:28545",
+    "api": "http://127.0.0.1:3300",
+    "postgres": "127.0.0.1:55432",
+    "frontend": "http://127.0.0.1:5173"
+  },
+  "wsl_environment_proposal": {
+    "BE09_SCOPE": "issue40",
+    "BE09_RPC_PORT": "28545",
+    "BE09_STATE_ROOT": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01",
+    "BE09_NODE_DIR": "/home/chung2k5/.local/opt/node-v24.15.0-linux-x64/bin",
+    "BE09_FOUNDRY_DIR": "/home/chung2k5/.local/opt/foundry-v1.8.5/bin",
+    "BE09_PG_DIR": "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin",
+    "BE09_LD_LIBRARY_PATH": "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/x86_64-linux-gnu"
+  },
+  "wsl_intended_command": "BE09_SCOPE=issue40 BE09_RPC_PORT=28545 BE09_STATE_ROOT=/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01 BE09_NODE_DIR=/home/chung2k5/.local/opt/node-v24.15.0-linux-x64/bin BE09_FOUNDRY_DIR=/home/chung2k5/.local/opt/foundry-v1.8.5/bin BE09_PG_DIR=/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin BE09_LD_LIBRARY_PATH=/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/x86_64-linux-gnu bash /home/chung2k5/dao-budget-issue40-runtime-7526e04/scripts/be09-local.sh serve",
+  "windows_control_command": "Set-Location -LiteralPath \"D:\\DAO-Issue40-7526e04\"\n& \"C:\\Program Files\\nodejs\\node.exe\" \"--env-file=D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env\" \"D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js\" \"D:\\DAO-Issue40-7526e04\\frontend\" --host 127.0.0.1 --port 5173 --strictPort\n$ControlExit = $LASTEXITCODE",
+  "windows_control_configuration_proposal_sha256": "19badb2942d7ef4aee0951a04cdd7d45a1f611e174b82fccb95052b8f32456a0",
+  "windows_control_approved_configuration_sha256": null,
+  "executable_helper_sha256": {
+    "scripts/be09-diagnose.mjs": "755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343",
+    "scripts/be09-live-test.mjs": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+    "scripts/be09-local.sh": "fc210f4efec3ddf6e7c86781cd3d431e14b654160dd6b98b3cb717a9f6f3efcd",
+    "scripts/be09-metadata.mjs": "8f5bc42618bb0262952ffdfa6fab82c0ec18aa65abf817f5da10113a0baa244f",
+    "scripts/be09-provenance.mjs": "6a0c22ea884be39ae746a4eb85ce17c5e077717d53890d0fcf5db59a29d9df2a",
+    "scripts/be09-readiness.mjs": "e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda",
+    "scripts/be09-register.mjs": "d15e6bed9cdd7be4ef196dcc2c36b434c12f46e6d559a60226d9a6d63c3b12f2",
+    "scripts/be09-rpc.mjs": "94a98f7c5a65297ee0044e2f0f27b4806c4e91c62775faab6b49c1e8c6851f59",
+    "scripts/be09-safety.mjs": "3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed",
+    "scripts/be09-seed.mjs": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+    "scripts/be09-verify.mjs": "0fc2c3d71b643eaf44d767f41d87ef416fb56ff18384d9554694158dbf82dcfc"
+  },
+  "executable_hash_provenance": "preflight-inventory.txt: Canonical tool hashes and checked ancestor paths; Proposed pinned executable set; Windows explicit serialized inventory",
+  "protected_resources": {
+    "issue42_ports": [
+      18545,
+      13300,
+      55442
+    ],
+    "system_postgresql_port": 5432,
+    "excluded_resources": [
+      "receiver42 processes/state/evidence",
+      "system PostgreSQL",
+      "shared Scheduled Task and launcher",
+      "shared Windows/WSL transport",
+      "firewall",
+      "portproxy",
+      ".wslconfig",
+      "system services",
+      "Chrome/wallet"
+    ]
+  },
+  "intended_lifecycle": "Exact accepted restoration B steps1–14 in restoration-b-checklist.md; no verify/full campaign/wallet",
+  "required_evidence": [
+    "Raw original task/listener/transport/path/tool/source inventories with UTC/commands/status",
+    "Authenticated Windows control baseline PID/executable/argv/listener and raw HTTP200",
+    "Authenticated WSL serve raw stdout/stderr, actual generated run ID/chain/deployment/manifest SHA256, exact-run status",
+    "Authorized Windows API/RPC reachability only after ownership validation",
+    "Actual foreground serve termination and own wait status; separate status/down residual records",
+    "Same-command/config restored Windows control new identity and raw HTTP200",
+    "Owned teardown/original Disabled/no5173 and unchanged protected/shared resources",
+    "Redacted evidence checksum seal; no secret env dumps"
+  ],
+  "abort_conditions": [
+    "Reviewed SHA/tree mismatch or branch/source drift",
+    "TV2 and TV4 do not approve same full source SHA",
+    "Receiver/controller responsibility unconfirmed or outside approved authority",
+    "Port tuple not allocated for intended operation window",
+    "Candidate collision or foreign/wildcard/unverifiable listener/process",
+    "Canonical checkout/state/PGDATA/socket mismatch, symlink/traversal, unexpected preexisting directory or unsafe ACL",
+    "Any risk to #42/system PostgreSQL/shared infrastructure",
+    "Windows control tools/entrypoint/source/env/config not sealed or cannot authenticate",
+    "Configuration differs from approved packet",
+    "Fresh near-execution Windows+WSL preflight/ownership/routes not accepted",
+    "Operation window absent/expired or preregistration incomplete",
+    "Explicit separate execution authorization absent"
+  ],
+  "cleanup_restoration_conditions": "Retain data/logs/manifests; narrow exact-run status/down only after authorization and authenticated identity; leave foreign processes untouched; restore identical temporary Windows control then stop it; original Disabled/no5173, transport unchanged",
+  "status": "PENDING",
+  "authorization_status": "NOT AUTHORIZED",
+  "final_preflight_status": "PENDING operation window and separately authorized near-run inspection",
+  "finalization_conditions": [
+    "TV2 same-SHA source approval",
+    "Owner approves exact Windows env/deployment policy/tools/entrypoint/config digest",
+    "Operation window and window-scoped use allocation confirmed",
+    "Final canonical ACL/symlink/collision and ownership/route inventory",
+    "Preregister before launch; attach actual run ID and manifest hash only once runner materializes them",
+    "Separate explicit execution authorization; no execution authorized in this preparation session"
+  ],
+  "wsl_executable_sha256": {
+    "/home/chung2k5/.local/opt/node-v24.15.0-linux-x64/bin/node": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c",
+    "/home/chung2k5/.local/opt/node-v24.15.0-linux-x64/lib/node_modules/npm/bin/npm-cli.js": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+    "/home/chung2k5/.local/opt/foundry-v1.8.5/bin/anvil": "00f97668e1ae0fcca118fd7d2d1b6d25c0496447a523ca6bc2dfd10958c99604",
+    "/home/chung2k5/.local/opt/foundry-v1.8.5/bin/forge": "06c477aee83d0996e57aa92b0841fdf06382cb172fd69bbb88920bb0054dfd7f",
+    "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin/initdb": "45880079a897a2c6e404bbf20111f6fdbd7d63d6681d2cc32f3ccff4d476a045",
+    "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin/pg_ctl": "ce5b66105637e88da5e84c510458bcdfb85ff3f53bd046fc7c01641eb403ad12",
+    "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin/createdb": "7ef63b4664bf0d77a7aa556d8f8ef8bcb174166bfbad058ffcdff94f22442e1a",
+    "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin/psql": "cb9c2bcbc14043547e14f01b20292dbdf3bd2a9b7ec6529120eede38f54fc988",
+    "/home/chung2k5/.local/opt/postgresql-18.4/usr/lib/postgresql/18/bin/postgres": "5300e05436b833f2c75700d7a3922f9e5f99311695950ea3c0419eb5e7b2c719"
+  }
+}

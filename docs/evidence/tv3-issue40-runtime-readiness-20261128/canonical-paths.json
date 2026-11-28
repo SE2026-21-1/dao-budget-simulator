@@ -1,0 +1,131 @@
+{
+  "source": {
+    "sha": "7526e045753707599e98d08d69f1b64380027291",
+    "tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "branch": "tv3/issue40-rpc-isolation-20261128",
+    "branch_head_observed": "7526e045753707599e98d08d69f1b64380027291",
+    "status": "TV4 SOURCE APPROVED / TV2 SOURCE APPROVAL PENDING",
+    "tv4": {
+      "status": "APPROVED",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240899580",
+      "reviewed_sha": "7526e045753707599e98d08d69f1b64380027291"
+    },
+    "tv2": {
+      "status": "PENDING",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240864664",
+      "approved_sha": null,
+      "note": "Handoff requests same-head review; not source approval."
+    },
+    "ancestry": [
+      "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+      "ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26",
+      "dbedc9137ece2634d6439654c482f4fa5fe03d44",
+      "7526e045753707599e98d08d69f1b64380027291"
+    ]
+  },
+  "checkout": {
+    "canonical_wsl": "/home/chung2k5/dao-budget-issue40-runtime-7526e04",
+    "canonical_windows": "D:\\DAO-Issue40-7526e04",
+    "approval": "USER-CONFIRMED path proposals, conditionally recheck before use",
+    "wsl_owner": "chung2k5:chung2k5",
+    "windows_owner": "DESKTOP-BQ4HPJ5\\Thuc",
+    "remote": "https://github.com/SE2026-21-1/dao-budget-simulator.git",
+    "head": "7526e045753707599e98d08d69f1b64380027291",
+    "tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "status_observed": "Clean staged/unstaged/untracked in both dedicated checkouts; five recursive submodules initialized at pins",
+    "recursive_submodule_inventory": [
+      " f3dae6e6ee381f25eb6a246f7da9b85c91a68219 lib/forge-std (v1.17.0)",
+      " c64a1edb67b6e3f4a15cca8909c9482ad33a02b0 lib/openzeppelin-contracts (v4.8.0-952-gc64a1edb)",
+      " 232ff9ba8194e406967f52ecc5cb52ed764209e9 lib/openzeppelin-contracts/lib/erc4626-tests (v0.1.1)",
+      " 3b20d60d14b343ee4f908cb8079495c07f5e8981 lib/openzeppelin-contracts/lib/forge-std (v1.9.6)",
+      " 7328abe100445fc53885c21d0e713b95293cf14c lib/openzeppelin-contracts/lib/halmos-cheatcodes (7328abe)"
+    ],
+    "working_tree_integrity": "Git clean observations plus lock/config byte comparisons; not final preflight",
+    "previous_wsl_checkout": {
+      "path": "/home/chung2k5/dao-budget-be09-pr48-tv3",
+      "head": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+      "action": "Preserved; not runtime source for this attempt"
+    },
+    "previous_windows_checkout": {
+      "path": "D:\\DAO-Budget-Simulator",
+      "head": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+      "status": "Existing staged/unstaged/untracked user changes; preserved, never reset/clean/reused"
+    },
+    "evidence_checkout": "/tmp/dao-issue40-runtime-readiness",
+    "evidence_checkout_role": "Documentation publication only; never use its evidence commit as approved executable SHA"
+  },
+  "approved_attempt_label": "issue40-lifecycle-01",
+  "state_root": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01",
+  "attempt_directory": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>",
+  "pgdata": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/postgres/data",
+  "socket_directory": "/tmp/dao-be09-<actual-run-id>-pg",
+  "unused_runner_created_directory": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/postgres/socket",
+  "pid_files": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/pids/{postgres,anvil,worker,api,frontend}.pid",
+  "identity_metadata": [
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/run-identity.json",
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/pids/<label>.identity.json"
+  ],
+  "logs": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/logs",
+  "manifest_output": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/public/manifest.json",
+  "configuration_files": [
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/runtime.json",
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/runtime.env",
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/worker.env",
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/frontend.env",
+    "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/indexer-config.json"
+  ],
+  "evidence_output": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/reports",
+  "private_vite_cache": "/home/chung2k5/.local/state/dao-budget-issue40-lifecycle-issue40-lifecycle-01/runs/<actual-run-id>/cache/vite",
+  "windows_control_root": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01",
+  "windows_evidence_root": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence",
+  "naming_contract": {
+    "state_root_suffix_regex": "[A-Za-z0-9-]+",
+    "actual_run_id_generation": "UTC YYYYMMDDTHHMMSSZ + hyphen + openssl rand -hex 6, generated only by authorized launch",
+    "run_directory": "exact immediate child of canonical stateRoot/runs; no traversal/symlinks; state outside checkout",
+    "socket": "exclusive mkdir mode0700 /tmp/dao-be09-<actual-run-id>-pg, no historical ID reuse"
+  },
+  "path_observation": {
+    "existing_wsl_parents": "/home/chung2k5 owned chung2k5 mode0750; .local/state owned chung2k5 mode0700; /tmp root-owned sticky01777",
+    "state_pgdata_socket": "Not created; proposed state root absent, glob found no existing Issue40 state/socket match; actual run-specific path cannot be checked before launch",
+    "windows_control": "Not created; proposed control root absent; D:\\ owner BUILTIN\\Administrators is observation, not authorization; Windows checkout now owned Thuc",
+    "symlinks": "WSL namei ancestors no symlinks; Windows inspected D:\\ and dedicated checkout/frontend show no LinkType/Target; recheck all concrete private components and effective ACLs immediately before use",
+    "runtime_permissions": "NOT CHECKED — runtime directories not materialized; do not chmod shared directories",
+    "separation": "New Issue40-only checkout/control/state paths; no #42 or system PGDATA reused"
+  },
+  "lock_and_control_file_hashes": {
+    "package-lock.json": {
+      "git_blob_sha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "windows_bytes_sha256": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/package-lock.json": {
+      "git_blob_sha256": "f5825427a22f4d5f36e14c4a530512f6b059b4555ccf81a48cca57ddb62d8ffd",
+      "windows_bytes_sha256": "c27a5fc932d72c1619cccef3c873ba32d5f9d71c1d1d1735f644d53a2d3a8262",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/package.json": {
+      "git_blob_sha256": "3aa77a0f7720303fcbb7a6cda7fe1c6ada99f7d9da8d1c89f6091f51b12afb69",
+      "windows_bytes_sha256": "53ebd28826bb7b0ea1b2c96f998cca0bc9bec8a6cf6e4385fd5e797d0e3fb7f2",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/vite.config.ts": {
+      "git_blob_sha256": "4b70970a8680e1b71b0f6deae747447d941b73982df8e073ba838b0ee9dac663",
+      "windows_bytes_sha256": "2a0623ef3d6ccfe946f14f35fa4b1c28bd0573f014db9f61c0e07fde1abb1eb5",
+      "windows_crlf_normalized_matches_blob": true
+    }
+  },
+  "executable_helper_sha256": {
+    "scripts/be09-diagnose.mjs": "755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343",
+    "scripts/be09-live-test.mjs": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+    "scripts/be09-local.sh": "fc210f4efec3ddf6e7c86781cd3d431e14b654160dd6b98b3cb717a9f6f3efcd",
+    "scripts/be09-metadata.mjs": "8f5bc42618bb0262952ffdfa6fab82c0ec18aa65abf817f5da10113a0baa244f",
+    "scripts/be09-provenance.mjs": "6a0c22ea884be39ae746a4eb85ce17c5e077717d53890d0fcf5db59a29d9df2a",
+    "scripts/be09-readiness.mjs": "e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda",
+    "scripts/be09-register.mjs": "d15e6bed9cdd7be4ef196dcc2c36b434c12f46e6d559a60226d9a6d63c3b12f2",
+    "scripts/be09-rpc.mjs": "94a98f7c5a65297ee0044e2f0f27b4806c4e91c62775faab6b49c1e8c6851f59",
+    "scripts/be09-safety.mjs": "3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed",
+    "scripts/be09-seed.mjs": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+    "scripts/be09-verify.mjs": "0fc2c3d71b643eaf44d767f41d87ef416fb56ff18384d9554694158dbf82dcfc"
+  },
+  "runtime_paths_status": "APPROVED proposals; final canonical paths/ACL/collision evidence PENDING"
+}

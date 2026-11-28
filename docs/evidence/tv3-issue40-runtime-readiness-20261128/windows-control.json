@@ -1,0 +1,93 @@
+{
+  "source_sha": "7526e045753707599e98d08d69f1b64380027291",
+  "source_tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+  "checkout": "D:\\DAO-Issue40-7526e04",
+  "frontend_working_directory": "D:\\DAO-Issue40-7526e04\\frontend",
+  "command_working_directory": "D:\\DAO-Issue40-7526e04",
+  "toolchain": {
+    "node": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "version": "v24.21.0",
+      "version_exit": 0,
+      "sha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32"
+    },
+    "npm": {
+      "executable": "C:\\Program Files\\nodejs\\npm.cmd",
+      "version": "11.19.0",
+      "version_exit": 0,
+      "sha256": "21b46c69ad6e2f231f02a9e120f4ba6c8e75fef5a45637103002eab99f888ab8"
+    }
+  },
+  "lock_and_configuration_hashes": {
+    "package-lock.json": {
+      "git_blob_sha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "windows_bytes_sha256": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/package-lock.json": {
+      "git_blob_sha256": "f5825427a22f4d5f36e14c4a530512f6b059b4555ccf81a48cca57ddb62d8ffd",
+      "windows_bytes_sha256": "c27a5fc932d72c1619cccef3c873ba32d5f9d71c1d1d1735f644d53a2d3a8262",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/package.json": {
+      "git_blob_sha256": "3aa77a0f7720303fcbb7a6cda7fe1c6ada99f7d9da8d1c89f6091f51b12afb69",
+      "windows_bytes_sha256": "53ebd28826bb7b0ea1b2c96f998cca0bc9bec8a6cf6e4385fd5e797d0e3fb7f2",
+      "windows_crlf_normalized_matches_blob": true
+    },
+    "frontend/vite.config.ts": {
+      "git_blob_sha256": "4b70970a8680e1b71b0f6deae747447d941b73982df8e073ba838b0ee9dac663",
+      "windows_bytes_sha256": "2a0623ef3d6ccfe946f14f35fa4b1c28bd0573f014db9f61c0e07fde1abb1eb5",
+      "windows_crlf_normalized_matches_blob": true
+    }
+  },
+  "vite_entrypoint": "D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js",
+  "vite_entrypoint_status": "NOT CHECKED — dependencies absent, entrypoint does not exist; no npm ci/package installation performed",
+  "intended_command": "Set-Location -LiteralPath \"D:\\DAO-Issue40-7526e04\"\n& \"C:\\Program Files\\nodejs\\node.exe\" \"--env-file=D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env\" \"D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js\" \"D:\\DAO-Issue40-7526e04\\frontend\" --host 127.0.0.1 --port 5173 --strictPort\n$ControlExit = $LASTEXITCODE",
+  "bind_address": "127.0.0.1",
+  "candidate_port": 5173,
+  "environment_allowlist_proposal": {
+    "VITE_RPC_URL": "http://127.0.0.1:28545",
+    "VITE_API_BASE_URL": "http://127.0.0.1:3300",
+    "VITE_CHAIN_ID": "31337",
+    "DAO_VITE_CACHE_DIR": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\vite-cache",
+    "VITE_DEPLOYMENT_ID": null,
+    "VITE_GOVERNOR_ADDRESS": null,
+    "VITE_TREASURY_ADDRESS": null,
+    "VITE_GOV_TOKEN_ADDRESS": null,
+    "VITE_BUD_TOKEN_ADDRESS": null,
+    "VITE_TIMELOCK_ADDRESS": null,
+    "VITE_EXPLORER_URL": null,
+    "VITE_CHAIN_NAME": null
+  },
+  "deployment_policy": "PENDING owner + TV2 approval. Transport-only control may leave deployment/address values unset, must explicitly approve this policy and identical baseline/restoration bytes; never reuse historical deployment as live or fabricate values. Do not load shared .env files. Inventory/reconcile Vite .env* auto-loading and inherited NODE_OPTIONS/NODE_ENV before sealing.",
+  "configuration_digest": {
+    "proposal_sha256": "19badb2942d7ef4aee0951a04cdd7d45a1f611e174b82fccb95052b8f32456a0",
+    "encoding": "UTF-8 JSON sorted keys, separators comma/colon, ensure_ascii=true, one trailing LF; null means PENDING",
+    "scope": "Nonsecret proposal only; not digest of materialized or approved env",
+    "approved_env_file_sha256": null,
+    "approved_full_configuration_sha256": null
+  },
+  "private_paths": {
+    "root": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01",
+    "env": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env",
+    "vite_cache": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\vite-cache",
+    "npm_cache": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\npm-cache",
+    "logs": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence",
+    "baseline_transcript": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence\\baseline-transcript.txt",
+    "restore_transcript": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence\\restore-transcript.txt"
+  },
+  "dependency_preparation": "PENDING separately permitted locked npm ci with actual npm.cmd and private npm cache, then entrypoint hash/version and nonsecret env seal; no packages installed this turn",
+  "identity_capture": "After separately authorized foreground launch, Get-NetTCPConnection -State Listen filtered5173; Get-CimInstance Win32_Process for exact PID; record PID/PPID/CreationDate/executable/argv, command/source/env hashes, UTC. Revalidate before requests/stop. Reject wildcard or foreign listeners.",
+  "stop_procedure": "Only authenticated foreground control Ctrl+C in its own terminal; record actual $ControlExit and listener disappearance; no kill-by-port/name",
+  "restoration_procedure": "After exact-run WSL owned processes/listeners ended, revalidate source/tool/lock/env/config bytes; repeat identical intended command with distinct restoration transcript, capture new identity/raw curl HTTP200; stop own restored control; original Disabled/no5173.",
+  "original_state": {
+    "task": "\\DAO Budget Simulator Web",
+    "enabled": false,
+    "state": "Disabled",
+    "shared_launcher": "D:\\DAO-Budget-Simulator\\scripts\\serve_frontend_windows.ps1",
+    "shared_launcher_executed": false,
+    "control_http200": "NOT CHECKED — NOT AUTHORIZED",
+    "restoration_http200": "NOT CHECKED — NOT AUTHORIZED"
+  },
+  "status": "PENDING dependency installation, env/deployment policy, full config digest and owner approval; actual toolchain VERIFIED; command draft only"
+}

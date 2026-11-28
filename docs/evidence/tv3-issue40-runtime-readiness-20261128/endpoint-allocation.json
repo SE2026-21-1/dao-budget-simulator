@@ -1,0 +1,101 @@
+{
+  "endpoints": [
+    {
+      "service": "Anvil RPC",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 28545,
+      "consumer": "WSL deployment/indexer/API/frontend; future Windows read-only reachability",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Backend API",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 3300,
+      "consumer": "WSL frontend; future Windows read-only reachability",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Private PostgreSQL",
+      "host_namespace": "WSL Ubuntu; shared Windows transport unchanged",
+      "listen_address": "127.0.0.1",
+      "port": 55432,
+      "consumer": "Issue40 migrations/registration/indexer/API only",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    },
+    {
+      "service": "Vite",
+      "host_namespace": "Windows temporary control, then WSL Ubuntu, then Windows control; never concurrent",
+      "listen_address": "127.0.0.1",
+      "port": 5173,
+      "consumer": "Windows curl control and WSL frontend, sequential exclusive ownership",
+      "ownership_requirement": "Authenticate exact owned process and listener before requests/signals; absence is not ownership",
+      "allocation_status": "APPROVED",
+      "allocation_scope": "Owner approved tuple for packet/preparation only; use requires separate execution authorization",
+      "allocation_provenance": "User form response: allocation=approved_preparation_only",
+      "availability_observation": "OBSERVED ONLY — no matching TCP listener in scoped Windows and WSL inventories; not bind/reservation/reachability proof",
+      "observation_utc": {
+        "wsl": "2026-11-28T16:18:00.662682+00:00",
+        "windows": "2026-11-28T16:18:36.983145+00:00"
+      },
+      "operation_window": null,
+      "runtime_listener_ownership": "NOT CHECKED",
+      "cleanup": "Stop only authenticated owned Issue40 processes; retain private data/logs; Vite restored then stopped; original task Disabled/no listener5173; no protected resource change"
+    }
+  ],
+  "protected_resources": {
+    "issue42_ports": [
+      18545,
+      13300,
+      55442
+    ],
+    "system_postgresql_port": 5432,
+    "excluded_resources": [
+      "receiver42 processes/state/evidence",
+      "system PostgreSQL",
+      "shared Scheduled Task and launcher",
+      "shared Windows/WSL transport",
+      "firewall",
+      "portproxy",
+      ".wslconfig",
+      "system services",
+      "Chrome/wallet"
+    ]
+  },
+  "operation_window": null,
+  "execution_authorization": "NOT AUTHORIZED"
+}

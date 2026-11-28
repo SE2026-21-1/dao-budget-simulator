@@ -1,0 +1,30 @@
+{
+  "observed_identity": {
+    "hostname": "DESKTOP-BQ4HPJ5",
+    "windows_account": "DESKTOP-BQ4HPJ5\\Thuc",
+    "wsl_account": "chung2k5",
+    "distribution": "Ubuntu 26.04.1 LTS"
+  },
+  "receiver_owner": "TV3 (@LangXiTrum2005)",
+  "windows_owner_controller": "TV3 (@LangXiTrum2005)",
+  "wsl_owner_controller": "TV3 (@LangXiTrum2005)",
+  "runtime_controller": "TV3 (@LangXiTrum2005)",
+  "windows_control_owner_controller": "TV3 (@LangXiTrum2005)",
+  "confirmation_status": "USER-CONFIRMED",
+  "confirmation_provenance": [
+    {
+      "type": "Direct user message in preparation session",
+      "statement": "TV3 owns/controls Windows account Thuc and WSL account chung2k5; preparation and scoped read-only inspection only; no lifecycle/launch/stop/shared infrastructure changes."
+    },
+    {
+      "type": "User authorization form response",
+      "statement": "TV3 assigned runtime and Windows control responsibilities; four-port tuple approved for packet/preparation only; path proposals approved subject to recheck; attempt label issue40-lifecycle-01; no operation window supplied; no execution authority."
+    }
+  ],
+  "operation_window": null,
+  "resource_scope": "Dedicated reviewed source checkouts, authorization documentation, scoped read-only OS inventory. Endpoint use only after separate authorization. No packages installed. No runtime state/control dirs created.",
+  "allocation_status": "APPROVED preparation tuple, not reservation or permission to bind/connect",
+  "execution_authorization": "NOT AUTHORIZED",
+  "launch_stop_permission_current_turn": "NOT AUTHORIZED",
+  "private_control_configuration_approval": "PENDING"
+}

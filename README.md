@@ -568,3 +568,19 @@ hiện là tạm thời và 16 unknown topics vẫn được báo `degraded`.
 [Pull CD cho VM](deploy/anvil-demo/cd/README.md) nhận release đã qua CI và cập nhật
 riêng API/indexer theo digest, preflight, health/data checks và rollback. Cần cài
 agent và bật systemd timer trên VM sau khi kiểm tra; commit file không tự bật CD.
+
+## What-if Budget Simulator (TV1, off-chain)
+
+Module TypeScript độc lập tại `simulator/` thử thứ tự giải ngân, requestId trùng,
+thiếu quỹ, top-up và retry bằng `bigint`. Core không gọi RPC. Adapter opt-in chỉ đọc
+Treasury tại snapshot đã pin; không thay đổi state chain, API hay UI hiện có. Kết quả là giả định, không chứng minh giao dịch thật sẽ thành công.
+
+```sh
+npm ci
+npm run test:simulator
+```
+
+[Thiết kế, schema và giới hạn](docs/what-if-budget.md) ·
+[Ví dụ có thể chạy](docs/what-if-budget-examples.md) ·
+[Snapshot adapter](docs/what-if-budget-snapshots.md) ·
+[Kiểm chứng bổ sung](docs/what-if-budget-verification.md).

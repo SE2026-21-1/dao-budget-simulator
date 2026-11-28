@@ -1,0 +1,70 @@
+name: TV1 What-if Budget Simulator
+
+on:
+  push:
+    branches: [main, Dev, 'feature/**']
+    paths:
+      - 'simulator/**'
+      - 'contracts/**'
+      - 'shared/abi/**'
+      - 'foundry.toml'
+      - 'foundry.lock'
+      - '.gitmodules'
+      - 'lib/**'
+      - 'tests/simulator/**'
+      - 'docs/what-if-budget*.md'
+      - 'package*.json'
+      - 'tsconfig*.json'
+      - '.github/workflows/simulator.yml'
+  pull_request:
+    paths:
+      - 'simulator/**'
+      - 'contracts/**'
+      - 'shared/abi/**'
+      - 'foundry.toml'
+      - 'foundry.lock'
+      - '.gitmodules'
+      - 'lib/**'
+      - 'tests/simulator/**'
+      - 'docs/what-if-budget*.md'
+      - 'package*.json'
+      - 'tsconfig*.json'
+      - '.github/workflows/simulator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulator:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm run test:simulator
+
+  differential:
+    name: Simulator versus production Treasury in Foundry VM
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - uses: ./.github/actions/install-foundry
+      - run: npm ci
+      - run: npm run test:simulator:differential

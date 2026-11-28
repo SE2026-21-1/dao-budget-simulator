@@ -1,6 +1,94 @@
 # Sepolia — chuẩn bị chung và điều kiện triển khai
 
-## Trạng thái TV4 ngày 26/11/2026
+## Hiện hành 28/11/2026 — owner/operator đã nhận, signer/ETH chưa xác minh
+
+[User-confirmed owner acceptance #20](https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-7240590072):
+**dung0611 nhận deployment owner và operator**, pin source chuẩn bị
+`e17ef61a8a51518005c38b0808cdc06fe7a68bbf` theo đề xuất TV2/nhóm trưởng
+`daongocuong` và TV1. Dev mới `f15f19252957d9ca37b424facdbb13afc8da0b05`
+chỉ tích hợp PR64 trong delta đã đối chiếu, không đổi deployment/contracts/ABI/pins;
+không tự đổi source triển khai sang latest Dev hoặc evidence HEAD.
+
+**Đã gỡ owner/operator acceptance blocker.** Chưa có public wallet address/map9,
+custody/exclusive-use/signing6 và Caller demo; native ETH funder/source/balances,
+actual-map estimates/nonces và final budget còn thiếu. Người dùng đã xác nhận
+**chưa biết có nguồn Sepolia ETH hay chưa**, không phải đã có ETH.
+`funding` trong map giữ BUD ban đầu, không mặc nhiên là native ETH funder.
+0,12 Sepolia ETH (0,10 bootstrap +0,02 demo/reserve), cap1gwei vẫn planning only.
+Không quyền ký/gửi/chuyển ETH/broadcast; #20 OPEN/BLOCKED, live testnet SKIP.
+
+### Khi owner chưa có ví — thao tác riêng, không qua agent
+
+Chỉ chạy nếu bạn chọn giữ các ví testnet riêng này; custody/exclusive-use phải
+xác nhận sau khi thực sự tạo và bảo quản được. Nếu giao custody cho người khác,
+để custodian đó tạo ví ở máy riêng và chỉ gửi public addresses/policy confirmation.
+Current CLI cần cả6 encrypted keystores trong một trusted local process;
+MetaMask/hardware/distributed signing chưa tự tương thích.
+
+**Bash/WSL terminal riêng của owner**, không terminal agent/CI, không `tee`,
+recording hoặc screen sharing khi nhập mật khẩu. Không chạy `cast wallet new`
+không có thư mục: chế độ đó in raw private key. Foundry help đã được đọc,
+nhưng agent **không tạo wallet/keystore hoặc đọc secret**.
+
+```bash
+set -euo pipefail
+umask 077
+mkdir -p "$HOME/.local/share"
+KEYROOT="$(mktemp -d "$HOME/.local/share/dao-budget-sepolia-keys.XXXXXXXX")"
+unset CAST_PASSWORD ETH_PASSWORD
+for role in A B C D funding deployer caller recipient outsider; do
+  cast wallet new "$KEYROOT" "$role"
+done
+chmod 600 "$KEYROOT"/*
+printf 'Giữ riêng thư mục keystore: %s\n' "$KEYROOT"
+node --input-type=module - "$KEYROOT" <<'NODE'
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+const roles = ['A', 'B', 'C', 'D', 'funding', 'deployer', 'caller', 'recipient', 'outsider'];
+const addresses = {};
+for (const role of roles) {
+  const keystore = JSON.parse(await readFile(join(process.argv[2], role), 'utf8'));
+  assert.equal(typeof keystore.address, 'string', `Missing public address for ${role}`);
+  const hex = keystore.address.replace(/^0x/i, '');
+  assert.match(hex, /^[0-9a-fA-F]{40}$/, `Invalid public address for ${role}`);
+  assert.ok(!/^0{40}$/.test(hex), `Zero address for ${role}`);
+  addresses[role] = `0x${hex.toLowerCase()}`;
+}
+assert.equal(new Set(Object.values(addresses)).size, roles.length, 'Addresses must be distinct');
+console.log(JSON.stringify(addresses, null, 2));
+NODE
+```
+
+Nhập mật khẩu mạnh qua hidden prompt, giữ backup riêng an toàn. Không dùng
+`--unsafe-password`, password argv/env hoặc gửi keystore/key/seed/password cho
+agent/GitHub/chat. Script chỉ in **map public addresses**, không decrypt key;
+chỉ gửi phần map cuối và tên custodian/exclusive-use xác nhận, không gửi file ví.
+Đây không tạo deployment manifest hoặc cấp quyền chạy deployment.
+
+### Nguồn Sepolia ETH — đề xuất không phải đã funded
+
+- [Ethereum.org: Sepolia/faucets](https://ethereum.org/developers/docs/networks/#sepolia)
+  phân biệt testnet ETH với mainnet và khuyến nghị không dùng chung tài khoản.
+- [Google Cloud Web3 Sepolia faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia):
+  trang đã đọc yêu cầu sign-in; quota/eligibility của owner chưa xác minh.
+- [Chainlink Ethereum Sepolia faucet](https://faucets.chain.link/sepolia):
+  native ETH riêng với LINK; cần compatible wallet connection. Không gọi
+  advertised drip là ETH đã nhận hoặc đảm bảo owner đủ điều kiện.
+
+Sau khi có public map, owner hoặc funder nhóm thực hiện faucet ở phiên riêng
+theo điều kiện provider; không agent đăng nhập, ký, giải CAPTCHA hay vượt quota.
+Chọn **Ethereum Sepolia11155111/native ETH**, không Arbitrum/Base Sepolia hoặc LINK.
+Không mua/gửi mainnet ETH, không nhập seed/private key vào faucet. Nếu chưa có
+nguồn hợp lệ, `daongocuong` điều phối funder nhóm; không mặc định ai có ETH.
+Faucet submission không phải confirmed balance: TV4 chỉ đọc canonical H/hash,
+chain/genesis, balances/latest-pending nonces khi có actual public addresses.
+Sau đó mới chốt actual-map gas/headroom, per-sender allocation và final budget.
+Không tự ký/chuyển gas hoặc broadcast; quyền đó phải cấp riêng.
+
+[Owner acceptance/evidence/remaining gates](evidence/2026-11-28-tv4-owner-acceptance.md).
+
+## Lịch sử chuẩn bị TV4 ngày 26/11/2026
 
 Mạng đã chốt tại #20: Sepolia, chainId **11155111**, RPC public
 `https://ethereum-sepolia-rpc.publicnode.com`, **K=2**. Lượt này không được cấp
@@ -102,12 +190,15 @@ Partial renounce không có general recovery guarantee; có thể phải redeplo
 
 ## Checklist công khai trước khi gửi (#20)
 
-Owner được nhóm chỉ định, do TV2 `@daongocuong` phối hợp xác định; **không mặc
-định TV1/TV2 giữ signer**. Mỗi mục cần người xác nhận + evidence công khai,
-hoặc ghi chưa có + người xử lý; giữ yêu cầu #20 hiện có, không tạo request trùng:
+TV2/nhóm trưởng `@daongocuong` đã đề cử; người dùng đã xác nhận **dung0611
+nhận owner/operator**, không còn chờ appoint/acceptance. Không mặc định
+owner/operator là custodian6signers hoặc native ETH funder. Mỗi gate còn lại
+cần người xác nhận + evidence công khai; không lặp request owner đã giải quyết.
 
-- [ ] Owner chọn **full approved SHA** tích hợp sau review, compiler/artifact/ABI
-      hashes cùng checkout; không tự lấy current HEAD/Dev/PR head làm lựa chọn.
+- [x] Owner/operator nhận vai trò và pin source chuẩn bị
+      **e17ef61a8a51518005c38b0808cdc06fe7a68bbf**, không auto-latest.
+- [ ] Final source/compiler/artifact/ABI/map binding trong authorization packet,
+      không lấy ownership acceptance thay quyền ký/gửi hoặc final budget.
 - [ ] Chín địa chỉ public khác nhau: A/B/C/D/funding/deployer/caller/recipient/outsider.
 - [ ] Tên custodian **riêng từng signer** A/B/C/D/funding/deployer; xác nhận
       custody an toàn và exclusive-use trong lượt deployment.

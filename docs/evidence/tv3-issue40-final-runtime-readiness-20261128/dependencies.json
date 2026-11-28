@@ -1,0 +1,166 @@
+{
+  "status": "VERIFIED",
+  "source": {
+    "sha": "7526e045753707599e98d08d69f1b64380027291",
+    "tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "branch": "tv3/issue40-rpc-isolation-20261128",
+    "branch_head_observed": "7526e045753707599e98d08d69f1b64380027291",
+    "status": "TV2 + TV4 SOURCE APPROVED — F40-1/F40-2 FIXED",
+    "tv4": {
+      "status": "APPROVED",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7240899580",
+      "reviewed_sha": "7526e045753707599e98d08d69f1b64380027291"
+    },
+    "tv2": {
+      "status": "APPROVED",
+      "reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7242429710",
+      "approved_sha": "7526e045753707599e98d08d69f1b64380027291"
+    },
+    "ancestry": [
+      "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+      "ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26",
+      "dbedc9137ece2634d6439654c482f4fa5fe03d44",
+      "7526e045753707599e98d08d69f1b64380027291"
+    ]
+  },
+  "permission": "Owner approved dependency-only npm ci, no services/endpoint use",
+  "windows_toolchain": {
+    "node": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "version": "v24.21.0",
+      "version_exit": 0,
+      "sha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32"
+    },
+    "npm": {
+      "executable": "C:\\Program Files\\nodejs\\npm.cmd",
+      "version": "11.19.0",
+      "version_exit": 0,
+      "sha256": "21b46c69ad6e2f231f02a9e120f4ba6c8e75fef5a45637103002eab99f888ab8"
+    }
+  },
+  "wsl_toolchain": {
+    "node": "v24.15.0",
+    "npm": "11.12.1",
+    "foundry": "1.8.5 (accepted prior inventory, not re-executed this delta)",
+    "private_postgresql": "18.4 direct private bin/library, not system18.6",
+    "binary_hashes_reference": "../tv3-issue40-runtime-readiness-20261128/runtime-preregistration-draft.json"
+  },
+  "installations": [
+    {
+      "namespace": "WSL",
+      "root_exit": 0,
+      "frontend_exit": 0,
+      "raw_record_label": "WSL locked dependency installation",
+      "audit": "0 vulnerabilities for root and frontend; security checks not disabled"
+    },
+    {
+      "namespace": "Windows",
+      "root_exit": 0,
+      "frontend_exit": 0,
+      "raw_record_label": "Windows locked dependency installation",
+      "audit": "0 vulnerabilities for root and frontend; security checks not disabled"
+    }
+  ],
+  "source_integrity": "Post-install Git status empty in both checkouts; full HEAD/tree and recursive pins unchanged; root/frontend lockfile actual-byte hashes unchanged from pre-install observations",
+  "actual_byte_hashes": {
+    "package-lock.json": {
+      "windows_sha256": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "wsl_sha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d"
+    },
+    "frontend/package-lock.json": {
+      "windows_sha256": "c27a5fc932d72c1619cccef3c873ba32d5f9d71c1d1d1735f644d53a2d3a8262",
+      "wsl_sha256": "f5825427a22f4d5f36e14c4a530512f6b059b4555ccf81a48cca57ddb62d8ffd"
+    },
+    "frontend/package.json": {
+      "windows_sha256": "53ebd28826bb7b0ea1b2c96f998cca0bc9bec8a6cf6e4385fd5e797d0e3fb7f2",
+      "wsl_sha256": "3aa77a0f7720303fcbb7a6cda7fe1c6ada99f7d9da8d1c89f6091f51b12afb69"
+    },
+    "frontend/vite.config.ts": {
+      "windows_sha256": "2a0623ef3d6ccfe946f14f35fa4b1c28bd0573f014db9f61c0e07fde1abb1eb5",
+      "wsl_sha256": "4b70970a8680e1b71b0f6deae747447d941b73982df8e073ba838b0ee9dac663"
+    },
+    "frontend/src/chain/config.ts": {
+      "windows_sha256": "70e29a869ec7ff0b212a8f74d1d33a88c9a1f315396bce0356eae992feca2e70",
+      "wsl_sha256": "df7286aebcec79db07c98b00360f2cb1e8247018ea4b933954ed17cb90b6ad69"
+    },
+    "frontend/.env.example": {
+      "windows_sha256": "e6b4cbd485910bcab0cc9b1ea39882793e4ed45a455e8af4e4f5ce55699d1c3d",
+      "wsl_sha256": "cdf405f9c6bca340a2459f9833dac01df4cd0fda8bfcf7bb0913fd9c9b4acfa3"
+    },
+    "frontend/node_modules/vite/bin/vite.js": {
+      "windows_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d",
+      "wsl_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d"
+    },
+    "frontend/node_modules/vite/package.json": {
+      "windows_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4",
+      "wsl_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4"
+    }
+  },
+  "npm_controls": {
+    "explicit_install_flags": "ci --cache <private> --registry https://registry.npmjs.org --foreground-scripts; root and --prefix frontend",
+    "node_overrides_removed": [
+      "NODE_OPTIONS",
+      "NODE_PATH",
+      "ESBUILD_BINARY_PATH"
+    ],
+    "npm_config_environment_names_observed_after_install": [],
+    "safe_effective_settings": {
+      "registry": "https://registry.npmjs.org/",
+      "audit": true,
+      "ignore-scripts": false,
+      "omit": "",
+      "include": "",
+      "global": false,
+      "script-shell": null
+    },
+    "project_frontend_user_npmrc": "Absent in scoped inspection; no config contents/credentials dumped",
+    "provenance_limit": "NPM_CONFIG_* name/effective-settings inspection occurred after installation; do not represent it as pre-install environment capture. Explicit install flags and actual logs retained. Future dependency preparation must clear/reconcile NPM_CONFIG_* in its dedicated process before use."
+  },
+  "install_script_review": {
+    "timing_provenance": "Script review completed before installation; exact review UTC was not separately emitted. First WSL installation began at recorded UTC 2026-11-28T16:55:22Z.",
+    "method": "Fetched only exact locked registry tarballs via Python urllib; verified lockfile SHA512 integrity before opening package.json/install sources in-memory; no extraction/execution",
+    "packages": [
+      {
+        "package": "esbuild",
+        "version": "0.28.2",
+        "registry_url": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
+        "integrity_verified": true,
+        "scripts": {
+          "postinstall": "node install.js"
+        },
+        "os": null,
+        "reviewed_source_sha256": {
+          "package/install.js": "612294e278914443bdcf81cb17f54afec34dbdd2ebd999a6ee187912320cc315"
+        }
+      },
+      {
+        "package": "fsevents",
+        "version": "2.3.3",
+        "registry_url": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz",
+        "integrity_verified": true,
+        "scripts": {
+          "clean": "node-gyp clean && rm -f fsevents.node",
+          "build": "node-gyp clean && rm -f fsevents.node && node-gyp rebuild && node-gyp clean",
+          "test": "/bin/bash ./test.sh 2>/dev/null",
+          "prepublishOnly": "npm run build"
+        },
+        "os": [
+          "darwin"
+        ],
+        "reviewed_source_sha256": {
+          "package/fsevents.js": "1d75660f48786792f0e98d6dabfd301883c8f2a8f61aa690cbf58fb4386c0f1a"
+        }
+      }
+    ],
+    "assessment": "No root/frontend lifecycle hooks. esbuild0.28.2 postinstall selects platform optional binary, may download/install exact version if missing, verifies binary hash and invokes --version, writes only package tree. fsevents2.3.3 Darwin-only omitted on Windows/Linux (implicit node-gyp possible only matching platform). No lifecycle/service binding script identified.",
+    "windows_warning": "npm11.19 warned esbuild postinstall is not yet covered by allowScripts; audit still0, install exit0. No allowScripts/source/lockfile/security setting changed."
+  },
+  "vite": {
+    "version": "8.3.4",
+    "entrypoint": "D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js",
+    "entrypoint_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d",
+    "package_metadata_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4",
+    "version_evidence": "Offline package.json name/version/bin/engines; Vite CLI not executed"
+  },
+  "dependency_logs_reference": "preflight-inventory.json records with installation labels"
+}

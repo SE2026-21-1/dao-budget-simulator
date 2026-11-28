@@ -1,0 +1,178 @@
+{
+  "configuration": {
+    "format": "tv3-issue40-windows-control-candidate-v1",
+    "issue": 40,
+    "attempt_label": "issue40-lifecycle-01",
+    "source_sha": "7526e045753707599e98d08d69f1b64380027291",
+    "source_tree": "0c2e643f4b73fb72023f9a733973343deb83a40e",
+    "owner": "TV3 (@LangXiTrum2005)",
+    "runtime_controller": "TV3 (@LangXiTrum2005)",
+    "windows_control_owner": "TV3 (@LangXiTrum2005)",
+    "operation_window": {
+      "local_start": "2026-11-29T09:00:00+07:00",
+      "local_end": "2026-11-29T12:00:00+07:00",
+      "utc_start": "2026-11-29T02:00:00Z",
+      "utc_end": "2026-11-29T05:00:00Z",
+      "status": "USER-CONFIRMED",
+      "provenance": "User form response: 2026-11-29 09:00 - 12:00 UTC+7"
+    },
+    "checkout": "D:\\DAO-Issue40-7526e04",
+    "frontend_root": "D:\\DAO-Issue40-7526e04\\frontend",
+    "working_directory": "D:\\DAO-Issue40-7526e04",
+    "node": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "version": "v24.21.0",
+      "version_exit": 0,
+      "sha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32"
+    },
+    "npm": {
+      "executable": "C:\\Program Files\\nodejs\\npm.cmd",
+      "version": "11.19.0",
+      "version_exit": 0,
+      "sha256": "21b46c69ad6e2f231f02a9e120f4ba6c8e75fef5a45637103002eab99f888ab8"
+    },
+    "vite": {
+      "version": "8.3.4",
+      "entrypoint": "D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js",
+      "entrypoint_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d",
+      "package_metadata_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4",
+      "version_evidence": "Offline package.json name/version/bin/engines; Vite CLI not executed"
+    },
+    "file_hashes": {
+      "package-lock.json": {
+        "windows_sha256": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+        "wsl_sha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d"
+      },
+      "frontend/package-lock.json": {
+        "windows_sha256": "c27a5fc932d72c1619cccef3c873ba32d5f9d71c1d1d1735f644d53a2d3a8262",
+        "wsl_sha256": "f5825427a22f4d5f36e14c4a530512f6b059b4555ccf81a48cca57ddb62d8ffd"
+      },
+      "frontend/package.json": {
+        "windows_sha256": "53ebd28826bb7b0ea1b2c96f998cca0bc9bec8a6cf6e4385fd5e797d0e3fb7f2",
+        "wsl_sha256": "3aa77a0f7720303fcbb7a6cda7fe1c6ada99f7d9da8d1c89f6091f51b12afb69"
+      },
+      "frontend/vite.config.ts": {
+        "windows_sha256": "2a0623ef3d6ccfe946f14f35fa4b1c28bd0573f014db9f61c0e07fde1abb1eb5",
+        "wsl_sha256": "4b70970a8680e1b71b0f6deae747447d941b73982df8e073ba838b0ee9dac663"
+      },
+      "frontend/src/chain/config.ts": {
+        "windows_sha256": "70e29a869ec7ff0b212a8f74d1d33a88c9a1f315396bce0356eae992feca2e70",
+        "wsl_sha256": "df7286aebcec79db07c98b00360f2cb1e8247018ea4b933954ed17cb90b6ad69"
+      },
+      "frontend/.env.example": {
+        "windows_sha256": "e6b4cbd485910bcab0cc9b1ea39882793e4ed45a455e8af4e4f5ce55699d1c3d",
+        "wsl_sha256": "cdf405f9c6bca340a2459f9833dac01df4cd0fda8bfcf7bb0913fd9c9b4acfa3"
+      },
+      "frontend/node_modules/vite/bin/vite.js": {
+        "windows_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d",
+        "wsl_sha256": "de5833362e640673962f16e255bf8738d4380a68601b9af26217eee4e1bac36d"
+      },
+      "frontend/node_modules/vite/package.json": {
+        "windows_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4",
+        "wsl_sha256": "260a0a7a96a35e1b657480014c0f3b592b70061e42099edefc8fe97972f05fd4"
+      }
+    },
+    "command": "Set-Location -LiteralPath \"D:\\DAO-Issue40-7526e04\"\n& \"C:\\Program Files\\nodejs\\node.exe\" \"--env-file=D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env\" \"D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js\" \"D:\\DAO-Issue40-7526e04\\frontend\" --host 127.0.0.1 --port 5173 --strictPort\n$ControlExit = $LASTEXITCODE",
+    "argv": [
+      "--env-file=D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env",
+      "D:\\DAO-Issue40-7526e04\\frontend\\node_modules\\vite\\bin\\vite.js",
+      "D:\\DAO-Issue40-7526e04\\frontend",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "5173",
+      "--strictPort"
+    ],
+    "listen_address": "127.0.0.1",
+    "port": 5173,
+    "environment": {
+      "NODE_ENV": "development",
+      "VITE_API_BASE_URL": "http://127.0.0.1:3300",
+      "VITE_RPC_URL": "http://127.0.0.1:28545",
+      "VITE_CHAIN_ID": "31337",
+      "DAO_VITE_CACHE_DIR": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\vite-cache",
+      "VITE_DEPLOYMENT_ID": "",
+      "VITE_GOVERNOR_ADDRESS": "",
+      "VITE_TREASURY_ADDRESS": "",
+      "VITE_GOV_TOKEN_ADDRESS": "",
+      "VITE_BUD_TOKEN_ADDRESS": "",
+      "VITE_TIMELOCK_ADDRESS": "",
+      "VITE_EXPLORER_URL": "",
+      "VITE_CHAIN_NAME": ""
+    },
+    "env_file": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env",
+    "env_file_sha256": "c934d30191c4b7c9c4b829189f00f1564a2dfe1da9ff6962d0529efa4e538d5b",
+    "env_encoding": "UTF-8 without BOM, sorted variable names, LF, one trailing LF; explicit empty strings are intentional, not PENDING",
+    "environment_preparation": {
+      "scope": "Dedicated future control PowerShell process only, never shared/global environment",
+      "remove_patterns": [
+        "VITE_*",
+        "DAO_VITE_CACHE_DIR",
+        "NODE_ENV",
+        "NODE_OPTIONS",
+        "NODE_PATH",
+        "DOTENV_CONFIG_*"
+      ],
+      "powershell_prelude": "Get-ChildItem Env: | Where-Object { $_.Name -like 'VITE_*' -or $_.Name -like 'DOTENV_CONFIG_*' -or $_.Name -in @('DAO_VITE_CACHE_DIR','NODE_ENV','NODE_OPTIONS','NODE_PATH') } | ForEach-Object { Remove-Item -LiteralPath ('Env:' + $_.Name) }",
+      "preserve": "Required Windows OS variables (PATH/SystemRoot/WINDIR/TEMP/TMP/user profile); no whole environment dump",
+      "env_file_precedence": "Remove listed inherited variables before Node --env-file; do not use shared checkout env; default Vite development mode; abort if frontend .env/.env.local/.env.development/.env.development.local appears",
+      "observed_frontend_env_files": [
+        ".env.example"
+      ]
+    },
+    "private_paths": {
+      "root": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01",
+      "env": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\frontend-control.env",
+      "vite_cache": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\vite-cache",
+      "npm_cache": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\npm-cache",
+      "logs": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence",
+      "baseline_transcript": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence\\baseline-transcript.txt",
+      "restore_transcript": "D:\\DAO-Issue40-Control\\issue40-lifecycle-01\\evidence\\restore-transcript.txt"
+    },
+    "deployment_policy": {
+      "scope": "HTTP200 HTML transport control only; no live deployment/wallet/governance/API acceptance",
+      "api_base_url": "http://127.0.0.1:3300",
+      "rpc_url": "http://127.0.0.1:28545",
+      "chain_id": 31337,
+      "deployment_config_source": "No manifest, no archived/live deployment selected; approved explicit empty deployment/address variables",
+      "expected_without_backend": "apiScope=null and deployment=null; missing deployment configurationError expected because nonempty API URL and blank deployment ID. Raw curl reads only HTML; no browser JS execution required.",
+      "wsl_live_runtime": "Distinct approved runner-generated frontend.env and actual new manifest/runtime metadata; never use control env",
+      "baseline_restore_invariants": "Identical source, lockfile/tool/entrypoint/config/env bytes, cwd, argv, cache path/policy. New PID and separate baseline/restoration logs expected."
+    },
+    "identity_and_stop": {
+      "capture": "Get-NetTCPConnection exact127.0.0.1:5173 + Get-CimInstance Win32_Process owning PID, PPID, CreationDate, ExecutablePath, CommandLine; bind config hash/UTC; revalidate before request/signal",
+      "stop": "Owned foreground Ctrl+C only under separate authorization, immediate actual Node $LASTEXITCODE; never kill-by-port/name",
+      "restore": "Accepted runbook steps12–14: exact command/config, new authenticated PID + raw HTTP200, stop owned restored control, original Disabled/no5173"
+    },
+    "protected_resources": {
+      "issue42_ports": [
+        18545,
+        13300,
+        55442
+      ],
+      "system_postgresql_port": 5432,
+      "excluded_resources": [
+        "receiver42 processes/state/evidence",
+        "system PostgreSQL",
+        "shared Scheduled Task and launcher",
+        "shared Windows/WSL transport",
+        "firewall",
+        "portproxy",
+        ".wslconfig",
+        "system services",
+        "Chrome/wallet"
+      ]
+    }
+  },
+  "canonicalization": "UTF-8 JSON sort_keys=true, ensure_ascii=true, separators=(comma,colon), one trailing LF; hash configuration object only",
+  "candidate_sha256": "c06c8f97e9b7105a992b895f537f71bc13140d36b7250a981e7a99d839533a83",
+  "owner_policy_status": "APPROVED",
+  "owner_final_byte_digest_approval": "PENDING — owner approved displayed policy, not yet this newly computed full-byte record",
+  "tv2_policy_status": "APPROVED",
+  "tv2_policy_request": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7242632032",
+  "tv4_packet_status": "PENDING",
+  "approved_final_configuration_sha256": null,
+  "status": "DETERMINISTIC CONFIGURATION CANDIDATE — FINAL BYTES PENDING REVIEW",
+  "reason": "Owner + TV2 policy approved; exact candidate bytes newly bound and await final independent byte/config packet review. Final approved configuration digest stays null until review.",
+  "tv2_policy_approval_reference": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7242660382"
+}

@@ -1,0 +1,690 @@
+{
+  "format": "tv4-approved-live-views-v1",
+  "status": "PASS",
+  "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "manifestSha256": "5acefc8305aabb6fb4a2a699294058b8180282366a55067ce46dc8c231c30ee7",
+  "startedAt": "2026-11-23T09:03:48.118Z",
+  "command": [
+    "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+    "/tmp/tv4-ui-views-20261123.mjs"
+  ],
+  "browserErrors": [],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/summary?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "limits": [
+    "Read-only browser, no injected wallet; not extension signing",
+    "Viewport emulation, not physical mobile/screen-reader certification",
+    "Fresh Dev6766e5e source; not reuse of e8e443c screenshots"
+  ],
+  "browser": "157.0.8103.38",
+  "finishedAt": "2026-11-23T09:04:10.927Z",
+  "rawReportSha256": "d3e3402a41663de694b78d18891d537ee076916c0212c51448a079ab628f9e88",
+  "pages": [
+    {
+      "width": 1366,
+      "height": 900,
+      "label": "Tổng quan",
+      "href": "/",
+      "geometry": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyWidth": 1366,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Ngân sách DAO"
+      ],
+      "screenshot": "1366-1.png",
+      "apiStatuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:51.932Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:51.936+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:52.417Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:52.419+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "label": "Đề xuất",
+      "href": "/proposals",
+      "geometry": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyWidth": 1366,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Danh sách đề xuất"
+      ],
+      "screenshot": "1366-2.png",
+      "apiStatuses": [
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:53.896Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:53.897+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "label": "Tạo đề xuất",
+      "href": "/proposals/new",
+      "geometry": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyWidth": 1366,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Đề xuất chi ngân sách"
+      ],
+      "screenshot": "1366-3.png",
+      "apiStatuses": [
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:55.707Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:55.709+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "label": "Treasury",
+      "href": "/treasury",
+      "geometry": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyWidth": 1366,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Treasury"
+      ],
+      "screenshot": "1366-4.png",
+      "apiStatuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:57.628Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:57.63+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 1366,
+      "height": 900,
+      "label": "Governance",
+      "href": "/governance",
+      "geometry": {
+        "viewport": 1366,
+        "documentWidth": 1366,
+        "bodyWidth": 1366,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Governance"
+      ],
+      "screenshot": "1366-5.png",
+      "apiStatuses": [
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:03:59.252Z",
+            "lastRpcCheckAt": "2026-11-23T16:03:59.254+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "Tổng quan",
+      "href": "/",
+      "geometry": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Ngân sách DAO"
+      ],
+      "screenshot": "390-1.png",
+      "apiStatuses": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:04.227Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:04.228+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "Đề xuất",
+      "href": "/proposals",
+      "geometry": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Danh sách đề xuất"
+      ],
+      "screenshot": "390-2.png",
+      "apiStatuses": [
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:05.408Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:05.409+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:05.832Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:05.833+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "Tạo đề xuất",
+      "href": "/proposals/new",
+      "geometry": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Đề xuất chi ngân sách"
+      ],
+      "screenshot": "390-3.png",
+      "apiStatuses": [
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:06.811Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:06.812+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "Treasury",
+      "href": "/treasury",
+      "geometry": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Treasury"
+      ],
+      "screenshot": "390-4.png",
+      "apiStatuses": [
+        200,
+        200,
+        200,
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:07.949Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:07.95+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "label": "Governance",
+      "href": "/governance",
+      "geometry": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "dpr": 1
+      },
+      "retried": false,
+      "heading": [
+        "Governance"
+      ],
+      "screenshot": "390-5.png",
+      "apiStatuses": [
+        200
+      ],
+      "contexts": [
+        {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:04:09.633Z",
+            "lastRpcCheckAt": "2026-11-23T16:04:09.636+07:00",
+            "recoveryStatus": "ready"
+          }
+        }
+      ]
+    }
+  ],
+  "liveVitest": {
+    "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+    "command": "BE05_LIVE_API_URL=<owned API> BE05_LIVE_CHAIN_ID=31337 BE05_LIVE_DEPLOYMENT_ID=qa07-e2e BE05_LIVE_RPC_URL=<owned RPC> npm run test --prefix frontend -- src/data/api.live.test.ts",
+    "result": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exitStatus": 0,
+      "wallSeconds": 6.11
+    },
+    "scope": "Six real endpoints at one pinned H/hash/revision with RPC canonical-hash comparison, executed against the still-live owned stack"
+  }
+}

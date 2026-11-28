@@ -1,0 +1,8 @@
+{
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "stopSignal": "SIGINT",
+  "finishedAt": "2026-11-28T10:19:08.078Z",
+  "exitCode": 0,
+  "note": "Capture stopped; acceptance must be derived from observed markers, coverage and workflow artifacts, not service startup."
+}

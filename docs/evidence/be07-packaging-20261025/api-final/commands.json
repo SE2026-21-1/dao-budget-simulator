@@ -1,0 +1,38 @@
+[
+  {
+    "label": "api-db",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "tests/api/server.test.mjs"
+    ],
+    "start": "2026-10-25T16:08:58.692Z",
+    "end": "2026-10-25T16:08:59.827Z",
+    "exitCode": 0
+  },
+  {
+    "label": "typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "start": "2026-10-25T16:08:59.833Z",
+    "end": "2026-10-25T16:09:02.014Z",
+    "exitCode": 0
+  },
+  {
+    "label": "build",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.build.json"
+    ],
+    "start": "2026-10-25T16:09:02.020Z",
+    "end": "2026-10-25T16:09:04.000Z",
+    "exitCode": 0
+  }
+]

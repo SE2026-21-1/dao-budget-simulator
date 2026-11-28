@@ -1,0 +1,30 @@
+
+> dao-budget-simulator@0.0.0 test:be08
+> node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs tests/indexer/be08-rpc-outage.test.mjs
+
+✔ BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples (425.745864ms)
+✔ BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results (3.624804ms)
+✔ BE08 forwarded CI service validates client loopback while PostgreSQL reports a container address and internal port (6.160195ms)
+✔ BE08 rejects non-loopback or unexpected client ports even when server metadata looks local (6.919648ms)
+✔ BE08 owned native cluster retains exact directory and server binding checks (3.748528ms)
+✔ projection failure and recovery check are separate bounded RPC calls (262.208886ms)
+✔ outage accounting groups interleaved retries from bounded projection fan-out (4.48355ms)
+✔ outage accounting accepts exhausted calls independently of worker stdout timing (2.658147ms)
+✔ outage recorder preserves same-ID attempts before and after the window (2.146831ms)
+✔ partial retries require same-ID attempts proving the call crossed an outage boundary (1.128243ms)
+✔ calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary (4.560232ms)
+✔ outage accounting rejects an over-budget call, missing retries, invalid windows and absent backoff (4.632241ms)
+✔ outage accounting rejects a reused call ID or changed method/params within a retry (9.727625ms)
+✔ concurrent identical RPC calls have distinct IDs while each retry keeps its ID (81.129622ms)
+✔ final worker trace accepts bounded interleaving (26.67219ms)
+✔ final worker trace rejects late fifth attempt (18.843842ms)
+✔ final worker trace accepts bounded interleaving across outage boundary (9.292289ms)
+✔ final worker trace rejects late fifth attempt across outage boundary (9.80574ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2339.006312

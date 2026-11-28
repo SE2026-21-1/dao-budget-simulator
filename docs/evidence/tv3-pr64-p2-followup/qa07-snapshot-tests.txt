@@ -1,0 +1,35 @@
+2026-11-28T12:27:08Z
+COMMAND: node --test tests/smoke/qa07-snapshot.test.mjs
+✔ same publication reconciles despite changing sync freshness (2.0757ms)
+✔ detail rejects snapshotRevision mismatch (other publication fields unchanged) (1.5467ms)
+✔ detail rejects chainId mismatch (other publication fields unchanged) (0.2242ms)
+✔ detail rejects deploymentId mismatch (other publication fields unchanged) (0.3085ms)
+✔ detail rejects asOfBlock mismatch (other publication fields unchanged) (0.259099ms)
+✔ detail rejects asOfBlockHash mismatch (other publication fields unchanged) (0.3164ms)
+✔ detail rejects asOfTimestamp mismatch (other publication fields unchanged) (0.2489ms)
+✔ detail rejects dataKind mismatch (other publication fields unchanged) (0.257ms)
+✔ transfers rejects snapshotRevision mismatch (other publication fields unchanged) (0.3264ms)
+✔ transfers rejects chainId mismatch (other publication fields unchanged) (0.3956ms)
+✔ transfers rejects deploymentId mismatch (other publication fields unchanged) (0.2475ms)
+✔ transfers rejects asOfBlock mismatch (other publication fields unchanged) (0.425ms)
+✔ transfers rejects asOfBlockHash mismatch (other publication fields unchanged) (0.1848ms)
+✔ transfers rejects asOfTimestamp mismatch (other publication fields unchanged) (0.213ms)
+✔ transfers rejects dataKind mismatch (other publication fields unchanged) (1.4904ms)
+✔ missing/empty summary revision undefined cannot reconcile with equally incomplete responses (0.4925ms)
+✔ missing/empty summary revision  cannot reconcile with equally incomplete responses (0.148ms)
+✔ final API reads retain the summary snapshot when publication advances before detail and transfers (0.9955ms)
+✔ omitting the pin on /proposals/7 selects a newer publication and must fail reconciliation (0.639ms)
+✔ omitting the pin on /treasury/transfers selects a newer publication and must fail reconciliation (0.2685ms)
+✔ rendered UI hash and revision match the summary (0.1435ms)
+✔ rendered UI revision mismatch at the same hash fails the runner oracle (0.1738ms)
+✔ rendered UI hash mismatch still fails even at the same revision (0.1776ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.292491
+
+EXIT_STATUS=0

@@ -1,0 +1,7 @@
+config/
+anvil/
+backups/
+*.dump
+*.dump.*
+*.env
+!.env.example

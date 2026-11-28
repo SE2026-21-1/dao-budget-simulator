@@ -1,0 +1,37 @@
+{
+  "format": "dao-budget-local-handoff-v1",
+  "sourceCommit": "REPLACE_WITH_VERIFIED_40_HEX_SOURCE_COMMIT",
+  "chainId": "REPLACE_WITH_CHAIN_ID",
+  "deploymentName": "REPLACE_WITH_VERIFIED_DEPLOYMENT_NAME",
+  "scanFromBlock": "REPLACE_WITH_EARLIEST_DEPLOYMENT_BLOCK",
+  "confirmationPolicy": {
+    "depth": 2
+  },
+  "contracts": {
+    "GOV": {
+      "address": "REPLACE_WITH_GOVERNANCE_TOKEN_ADDRESS",
+      "deploymentBlock": "REPLACE_WITH_GOVERNANCE_TOKEN_DEPLOYMENT_BLOCK",
+      "abiVersion": "sc02-governance-token-v1"
+    },
+    "BUD": {
+      "address": "REPLACE_WITH_BUD_ADDRESS",
+      "deploymentBlock": "REPLACE_WITH_BUD_DEPLOYMENT_BLOCK",
+      "abiVersion": "oz-5.4.0-erc20"
+    },
+    "Treasury": {
+      "address": "REPLACE_WITH_TREASURY_ADDRESS",
+      "deploymentBlock": "REPLACE_WITH_TREASURY_DEPLOYMENT_BLOCK",
+      "abiVersion": "sc01-itreasury-v1"
+    },
+    "Timelock": {
+      "address": "REPLACE_WITH_TIMELOCK_ADDRESS",
+      "deploymentBlock": "REPLACE_WITH_TIMELOCK_DEPLOYMENT_BLOCK",
+      "abiVersion": "oz-5.4.0-timelock"
+    },
+    "Governor": {
+      "address": "REPLACE_WITH_GOVERNOR_ADDRESS",
+      "deploymentBlock": "REPLACE_WITH_GOVERNOR_DEPLOYMENT_BLOCK",
+      "abiVersion": "oz-5.4.0-governor"
+    }
+  }
+}

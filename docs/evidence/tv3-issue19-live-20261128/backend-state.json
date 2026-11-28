@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-28T10:18:46.445Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "scope": "owned isolated PostgreSQL; no shared receiver accessed",
+  "deployments": [
+    {
+      "deployment_id": "1",
+      "chain_id": "31337",
+      "deployment_name": "qa07-e2e",
+      "indexer_state": {
+        "head": "26",
+        "phase": "ready",
+        "lagSince": null,
+        "confirmed": "24",
+        "lastCheckedAt": "2026-11-28T17:18:46.41+07:00",
+        "lastPublishedAt": "2026-11-28T17:18:46.169689+07:00"
+      }
+    }
+  ],
+  "checkpoints": [
+    {
+      "deployment_id": "1",
+      "block_number": "24",
+      "block_hash": "0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9",
+      "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+      "snapshot_revision": "323ce374-f4e4-4d20-986b-020cb3d7c2b0",
+      "ignored_ancillary_events": 16,
+      "published_at": "2026-11-28T10:18:46.055Z"
+    }
+  ]
+}

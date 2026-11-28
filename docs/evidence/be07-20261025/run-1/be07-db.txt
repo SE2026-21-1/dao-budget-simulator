@@ -1,0 +1,329 @@
+✖ same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated (123.925274ms)
+✖ deep reorg outside window requires BE06; does not destroy diagnosis data or metadata (10.956981ms)
+✖ recovery crash boundary recoveryMarked resumes with a fresh storage instance (7.549409ms)
+✖ recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance (5.965697ms)
+✖ recovery crash boundary afterRollbackCommit resumes with a fresh storage instance (5.759953ms)
+✖ RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes (7.050116ms)
+✖ recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data (5.533285ms)
+✖ a fork between committed catch-up batches persists recovery and replays on the next invocation (6.565796ms)
+✖ SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart (7.958886ms)
+✖ SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart (6.582708ms)
+✖ SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart (6.055731ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 0
+ℹ fail 11
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1296.254898
+
+✖ failing tests:
+
+test at tests/indexer/be07-db.test.mjs:38:1
+✖ same-height shallow reorg rolls back orphan raw suffix; replay is idempotent and scope stays isolated (123.925274ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:39:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (1, 50000, be07-50000, 6795ba45-129c-4439-9bb1-67135fa403d8, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.476396+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:47:1
+✖ deep reorg outside window requires BE06; does not destroy diagnosis data or metadata (10.956981ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:48:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (2, 50001, be07-50001, 173e68df-959e-4df6-9fc8-c745713d5822, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.488371+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:53:87
+✖ recovery crash boundary recoveryMarked resumes with a fresh storage instance (7.549409ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:54:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (3, 50002, be07-50002, 4deb4ff1-e412-488f-9f9b-e7e23142346d, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.496063+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:53:87
+✖ recovery crash boundary beforeRollbackCommit resumes with a fresh storage instance (5.965697ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:54:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (4, 50003, be07-50003, 3c8c874d-0ec6-43b3-bcd0-06279c2f56a5, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.502192+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:53:87
+✖ recovery crash boundary afterRollbackCommit resumes with a fresh storage instance (5.759953ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:54:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (5, 50004, be07-50004, 69106e26-9428-4a94-8fdb-09bb69c02771, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.508178+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:61:1
+✖ RPC failure is not evidence of a fork; RPC loss during search preserves closed gate and restart resumes (7.050116ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:62:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (6, 50005, be07-50005, ee9d90bc-e041-448b-9c64-f39b95eef1a3, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.514974+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:70:1
+✖ recovery gate fences a stale ingestion writer; concurrent recoveries cannot delete replayed data (5.533285ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:71:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (7, 50006, be07-50006, 4c51e0e5-2da9-4385-ba2f-46808599df30, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.520951+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:80:1
+✖ a fork between committed catch-up batches persists recovery and replays on the next invocation (6.565796ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:81:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (8, 50007, be07-50007, 204eb30c-b522-439b-9a7d-30c77e497171, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.526937+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:88:87
+✖ SIGKILL at recoveryMarked: PostgreSQL reconnect and recovery restart (7.958886ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:91:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 378,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (9, 50008, be07-50008, 4370e90c-98d9-4590-a64f-cf156fa5b7f2, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.534989+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:88:87
+✖ SIGKILL at beforeRollbackCommit: PostgreSQL reconnect and recovery restart (6.582708ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:91:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 379,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (10, 50009, be07-50009, 3d86b5f4-bc45-4422-9a7a-cd6a46253db7, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.542164+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }
+
+test at tests/indexer/be07-db.test.mjs:88:87
+✖ SIGKILL at afterRollbackCommit: PostgreSQL reconnect and recovery restart (6.055731ms)
+  error: null value in column "governance_config" of relation "deployments" violates not-null constraint
+      at /home/cuongdz/projects/dao-be04-audit/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async fixture (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:20:13)
+      at async TestContext.<anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/tests/indexer/be07-db.test.mjs:91:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    length: 379,
+    severity: 'ERROR',
+    code: '23502',
+    detail: 'Failing row contains (11, 50010, be07-50010, 96578aa2-3aa3-49e6-99b6-5e920e18ed77, 100, test, null, 18, 18, 2, 2026-10-25 14:55:46.548516+00, {"phase": "unverified"}).',
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'deployments',
+    column: 'governance_config',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'execMain.c',
+    line: '2213',
+    routine: 'ReportNotNullViolationError'
+  }

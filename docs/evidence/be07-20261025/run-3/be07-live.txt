@@ -1,0 +1,56 @@
+{"phase":"created","H":"24","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact snapshot","H":"28","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Active block","H":"31","counts":{"proposals":5,"votes":0,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"exact deadline","H":"41","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty result block","H":"44","counts":{"proposals":5,"votes":7,"operations":0,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"queued Waiting","H":"48","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"empty Ready block","H":"51","counts":{"proposals":5,"votes":7,"operations":2,"transfers":1,"disbursements":0},"balance":"10000000000000000000000"}
+{"phase":"executed plus zero requestId duplicate revert","H":"55","counts":{"proposals":5,"votes":7,"operations":2,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"underfunded execute reverted","H":"63","counts":{"proposals":6,"votes":9,"operations":3,"transfers":2,"disbursements":1},"balance":"9000000000000000000000"}
+{"phase":"funded retry succeeds","H":"67","counts":{"proposals":6,"votes":9,"operations":3,"transfers":4,"disbursements":2},"balance":"1000000000000000000000"}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+
+Caught error:
+
+Error: block header must be an object.
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async checkBe07Live (file:///mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/scripts/check_be07_live.mjs:124:3)
+    at async <anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/scripts/check_be04_live.mjs:644:19) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: SyncError: block header must be an object.
+      at sync (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/indexer/syncer.ts:93:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async waitForActual (node:assert:646:5)
+      at async strict.rejects (node:assert:769:25)
+      at async checkBe07Live (file:///mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/scripts/check_be07_live.mjs:124:3)
+      at async <anonymous> (/mnt/c/Users/Cuongdz/Downloads/cv3/dao-budget-simulator-be07/scripts/check_be04_live.mjs:644:19) {
+    report: {
+      status: 'failed',
+      chainId: '31337',
+      deploymentId: '1',
+      checkpoint: {
+        number: '70',
+        hash: '0x570e9aa1f050d0bb3bcf285f3d817735dbbfb14349f19e1e68a6878b59f78b42'
+      },
+      decodeComplete: false,
+      unknownTopics: 0,
+      decodeErrors: 0,
+      issues: [],
+      committedBatches: 0,
+      error: {
+        code: 'RPC_INVALID_DATA',
+        message: 'block header must be an object.'
+      }
+    }
+  },
+  expected: [Function (anonymous)],
+  operator: 'rejects',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

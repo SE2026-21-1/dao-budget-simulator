@@ -1,0 +1,436 @@
+{
+  "kind": "actual-local-native-BE08-release-gate",
+  "status": "PASS",
+  "baseCommit": "c1ffb9ee0f661d095cba92d20855295e7a3d3f26",
+  "patchSha256": "19f83e67de6bec312358d9e0c74d5b180f3c115daef9e586d525a56d1ce7be4e",
+  "patchMeaning": "exact three-file PR61 port later committed as5c899976ac4de97434737493815e7ccbdcd13984; no backend runtime changes",
+  "command": "npm run test:be08:native -- --postgres-bin /tmp/dao-tv4-pg18-20261123/node_modules/@embedded-postgres/linux-x64/native/bin --output /tmp/tv4-be08-integrated-20261123 --benchmark",
+  "exitCode": 0,
+  "suites": {
+    "be01-sql": {
+      "status": "PASS",
+      "durationMs": 530
+    },
+    "be02-storage": {
+      "status": "PASS",
+      "tests": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 9021
+    },
+    "be03-checkpoint-crash": {
+      "status": "PASS",
+      "tests": {
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 9959
+    },
+    "be04-projection": {
+      "status": "PASS",
+      "tests": {
+        "tests": 10,
+        "pass": 10,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 18257
+    },
+    "be05-api": {
+      "status": "PASS",
+      "tests": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 4293
+    },
+    "be06-two-db": {
+      "status": "PASS",
+      "tests": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 2239
+    },
+    "typecheck": {
+      "status": "PASS",
+      "durationMs": 12584
+    },
+    "build": {
+      "status": "PASS",
+      "durationMs": 6988
+    },
+    "unit": {
+      "status": "PASS",
+      "tests": {
+        "tests": 191,
+        "pass": 191,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 42923
+    },
+    "contracts": {
+      "status": "PASS",
+      "durationMs": 181814
+    },
+    "be07-db": {
+      "status": "PASS",
+      "tests": {
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "durationMs": 16182
+    },
+    "live-be07": {
+      "status": "PASS",
+      "durationMs": 112512
+    },
+    "api-benchmark": {
+      "status": "PASS",
+      "evidence": "benchmark.json",
+      "durationMs": 448127
+    }
+  },
+  "cleanup": {
+    "status": "PASS",
+    "clusterStopped": true,
+    "temporaryFilesRemoved": true,
+    "errors": []
+  },
+  "load": {
+    "requests": 13080,
+    "errors": 0,
+    "p95Ms": 299.2066549999872,
+    "concurrency": 10,
+    "durationMs": 60000,
+    "dataset": "100 proposals/1000 votes"
+  },
+  "freshness": {
+    "samples": 20,
+    "maxMs": 23855.71113499999
+  },
+  "outage": {
+    "durationMs": 31305.72703800001,
+    "cycles": [
+      {
+        "id": 8749,
+        "method": "eth_call",
+        "attempts": 4,
+        "gapsMs": [
+          195.79427499999292,
+          389.1517290000338,
+          808.2022139999899
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8750,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          229.17481200001203,
+          408.3749799999641,
+          501.92711899999995
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8751,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          160.23938899999484,
+          288.26267099997494,
+          776.9833179999841
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8752,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          173.19147700001486,
+          482.96241600002395,
+          542.3444069999969
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8753,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          167.5084870000137,
+          282.4162200000137,
+          918.1542469999986
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8754,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          147.32646100001875,
+          328.89546199998586,
+          525.3655670000007
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8755,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          173.6895229999791,
+          336.4883689999697,
+          720.1109540000325
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8756,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          227.98073800001293,
+          368.3190839999588,
+          981.914140000008
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8757,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          159.69502199999988,
+          321.87715299997944,
+          743.9009920000099
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8758,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          246.76452600001357,
+          376.9175679999753,
+          613.1539550000452
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8759,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          143.40115300001344,
+          478.7832000000053,
+          532.4246169999824
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8760,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          182.16453299997374,
+          446.08976499998244,
+          778.9699570000521
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8761,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          136.28860600001644,
+          444.10869099997217,
+          868.2355620000162
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8762,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          135.16797499998938,
+          346.85723500000313,
+          554.685679999995
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 8763,
+        "method": "eth_chainId",
+        "attempts": 3,
+        "gapsMs": [
+          152.6588670000201,
+          356.0193330000038,
+          976.8650280000293
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": true
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "postgres-version",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "anvil-version",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "forge-version",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "initdb",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "postgres-start",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "postgres-identity",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "create-fresh-databases",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be01-migrate",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be01-constraints",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be02-storage",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be03-checkpoint-crash",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be04-projection",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be05-api",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be06-two-db",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "unit",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "be07-db",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "contracts",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "live-be07",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "api-benchmark",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "name": "postgres-stop-fast",
+      "exitCode": 0,
+      "signal": null
+    }
+  ],
+  "scope": "Owned Anvil/PostgreSQL18.4 local only, not testnet/MetaMask/production SLA"
+}

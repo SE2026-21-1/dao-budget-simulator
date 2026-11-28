@@ -1,0 +1,143 @@
+[stdout] TAP version 13
+[stdout] # Subtest: PostgreSQL storage (real isolated PostgreSQL)
+[stdout]     # Subtest: writes complete headers including empty block, exact uint256, original JSON and scoped raw columns
+[stdout]     ok 1 - writes complete headers including empty block, exact uint256, original JSON and scoped raw columns
+[stdout]       ---
+[stdout]       duration_ms: 12.479691
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: identical and concurrent retries do not duplicate events or blocks
+[stdout]     ok 2 - identical and concurrent retries do not duplicate events or blocks
+[stdout]       ---
+[stdout]       duration_ms: 18.038888
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: detects changed block hash, parent hash and timestamp with the same block key
+[stdout]     ok 3 - detects changed block hash, parent hash and timestamp with the same block key
+[stdout]       ---
+[stdout]       duration_ms: 22.886267
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: detects raw/decode content conflicts rather than suppressing the chain dedup key
+[stdout]     ok 4 - detects raw/decode content conflicts rather than suppressing the chain dedup key
+[stdout]       ---
+[stdout]       duration_ms: 43.083396
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: same chain dedup key cannot be silently copied to another deployment
+[stdout]     ok 5 - same chain dedup key cannot be silently copied to another deployment
+[stdout]       ---
+[stdout]       duration_ms: 9.192029
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: unknown topics and decoder errors retain raw data and NULL decode columns
+[stdout]     ok 6 - unknown topics and decoder errors retain raw data and NULL decode columns
+[stdout]       ---
+[stdout]       duration_ms: 12.683946
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: missing deployment or chain mismatch fails before inserting any data
+[stdout]     ok 7 - missing deployment or chain mismatch fails before inserting any data
+[stdout]       ---
+[stdout]       duration_ms: 3.625001
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: numeric metadata with an explicit zero scale still matches its exact integer configuration
+[stdout]     ok 8 - numeric metadata with an explicit zero scale still matches its exact integer configuration
+[stdout]       ---
+[stdout]       duration_ms: 6.008418
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: detects disconnected stored neighbors on either boundary across separate runs
+[stdout]     ok 9 - detects disconnected stored neighbors on either boundary across separate runs
+[stdout]       ---
+[stdout]       duration_ms: 13.539305
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: detects conflicting canonical coordinates even when the transaction dedup key differs
+[stdout]     ok 10 - detects conflicting canonical coordinates even when the transaction dedup key differs
+[stdout]       ---
+[stdout]       duration_ms: 14.078488
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: detects inverse transaction/log ordering against logs saved by a previous run
+[stdout]     ok 11 - detects inverse transaction/log ordering against logs saved by a previous run
+[stdout]       ---
+[stdout]       duration_ms: 12.642239
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: rejects a stored transaction appearing in a different connected block with a new log index
+[stdout]     ok 12 - rejects a stored transaction appearing in a different connected block with a new log index
+[stdout]       ---
+[stdout]       duration_ms: 6.265177
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: every requested contract role/address/deploymentBlock/ABI must match existing metadata
+[stdout]     ok 13 - every requested contract role/address/deploymentBlock/ABI must match existing metadata
+[stdout]       ---
+[stdout]       duration_ms: 10.708492
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: later event conflict rolls back newly inserted headers and earlier events, preserving prior batch
+[stdout]     ok 14 - later event conflict rolls back newly inserted headers and earlier events, preserving prior batch
+[stdout]       ---
+[stdout]       duration_ms: 7.491159
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: database errors roll back inserted headers and raw events
+[stdout]     ok 15 - database errors roll back inserted headers and raw events
+[stdout]       ---
+[stdout]       duration_ms: 6.081829
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches
+[stdout]     ok 16 - rejects removed logs, bad coordinates, out-of-scope contracts and incomplete batches
+[stdout]       ---
+[stdout]       duration_ms: 10.5621
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: BE01 foreign keys reject a log linked to another deployment contract or block hash
+[stdout]     ok 17 - BE01 foreign keys reject a log linked to another deployment contract or block hash
+[stdout]       ---
+[stdout]       duration_ms: 17.525101
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: does not advance checkpoints or create projections or overwrite deployment metadata
+[stdout]     ok 18 - does not advance checkpoints or create projections or overwrite deployment metadata
+[stdout]       ---
+[stdout]       duration_ms: 10.120028
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates
+[stdout]     ok 19 - actual CLI over HTTP RPC and PostgreSQL exits 0, preserves raw JSON, and reruns without duplicates
+[stdout]       ---
+[stdout]       duration_ms: 5139.33046
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields
+[stdout]     ok 20 - actual CLI exits 2 for unknown topic plus decode error while SQL retains both raw logs with NULL decoded fields
+[stdout]       ---
+[stdout]       duration_ms: 2357.282656
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back
+[stdout]     ok 21 - actual CLI exits 1 on later SQL conflict, reports prior commit, and SQL proves failed-batch inserts rolled back
+[stdout]       ---
+[stdout]       duration_ms: 2654.950473
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     1..21
+[stdout] ok 1 - PostgreSQL storage (real isolated PostgreSQL)
+[stdout]   ---
+[stdout]   duration_ms: 10447.861765
+[stdout]   type: 'suite'
+[stdout]   ...
+[stdout] 1..1
+[stdout] # tests 21
+[stdout] # suites 1
+[stdout] # pass 21
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 13368.869435

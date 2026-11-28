@@ -1,0 +1,15 @@
+{
+  "label": "offline-redecode",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "indexer/cli.ts",
+    "--config",
+    "D:\\dao-budget-simulator\\docs\\evidence\\be03-integration-20261024\\config.json",
+    "--redecode"
+  ],
+  "exitCode": 2,
+  "signal": null,
+  "log": "offline-redecode.txt"
+}

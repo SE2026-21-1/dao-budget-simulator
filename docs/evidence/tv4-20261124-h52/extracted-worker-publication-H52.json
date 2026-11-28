@@ -1,0 +1,24 @@
+{
+  "status": "MATCHED_ACTUAL_WORKER_PUBLICATION",
+  "source": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "wholeLog": {
+    "name": "worker.stdout.log",
+    "bytes": 7088536,
+    "sha256": "4027507813b4d8df462c9678bd72722b574a245369752c9f9862a75abd635684"
+  },
+  "record": {
+    "ordinal": 7540,
+    "startLine": 7540,
+    "rawSha256": "dbef80c59aeb76e2a9f36c3adcedf881829ca1d2efb15b4f6c262353e4914000",
+    "rawJson": "{\"type\":\"worker_publication\",\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"1\",\"asOfBlock\":\"52\",\"asOfBlockHash\":\"0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66\",\"asOfTimestamp\":\"1800002470\",\"snapshotRevision\":\"ae1ae7f2-48f8-4847-af12-b20988a382c9\",\"dataKind\":\"chain\"},\"counts\":{\"proposals\":1,\"votes\":1,\"operations\":1,\"transfers\":3,\"disbursements\":1},\"treasury\":{\"totalIn\":\"12000000000000000000000\",\"totalOut\":\"11000000000000000000000\",\"balance\":\"1000000000000000000000\"},\"ignoredAncillaryEvents\":16,\"rawDecodeIssues\":16}"
+  },
+  "matchedContext": {
+    "chainId": "31337",
+    "deploymentId": "1",
+    "asOfBlock": "52",
+    "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+    "asOfTimestamp": "1800002470",
+    "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+    "dataKind": "chain"
+  }
+}

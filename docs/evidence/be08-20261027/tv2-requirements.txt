@@ -1,0 +1,190 @@
+Công việc thành viên 2
+Indexer dữ liệu và API
+DAO Budget Simulator  •  Phân công phiên bản 1.0  •  11 tháng 10 năm 2026
+Xây dựng nguồn dữ liệu đọc cho dashboard, đồng bộ đúng từ blockchain và có thể dựng lại hoàn toàn. Bạn chịu trách nhiệm tính nhất quán của database; smart contract vẫn quyết định quyền và kết quả.
+Phạm vi sở hữu: Chính: FR13–FR16, NFR02–NFR04. Phối hợp FR04, FR09, FR11, NFR05 và NFR07. Thư mục đề xuất: indexer/, api/, database/, tests/indexer/, docs/api.md.
+1 Danh sách đầu việc
+Mã task
+Đầu việc
+Tuần
+BE01
+Thiết kế database và hợp đồng API
+1
+BE02
+Viết bộ đọc log và decoder
+2–3
+BE03
+Lưu checkpoint và chống ghi trùng
+3
+BE04
+Dựng proposal và sổ dòng tiền
+3–4
+BE05
+Xây dựng API đọc cho dashboard
+3–4
+BE06
+Làm chức năng rebuild và so sánh
+4–5
+BE07
+Xử lý reorg và lỗi RPC
+4–5
+BE08
+Kiểm thử và đo hiệu năng
+5–6
+BE09
+Tích hợp với frontend và testnet
+6–7
+BE10
+Viết hướng dẫn vận hành và bàn giao
+7–8
+
+Bắt đầu ngay: Tạo BE01; chốt schema và API với TV3, yêu cầu TV1 gửi ABI/event nháp. Dựng fixture để frontend làm việc ngay trong tuần 1.
+Các mốc tuần tính từ ngày nhóm bắt đầu dự án, theo kế hoạch tham khảo 8 tuần. Tên thư mục, endpoint và mẫu giao diện trong file là đề xuất triển khai, cần chốt chung ở tuần 1; chưa phải mã nguồn đã có.
+Quy tắc làm việc
+Mỗi task tương ứng một GitHub Issue có assignee, requirement liên quan, checklist và bằng chứng hoàn thành. Mỗi PR có ít nhất một người khác review. Đổi ABI/API/event phải cập nhật consumer và test liên quan trong cùng đợt tích hợp.
+
+2 Công việc nền tảng
+BE01  Thiết kế database và hợp đồng API
+Tuần 1  |  Đối chiếu FR13–FR16
+1. Thiết kế deployments, raw_events, proposals, votes, operations, transfers và checkpoints; lưu ID/số tiền lớn bằng kiểu chính xác.
+2. Chốt endpoint và response mẫu với TV3; mọi response có asOfBlock, số tiền/uint256 dùng chuỗi số nguyên.
+Bàn giao: Migration, sơ đồ dữ liệu, docs/api.md và fixtures/api/*.json.
+Hoàn thành khi: Tạo DB sạch được; response mẫu đủ cho bốn màn hình; ID trùng bị ràng buộc đúng.
+Phối hợp: TV1 duyệt ý nghĩa trường on-chain; TV3 duyệt nhu cầu hiển thị.
+BE02  Viết bộ đọc log và decoder
+Tuần 2–3  |  Đối chiếu FR13
+1. Đọc RPC theo dải block từ deployment block của từng contract. Decode Governor, Timelock, Treasury và BUD theo ABI được bàn giao.
+2. Lưu log gốc gồm chainId, address, blockNumber/hash, txHash, logIndex, event và payload trước khi tạo dữ liệu phục vụ API.
+Bàn giao: Indexer CLI/service, bộ decoder và test với receipt thật của TV1.
+Hoàn thành khi: Một proposal đi hết vòng đời được index đủ log; không đọc sai chain/địa chỉ.
+Phối hợp: Dùng ABI nháp khi làm khung; chuyển sang log thật sau SC06.
+BE03  Lưu checkpoint và chống ghi trùng
+Tuần 3  |  Đối chiếu FR14; NFR04
+1. Tạo khóa duy nhất chainId + txHash + logIndex; ghi batch và checkpoint trong giao dịch database nhất quán.
+2. Chỉ nhận block đủ K xác nhận, mặc định demo K=2; khởi động lại từ checkpoint và kiểm tra block hash.
+Bàn giao: Cơ chế checkpoint/idempotency và test dừng giữa batch.
+Hoàn thành khi: Quét lại hai lần hoặc restart không mất/trùng event; checkpoint không vượt dữ liệu đã commit.
+Phối hợp: TV4 cung cấp bài test ngắt tiến trình; TV1 kiểm tra block đối chiếu.
+
+3 Công việc xử lý chính
+BE04  Dựng proposal và sổ dòng tiền
+Tuần 3–4  |  Đối chiếu FR04, FR09, FR11, FR13
+1. Dựng proposal từ description nguyên bản và calldata; nối requestId, operationId, phiếu, queue/execute/cancel.
+2. Dùng BUD Transfer để tính dòng tiền; event giải ngân chỉ liên kết khoản chi. Tính trạng thái theo clock ở block H và đối chiếu contract.
+Bàn giao: Bảng dữ liệu truy vấn, truy vấn số dư/tổng tiền và test trạng thái.
+Hoàn thành khi: Không tính đôi một khoản chi; Active/Succeeded/Defeated cập nhật dù không có event mới.
+Phối hợp: TV1 review quy tắc trạng thái; TV3 dùng asOfBlock để hiển thị nhất quán.
+BE05  Xây dựng API đọc cho dashboard
+Tuần 3–4  |  Đối chiếu FR16; FR04, FR11
+1. Làm GET /api/summary, /api/proposals, /api/proposals/:id, /api/proposals/:id/votes, /api/treasury/transfers và /api/health.
+2. Thêm lọc trạng thái, limit=20, thứ tự ổn định và cursor gắn mốc dữ liệu; chuẩn hóa lỗi ID sai/không tìm thấy.
+Bàn giao: API, tài liệu response/error và test hợp đồng API.
+Hoàn thành khi: 45 proposal đi qua 3 trang không mất/trùng; API không có chức năng ký hộ giao dịch.
+Phối hợp: TV3 xác nhận response; đường dẫn là đề xuất cần chốt ở BE01.
+BE06  Làm chức năng rebuild và so sánh
+Tuần 4–5  |  Đối chiếu FR15; TC12
+1. Viết lệnh rebuild vào database mới từ chainId, địa chỉ contract, deployment block và block đích H.
+2. Xuất dữ liệu chuẩn hóa trước/sau tại cùng H; so proposal, vote, transfer, số dư và state; bỏ các trường thời gian ingest.
+Bàn giao: Script rebuild, script compare và báo cáo kết quả replay.
+Hoàn thành khi: Database mới khớp database đang chạy và chain tại H; không cần metadata cũ bị xóa.
+Phối hợp: TV4 sở hữu bài nghiệm thu độc lập; TV1 hỗ trợ RPC đọc trạng thái tại H.
+
+4 Tích hợp kiểm thử và bàn giao
+BE07  Xử lý reorg và lỗi RPC
+Tuần 4–5  |  Đối chiếu FR14; NFR03–NFR04; TC11
+1. Lưu cửa sổ block hash; phát hiện nhánh thay đổi, rollback dữ liệu dẫn xuất cùng log rồi quét lại từ tổ tiên chung.
+2. Retry RPC có backoff. Reorg vượt cửa sổ phải báo cần rebuild; không tiếp tục trả dữ liệu mới như đã đồng bộ.
+Bàn giao: Cơ chế rollback/retry, health status và test reorg nông/sâu.
+Hoàn thành khi: Log nhánh cũ biến mất; không dùng checkpoint sai; dashboard thấy cảnh báo khi chậm.
+Phối hợp: TV4 chạy fixture reorg; TV3 hiển thị syncStatus.
+BE08  Kiểm thử và đo hiệu năng
+Tuần 5–6  |  Đối chiếu NFR02–NFR04, NFR07
+1. Viết test decoder, migration, idempotency, trạng thái, pagination, reorg và rebuild.
+2. Tạo fixture hiệu năng 100 proposal/1.000 vote; chạy 10 client trong 60 giây; ghi máy, cách đo và p95.
+Bàn giao: Bộ test indexer/API và báo cáo hiệu năng.
+Hoàn thành khi: p95 API dưới 1 giây; event đủ xác nhận xử lý trong 30 giây khi RPC bình thường.
+Phối hợp: Fixture hiệu năng tách bộ demo bốn ví; TV4 review cách đo và chạy CI.
+BE09  Tích hợp với frontend và testnet
+Tuần 6–7  |  Đối chiếu FR04, FR09, FR11–FR16
+1. Cùng TV3 thử màn hình rỗng, phân trang, ID sai, dữ liệu cũ và receipt vừa xác nhận nhưng chưa index.
+2. Chạy trên manifest testnet của TV4; đối chiếu số liệu với contract cùng block.
+Bàn giao: API dùng dữ liệu thật và danh sách lỗi tích hợp đã xử lý.
+Hoàn thành khi: Dashboard có số liệu đúng; indexer restart không cần xóa DB để chạy tiếp.
+Phối hợp: TV1 xác nhận semantics; TV4 hỗ trợ RPC và deployment metadata.
+BE10  Viết hướng dẫn vận hành và bàn giao
+Tuần 7–8  |  Đối chiếu NFR05; FR15
+1. Viết cách migrate, start, kiểm tra health, restart và rebuild; ghi rõ dữ liệu/cache nào có thể tạo lại.
+2. Đóng gói migration, script, test report và phần báo cáo về event reconstruction.
+Bàn giao: docs/indexer.md, docs/api.md, evidence replay và phần báo cáo cá nhân.
+Hoàn thành khi: Thành viên khác dựng DB mới theo tài liệu và tái hiện kết quả so sánh.
+Phối hợp: TV4 kiểm tra trên clone sạch; TV3 review tài liệu response cuối.
+
+5 Tiến độ phối hợp và nghiệm thu
+Tuần
+Task tập trung
+Đầu ra cần đạt
+1
+BE01
+Schema, API và fixture giao cho TV3.
+2
+BE02
+Bộ đọc log/decoder chạy được với fixture.
+3
+BE02–BE05
+Log thật, checkpoint và API cơ bản.
+4
+BE04–BE07
+Trạng thái/dòng tiền đúng; bắt đầu replay/reorg.
+5
+BE06–BE08
+Rebuild, resume, reorg test hoàn chỉnh.
+6
+BE08–BE09
+Tích hợp UI; đạt chỉ tiêu hiệu năng.
+7
+BE09–BE10
+Indexer/API chạy với testnet; đối chiếu cùng block.
+8
+BE10
+Hướng dẫn, replay evidence và bàn giao.
+
+Bàn giao giữa các thành viên
+Phối hợp
+Bạn bàn giao
+Bạn nhận
+TV1
+Gửi lỗi decode/state và kết quả đối chiếu H
+Nhận ABI, log thật, custom events và clock.
+TV3
+API schema/fixture tuần 1; API thật tuần 3–4
+Nhận yêu cầu hiển thị và lỗi tích hợp.
+TV4
+Lệnh migrate/start/rebuild/compare và test
+Nhận môi trường, manifest và bài nghiệm thu độc lập.
+
+Điều kiện hoàn thành phần việc
+1. Tất cả dữ liệu tài chính có thể đối chiếu cùng một block.
+2. Quét lặp, restart và rollback không tạo phiếu hoặc khoản chi trùng.
+3. Rebuild database mới khớp dữ liệu trước đó tại H.
+4. API có tài liệu, asOfBlock, lỗi có cấu trúc và kết quả đo hiệu năng.
+Người review: TV1 review phép tính on-chain; TV3 review API; TV4 review test khôi phục và evidence.
+Bằng chứng cá nhân gồm: issue/PR, commit, mã test và kết quả, hướng dẫn chạy, phần báo cáo. Với giao dịch, bổ sung chainId và transaction hash; với replay, bổ sung block H và kết quả so sánh.
+
+6 Thông số chung và checklist bàn giao
+Cấu hình demo dùng chung: 1.000 GOV chia A/B/C/D = 400/300/200/100; 20.000 BUD, trong đó treasury bắt đầu với 10.000. Cả hai token có 18 decimals. Threshold 50 GOV, quorum 20%, voting delay 60 giây, voting period 300 giây, timelock 120 giây; clock timestamp.
+Một proposal có một khoản chi. For + Abstain được tính vào quorum; cần For > Against. Quyền biểu quyết chốt tại snapshot. Chỉ timelock chi tiền; mỗi requestId thanh toán tối đa một lần. Queue và execute là giao dịch do người dùng gửi qua Governor.
+Các điều kiện không được làm sai khi tích hợp
+• Giữ nguyên description dùng tạo proposal. Không dựng lại bằng một chuỗi khác khi tính descriptionHash cho queue hoặc execute.
+• UI hiển thị Ready như điều kiện của operation Queued. Một lần execute revert không có nghĩa proposal chuyển sang trạng thái Failed.
+• Đề xuất không giữ chỗ ngân sách. Treasury kiểm tra số dư khi execute; thiếu tiền phải revert toàn bộ và cho thử lại sau khi nạp.
+• Chỉ creator hủy được Pending. MVP không hỗ trợ proposal thay đổi role hoặc tham số; muốn đổi cấu hình demo phải deploy lại.
+• BUD Transfer là nguồn tính dòng tiền; event treasury dùng để liên kết khoản chi. Không cộng cả hai thành hai lần giải ngân.
+• Dữ liệu API gồm asOfBlock; số tiền/uint256 là chuỗi nguyên. So sánh số liệu và replay phải dùng cùng block H.
+Checklist cho từng pull request
+• Gắn mã task và mã FR/BR/NFR hoặc TC/INV liên quan.
+• Mô tả thay đổi, cách chạy, test đã chạy và kết quả thực tế.
+• Cập nhật ABI/API/event, fixture, env.example hoặc tài liệu khi có thay đổi.
+• Có người review phù hợp; không đưa secret hoặc dữ liệu ví nhạy cảm vào log/evidence.
+• Ghi rõ phần còn phụ thuộc thành viên khác và thời điểm dự kiến tích hợp.
+Căn cứ và phạm vi áp dụng
+Phân rã từ DAO_Budget_Simulator_Requirements_Nhom_4.docx phiên bản 1.0 ngày 11 tháng 10 năm 2026. Mã FR01–FR16, BR01–BR07, NFR01–NFR08, TC01–TC14 và INV01–INV04 giữ nguyên theo bản requirement. File này giao việc triển khai và nghiệm thu, không phải báo cáo các tác vụ đã hoàn thành.

@@ -1,0 +1,1118 @@
+{
+  "status": "PASS_CANDIDATE_READY",
+  "classification": "Pre-commit packaging checks; previously recorded integration reused, not rerun",
+  "recordedAt": "2026-10-24T03:58:51+00:00",
+  "branch": "feature/tv2-be03",
+  "base": "Dev",
+  "baseSha": "1a4c262f387fa7480020da17dde5d608a5193eaf",
+  "parentSha": "1a4c262f387fa7480020da17dde5d608a5193eaf",
+  "agents": "No AGENTS.md found in repository or parents",
+  "repository": "https://github.com/SE2026-21-1/dao-budget-simulator.git",
+  "candidateBinding": "candidate-binding.json",
+  "finalCommands": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.build.json",
+      "exitCode": 0,
+      "log": "build.txt"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0,
+      "log": "typecheck.txt"
+    },
+    {
+      "command": "git -c core.autocrlf=input diff --cached --check",
+      "exitCode": 0
+    },
+    {
+      "command": "Windows Git diff --cached --check",
+      "exitCode": 0
+    }
+  ],
+  "reusedEvidence": {
+    "verification": "../be03-integration-20261024/verification.json",
+    "verificationSha256": "e6f3be9de4430a7e0cc0441a06fe15d5d3cfc60a102c1c3c834b3d4e139ad2b5",
+    "counts": [
+      {
+        "label": "be03-unit-decoder",
+        "tests": 47,
+        "pass": 47,
+        "fail": 0,
+        "skipped": 0
+      },
+      {
+        "label": "be03-postgres-regression",
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "skipped": 0
+      }
+    ],
+    "provenanceGuards": {
+      "pass": 4,
+      "fail": 0,
+      "evidence": "provenance-guards.json",
+      "classification": "Synthetic RPC preflight, real deploy helper source checking, no real send"
+    },
+    "sameHeight": {
+      "H": "32",
+      "blockHash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+      "head": "34",
+      "checkpoint": {
+        "deployment_id": "1",
+        "block_number": "32",
+        "block_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+        "header_hash": "0x64dc2cb9ce371d693edf9f9db1d3d684cefac7f63be19b47ff543362f7c59954",
+        "observed_head_block": "34",
+        "confirmation_depth": 2,
+        "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+        "sync_status": "syncing",
+        "last_error_code": "DECODE_INCOMPLETE"
+      },
+      "headerCount": 31,
+      "receiptLogCount": 30,
+      "rawEventCount": 30,
+      "distinctEventCount": 30,
+      "decodedCount": 14,
+      "unknownBootstrapCount": 16,
+      "decodeErrorCount": 0,
+      "missingEvents": 0,
+      "duplicateEvents": 0,
+      "rawMismatches": 0,
+      "supportedDecodeMismatches": 0,
+      "finalDigest": "6e7f8a51cf3c573de66b3b7a2792dd1a8df92f5e145bab6debef000c361d4edf",
+      "receiptEvidence": "canonical-rpc-at-H.json",
+      "sqlEvidence": "sql-final.json",
+      "sqlQueries": {
+        "headers": "SELECT block_number::text,block_hash,parent_hash,block_timestamp::text FROM indexed_blocks ORDER BY indexed_blocks.block_number",
+        "events": "SELECT raw_event_id::text,chain_id::text,contract_role,contract_address,block_number::text,block_hash,transaction_hash,transaction_index::text,log_index::text,topics::text[],data,removed,event_name,decoded_payload,rpc_log,decode_status,decode_error_code FROM raw_events ORDER BY raw_events.block_number,raw_events.transaction_index,raw_events.log_index",
+        "checkpoint": "SELECT c.deployment_id::text,c.block_number::text,c.block_hash,b.block_hash AS header_hash,c.observed_head_block::text,c.confirmation_depth,c.source_scope,c.sync_status,c.last_error_code FROM checkpoints c JOIN indexed_blocks b USING(deployment_id,block_number,block_hash)"
+      }
+    },
+    "runtimeNoBehaviorChanges": true,
+    "registryCommentOnly": true,
+    "historicalEvidenceBytesUnchanged": true,
+    "allEvidenceChecksumsVerified": true
+  },
+  "cliOutcome": {
+    "exitCode": 2,
+    "unknownTopics": 16,
+    "decodeErrors": 0,
+    "decodeComplete": false,
+    "lastErrorCode": "DECODE_INCOMPLETE",
+    "reason": "Preserved bootstrap events outside supported ABI subset; raw checkpoint acceptance and test PASS do not imply every event decoded."
+  },
+  "scopeChecks": {
+    "excludedBuildArtifactsBinariesCachesClusters": true,
+    "outsideScopeTrackedFileCount": 118,
+    "outsideScopeWorkingBytesUnchanged": true,
+    "submoduleGitlinksNotStaged": true,
+    "selectiveStaging": true,
+    "evidenceStagedByteExact": true,
+    "sourceIndexNormalization": "CRLF -> LF only; working files not rewritten",
+    "rawLogWhitespacePolicy": ".gitattributes preserves exact raw log spaces and CRLF; source/JSON/Markdown remain checked."
+  },
+  "remainingReview": [
+    "TV1: ABI/indexed fields/WithParams semantics and full source review.",
+    "TV4: manifest/toolchain Osaka/K=2/raw unknown policy and recovery acceptance."
+  ],
+  "forbiddenActions": [
+    "merge",
+    "mark ready",
+    "close #18",
+    "post comments",
+    "BE04"
+  ],
+  "candidateFilesExcludingThisSelfReferentialVerification": {
+    ".gitattributes": {
+      "gitBlobSha256": "f3473df67e8fec1ed06e0b4bcdb3bab20c26d0abb1bbad8b155b400e84c44f6c",
+      "workingFileSha256": "f3473df67e8fec1ed06e0b4bcdb3bab20c26d0abb1bbad8b155b400e84c44f6c",
+      "normalizedSha256": "f3473df67e8fec1ed06e0b4bcdb3bab20c26d0abb1bbad8b155b400e84c44f6c",
+      "byteExact": true
+    },
+    "README.md": {
+      "gitBlobSha256": "266571fdfee94e3a9b9d2f821862c89a421f43a66b73ede18709b5eb73ac7ffe",
+      "workingFileSha256": "8e02e92c65dc3c12ff08a64e9eb9b34b63292fcd678a51a887b788c9926e4fc7",
+      "normalizedSha256": "266571fdfee94e3a9b9d2f821862c89a421f43a66b73ede18709b5eb73ac7ffe",
+      "byteExact": false
+    },
+    "database/migrations/002_be03.sql": {
+      "gitBlobSha256": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+      "workingFileSha256": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+      "normalizedSha256": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+      "byteExact": true
+    },
+    "docs/be02-checklist.md": {
+      "gitBlobSha256": "2a07b66ebd3c1a93d2411790ffe69063281bb97f1013531560af931b37b3a4fc",
+      "workingFileSha256": "3ce117efeb90feb733b7175af5e96ac8f1fb0b31fc201343d5dc3be9c21978da",
+      "normalizedSha256": "2a07b66ebd3c1a93d2411790ffe69063281bb97f1013531560af931b37b3a4fc",
+      "byteExact": false
+    },
+    "docs/be03-checklist.md": {
+      "gitBlobSha256": "8b06d83015db2c140e79d053a2eb9c40fc906bb8aa7305fd53fbeaea2e504373",
+      "workingFileSha256": "8b06d83015db2c140e79d053a2eb9c40fc906bb8aa7305fd53fbeaea2e504373",
+      "normalizedSha256": "8b06d83015db2c140e79d053a2eb9c40fc906bb8aa7305fd53fbeaea2e504373",
+      "byteExact": true
+    },
+    "docs/be03.md": {
+      "gitBlobSha256": "2eadf937c7575ba969422759c8dcce9632307cac23f32155d9a468ef248ba9e0",
+      "workingFileSha256": "2eadf937c7575ba969422759c8dcce9632307cac23f32155d9a468ef248ba9e0",
+      "normalizedSha256": "2eadf937c7575ba969422759c8dcce9632307cac23f32155d9a468ef248ba9e0",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/be01-fixtures.txt": {
+      "gitBlobSha256": "6a50f641b4e4a791a5670439524fdc7a0666a0e91628bb16b2686015763338e5",
+      "workingFileSha256": "6a50f641b4e4a791a5670439524fdc7a0666a0e91628bb16b2686015763338e5",
+      "normalizedSha256": "6a50f641b4e4a791a5670439524fdc7a0666a0e91628bb16b2686015763338e5",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/be02-db.txt": {
+      "gitBlobSha256": "7cd24274de21ec8af1e766c2d9e477aef2f3d94f4fee3fb305cce40c62aa9761",
+      "workingFileSha256": "7cd24274de21ec8af1e766c2d9e477aef2f3d94f4fee3fb305cce40c62aa9761",
+      "normalizedSha256": "7cd24274de21ec8af1e766c2d9e477aef2f3d94f4fee3fb305cce40c62aa9761",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/be02.txt": {
+      "gitBlobSha256": "7515d4b01bc31abece99f18be2ae3a9e616b0a8fb9c166a1cb1e2d6ad22879c6",
+      "workingFileSha256": "7515d4b01bc31abece99f18be2ae3a9e616b0a8fb9c166a1cb1e2d6ad22879c6",
+      "normalizedSha256": "7515d4b01bc31abece99f18be2ae3a9e616b0a8fb9c166a1cb1e2d6ad22879c6",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/be03-db.txt": {
+      "gitBlobSha256": "83974fad8a9ac8f488316b39436169342b07f6a65952c3e90841e86131a57d4a",
+      "workingFileSha256": "83974fad8a9ac8f488316b39436169342b07f6a65952c3e90841e86131a57d4a",
+      "normalizedSha256": "83974fad8a9ac8f488316b39436169342b07f6a65952c3e90841e86131a57d4a",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/be03.txt": {
+      "gitBlobSha256": "81af0b7e8d2129f0cf4af6815a6bc235d22d012fe27397f9efea6677b9683e43",
+      "workingFileSha256": "81af0b7e8d2129f0cf4af6815a6bc235d22d012fe27397f9efea6677b9683e43",
+      "normalizedSha256": "81af0b7e8d2129f0cf4af6815a6bc235d22d012fe27397f9efea6677b9683e43",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/build.txt": {
+      "gitBlobSha256": "3e6b2e7b703370fd8dc03813d4e8295e468bb8e0f78a31fe6f25f20f6a580cbf",
+      "workingFileSha256": "3e6b2e7b703370fd8dc03813d4e8295e468bb8e0f78a31fe6f25f20f6a580cbf",
+      "normalizedSha256": "3e6b2e7b703370fd8dc03813d4e8295e468bb8e0f78a31fe6f25f20f6a580cbf",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/integration-blocked.txt": {
+      "gitBlobSha256": "a8a3f5bdb009675e652821ba068cb31f3c11a13eca835be5f73ab5df65cb1b5f",
+      "workingFileSha256": "a8a3f5bdb009675e652821ba068cb31f3c11a13eca835be5f73ab5df65cb1b5f",
+      "normalizedSha256": "a8a3f5bdb009675e652821ba068cb31f3c11a13eca835be5f73ab5df65cb1b5f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/typecheck.txt": {
+      "gitBlobSha256": "ea5c864fdad9acdcf18f3ced55e38f183a9599bdf485d771ebd86c9b43b06338",
+      "workingFileSha256": "ea5c864fdad9acdcf18f3ced55e38f183a9599bdf485d771ebd86c9b43b06338",
+      "normalizedSha256": "ea5c864fdad9acdcf18f3ced55e38f183a9599bdf485d771ebd86c9b43b06338",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/verification.json": {
+      "gitBlobSha256": "994cb091af15006ebe36f9e481828e5639a6c4a0b525dd9d74a08895b631abed",
+      "workingFileSha256": "994cb091af15006ebe36f9e481828e5639a6c4a0b525dd9d74a08895b631abed",
+      "normalizedSha256": "994cb091af15006ebe36f9e481828e5639a6c4a0b525dd9d74a08895b631abed",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/whitespace.txt": {
+      "gitBlobSha256": "f6b9c0ac4bdb4dc943f7fb067ac8ac82b64f38f54859e3f9396a54bac96267c0",
+      "workingFileSha256": "f6b9c0ac4bdb4dc943f7fb067ac8ac82b64f38f54859e3f9396a54bac96267c0",
+      "normalizedSha256": "f6b9c0ac4bdb4dc943f7fb067ac8ac82b64f38f54859e3f9396a54bac96267c0",
+      "byteExact": true
+    },
+    "docs/evidence/be03-20261024/withparams-regression.json": {
+      "gitBlobSha256": "4d5bf39dc7e4c026d6a6a67ec6a746606c82ee5e5c2360cb61457de571e83da3",
+      "workingFileSha256": "4d5bf39dc7e4c026d6a6a67ec6a746606c82ee5e5c2360cb61457de571e83da3",
+      "normalizedSha256": "4d5bf39dc7e4c026d6a6a67ec6a746606c82ee5e5c2360cb61457de571e83da3",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/afterCommit-restart.json": {
+      "gitBlobSha256": "4a8061505c7d5d8f19547d432448f49b938312da3ccb49720a58cdc9d8fa285d",
+      "workingFileSha256": "4a8061505c7d5d8f19547d432448f49b938312da3ccb49720a58cdc9d8fa285d",
+      "normalizedSha256": "4a8061505c7d5d8f19547d432448f49b938312da3ccb49720a58cdc9d8fa285d",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/afterCommit-restart.txt": {
+      "gitBlobSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "workingFileSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "normalizedSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/anvil-output.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/artifact-verification.json": {
+      "gitBlobSha256": "476de2e5da9cc44df533a1349688a89a00ea2aacde3fab3cfa49409fbfa25777",
+      "workingFileSha256": "476de2e5da9cc44df533a1349688a89a00ea2aacde3fab3cfa49409fbfa25777",
+      "normalizedSha256": "476de2e5da9cc44df533a1349688a89a00ea2aacde3fab3cfa49409fbfa25777",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/backend-build.json": {
+      "gitBlobSha256": "7e2bcbbf09457cbbbb76e09bfa7cb383aaca0f223123d3aa9f6c44246067cece",
+      "workingFileSha256": "7e2bcbbf09457cbbbb76e09bfa7cb383aaca0f223123d3aa9f6c44246067cece",
+      "normalizedSha256": "7e2bcbbf09457cbbbb76e09bfa7cb383aaca0f223123d3aa9f6c44246067cece",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/backend-build.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/backend-typecheck.json": {
+      "gitBlobSha256": "829672b9514aabf9220c415ea31784f53944661d3a5307f2524ccdeb2634ffc6",
+      "workingFileSha256": "829672b9514aabf9220c415ea31784f53944661d3a5307f2524ccdeb2634ffc6",
+      "normalizedSha256": "829672b9514aabf9220c415ea31784f53944661d3a5307f2524ccdeb2634ffc6",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/backend-typecheck.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/be03-postgres-regression.json": {
+      "gitBlobSha256": "e0c6bba2e1339d9544c8ed5cec20b439702b8086f0c4a9a8a4800cedeca25ca8",
+      "workingFileSha256": "e0c6bba2e1339d9544c8ed5cec20b439702b8086f0c4a9a8a4800cedeca25ca8",
+      "normalizedSha256": "e0c6bba2e1339d9544c8ed5cec20b439702b8086f0c4a9a8a4800cedeca25ca8",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/be03-postgres-regression.txt": {
+      "gitBlobSha256": "695edd39f8f6390a902328b2cbd3050e37b06dbcdd63a7610b9dd0d7a2d6567b",
+      "workingFileSha256": "695edd39f8f6390a902328b2cbd3050e37b06dbcdd63a7610b9dd0d7a2d6567b",
+      "normalizedSha256": "695edd39f8f6390a902328b2cbd3050e37b06dbcdd63a7610b9dd0d7a2d6567b",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/be03-unit-decoder.json": {
+      "gitBlobSha256": "3ad89c31bdf5d7a32a1270dc08b6cf66f9bc12065a9876bebc01ccae923f1312",
+      "workingFileSha256": "3ad89c31bdf5d7a32a1270dc08b6cf66f9bc12065a9876bebc01ccae923f1312",
+      "normalizedSha256": "3ad89c31bdf5d7a32a1270dc08b6cf66f9bc12065a9876bebc01ccae923f1312",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/be03-unit-decoder.txt": {
+      "gitBlobSha256": "0c7a8995e61a81858db883c28636ba9eb22b2db1f8665dbb485ed10e193b70b3",
+      "workingFileSha256": "0c7a8995e61a81858db883c28636ba9eb22b2db1f8665dbb485ed10e193b70b3",
+      "normalizedSha256": "0c7a8995e61a81858db883c28636ba9eb22b2db1f8665dbb485ed10e193b70b3",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/beforeCommit-restart.json": {
+      "gitBlobSha256": "1bd454d675564faa339050622901d3713b577ba501cdb30ffc91d77b76e20b43",
+      "workingFileSha256": "1bd454d675564faa339050622901d3713b577ba501cdb30ffc91d77b76e20b43",
+      "normalizedSha256": "1bd454d675564faa339050622901d3713b577ba501cdb30ffc91d77b76e20b43",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/beforeCommit-restart.txt": {
+      "gitBlobSha256": "ec7301c0b42a57e41133961652a129c00560399f770eaf05f596316255ece3cd",
+      "workingFileSha256": "ec7301c0b42a57e41133961652a129c00560399f770eaf05f596316255ece3cd",
+      "normalizedSha256": "ec7301c0b42a57e41133961652a129c00560399f770eaf05f596316255ece3cd",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/canonical-rpc-at-H.json": {
+      "gitBlobSha256": "ca334d05e88a1e6ef7babc049229cee32a2b7266a90be3c76f4da740495fea00",
+      "workingFileSha256": "ca334d05e88a1e6ef7babc049229cee32a2b7266a90be3c76f4da740495fea00",
+      "normalizedSha256": "ca334d05e88a1e6ef7babc049229cee32a2b7266a90be3c76f4da740495fea00",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/cast-chain-id.json": {
+      "gitBlobSha256": "a2aa37395600c8403f81753efeaa5f82b99a1ce100a03672280363fb260c5523",
+      "workingFileSha256": "a2aa37395600c8403f81753efeaa5f82b99a1ce100a03672280363fb260c5523",
+      "normalizedSha256": "a2aa37395600c8403f81753efeaa5f82b99a1ce100a03672280363fb260c5523",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/cast-chain-id.txt": {
+      "gitBlobSha256": "86a0c4f8d13f9617d4b7dbd87976fa11a69de64cf0ce47b13bd21ab7cf9f1aca",
+      "workingFileSha256": "86a0c4f8d13f9617d4b7dbd87976fa11a69de64cf0ce47b13bd21ab7cf9f1aca",
+      "normalizedSha256": "86a0c4f8d13f9617d4b7dbd87976fa11a69de64cf0ce47b13bd21ab7cf9f1aca",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/check-provenance-guards.mjs": {
+      "gitBlobSha256": "819ea6f52811f57040d887db32480fe9ee3349ae1a39fea4c0b88d8ec30641f1",
+      "workingFileSha256": "819ea6f52811f57040d887db32480fe9ee3349ae1a39fea4c0b88d8ec30641f1",
+      "normalizedSha256": "819ea6f52811f57040d887db32480fe9ee3349ae1a39fea4c0b88d8ec30641f1",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/concurrency-attempt-be03-postgres-regression.json": {
+      "gitBlobSha256": "22bd52986a310caf0966fe0c40bf1db40058a909e1ca29449447a88aba15c9dd",
+      "workingFileSha256": "22bd52986a310caf0966fe0c40bf1db40058a909e1ca29449447a88aba15c9dd",
+      "normalizedSha256": "22bd52986a310caf0966fe0c40bf1db40058a909e1ca29449447a88aba15c9dd",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/concurrency-attempt-be03-postgres-regression.txt": {
+      "gitBlobSha256": "42a0cfb72d883c09ed431fca3f4e14286d01a2b80169e6fee2f8f7bb9f00d82c",
+      "workingFileSha256": "42a0cfb72d883c09ed431fca3f4e14286d01a2b80169e6fee2f8f7bb9f00d82c",
+      "normalizedSha256": "42a0cfb72d883c09ed431fca3f4e14286d01a2b80169e6fee2f8f7bb9f00d82c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/concurrency-attempt-integration.json": {
+      "gitBlobSha256": "efb4dfb365efb89b9c88a7397d90330c0b8aa80d5bc2640b26a5880a2b80fdbf",
+      "workingFileSha256": "efb4dfb365efb89b9c88a7397d90330c0b8aa80d5bc2640b26a5880a2b80fdbf",
+      "normalizedSha256": "efb4dfb365efb89b9c88a7397d90330c0b8aa80d5bc2640b26a5880a2b80fdbf",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/concurrency-attempt-postgres-server.txt": {
+      "gitBlobSha256": "83144e83e40462df2a69a114eab5c82fd4ed8ef75b26d4aa3af8a80edb9779e7",
+      "workingFileSha256": "83144e83e40462df2a69a114eab5c82fd4ed8ef75b26d4aa3af8a80edb9779e7",
+      "normalizedSha256": "849a813bb690478eaaccaafd9a9d00aae621a97e7d9dc63717f1c164b04d3915",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/concurrency-attempt-run-output.txt": {
+      "gitBlobSha256": "560f6e660e8e7319545a274f925b0871a1f61939c09168a45ac01e42c9947f01",
+      "workingFileSha256": "560f6e660e8e7319545a274f925b0871a1f61939c09168a45ac01e42c9947f01",
+      "normalizedSha256": "560f6e660e8e7319545a274f925b0871a1f61939c09168a45ac01e42c9947f01",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/config.json": {
+      "gitBlobSha256": "1b543e26dee4f2d134e95150e984f2dcea4e5356b8c5da0d8e9bbcd4bfb33436",
+      "workingFileSha256": "1b543e26dee4f2d134e95150e984f2dcea4e5356b8c5da0d8e9bbcd4bfb33436",
+      "normalizedSha256": "1b543e26dee4f2d134e95150e984f2dcea4e5356b8c5da0d8e9bbcd4bfb33436",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/execute-confirmed.json": {
+      "gitBlobSha256": "c034eae96dfc0a5cacc43285abff1304777dbb2c65a79ed7c42b34280981cfc8",
+      "workingFileSha256": "c034eae96dfc0a5cacc43285abff1304777dbb2c65a79ed7c42b34280981cfc8",
+      "normalizedSha256": "c034eae96dfc0a5cacc43285abff1304777dbb2c65a79ed7c42b34280981cfc8",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/execute-confirmed.txt": {
+      "gitBlobSha256": "40b73b8267b141a345798b90117678b7f028a041b084e31291366d21e871299f",
+      "workingFileSha256": "40b73b8267b141a345798b90117678b7f028a041b084e31291366d21e871299f",
+      "normalizedSha256": "40b73b8267b141a345798b90117678b7f028a041b084e31291366d21e871299f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/execute-unconfirmed.json": {
+      "gitBlobSha256": "ca02d5485432246b7a483d9a35d661c5c612336bdfb75560f99088202b3c639e",
+      "workingFileSha256": "ca02d5485432246b7a483d9a35d661c5c612336bdfb75560f99088202b3c639e",
+      "normalizedSha256": "ca02d5485432246b7a483d9a35d661c5c612336bdfb75560f99088202b3c639e",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/execute-unconfirmed.txt": {
+      "gitBlobSha256": "8d76a8a287feb177288ef53bb4e74489a3e7e0adc39d29af4a2a2c173622f48f",
+      "workingFileSha256": "8d76a8a287feb177288ef53bb4e74489a3e7e0adc39d29af4a2a2c173622f48f",
+      "normalizedSha256": "8d76a8a287feb177288ef53bb4e74489a3e7e0adc39d29af4a2a2c173622f48f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/final-checks.json": {
+      "gitBlobSha256": "c84248b21b4f3ce42d4d1a7a2435507320ab6d4b63a8fb080b2cbe18b7a00d82",
+      "workingFileSha256": "c84248b21b4f3ce42d4d1a7a2435507320ab6d4b63a8fb080b2cbe18b7a00d82",
+      "normalizedSha256": "c84248b21b4f3ce42d4d1a7a2435507320ab6d4b63a8fb080b2cbe18b7a00d82",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/final-source-verification.json": {
+      "gitBlobSha256": "6deb8da2e91a43356f7fe67ff51009bf6d89504b129f3c7bd42b26d789d53665",
+      "workingFileSha256": "6deb8da2e91a43356f7fe67ff51009bf6d89504b129f3c7bd42b26d789d53665",
+      "normalizedSha256": "6deb8da2e91a43356f7fe67ff51009bf6d89504b129f3c7bd42b26d789d53665",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/final-status.txt": {
+      "gitBlobSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "workingFileSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "normalizedSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/forge-build.txt": {
+      "gitBlobSha256": "0d85aca504ecb6b8d576c477c6adfce4e6d88536962cfffea8edfe3080cedc2d",
+      "workingFileSha256": "0d85aca504ecb6b8d576c477c6adfce4e6d88536962cfffea8edfe3080cedc2d",
+      "normalizedSha256": "0d85aca504ecb6b8d576c477c6adfce4e6d88536962cfffea8edfe3080cedc2d",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/forge-config.json": {
+      "gitBlobSha256": "1573bf6060a155055eba7afafaf1539af39387737dbb214d2dcfcc13fec0b468",
+      "workingFileSha256": "1573bf6060a155055eba7afafaf1539af39387737dbb214d2dcfcc13fec0b468",
+      "normalizedSha256": "1573bf6060a155055eba7afafaf1539af39387737dbb214d2dcfcc13fec0b468",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/forge-rebuild.txt": {
+      "gitBlobSha256": "d15f8f37757a5531a2ab773de566c8023cd717ae433ecd6d485733d5dbf1e3ed",
+      "workingFileSha256": "d15f8f37757a5531a2ab773de566c8023cd717ae433ecd6d485733d5dbf1e3ed",
+      "normalizedSha256": "d15f8f37757a5531a2ab773de566c8023cd717ae433ecd6d485733d5dbf1e3ed",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/idle-rerun-1.json": {
+      "gitBlobSha256": "e65e397f8b3a90528b871f123ce231086dbd9ce514a096b94979ecb05dcd7aca",
+      "workingFileSha256": "e65e397f8b3a90528b871f123ce231086dbd9ce514a096b94979ecb05dcd7aca",
+      "normalizedSha256": "e65e397f8b3a90528b871f123ce231086dbd9ce514a096b94979ecb05dcd7aca",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/idle-rerun-1.txt": {
+      "gitBlobSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "workingFileSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "normalizedSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/idle-rerun-2.json": {
+      "gitBlobSha256": "4bd0a28e2024c28646242cdd80e32c2cefece27c0c71a6ae1ef97a1c4fe3c5de",
+      "workingFileSha256": "4bd0a28e2024c28646242cdd80e32c2cefece27c0c71a6ae1ef97a1c4fe3c5de",
+      "normalizedSha256": "4bd0a28e2024c28646242cdd80e32c2cefece27c0c71a6ae1ef97a1c4fe3c5de",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/idle-rerun-2.txt": {
+      "gitBlobSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "workingFileSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "normalizedSha256": "4114da9a23dc5d0a7bf7932a266082bff7e0af39b4cd1f70c95d600ebef6ef1f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/initial-contract-semantic-diff.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/initial-source-hash-failure-integration.json": {
+      "gitBlobSha256": "863ee1e0c60e3c7774a82dd59dd30c8830d8ff30711ee4e015af11d4c4ab7350",
+      "workingFileSha256": "863ee1e0c60e3c7774a82dd59dd30c8830d8ff30711ee4e015af11d4c4ab7350",
+      "normalizedSha256": "863ee1e0c60e3c7774a82dd59dd30c8830d8ff30711ee4e015af11d4c4ab7350",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/initial-source-hash-failure-run-output.txt": {
+      "gitBlobSha256": "8c3f09dab8acdf85da6d3a047bbaab968150b8b45a7942ebf7b1777383aff103",
+      "workingFileSha256": "8c3f09dab8acdf85da6d3a047bbaab968150b8b45a7942ebf7b1777383aff103",
+      "normalizedSha256": "8c3f09dab8acdf85da6d3a047bbaab968150b8b45a7942ebf7b1777383aff103",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/initial-status.txt": {
+      "gitBlobSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "workingFileSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "normalizedSha256": "75d9c029f28c261bb2bcd7e4af68ebb77fb3072e6123cefa2bc1bf8a6aa019c1",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/integration.json": {
+      "gitBlobSha256": "38d048406cbb4127186076d309a851183358944bd2fb6d7c2554830983e079b6",
+      "workingFileSha256": "38d048406cbb4127186076d309a851183358944bd2fb6d7c2554830983e079b6",
+      "normalizedSha256": "38d048406cbb4127186076d309a851183358944bd2fb6d7c2554830983e079b6",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-0-following.json": {
+      "gitBlobSha256": "6941f1bf6d4f01e2c5e02779d7dfdc9590bdc55bab8c609904eebb7283b01e5d",
+      "workingFileSha256": "6941f1bf6d4f01e2c5e02779d7dfdc9590bdc55bab8c609904eebb7283b01e5d",
+      "normalizedSha256": "6941f1bf6d4f01e2c5e02779d7dfdc9590bdc55bab8c609904eebb7283b01e5d",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-0-following.txt": {
+      "gitBlobSha256": "2e817482226e82f9564d7077bc714acbb85553defeec1eed83f69b16d8d2e458",
+      "workingFileSha256": "2e817482226e82f9564d7077bc714acbb85553defeec1eed83f69b16d8d2e458",
+      "normalizedSha256": "2e817482226e82f9564d7077bc714acbb85553defeec1eed83f69b16d8d2e458",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-1-following.json": {
+      "gitBlobSha256": "3438f92b5c5c18c50632ac91a8cd81c2745c32d68b5809cd4d88b21cb8e8b68a",
+      "workingFileSha256": "3438f92b5c5c18c50632ac91a8cd81c2745c32d68b5809cd4d88b21cb8e8b68a",
+      "normalizedSha256": "3438f92b5c5c18c50632ac91a8cd81c2745c32d68b5809cd4d88b21cb8e8b68a",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-1-following.txt": {
+      "gitBlobSha256": "0826c362e29c786a1e4bdac4b88324eeddaeefbe060b45a21118c74d51c447aa",
+      "workingFileSha256": "0826c362e29c786a1e4bdac4b88324eeddaeefbe060b45a21118c74d51c447aa",
+      "normalizedSha256": "0826c362e29c786a1e4bdac4b88324eeddaeefbe060b45a21118c74d51c447aa",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-2-following.json": {
+      "gitBlobSha256": "3b5889f635b99fae6155970f9672838d10f1f66a9e2eebbfb3255f85931d18e4",
+      "workingFileSha256": "3b5889f635b99fae6155970f9672838d10f1f66a9e2eebbfb3255f85931d18e4",
+      "normalizedSha256": "3b5889f635b99fae6155970f9672838d10f1f66a9e2eebbfb3255f85931d18e4",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/k2-2-following.txt": {
+      "gitBlobSha256": "272f54ebd4e30a9c457fe5b89a66da16c90966cba06e8e2b99c9b13e90f53a0e",
+      "workingFileSha256": "272f54ebd4e30a9c457fe5b89a66da16c90966cba06e8e2b99c9b13e90f53a0e",
+      "normalizedSha256": "272f54ebd4e30a9c457fe5b89a66da16c90966cba06e8e2b99c9b13e90f53a0e",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/manifest.json": {
+      "gitBlobSha256": "176d8f0c692455aaa7e74a2c9fb2fd17dc08f4d6f8d84314ca5872e0c257bf53",
+      "workingFileSha256": "176d8f0c692455aaa7e74a2c9fb2fd17dc08f4d6f8d84314ca5872e0c257bf53",
+      "normalizedSha256": "176d8f0c692455aaa7e74a2c9fb2fd17dc08f4d6f8d84314ca5872e0c257bf53",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/offline-redecode.json": {
+      "gitBlobSha256": "e3b9db3a1a9f2bac756709d40d9cc963af760ed954cc96958f4a0655d2e3ee46",
+      "workingFileSha256": "e3b9db3a1a9f2bac756709d40d9cc963af760ed954cc96958f4a0655d2e3ee46",
+      "normalizedSha256": "e3b9db3a1a9f2bac756709d40d9cc963af760ed954cc96958f4a0655d2e3ee46",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/offline-redecode.txt": {
+      "gitBlobSha256": "2031f09541e35eb3b44dbd6e5f5cd4cd8a37cf10f95dcc2326f8d27b94db9f0c",
+      "workingFileSha256": "2031f09541e35eb3b44dbd6e5f5cd4cd8a37cf10f95dcc2326f8d27b94db9f0c",
+      "normalizedSha256": "2031f09541e35eb3b44dbd6e5f5cd4cd8a37cf10f95dcc2326f8d27b94db9f0c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-initdb.json": {
+      "gitBlobSha256": "177b166b998f6185d42b63ab88a45c365a34909ca70ba9a05f788b01e4bf0f89",
+      "workingFileSha256": "177b166b998f6185d42b63ab88a45c365a34909ca70ba9a05f788b01e4bf0f89",
+      "normalizedSha256": "177b166b998f6185d42b63ab88a45c365a34909ca70ba9a05f788b01e4bf0f89",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-initdb.txt": {
+      "gitBlobSha256": "76f58e86733fe3e577c4b24b1982792d63f2100905800731dfa5203c9398a9ff",
+      "workingFileSha256": "76f58e86733fe3e577c4b24b1982792d63f2100905800731dfa5203c9398a9ff",
+      "normalizedSha256": "a2cc78257f54741265f0d1517683a94dada614422464184f4298d86322043c8b",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-integration.json": {
+      "gitBlobSha256": "126eac4cf78ee0fa0c5ba7d9bf5578ed84112afcf405e0affc5f04a98c14281a",
+      "workingFileSha256": "126eac4cf78ee0fa0c5ba7d9bf5578ed84112afcf405e0affc5f04a98c14281a",
+      "normalizedSha256": "126eac4cf78ee0fa0c5ba7d9bf5578ed84112afcf405e0affc5f04a98c14281a",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-pg-start.json": {
+      "gitBlobSha256": "ce3a8febdcc5cbda363b1623e740bbbc46d90d15359abad2800a3993aab33bb8",
+      "workingFileSha256": "ce3a8febdcc5cbda363b1623e740bbbc46d90d15359abad2800a3993aab33bb8",
+      "normalizedSha256": "ce3a8febdcc5cbda363b1623e740bbbc46d90d15359abad2800a3993aab33bb8",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-pg-start.txt": {
+      "gitBlobSha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+      "workingFileSha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+      "normalizedSha256": "66afd0411ccc09366e99fdd99b85f21899c8d2d064f5835126859618802153ad",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-pg-stop.json": {
+      "gitBlobSha256": "079d2acb381080f41b479793e745769340b87d72435c8f8690a0d9a802bf982b",
+      "workingFileSha256": "079d2acb381080f41b479793e745769340b87d72435c8f8690a0d9a802bf982b",
+      "normalizedSha256": "079d2acb381080f41b479793e745769340b87d72435c8f8690a0d9a802bf982b",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-pg-stop.txt": {
+      "gitBlobSha256": "37560b86d897a93dc51c8a25bafb1e1161b5ca155aab9274436708ba45c31900",
+      "workingFileSha256": "37560b86d897a93dc51c8a25bafb1e1161b5ca155aab9274436708ba45c31900",
+      "normalizedSha256": "b233f4491e0b8864d84623d129e78c9f965b47f443e62f04f141e0d2961f271e",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-resolution.json": {
+      "gitBlobSha256": "46262fa3f277c08c0d959864d7e883308d907e0a97d4b3bf4aaac3af664f9bee",
+      "workingFileSha256": "46262fa3f277c08c0d959864d7e883308d907e0a97d4b3bf4aaac3af664f9bee",
+      "normalizedSha256": "46262fa3f277c08c0d959864d7e883308d907e0a97d4b3bf4aaac3af664f9bee",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-pipe-attempt-run-output.txt": {
+      "gitBlobSha256": "a313083d5f06ff1efa902c627afa0b9936b454be102dd6cb16a576e211110981",
+      "workingFileSha256": "a313083d5f06ff1efa902c627afa0b9936b454be102dd6cb16a576e211110981",
+      "normalizedSha256": "a313083d5f06ff1efa902c627afa0b9936b454be102dd6cb16a576e211110981",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-start.json": {
+      "gitBlobSha256": "28eb0b786a31fe03af5e5976e8788f1d0a71afd813238fdc3e961ef1872b77a9",
+      "workingFileSha256": "28eb0b786a31fe03af5e5976e8788f1d0a71afd813238fdc3e961ef1872b77a9",
+      "normalizedSha256": "28eb0b786a31fe03af5e5976e8788f1d0a71afd813238fdc3e961ef1872b77a9",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-start.txt": {
+      "gitBlobSha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+      "workingFileSha256": "46038efb813fbca18a92272496901190638dea3f97b51f7af0daa1ca2eb13818",
+      "normalizedSha256": "66afd0411ccc09366e99fdd99b85f21899c8d2d064f5835126859618802153ad",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-status-after-stop.json": {
+      "gitBlobSha256": "094c0351daaaf97a69814147ae490586b1383e1d5053185c1f5004c56b1f6eed",
+      "workingFileSha256": "094c0351daaaf97a69814147ae490586b1383e1d5053185c1f5004c56b1f6eed",
+      "normalizedSha256": "094c0351daaaf97a69814147ae490586b1383e1d5053185c1f5004c56b1f6eed",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-status-after-stop.txt": {
+      "gitBlobSha256": "00e9e2231199060045479aeef60a466d575acde1f92e0f1567df14db2d3dc4b1",
+      "workingFileSha256": "00e9e2231199060045479aeef60a466d575acde1f92e0f1567df14db2d3dc4b1",
+      "normalizedSha256": "e138ccb54fdb08283c6eb21159c53207bbbbf07077246e2804e18d22efe6e250",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-stop.json": {
+      "gitBlobSha256": "134bb5f098ec9ebd2431295ace41594e7cb1ed4e48e705d6315ee40c4c8973e9",
+      "workingFileSha256": "134bb5f098ec9ebd2431295ace41594e7cb1ed4e48e705d6315ee40c4c8973e9",
+      "normalizedSha256": "134bb5f098ec9ebd2431295ace41594e7cb1ed4e48e705d6315ee40c4c8973e9",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/pg-stop.txt": {
+      "gitBlobSha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+      "workingFileSha256": "3589d2bd01f8295cc7c9ec3f5e07625fcd347ccb6f33f2d80edafe5f5217c1fb",
+      "normalizedSha256": "ca19178a35ab4153b75b494963b66ce8243e1b94c173107c87b44d09db23652d",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/postgres-server.txt": {
+      "gitBlobSha256": "2609514b4d8c2fed4d1c669b30cf65b5411b5c592ce377d6c23a4c7c9e18e164",
+      "workingFileSha256": "2609514b4d8c2fed4d1c669b30cf65b5411b5c592ce377d6c23a4c7c9e18e164",
+      "normalizedSha256": "0b2af58c6f81769c610ef97dfb68e968f677726cc18aaddb45b7ff70360bb27c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/preprocessor-check-attempt-integration.json": {
+      "gitBlobSha256": "d159c1b117faae9bb710d214381e53406b93b161d7a619527413b7929f639ecf",
+      "workingFileSha256": "d159c1b117faae9bb710d214381e53406b93b161d7a619527413b7929f639ecf",
+      "normalizedSha256": "d159c1b117faae9bb710d214381e53406b93b161d7a619527413b7929f639ecf",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/preprocessor-check-attempt-run-output.txt": {
+      "gitBlobSha256": "25c9ec2fc8713e7c120ba34342ea43eeb77a5fb2582914bc5970d9bcf6f0dc36",
+      "workingFileSha256": "25c9ec2fc8713e7c120ba34342ea43eeb77a5fb2582914bc5970d9bcf6f0dc36",
+      "normalizedSha256": "25c9ec2fc8713e7c120ba34342ea43eeb77a5fb2582914bc5970d9bcf6f0dc36",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/provenance-guards.json": {
+      "gitBlobSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "workingFileSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "normalizedSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/provenance-guards.txt": {
+      "gitBlobSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "workingFileSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "normalizedSha256": "16a69f51d5d098a2f904a6779e4cda534f0c88b58db2ed65589857e3fafa0b8c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/rebuild-comparison.json": {
+      "gitBlobSha256": "b45056d9c53995d8ecd6fffe9e438f3be437c504a22008dfdb102894965ed434",
+      "workingFileSha256": "b45056d9c53995d8ecd6fffe9e438f3be437c504a22008dfdb102894965ed434",
+      "normalizedSha256": "b45056d9c53995d8ecd6fffe9e438f3be437c504a22008dfdb102894965ed434",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/receipts.json": {
+      "gitBlobSha256": "3dce0f152bdb60cdb87da51e90e9421e879a7abc53d2b83ce5d5ebdab9b06ad5",
+      "workingFileSha256": "3dce0f152bdb60cdb87da51e90e9421e879a7abc53d2b83ce5d5ebdab9b06ad5",
+      "normalizedSha256": "3dce0f152bdb60cdb87da51e90e9421e879a7abc53d2b83ce5d5ebdab9b06ad5",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/report.md": {
+      "gitBlobSha256": "4a640083503cbea543a911ced093474b9e3f8f8a0170af2582f1676e32844c00",
+      "workingFileSha256": "4a640083503cbea543a911ced093474b9e3f8f8a0170af2582f1676e32844c00",
+      "normalizedSha256": "4a640083503cbea543a911ced093474b9e3f8f8a0170af2582f1676e32844c00",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/repository-deploy.json": {
+      "gitBlobSha256": "e7eedc44c61c225cb56cf43b82caf691c6f938e0df88d0593271a850cd024d8f",
+      "workingFileSha256": "e7eedc44c61c225cb56cf43b82caf691c6f938e0df88d0593271a850cd024d8f",
+      "normalizedSha256": "e7eedc44c61c225cb56cf43b82caf691c6f938e0df88d0593271a850cd024d8f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/repository-deploy.txt": {
+      "gitBlobSha256": "4d7d25393ccaf95e388eca368427bbb79eec03e3d5301d6a010bfb1dbd236cdb",
+      "workingFileSha256": "4d7d25393ccaf95e388eca368427bbb79eec03e3d5301d6a010bfb1dbd236cdb",
+      "normalizedSha256": "4d7d25393ccaf95e388eca368427bbb79eec03e3d5301d6a010bfb1dbd236cdb",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/run-integration.mjs": {
+      "gitBlobSha256": "9073a58ad4c7a5fe8b2735ff97daba7b07ef57fb7133e02d1edebff1f7f8b40d",
+      "workingFileSha256": "9073a58ad4c7a5fe8b2735ff97daba7b07ef57fb7133e02d1edebff1f7f8b40d",
+      "normalizedSha256": "9073a58ad4c7a5fe8b2735ff97daba7b07ef57fb7133e02d1edebff1f7f8b40d",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/run-output.txt": {
+      "gitBlobSha256": "43167e0c5a14d3ae4ce3266e6c9c97b21a35065fe29b73bda8c2d572df036f19",
+      "workingFileSha256": "43167e0c5a14d3ae4ce3266e6c9c97b21a35065fe29b73bda8c2d572df036f19",
+      "normalizedSha256": "43167e0c5a14d3ae4ce3266e6c9c97b21a35065fe29b73bda8c2d572df036f19",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/solc-provenance.json": {
+      "gitBlobSha256": "c02310fcbd7782a453b3130b757e132880694f5cc7c90c21795463109e75522c",
+      "workingFileSha256": "c02310fcbd7782a453b3130b757e132880694f5cc7c90c21795463109e75522c",
+      "normalizedSha256": "c02310fcbd7782a453b3130b757e132880694f5cc7c90c21795463109e75522c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-after-idle-reruns.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-after-redecode.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-afterCommit-after-kill.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-afterCommit-before-worker.json": {
+      "gitBlobSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "workingFileSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "normalizedSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-afterCommit-resumed.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-before-idle-reruns.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-beforeCommit-after-kill.json": {
+      "gitBlobSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "workingFileSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "normalizedSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-beforeCommit-before-worker.json": {
+      "gitBlobSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "workingFileSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "normalizedSha256": "76feb9b0acd785f1e25384255e462b1969fc856339affc2af33fec82f4451065",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-beforeCommit-resumed.json": {
+      "gitBlobSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "workingFileSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "normalizedSha256": "3041b62cdf5b013f1b1c23aad3259980ce144ee8719d375907f43413499144dc",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-final.json": {
+      "gitBlobSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "workingFileSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "normalizedSha256": "f02f01fbf669d1cabc086a308fe5065e2f08a99c13fe4434b2e08412ddda2864",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-k2-0.json": {
+      "gitBlobSha256": "f506bdf854c712caf35d19b9b8745c0a1d88781518c43ec94274c151cd8399aa",
+      "workingFileSha256": "f506bdf854c712caf35d19b9b8745c0a1d88781518c43ec94274c151cd8399aa",
+      "normalizedSha256": "f506bdf854c712caf35d19b9b8745c0a1d88781518c43ec94274c151cd8399aa",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-k2-1.json": {
+      "gitBlobSha256": "81c345e6a0dad1368fbae6b589f95e1b903e66ce1290ba65fff540fb93d289c8",
+      "workingFileSha256": "81c345e6a0dad1368fbae6b589f95e1b903e66ce1290ba65fff540fb93d289c8",
+      "normalizedSha256": "81c345e6a0dad1368fbae6b589f95e1b903e66ce1290ba65fff540fb93d289c8",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/sql-k2-2.json": {
+      "gitBlobSha256": "ef590ee9e1da2478a05ed89d0db74d476f1d5a75a6b49aff383c6ed4e8772d41",
+      "workingFileSha256": "ef590ee9e1da2478a05ed89d0db74d476f1d5a75a6b49aff383c6ed4e8772d41",
+      "normalizedSha256": "ef590ee9e1da2478a05ed89d0db74d476f1d5a75a6b49aff383c6ed4e8772d41",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/submodules-recursive.json": {
+      "gitBlobSha256": "baae835d75014e256292c11b72d92c90bd30b7638d8b0bf84e2c308d7f3564d1",
+      "workingFileSha256": "baae835d75014e256292c11b72d92c90bd30b7638d8b0bf84e2c308d7f3564d1",
+      "normalizedSha256": "baae835d75014e256292c11b72d92c90bd30b7638d8b0bf84e2c308d7f3564d1",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/verification.json": {
+      "gitBlobSha256": "e6f3be9de4430a7e0cc0441a06fe15d5d3cfc60a102c1c3c834b3d4e139ad2b5",
+      "workingFileSha256": "e6f3be9de4430a7e0cc0441a06fe15d5d3cfc60a102c1c3c834b3d4e139ad2b5",
+      "normalizedSha256": "e6f3be9de4430a7e0cc0441a06fe15d5d3cfc60a102c1c3c834b3d4e139ad2b5",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/withparams-receipt-decoder.json": {
+      "gitBlobSha256": "2e7d38541e950f72b2f25b017a6e2325e7a9c201912fb8b1b7551b1757e5ab3a",
+      "workingFileSha256": "2e7d38541e950f72b2f25b017a6e2325e7a9c201912fb8b1b7551b1757e5ab3a",
+      "normalizedSha256": "2e7d38541e950f72b2f25b017a6e2325e7a9c201912fb8b1b7551b1757e5ab3a",
+      "byteExact": true
+    },
+    "docs/evidence/be03-integration-20261024/wsl-provenance.json": {
+      "gitBlobSha256": "d6fd0f839d3bf7198f721d7c4f4d53b69345d4411125ab552884ec2565b73e63",
+      "workingFileSha256": "d6fd0f839d3bf7198f721d7c4f4d53b69345d4411125ab552884ec2565b73e63",
+      "normalizedSha256": "d6fd0f839d3bf7198f721d7c4f4d53b69345d4411125ab552884ec2565b73e63",
+      "byteExact": true
+    },
+    "docs/evidence/be03-packaging-20261024/README.md": {
+      "gitBlobSha256": "6c42cd7563e5b12ce9fbe79425a681f182918b11bcb0ebb252d7a474302639e5",
+      "workingFileSha256": "6c42cd7563e5b12ce9fbe79425a681f182918b11bcb0ebb252d7a474302639e5",
+      "normalizedSha256": "6c42cd7563e5b12ce9fbe79425a681f182918b11bcb0ebb252d7a474302639e5",
+      "byteExact": true
+    },
+    "docs/evidence/be03-packaging-20261024/build.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-packaging-20261024/candidate-binding.json": {
+      "gitBlobSha256": "1159d794b8e9747e77ed1fb3dfce7cec2ccc80bd811c0b4ab330fcd370681c7e",
+      "workingFileSha256": "1159d794b8e9747e77ed1fb3dfce7cec2ccc80bd811c0b4ab330fcd370681c7e",
+      "normalizedSha256": "1159d794b8e9747e77ed1fb3dfce7cec2ccc80bd811c0b4ab330fcd370681c7e",
+      "byteExact": true
+    },
+    "docs/evidence/be03-packaging-20261024/typecheck.txt": {
+      "gitBlobSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "workingFileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "normalizedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "byteExact": true
+    },
+    "docs/evidence/be03-packaging-20261024/verify-candidate.mjs": {
+      "gitBlobSha256": "e572b3984ece889bf8da291631b4818ef48ea8e744af6f092ff656ab34e26576",
+      "workingFileSha256": "e572b3984ece889bf8da291631b4818ef48ea8e744af6f092ff656ab34e26576",
+      "normalizedSha256": "e572b3984ece889bf8da291631b4818ef48ea8e744af6f092ff656ab34e26576",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/anvil-preflight-command.json": {
+      "gitBlobSha256": "6ad153bde90a2ee434fcb1dcefaf64a1f8c70088397c8ed2c767668f496310c9",
+      "workingFileSha256": "6ad153bde90a2ee434fcb1dcefaf64a1f8c70088397c8ed2c767668f496310c9",
+      "normalizedSha256": "6ad153bde90a2ee434fcb1dcefaf64a1f8c70088397c8ed2c767668f496310c9",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/anvil-preflight-sandbox.json": {
+      "gitBlobSha256": "65d3395f2851a308a9c56d496d90271af8bd7c8c06d73abe27f60d31c2e9bb1f",
+      "workingFileSha256": "65d3395f2851a308a9c56d496d90271af8bd7c8c06d73abe27f60d31c2e9bb1f",
+      "normalizedSha256": "65d3395f2851a308a9c56d496d90271af8bd7c8c06d73abe27f60d31c2e9bb1f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/anvil-preflight.json": {
+      "gitBlobSha256": "f011aaf1452ac39b0b9b545516b1a0c37ba99c34b91d3a1df0f554046d6e478f",
+      "workingFileSha256": "f011aaf1452ac39b0b9b545516b1a0c37ba99c34b91d3a1df0f554046d6e478f",
+      "normalizedSha256": "f011aaf1452ac39b0b9b545516b1a0c37ba99c34b91d3a1df0f554046d6e478f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-db-escalated.json": {
+      "gitBlobSha256": "8587a2fa6f43f7b78048b972bf202e8f9b4e29c88625618fc5c8dca6c48796c5",
+      "workingFileSha256": "8587a2fa6f43f7b78048b972bf202e8f9b4e29c88625618fc5c8dca6c48796c5",
+      "normalizedSha256": "8587a2fa6f43f7b78048b972bf202e8f9b4e29c88625618fc5c8dca6c48796c5",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-db-escalated.txt": {
+      "gitBlobSha256": "86d7c78156673dcc3efe69e522820cbaa3f2d7d3e63adab6850f94a52cdb3599",
+      "workingFileSha256": "86d7c78156673dcc3efe69e522820cbaa3f2d7d3e63adab6850f94a52cdb3599",
+      "normalizedSha256": "3ce58cbd188abd7fa5b4c26045cf5deea08ced8b1c292be83a0e5aebdf60a38c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-db.json": {
+      "gitBlobSha256": "b47dc83eb43c164d195b6f922e8e2acd8fbd320a1919f37f4de887a8613c0a13",
+      "workingFileSha256": "b47dc83eb43c164d195b6f922e8e2acd8fbd320a1919f37f4de887a8613c0a13",
+      "normalizedSha256": "b47dc83eb43c164d195b6f922e8e2acd8fbd320a1919f37f4de887a8613c0a13",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-db.txt": {
+      "gitBlobSha256": "8ec468a40450bbd34f6f753144891de151bb078200a02e8b5aac47ebbce2b837",
+      "workingFileSha256": "8ec468a40450bbd34f6f753144891de151bb078200a02e8b5aac47ebbce2b837",
+      "normalizedSha256": "5e641e16854b23c49acf3d8ca58a7c82ea8d5be4dfe9f3969eabc898c89b61b2",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-unit.json": {
+      "gitBlobSha256": "9f9fbbb6edeca880925321eedca7d05da72617bf92f379cbbcf8bf638a7601b9",
+      "workingFileSha256": "9f9fbbb6edeca880925321eedca7d05da72617bf92f379cbbcf8bf638a7601b9",
+      "normalizedSha256": "9f9fbbb6edeca880925321eedca7d05da72617bf92f379cbbcf8bf638a7601b9",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/be03-unit.txt": {
+      "gitBlobSha256": "e83af8e037c77b326f72421606ff6f400c6ae9fd8e1a7525d69ae7a463e9928f",
+      "workingFileSha256": "e83af8e037c77b326f72421606ff6f400c6ae9fd8e1a7525d69ae7a463e9928f",
+      "normalizedSha256": "5b876e82484bf944066520dbf792b58946460524449ae60e9155210ac4f08fdc",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/build.json": {
+      "gitBlobSha256": "b472f39ffcf78e2a560eb393ece98810461a638fed918043a509ac46f721b270",
+      "workingFileSha256": "b472f39ffcf78e2a560eb393ece98810461a638fed918043a509ac46f721b270",
+      "normalizedSha256": "b472f39ffcf78e2a560eb393ece98810461a638fed918043a509ac46f721b270",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/build.txt": {
+      "gitBlobSha256": "ca4eb94aeb52b4c4fc61466f0957ebcf98502397c97d85f4993571d91c9a9186",
+      "workingFileSha256": "ca4eb94aeb52b4c4fc61466f0957ebcf98502397c97d85f4993571d91c9a9186",
+      "normalizedSha256": "e15da8d31534b14669e5d1249e5bbd6ac6f5947f13a2680ee1a1d16fdcfaa244",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/cast-package.json": {
+      "gitBlobSha256": "5d811f6d29d30c21f0b8d3d67e3ccfc548e9e230c6f278d1b80d1446f592aa09",
+      "workingFileSha256": "5d811f6d29d30c21f0b8d3d67e3ccfc548e9e230c6f278d1b80d1446f592aa09",
+      "normalizedSha256": "5d811f6d29d30c21f0b8d3d67e3ccfc548e9e230c6f278d1b80d1446f592aa09",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/cast-package.txt": {
+      "gitBlobSha256": "c6767aade768a7f1489dea7731023c92d5e861d6344800f71a063b3197c04f7c",
+      "workingFileSha256": "c6767aade768a7f1489dea7731023c92d5e861d6344800f71a063b3197c04f7c",
+      "normalizedSha256": "c9fc9e9b6a34e980ab506e0a71e916dbce96f09ca68703406926b1365f319012",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/cast-probe.json": {
+      "gitBlobSha256": "76bd6512e70af5454f9a37590f6e699d54733272bdf2dc6679128877e1dae614",
+      "workingFileSha256": "76bd6512e70af5454f9a37590f6e699d54733272bdf2dc6679128877e1dae614",
+      "normalizedSha256": "76bd6512e70af5454f9a37590f6e699d54733272bdf2dc6679128877e1dae614",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/cleanup.json": {
+      "gitBlobSha256": "d26acb3132d0af70b0c29b520962f74498849d952945335f961074fe924e314b",
+      "workingFileSha256": "d26acb3132d0af70b0c29b520962f74498849d952945335f961074fe924e314b",
+      "normalizedSha256": "5d71dd2b93d19d469964323b414d0b6a220f31be8b5947780fd58758ca55b98c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/commit-candidates.txt": {
+      "gitBlobSha256": "c05f5f4b74c5502ee25bde0df2c1eadf15aea94ce06022b0f22381414606f499",
+      "workingFileSha256": "c05f5f4b74c5502ee25bde0df2c1eadf15aea94ce06022b0f22381414606f499",
+      "normalizedSha256": "c05f5f4b74c5502ee25bde0df2c1eadf15aea94ce06022b0f22381414606f499",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/decoder.json": {
+      "gitBlobSha256": "699d3f5050b01d9f777dda54ef5b15038f214f0d630a106e0539075b8a6ac86f",
+      "workingFileSha256": "699d3f5050b01d9f777dda54ef5b15038f214f0d630a106e0539075b8a6ac86f",
+      "normalizedSha256": "699d3f5050b01d9f777dda54ef5b15038f214f0d630a106e0539075b8a6ac86f",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/decoder.txt": {
+      "gitBlobSha256": "dad571ec8eeef02c53c76facb212ac074c7086ad17854972676614d44b088527",
+      "workingFileSha256": "dad571ec8eeef02c53c76facb212ac074c7086ad17854972676614d44b088527",
+      "normalizedSha256": "fea37ab76af5f616c4044f23c3790cf9b0c5fdf22676240d5d7331240adbec5a",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/environment-probes.json": {
+      "gitBlobSha256": "cfdbcecc19ac32c32e255d1f254705f690c6b339a0dfa8a0a895f7b0e60cbf61",
+      "workingFileSha256": "cfdbcecc19ac32c32e255d1f254705f690c6b339a0dfa8a0a895f7b0e60cbf61",
+      "normalizedSha256": "cfdbcecc19ac32c32e255d1f254705f690c6b339a0dfa8a0a895f7b0e60cbf61",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/forge-escalated.json": {
+      "gitBlobSha256": "cc6c39e681d830c37889466f8315347ee0e92972a4219e443fe4f7d2ddd21f30",
+      "workingFileSha256": "cc6c39e681d830c37889466f8315347ee0e92972a4219e443fe4f7d2ddd21f30",
+      "normalizedSha256": "cc6c39e681d830c37889466f8315347ee0e92972a4219e443fe4f7d2ddd21f30",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/foundry-probes.json": {
+      "gitBlobSha256": "46f5df8ea05d8aaf310da45bf679f95ce089bdccdada0beee5c436031a610f94",
+      "workingFileSha256": "46f5df8ea05d8aaf310da45bf679f95ce089bdccdada0beee5c436031a610f94",
+      "normalizedSha256": "46f5df8ea05d8aaf310da45bf679f95ce089bdccdada0beee5c436031a610f94",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/postgres-server.txt": {
+      "gitBlobSha256": "e2d4082c398dafcd9189816973787266c7c7b38412b29134124e7cb6bdacd2ef",
+      "workingFileSha256": "e2d4082c398dafcd9189816973787266c7c7b38412b29134124e7cb6bdacd2ef",
+      "normalizedSha256": "0baa16c6789fcb0a9bd4243eb6803f71697df235efa7415979a01dc066250e4c",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/probe-anvil.mjs": {
+      "gitBlobSha256": "6a873f20113f36893ef07f9e6c73de1d3f313ab91a937800c01f6282daf9b5ac",
+      "workingFileSha256": "6a873f20113f36893ef07f9e6c73de1d3f313ab91a937800c01f6282daf9b5ac",
+      "normalizedSha256": "6a873f20113f36893ef07f9e6c73de1d3f313ab91a937800c01f6282daf9b5ac",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/review.md": {
+      "gitBlobSha256": "aca30f52b429fb6006f910fe8a5a2c84d5a85bbd6115618908334e5a18bf3bfb",
+      "workingFileSha256": "aca30f52b429fb6006f910fe8a5a2c84d5a85bbd6115618908334e5a18bf3bfb",
+      "normalizedSha256": "aca30f52b429fb6006f910fe8a5a2c84d5a85bbd6115618908334e5a18bf3bfb",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/typecheck.json": {
+      "gitBlobSha256": "fc911ee296cd72c44d43cd2b253fc7684b553069808a7bb8ebd19d37655d7883",
+      "workingFileSha256": "fc911ee296cd72c44d43cd2b253fc7684b553069808a7bb8ebd19d37655d7883",
+      "normalizedSha256": "fc911ee296cd72c44d43cd2b253fc7684b553069808a7bb8ebd19d37655d7883",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/typecheck.txt": {
+      "gitBlobSha256": "07a0b1a4a94386e58e070fe9817cf7c332c96d17ba8561038a3b7a62de57bb30",
+      "workingFileSha256": "07a0b1a4a94386e58e070fe9817cf7c332c96d17ba8561038a3b7a62de57bb30",
+      "normalizedSha256": "776c73c8bd6a351bfc14f09bd46beb155748c30174ac20b93fd33e949f0c7e38",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/verification.json": {
+      "gitBlobSha256": "e38ce213f1faaa60f196c303613615816ff6c19de9a12a3969bc13288c36cca2",
+      "workingFileSha256": "e38ce213f1faaa60f196c303613615816ff6c19de9a12a3969bc13288c36cca2",
+      "normalizedSha256": "e38ce213f1faaa60f196c303613615816ff6c19de9a12a3969bc13288c36cca2",
+      "byteExact": true
+    },
+    "docs/evidence/be03-review-20261024/whitespace.json": {
+      "gitBlobSha256": "dd96468db2dbce4905fe3c2b19baa5dd27b05c89f6e4c710a668a6c608ee878c",
+      "workingFileSha256": "dd96468db2dbce4905fe3c2b19baa5dd27b05c89f6e4c710a668a6c608ee878c",
+      "normalizedSha256": "3cc4795aab1762f6f237fe35b21f4a61a3e230b2919ab0dd9cde8f26a9149269",
+      "byteExact": true
+    },
+    "docs/indexer.md": {
+      "gitBlobSha256": "404d782b94e46e287d7fdaeb4985462bc8df688434f6e03aa101906d8b3faa93",
+      "workingFileSha256": "9c695cbff5704d649c1eb5dc1dc049d4ca4475fd6f3b2944ebe2c50cf7e3e2b8",
+      "normalizedSha256": "404d782b94e46e287d7fdaeb4985462bc8df688434f6e03aa101906d8b3faa93",
+      "byteExact": false
+    },
+    "fixtures/be02/README.md": {
+      "gitBlobSha256": "f97c1498b6f0bffff9a3ff629aad23855c3123cc90ed8088a24383bb225fca9c",
+      "workingFileSha256": "f97c1498b6f0bffff9a3ff629aad23855c3123cc90ed8088a24383bb225fca9c",
+      "normalizedSha256": "f97c1498b6f0bffff9a3ff629aad23855c3123cc90ed8088a24383bb225fca9c",
+      "byteExact": true
+    },
+    "indexer/abi-registry.ts": {
+      "gitBlobSha256": "49ac2246021e5bbad532ab67a52ff96ea48f9ce32674a5e5fd4c642d80e88fa4",
+      "workingFileSha256": "49ac2246021e5bbad532ab67a52ff96ea48f9ce32674a5e5fd4c642d80e88fa4",
+      "normalizedSha256": "49ac2246021e5bbad532ab67a52ff96ea48f9ce32674a5e5fd4c642d80e88fa4",
+      "byteExact": true
+    },
+    "indexer/cli.ts": {
+      "gitBlobSha256": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+      "workingFileSha256": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+      "normalizedSha256": "4d88cbd983170c87260504414fceb8f09e4d9051997c74d621eef5d2f42414e2",
+      "byteExact": true
+    },
+    "indexer/config.ts": {
+      "gitBlobSha256": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+      "workingFileSha256": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+      "normalizedSha256": "74208de265f9c351d77be068c643cd47aea6827560307969254057b816f5ad6c",
+      "byteExact": true
+    },
+    "indexer/config/example.json": {
+      "gitBlobSha256": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+      "workingFileSha256": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+      "normalizedSha256": "b7d41bd65b6a601c6fce1e3857e76dbc3edc42d9a2e27ffe497c21d5ffa6b7df",
+      "byteExact": true
+    },
+    "indexer/reader.ts": {
+      "gitBlobSha256": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+      "workingFileSha256": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+      "normalizedSha256": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+      "byteExact": true
+    },
+    "indexer/scope.ts": {
+      "gitBlobSha256": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+      "workingFileSha256": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+      "normalizedSha256": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+      "byteExact": true
+    },
+    "indexer/storage.ts": {
+      "gitBlobSha256": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+      "workingFileSha256": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+      "normalizedSha256": "1eb969790f5b8fd4dc794dcda3002fce97e908dc8485c8de7f9b3e768f3b6865",
+      "byteExact": true
+    },
+    "indexer/syncer.ts": {
+      "gitBlobSha256": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+      "workingFileSha256": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+      "normalizedSha256": "a00768ba8d89119bcdf9d0f15860458231fdaa972315c0217b4145d629cd8ee0",
+      "byteExact": true
+    },
+    "indexer/types.ts": {
+      "gitBlobSha256": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+      "workingFileSha256": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+      "normalizedSha256": "7ac5e1a4b56fbf0047c1fec122796c11f2bb8e449288e1cd15e2c682d5de126c",
+      "byteExact": true
+    },
+    "package.json": {
+      "gitBlobSha256": "6323e843b8de2bb6399472002e51ad2679317ee40d7f115009a2fe0f96aad9ac",
+      "workingFileSha256": "8708d771335df917c6d5ffc235aa016f9260d866ef5155917c60f647b25c0106",
+      "normalizedSha256": "6323e843b8de2bb6399472002e51ad2679317ee40d7f115009a2fe0f96aad9ac",
+      "byteExact": false
+    },
+    "scripts/check_be03_database.ps1": {
+      "gitBlobSha256": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+      "workingFileSha256": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+      "normalizedSha256": "de13311040542adffe28380b4d5eb71a29a3d68bbc0015dbbb19fae41946f5ef",
+      "byteExact": true
+    },
+    "scripts/governance_local.mjs": {
+      "gitBlobSha256": "a2d61a3ec5568eb046957c0c80d18c1577055f10daacda850e200e6735595872",
+      "workingFileSha256": "27524cac530930dc94b5fd6a5f06d733f25bd14c8021748668ab22941dc2031d",
+      "normalizedSha256": "a2d61a3ec5568eb046957c0c80d18c1577055f10daacda850e200e6735595872",
+      "byteExact": false
+    },
+    "tests/indexer/checkpoint-storage.test.ts": {
+      "gitBlobSha256": "66af31aef208d487e95cdd34720a1b186472ad03b2a01e29d69580b12bba125f",
+      "workingFileSha256": "66af31aef208d487e95cdd34720a1b186472ad03b2a01e29d69580b12bba125f",
+      "normalizedSha256": "66af31aef208d487e95cdd34720a1b186472ad03b2a01e29d69580b12bba125f",
+      "byteExact": true
+    },
+    "tests/indexer/crash-worker.ts": {
+      "gitBlobSha256": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+      "workingFileSha256": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+      "normalizedSha256": "4e517d900dce54ccaf04779dc3e23568752c5235a911937cfee1dddc80e6ca64",
+      "byteExact": true
+    },
+    "tests/indexer/decoder.test.ts": {
+      "gitBlobSha256": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+      "workingFileSha256": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+      "normalizedSha256": "002d0aa9d5e2a1feb587111723afb09fe3ac83862a593244b78f17f62042d153",
+      "byteExact": true
+    },
+    "tests/indexer/syncer.test.ts": {
+      "gitBlobSha256": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+      "workingFileSha256": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+      "normalizedSha256": "c61b4fcb2802021e4de0368fe52dfa92f24e28399e341493679d37b3a6a85b74",
+      "byteExact": true
+    }
+  }
+}

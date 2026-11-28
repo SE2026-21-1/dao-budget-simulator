@@ -1,0 +1,84 @@
+✖ final worker trace accepts bounded interleaving (100.93364ms)
+✖ final worker trace rejects late fifth attempt (16.077173ms)
+✖ final worker trace accepts bounded interleaving across outage boundary (11.434186ms)
+✖ final worker trace rejects late fifth attempt across outage boundary (10.87195ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1783.016801
+
+✖ failing tests:
+
+test at tests/indexer/be08-rpc-outage.test.mjs:175:5
+✖ final worker trace accepts bounded interleaving (100.93364ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'AWAITING_FINAL_TRACE'
+  - 'PASS'
+  
+      at TestContext.<anonymous> (file:///tmp/dao-review-pr61-20261124/tests/indexer/be08-rpc-outage.test.mjs:213:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'AWAITING_FINAL_TRACE',
+    expected: 'PASS',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be08-rpc-outage.test.mjs:175:5
+✖ final worker trace rejects late fifth attempt (16.077173ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-review-pr61-20261124/tests/indexer/be08-rpc-outage.test.mjs:205:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /must remain bounded/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be08-rpc-outage.test.mjs:175:5
+✖ final worker trace accepts bounded interleaving across outage boundary (11.434186ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'AWAITING_FINAL_TRACE'
+  - 'PASS'
+  
+      at TestContext.<anonymous> (file:///tmp/dao-review-pr61-20261124/tests/indexer/be08-rpc-outage.test.mjs:213:18)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'AWAITING_FINAL_TRACE',
+    expected: 'PASS',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/indexer/be08-rpc-outage.test.mjs:175:5
+✖ final worker trace rejects late fifth attempt across outage boundary (10.87195ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///tmp/dao-review-pr61-20261124/tests/indexer/be08-rpc-outage.test.mjs:205:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /must remain bounded/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

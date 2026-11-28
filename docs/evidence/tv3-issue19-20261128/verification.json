@@ -1,0 +1,73 @@
+{
+  "runId": "TV3-issue19-readiness-20261128T094833Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "startedAt": "2026-11-28T09:52:35.512Z",
+  "commands": [
+    {
+      "name": "frontend-targeted-tests",
+      "command": "npm --prefix frontend test -- src/chain/wallet.test.tsx src/chain/walletProviders.test.ts src/chain/transactions.test.ts src/data/api.test.ts src/data/api.integration.test.ts",
+      "startedAt": "2026-11-28T09:52:35.512Z",
+      "finishedAt": "2026-11-28T09:52:40.388Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "frontend-targeted-tests.txt"
+    },
+    {
+      "name": "qa07-snapshot-tests",
+      "command": "node --test tests/smoke/qa07-snapshot.test.mjs",
+      "startedAt": "2026-11-28T09:52:40.390Z",
+      "finishedAt": "2026-11-28T09:52:40.790Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "qa07-snapshot-tests.txt"
+    },
+    {
+      "name": "frontend-lint",
+      "command": "npm --prefix frontend run lint",
+      "startedAt": "2026-11-28T09:52:40.790Z",
+      "finishedAt": "2026-11-28T09:52:41.390Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "frontend-lint.txt"
+    },
+    {
+      "name": "root-typecheck",
+      "command": "npm run typecheck",
+      "startedAt": "2026-11-28T09:52:41.390Z",
+      "finishedAt": "2026-11-28T09:52:48.639Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "root-typecheck.txt"
+    },
+    {
+      "name": "frontend-production-build",
+      "command": "npm --prefix frontend run build",
+      "startedAt": "2026-11-28T09:52:48.639Z",
+      "finishedAt": "2026-11-28T09:53:06.982Z",
+      "exitCode": 0,
+      "signal": null,
+      "status": "PASS",
+      "output": "frontend-production-build.txt"
+    }
+  ],
+  "liveMetaMask": {
+    "status": "BLOCKED",
+    "reason": "No controllable real extension session or live local app/API/RPC at checked ports"
+  },
+  "historical503": {
+    "status": "BLOCKED",
+    "cause": "UNKNOWN",
+    "reason": "No retained raw packet/correlated TV2 logs found in documented search scope"
+  },
+  "documentation": {
+    "status": "PASS",
+    "failures": [],
+    "scope": "Authored evidence JSON/Markdown source bindings, relative links, conflict markers and common credential patterns; not an exhaustive secret detector"
+  },
+  "finishedAt": "2026-11-28T09:53:06.985Z",
+  "overall": "PASS_STATIC_CHECKS_LIVE_BLOCKED"
+}

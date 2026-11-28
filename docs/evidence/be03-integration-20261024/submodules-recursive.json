@@ -1,0 +1,42 @@
+{
+  "lib/forge-std": {
+    "head": "f3dae6e6ee381f25eb6a246f7da9b85c91a68219",
+    "semanticFileDiffExit": 0,
+    "semanticFileDiff": "",
+    "untracked": [],
+    "parentGitlink": "160000 commit f3dae6e6ee381f25eb6a246f7da9b85c91a68219\tlib/forge-std",
+    "matchesParentGitlink": true
+  },
+  "lib/openzeppelin-contracts": {
+    "head": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+    "semanticFileDiffExit": 0,
+    "semanticFileDiff": "",
+    "untracked": [],
+    "parentGitlink": "160000 commit c64a1edb67b6e3f4a15cca8909c9482ad33a02b0\tlib/openzeppelin-contracts",
+    "matchesParentGitlink": true
+  },
+  "lib/openzeppelin-contracts/lib/erc4626-tests": {
+    "head": "232ff9ba8194e406967f52ecc5cb52ed764209e9",
+    "semanticFileDiffExit": 0,
+    "semanticFileDiff": "",
+    "untracked": [],
+    "parentGitlink": "160000 commit 232ff9ba8194e406967f52ecc5cb52ed764209e9\tlib/erc4626-tests",
+    "matchesParentGitlink": true
+  },
+  "lib/openzeppelin-contracts/lib/forge-std": {
+    "head": "3b20d60d14b343ee4f908cb8079495c07f5e8981",
+    "semanticFileDiffExit": 0,
+    "semanticFileDiff": "",
+    "untracked": [],
+    "parentGitlink": "160000 commit 3b20d60d14b343ee4f908cb8079495c07f5e8981\tlib/forge-std",
+    "matchesParentGitlink": true
+  },
+  "lib/openzeppelin-contracts/lib/halmos-cheatcodes": {
+    "head": "7328abe100445fc53885c21d0e713b95293cf14c",
+    "semanticFileDiffExit": 0,
+    "semanticFileDiff": "",
+    "untracked": [],
+    "parentGitlink": "160000 commit 7328abe100445fc53885c21d0e713b95293cf14c\tlib/halmos-cheatcodes",
+    "matchesParentGitlink": true
+  }
+}

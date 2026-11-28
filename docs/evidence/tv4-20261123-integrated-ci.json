@@ -1,0 +1,202 @@
+{
+  "source": "5c899976ac4de97434737493815e7ccbdcd13984",
+  "prMergeSource": "b4b505d91eec2805d10ba6098f804f0f94ba5b78",
+  "pushRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45126740550",
+  "prRun": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/45126748982",
+  "checks": {
+    "success": 22,
+    "skipped": 2
+  },
+  "artifact": {
+    "id": 14795624482,
+    "sha256": "sha256:0390cbec96a3cf236d72233f60564d25c526466bac86436bea79bcdf6f08f5cd",
+    "patchBytes": 0
+  },
+  "status": "PASS",
+  "backendRuntimeSourceHashesEqualDev6766e5e": true,
+  "http": {
+    "requests": 30431,
+    "errors": 0,
+    "nearestRankP95Ms": 29.05794500000775,
+    "maxMs": 1809.853999999992
+  },
+  "freshness": {
+    "samples": 20,
+    "maxMs": 4405.30434100001
+  },
+  "outage": {
+    "durationMs": 31264.808873,
+    "cycles": [
+      {
+        "id": 9607,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          238.447868999996,
+          427.4581719999842,
+          718.3645020000113
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9608,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          212.44567800001823,
+          465.64389099998516,
+          907.907326000015
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9609,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          153.54722500001662,
+          363.07241500000237,
+          679.3509400000039
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9610,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          141.43135899998015,
+          322.7392300000065,
+          834.402242000011
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9611,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          129.86298299999908,
+          356.09076699998695,
+          706.0403420000221
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9612,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          247.91337799999746,
+          387.48924899997655,
+          635.9438760000048
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9613,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          163.98604099999648,
+          283.9833980000112,
+          695.7338319999981
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9614,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          175.95114300001296,
+          387.006315000006,
+          966.4260729999805
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9615,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          205.71599599998444,
+          353.55048900001566,
+          688.759602999984
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9616,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          196.55251199999475,
+          452.72004300000845,
+          745.8471800000116
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9617,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          140.66837200001464,
+          328.1331530000025,
+          744.5049339999969
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9618,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          145.64056699999492,
+          256.00054400000954,
+          746.4968289999815
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9619,
+        "method": "eth_chainId",
+        "attempts": 4,
+        "gapsMs": [
+          232.74399200000335,
+          269.7984629999846,
+          833.3118900000118
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": false
+      },
+      {
+        "id": 9620,
+        "method": "eth_chainId",
+        "attempts": 2,
+        "gapsMs": [
+          198.68376200000057,
+          351.75208800000837
+        ],
+        "clippedAtStart": false,
+        "clippedAtEnd": true
+      }
+    ],
+    "rawLifecycleSamples": 55,
+    "sameIdBoundaryEvidenceVerified": true
+  },
+  "scope": "CI artifact independently inspected; not TV4 local execution or testnet/extension acceptance"
+}

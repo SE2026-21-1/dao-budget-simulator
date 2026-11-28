@@ -1,0 +1,12 @@
+✔ six endpoints, exact data types, validation, and financial semantics (404.690698ms)
+✔ numeric keyset pages are complete, filters bind cursors, and old H survives publication progress (132.435905ms)
+✔ BE07 gates every data endpoint and cached cursor in recovering/replaying/rebuild_required phases (83.025056ms)
+✔ filter totals, snapshot errors, unavailable publication, rebuild health, and database failure (76.955579ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1095.028676

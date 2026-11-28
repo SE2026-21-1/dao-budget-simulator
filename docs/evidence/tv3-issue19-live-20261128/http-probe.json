@@ -1,0 +1,77 @@
+{
+  "scope": "NEW narrow read-only probe, not reproduction or explanation of historical HTTP 503",
+  "exchanges": [
+    {
+      "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "runId": "TV3-MM-boundary-20261128T100609709Z",
+      "startedAt": "2026-11-28T10:18:46.145Z",
+      "finishedAt": "2026-11-28T10:18:46.304Z",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:41191/api/health?chainId=31337&deploymentId=qa07-e2e",
+        "headers": {}
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:36453",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Sat, 28 Nov 2026 10:18:46 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": "{\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"qa07-e2e\",\"asOfBlock\":\"24\",\"asOfBlockHash\":\"0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9\",\"asOfTimestamp\":\"1800000631\",\"snapshotRevision\":\"323ce374-f4e4-4d20-986b-020cb3d7c2b0\",\"dataKind\":\"chain\",\"sync\":{\"status\":\"synced\",\"headBlock\":\"26\",\"confirmedBlock\":\"24\",\"indexedBlock\":\"24\",\"publicationBlock\":\"24\",\"lagBlocks\":\"0\",\"lagSeconds\":\"0\",\"confirmations\":\"2\",\"lastIndexedAt\":\"2026-11-28T10:18:46.034Z\",\"lastRpcCheckAt\":\"2026-11-28T17:18:46.035+07:00\",\"recoveryStatus\":\"ready\"}},\"data\":{\"status\":\"ok\",\"database\":\"up\",\"indexer\":\"synced\",\"publication\":\"ready\",\"recoveryStatus\":\"ready\",\"projectionStatus\":\"current\",\"publicationBlock\":\"24\",\"projectionLagBlocks\":\"0\",\"rawDecodeComplete\":true,\"rawDecodeIssues\":{\"unknownTopics\":0,\"decodeErrors\":0},\"ignoredAncillaryEvents\":16}}"
+      }
+    },
+    {
+      "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "runId": "TV3-MM-boundary-20261128T100609709Z",
+      "startedAt": "2026-11-28T10:18:46.305Z",
+      "finishedAt": "2026-11-28T10:18:46.381Z",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:41191/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+        "headers": {}
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:36453",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Sat, 28 Nov 2026 10:18:46 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": "{\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"qa07-e2e\",\"asOfBlock\":\"24\",\"asOfBlockHash\":\"0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9\",\"asOfTimestamp\":\"1800000631\",\"snapshotRevision\":\"323ce374-f4e4-4d20-986b-020cb3d7c2b0\",\"dataKind\":\"chain\",\"sync\":{\"status\":\"synced\",\"headBlock\":\"26\",\"confirmedBlock\":\"24\",\"indexedBlock\":\"24\",\"publicationBlock\":\"24\",\"lagBlocks\":\"0\",\"lagSeconds\":\"0\",\"confirmations\":\"2\",\"lastIndexedAt\":\"2026-11-28T10:18:46.034Z\",\"lastRpcCheckAt\":\"2026-11-28T17:18:46.035+07:00\",\"recoveryStatus\":\"ready\"}},\"data\":[],\"pagination\":{\"limit\":20,\"totalCount\":0,\"nextCursor\":null}}"
+      }
+    },
+    {
+      "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+      "runId": "TV3-MM-boundary-20261128T100609709Z",
+      "startedAt": "2026-11-28T10:18:46.382Z",
+      "finishedAt": "2026-11-28T10:18:46.411Z",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:41191/api/summary?chainId=31337&deploymentId=qa07-e2e",
+        "headers": {}
+      },
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:36453",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Sat, 28 Nov 2026 10:18:46 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": "{\"context\":{\"chainId\":\"31337\",\"deploymentId\":\"qa07-e2e\",\"asOfBlock\":\"24\",\"asOfBlockHash\":\"0x12cfc1583fc3f0f7211f2a45cb6629d5a52ec066b41ed26bbc4b978d84b855b9\",\"asOfTimestamp\":\"1800000631\",\"snapshotRevision\":\"323ce374-f4e4-4d20-986b-020cb3d7c2b0\",\"dataKind\":\"chain\",\"sync\":{\"status\":\"synced\",\"headBlock\":\"26\",\"confirmedBlock\":\"24\",\"indexedBlock\":\"24\",\"publicationBlock\":\"24\",\"lagBlocks\":\"0\",\"lagSeconds\":\"0\",\"confirmations\":\"2\",\"lastIndexedAt\":\"2026-11-28T10:18:46.034Z\",\"lastRpcCheckAt\":\"2026-11-28T17:18:46.035+07:00\",\"recoveryStatus\":\"ready\"}},\"data\":{\"treasury\":{\"token\":{\"symbol\":\"BUD\",\"address\":\"0x9baab117304f7d6517048e371025db8f89a8dbe5\",\"decimals\":18},\"address\":\"0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd\",\"balance\":\"10000000000000000000000\",\"totalIn\":\"10000000000000000000000\",\"totalOut\":\"0\"},\"governance\":{\"govToken\":{\"symbol\":\"GOV\",\"address\":\"0x0116686e2291dbd5e317f47fadbfb43b599786ef\",\"decimals\":18},\"governor\":\"0x2706a171ecb68e0038378d40dd1d136361d0cb7d\",\"timelock\":\"0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead\",\"clockMode\":\"mode=timestamp\",\"totalSupply\":\"1000000000000000000000\",\"votingDelay\":\"60\",\"votingPeriod\":\"300\",\"timelockDelay\":\"120\",\"quorumNumerator\":\"20\",\"proposalThreshold\":\"50000000000000000000\",\"quorumDenominator\":\"100\"},\"proposalCounts\":{\"total\":0,\"byState\":{\"Active\":0,\"Queued\":0,\"Pending\":0,\"Canceled\":0,\"Defeated\":0,\"Executed\":0,\"Succeeded\":0}},\"recentActivity\":[{\"to\":\"0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd\",\"from\":\"0x15d34aaf54267db7d7c367839aaf71a00a2c6a65\",\"type\":\"Transfer\",\"token\":\"0x9baab117304f7d6517048e371025db8f89a8dbe5\",\"amount\":\"10000000000000000000000\",\"logIndex\":\"0\",\"blockHash\":\"0x6e423242c6e7361e40d193c4eb199a9bf7bd89cf11ce2b20142f500174b4770c\",\"direction\":\"in\",\"requestId\":null,\"proposalId\":null,\"blockNumber\":\"19\",\"transactionHash\":\"0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283\",\"transactionIndex\":\"0\"}]}}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "recordedAt": "2026-10-22T04:54:22.025316+00:00",
+  "scope": "TV4 local candidate integration and acceptance evidence; not full TC01–TC14/INV/NFR acceptance or testnet",
+  "sources": {
+    "baseCommit": "5fbf61581c5f975f967983022155bd27f2863142",
+    "candidateState": "Uncommitted working-tree candidate over baseCommit; no commit/push/PR mutation performed. The base SHA is not a claim that new scripts/frontend are committed. Exact exercised source is identified below.",
+    "frontendSourceCommit": "47f91d50b7a9104c027dbf05e7a862ddb69d31d0",
+    "integrationMethod": "Imported frontend snapshot without staging; TV4 fixture/a11y/acceptance fixes applied. Preserved existing README AD-064 link and user architecture review."
+  },
+  "environment": {
+    "node": "v24.15.0",
+    "npm": "10.9.9",
+    "python": "Python 3.12.3",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "postgres": "18.4 native from @embedded-postgres/linux-x64@18.4.0-beta.17 installed only outside repository"
+  },
+  "frontend": {
+    "install": "npm ci --prefix frontend",
+    "lint": {
+      "command": "npm run lint --prefix frontend",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0,
+      "stdout": "frontend-lint.txt"
+    },
+    "build": {
+      "command": "npm run build --prefix frontend",
+      "exit": 0,
+      "scope": "tsc -b and Vite production bundle with canonical BE01 fixture imports",
+      "stdout": "frontend-build.txt"
+    },
+    "browser": {
+      "report": "frontend-browser.json",
+      "scenarioCount": 11,
+      "viewports": [
+        390,
+        1366
+      ],
+      "scope": "Fixture UI in Chromium, not wallet/API/chain E2E"
+    }
+  },
+  "cleanCandidate": {
+    "baseCloneCommand": "git clone --no-local --recurse-submodules --branch feature/tv4-operation <local-repository> <new-directory>",
+    "candidateOverlay": "Current frontend/, scripts/, .github/ sources; no node_modules, out, cache or frontend dist copied. All source hashes below match the isolated candidate.",
+    "environmentLimit": "Same machine; globally available compiler 0.8.37 and installed system tools reused. Not an independent other-machine or fresh remote candidate-commit clone.",
+    "installAndChecks": [
+      {
+        "step": "clean-root-install",
+        "exit": 0,
+        "stdout": "clean-root-install.txt"
+      },
+      {
+        "step": "clean-frontend-install",
+        "exit": 0,
+        "stdout": "clean-frontend-install.txt"
+      },
+      {
+        "step": "clean-frontend-lint",
+        "exit": 0,
+        "stdout": "clean-frontend-lint.txt"
+      },
+      {
+        "step": "clean-frontend-build",
+        "exit": 0,
+        "stdout": "clean-frontend-build.txt"
+      },
+      {
+        "step": "clean-contracts",
+        "exit": 0,
+        "stdout": "clean-contracts.txt"
+      }
+    ],
+    "contracts": {
+      "passed": 142,
+      "failed": 0,
+      "skipped": 0,
+      "profile": "ci",
+      "seed": "0x20261021",
+      "fuzzRuns": 256,
+      "invariantRuns": 100,
+      "invariantDepth": 50,
+      "stdout": "clean-contracts.txt"
+    },
+    "warningsRetained": [
+      "block-timestamp",
+      "unsafe-typecast",
+      "environment-read-across-mutation"
+    ],
+    "defaultGovernanceSmoke": {
+      "exit": 0,
+      "stdout": "default-governance-smoke.txt"
+    },
+    "treasurySmoke": {
+      "exit": 0,
+      "stdout": "clean-treasury-smoke.txt"
+    }
+  },
+  "backend": {
+    "typecheck": {
+      "exit": 0,
+      "stdout": "backend-typecheck.txt"
+    },
+    "build": {
+      "exit": 0,
+      "stdout": "backend-build.txt"
+    },
+    "unitRpcDecoder": {
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0,
+      "stdout": "backend-tests.txt"
+    },
+    "postgresStorageCli": {
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "postgres": "18.4",
+      "isolation": "Owned new native cluster, fresh be02_test database/role as required by suite; migration and SQL constraints executed. No existing database reused.",
+      "stdout": "backend-storage.txt"
+    },
+    "be01Fixtures": {
+      "exit": 0,
+      "files": 123,
+      "proposals": 45,
+      "stdout": "be01-fixtures.txt"
+    }
+  },
+  "liveGovernanceStorage": {
+    "report": "governance-storage.json",
+    "exit": 0,
+    "counts": {
+      "headers": 108,
+      "rawLogs": 61,
+      "decoded": 45,
+      "unknownTopics": 16,
+      "decodeErrors": 0
+    },
+    "atBlock": {
+      "number": "109",
+      "hash": "0xd34215246bad3f1c0fc2774e7a5ebc7882d713ad2551636656dae09a517fe076",
+      "timestamp": "1800000492"
+    },
+    "semanticDigest": "dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086",
+    "rebuildDigest": "dcbccb018fe122d966cf0a6f2c42e32215ff873c01f6f62bd42184e5da7c1086",
+    "scope": "Real HTTP RPC/scanner/PostgresStorage/CLI, mid-batch SQL rollback, explicit finite-range continuation, process rerun idempotence and second-database raw replay. Not checkpoint/reorg/production projections or FR15 reconstruction.",
+    "guards": {
+      "exit": 0,
+      "stdout": "storage-guards.txt",
+      "cases": [
+        "missing isolated flag",
+        "non-loopback host",
+        "URL options",
+        "non-smoke database name",
+        "nonempty database rejection without changing header/event counts"
+      ]
+    }
+  },
+  "handoff": {
+    "positiveExportExit": 0,
+    "mainCheckoutRoleCheckExit": 0,
+    "existingDirectoryExit": 1,
+    "existingBundleUnchanged": true,
+    "rpc": "http://127.0.0.1:8559",
+    "height": "19",
+    "bundle": "local-handoff/",
+    "scope": "Read-only exporter audited the caller-owned clean-candidate deployment; five full compiler ABIs and four supported BE02 contract descriptors. Existing directory was rejected unchanged. No deployment ID fabricated.",
+    "serviceName": "tv4-handoff-anvil",
+    "processId": 65026,
+    "chainId": "31337",
+    "lifecycle": "Owned numeric-loopback Anvil intentionally left running in persistent mode for consumer handoff. Reset/restart or changed source/build/commit requires fresh deployment and bundle."
+  },
+  "ci": {
+    "configuredJobs": [
+      "contracts",
+      "be01",
+      "be02",
+      "frontend"
+    ],
+    "newGitHubRunObserved": false,
+    "newDockerRunnerExecutedLocally": false,
+    "yamlParsed": true,
+    "runnerBashSyntaxExit": 0,
+    "scope": "Contracts now calls owned Docker PostgreSQL governance runner; frontend lint/typecheck/build and artifacts added. Actual new CI run must follow commit/push; native SQL evidence is not Docker-runner evidence."
+  },
+  "github": {
+    "checkedAt": "2026-10-22",
+    "pullRequest": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/5",
+    "state": "open",
+    "head": "5fbf61581c5f975f967983022155bd27f2863142",
+    "requestedReviewers": [
+      "nvdungmim",
+      "daongocuong"
+    ],
+    "reviewsObserved": 0,
+    "readSources": [
+      "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/pulls/5",
+      "https://api.github.com/repos/SE2026-21-1/dao-budget-simulator/pulls/5/reviews"
+    ],
+    "writeOperationsPerformed": false
+  },
+  "cleanup": {
+    "nativePostgres": {
+      "method": "pg_ctl -m fast -w stop",
+      "exit": 0,
+      "ownedClusterStopped": true,
+      "nativeCluster": "/tmp/dao-tv4-acceptance-Cpq1w4I3/pgdata",
+      "ownedClusterFilesRemoved": true,
+      "binaryToolsRemoved": true,
+      "stdout": "postgres-cleanup.txt"
+    },
+    "frontendDevAndPreviewStopped": true,
+    "browserTabClosed": true,
+    "handoffAnvilIntentionallyRunning": true
+  },
+  "blockers": [
+    {
+      "owner": "TV1",
+      "requirement": "Peer review deployment/SC05/ABI; requested review is not approval."
+    },
+    {
+      "owner": "TV2",
+      "requirement": "Production checkpoint/resume/K-confirmations/reorg/projections/API and full projection/state rebuild. Raw replay does not complete TC11 or FR15."
+    },
+    {
+      "owner": "TV3",
+      "requirement": "Wallet, real create/vote/cancel/queue/execute UI and transaction/network errors. Fixture browser acceptance does not complete TC13 or full UI-to-chain-to-API flow."
+    },
+    {
+      "owner": "Team/TV4",
+      "requirement": "Independent member-machine clean clone, peer approval and actual new-revision GitHub CI after commit/push."
+    },
+    {
+      "owner": "Team/TV1/TV4",
+      "requirement": "Selected testnet, RPC/faucet, funded authorized signer and verified EVM/compiler compatibility. No public-chain transaction sent."
+    }
+  ],
+  "sourceHashes": {
+    ".github/workflows/ci.yml": "78ad1ccfbcc2835fee41ee7febe66beb2705bcef014d23a90b2cbc701e93ed8d",
+    "package.json": "ef918ef5925afe8a50e2f695c204967d12797a4514f25282d8ca059b716fe6d1",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "tsconfig.json": "e2aba9596967b5b891b18dba78a67d5716e196de97708910e0890f69f7944ec4",
+    "tsconfig.build.json": "fb30b3b0c40147dc441087d57595d54bdae5d2d56c43e22d2db57c0bca024636",
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+    "scripts/ci.sh": "a9f91ea0111cf66f64fbcfd97fba498728460652649072983919b0b4cb559e22",
+    "scripts/deploy_local.mjs": "b44a2402fe403b70f50266fa07bac3f0c0a48179111e26e275fdf71e2889b9a4",
+    "scripts/check_roles.mjs": "ef834dc8a4b2e3bd524e2b7e0255b8286b1e364e005c59a78db43e7aa71232fc",
+    "scripts/governance_local.mjs": "c4ea2669072a610a177ab51ee4a9f07a431017bf094b92ea9107aee887065ed7",
+    "scripts/smoke_governance.mjs": "97b6fd07fa1b458179e2dc5ff057aad0884b92bd3c0af892f7f4aae3008c7c8f",
+    "scripts/governance_storage.mjs": "6c937cbfcaed8297054f886c1e11cf42714e90559f62d783509f2dcc6ea6e966",
+    "scripts/export_local_handoff.mjs": "8a182ceb348438ed63569939f36b490350d09aaef5f7612e77bf016370cb9c8d",
+    "scripts/check_governance_database.sh": "fb30495f75e274b652f97b9f48d3bf14b521409a005f3f156500be63c53306e3",
+    "scripts/smoke_treasury.mjs": "4c36bc65e1ba03959598de0ca2ddc5a366a2ef7c7357bed076e0379053ebd92b",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "fixtures/api/proposals-page-1.json": "bc18b2ea2e1ebf39745f867d89ddded810e0ea5231ba737d702ca55b6197569b",
+    "fixtures/api/proposals-page-2.json": "196f1d74c7f07f414dff94fca308b4951f9d39375ebc1cca309bd295f96e7f92",
+    "fixtures/api/proposals-page-3.json": "032758f473e5e8c066ca80a6137a522f77a6cb5691e6cdd4b60ce402fd9648cf",
+    "frontend/tsconfig.app.json": "8e5d12ba330e7d86409edec74b95451e0db22ee09b9426c94b5bf817571eddb0",
+    "frontend/tsconfig.json": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+    "frontend/tsconfig.node.json": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8",
+    "frontend/vite.config.ts": "44148104e23eb5fc4b9707358585ee2ae5074f2330e67e9aae44428a7be29f60",
+    "frontend/.oxlintrc.json": "b4d344818a1e1bf43997e4744a9153c8eef770c98b58229cd86363dabb85ded4",
+    "frontend/package-lock.json": "a8134d21a92109ac03be7cbb96761ee9e967b3d9ce6bf601eea2459a514033b2",
+    "frontend/package.json": "23445446fd97b7337e3657f40e43cf880bc4085da2ed36743585f271a667428f",
+    "frontend/index.html": "5f600d22a1aa08442ffc86e64741a823b317aa8a617b9c566c5dfb163af9a99d",
+    "frontend/.gitignore": "fe718e7babb14f3cbad2d97f08889b9ce5215ed3fe0e43b2b8cfbfb3b9b844e8",
+    "frontend/src/index.css": "ac54c1378b34cc9dd65fd9b754b48a90666c25f8946d7c5e15a70180a1d2848f",
+    "frontend/src/App.tsx": "c13cfaa943be8c7af3a7b4a2919c2e7b8b6b1e6ab8445778e32da971cc1fea4c",
+    "frontend/src/main.tsx": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2",
+    "frontend/src/data/useProposalFixtures.ts": "23cbc55eee01768951982bf4a829290a04509d63262ed10f0b92b5985591ea0c",
+    "frontend/src/data/proposals.ts": "b12915d35d76480fe9b46494935e4353692112b62b46004b1c53198dd8bc2ecc",
+    "frontend/src/data/formatBUD.ts": "7fc1fdb13cbcb115f1318002729596e6f709d0be95703c1aaac94e1780963a28",
+    "frontend/src/pages/ProposalListPage.tsx": "434980eb2d2592924c1a2ad5602894fc8eb0c1fa1d77fc292cf13084c4b7b949",
+    "frontend/src/pages/DashboardPage.tsx": "7a7f8327c439f98103a7de77d63a526a397e5f9e42facd7c18aabf64ee4a8a3f",
+    "frontend/src/pages/ProposalDetailPage.tsx": "628eae341d8e83359a3f44dbf79c4f233ddd2709258a2317cee926af89ccadd7",
+    "frontend/src/pages/CreateProposalPage.tsx": "ad937c282fd5b18533361a48020ba50f9d88573d27b2db82beec9b0e2ab049c8",
+    "frontend/src/components/FixtureLoadState.tsx": "fb976d03a912d603558092ff35ff93e0484474cc249006810b4af10345c931d9",
+    "frontend/public/favicon.svg": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66",
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "contracts/interfaces/ITreasury.sol": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+    "indexer/rpc.ts": "6b3472a8627fdf36213a49e16b68aefa47db9271b83517074b23bdbaf26c6c51",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/storage.ts": "33d1757e21a2dd7e488889bbd613285e07a87acceeaab139e81b142ea6075862",
+    "indexer/types.ts": "535be3dddcebe22409db784a1d918be2b1b6a0eedc9784948ff7dc4e1db1a4b0",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/errors.ts": "61fae126552748bc8c5890904b2cfea0ba8dc9522d333a0e85c2471730650f75",
+    "indexer/reader.ts": "b3fb6a58e837f8e301921dafcdff2ea3517e41d0928e6d050834d3d1da7b0049",
+    "indexer/cli.ts": "1aad7935cf8166f91287c850e44712eebc5a90895f785c68f5822eded20bf5fb",
+    "indexer/config.ts": "3005cd643994dfce74ad1ec227f83ac0519e9871b8410f418c6a138125b34ec4",
+    "indexer/abi-registry.ts": "84b7982de1eecf2a9b0b97ba461d734582b704c6a9d7ef0969bd94046cda6922"
+  }
+}

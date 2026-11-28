@@ -1,0 +1,13 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+crash*.log
+override.tf
+*_override.tf
+clouds.yaml
+secure.yaml
+# Review and commit .terraform.lock.hcl after provider initialization.

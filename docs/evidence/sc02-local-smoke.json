@@ -1,0 +1,105 @@
+{
+  "scope": "SC02 token-only local Anvil smoke, not testnet/governance/Treasury acceptance",
+  "sourceBranch": "feature/tv1-sc02",
+  "sourceCommit": "9a890a2084f10876e580d24589fa6cb0829c11f3",
+  "chainId": "31337",
+  "runtime": "Anvil 1.8.5, Osaka, loopback-only throwaway chain",
+  "contracts": {
+    "GOV": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+    "BUD": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512"
+  },
+  "snapshotTimestamp": "1792513074",
+  "assertions": [
+    "fixed supplies and 18 decimals",
+    "GOV distribution 400/300/200/100 and zero initial votes",
+    "timestamp clock and mode",
+    "current timestamp historical lookup rejected",
+    "self-delegation and historical votes 400/300",
+    "delegated approve/transferFrom changes current votes to300/400 and consumes allowance",
+    "undelegation clears current votes but preserves snapshot400",
+    "past total supply1000",
+    "direct BUD transfer10000 leaves10000/10000; EOA recipient only"
+  ],
+  "receipts": [
+    {
+      "label": "deploy GOV",
+      "transactionHash": "0xe45a6cf9e4739020b198185215e34d21888d021b341f46d75a1eabe8ca664f03",
+      "blockNumber": "1",
+      "status": "0x1",
+      "blockHash": "0x7715e83f31e41581b997f804afec2629c29e0827a00236818efbf398747a38e2",
+      "gasUsed": "1797071"
+    },
+    {
+      "label": "deploy BUD",
+      "transactionHash": "0xf8f169e501e899f9c7744d49ac6054e47c8d1a742d40c9b73785947f42679596",
+      "blockNumber": "2",
+      "status": "0x1",
+      "blockHash": "0x3a3d64fdef7cb80bb97b84c1e19893c4be0e6a1fdac47a403131f866f355d3fd",
+      "gasUsed": "541918"
+    },
+    {
+      "label": "A self-delegates",
+      "transactionHash": "0xab40b113236ba88df11eb7a62dcbf722a4ef04ac7e33db2a3b8b747102a81dbf",
+      "blockNumber": "3",
+      "status": "0x1",
+      "blockHash": "0xd7823ffa166ed571a4fdb3cb076349d35d8f71735040e42a6f6383ce57f39ba4",
+      "gasUsed": "95644"
+    },
+    {
+      "label": "B self-delegates",
+      "transactionHash": "0xec43fc68389e867dcba7036e3cb170b6b3bfa5ebdd2358cc622c620b8492472c",
+      "blockNumber": "4",
+      "status": "0x1",
+      "blockHash": "0x6033b726ee30184028330bb026857183460a3525cfc36690854bafff7a653d16",
+      "gasUsed": "95644"
+    },
+    {
+      "label": "A approves GOV transferFrom",
+      "transactionHash": "0x9b9593e2d18cf16fee36c2a95ef00222f7c2c9ef4c5aafbf2669761a96234163",
+      "blockNumber": "6",
+      "status": "0x1",
+      "blockHash": "0xe3c9b9afb99f8cc89eb1e8c0759376cbd6cdf7077031ea81a45273fe82727449",
+      "gasUsed": "46401"
+    },
+    {
+      "label": "B transfers delegated GOV from A",
+      "transactionHash": "0x96344c152899a94ba76641717f9922b41add624cf45b7a454426c3def131a4ba",
+      "blockNumber": "7",
+      "status": "0x1",
+      "blockHash": "0x16301019668c4c2d3213a2732533d276acb6d69cf9cbd37c311782f093543e05",
+      "gasUsed": "106049"
+    },
+    {
+      "label": "A undelegates to zero",
+      "transactionHash": "0xed567322288af97c02f82147c6f093a233c9fd1c30f8ca9f1df7c410b9701fde",
+      "blockNumber": "8",
+      "status": "0x1",
+      "blockHash": "0x6f6dcbcbf7d503b002019be90dd62c40f2fcef8e526dc33f02644ab5648812c5",
+      "gasUsed": "59090"
+    },
+    {
+      "label": "funding wallet transfers BUD to token-only recipient",
+      "transactionHash": "0xf79d733979a5719fa767795df2d2fb8c7ed45f91fae7173afdaad75b93aee429",
+      "blockNumber": "9",
+      "status": "0x1",
+      "blockHash": "0x0fdb938a34e346e60f4777220bdc3cfb62a068c1a7bd045f9e1a6219e43451e1",
+      "gasUsed": "51637"
+    }
+  ],
+  "accounts": {
+    "A": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+    "B": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+    "C": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+    "D": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+    "funding": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+    "tokenOnlyRecipient": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc"
+  },
+  "fuzzSeed": "0x20261020",
+  "unitTests": {
+    "GovernanceToken": 15,
+    "BudgetToken": 9,
+    "total": 24,
+    "failed": 0,
+    "fuzzRunsPerTest": 256
+  }
+}

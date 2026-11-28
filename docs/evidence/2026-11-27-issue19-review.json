@@ -1,0 +1,491 @@
+{
+  "reviewDateLabel": "2026-11-27",
+  "evidenceCommit": "887c5ecafd79feaf64956b8e05e9d16576404d84",
+  "productSource": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+  "reviewCheckout": "d4d405f2ca64e1786b44c7d81354cbe2de18040f",
+  "runId": "TV3-MM-negative-20261126-4cba99a0",
+  "verdict": "SCOPED_VISUAL_PREFLIGHT_ACCEPTED_NO_SEND_INFERENCE_ONLY_FULL_ACCEPTANCE_PENDING",
+  "files": [
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 656,
+      "sha256": "9a6f1d46994c0eb9ad58ba986d5491d4cfad5a053c9e507e372594da77e21478",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/SHA256SUMS.txt"
+    },
+    {
+      "name": "browser-eth-accounts-console.png",
+      "bytes": 30742,
+      "sha256": "ba5d621a46002bdf84abb2c058cf46a218438a04198fe77b23e9c1e73632c85d",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/browser-eth-accounts-console.png"
+    },
+    {
+      "name": "deployment-manifest.json",
+      "bytes": 109009,
+      "sha256": "92f4149f540e3a23178bddb8ed8c5bc68cee0454d031b60257ce89d41aa0de83",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/deployment-manifest.json"
+    },
+    {
+      "name": "rpc-state-after-repeat.json",
+      "bytes": 573,
+      "sha256": "b496fd0207fe0d24ebba75e29d1d02a21cfbec878ef9c7130f98b66bcf47e104",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/rpc-state-after-repeat.json"
+    },
+    {
+      "name": "rpc-state-after-submit.json",
+      "bytes": 623,
+      "sha256": "c627728cef1be4914b64761dc1dc472e3a6c00160600955d48fab6f6c3b38556",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/rpc-state-after-submit.json"
+    },
+    {
+      "name": "rpc-state-before-repeat.json",
+      "bytes": 466,
+      "sha256": "274ac026c64c94df7d07b66bf02054051fbdaf9d9a4eb5a715918be920d61f76",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/rpc-state-before-repeat.json"
+    },
+    {
+      "name": "run-summary.md",
+      "bytes": 3044,
+      "sha256": "060b69799fd00a121fcd7c53b71a2035b0f7841bc60cc80a75107bf03b4d5f47",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/run-summary.md"
+    },
+    {
+      "name": "submit-blocked-account-b.png",
+      "bytes": 179732,
+      "sha256": "7e44d2c7768e47e40e5f2bb12ea0e8ecc77a06949c3e52c276ce67abc03a5529",
+      "url": "https://raw.githubusercontent.com/SE2026-21-1/dao-budget-simulator/887c5ecafd79feaf64956b8e05e9d16576404d84/docs/evidence/tv3-metamask-negative-20261126-4cba99a0/submit-blocked-account-b.png"
+    }
+  ],
+  "sourceNormalization": "Git LF -> CRLF reconstructed bytes; NOT raw Git byte equality",
+  "firstPartySourceHashes": [
+    {
+      "path": "foundry.toml",
+      "declared": "211fdac51a1fcdfe6bf67860d57ea89975569e6f4fa14d79d5259082a330868e",
+      "gitSha256": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+      "lfSha256": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+      "crlfSha256": "211fdac51a1fcdfe6bf67860d57ea89975569e6f4fa14d79d5259082a330868e",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "foundry.lock",
+      "declared": "515030960082805b0e943111b2d62127f5f85548dfcd1ba71cc2746bd4da8113",
+      "gitSha256": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+      "lfSha256": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9",
+      "crlfSha256": "515030960082805b0e943111b2d62127f5f85548dfcd1ba71cc2746bd4da8113",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "package-lock.json",
+      "declared": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "gitSha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "lfSha256": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+      "crlfSha256": "21094ab4f05427e0de773bf6edae33a883bbc63626b3faa0f6ead2c7b79ec022",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "scripts/governance_local.mjs",
+      "declared": "865bf84cf17a1a65201a49b42b5277ca61e5bbecbbd149894263dc0922ad3037",
+      "gitSha256": "57808a1136539a1b2287661efe4f5d31df64445f94b2dad2450260f1450d53d3",
+      "lfSha256": "57808a1136539a1b2287661efe4f5d31df64445f94b2dad2450260f1450d53d3",
+      "crlfSha256": "865bf84cf17a1a65201a49b42b5277ca61e5bbecbbd149894263dc0922ad3037",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "scripts/governance_operations.mjs",
+      "declared": "8790ad37e5b5f38d6b832dea5f2f6dc4048a0bcfb628f673450de4674582d289",
+      "gitSha256": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+      "lfSha256": "1020556cc2332f596ba32ef1ad6f9294447c933bf4d80ea9eabc3440bfebc5cd",
+      "crlfSha256": "8790ad37e5b5f38d6b832dea5f2f6dc4048a0bcfb628f673450de4674582d289",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "scripts/deploy_local.mjs",
+      "declared": "79feb62a69b39afa42592d3bad8733a09da8aa5ca575a4f188dc5125d00c18c6",
+      "gitSha256": "a68b75811bd279d2fe6ce5e14529e95e208d085ce08caeef32b797e4c62c86f5",
+      "lfSha256": "a68b75811bd279d2fe6ce5e14529e95e208d085ce08caeef32b797e4c62c86f5",
+      "crlfSha256": "79feb62a69b39afa42592d3bad8733a09da8aa5ca575a4f188dc5125d00c18c6",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "scripts/check_roles.mjs",
+      "declared": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+      "gitSha256": "ef834dc8a4b2e3bd524e2b7e0255b8286b1e364e005c59a78db43e7aa71232fc",
+      "lfSha256": "ef834dc8a4b2e3bd524e2b7e0255b8286b1e364e005c59a78db43e7aa71232fc",
+      "crlfSha256": "def1be4c0966513bac36494e5b2aed11efe14d298204939ccba9aea28085096c",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "contracts/GovernanceToken.sol",
+      "declared": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+      "gitSha256": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+      "lfSha256": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+      "crlfSha256": "cdc368959a57d582f665b0986b37eae42435ab8af816bf42a33a030b0c3a266e",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "contracts/BudgetToken.sol",
+      "declared": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+      "gitSha256": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+      "lfSha256": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+      "crlfSha256": "c2e6dc3e77012adab7d56d22fb3fb15c619db1a86d79ce66d9b85888e8c8ed34",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "contracts/Treasury.sol",
+      "declared": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+      "gitSha256": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+      "lfSha256": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+      "crlfSha256": "86e5c3d0010ceea9531f07cb9fa4b5e7ef11fbc959bf575d0ec711882bcc9020",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "contracts/interfaces/ITreasury.sol",
+      "declared": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+      "gitSha256": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+      "lfSha256": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+      "crlfSha256": "21f01aa857d328a8bd26f832aeb020ad7814bab506745c8611ad25d8d7a6707d",
+      "lfMatches": false,
+      "crlfMatches": true
+    },
+    {
+      "path": "contracts/BudgetGovernor.sol",
+      "declared": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+      "gitSha256": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+      "lfSha256": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+      "crlfSha256": "306b5d4be24dfe51bf7fb0fb50142b43424efb885f561ad3c196476df68e78f6",
+      "lfMatches": false,
+      "crlfMatches": true
+    }
+  ],
+  "dependencyGitlink": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0",
+  "dependencySourceHashes": [
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/utils/IVotes.sol",
+      "crlfSha256": "4aaa6d977b474ee41fa46e0f192e67b2286957f75c5c446d29ceced09b65b0c1",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/utils/Votes.sol",
+      "crlfSha256": "f2404e5a729c79178613c4a75d2060bcd51747ef96c5f9a114475967a9cfee74",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC5267.sol",
+      "crlfSha256": "59faab8ec1bdf233dfb0b01f3e1f66f35e0b3cec0963c909958fc1609c8020a0",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC5805.sol",
+      "crlfSha256": "3ea659eb098b0bb3979ec18ecca4c505f0e7a8d8385b6ef39a408828a4394e73",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC6372.sol",
+      "crlfSha256": "6b68c9b32bf24775b27b9720224a7fee814d91e501aa42c5305322a50aa34cd0",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/draft-IERC6093.sol",
+      "crlfSha256": "58e587382482e7b83d1425ce3b4a39d75661ce2bee70ad2a38fb0d4ed623a28a",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+      "crlfSha256": "fd1cfeb472628d788f5c6667a29b8e641a91ca348037e918647514b9d1ded2bb",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "crlfSha256": "c88183106683ce7dc24449994ab64fc525e45d0efb8f969159c27f7f7dc19341",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Votes.sol",
+      "crlfSha256": "2804f50d55dbb8b5bbc853d48abbb860da32e58b517319a259f8eb06dd373c94",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "crlfSha256": "a1ec1fe630f0a2972c11ed94485d84c021e1b717ab78c9b3238a6a34ca6b6fa8",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "crlfSha256": "1d2f9cd76e0e0179dd8522aae8d0774b05d9a1902555ff5704ffa5e229047798",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Nonces.sol",
+      "crlfSha256": "31b98a996a6daedbcc4cff10c5e74f2604c6236defa33fcaf6f89ec52bb796d8",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Panic.sol",
+      "crlfSha256": "c23b2047b51054dd135798a956b0c794d426a04214b628724c10076c98d4d17d",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/ShortStrings.sol",
+      "crlfSha256": "732f34c2259785fc4a8036266688b94d01b1cc1aa3cf88cc2f113df9cce942a7",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/StorageSlot.sol",
+      "crlfSha256": "ba24c6c8a516db76eaab1f00522a9630947d77194d718bf49de0ed72e856e6d1",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
+      "crlfSha256": "1fec567a6cf30b9cd664788a1472821b3023709a0e71487815ce9fff62f4dc6d",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol",
+      "crlfSha256": "e2f8a854c5de8cbfb7ed584277661832edf05bbfe290822cb566eecdb891052e",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/EIP712.sol",
+      "crlfSha256": "77998437bd2bf3616ca97dac72e9daf7b2603814a763d93d8ec8524b39cbfebd",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol",
+      "crlfSha256": "7f0cf821beee763a5092a46fab3fe7d98d3c14daffcea05d2b1e8eb4c1833618",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/Math.sol",
+      "crlfSha256": "aaee82aa2e97bee33772187f132e0d5f8b5c8a83a3e9f8fec348205a8cf5032e",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/SafeCast.sol",
+      "crlfSha256": "2f8ffac6a0bc9d84f6cb3618dd8aff14dc16b63928d43c5f110df69c32064c2a",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/math/SignedMath.sol",
+      "crlfSha256": "a74bead11c92a444806cc33e64c3e77c946aef4e8780b04dbc57cd495a34ef3f",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/Checkpoints.sol",
+      "crlfSha256": "ea6ccfbb4882e737605b397ba02d7091a78c2d8ffc1756a56cc479feb56c9ce5",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/types/Time.sol",
+      "crlfSha256": "9dcf9a63cd0a05239354c4fcfe2123ce10da729d9168019babaa95cb6519dbb9",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/AccessControl.sol",
+      "crlfSha256": "e3a1d6c3bd350cd79af5b79aee6123fd64341182554e3ae8a71c78dcb7827c97",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/access/IAccessControl.sol",
+      "crlfSha256": "87663faea573c1c5d69b61118f99a0a1aa7b69a3adf923a173c91295304a30bb",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1363.sol",
+      "crlfSha256": "e50076f76fc3383d41939755d0b2e0aa67b3aa240478775459d4248f3e59c619",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC165.sol",
+      "crlfSha256": "50737d8441ba2583b41c79118591e8bf5eef912923973ca2ecf989e2f7b435ab",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol",
+      "crlfSha256": "7984ca1e9c81f5ab188a00b3a102e5a249c55021fe2d4fae032e3674dae880ea",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+      "crlfSha256": "ee455e7a639484a69aca4fe45a099c7d3428ba3c71670d9f033140844208fc98",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "crlfSha256": "aaecc0e2d1ff1fa9f87dfe1b71a625f711ff781be431c1662aab44ac8aa7b6a7",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "crlfSha256": "ea549ecb4a958b2a6e8d431b9bb4a6ffcbbbfc3affa4269369bda525fd63dcfb",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/TimelockController.sol",
+      "crlfSha256": "844ca71008b5995acd6f1d81566d961ffb799f55037b4c707b1e9414bbc477d9",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+      "crlfSha256": "9d0ebfaeac3a1063e0af9ff51ff4d45c7545bd8201c61ab9d71c8441855555ff",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+      "crlfSha256": "0d8ff4214a2b906aa2764c0b94d9a61d9f178f65fa245fad6504022216bfa9f0",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721Receiver.sol",
+      "crlfSha256": "38bc286e04fc9cd2df8fdb0604ead93a9eee966843094c09b369879c45a4c141",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/token/ERC721/utils/ERC721Holder.sol",
+      "crlfSha256": "09c2d2c9a5145010bd650ddeb785cfaa287cb4e91a5969ed67530aebc1d9c86d",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+      "crlfSha256": "caaeb1444a1ce30144bf747224805f3d483fdc0709ac5224f15cc6d6261b0bce",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Errors.sol",
+      "crlfSha256": "383603712e40c122322647fe6d86457c7fc9c709a92d3765614e047bd3ac6f42",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/Governor.sol",
+      "crlfSha256": "77aa0437a17434282b04d3b4f1c671f545d62abb2fa6808712776dbdc303f702",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/IGovernor.sol",
+      "crlfSha256": "b4f1e9ed39ea2ca7909160ed0372a288b00ce6a7dd89ce35aba973a61b95fd93",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorCountingSimple.sol",
+      "crlfSha256": "e703a1e8752e2a75ad20b982d1ab785eebe9e5ed417280f2c6fc6a8eea8a7a3b",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorSettings.sol",
+      "crlfSha256": "1b3daccd706d16d23ac483d4e46e456cbf6ec298b7fb3ce699973a04c7ff512f",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorTimelockControl.sol",
+      "crlfSha256": "91ec9eadb23c7245b28f868c51b537eb9a0d6a44afd071717cdc4af3ac6980ea",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotes.sol",
+      "crlfSha256": "d68bf7f0528001182480756d64ba2124a5312d6d11f984a83fcfb8c090eac8fb",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/governance/extensions/GovernorVotesQuorumFraction.sol",
+      "crlfSha256": "b91205e9563829d1779ab5804eb22c37a05330d3086f50b01d832f0bef083e73",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol",
+      "crlfSha256": "8eec03bec7ead7ebb1764d5ab14fcac00595f112506f0ff975e2b82e0fc241d1",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/interfaces/IERC7913.sol",
+      "crlfSha256": "e156247d303391acbd16d8118dcba9dc2825111eb4899545b9630bd54730f021",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/Bytes.sol",
+      "crlfSha256": "90dd3ae6497d20d3a81b6747865d0ad516f488fd4ddc17a15408710a05355b45",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol",
+      "crlfSha256": "337a14d47b7c8cad519914b157d376d9478e63f1ebc09565a6114f28bdc77417",
+      "matches": true
+    },
+    {
+      "path": "lib/openzeppelin-contracts/contracts/utils/structs/DoubleEndedQueue.sol",
+      "crlfSha256": "8045832819f619156d3a109f9908e7f4d36567f0c53d8dd9831120beaffe7ba9",
+      "matches": true
+    }
+  ],
+  "rpcSnapshots": [
+    {
+      "runId": "TV3-MM-negative-20261126-4cba99a0",
+      "capturedAtUtc": "2026-11-26T16:40:14.3193375Z",
+      "sourceCommit": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+      "chainIdHex": "0x7a69",
+      "blockNumberHex": "0x13",
+      "blockHash": "0x81a732f2b519c449c2d3b6babe165db663bb28c52a1a1f1b5d66d496e90efddf",
+      "accountB": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+      "nonceLatestHex": "0x0",
+      "noncePendingHex": "0x0",
+      "txpoolStatus": {
+        "pending": "0x0",
+        "queued": "0x0"
+      },
+      "observedUi": "Preflight blocked for insufficient delegated voting power; no MetaMask transaction confirmation shown."
+    },
+    {
+      "runId": "TV3-MM-negative-20261126-4cba99a0",
+      "capturedAtUtc": "2026-11-26T16:41:54.5152071Z",
+      "phase": "before-repeat",
+      "chainIdHex": "0x7a69",
+      "blockNumberHex": "0x13",
+      "blockHash": "0x81a732f2b519c449c2d3b6babe165db663bb28c52a1a1f1b5d66d496e90efddf",
+      "accountB": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+      "nonceLatestHex": "0x0",
+      "noncePendingHex": "0x0",
+      "txpoolStatus": {
+        "pending": "0x0",
+        "queued": "0x0"
+      }
+    },
+    {
+      "runId": "TV3-MM-negative-20261126-4cba99a0",
+      "capturedAtUtc": "2026-11-26T16:44:45.2779748Z",
+      "phase": "after-repeat",
+      "chainIdHex": "0x7a69",
+      "blockNumberHex": "0x13",
+      "blockHash": "0x81a732f2b519c449c2d3b6babe165db663bb28c52a1a1f1b5d66d496e90efddf",
+      "accountB": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+      "nonceLatestHex": "0x0",
+      "noncePendingHex": "0x0",
+      "txpoolStatus": {
+        "pending": "0x0",
+        "queued": "0x0"
+      },
+      "uiMessage": "Chưa đủ voting power đã delegate tại checkpoint quá khứ để tạo proposal."
+    }
+  ],
+  "verified": {
+    "checksumPayloads": 7,
+    "firstPartyCrlfMatches": 12,
+    "dependencyCrlfMatches": 51,
+    "deploymentReceiptBindings": 5,
+    "runtimeArtifactIdentityBindings": 5
+  },
+  "notVerified": [
+    "eth_sendTransaction provider boundary",
+    "MetaMask extension manifest/version independently",
+    "served frontend bytes",
+    "API 503 root cause",
+    "H26 historical version/capture",
+    "current Dev runtime acceptance"
+  ]
+}

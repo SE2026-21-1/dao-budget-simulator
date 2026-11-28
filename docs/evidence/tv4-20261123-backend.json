@@ -1,0 +1,79 @@
+{
+  "kind": "offline-validation-of-historical-CI",
+  "source": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "run": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922735121",
+  "artifact": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922735121/artifacts/14714069533",
+  "zipSha256": "b84cf8a84297c623b394adefb03dfe8d10f65a1bfe69257ca8c4ebc93b89bb61",
+  "githubPublishedDigestMatched": true,
+  "patchBytes": 0,
+  "runtimeSourceFilesCheckedAgainstGit": 26,
+  "commandExitCodes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "canonical": {
+    "h": "67",
+    "hash": "0x85aa7dbe528c68daf932b94a14573ec92d44add81109efb24791112ed41ee723",
+    "head": "69"
+  },
+  "compare": {
+    "result": "equal",
+    "mismatches": [],
+    "chainCrossCheck": {
+      "block": "67",
+      "hash": "0x85aa7dbe528c68daf932b94a14573ec92d44add81109efb24791112ed41ee723",
+      "reference": "PASS",
+      "rebuild": "PASS",
+      "proposals": 1,
+      "operations": 1,
+      "treasuryBalance": "9996000000000000000000"
+    }
+  },
+  "load": {
+    "requests": 29724,
+    "errors": 0,
+    "recomputedNearestRankP95Ms": 29.271088000008604,
+    "maxMs": 1681.2068240000226,
+    "concurrency": 10,
+    "durationMs": 60000
+  },
+  "freshness": {
+    "samples": 20,
+    "maxMs": 4004.0025329999917,
+    "allPublicationApiBindingsMatch": true
+  },
+  "outage": {
+    "fullyObservedFourAttemptIds": 13,
+    "partialWithoutSameIdBoundaryEvidence": [
+      {
+        "id": 9398,
+        "attempts": 3
+      }
+    ],
+    "backoffAtLeast100msForExhaustedCalls": true,
+    "durationMs": 31250.736673999985
+  },
+  "scope": "TC11/TC12 and NFR02\u201304 historical backend evidence on Dev, not extension/testnet/UI; corrected integrated gate recorded separately",
+  "limits": [
+    "16 unknown ancillary topics retained",
+    "p95 threshold does not assert every response below 1 second",
+    "Historical ID9398 lacks post-outage same-ID evidence; do not claim full lifecycle verification from this artifact",
+    "PR21/55 history remains excluded"
+  ]
+}

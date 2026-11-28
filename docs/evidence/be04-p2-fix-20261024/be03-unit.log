@@ -1,0 +1,34 @@
+
+> dao-budget-simulator@0.0.0 test:be03
+> tsx --test tests/indexer/syncer.test.ts
+
+✔ K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block (1.060836ms)
+✔ invalid K rejected: -1 (1.92783ms)
+✔ invalid K rejected: 0.5 (0.896253ms)
+✔ invalid K rejected: 2 (0.580653ms)
+✔ invalid K rejected: null (0.582695ms)
+✔ invalid K rejected: true (0.802365ms)
+✔ invalid K rejected: 2147483648 (4.129898ms)
+✔ invalid K rejected: NaN (0.397051ms)
+✔ invalid K rejected: Infinity (0.435152ms)
+✔ K defaults to 2 and numeric 0 is valid (0.870891ms)
+✔ scope is order independent but bound to chain/deployment/address/block/ABI and sources (0.989056ms)
+✔ new DB starts at earliest deployment block, clamps later sources and empty batches advance (2.958867ms)
+✔ no safe block and deployment after safe boundary produce no negative RPC range/checkpoint (1.252772ms)
+✔ checkpoint block 0 is distinct from absent checkpoint and resumes at 1 (0.883093ms)
+✔ restart with no new block still verifies hash; then continues from H+1 (1.464172ms)
+✔ checkpoint mismatch even when idle leaves stored data unchanged (0.974349ms)
+✔ checkpoint RPC cannot verify: missing (4.243499ms)
+✔ checkpoint RPC cannot verify: malformed (0.573182ms)
+✔ checkpoint RPC cannot verify: unavailable (0.366643ms)
+✔ one required RPC source fails: entire batch and checkpoint stay unchanged (0.483744ms)
+✔ decode issues remain visible on idle restart after raw checkpoint advances (3.901726ms)
+✔ explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment (0.649295ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 439.405768

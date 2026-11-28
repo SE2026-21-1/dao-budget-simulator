@@ -1,0 +1,500 @@
+{
+  "schema": "tv4-wallet-review-v1",
+  "reviewDate": "2026-11-23",
+  "issue": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19",
+  "decision": {
+    "historicalHappyPath": "ACCEPTED_AS_REPORTED_HISTORY_WITH_PRESERVED_VISUAL_AND_WORKER_SUPPORT",
+    "fullAcceptance": "PENDING",
+    "currentApprovedSourceExtensionAcceptance": "NOT_ESTABLISHED_BY_THIS_ATTACHMENT",
+    "independentHistoricalChainVerification": false,
+    "historicalCampaignRerunRequested": false,
+    "deliveredZipAndScreenshotsGap": "RESOLVED"
+  },
+  "attachment": {
+    "url": "https://github.com/user-attachments/files/35253529/TV3_Issue19_Consolidated_Delivery_20261123.zip",
+    "bytes": 679453,
+    "expectedSha256": "592361fd38fdd85a768d1bac686a2e03d3fd994a83775988ec9f185008f07614",
+    "actualSha256": "592361fd38fdd85a768d1bac686a2e03d3fd994a83775988ec9f185008f07614",
+    "files": 28,
+    "uncompressedBytes": 847552,
+    "duplicateMemberNames": false,
+    "absoluteOrTraversalPaths": false,
+    "crcErrorMember": null,
+    "allInventory": [
+      {
+        "path": "ACCEPTANCE_MATRIX.md",
+        "bytes": 2374,
+        "sha256": "061d65096a6fb3c88de512c9bf4373d2618325075d41c2be6cc885599dfd1267"
+      },
+      {
+        "path": "CONSOLIDATED_REPORT.md",
+        "bytes": 1999,
+        "sha256": "e368e680fe8ae3a6e0f5ba59c0dabac7c4b00daf6c4e91fdb2bb21a176719d52"
+      },
+      {
+        "path": "EVIDENCE_INDEX.json",
+        "bytes": 13323,
+        "sha256": "bf51dfbe03fd07a82e293fbc014e03edf188b24dd7df99dd9faf83c0d8c8d765"
+      },
+      {
+        "path": "README.md",
+        "bytes": 1751,
+        "sha256": "0fcfb2de5b660f365032edc744f38b0949da29a2d3a0aa9132289694ea0f8830"
+      },
+      {
+        "path": "SHA256SUMS",
+        "bytes": 3234,
+        "sha256": "f6fd6c67a559a811379afd8d89e99c84fd8966e894a80333f296e9574070445e"
+      },
+      {
+        "path": "source-a-historical/ACCEPTANCE_MATRIX.md",
+        "bytes": 1618,
+        "sha256": "3112e58a30c247143f7c23c706509f475d0876d0cd908be3d1a004c19f93cfba"
+      },
+      {
+        "path": "source-a-historical/EVIDENCE_MANIFEST.json",
+        "bytes": 15179,
+        "sha256": "723ed71075c10bd23ee9a7dfbc6a4729c1996e15b484f5ab002b6b6de7b34124"
+      },
+      {
+        "path": "source-a-historical/ISSUE19_REPORT.md",
+        "bytes": 2193,
+        "sha256": "75da6fcf34ca6968eb6576cd11c2a9dfbc06f8b13ee79eff539a37467e3d3934"
+      },
+      {
+        "path": "source-a-historical/README.md",
+        "bytes": 883,
+        "sha256": "f90d375c80125d5fa4265628846fb840885fafd2bda0edfffdfa7b998808afad"
+      },
+      {
+        "path": "source-a-historical/SHA256SUMS",
+        "bytes": 1583,
+        "sha256": "af4fa98ba4956b4cdbd52ce3368a717af3266d1ac098a5d111383ba7e15c0758"
+      },
+      {
+        "path": "source-a-historical/TRANSACTION_LEDGER.md",
+        "bytes": 1419,
+        "sha256": "10935417d19457b513268458055d16fdab4a32d396a9996f08616cf348670cb3"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/public/manifest.json",
+        "bytes": 100121,
+        "sha256": "2eb2fddf9ed3bb678d75096b51ff14bbf525e7925b9b4de6558b33e45c4e4eab"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/governance-seed.json",
+        "bytes": 15886,
+        "sha256": "ed6ea07998cc278e232981045a252342fb78865f343530cdc8f443fc6b779266"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/source-provenance.json",
+        "bytes": 783,
+        "sha256": "d724e99e3e9f985b02dc06f82b22e9dc1880bbac26856e7ce472447a577ddaac"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/up-report.md",
+        "bytes": 1396,
+        "sha256": "f016c55547959851c20c44aa00ecd7e2109c2fe13cb8df210d5519e84094d654"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/verify-20261122T151926Z-ca2e3989/frontend-api-live-test.log",
+        "bytes": 1099,
+        "sha256": "653b20d88513f10928396497ff20bb4942d921138e7eb623b6d818012d5658c3"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/verify-20261122T151926Z-ca2e3989/frontend-api-live-test.vitest.json",
+        "bytes": 1047,
+        "sha256": "5e2075f02788be53fb8c493f599f5d51ab98bce6495b08bbb711ca1cfdf24b13"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/verify-20261122T151926Z-ca2e3989/report.md",
+        "bytes": 1479,
+        "sha256": "58b7cba2a69c3e908916df0b414d6f6fa95a9fa1eccbcec1da02cda5c9566935"
+      },
+      {
+        "path": "source-a-historical/historical/bootstrap/reports/verify-20261122T151926Z-ca2e3989/results.json",
+        "bytes": 4960,
+        "sha256": "57733b05c23813b980f83264c4b5f247c3167dfca36d8266251601e5b68e6488"
+      },
+      {
+        "path": "source-a-historical/historical/final/worker-publication-H53.jsonl",
+        "bytes": 538,
+        "sha256": "687ffee339ec85bac70d63e8c5a54a72a86829a88721e7c9cd35f1bee188f3db"
+      },
+      {
+        "path": "source-b-user-supplied/EVIDENCE_INDEX.json",
+        "bytes": 1827,
+        "sha256": "d8c2040d1e88ae3b42bb96a89c252d3e84586c0fb2f7fc4c84fec02f2fd88132"
+      },
+      {
+        "path": "source-b-user-supplied/GITHUB_COMMENT_DRAFT.md",
+        "bytes": 1838,
+        "sha256": "0df6c68a629e7e0651751c1db6a8a397e8f5cb6fe6ed723131e7e4da35b6ca4a"
+      },
+      {
+        "path": "source-b-user-supplied/README.md",
+        "bytes": 1239,
+        "sha256": "3527ebf1e48b6697a629952557f06b88817d2aa417cca575852e75d8ac4fd5e5"
+      },
+      {
+        "path": "source-b-user-supplied/REPORT_ISSUE19_TV3.md",
+        "bytes": 10106,
+        "sha256": "feeefb6b8c5b564d92681ae4b355ffec67007c2a26bdad002a36cd26c5386f12"
+      },
+      {
+        "path": "source-b-user-supplied/SHA256SUMS",
+        "bytes": 675,
+        "sha256": "629b5edb36133db6c7efc58e106c2cbc679384cf09a966925ac4e1c3d79a2b2a"
+      },
+      {
+        "path": "source-b-user-supplied/screenshots/01_governor_succeeded_metamask.png",
+        "bytes": 233692,
+        "sha256": "dfdd3849ce76436f0b10e2f97be2409e65b33c1df8e3cf6855b8accbae1dbf26"
+      },
+      {
+        "path": "source-b-user-supplied/screenshots/02_governor_queued_metamask.png",
+        "bytes": 232998,
+        "sha256": "b22b80f2588789cce290a33fe525dfedce6eb77592bdf1123076d282d01f7a43"
+      },
+      {
+        "path": "source-b-user-supplied/screenshots/03_governor_executed_metamask.png",
+        "bytes": 192312,
+        "sha256": "3a920d35869b5b6f7c85c601d872480dcefb24da3428435922f8ec6b926bf198"
+      }
+    ],
+    "checksumManifests": [
+      {
+        "manifest": "issue19-consolidated-final-20261123/SHA256SUMS",
+        "checked": 27,
+        "passed": true
+      },
+      {
+        "manifest": "issue19-consolidated-final-20261123/source-a-historical/SHA256SUMS",
+        "checked": 14,
+        "passed": true
+      },
+      {
+        "manifest": "issue19-consolidated-final-20261123/source-b-user-supplied/SHA256SUMS",
+        "checked": 7,
+        "passed": true
+      }
+    ],
+    "consolidatedSourceIndex": {
+      "bindings": 23,
+      "allMatch": true
+    },
+    "historicalManifestIncludedFiles": {
+      "bindings": 13,
+      "allMatch": true
+    }
+  },
+  "originalSourceArchives": [
+    {
+      "bytes": 31238,
+      "sha256": "79e8d8dd8881f9b7f04d7c9c776400e70c1418a832182372df20252ea2aae5a7",
+      "checksumVerified": true,
+      "name": "TV3_Issue19_Final_Review_20261123.zip",
+      "verificationByTV4": "NOT_DOWNLOADED_OR_EMBEDDED; original envelope bytes unavailable; checksumVerified=true is TV3 provenance claim, not TV4 result"
+    },
+    {
+      "bytes": 638563,
+      "sha256": "848f2ab3338322814643a5ee8a972215ac68254f8d60124fe4bba295765e3bfb",
+      "checksumVerified": true,
+      "name": "TV3_Issue19_Evidence_Review_20261123.zip",
+      "verificationByTV4": "NOT_DOWNLOADED_OR_EMBEDDED; original envelope bytes unavailable; checksumVerified=true is TV3 provenance claim, not TV4 result"
+    }
+  ],
+  "historicalIdentity": {
+    "sourceCommit": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+    "run": "20261122T151715Z-3cb615b2187f",
+    "deployment": "be09-local-20261122T151715Z-17bb72e04967",
+    "chainId": "31337",
+    "genesisHashReported": "0xbf48bc3c82308c9f095294b82fb69a9d32425e21de16ef725a531fd6ff2d8c9c",
+    "proposalId": "62849244793568770327830970846656297920794061083257884506153138992139515370756",
+    "requestId": "0xe3e4e13dc391dcd088115b4f9412b3fc3880887d679d48d92f57cd6f6f2ff3a1",
+    "operationIdReported": "0xb5553ad2a81e9e9d63e15ce37b6fdafe872279d4a76512cb96464775f0e8d34c",
+    "recipientPublicAddressReported": "0xA6BE0B9c35ade169093EF3959409330E4227C20A",
+    "offline": true,
+    "finalReportedHead": "55",
+    "sourceBindings": [
+      {
+        "path": "scripts/be09-local.sh",
+        "expectedSha256": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+        "gitBlobSha256": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-seed.mjs",
+        "expectedSha256": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+        "gitBlobSha256": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-register.mjs",
+        "expectedSha256": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+        "gitBlobSha256": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-diagnose.mjs",
+        "expectedSha256": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+        "gitBlobSha256": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-verify.mjs",
+        "expectedSha256": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+        "gitBlobSha256": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-live-test.mjs",
+        "expectedSha256": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+        "gitBlobSha256": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+        "matches": true
+      },
+      {
+        "path": "scripts/be09-provenance.mjs",
+        "expectedSha256": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+        "gitBlobSha256": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+        "matches": true
+      }
+    ],
+    "sourceBindingLimit": "Seven BE09 script hashes match immutable Git blobs; not an attestation of browser frontend build or all runtime product bytes."
+  },
+  "transactionLedger": {
+    "classification": "TV3 reported historical live results; standalone receipts unavailable",
+    "hashes": {
+      "self_delegate": "0x7a5f6e0b7527f039bf1b1dafcd88f6a696819e7e4d4962f2e97f00e7018454b6",
+      "create": "0x2231c8d8a82c41a3adbb9d754b0a5b7a9ab969e2feced47631db56463e91d9c9",
+      "vote_tv3": "0x37192fbf0acb6d34386438f7d6e1c63f938d2dbf608a72d2f03b4c097db2b5fa",
+      "vote_account_a": "0x5041c03cb5f4a2f4129eab24982db8e3496b70342d2b0b6f11167d73c465a24a",
+      "queue": "0x7054f81c9ac7bcc94e84a09e3228b84d33cf330e499833f89a737cfb996afa37",
+      "execute": "0xc0917add0bc8389361586e2af8f203381122f1ab114c750545cb97e5bc0b1a2a"
+    },
+    "blocksReported": {
+      "self_delegate": 29,
+      "create": 36,
+      "vote_tv3": 40,
+      "vote_account_a": 41,
+      "queue": 47,
+      "execute": 53
+    },
+    "tv3ForGov": "60",
+    "accountAForGov": "340",
+    "accountAVoteSigner": "unlocked local Anvil account, NOT MetaMask",
+    "totalForGov": "400",
+    "quorumGov": "200",
+    "amountBud": "1",
+    "treasuryBeforeBudReported": "9000",
+    "treasuryAfterBudCorroboratedByWorker": "8999",
+    "recipientBeforeAfterBudReported": [
+      "0",
+      "1"
+    ],
+    "governorFinalStateReported": "Executed (7)",
+    "timelockFinalStateReported": "Done",
+    "paidRequestReported": true,
+    "receiptStatus1AndOrderedEventsReported": [
+      "Transfer",
+      "BudgetDisbursed",
+      "CallExecuted",
+      "ProposalExecuted"
+    ],
+    "rawReceiptOrIndependentRequeryAvailable": false
+  },
+  "preservedFinalWorker": {
+    "path": "source-a-historical/historical/final/worker-publication-H53.jsonl",
+    "sha256": "687ffee339ec85bac70d63e8c5a54a72a86829a88721e7c9cd35f1bee188f3db",
+    "sourceLineReported": 10993,
+    "fullSourceWorkerSha256Reported": "81305b335a888dac712c943e9e0f99e526c3b339234ffef7b4c361a6dad15dba",
+    "fullWorkerAvailable": false,
+    "sourceLineProvenanceIndependentlyVerifiable": false,
+    "record": {
+      "type": "worker_publication",
+      "context": {
+        "chainId": "31337",
+        "deploymentId": "1",
+        "asOfBlock": "53",
+        "asOfBlockHash": "0x6971f932fd727f1942eef2193da9ff8378874eb9a9e805388f03eaa3024e9cb4",
+        "asOfTimestamp": "1800005850",
+        "snapshotRevision": "4ffb6fea-001f-4e55-9ef0-33cb554d563d",
+        "dataKind": "chain"
+      },
+      "counts": {
+        "proposals": 3,
+        "votes": 4,
+        "operations": 2,
+        "transfers": 3,
+        "disbursements": 2
+      },
+      "treasury": {
+        "totalIn": "10000000000000000000000",
+        "totalOut": "1001000000000000000000",
+        "balance": "8999000000000000000000"
+      },
+      "ignoredAncillaryEvents": 16,
+      "rawDecodeIssues": 16
+    },
+    "limit": "Authentic delivered excerpt bytes, not an independently fetched canonical block/receipt/API response. Record has counts/balances/context but no per-proposal/request/tx ledger."
+  },
+  "bootstrapSeparation": {
+    "height": "24",
+    "hash": "0x5860855e3ccfada24292e2347ae9b20eb3433940ba82fe50b07e340c17edfe3e",
+    "proposalId": "85033959057062009095055709644487027886063896898440812188508422353819508755887",
+    "requestId": "0x00617eacb17a392c2d2c8a1d4eebebf734a23b1fe9983b0a4f460fbc1557f7ad",
+    "forGov": "700",
+    "disbursementBud": "1000",
+    "treasuryBalanceBud": "9000",
+    "executeTx": "0x91008b6c830be0c9309f8e1fd83a05532657a3bed61d48f92c0640769a3ac0d7",
+    "notFinalTV3Proposal": true,
+    "sameRevisionDoesNotMakeSamePublication": true,
+    "arithmeticOnly": "H53 worker totalIn10000 minus totalOut1001 equals8999;1001 combines bootstrap1000 and reported TV3 payment1, not a 1001 BUD TV3 payment."
+  },
+  "screenshots": [
+    {
+      "file": "source-b-user-supplied/screenshots/01_governor_succeeded_metamask.png",
+      "applicationSnapshotHeight": "44",
+      "applicationState": "Succeeded",
+      "confirmedTransactionShown": "0x7054f81c9ac7bcc94e84a09e3228b84d33cf330e499833f89a737cfb996afa37",
+      "visible": [
+        "Chrome toolbar and loopback proposal URL matching full historical proposal ID",
+        "MetaMask-branded side panel; Account 1; 0xA6BE0...7C20A; Local Anvil; connected origin 127.0.0.1:5173",
+        "Application chain 31337, TV3 60 GOV balance/voting power, self-delegation status",
+        "1 BUD, 400 GOV For, 200 GOV quorum, Queue control",
+        "Application queue-confirmed banner while indexed state remains Succeeded; MetaMask generic confirmed toast"
+      ],
+      "doesNotProve": [
+        "Approval/signature prompt or wallet-specific signing RPC",
+        "Standalone queue receipt or block hash",
+        "All preceding actions were signed via this extension"
+      ],
+      "dimensions": [
+        1920,
+        1028
+      ],
+      "sha256": "dfdd3849ce76436f0b10e2f97be2409e65b33c1df8e3cf6855b8accbae1dbf26"
+    },
+    {
+      "file": "source-b-user-supplied/screenshots/02_governor_queued_metamask.png",
+      "applicationSnapshotHeight": "50",
+      "applicationState": "Queued",
+      "confirmedTransactionShown": "0xc0917add0bc8389361586e2af8f203381122f1ab114c750545cb97e5bc0b1a2a",
+      "visible": [
+        "Chrome toolbar and matching loopback proposal URL",
+        "Same MetaMask-branded Local Anvil Account 1 and connected origin",
+        "Application Queued, ETA, 1 BUD, 400 GOV For, 200 GOV quorum, Create/Queue hashes and Execute control",
+        "Application execute-confirmed banner while indexed state remains Queued; MetaMask generic confirmed toast"
+      ],
+      "doesNotProve": [
+        "Standalone execute receipt/status/block or Timelock Ready RPC result",
+        "Extension signing approval dialog or exact extension ID/version"
+      ],
+      "dimensions": [
+        1920,
+        1021
+      ],
+      "sha256": "b22b80f2588789cce290a33fe525dfedce6eb77592bdf1123076d282d01f7a43"
+    },
+    {
+      "file": "source-b-user-supplied/screenshots/03_governor_executed_metamask.png",
+      "applicationSnapshotHeight": "53",
+      "applicationState": "Executed",
+      "confirmedTransactionShown": null,
+      "visible": [
+        "Cropped application and MetaMask-branded side panel; no Chrome toolbar in this image",
+        "Same historical full proposal ID; app H53 and Executed; same 1 BUD/400 For/200 quorum",
+        "Create/Queue/Execute hashes match ledger; Execute control absent",
+        "Application says two vote rows and one Transfer reconciled at same snapshot",
+        "Same Local Anvil Account 1, public address suffix and connected loopback origin"
+      ],
+      "doesNotProve": [
+        "Canonical block hash (not visible), actual token balance 1 BUD or Treasury 8999 BUD",
+        "Timelock Done or request paid direct reads",
+        "Raw receipt/events/API response or extension signing actions"
+      ],
+      "dimensions": [
+        1920,
+        878
+      ],
+      "sha256": "3a920d35869b5b6f7c85c601d872480dcefb24da3428435922f8ec6b926bf198"
+    }
+  ],
+  "extensionEvidenceLimit": "Visible MetaMask branding/account/network/origin corroborates the reported browser session. No captured signing prompt, extension ID/version, authorization RPC or raw receipt; images alone do not prove which provider submitted each tx. Image03 is cropped and lacks Chrome toolbar. All images are1920px wide, not390/1366 viewport or keyboard evidence.",
+  "healthClassification": {
+    "rawWorkerIgnoredAncillaryEvents": 16,
+    "rawWorkerRawDecodeIssues": 16,
+    "reportedDecodeErrors": 0,
+    "standaloneFinalHealthResponse": false,
+    "decision": "Preserve degraded/ancillary-warning status. Do not equate rawDecodeIssues to decodeErrors; zero decode errors is historical report only, not directly verified here."
+  },
+  "minimalMissingHistoricalBytes": [
+    {
+      "item": "Final execute receipt plus raw logs for the exact execute hash/block53",
+      "purpose": "Bind status1 and Transfer/BudgetDisbursed/CallExecuted/ProposalExecuted to proposal/request/operation/recipient/1e18 raw BUD",
+      "requirement": "Only ask for already-preserved bytes; unavailable after chain loss, do not reconstruct."
+    },
+    {
+      "item": "Full raw final API HTTP status/headers/JSON: detail, votes, transfers, summary, health and context/publication response",
+      "purpose": "Bind matching proposal/request/payment and degraded health to H53/hash/revision; worker aggregate alone cannot prove per-proposal API response",
+      "requirement": "Only if saved; no bootstrap response substitution."
+    },
+    {
+      "item": "Existing direct contract read outputs at the same H/hash, if preserved",
+      "purpose": "Corroborate Governor7, TimelockDone, paidRequest and before/after recipient balances",
+      "requirement": "Keep reported classification if absent; not a demand to restore or rerun old campaign."
+    }
+  ],
+  "currentSourceAcceptanceGates": [
+    {
+      "case": "Source/run attribution",
+      "expectedBytes": "Approved exact revision + relevant file hashes, clean disposable run/deployment/manifest/genesis, public account/chain, browser and installed extension ID/version/origin. Do not publish wallet secrets. Current Dev6766e5e is distinct from historical e8e443c; PR60/61 integration is not whole-approved."
+    },
+    {
+      "case": "Wrong network using real extension",
+      "expectedBytes": "Network/chain mismatch visible in actual extension and UI; guarded signing controls; actual action attempt and no send/no receipt; restore correct network and show recovery."
+    },
+    {
+      "case": "Refuse/cancel wallet confirmation",
+      "expectedBytes": "Actual extension approval dialog then user Reject/cancel; app rejection/error and retained safe state; error4001 when emitted; no broadcast/tx hash. Closing a signing dialog is not Governor.cancel."
+    },
+    {
+      "case": "Controlled revert/error and retry",
+      "expectedBytes": "Safe disposable precondition, exact attempted action/call bytes, real extension outcome and app error/retry. If broadcast, raw failed receipt status0 + canonical block and unchanged state; if extension/estimation blocks send, record that accurately, not as mined revert. Successful retry receipt/publication if exercised."
+    },
+    {
+      "case": "Account switching during flow",
+      "expectedBytes": "Actual extension account change A→B, accountsChanged/UI address+power refresh, stale intent invalidation/disabled state and no inadvertent send by wrong account. New-account action only if required to establish behavior."
+    },
+    {
+      "case": "Current form/HTML/layout/keyboard",
+      "expectedBytes": "Reuse qualifying exact-source #36/#41 evidence; BigInt/address/description rejection/unchanged calldata, HTML literal-safe rendering,390/1366 captures and keyboard focus trace. Adapter coverage must remain labelled adapter, not extension."
+    },
+    {
+      "case": "Current-source happy path only if current acceptance is sought",
+      "expectedBytes": "One new proposal on approved source with new run ID; extension actions bound to saved raw receipts/logs and same-H/hash/revision contract/worker/API/UI publication. No rerun of entire historical campaign and no retroactive relabeling of e8e443c evidence."
+    }
+  ],
+  "relatedReceiverIssues": {
+    "previousReview": "tv4-20261123-bundles.md and tv4-20261123-bundles.json",
+    "issue40Comment": 7093754608,
+    "issue42Comment": 7093754308,
+    "newChecksPerformedHere": false,
+    "remainingPerPriorReview": [
+      "#40 retained raw lifecycle/final PID-port-Windows restoration and transport/status outputs, only if saved",
+      "#42 receiving-machine API restart before/after context/checkpoint/digest/six responses; not another BE06 rebuild/checksum campaign"
+    ],
+    "staleWaitingReviewScreenshotIsNotNewEvidence": true
+  },
+  "safety": {
+    "archiveHandledInMemory": true,
+    "onlyPngExtractedToTemporaryDirectory": true,
+    "secretFilesExtractedToRepository": false,
+    "walletSecretValuesIncluded": false,
+    "historicalOrPersonalWalletAccessed": false,
+    "githubMutation": false,
+    "productOrHarnessEdits": false,
+    "testsBuildLintFormatterRun": false
+  },
+  "draftIssue19Comment": "## TV4 — đã nhận và review bytes #19 (23/11/2026)\n\nĐã tải attachment thực tế: SHA256 `592361fd38fdd85a768d1bac686a2e03d3fd994a83775988ec9f185008f07614`, đúng **28 file**, checksum top-level **27/27**, Source A **14/14**, Source B **7/7**; 7 BE09 source hashes khớp Git `e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0`. Không còn blocker “chưa chuyển ZIP/ảnh”.\n\n**Tiếp nhận happy-path lịch sử có giới hạn**, không phải full/current-source sign-off: run `20261122T151715Z-3cb615b2187f`, deployment `be09-local-20261122T151715Z-17bb72e04967`, proposal `62849244793568770327830970846656297920794061083257884506153138992139515370756`, request `0xe3e4e13dc391dcd088115b4f9412b3fc3880887d679d48d92f57cd6f6f2ff3a1`. Ảnh thực có MetaMask/Account 1/Local Anvil và app Succeeded H44 → Queued H50 → Executed H53; 400 For/quorum200/1 BUD. Hai ảnh đầu còn ghi tx đã xác nhận trước khi indexer cập nhật, ảnh cuối có Create/Queue/Execute hashes và bỏ Execute. Đây là hỗ trợ hình ảnh cho happy path TV3, **không** phải ảnh approval/signature prompt hay raw receipt. 340 GOV của Account A là unlocked Anvil, không phải MetaMask.\n\nRaw worker H53 lưu hash `0x6971f932fd727f1942eef2193da9ff8378874eb9a9e805388f03eaa3024e9cb4`, revision `4ffb6fea-001f-4e55-9ef0-33cb554d563d`, Treasury8999; tổng chi1001 = bootstrap1000 + khoản TV3 1. Bootstrap H24/proposal850339…55887/700 For không được gộp thành final receipt. Raw line có `ignoredAncillaryEvents=16`, `rawDecodeIssues=16`; “0 decode errors” chỉ là kết quả TV3 đã báo, chưa có full health JSON. Không gọi fully healthy.\n\n**Chỉ còn xin bytes tối thiểu nếu đã được giữ**, không rerun cả campaign cũ: final execute receipt+logs; raw API publication H53 (headers/status/context và detail/votes/transfers/summary/health) cùng direct contract reads nếu còn. Chain cũ offline và chưa có các file đó; giữ giới hạn, không dựng receipt hoặc dùng disposable chain/chainId/địa chỉ trùng làm proof lịch sử. Hai original ZIP hashes trong index là provenance do TV3 khai báo; file ZIP gốc không nằm trong attachment nên TV4 chỉ tự kiểm được member bytes.\n\n**Gate còn mở trên revision đã được chấp thuận:** real-extension wrong-network, refusal/cancel-confirmation, controlled revert/error+retry và account switch; lưu precondition→thao tác extension→UI/error→RPC/receipt/no-broadcast phù hợp từng case. Cancel popup không phải Governor.cancel. Form BigInt/address/description/HTML-safety và 390/1366/keyboard có evidence riêng #36/#41; dùng lại exact-source evidence đã đủ, không ép chạy lại toàn luồng cũ. Ghi source/hash, browser+extension identity/version, run/deployment/manifest, account công khai/chain, proposal/request/tx và cùng H/hash/revision; adapter/unit không thay extension. Nếu cần acceptance happy path trên source mới, chạy một proposal mới dưới run ID mới và lưu raw receipt/API từ đầu, không gán nhãn e8e443c thành Dev.\n\n#19 vẫn **FULL_ACCEPTANCE_PENDING**. #40/#42 đã có TV4 scoped review riêng; không dùng ảnh waiting-review cũ để yêu cầu lại checksum/rebuild. Chi tiết: `docs/evidence/tv4-20261123-wallet-review.{md,json}` (review evidence; không chứa key/seed/password).\n"
+}

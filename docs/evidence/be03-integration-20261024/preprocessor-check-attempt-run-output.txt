@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "error": {
+    "message": "out/GovernanceAttacks.t.sol/GovernanceAttacksTest.json: source mismatch tests/invariant/GovernanceInvariant.t.sol\n+ actual - expected\n\n+ '0x00ad4e272699612aec48d5a4ef724502f2198fc75f97b80079e5686f819951af'\n- '0x08bbba3abd9672d50c171ea8c5122e5c7d94d5599681f8bd6f6d4a53c717cf11'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: out/GovernanceAttacks.t.sol/GovernanceAttacksTest.json: source mismatch tests/invariant/GovernanceInvariant.t.sol\n+ actual - expected\n\n+ '0x00ad4e272699612aec48d5a4ef724502f2198fc75f97b80079e5686f819951af'\n- '0x08bbba3abd9672d50c171ea8c5122e5c7d94d5599681f8bd6f6d4a53c717cf11'\n\n    at file:///D:/dao-budget-simulator/docs/evidence/be03-integration-20261024/run-integration.mjs:100:20"
+  },
+  "cleanup": {}
+}
+

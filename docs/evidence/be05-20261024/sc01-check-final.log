@@ -1,0 +1,4 @@
+command=python3 scripts/check.py
+SC01 OK: compiler ABI, calldata, descriptionHash and proposalId agree
+
+exit_code=0

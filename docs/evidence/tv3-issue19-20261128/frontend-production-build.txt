@@ -1,0 +1,33 @@
+Command: npm --prefix frontend run build
+StartedAt: 2026-11-28T09:52:48.639Z
+
+> frontend@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 546 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                              0.56 kB │ gzip:   0.34 kB
+dist/assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2     10.25 kB
+dist/assets/inter-greek-ext-wght-normal-DlzME5K_.woff2      11.23 kB
+dist/assets/inter-cyrillic-wght-normal-DqGufNeO.woff2       18.74 kB
+dist/assets/inter-greek-wght-normal-CkhJZR-_.woff2          18.99 kB
+dist/assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2   25.96 kB
+dist/assets/inter-latin-wght-normal-Dx4kXJAl.woff2          48.25 kB
+dist/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2      85.06 kB
+dist/assets/index-B3X_CqH-.css                              70.82 kB │ gzip:  14.23 kB
+dist/assets/ccip-BBew6uBy.js                                 2.83 kB │ gzip:   1.30 kB
+dist/assets/index-C0S8cMAW.js                              753.81 kB │ gzip: 218.14 kB
+
+✓ built in 1.10s
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Exit code: 0
+Signal: none
+

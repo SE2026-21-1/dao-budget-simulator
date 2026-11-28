@@ -1,0 +1,813 @@
+{
+  "format": "tv4-approved-source-ui-v1",
+  "status": "PASS",
+  "verification": {
+    "command": [
+      "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+      "--import",
+      "tsx",
+      "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+      "--postgres-bin",
+      "/tmp/dao-tv4-pg18-20261123/node_modules/@embedded-postgres/linux-x64/native/bin",
+      "--output",
+      "/tmp/qa07-approved-keyboard-e2e-20261123-final",
+      "--project-root",
+      "/tmp/dao-tv4-approved-e2e-20261123"
+    ],
+    "exitStatus": 0,
+    "driver": "Owned real headless Chrome + unlocked EIP-1193 Anvil adapter, NOT MetaMask",
+    "startedAt": "2026-11-23T08:49:02.602Z",
+    "finishedAt": "2026-11-23T08:50:16.095Z"
+  },
+  "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "qaHarness": {
+    "path": "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+    "sha256": "2e17c4a479eff7f66bd6f0a056919a455469bcd1b2e324ec99c59c45243f7c1e",
+    "keyboardSha256": "19aeec782b4b5db62e7486682c1f8e42bd20dc2cdd37265f6901e1ef45384dff"
+  },
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+    "postgresBinary": "postgres (PostgreSQL) 18.4",
+    "postgres": "PostgreSQL 18.4 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "playwright": "1.56.1",
+    "chrome": "157.0.8103.38"
+  },
+  "sourceHashes": {
+    "contracts/BudgetGovernor.sol": "2210a79c91a3458e60efe57cde13d8cd39696956fd83269ca168e300a3105a5b",
+    "contracts/BudgetToken.sol": "304909510e8e39e39292990bca1008e91421ad14c41d729f2e43e857ad025c53",
+    "contracts/GovernanceToken.sol": "864dc5d1c1691568d3e56988246f9fe12b2aeecbb05b54753ce78e76e1f091e8",
+    "contracts/Treasury.sol": "78f605760373a5dc59374b8f13e7dd71b7be7457b012e35618b406b675a6c577",
+    "contracts/interfaces/ITreasury.sol": "0eba1e80a055f135b69ab2a370c601ad126e4e8921d647f110fe8c787decaa16",
+    "indexer/abi-registry.ts": "49ac2246021e5bbad532ab67a52ff96ea48f9ce32674a5e5fd4c642d80e88fa4",
+    "indexer/api/main.ts": "99082e575492d4fb26b28c698fb41a7ee1f32c4c7437b1af912596c217dc1d68",
+    "indexer/api/server.ts": "935fc5bcb7aedc7408cf8963e720c91a19597f23fad986810cfdb385ddaff1c1",
+    "indexer/be06/cli.ts": "e156e45aab265c16f5993ff99620aae9b103f1c5ab7b78391965b1fb214173f2",
+    "indexer/be06/compare.ts": "0a58da3c272849a4891f4693fafb2cbce0a919e592896191b1dab7c6e593cf9b",
+    "indexer/be06/manifest.ts": "df32fddcd78ab1e68fa256ac1a536741bc86af43c1c5d6285ad52c2619179d67",
+    "indexer/be06/rebuild.ts": "0dba35e0f6d28100379bb516f924dd4abb9697154ce165d66636436d4758a9ac",
+    "indexer/cli.ts": "2b695bc873b1d0c3ba118e9a703f2b6783b6cc17e3d5504058580c3df125e2eb",
+    "indexer/config/be06.manifest.example.json": "595c7b0511e6bed65c109ccf7dfcbf8cede74186ce93084836634d96d0cf82a5",
+    "indexer/config/example.json": "9eef6d16a3755f789acfe69c522a180bc5d9c9f1f5e2d73438c11456711286d0",
+    "indexer/config/example.metadata.sql": "2c46e30630a3758e6a8bbbf891a5f2961d114a12c496745bf23c915e2a3f5b1b",
+    "indexer/config.ts": "74f0210b544026f5ea2a933f380006d2f4222be51c60e38ea81dc8facacee073",
+    "indexer/decoder.ts": "0e6f532f4be6c41e66dba927deb1d03f673bc1d0bf37f8c97bca7ed51f218142",
+    "indexer/errors.ts": "745861f561b7ca6eebd2a58e6e2bfae40ee33910b6278486a2ec18b8ceea7507",
+    "indexer/projection/chain.ts": "fa3537d422aa3672afd54b3cdacf382b9d457ce4b0514a8f7da3cee357a02fbe",
+    "indexer/projection/model.ts": "2239615b0f3d6a193aec31adecedb3b16b2e205027d32acf10638e3f4011093b",
+    "indexer/projection/projector.ts": "8eb8b10f1b7fd0f2d8316adc2e2b18d98ab74ac2eeaca63b45d3bbc4babd565c",
+    "indexer/reader.ts": "330826dff9ce15abf84ec2f8e183a7dacd7483643116895f1c988cbc8107e69e",
+    "indexer/recovery.ts": "330b99e7aaaad8d56bfd06ec5ed114360691aca27c4cb95873070eb9a9ba9418",
+    "indexer/rpc.ts": "2a0fa4bb5b4f994a0685550885c56e0633324d395a2f3635a977233df1065084",
+    "indexer/scanner.ts": "f8d4ae46d35ce1aa167ac935fa441fdbc53403fd712eb8e1a869541596727fdf",
+    "indexer/scope.ts": "1ea444db4cdbe01ac40a36e1a57ae2696d1672250bc9436b601056f84941e472",
+    "indexer/storage.ts": "0b4e6a907942f702e4e0879e26a30cbd9b2fa7e2abc6fc8e9a2a306db6ded220",
+    "indexer/syncer.ts": "183a3df6b00afb89ce48d43ce238b21c9c85755a0a03099fdfcbfca6a124abd4",
+    "indexer/types.ts": "d966da34905f076f5909f60dfcac5e6ca8f2b2b1150b6d69189efe3bee6decfa",
+    "indexer/worker.ts": "a2206ff5c25fa351c7c5f32ea4c32bc1b7e0252eb6af54fe54d49945b612ee6e",
+    "database/migrations/001_initial.sql": "6414d13b851f24da4cc219ef32d21a5848a9d0776e1316cc81aac36275e4a4e6",
+    "database/migrations/002_be03.sql": "8a45fe20cf3a38ec44523a43ef27db6662a86caa15d8fd2a4d0dc82172071659",
+    "database/migrations/003_be04.sql": "65fece15c327045793d06fca6efc0297290d97c0cd66cf1f7a3d24592ec9c5f8",
+    "database/migrations/004_be05_api.sql": "f643762e4719aee8c0d35bfc512db0f7cde511e4c50ceeb44d82b8794d076911",
+    "database/migrations/005_be07.sql": "490ee96446f4c4a8920f0f3af177a90772cbde50afd2df9de13da0c4f520e57e",
+    "frontend/src/App.tsx": "d70e848aa0b04459aabec033496185ae68b009b952163e228886c693dfa56d98",
+    "frontend/src/abi/BudgetGovernor.json": "fff98f26ce17855e6382c7640df5af6b43a50b5468aeb462bfe21c7f7efe2829",
+    "frontend/src/abi/Treasury.json": "9e0e4639138e606f25610ebff74ebc1b295c77e00374831545367149daa7a583",
+    "frontend/src/chain/config.test.ts": "828fe78cda4c9a80e00adba3c5432ac2734571b7440ff786bd8502d488bdf0b4",
+    "frontend/src/chain/config.ts": "ee12f0db5fa047ed10a02520e063bc6976552cd22a4e1b6d048920fb1f28dd79",
+    "frontend/src/chain/governanceActions.test.ts": "952ade6d50f4db69f7abe0f3a4921ccb6181c5f4cbf364c163d9b3eaebed4eca",
+    "frontend/src/chain/governanceActions.ts": "5c0553ec713a75ba77f70eb6eef8524975a0fd19b6e2934f3e9bd5386d662e3e",
+    "frontend/src/chain/sc06-v1.vectors.json": "459253463c700084c1a939b02a3f293042b95b62db2b621c7070c7c7aa0864d5",
+    "frontend/src/chain/transactions.test.ts": "c490df52825f9b269f2d56dd9b2eae8a399e841ab8410599904d8649efdca6e3",
+    "frontend/src/chain/transactions.ts": "e75f9765d73c565a761f1ea4390d8c3aa30bf7d8036681ff0fc6c0097ce8e9a8",
+    "frontend/src/chain/useTransaction.ts": "f49a65a62c05ed23b95c23c00cf74dbfd96c74be505b3667f84a4d83a7c60558",
+    "frontend/src/chain/wallet.test.tsx": "27aa264f09df810e5232b4f762f2b9083c0c231cdc646f7c988e4d8fb24dcb4a",
+    "frontend/src/chain/wallet.tsx": "5113f6e86b055cc867db9ef05fd3becb652b40a3a72ee64193aa8a3b426ec581",
+    "frontend/src/chain/walletProviders.test.ts": "2d8133fd0ca53e085a0318f30898ca3a9ba7cc0a72b588011655b5ca0795bdf9",
+    "frontend/src/chain/walletProviders.ts": "ee35b90f1775bcc0aef3b2cd363b3ae7c153cfc514b24d0846cb39edb55dda68",
+    "frontend/src/components/ApiHealth.tsx": "baabdea96756785bbd7ad6ddcbe5f42681e51465a65fa5278ee35a2910007292",
+    "frontend/src/components/EditorialActivityList.tsx": "5a6b947801edf8a44c83bc51d58acee5588b75685962a48fe6c15cdae9c4fa25",
+    "frontend/src/components/EditorialDonutChart.tsx": "2b65b68dc64e3ebe39ca07ad1b9c526577acbf6512aae51ae1bc9209bb76bfbd",
+    "frontend/src/components/EditorialIcons.tsx": "0f25d0fa691b59b5a7c29c24f722e2d64e0a80a3b917520eb03c9598b9dac69d",
+    "frontend/src/components/EditorialTreasuryChart.tsx": "a2a03bc465985377457386c4953f898482a879f8186c549f31e7610280a02082",
+    "frontend/src/components/FixtureLoadState.tsx": "d983ae2afa61bc6bcc866d6376055c3cffbfe1fe529e5962fc914a1f31007166",
+    "frontend/src/components/ProposalActions.tsx": "580e343720f128d54c000094166ab620522b27bae8534a39cdf9b248b192e7c1",
+    "frontend/src/components/SnapshotInfo.tsx": "6bfac6aa8877667d14729a537566ac28b732970721e7503a6b7455e316b9feae",
+    "frontend/src/components/TransactionStatus.tsx": "63774918d6a0454ad71c1f31f215a5a2e6c089d3556b4838e20e35ae1155e0a0",
+    "frontend/src/components/TreasurySection.test.tsx": "e98f7a4db4604fe015671f3f0119ec7b2a55a2fa6989f2a0c701a46ec3d30048",
+    "frontend/src/components/TreasurySection.tsx": "5472b12fa4f325b6c6d78e077f700124921a98b825b7639b7fbae447223d2a64",
+    "frontend/src/components/WalletPanel.test.tsx": "85ba343ec468e84c79955d6745df9e2e1d11722526331571a4bc0eeade17a176",
+    "frontend/src/components/WalletPanel.tsx": "8cfd68e1614b0fa123dc8520141c12df459d495dfa8569aada117929cb486889",
+    "frontend/src/data/api.integration.test.ts": "9ffe907004f3737c86b2bb056d9e80de0b9e6ec547f5aef06c2b14db5c64f677",
+    "frontend/src/data/api.live.test.ts": "62c9d520a2af588f729da587fc00e96aa91aa570756df93e8dde7b9c17a02e74",
+    "frontend/src/data/api.test.ts": "3b51c819a970f4447bc489d901023b3a61f2b9039ed1efeaff97e1779e6b48f0",
+    "frontend/src/data/api.ts": "a2d423728ae2242b8cb4a0d91e59365c51e4671c4de0924177a43395a65934a5",
+    "frontend/src/data/formatBUD.ts": "0e9bf7071f039a0ba9890b358666a298ce4fa6cce7bca91331a8df203bc02cbc",
+    "frontend/src/data/proposals.ts": "ef69703194f404089c00288367c3cd54e3e1ca53f1c833fab8ba3daf21eb32ee",
+    "frontend/src/data/useProposalFixtures.test.tsx": "a9d594b8befd777ac1419121a2b05f050d7273331d1495bda6279a1ebd9b9c63",
+    "frontend/src/data/useProposalFixtures.ts": "70c5d50d94b8e31470c920e629e6655bd9f17750a821127de4f442d8c6a3fc3c",
+    "frontend/src/index.css": "515543a51bd2b78fb50dc273f62993e159e7cd160c40fd5fd051164b418a79b7",
+    "frontend/src/main.tsx": "e0ed2a0d2689bc8865a6ee2133eaca681c85a441b9d48917b0a74b9aa328779a",
+    "frontend/src/pages/CreateProposalPage.tsx": "60375f3dd8d67ba5d29bbae1d31e30f3c787f623dd892918d23e71571d8a4de3",
+    "frontend/src/pages/DashboardPage.tsx": "71917851a815dad4b78ae36508c3cfc4946bfcc408ad802c3c666046ae2d88de",
+    "frontend/src/pages/GovernancePage.tsx": "c59b3a586a91342fae4c06037add98142a5f0dc8867f87131f6182ef8e8d7541",
+    "frontend/src/pages/ProposalDetailPage.test.tsx": "25a75b3e29a268bf1932f04b06de81bef307214b6876d9ca2f65553ea1d28741",
+    "frontend/src/pages/ProposalDetailPage.tsx": "efebae5c49a726333b5da0e798c84498ea4e36d4af396ad1fd9b34de4a71cbba",
+    "frontend/src/pages/ProposalListPage.tsx": "97b1836e0f7e374f6c8481affcb82c97facbf7eda0c24bea1489fb93e29de3ec",
+    "frontend/src/pages/TreasuryPage.tsx": "846d800380524ca3472cea6974c25b8121b22ba4791155a00777eef2fececa8d",
+    "frontend/src/pages/proposalTimeline.test.ts": "a22e81a9ea6a5c50e210f11607eca6ef4c22b8f63241fd436b7f41e9535f80cb",
+    "frontend/src/pages/proposalTimeline.ts": "3e0cee2fc8088c4574553fde5c13d711273865e5052d2950f1e2a1f0fc627842",
+    "frontend/src/swiss.css": "9b9e8ede9a0f744feaf0bd7faaf60deee27ac77080299305152dbb56e07fb325",
+    "frontend/src/test/deferred.ts": "51d5a6d3a6fa79b6e28df067daa65924fefcb55934586d70bf65ad57388e6963",
+    "frontend/public/favicon.svg": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66",
+    "frontend/public/runtime-config.js": "53a639dde4a6dc2538b7ed03cf551dee1b6a42203eac063eccc5362b24cbb0ac",
+    "scripts/governance_local.mjs": "1347135bf5ec891a8b8685b6f1b67f5be526683e7d8e05c15d0ffeb556e9b87c",
+    "scripts/smoke_lifecycle.mjs": "1de44fa74be2cfed90ce0efebeca93d59fcc9d0a05eed1829155fd14b6544576",
+    "package-lock.json": "51b35bcbae6c1037539ce795258cb01552f0b06ba9e7bdc1cef2645067d2277d",
+    "frontend/package-lock.json": "71af45e0f18441b6d0f4eb2463b951748390504ca501b875012a21a202221b3e",
+    "foundry.toml": "d4f66f88849cacb82a245cd477542810a0bd01a854764f6f8db8b8ffa0c215ce",
+    "foundry.lock": "7898518f8f76e80fd46302c131516b276971888719710830c317da0d21c297d9"
+  },
+  "identity": {
+    "requestId": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+    "proposalId": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+    "deploymentId": "qa07-e2e",
+    "chainId": "31337",
+    "addresses": {
+      "GOV": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "BUD": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "Treasury": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "Timelock": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "Governor": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+    }
+  },
+  "keyboard": [
+    {
+      "width": 1366,
+      "height": 900,
+      "steps": [
+        {
+          "label": "skip-link",
+          "tag": "A",
+          "id": "",
+          "text": "Đến nội dung chính",
+          "href": "#main-content",
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 20,
+          "y": 10,
+          "width": 181.703125,
+          "height": 52,
+          "viewport": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "target": "#proposal-title",
+          "tabs": 4,
+          "reverse": false
+        },
+        {
+          "label": "title",
+          "tag": "INPUT",
+          "id": "proposal-title",
+          "text": "",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "boxShadow": "rgba(8, 127, 91, 0.01) 0px 0px 0px 0.303924px",
+          "x": 309.96875,
+          "y": 827.03125,
+          "width": 842,
+          "height": 44,
+          "viewport": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "label": "review-button",
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Tiếp tục: xem lại",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 309.96875,
+          "y": 817.59375,
+          "width": 144.5625,
+          "height": 44,
+          "viewport": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "target": "button:text-is(\"Chỉnh sửa\")",
+          "tabs": 1,
+          "reverse": false
+        },
+        {
+          "label": "edit-button",
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Chỉnh sửa",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 328.96875,
+          "y": 806.171875,
+          "width": 102,
+          "height": 44,
+          "viewport": 1366,
+          "scrollWidth": 1366
+        },
+        {
+          "target": "nav[aria-label=\"Điều hướng sidebar\"] a[href=\"/proposals\"]",
+          "tabs": 12,
+          "reverse": false
+        },
+        {
+          "label": "proposal-navigation",
+          "tag": "A",
+          "id": "",
+          "text": "Đề xuất",
+          "href": "/proposals",
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 16,
+          "y": 236.578125,
+          "width": 217,
+          "height": 44,
+          "viewport": 1366,
+          "scrollWidth": 1366
+        }
+      ],
+      "dimensions": {
+        "viewport": 1366,
+        "scrollWidth": 1366
+      },
+      "status": "PASS"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "steps": [
+        {
+          "label": "skip-link",
+          "tag": "A",
+          "id": "",
+          "text": "Đến nội dung chính",
+          "href": "#main-content",
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 20,
+          "y": 10,
+          "width": 181.703125,
+          "height": 52,
+          "viewport": 390,
+          "scrollWidth": 390
+        },
+        {
+          "target": "#proposal-title",
+          "tabs": 4,
+          "reverse": false
+        },
+        {
+          "label": "title",
+          "tag": "INPUT",
+          "id": "proposal-title",
+          "text": "",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "boxShadow": "rgba(8, 127, 91, 0.098) 0px 0px 0px 2.85802px",
+          "x": 31,
+          "y": 738.90625,
+          "width": 328,
+          "height": 44,
+          "viewport": 390,
+          "scrollWidth": 390
+        },
+        {
+          "label": "review-button",
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Tiếp tục: xem lại",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 31,
+          "y": 753.46875,
+          "width": 144.5625,
+          "height": 44,
+          "viewport": 390,
+          "scrollWidth": 390
+        },
+        {
+          "target": "button:text-is(\"Chỉnh sửa\")",
+          "tabs": 1,
+          "reverse": false
+        },
+        {
+          "label": "edit-button",
+          "tag": "BUTTON",
+          "id": "",
+          "text": "Chỉnh sửa",
+          "href": null,
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 50,
+          "y": 754.890625,
+          "width": 102,
+          "height": 44,
+          "viewport": 390,
+          "scrollWidth": 390
+        },
+        {
+          "target": "nav[aria-label=\"Điều hướng sidebar\"] a[href=\"/proposals\"]",
+          "tabs": 7,
+          "reverse": false
+        },
+        {
+          "label": "proposal-navigation",
+          "tag": "A",
+          "id": "",
+          "text": "Đề xuất",
+          "href": "/proposals",
+          "focusVisible": true,
+          "outlineStyle": "solid",
+          "outlineWidth": "2px",
+          "boxShadow": "none",
+          "x": 133.53125,
+          "y": 8,
+          "width": 96.84375,
+          "height": 44,
+          "viewport": 390,
+          "scrollWidth": 390
+        }
+      ],
+      "dimensions": {
+        "viewport": 390,
+        "scrollWidth": 390
+      },
+      "status": "PASS"
+    }
+  ],
+  "checks": [
+    "same browser-created proposal: propose/vote/queue/reverted-execute/funded-execute; receipts, worker, API, UI and canonical H/hash reconciled",
+    "adapter wrong-network locks signing; adapter code4001 rejection with no tx; confirmed-not-indexed; real receipt revert; loading/network error/retry; actual worker recovering503 and cursor409 with canonical recovery",
+    "desktop 1366x900 and mobile 390x844 screenshots captured from real rendered pages"
+  ],
+  "reconciliation": {
+    "detail": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "44",
+          "asOfBlockHash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f",
+          "asOfTimestamp": "1800000524",
+          "snapshotRevision": "4092014d-3d76-4f92-871d-788ca152764c",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "46",
+            "confirmedBlock": "44",
+            "indexedBlock": "44",
+            "publicationBlock": "44",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:06.457Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:06.458+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "QA07 browser receipt to real worker to API to UI; one proposal and deployment.",
+          "state": "Executed",
+          "title": "QA07 same-proposal browser lifecycle",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0xd54b5de29ec7092d11aa29d43542271857f5e8434a042fd89a5f5389b59c06bf",
+            "blockNumber": "22",
+            "transactionHash": "0x08894027b6c6a98d2da51781a0b4320318afa76fedd3767812c23387305ea18c",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800000392",
+          "proposer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "snapshot": "1800000092",
+          "calldatas": [
+            "0x6664ac9186c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800000517",
+            "salt": "0x5b72debffbc66d5be5c05c8ff79eb99f77050e70ffddaa5c2346b221e498fa85",
+            "status": "Done",
+            "queuedAt": "1800000397",
+            "operationId": "0xe5cf6ab90a3686be8188ab769a8818af63fb66dfedeab7a68e7bd70a5d4b9e69",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+          "proposalId": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+          "description": "{\"version\":1,\"title\":\"QA07 same-proposal browser lifecycle\",\"body\":\"QA07 browser receipt to real worker to API to UI; one proposal and deployment.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0xeabee4a83615a3c563dd01e505c99726a5f29de302d5148a33c5ef6342106dd7",
+            "created": "0x08894027b6c6a98d2da51781a0b4320318afa76fedd3767812c23387305ea18c",
+            "canceled": null,
+            "executed": "0x4a80649fa591c0340d11c4a41d5375311824149b14bda1cbf9a31b94859e9246"
+          },
+          "descriptionHash": "0x7c747fce1770e35bddf7d1cf2a83aafc16d5c50dffddaa5c2346b221e498fa85"
+        }
+      }
+    },
+    "transfers": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "44",
+          "asOfBlockHash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f",
+          "asOfTimestamp": "1800000524",
+          "snapshotRevision": "4092014d-3d76-4f92-871d-788ca152764c",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "46",
+            "confirmedBlock": "44",
+            "indexedBlock": "44",
+            "publicationBlock": "44",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:06.457Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:06.458+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "11000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f",
+            "direction": "out",
+            "requestId": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+            "proposalId": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+            "blockNumber": "44",
+            "transactionHash": "0x4a80649fa591c0340d11c4a41d5375311824149b14bda1cbf9a31b94859e9246",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "qa07-e2e",
+      "asOfBlock": "44",
+      "asOfBlockHash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f",
+      "asOfTimestamp": "1800000524",
+      "snapshotRevision": "4092014d-3d76-4f92-871d-788ca152764c",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "46",
+        "confirmedBlock": "44",
+        "indexedBlock": "44",
+        "publicationBlock": "44",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-23T08:50:05.073Z",
+        "lastRpcCheckAt": "2026-11-23T15:50:05.075+07:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "operationId": "0xe5cf6ab90a3686be8188ab769a8818af63fb66dfedeab7a68e7bd70a5d4b9e69",
+    "executeHash": "0x4a80649fa591c0340d11c4a41d5375311824149b14bda1cbf9a31b94859e9246",
+    "requestId": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+    "proposalId": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+    "treasuryBalance": "1000000000000000000000",
+    "recipientBalance": "11000000000000000000000",
+    "paid": true,
+    "sqlDisbursement": {
+      "request_id": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+      "proposal_id": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+      "operation_id": "0xe5cf6ab90a3686be8188ab769a8818af63fb66dfedeab7a68e7bd70a5d4b9e69",
+      "amount": "11000000000000000000000",
+      "transaction_hash": "0x4a80649fa591c0340d11c4a41d5375311824149b14bda1cbf9a31b94859e9246",
+      "block_hash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f"
+    }
+  },
+  "recovery": {
+    "gate": {
+      "indexer_state": {
+        "head": "49",
+        "phase": "recovering",
+        "lagSince": null,
+        "confirmed": "47",
+        "orphanHash": "0x0134104f70e8d686ef95597c8440093a710638d62b7f3ea26dbb4b3184b29be7",
+        "orphanNumber": "47",
+        "lastCheckedAt": "2026-11-23T15:50:09.078+07:00",
+        "lastPublishedAt": "2026-11-23T15:50:09.27325+07:00"
+      }
+    },
+    "summary": {
+      "status": 503,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "snapshotRevision": "3f6e7a4a-be66-450e-b0e8-d19a74f1efc9",
+          "asOfBlock": null,
+          "asOfBlockHash": null,
+          "asOfTimestamp": null,
+          "dataKind": "chain",
+          "sync": {
+            "status": "not_ready",
+            "headBlock": "49",
+            "confirmedBlock": "47",
+            "indexedBlock": "47",
+            "publicationBlock": "47",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:09.077Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:09.078+07:00",
+            "recoveryStatus": "recovering"
+          }
+        },
+        "error": {
+          "code": "DATA_NOT_READY",
+          "message": "Chưa có publication BE04 đáng tin cậy.",
+          "details": {},
+          "retryable": true
+        }
+      }
+    },
+    "oldCursor": {
+      "status": 409,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "snapshotRevision": "3f6e7a4a-be66-450e-b0e8-d19a74f1efc9",
+          "asOfBlock": null,
+          "asOfBlockHash": null,
+          "asOfTimestamp": null,
+          "dataKind": "chain",
+          "sync": {
+            "status": "not_ready",
+            "headBlock": "49",
+            "confirmedBlock": "47",
+            "indexedBlock": "47",
+            "publicationBlock": "47",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:09.077Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:09.078+07:00",
+            "recoveryStatus": "recovering"
+          }
+        },
+        "error": {
+          "code": "SNAPSHOT_INVALIDATED",
+          "message": "Snapshot không còn hợp lệ sau thay đổi raw/projection.",
+          "details": {},
+          "retryable": false
+        }
+      }
+    },
+    "recovered": {
+      "status": 200,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "47",
+          "asOfBlockHash": "0x85b3369dda502dbb682c148ab354dce7c32469eb58bcad5e66bcad36fab57612",
+          "asOfTimestamp": "1800000531",
+          "snapshotRevision": "3f6e7a4a-be66-450e-b0e8-d19a74f1efc9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "49",
+            "confirmedBlock": "47",
+            "indexedBlock": "47",
+            "publicationBlock": "47",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:10.499Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:10.5+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "treasury": {
+            "token": {
+              "symbol": "BUD",
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "decimals": 18
+            },
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "balance": "1000000000000000000002",
+            "totalIn": "12000000000000000000002",
+            "totalOut": "11000000000000000000000"
+          },
+          "governance": {
+            "govToken": {
+              "symbol": "GOV",
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "decimals": 18
+            },
+            "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "clockMode": "mode=timestamp",
+            "totalSupply": "1000000000000000000000",
+            "votingDelay": "60",
+            "votingPeriod": "300",
+            "timelockDelay": "120",
+            "quorumNumerator": "20",
+            "proposalThreshold": "50000000000000000000",
+            "quorumDenominator": "100"
+          },
+          "proposalCounts": {
+            "total": 1,
+            "byState": {
+              "Active": 0,
+              "Queued": 0,
+              "Pending": 0,
+              "Canceled": 0,
+              "Defeated": 0,
+              "Executed": 1,
+              "Succeeded": 0
+            }
+          },
+          "recentActivity": [
+            {
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "2",
+              "logIndex": "0",
+              "blockHash": "0x85b3369dda502dbb682c148ab354dce7c32469eb58bcad5e66bcad36fab57612",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "47",
+              "transactionHash": "0x5189e0532f124aa472f43307053cfea7a21f9661b3146865fae1c60fae2c8996",
+              "transactionIndex": "0"
+            },
+            {
+              "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "11000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x6ec7461125443cd60fa4b9e29905afe0522cb6c8f1585256453b70717e88b91f",
+              "direction": "out",
+              "requestId": "0x86c29e9808080042fecf074009a7d042848e113749ce0ac46ec9b47ffd85d3ba",
+              "proposalId": "79483937909651101352431138791574239270037473408428744582316426606884033144043",
+              "blockNumber": "44",
+              "transactionHash": "0x4a80649fa591c0340d11c4a41d5375311824149b14bda1cbf9a31b94859e9246",
+              "transactionIndex": "0"
+            },
+            {
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "2000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x154ff0ae1858da28c3970435c5b8ff6c9c6e4fa95e2c45d4e85f48aa079262ae",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "41",
+              "transactionHash": "0x23dcd22a098f5383c72c4cf3b7f7b589be10c77721e3eb5445531f3f5c50ed5e",
+              "transactionIndex": "0"
+            },
+            {
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "type": "Transfer",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "10000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x6874dfd2ea45b082dda4543b165bf1f0c67e9fd5172c728fb49b7383f9376e39",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "19",
+              "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+              "transactionIndex": "0"
+            }
+          ]
+        }
+      }
+    },
+    "oldCursorAfterRecovery": {
+      "status": 409,
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "47",
+          "asOfBlockHash": "0x85b3369dda502dbb682c148ab354dce7c32469eb58bcad5e66bcad36fab57612",
+          "asOfTimestamp": "1800000531",
+          "snapshotRevision": "3f6e7a4a-be66-450e-b0e8-d19a74f1efc9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "49",
+            "confirmedBlock": "47",
+            "indexedBlock": "47",
+            "publicationBlock": "47",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:50:10.499Z",
+            "lastRpcCheckAt": "2026-11-23T15:50:10.5+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "error": {
+          "code": "SNAPSHOT_INVALIDATED",
+          "message": "Snapshot revision đã thay đổi.",
+          "details": {},
+          "retryable": false
+        }
+      }
+    }
+  },
+  "browserErrors": [],
+  "screenshots": [
+    "keyboard-1366-skip-link.png",
+    "keyboard-1366-form.png",
+    "keyboard-1366-navigation.png",
+    "keyboard-390-skip-link.png",
+    "keyboard-390-form.png",
+    "keyboard-390-navigation.png",
+    "01-wrong-network.png",
+    "02-signature-rejected-adapter.png",
+    "03-propose-confirmed-not-indexed.png",
+    "04-confirmed-not-indexed-detail.png",
+    "05-vote-receipt.png",
+    "06-execute-reverted.png",
+    "07-execute-confirmed.png",
+    "08-executed-reconciled-ui.png",
+    "09-loading-real-transport.png",
+    "10-api-network-error.png",
+    "11-error-retry-recovered.png",
+    "12-recovery-503-ui.png",
+    "13-canonical-recovery-ui.png",
+    "14-mobile-executed.png"
+  ],
+  "limits": [
+    "UI viewport emulation, not physical mobile or screen-reader certification",
+    "Local unforked chain/time controls, not Sepolia/realtime acceptance",
+    "Product source Dev6766e5e reviewed; tooling separately hash-bound, not whole-PR60 approval",
+    "Historical first keyboard attempt incorrectly targeted hidden mobile desktop navigation; preserved separately as tooling failure, not product bug"
+  ]
+}

@@ -1,0 +1,41 @@
+Command: node --test tests/smoke/qa07-provider-observer.test.mjs tests/smoke/qa07-snapshot.test.mjs
+StartedAt: 2026-11-28T10:25:21.838Z
+✔ records requests through the function cached after discovery, including sender after account switch (5.9399ms)
+✔ preserves exact real result and thrown error while redacting signing payloads (1.9059ms)
+✔ reports immutable provider as uncovered instead of treating its empty trace as no-send (1.094ms)
+✔ detects wrapper replacement so later zero entries cannot claim continuous coverage (1.0667ms)
+✔ same publication reconciles despite changing sync freshness (2.2781ms)
+✔ detail rejects snapshotRevision mismatch (other publication fields unchanged) (1.6934ms)
+✔ detail rejects chainId mismatch (other publication fields unchanged) (0.2575ms)
+✔ detail rejects deploymentId mismatch (other publication fields unchanged) (0.3737ms)
+✔ detail rejects asOfBlock mismatch (other publication fields unchanged) (0.3171ms)
+✔ detail rejects asOfBlockHash mismatch (other publication fields unchanged) (0.3723ms)
+✔ detail rejects asOfTimestamp mismatch (other publication fields unchanged) (0.2637ms)
+✔ detail rejects dataKind mismatch (other publication fields unchanged) (0.2574ms)
+✔ transfers rejects snapshotRevision mismatch (other publication fields unchanged) (0.3545ms)
+✔ transfers rejects chainId mismatch (other publication fields unchanged) (0.4737ms)
+✔ transfers rejects deploymentId mismatch (other publication fields unchanged) (0.3109ms)
+✔ transfers rejects asOfBlock mismatch (other publication fields unchanged) (0.3668ms)
+✔ transfers rejects asOfBlockHash mismatch (other publication fields unchanged) (0.2033ms)
+✔ transfers rejects asOfTimestamp mismatch (other publication fields unchanged) (0.2628ms)
+✔ transfers rejects dataKind mismatch (other publication fields unchanged) (1.6277ms)
+✔ missing/empty summary revision undefined cannot reconcile with equally incomplete responses (0.5473ms)
+✔ missing/empty summary revision  cannot reconcile with equally incomplete responses (0.3084ms)
+✔ final API reads retain the summary snapshot when publication advances before detail and transfers (1.720901ms)
+✔ omitting the pin on /proposals/7 selects a newer publication and must fail reconciliation (0.8303ms)
+✔ omitting the pin on /treasury/transfers selects a newer publication and must fail reconciliation (0.4094ms)
+✔ rendered UI hash and revision match the summary (0.1847ms)
+✔ rendered UI revision mismatch at the same hash fails the runner oracle (0.3168ms)
+✔ rendered UI hash mismatch still fails even at the same revision (0.2417ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96.068302
+
+Exit code: 0
+Signal: none
+

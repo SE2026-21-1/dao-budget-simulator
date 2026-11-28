@@ -1,0 +1,827 @@
+[stdout] TAP version 13
+[stdout] # Subtest: BE04 live receipt polling
+[stdout]     # Subtest: keeps polling after null and returns the eventual receipt
+[stdout]     ok 1 - keeps polling after null and returns the eventual receipt
+[stdout]       ---
+[stdout]       duration_ms: 6.005433
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: times out after a finite deadline with step and transaction hash
+[stdout]     ok 2 - times out after a finite deadline with step and transaction hash
+[stdout]       ---
+[stdout]       duration_ms: 41.15044
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: reports RPC failures without exposing provider error details
+[stdout]     ok 3 - reports RPC failures without exposing provider error details
+[stdout]       ---
+[stdout]       duration_ms: 0.670004
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     # Subtest: accepts an expected revert and rejects a revert when success was expected
+[stdout]     ok 4 - accepts an expected revert and rejects a revert when success was expected
+[stdout]       ---
+[stdout]       duration_ms: 0.30055
+[stdout]       type: 'test'
+[stdout]       ...
+[stdout]     1..4
+[stdout] ok 1 - BE04 live receipt polling
+[stdout]   ---
+[stdout]   duration_ms: 49.10665
+[stdout]   type: 'suite'
+[stdout]   ...
+[stdout] # Subtest: BE06 parses the verified TV4 handoff without requiring a source deployment id
+[stdout] ok 2 - BE06 parses the verified TV4 handoff without requiring a source deployment id
+[stdout]   ---
+[stdout]   duration_ms: 3.273084
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: BE06 rejects an incomplete or unsupported manifest and a source range that skips deployment
+[stdout] ok 3 - BE06 rejects an incomplete or unsupported manifest and a source range that skips deployment
+[stdout]   ---
+[stdout]   duration_ms: 0.546903
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: manifest H and confirmation settings stay canonical and bounded
+[stdout] ok 4 - manifest H and confirmation settings stay canonical and bounded
+[stdout]   ---
+[stdout]   duration_ms: 0.396529
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: normalized compare ignores internal IDs, UUID revisions and ingestion timestamps by construction
+[stdout] ok 5 - normalized compare ignores internal IDs, UUID revisions and ingestion timestamps by construction
+[stdout]   ---
+[stdout]   duration_ms: 2.063829
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: normalized compare reports precise values for data, scope, H and hash mismatches
+[stdout] ok 6 - normalized compare reports precise values for data, scope, H and hash mismatches
+[stdout]   ---
+[stdout]   duration_ms: 0.393725
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries 429, then recovers (real HTTP)
+[stdout] ok 7 - RPC retries 429, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 40.448718
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries 500, then recovers (real HTTP)
+[stdout] ok 8 - RPC retries 500, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 13.492175
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries 503, then recovers (real HTTP)
+[stdout] ok 9 - RPC retries 503, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 9.574303
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries network, then recovers (real HTTP)
+[stdout] ok 10 - RPC retries network, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 10.994159
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries timeout, then recovers (real HTTP)
+[stdout] ok 11 - RPC retries timeout, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 86.468709
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries -32005, then recovers (real HTTP)
+[stdout] ok 12 - RPC retries -32005, then recovers (real HTTP)
+[stdout]   ---
+[stdout]   duration_ms: 6.919593
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC permanent -32601 is attempted once
+[stdout] ok 13 - RPC permanent -32601 is attempted once
+[stdout]   ---
+[stdout]   duration_ms: 3.284773
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC permanent -32602 is attempted once
+[stdout] ok 14 - RPC permanent -32602 is attempted once
+[stdout]   ---
+[stdout]   duration_ms: 3.056646
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC permanent -32000 is attempted once
+[stdout] ok 15 - RPC permanent -32000 is attempted once
+[stdout]   ---
+[stdout]   duration_ms: 2.298527
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC permanent 401 is attempted once
+[stdout] ok 16 - RPC permanent 401 is attempted once
+[stdout]   ---
+[stdout]   duration_ms: 2.344985
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC permanent 403 is attempted once
+[stdout] ok 17 - RPC permanent 403 is attempted once
+[stdout]   ---
+[stdout]   duration_ms: 1.576753
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC retries are bounded, exponential, jittered and interruptible
+[stdout] ok 18 - RPC retries are bounded, exponential, jittered and interruptible
+[stdout]   ---
+[stdout]   duration_ms: 96.298181
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: freshness changes after 30 seconds with zero new events; recovery gates are explicit
+[stdout] ok 19 - freshness changes after 30 seconds with zero new events; recovery gates are explicit
+[stdout]   ---
+[stdout]   duration_ms: 0.468617
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: recovery config validates bounded window and polling interval
+[stdout] ok 20 - recovery config validates bounded window and polling interval
+[stdout]   ---
+[stdout]   duration_ms: 3.651778
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response
+[stdout] ok 21 - invalid RPC JSON/ID is permanent; shutdown aborts an in-flight response
+[stdout]   ---
+[stdout]   duration_ms: 35.692082
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples
+[stdout] ok 22 - BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples
+[stdout]   ---
+[stdout]   duration_ms: 282.989016
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results
+[stdout] ok 23 - BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results
+[stdout]   ---
+[stdout]   duration_ms: 0.796426
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: CLI help and invalid arguments have appropriate exit codes
+[stdout] ok 24 - CLI help and invalid arguments have appropriate exit codes
+[stdout]   ---
+[stdout]   duration_ms: 6327.193427
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: CLI reports unsupported ABI as an actionable config error
+[stdout] ok 25 - CLI reports unsupported ABI as an actionable config error
+[stdout]   ---
+[stdout]   duration_ms: 2416.714614
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: CLI rejects wrong chain before attempting PostgreSQL and never prints secrets
+[stdout] ok 26 - CLI rejects wrong chain before attempting PostgreSQL and never prints secrets
+[stdout]   ---
+[stdout]   duration_ms: 2954.402001
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: config preserves bigint, validates scope and permits a pinned latest request
+[stdout] ok 27 - config preserves bigint, validates scope and permits a pinned latest request
+[stdout]   ---
+[stdout]   duration_ms: 2.255461
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: numericChainId
+[stdout] ok 28 - reject invalid config: numericChainId
+[stdout]   ---
+[stdout]   duration_ms: 0.246067
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: zeroChain
+[stdout] ok 29 - reject invalid config: zeroChain
+[stdout]   ---
+[stdout]   duration_ms: 0.087615
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: overflow
+[stdout] ok 30 - reject invalid config: overflow
+[stdout]   ---
+[stdout]   duration_ms: 0.062895
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: fractionalBlock
+[stdout] ok 31 - reject invalid config: fractionalBlock
+[stdout]   ---
+[stdout]   duration_ms: 0.096065
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: negativeBlock
+[stdout] ok 32 - reject invalid config: negativeBlock
+[stdout]   ---
+[stdout]   duration_ms: 0.0887
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: reversedRange
+[stdout] ok 33 - reject invalid config: reversedRange
+[stdout]   ---
+[stdout]   duration_ms: 0.06882
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: zeroBatch
+[stdout] ok 34 - reject invalid config: zeroBatch
+[stdout]   ---
+[stdout]   duration_ms: 0.107052
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: unboundedBatch
+[stdout] ok 35 - reject invalid config: unboundedBatch
+[stdout]   ---
+[stdout]   duration_ms: 0.167932
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: invalidRpc
+[stdout] ok 36 - reject invalid config: invalidRpc
+[stdout]   ---
+[stdout]   duration_ms: 0.172994
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: deploymentOverflow
+[stdout] ok 37 - reject invalid config: deploymentOverflow
+[stdout]   ---
+[stdout]   duration_ms: 0.073129
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid config: emptyContracts
+[stdout] ok 38 - reject invalid config: emptyContracts
+[stdout]   ---
+[stdout]   duration_ms: 0.054866
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI
+[stdout] ok 39 - reject invalid, zero or duplicate addresses, duplicate roles and unsupported ABI
+[stdout]   ---
+[stdout]   duration_ms: 2.327054
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields
+[stdout] ok 40 - VoteCastWithParams regression: compiler ABI synthetic vector preserves all six fields
+[stdout]   ---
+[stdout]   duration_ms: 17.281683
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: synthetic vectors cover all eleven required event types and source indexed layouts
+[stdout] ok 41 - synthetic vectors cover all eleven required event types and source indexed layouts
+[stdout]   ---
+[stdout]   duration_ms: 0.189682
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes governor.ProposalCreated with exact named ABI values
+[stdout] ok 42 - decodes governor.ProposalCreated with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 3.54686
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes governor.VoteCast with exact named ABI values
+[stdout] ok 43 - decodes governor.VoteCast with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.844178
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes governor.ProposalQueued with exact named ABI values
+[stdout] ok 44 - decodes governor.ProposalQueued with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.46736
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes governor.ProposalExecuted with exact named ABI values
+[stdout] ok 45 - decodes governor.ProposalExecuted with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.386791
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes governor.ProposalCanceled with exact named ABI values
+[stdout] ok 46 - decodes governor.ProposalCanceled with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.552548
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes timelock.CallScheduled with exact named ABI values
+[stdout] ok 47 - decodes timelock.CallScheduled with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 1.250806
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes timelock.CallExecuted with exact named ABI values
+[stdout] ok 48 - decodes timelock.CallExecuted with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.623171
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes timelock.Cancelled with exact named ABI values
+[stdout] ok 49 - decodes timelock.Cancelled with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.456692
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes timelock.CallSalt with exact named ABI values
+[stdout] ok 50 - decodes timelock.CallSalt with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.374145
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes treasury.BudgetDisbursed with exact named ABI values
+[stdout] ok 51 - decodes treasury.BudgetDisbursed with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.456612
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decodes budget_token.Transfer with exact named ABI values
+[stdout] ok 52 - decodes budget_token.Transfer with exact named ABI values
+[stdout]   ---
+[stdout]   duration_ms: 0.440073
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: independent hand-assembled canonical Transfer vector decodes without fixture encoder
+[stdout] ok 53 - independent hand-assembled canonical Transfer vector decodes without fixture encoder
+[stdout]   ---
+[stdout]   duration_ms: 0.615807
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: preserves uint256 above 2^53 including indexed integers and maximum proposal ID
+[stdout] ok 54 - preserves uint256 above 2^53 including indexed integers and maximum proposal ID
+[stdout]   ---
+[stdout]   duration_ms: 4.287205
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: dynamic description and reason preserve exact Unicode and whitespace
+[stdout] ok 55 - dynamic description and reason preserve exact Unicode and whitespace
+[stdout]   ---
+[stdout]   duration_ms: 1.130235
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: registry Treasury fragment matches handed-over shared JSON ABI exactly
+[stdout] ok 56 - registry Treasury fragment matches handed-over shared JSON ABI exactly
+[stdout]   ---
+[stdout]   duration_ms: 5.17649
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: ABI version is explicitly bound to contract role and cannot use object prototype keys
+[stdout] ok 57 - ABI version is explicitly bound to contract role and cannot use object prototype keys
+[stdout]   ---
+[stdout]   duration_ms: 0.659617
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC
+[stdout] ok 58 - unsupported topic and a supported ABI for the wrong event return UNKNOWN_TOPIC
+[stdout]   ---
+[stdout]   duration_ms: 0.183868
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: known events reject missing, additional and malformed indexed topics
+[stdout] ok 59 - known events reject missing, additional and malformed indexed topics
+[stdout]   ---
+[stdout]   duration_ms: 0.539849
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: known events reject truncated, odd, nonhex and trailing data
+[stdout] ok 60 - known events reject truncated, odd, nonhex and trailing data
+[stdout]   ---
+[stdout]   duration_ms: 1.078868
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: known events reject noncanonical uint8 and invalid dynamic offsets
+[stdout] ok 61 - known events reject noncanonical uint8 and invalid dynamic offsets
+[stdout]   ---
+[stdout]   duration_ms: 0.939171
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: NUL in valid Solidity description or reason is raw-only for JSONB storage
+[stdout] ok 62 - NUL in valid Solidity description or reason is raw-only for JSONB storage
+[stdout]   ---
+[stdout]   duration_ms: 1.592346
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error
+[stdout] ok 63 - invalid UTF-8 in a dynamic Solidity string produces a raw-only decode error
+[stdout]   ---
+[stdout]   duration_ms: 0.394941
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decoded, unknown and malformed logs retain every original RPC field
+[stdout] ok 64 - decoded, unknown and malformed logs retain every original RPC field
+[stdout]   ---
+[stdout]   duration_ms: 0.745466
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay
+[stdout] ok 65 - raw description, ID/calldata, zero/repeated requestId, WithParams and exact uint256 survive replay
+[stdout]   ---
+[stdout]   duration_ms: 24.449108
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: successful lifecycle links same-tx operation/request/Transfer and counts one payment
+[stdout] ok 66 - successful lifecycle links same-tx operation/request/Transfer and counts one payment
+[stdout]   ---
+[stdout]   duration_ms: 8.954253
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: unrelated BUD, self and zero transfers do not change treasury totals
+[stdout] ok 67 - unrelated BUD, self and zero transfers do not change treasury totals
+[stdout]   ---
+[stdout]   duration_ms: 3.365566
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active
+[stdout] ok 68 - timestamp boundaries and empty-block transitions: snapshot inclusive Pending, deadline inclusive Active
+[stdout]   ---
+[stdout]   duration_ms: 2.655704
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: quorum/result 0/100/0 -> Defeated
+[stdout] ok 69 - quorum/result 0/100/0 -> Defeated
+[stdout]   ---
+[stdout]   duration_ms: 2.726163
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: quorum/result 0/100/100 -> Succeeded
+[stdout] ok 70 - quorum/result 0/100/100 -> Succeeded
+[stdout]   ---
+[stdout]   duration_ms: 2.227247
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: quorum/result 200/200/0 -> Defeated
+[stdout] ok 71 - quorum/result 200/200/0 -> Defeated
+[stdout]   ---
+[stdout]   duration_ms: 2.66723
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: quorum/result 300/200/100 -> Defeated
+[stdout] ok 72 - quorum/result 300/200/100 -> Defeated
+[stdout]   ---
+[stdout]   duration_ms: 2.361027
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable
+[stdout] ok 73 - ETA inclusive Ready remains Queued; absent success receipt leaves failed execute retryable
+[stdout]   ---
+[stdout]   duration_ms: 5.918974
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: Pending cancellation and direct Timelock cancellation are represented
+[stdout] ok 74 - Pending cancellation and direct Timelock cancellation are represented
+[stdout]   ---
+[stdout]   duration_ms: 7.52347
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong ID
+[stdout] ok 75 - reject inconsistent projection: wrong ID
+[stdout]   ---
+[stdout]   duration_ms: 8.64373
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong description
+[stdout] ok 76 - reject inconsistent projection: wrong description
+[stdout]   ---
+[stdout]   duration_ms: 6.156377
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong salt
+[stdout] ok 77 - reject inconsistent projection: wrong salt
+[stdout]   ---
+[stdout]   duration_ms: 7.142372
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong ETA
+[stdout] ok 78 - reject inconsistent projection: wrong ETA
+[stdout]   ---
+[stdout]   duration_ms: 5.798353
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong executed calldata
+[stdout] ok 79 - reject inconsistent projection: wrong executed calldata
+[stdout]   ---
+[stdout]   duration_ms: 5.923969
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: missing transfer
+[stdout] ok 80 - reject inconsistent projection: missing transfer
+[stdout]   ---
+[stdout]   duration_ms: 6.238763
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: missing payment
+[stdout] ok 81 - reject inconsistent projection: missing payment
+[stdout]   ---
+[stdout]   duration_ms: 6.352767
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: wrong transaction
+[stdout] ok 82 - reject inconsistent projection: wrong transaction
+[stdout]   ---
+[stdout]   duration_ms: 6.25355
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: ambiguous transfer
+[stdout] ok 83 - reject inconsistent projection: ambiguous transfer
+[stdout]   ---
+[stdout]   duration_ms: 6.226921
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: duplicate vote
+[stdout] ok 84 - reject inconsistent projection: duplicate vote
+[stdout]   ---
+[stdout]   duration_ms: 5.0525
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject inconsistent projection: unlinked outflow
+[stdout] ok 85 - reject inconsistent projection: unlinked outflow
+[stdout]   ---
+[stdout]   duration_ms: 5.813374
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: malformed/unknown business log cannot be silently skipped
+[stdout] ok 86 - malformed/unknown business log cannot be silently skipped
+[stdout]   ---
+[stdout]   duration_ms: 1.107993
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events
+[stdout] ok 87 - replay original BE03 real receipt bytes offline: 16 explicitly recognized ancillary, 14 business events
+[stdout]   ---
+[stdout]   duration_ms: 26.052393
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: range boundaries work above Number.MAX_SAFE_INTEGER without gaps
+[stdout] ok 88 - range boundaries work above Number.MAX_SAFE_INTEGER without gaps
+[stdout]   ---
+[stdout]   duration_ms: 1.226518
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: scan includes every boundary/empty block and sorts tx/log indices; preserves raw input
+[stdout] ok 89 - scan includes every boundary/empty block and sorts tx/log indices; preserves raw input
+[stdout]   ---
+[stdout]   duration_ms: 11.50093
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: different deployment blocks retain early contract logs and clamp each RPC filter
+[stdout] ok 90 - different deployment blocks retain early contract logs and clamp each RPC filter
+[stdout]   ---
+[stdout]   duration_ms: 1.569587
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC cannot return a known contract log before its deployment block
+[stdout] ok 91 - RPC cannot return a known contract log before its deployment block
+[stdout]   ---
+[stdout]   duration_ms: 0.704412
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC cannot substitute another configured contract in a filter response
+[stdout] ok 92 - RPC cannot substitute another configured contract in a filter response
+[stdout]   ---
+[stdout]   duration_ms: 0.420872
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: duplicate transaction hashes in a header are contradictory
+[stdout] ok 93 - duplicate transaction hashes in a header are contradictory
+[stdout]   ---
+[stdout]   duration_ms: 0.372879
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: wrong chain stops before any storage write or block request
+[stdout] ok 94 - wrong chain stops before any storage write or block request
+[stdout]   ---
+[stdout]   duration_ms: 0.477303
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: latest is pinned once for the finite scan
+[stdout] ok 95 - latest is pinned once for the finite scan
+[stdout]   ---
+[stdout]   duration_ms: 1.261081
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: outside-deployment log is dropped before ABI or canonical-log validation
+[stdout] ok 96 - outside-deployment log is dropped before ABI or canonical-log validation
+[stdout]   ---
+[stdout]   duration_ms: 0.811604
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics
+[stdout] ok 97 - unknown topic and invalid ABI payload survive as raw and produce distinct diagnostics
+[stdout]   ---
+[stdout]   duration_ms: 2.10901
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: removed
+[stdout] ok 98 - reject contradictory/invalid log: removed
+[stdout]   ---
+[stdout]   duration_ms: 2.455665
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: pending
+[stdout] ok 99 - reject contradictory/invalid log: pending
+[stdout]   ---
+[stdout]   duration_ms: 0.292142
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: blockHash
+[stdout] ok 100 - reject contradictory/invalid log: blockHash
+[stdout]   ---
+[stdout]   duration_ms: 0.199351
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: block number
+[stdout] ok 101 - reject contradictory/invalid log: block number
+[stdout]   ---
+[stdout]   duration_ms: 0.199402
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: txHash
+[stdout] ok 102 - reject contradictory/invalid log: txHash
+[stdout]   ---
+[stdout]   duration_ms: 0.300348
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: txIndex
+[stdout] ok 103 - reject contradictory/invalid log: txIndex
+[stdout]   ---
+[stdout]   duration_ms: 0.298578
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: invalid hex
+[stdout] ok 104 - reject contradictory/invalid log: invalid hex
+[stdout]   ---
+[stdout]   duration_ms: 0.233712
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reject contradictory/invalid log: unsafe index
+[stdout] ok 105 - reject contradictory/invalid log: unsafe index
+[stdout]   ---
+[stdout]   duration_ms: 0.233617
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: detect colliding log positions and transaction order disagreement
+[stdout] ok 106 - detect colliding log positions and transaction order disagreement
+[stdout]   ---
+[stdout]   duration_ms: 0.470693
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: reports previous committed batch separately when a later header chain disagrees
+[stdout] ok 107 - reports previous committed batch separately when a later header chain disagrees
+[stdout]   ---
+[stdout]   duration_ms: 0.573145
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: changing final header prevents write
+[stdout] ok 108 - changing final header prevents write
+[stdout]   ---
+[stdout]   duration_ms: 0.292129
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: HTTP JSON-RPC transport reads synthetic logs through scanner
+[stdout] ok 109 - HTTP JSON-RPC transport reads synthetic logs through scanner
+[stdout]   ---
+[stdout]   duration_ms: 62.088189
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: RPC HTTP failures redact URL paths and body; prior batches remain explicit
+[stdout] ok 110 - RPC HTTP failures redact URL paths and body; prior batches remain explicit
+[stdout]   ---
+[stdout]   duration_ms: 1304.15238
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block
+[stdout] ok 111 - K uses following blocks: head-2 included, head-1 excluded; K=0 and no safe block
+[stdout]   ---
+[stdout]   duration_ms: 0.775217
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: -1
+[stdout] ok 112 - invalid K rejected: -1
+[stdout]   ---
+[stdout]   duration_ms: 1.68458
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: 0.5
+[stdout] ok 113 - invalid K rejected: 0.5
+[stdout]   ---
+[stdout]   duration_ms: 0.619267
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: 2
+[stdout] ok 114 - invalid K rejected: 2
+[stdout]   ---
+[stdout]   duration_ms: 0.406391
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: null
+[stdout] ok 115 - invalid K rejected: null
+[stdout]   ---
+[stdout]   duration_ms: 0.394024
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: true
+[stdout] ok 116 - invalid K rejected: true
+[stdout]   ---
+[stdout]   duration_ms: 0.189804
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: 2147483648
+[stdout] ok 117 - invalid K rejected: 2147483648
+[stdout]   ---
+[stdout]   duration_ms: 0.20681
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: NaN
+[stdout] ok 118 - invalid K rejected: NaN
+[stdout]   ---
+[stdout]   duration_ms: 0.13453
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: invalid K rejected: Infinity
+[stdout] ok 119 - invalid K rejected: Infinity
+[stdout]   ---
+[stdout]   duration_ms: 1.242872
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: K defaults to 2 and numeric 0 is valid
+[stdout] ok 120 - K defaults to 2 and numeric 0 is valid
+[stdout]   ---
+[stdout]   duration_ms: 0.382559
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: scope is order independent but bound to chain/deployment/address/block/ABI and sources
+[stdout] ok 121 - scope is order independent but bound to chain/deployment/address/block/ABI and sources
+[stdout]   ---
+[stdout]   duration_ms: 0.42469
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: new DB starts at earliest deployment block, clamps later sources and empty batches advance
+[stdout] ok 122 - new DB starts at earliest deployment block, clamps later sources and empty batches advance
+[stdout]   ---
+[stdout]   duration_ms: 2.980251
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: no safe block and deployment after safe boundary produce no negative RPC range/checkpoint
+[stdout] ok 123 - no safe block and deployment after safe boundary produce no negative RPC range/checkpoint
+[stdout]   ---
+[stdout]   duration_ms: 1.387053
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: checkpoint block 0 is distinct from absent checkpoint and resumes at 1
+[stdout] ok 124 - checkpoint block 0 is distinct from absent checkpoint and resumes at 1
+[stdout]   ---
+[stdout]   duration_ms: 1.073127
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: restart with no new block still verifies hash; then continues from H+1
+[stdout] ok 125 - restart with no new block still verifies hash; then continues from H+1
+[stdout]   ---
+[stdout]   duration_ms: 2.556504
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: checkpoint mismatch even when idle leaves stored data unchanged
+[stdout] ok 126 - checkpoint mismatch even when idle leaves stored data unchanged
+[stdout]   ---
+[stdout]   duration_ms: 0.461751
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: checkpoint RPC cannot verify: missing
+[stdout] ok 127 - checkpoint RPC cannot verify: missing
+[stdout]   ---
+[stdout]   duration_ms: 0.229822
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: checkpoint RPC cannot verify: malformed
+[stdout] ok 128 - checkpoint RPC cannot verify: malformed
+[stdout]   ---
+[stdout]   duration_ms: 0.189443
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: checkpoint RPC cannot verify: unavailable
+[stdout] ok 129 - checkpoint RPC cannot verify: unavailable
+[stdout]   ---
+[stdout]   duration_ms: 0.214131
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: one required RPC source fails: entire batch and checkpoint stay unchanged
+[stdout] ok 130 - one required RPC source fails: entire batch and checkpoint stay unchanged
+[stdout]   ---
+[stdout]   duration_ms: 0.272516
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: decode issues remain visible on idle restart after raw checkpoint advances
+[stdout] ok 131 - decode issues remain visible on idle restart after raw checkpoint advances
+[stdout]   ---
+[stdout]   duration_ms: 2.601241
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] # Subtest: explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment
+[stdout] ok 132 - explicit toBlock is capped by confirmed head and fromBlock cannot skip deployment
+[stdout]   ---
+[stdout]   duration_ms: 0.36431
+[stdout]   type: 'test'
+[stdout]   ...
+[stdout] 1..132
+[stdout] # tests 135
+[stdout] # suites 1
+[stdout] # pass 135
+[stdout] # fail 0
+[stdout] # cancelled 0
+[stdout] # skipped 0
+[stdout] # todo 0
+[stdout] # duration_ms 14344.943943

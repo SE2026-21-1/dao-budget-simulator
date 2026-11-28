@@ -1,0 +1,95 @@
+2026-10-27 14:24:24.260 UTC [607] LOG:  starting PostgreSQL 18.4 (Ubuntu 18.4-1.pgdg26.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0, 64-bit
+2026-10-27 14:24:24.260 UTC [607] LOG:  listening on IPv4 address "127.0.0.1", port 46193
+2026-10-27 14:24:24.260 UTC [607] LOG:  listening on Unix socket "/tmp/dao-be08-native-LrwuZN/.s.PGSQL.46193"
+2026-10-27 14:24:24.262 UTC [613] LOG:  database system was shut down at 2026-10-27 14:24:24 UTC
+2026-10-27 14:24:24.263 UTC [607] LOG:  database system is ready to accept connections
+2026-10-27 14:24:29.287 UTC [695] ERROR:  value for domain evm_hex_data violates check constraint "evm_hex_data_check"
+2026-10-27 14:24:29.287 UTC [695] CONTEXT:  unnamed portal parameter $11 = '...'
+2026-10-27 14:24:29.287 UTC [695] STATEMENT:  
+	  INSERT INTO raw_events (
+	    deployment_id, chain_id, contract_role, contract_address,
+	    block_number, block_hash, transaction_hash, transaction_index, log_index,
+	    topics, data, removed, event_name, decoded_payload, rpc_log
+	  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::evm_hash32[], $11, FALSE, $12, $13::jsonb, $14::jsonb)
+	  ON CONFLICT (chain_id, transaction_hash, log_index) DO UPDATE
+	    SET log_index = raw_events.log_index
+	    WHERE raw_events.deployment_id = EXCLUDED.deployment_id
+	      AND raw_events.chain_id = EXCLUDED.chain_id
+	      AND raw_events.contract_role = EXCLUDED.contract_role
+	      AND raw_events.contract_address = EXCLUDED.contract_address
+	      AND raw_events.block_number = EXCLUDED.block_number
+	      AND raw_events.block_hash = EXCLUDED.block_hash
+	      AND raw_events.transaction_hash = EXCLUDED.transaction_hash
+	      AND raw_events.transaction_index = EXCLUDED.transaction_index
+	      AND raw_events.log_index = EXCLUDED.log_index
+	      AND raw_events.topics = EXCLUDED.topics
+	      AND raw_events.data = EXCLUDED.data
+	      AND raw_events.removed = EXCLUDED.removed
+	      AND raw_events.event_name IS NOT DISTINCT FROM EXCLUDED.event_name
+	      AND raw_events.decoded_payload IS NOT DISTINCT FROM EXCLUDED.decoded_payload
+	      AND raw_events.rpc_log = EXCLUDED.rpc_log
+	  RETURNING (xmax = 0) AS inserted
+2026-10-27 14:24:29.307 UTC [695] ERROR:  insert or update on table "raw_events" violates foreign key constraint "raw_events_deployment_id_chain_id_contract_role_contract_a_fkey"
+2026-10-27 14:24:29.307 UTC [695] DETAIL:  Key (deployment_id, chain_id, contract_role, contract_address)=(42, 31375, treasury, 0x000000000000000000000000000000000000017f) is not present in table "deployment_contracts".
+2026-10-27 14:24:29.307 UTC [695] STATEMENT:  INSERT INTO raw_events (
+	        deployment_id, chain_id, contract_role, contract_address, block_number, block_hash,
+	        transaction_hash, transaction_index, log_index, topics, data, rpc_log)
+	        VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0, ARRAY[]::evm_hash32[], '0x', '{}'::jsonb)
+2026-10-27 14:24:29.308 UTC [694] ERROR:  insert or update on table "raw_events" violates foreign key constraint "raw_events_deployment_id_block_number_block_hash_fkey"
+2026-10-27 14:24:29.308 UTC [694] DETAIL:  Key (deployment_id, block_number, block_hash)=(42, 100, 0x000000000000000000000000000000000000000000000000000000000001869f) is not present in table "indexed_blocks".
+2026-10-27 14:24:29.308 UTC [694] STATEMENT:  INSERT INTO raw_events (
+	        deployment_id, chain_id, contract_role, contract_address, block_number, block_hash,
+	        transaction_hash, transaction_index, log_index, topics, data, rpc_log)
+	        VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0, ARRAY[]::evm_hash32[], '0x', '{}'::jsonb)
+2026-10-27 14:24:42.427 UTC [791] ERROR:  value for domain evm_hex_data violates check constraint "evm_hex_data_check"
+2026-10-27 14:24:42.427 UTC [791] CONTEXT:  unnamed portal parameter $11 = '...'
+2026-10-27 14:24:42.427 UTC [791] STATEMENT:  
+	  INSERT INTO raw_events (
+	    deployment_id, chain_id, contract_role, contract_address,
+	    block_number, block_hash, transaction_hash, transaction_index, log_index,
+	    topics, data, removed, event_name, decoded_payload, rpc_log
+	  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::evm_hash32[], $11, FALSE, $12, $13::jsonb, $14::jsonb)
+	  ON CONFLICT (chain_id, transaction_hash, log_index) DO UPDATE
+	    SET log_index = raw_events.log_index
+	    WHERE raw_events.deployment_id = EXCLUDED.deployment_id
+	      AND raw_events.chain_id = EXCLUDED.chain_id
+	      AND raw_events.contract_role = EXCLUDED.contract_role
+	      AND raw_events.contract_address = EXCLUDED.contract_address
+	      AND raw_events.block_number = EXCLUDED.block_number
+	      AND raw_events.block_hash = EXCLUDED.block_hash
+	      AND raw_events.transaction_hash = EXCLUDED.transaction_hash
+	      AND raw_events.transaction_index = EXCLUDED.transaction_index
+	      AND raw_events.log_index = EXCLUDED.log_index
+	      AND raw_events.topics = EXCLUDED.topics
+	      AND raw_events.data = EXCLUDED.data
+	      AND raw_events.removed = EXCLUDED.removed
+	      AND raw_events.event_name IS NOT DISTINCT FROM EXCLUDED.event_name
+	      AND raw_events.decoded_payload IS NOT DISTINCT FROM EXCLUDED.decoded_payload
+	      AND raw_events.rpc_log = EXCLUDED.rpc_log
+	  RETURNING (xmax = 0) AS inserted
+2026-10-27 14:24:42.449 UTC [791] ERROR:  test deferred COMMIT failure
+2026-10-27 14:24:42.449 UTC [791] CONTEXT:  PL/pgSQL function be03_test_commit_failure() line 2 at RAISE
+2026-10-27 14:24:42.449 UTC [791] STATEMENT:  COMMIT
+2026-10-27 14:24:42.450 UTC [791] WARNING:  there is no transaction in progress
+2026-10-27 14:24:44.928 UTC [814] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-27 14:24:55.393 UTC [883] ERROR:  test only
+2026-10-27 14:24:55.393 UTC [883] CONTEXT:  PL/pgSQL function be04_test_fail() line 1 at RAISE
+2026-10-27 14:24:55.393 UTC [883] STATEMENT:  INSERT INTO proposals (deployment_id,proposal_id,request_id,proposer,treasury_address,recipient,amount,
+	      description_bytes,description,description_hash,targets,native_values,calldatas,snapshot,deadline,created_event_id,canceled_event_id,executed_event_id)
+	      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+2026-10-27 14:24:55.496 UTC [883] ERROR:  redecode test only
+2026-10-27 14:24:55.496 UTC [883] CONTEXT:  PL/pgSQL function be04_test_fail_redecode() line 2 at RAISE
+2026-10-27 14:24:55.496 UTC [883] STATEMENT:  UPDATE raw_events SET event_name=$2, decoded_payload=$3::jsonb, decode_status=$4, decode_error_code=$5
+	          WHERE raw_event_id=$1
+2026-10-27 14:25:46.843 UTC [1279] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-27 14:25:51.237 UTC [1245] WARNING:  there is no transaction in progress
+2026-10-27 14:26:37.597 UTC [1576] LOG:  unexpected EOF on client connection with an open transaction
+2026-10-27 14:29:25.027 UTC [611] LOG:  checkpoint starting: time
+2026-10-27 14:31:26.928 UTC [607] LOG:  received fast shutdown request
+2026-10-27 14:31:26.928 UTC [607] LOG:  aborting any active transactions
+2026-10-27 14:31:26.930 UTC [607] LOG:  background worker "logical replication launcher" (PID 616) exited with exit code 1
+2026-10-27 14:31:26.959 UTC [611] LOG:  checkpoint complete: wrote 5396 buffers (32.9%), wrote 5 SLRU buffers; 0 WAL file(s) added, 0 removed, 5 recycled; write=121.920 s, sync=0.012 s, total=121.932 s; sync files=5696, longest=0.001 s, average=0.001 s; distance=84717 kB, estimate=84717 kB; lsn=0/A995538, redo lsn=0/6A1F778
+2026-10-27 14:31:26.960 UTC [611] LOG:  shutting down
+2026-10-27 14:31:26.960 UTC [611] LOG:  checkpoint starting: shutdown immediate
+2026-10-27 14:31:26.975 UTC [611] LOG:  checkpoint complete: wrote 3959 buffers (24.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 4 recycled; write=0.015 s, sync=0.001 s, total=0.015 s; sync files=71, longest=0.001 s, average=0.000 s; distance=64983 kB, estimate=82744 kB; lsn=0/A9955B0, redo lsn=0/A9955B0
+2026-10-27 14:31:26.987 UTC [607] LOG:  database system is shut down

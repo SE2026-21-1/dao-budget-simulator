@@ -1,0 +1,6 @@
+Final cleanup 2026-10-24 UTC:
+- Removed audit-created detached baseline worktree /tmp/dao-be04-fix-p2-20261024/baseline.
+- Stopped PostgreSQL 18.4 cluster with pg_ctl -m fast; server reported "server stopped".
+- Removed audit-created temporary cluster directory /tmp/dao-be04-fix-p2-20261024.
+- git worktree list contains only the review checkout.
+- Retained SQL dump and run evidence under audit-artifacts/fix-p2-20261024.

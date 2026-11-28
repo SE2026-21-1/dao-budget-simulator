@@ -1,0 +1,82 @@
+{
+  "format": "dao-budget-local-handoff-v1",
+  "sourceCommit": "5fbf61581c5f975f967983022155bd27f2863142",
+  "scope": "Local audited deployment and full compiler ABI handoff, not testnet or UI/API acceptance. Receiver must use this running chain or redeploy and regenerate the bundle.",
+  "rpcUrl": "http://127.0.0.1:8559",
+  "chainId": "31337",
+  "instanceId": "0x8b8696da80fb7bb96eb4e5efbb76bcc9bcef3850cc680713c5df3108b70b0008",
+  "asOfBlock": "19",
+  "asOfBlockHash": "0x4e037f8b39a14bdfed599b219ec68722c35d506c7daf584ebbd616e59a279cfa",
+  "scanFromBlock": "1",
+  "confirmationPolicy": {
+    "depth": "2",
+    "enforcedByBE02": false
+  },
+  "accounts": {
+    "A": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "B": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "C": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "D": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+    "funding": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+    "deployer": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+    "caller": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+    "recipient": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+    "outsider": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f"
+  },
+  "config": {
+    "proposalThreshold": "50000000000000000000",
+    "quorumNumerator": "20",
+    "quorumDenominator": "100",
+    "votingDelay": "60",
+    "votingPeriod": "300",
+    "minDelay": "120",
+    "clockMode": "mode=timestamp",
+    "govSupply": "1000000000000000000000",
+    "budSupply": "20000000000000000000000",
+    "treasurySeed": "10000000000000000000000"
+  },
+  "contracts": {
+    "GOV": {
+      "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "deploymentBlock": "1",
+      "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+      "abiVersion": "sc02-governance-token-v1"
+    },
+    "BUD": {
+      "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "deploymentBlock": "2",
+      "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+      "abiVersion": "oz-5.4.0-erc20"
+    },
+    "Treasury": {
+      "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "deploymentBlock": "3",
+      "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+      "abiVersion": "sc01-itreasury-v1"
+    },
+    "Timelock": {
+      "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "deploymentBlock": "4",
+      "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+      "abiVersion": "oz-5.4.0-timelock"
+    },
+    "Governor": {
+      "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+      "deploymentBlock": "5",
+      "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+      "abiVersion": "oz-5.4.0-governor"
+    }
+  },
+  "abiHashes": {
+    "GOV": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b",
+    "BUD": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8",
+    "Treasury": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b",
+    "Timelock": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa",
+    "Governor": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+  },
+  "be02": {
+    "contractsFile": "be02-contracts.json",
+    "metadataOwner": "TV2",
+    "scope": "Four supported raw-log roles. TV2 must insert metadata into its chosen migrated database and use the actual returned deployment_id; this export does not invent one. GOV ABI is supplied but GOV events are not supported by the BE02 registry."
+  }
+}

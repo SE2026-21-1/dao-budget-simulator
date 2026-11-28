@@ -1,0 +1,2 @@
+Deployment manifest, receipts, source/compiler/ABI hashes and role evidence: D:\dao-budget-simulator\docs\evidence\be03-integration-20261024\manifest.json
+Validated chain 31337 at block 19; bootstrap roles removed before Treasury funding.

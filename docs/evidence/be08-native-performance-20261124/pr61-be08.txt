@@ -1,0 +1,30 @@
+
+> dao-budget-simulator@0.0.0 test:be08
+> node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs tests/indexer/be08-rpc-outage.test.mjs
+
+✔ BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples (470.805222ms)
+✔ BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results (7.031606ms)
+✔ BE08 forwarded CI service validates client loopback while PostgreSQL reports a container address and internal port (5.201035ms)
+✔ BE08 rejects non-loopback or unexpected client ports even when server metadata looks local (9.487366ms)
+✔ BE08 owned native cluster retains exact directory and server binding checks (3.208228ms)
+✔ projection failure and recovery check are separate bounded RPC calls (229.357551ms)
+✔ outage accounting groups interleaved retries from bounded projection fan-out (4.217659ms)
+✔ outage accounting accepts exhausted calls independently of worker stdout timing (1.67088ms)
+✔ outage recorder preserves same-ID attempts before and after the window (1.877906ms)
+✔ partial retries require same-ID attempts proving the call crossed an outage boundary (0.935964ms)
+✔ calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary (3.189995ms)
+✔ outage accounting rejects an over-budget call, missing retries, invalid windows and absent backoff (3.384226ms)
+✔ outage accounting rejects a reused call ID or changed method/params within a retry (4.692764ms)
+✔ concurrent identical RPC calls have distinct IDs while each retry keeps its ID (71.216087ms)
+✔ final worker trace accepts bounded interleaving (26.984603ms)
+✔ final worker trace rejects late fifth attempt (15.311191ms)
+✔ final worker trace accepts bounded interleaving across outage boundary (8.629621ms)
+✔ final worker trace rejects late fifth attempt across outage boundary (14.505093ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2277.039773

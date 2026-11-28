@@ -1,0 +1,206 @@
+{
+  "format": "tv4-current-ui-evidence-index-v1",
+  "createdAt": "2026-11-23T10:00:12.794846+00:00",
+  "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "tooling": {
+    "path": "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+    "sha256": "2e17c4a479eff7f66bd6f0a056919a455469bcd1b2e324ec99c59c45243f7c1e",
+    "keyboardSha256": "19aeec782b4b5db62e7486682c1f8e42bd20dc2cdd37265f6901e1ef45384dff"
+  },
+  "archive": {
+    "path": "docs/evidence/tv4-20261123-current-ui.tar.gz",
+    "bytes": 10383497,
+    "sha256": "f2ae8cf26fcddbeb57d89dd8bbabc8e9401a0d49e3712e1887719cbf2f2247d7",
+    "payloadFiles": 161,
+    "manifest": "MANIFEST.json",
+    "manifestSha256": "5946b8311f22d07260af5e04d35f1c39168450e89917f01114ecb3e0abe8bd1b"
+  },
+  "runs": {
+    "approvedAdapter": {
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "--import",
+        "tsx",
+        "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+        "--postgres-bin",
+        "/tmp/dao-tv4-pg18-20261123/node_modules/@embedded-postgres/linux-x64/native/bin",
+        "--output",
+        "/tmp/qa07-approved-keyboard-e2e-20261123-final",
+        "--project-root",
+        "/tmp/dao-tv4-approved-e2e-20261123"
+      ],
+      "exitStatus": 0,
+      "wallSeconds": 75.82,
+      "status": "PASS",
+      "rawReport": "approved-adapter-final/report.json",
+      "sha256": "4ddce85695aae3f6a08a8bb74c7c2eee9ecdbb08f5e80dca823efe8da264746f",
+      "scope": "Actual Chrome + unlocked owned EIP-1193 adapter; NOT MetaMask"
+    },
+    "realExtension": {
+      "command": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node /tmp/tv4-mm-continue-20261123.mjs",
+      "exitStatus": 0,
+      "wallSeconds": 95.23,
+      "status": "PASS_SCOPED_TWO_REAL_EXTENSION_ACTORS",
+      "rawReport": "real-extension/real-extension-report.json",
+      "sha256": "eceea6696b79e160d423a58d88dc3de0d62a40e05722de431073464371918dce",
+      "sourceSnapshot": "real-extension/driver-sources/real-extension-success.source.txt",
+      "scope": "Actual official unpacked MetaMask13.58.0.0/Chromium141, two real extension actors; one proposal/deployment; not testnet or Chrome Web Store/user profile"
+    },
+    "liveViews": {
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "/tmp/tv4-ui-views-20261123.mjs"
+      ],
+      "exitStatus": 0,
+      "wallSeconds": 24.05,
+      "status": "PASS",
+      "renders": 10,
+      "rawReport": "approved-live-views/report.json",
+      "sourceSnapshot": "real-extension/driver-sources/live-views-success.source.txt"
+    },
+    "frontendLiveApi": {
+      "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+      "command": "BE05_LIVE_API_URL=<owned API> BE05_LIVE_CHAIN_ID=31337 BE05_LIVE_DEPLOYMENT_ID=qa07-e2e BE05_LIVE_RPC_URL=<owned RPC> npm run test --prefix frontend -- src/data/api.live.test.ts",
+      "result": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "exitStatus": 0,
+        "wallSeconds": 6.11
+      },
+      "scope": "Six real endpoints at one pinned H/hash/revision with RPC canonical-hash comparison, executed against the still-live owned stack"
+    },
+    "handoffSmoke": {
+      "command": [
+        "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+        "--import",
+        "tsx",
+        "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+        "--postgres-bin",
+        "/tmp/dao-tv4-pg18-20261123/node_modules/@embedded-postgres/linux-x64/native/bin",
+        "--output",
+        "/tmp/qa07-reviewed-serve-final-smoke-20261123",
+        "--project-root",
+        "/tmp/dao-tv4-approved-e2e-20261123",
+        "--serve"
+      ],
+      "exitStatus": 0,
+      "status": "SERVE_STOPPED",
+      "qaHarness": {
+        "path": "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+        "sha256": "2e17c4a479eff7f66bd6f0a056919a455469bcd1b2e324ec99c59c45243f7c1e",
+        "keyboardSha256": "19aeec782b4b5db62e7486682c1f8e42bd20dc2cdd37265f6901e1ef45384dff"
+      },
+      "scope": "Startup/stop of --serve on approved source; not wallet/E2E acceptance"
+    },
+    "accountSwitch": {
+      "status": "PARTIAL_NOT_ACCEPTED",
+      "review": "docs/evidence/tv4-20261123-account-switch.json",
+      "scope": "Actual A300 control/imported B0 and permission revoke disable proven; authorized B transition/no-stale-send still needs TV3. Native focus/dashboard inaccessible in headless and authenticated rootless headed display; no assertion timeout increased."
+    }
+  },
+  "reconciliation": {
+    "apiDeploymentName": "qa07-e2e",
+    "workerSqlDeploymentId": "1",
+    "deploymentBinding": "Worker takes the SQL INSERT-returned numeric deployment_id; API uses deployment_name. Owned SQL reconciliation selects the deployment by chain31337/name qa07-e2e; numeric1 must not be configured as VITE_DEPLOYMENT_ID.",
+    "context": {
+      "chainId": "31337",
+      "deploymentId": "qa07-e2e",
+      "asOfBlock": "52",
+      "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "asOfTimestamp": "1800002470",
+      "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+      "dataKind": "chain",
+      "sync": {
+        "status": "synced",
+        "headBlock": "54",
+        "confirmedBlock": "52",
+        "indexedBlock": "52",
+        "publicationBlock": "52",
+        "lagBlocks": "0",
+        "lagSeconds": "0",
+        "confirmations": "2",
+        "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+        "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+        "recoveryStatus": "ready"
+      }
+    },
+    "identity": {
+      "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+      "chainId": "31337",
+      "deploymentId": "qa07-e2e"
+    },
+    "worker": "real-extension/worker-publication-H52.json",
+    "sql": "real-extension/sql-reconciliation.json",
+    "revertOracle": "real-extension/revert-oracle.json",
+    "revertDecoded": "InsufficientBudget(10000e18,11000e18), actual receipt0; gasUsed below gasLimit, not gas exhaustion",
+    "balances": {
+      "treasuryBalance": "1000000000000000000000",
+      "recipientBalance": "11000000000000000000000",
+      "paid": true,
+      "governorState": "7",
+      "operationDone": true
+    }
+  },
+  "sources": [
+    {
+      "name": "driver-sources/real-extension-success.source.txt",
+      "originalCommandSource": "/tmp/tv4-mm-continue-20261123.mjs",
+      "sha256": "c6f6ad4c16a40712227ead15c4abaf7c90a260a745d127f6b6a04fe1c6e2ab74",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/live-views-success.source.txt",
+      "originalCommandSource": "/tmp/tv4-ui-views-20261123.mjs",
+      "sha256": "e366cb939391b4f783cb2e77f742181870318fba39fd58c349ff34abc486e79a",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/account-import-partial.source.txt",
+      "originalCommandSource": "/tmp/tv4-mm-account-20261123.mjs",
+      "sha256": "61aa5d53d00d63f97aa18d7e057f889759e0191f5703ddda29d1956f2dd6b8b0",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/account-revoke-partial.source.txt",
+      "originalCommandSource": "/tmp/tv4-mm-revoke-switch-20261123.mjs",
+      "sha256": "b64f04583d2669f3f4b62c101ce2d085c30d7817a15094d1c2b15ab47dadd4ee",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/account-headless-partial.source.txt",
+      "originalCommandSource": "/tmp/tv4-mm-account-final-20261123.mjs",
+      "sha256": "9e335c0747759a8ea8729deb408c403e8cba9d133ef9554e8aa9e08f8b072257",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/account-headed-partial.source.txt",
+      "originalCommandSource": "/tmp/tv4-mm-account-headed-20261123.mjs",
+      "sha256": "2be31264a2ecce4320ffd768fa59441008f444586902bc90a7c0ec2371c2aa6a",
+      "includedInArchive": true
+    },
+    {
+      "name": "driver-sources/qa07-serve-616acd.source.txt",
+      "sha256": "616acd0625e7aab9d1525c143544288890f19181d9da1d945f58fb77c955c122",
+      "derivation": "Reversed only the two metadata-only changes in final2e17c4a; exact SHA256 equals the original serving report616acd, not a reconstructed receipt.",
+      "includedInArchive": false
+    }
+  ],
+  "cleanup": {
+    "ownedServicesExitStatus": 0,
+    "processPorts": "real-extension/lifecycle-after.json",
+    "privateFixturesAndDisplay": "real-extension/private-cleanup.json",
+    "temporaryDriverScripts": "Deleted after retaining nonsecret source snapshots",
+    "publicEndpoints": "Archived and no longer live; new --serve deployment required"
+  },
+  "privacyCheck": {
+    "boundedPayloadFiles": 161,
+    "textFilesChecked": 106,
+    "knownOwnedSecretValuesMatched": 0,
+    "credentialShapedDatabaseUrlsMatched": 0,
+    "sourceCopyExcluded": 1,
+    "limit": "Exact-value and credential-URL scan of intended evidence only, not a whole-history security guarantee"
+  },
+  "historicalBoundary": "Fresh Dev6766e5e runs do not relabel e8e443c historical wallet/browser bundles or repair their missing final raw receipts. One transient DATA_NOT_READY503 in this new run recovered via actual UI retry; no root-cause/fix claim for historical Incognito503."
+}

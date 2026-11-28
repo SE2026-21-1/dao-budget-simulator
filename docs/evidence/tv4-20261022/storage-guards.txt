@@ -1,0 +1,5 @@
+PASS guard: missing isolated guard
+PASS guard: remote host
+PASS guard: URL options
+PASS guard: non-smoke database
+PASS guard: existing populated database rejected; header and event counts unchanged

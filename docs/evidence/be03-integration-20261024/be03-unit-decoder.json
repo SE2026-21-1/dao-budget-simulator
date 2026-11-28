@@ -1,0 +1,14 @@
+{
+  "label": "be03-unit-decoder",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "--test",
+    "tests/indexer/syncer.test.ts",
+    "tests/indexer/decoder.test.ts"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "log": "be03-unit-decoder.txt"
+}

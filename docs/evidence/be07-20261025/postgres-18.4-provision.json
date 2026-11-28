@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.4-1.pgdg26.04%2B1_amd64.deb",
+    "sha256": "d6bf3a9859fc330bace41abbf49c50ca8950e3b65c9bc9021827e150830659aa",
+    "size": 7673244
+  },
+  {
+    "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.4-1.pgdg26.04%2B1_amd64.deb",
+    "sha256": "132f93fab0975234d9a703dc7bca6f05958e7e4a2f8def1e87dce9d42ee0a9f1",
+    "size": 2100280
+  },
+  {
+    "url": "https://apt.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.4-1.pgdg26.04%2B1_amd64.deb",
+    "sha256": "ae7268947f1e3b60503c6e113c4cc279e73695176eb3bcdbf0879868aa652b25",
+    "size": 258632
+  }
+]

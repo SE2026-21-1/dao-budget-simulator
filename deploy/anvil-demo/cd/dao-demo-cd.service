@@ -1,0 +1,15 @@
+[Unit]
+Description=Pull verified DAO Dev release and update API/indexer
+Wants=network-online.target
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+Environment=HOME=/home/ubuntu
+EnvironmentFile=/etc/dao-demo-cd.env
+WorkingDirectory=/opt/dao-demo-cd
+ExecStart=/usr/bin/python3 /opt/dao-demo-cd/agent.py --apply
+UMask=0077
+TimeoutStartSec=20min

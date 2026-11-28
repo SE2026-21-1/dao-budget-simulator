@@ -1,0 +1,920 @@
+{
+  "schema": "tv4-historical-bundle-review-v1",
+  "reviewDate": "2026-11-23",
+  "reviewer": "TV4 coding assistant; offline evidence inspection prepared for integration owner",
+  "scope": "Only historical attachment byte integrity and internal evidence/source binding. No live service, browser/Windows/WSL receiver operation, rebuild campaign, CI, testnet, PR21 or wallet/governance E2E rerun.",
+  "repositoryUsedForReadOnlyGitBlobs": "/tmp/dao-tv4-integrated-20261123",
+  "downloadDirectory": "/tmp/tv4-bundle-review-20261123",
+  "archiveExtractionPerformed": false,
+  "repositoryRawEvidenceImported": false,
+  "method": {
+    "archive": "zipfile.ZipFile.testzip(); read every member in full; validate relative POSIX paths/no .., no symlinks, no duplicate names; SHA-256 of every member; compare every SHA256SUMS row; JSON parse every JSON member.",
+    "content": "Compare both normalized export objects against compare reference/rebuild; bind manifest/source/scope/height/hash/raw checkpoint/projection; parse all 2929 worker log records and compare recorded values.",
+    "security": {
+      "patterns": {
+        "credential_url": "(?i)(?:postgres(?:ql)?|https?)://[^\\s\"/]+:[^\\s\"@]+@",
+        "private_key_assignment": "(?i)(?:private[_ -]?key|mnemonic|api_cursor_secret|pgpassword|database_password)\\s*[=:]\\s*[\"\\']?(?:0x)?[A-Za-z0-9+/=_-]{16,}",
+        "pem_private_key": "-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----",
+        "github_token": "\\b(?:ghp_|github_pat_)[A-Za-z0-9_]{20,}"
+      },
+      "filesScanned": 33,
+      "bytesScanned": 1937335,
+      "matches": 0,
+      "limitation": "Bounded credential-pattern scan, not a guarantee of no secrets. No env, DB dumps or raw secrets copied into repository."
+    }
+  },
+  "executedCommands": [
+    {
+      "command": "curl -fL --retry 1 -o /tmp/tv4-bundle-review-20261123/issue42.zip https://github.com/user-attachments/files/35255456/TV3_Issue42_BE06_Original_Evidence_20261123.zip",
+      "exitCode": 0
+    },
+    {
+      "command": "curl -fL --retry 1 -o /tmp/tv4-bundle-review-20261123/issue40.zip https://github.com/user-attachments/files/35256884/TV3_BE09_20261121_Evidence.zip",
+      "exitCode": 0
+    },
+    {
+      "command": "sha256sum /tmp/tv4-bundle-review-20261123/*.zip",
+      "exitCode": 0
+    },
+    {
+      "execution": "eval Python: archive CRC/path/full-member read/checksum/provenance/content/security assertions",
+      "result": "completed successfully; OFFLINE_ASSERTIONS_PASS",
+      "processExitCode": null,
+      "note": "eval kernel operations, not a spawned historical command"
+    },
+    {
+      "execution": "Earlier report-reading helper used ambiguous suffix report.md",
+      "result": "AssertionError; corrected by selecting verify-20261121T165226Z-c65b835c/report.md",
+      "processExitCode": 1,
+      "note": "Read-selection error only, not an archive or product failure"
+    }
+  ],
+  "issues": {
+    "42": {
+      "issueUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42",
+      "attachmentUrl": "https://github.com/user-attachments/files/35255456/TV3_Issue42_BE06_Original_Evidence_20261123.zip",
+      "attachmentBytes": 32484,
+      "attachmentSha256": "72a16fcc2f336aa4be0598bb3e1e6b789537f1224af430c6f46741c2203560dd",
+      "zipCrc": "PASS",
+      "safeMemberPaths": "PASS",
+      "members": [
+        {
+          "path": "issue42-be06-original-20261111/EVIDENCE_MANIFEST.json",
+          "bytes": 5209,
+          "sha256": "5af873121b122a9b6e27df8191cbe015fcda7c5000b770f8ee8286d244d6e1ff"
+        },
+        {
+          "path": "issue42-be06-original-20261111/README.md",
+          "bytes": 1772,
+          "sha256": "19395f9bc7fbe2b2289ad5254e60b7cdc4e8ee8c4e61314f4a1f5ba43eb033b0"
+        },
+        {
+          "path": "issue42-be06-original-20261111/SHA256SUMS",
+          "bytes": 1226,
+          "sha256": "b58792ad6039947d8280e4bd3773b7e22c77de465efac124bb7171b80606a13f"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/compare.json",
+          "bytes": 37806,
+          "sha256": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/compare.md",
+          "bytes": 630,
+          "sha256": "173608befa51eadca5ec5e2011aa4a32983d2f759ad8fd74e1f72cb2555868d3"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/logs/compare.log",
+          "bytes": 1132,
+          "sha256": "f878bd9cb0ca7a33a0e6ca2293cac4c3c5ee766019be929413c2518f3b84aa9a"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/logs/export_reference.log",
+          "bytes": 530,
+          "sha256": "228067a6cb7eb4540c80df788bd4422f17040990745aa410a6796b902028cd7e"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/logs/export_target.log",
+          "bytes": 521,
+          "sha256": "7a7abf5fcf6298f91064480161cc1547a13959c252e040ac626822e768fc31d4"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/logs/rebuild.log",
+          "bytes": 3899,
+          "sha256": "003b3baee11ea4be5422d6eeedacd4588e3696bffc74eb627ea4cca3c78444ca"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/rebuild.json",
+          "bytes": 4414,
+          "sha256": "266df1f9c2cd7ced17d3869bafce9907a3ddc97b3f3ac66783a58c081dc6edf3"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/reference.json",
+          "bytes": 17784,
+          "sha256": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/be06/target.json",
+          "bytes": 17784,
+          "sha256": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/public/manifest.json",
+          "bytes": 100121,
+          "sha256": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b"
+        },
+        {
+          "path": "issue42-be06-original-20261111/original/source-provenance.json",
+          "bytes": 783,
+          "sha256": "b90f6b34e8a63d7962d9d01c2891f59712803a7015412f690374183591874910"
+        }
+      ],
+      "checksumPassed": 13,
+      "checksumTotal": 13,
+      "checksumResults": [
+        {
+          "path": "EVIDENCE_MANIFEST.json",
+          "expected": "5af873121b122a9b6e27df8191cbe015fcda7c5000b770f8ee8286d244d6e1ff",
+          "actual": "5af873121b122a9b6e27df8191cbe015fcda7c5000b770f8ee8286d244d6e1ff",
+          "match": true
+        },
+        {
+          "path": "README.md",
+          "expected": "19395f9bc7fbe2b2289ad5254e60b7cdc4e8ee8c4e61314f4a1f5ba43eb033b0",
+          "actual": "19395f9bc7fbe2b2289ad5254e60b7cdc4e8ee8c4e61314f4a1f5ba43eb033b0",
+          "match": true
+        },
+        {
+          "path": "original/be06/compare.json",
+          "expected": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2",
+          "actual": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2",
+          "match": true
+        },
+        {
+          "path": "original/be06/compare.md",
+          "expected": "173608befa51eadca5ec5e2011aa4a32983d2f759ad8fd74e1f72cb2555868d3",
+          "actual": "173608befa51eadca5ec5e2011aa4a32983d2f759ad8fd74e1f72cb2555868d3",
+          "match": true
+        },
+        {
+          "path": "original/be06/logs/compare.log",
+          "expected": "f878bd9cb0ca7a33a0e6ca2293cac4c3c5ee766019be929413c2518f3b84aa9a",
+          "actual": "f878bd9cb0ca7a33a0e6ca2293cac4c3c5ee766019be929413c2518f3b84aa9a",
+          "match": true
+        },
+        {
+          "path": "original/be06/logs/export_reference.log",
+          "expected": "228067a6cb7eb4540c80df788bd4422f17040990745aa410a6796b902028cd7e",
+          "actual": "228067a6cb7eb4540c80df788bd4422f17040990745aa410a6796b902028cd7e",
+          "match": true
+        },
+        {
+          "path": "original/be06/logs/export_target.log",
+          "expected": "7a7abf5fcf6298f91064480161cc1547a13959c252e040ac626822e768fc31d4",
+          "actual": "7a7abf5fcf6298f91064480161cc1547a13959c252e040ac626822e768fc31d4",
+          "match": true
+        },
+        {
+          "path": "original/be06/logs/rebuild.log",
+          "expected": "003b3baee11ea4be5422d6eeedacd4588e3696bffc74eb627ea4cca3c78444ca",
+          "actual": "003b3baee11ea4be5422d6eeedacd4588e3696bffc74eb627ea4cca3c78444ca",
+          "match": true
+        },
+        {
+          "path": "original/be06/rebuild.json",
+          "expected": "266df1f9c2cd7ced17d3869bafce9907a3ddc97b3f3ac66783a58c081dc6edf3",
+          "actual": "266df1f9c2cd7ced17d3869bafce9907a3ddc97b3f3ac66783a58c081dc6edf3",
+          "match": true
+        },
+        {
+          "path": "original/be06/reference.json",
+          "expected": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415",
+          "actual": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415",
+          "match": true
+        },
+        {
+          "path": "original/be06/target.json",
+          "expected": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415",
+          "actual": "233e374173e632be60dfbf8bcd797df4cf207cf731cb9bbc78ae44b095703415",
+          "match": true
+        },
+        {
+          "path": "original/public/manifest.json",
+          "expected": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b",
+          "actual": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b",
+          "match": true
+        },
+        {
+          "path": "original/source-provenance.json",
+          "expected": "b90f6b34e8a63d7962d9d01c2891f59712803a7015412f690374183591874910",
+          "actual": "b90f6b34e8a63d7962d9d01c2891f59712803a7015412f690374183591874910",
+          "match": true
+        }
+      ],
+      "sourceCommit": "4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44",
+      "gitBlobResults": [
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-local.sh",
+          "exitCode": 0,
+          "path": "scripts/be09-local.sh",
+          "expected": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+          "actual": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-seed.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-seed.mjs",
+          "expected": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+          "actual": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-register.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-register.mjs",
+          "expected": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+          "actual": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-diagnose.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-diagnose.mjs",
+          "expected": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+          "actual": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-verify.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-verify.mjs",
+          "expected": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+          "actual": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-live-test.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-live-test.mjs",
+          "expected": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+          "actual": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+          "match": true
+        },
+        {
+          "command": "git show 4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44:scripts/be09-provenance.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-provenance.mjs",
+          "expected": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+          "actual": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+          "match": true
+        }
+      ],
+      "closureRecommended": false,
+      "status": "BE06 ORIGINAL BYTES ACCEPTED; FULL ISSUE PARTIAL / IN REVIEW",
+      "runId": "20261111T071940Z-a0311f572edf",
+      "deploymentName": "be09-local-20261111T071940Z-0210c9c44501",
+      "manifestSha256": "72452b437691db5343d92ca1141a3db71c8b666d27673b331a64f0b1605e741b",
+      "comparisonSha256": "34e6a6b18576d64a5dbde144f1f45604a6f7187f547778cbaccba78185ce8ab2",
+      "evidenceManifestOriginalEntries": 11,
+      "evidenceManifestOriginalEntriesMatching": 11,
+      "bindingAssertions": {
+        "archiveShaMatches": true,
+        "manifestHashMatchesRebuild": true,
+        "sourceCommitMatches": true,
+        "normalizedExportsByteIdentical": true,
+        "referenceMatchesEmbedded": true,
+        "targetMatchesEmbedded": true,
+        "scopeMatches": true,
+        "heightMatches": true,
+        "hashMatches": true,
+        "chainIdMatches": true,
+        "equalNoMismatches": true,
+        "referenceAndRebuildCrossCheckPass": true,
+        "safeHeadsConsistent": true,
+        "logRebuildMatchesReport": true,
+        "scopeMatchesManifest": true
+      },
+      "context": {
+        "chainId": "31337",
+        "scope": {
+          "chainId": "31337",
+          "contracts": [
+            {
+              "role": "budget_token",
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "deploymentBlock": "2",
+              "abiVersion": "oz-5.4.0-erc20"
+            },
+            {
+              "role": "governor",
+              "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "deploymentBlock": "5",
+              "abiVersion": "oz-5.4.0-governor"
+            },
+            {
+              "role": "timelock",
+              "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "deploymentBlock": "4",
+              "abiVersion": "oz-5.4.0-timelock"
+            },
+            {
+              "role": "treasury",
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "deploymentBlock": "3",
+              "abiVersion": "sc01-itreasury-v1"
+            }
+          ]
+        },
+        "atBlock": "24",
+        "blockHash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd",
+        "blockTimestamp": "1800000488"
+      },
+      "rawCheckpoint": {
+        "block": "24",
+        "hash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd"
+      },
+      "projectionContext": {
+        "chainId": "31337",
+        "deploymentId": "1",
+        "asOfBlock": "24",
+        "asOfBlockHash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd",
+        "asOfTimestamp": "1800000488",
+        "snapshotRevision": "73443e90-1f00-4107-885e-325141a08a6c",
+        "dataKind": "chain"
+      },
+      "targetIdentity": {
+        "deploymentId": "1",
+        "deploymentName": "be06-2ee1062475e87e9b19504aaf"
+      },
+      "chainCrossCheckActualContent": {
+        "block": "24",
+        "hash": "0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd",
+        "reference": "PASS",
+        "rebuild": "PASS",
+        "proposals": 1,
+        "operations": 1,
+        "treasuryBalance": "9000000000000000000000"
+      },
+      "chainCrossCheckLimit": "Only block/hash, reference/rebuild PASS, proposal count, operation count and treasury balance appear in this object; no per-call RPC transcript. Compare summary names broader checks, not a fresh TV4 chain check.",
+      "counts": {
+        "proposals": 1,
+        "votes": 2,
+        "operations": 1,
+        "transfers": 2,
+        "disbursements": 1
+      },
+      "treasury": {
+        "totalIn": "10000000000000000000000",
+        "totalOut": "1000000000000000000000",
+        "balance": "9000000000000000000000"
+      },
+      "decodeWarnings": {
+        "complete": false,
+        "unknownTopics": 16,
+        "decodeErrors": 0
+      },
+      "historicalCommandRecords": [
+        {
+          "log": "logs/rebuild.log",
+          "commandLine": "> tsx indexer/be06/cli.ts rebuild --manifest /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/public/manifest.json --at 24 --output /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/reports/be06-independent-20261111-6a6475/rebuild.json",
+          "explicitProcessExitCode": null,
+          "historicalTV3ReportedExitCode": 0
+        },
+        {
+          "log": "logs/export_reference.log",
+          "commandLine": "> tsx indexer/be06/cli.ts export --manifest /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/public/manifest.json --at 24 --database reference --output /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/reports/be06-independent-20261111-6a6475/reference.json",
+          "explicitProcessExitCode": null,
+          "historicalTV3ReportedExitCode": 0
+        },
+        {
+          "log": "logs/export_target.log",
+          "commandLine": "> tsx indexer/be06/cli.ts export --manifest /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/public/manifest.json --at 24 --database target --output /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/reports/be06-independent-20261111-6a6475/target.json",
+          "explicitProcessExitCode": null,
+          "historicalTV3ReportedExitCode": 0
+        },
+        {
+          "log": "logs/compare.log",
+          "commandLine": "> tsx indexer/be06/cli.ts compare --manifest /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/public/manifest.json --at 24 --json-output /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/reports/be06-independent-20261111-6a6475/compare.json --summary-output /home/chung2k5/.local/state/tv3-be09-receiver-20261111-6a6475/runs/20261111T071940Z-a0311f572edf/reports/be06-independent-20261111-6a6475/compare.md",
+          "explicitProcessExitCode": null,
+          "historicalTV3ReportedExitCode": 0
+        }
+      ],
+      "historicalProvenance": {
+        "receiver": "TV3 LangXiTrum2005",
+        "os": "Ubuntu WSL 26.04.1",
+        "node": "24.15.0",
+        "npm": "11.12.1",
+        "foundry": "1.8.5",
+        "postgresql": "18.4",
+        "target": "New empty isolated DB; API DB read-only reference",
+        "attribution": "TV3 comment 6790134378; machine/toolchain/DB provisioning not independently reconstructed from this bundle",
+        "sourceUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-6790134378"
+      },
+      "minimumMissing": [
+        "Receiver-side API restart with before/after checkpoint/context/digest and six API responses bound to one receiver run. Existing TV2 restart and TV3 worker restart do not establish this."
+      ],
+      "limitations": [
+        "Four explicit process exit-code records absent; four exit0 remain historical TV3 report, not a demand to rerun the accepted campaign.",
+        "No current chain liveness or source integration acceptance.",
+        "16 unknown ancillary topics and 0 decode errors; incomplete raw decode retained."
+      ],
+      "suggestedIssueComment": "TV4 đã tải và kiểm độc lập bytes [bundle BE06](https://github.com/user-attachments/files/35255456/TV3_Issue42_BE06_Original_Evidence_20261123.zip), SHA-256 `72a16fcc2f336aa4be0598bb3e1e6b789537f1224af430c6f46741c2203560dd`: ZIP CRC/path an toàn, 13/13 mục SHA256SUMS PASS (14 tệp tổng cộng), 11/11 original bindings trong EVIDENCE_MANIFEST khớp; 7/7 source hashes khớp Git `4cba99a0ecb54a9ad8fc29ec5c08419e61e80c44`.\nManifest `72452b…e741b` khớp rebuild.manifest.sha256; compare JSON đúng checksum lịch sử `34e6a6…e8ab2`. Hai exports byte-identical và bằng đúng hai phần reference/rebuild nhúng trong compare; scope/chain 31337/H24/hash `0x255897152523be3f753222abd3e87c4ddf7451bceb9927c91ba772958660becd` khớp rebuild/rawCheckpoint/projection context/exports. Compare equal, mismatches=[], chainCrossCheck reference/rebuild PASS (1 proposal, 1 operation, balance 9000000000000000000000); đây là summary lịch sử, không phải RPC rerun của TV4. Giữ 16 unknown ancillary topics/0 decode errors, không suy ra decoder complete.\nĐã nhận đủ bytes rebuild/exports/compare: không còn yêu cầu nộp lại hoặc chạy lại toàn campaign. Bốn log chứa lệnh và kết quả thành công nhưng không có explicit process exit code: 4×exit0 chỉ là TV3 historical report, không independently reverified. Clean WSL/toolchain/new-empty target/read-only reference được quy đúng cho báo cáo TV3; source này không thay Dev/PR21 acceptance.\n#42 tiếp tục PARTIAL/In review cho điều kiện vận hành máy nhận: chưa có evidence API restart trên TV3 với checkpoint/context/digest/sáu responses trước–sau cùng run. Worker restart #40 và API restart trên TV2 không thay phần này. Xin gửi output đã giữ, đã redact của riêng API restart máy nhận (nếu có), không gửi DB/env/credentials; không cần lặp rebuild đã đủ. Chưa đề nghị đóng toàn issue."
+    },
+    "40": {
+      "issueUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/40",
+      "attachmentUrl": "https://github.com/user-attachments/files/35256884/TV3_BE09_20261121_Evidence.zip",
+      "attachmentBytes": 42307,
+      "attachmentSha256": "c29d61992ff10041ddcb1479ed164279bec68e11c2c9cd32a5271502052d98d3",
+      "zipCrc": "PASS",
+      "safeMemberPaths": "PASS",
+      "members": [
+        {
+          "path": "public/manifest.json",
+          "bytes": 100121,
+          "sha256": "ab8f932c4f5d8a30eaee60877c754a38f4c1f42628225615bd292aaab1d255b4"
+        },
+        {
+          "path": "reports/source-provenance.json",
+          "bytes": 783,
+          "sha256": "d724e99e3e9f985b02dc06f82b22e9dc1880bbac26856e7ce472447a577ddaac"
+        },
+        {
+          "path": "reports/governance-seed.json",
+          "bytes": 15886,
+          "sha256": "a4f982f6e163427183db3d4691482990baa5ecc29bd78ace88b1c43b7f7fe055"
+        },
+        {
+          "path": "reports/up-report.md",
+          "bytes": 1408,
+          "sha256": "634a9ee765e9cd391303d557dc5cd0bc7e9dbb6bfd5ae13af0610d9760f0d30c"
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/report.md",
+          "bytes": 1482,
+          "sha256": "df1bfefb0eaed5f862f3af22ec731f59c921a93318b76f65f31b03c3fb310610"
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/results.json",
+          "bytes": 4968,
+          "sha256": "d18f9038f55ebedb2bd840fb24b2586ef9f8162686779359de4b6633c4e740fe"
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/frontend-api-live-test.log",
+          "bytes": 1104,
+          "sha256": "f2ef4c1d9af853628081b2eb967a8290df248def38726ff97674ddca314d4ebc"
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/frontend-api-live-test.vitest.json",
+          "bytes": 1046,
+          "sha256": "ffefb08dcee5bc340c3646e1192867e2b9f11cd05e49c43bdc30974e8d461489"
+        },
+        {
+          "path": "logs/setup.log",
+          "bytes": 19918,
+          "sha256": "99dd5976d00c4840adbc2232792abf79e825b72e6c7f0beb9c87b5ddc1ce88ea"
+        },
+        {
+          "path": "logs/deploy.log",
+          "bytes": 274,
+          "sha256": "5ba709273e5cb898c31457947494788b2c62574f937e8f98b4fcaf04f6a09003"
+        },
+        {
+          "path": "logs/register.log",
+          "bytes": 155,
+          "sha256": "dbbb4bd9faea410574ad8ce46f91e14f0b69431391ce0436e7deacf2c08d2280"
+        },
+        {
+          "path": "logs/role-check.log",
+          "bytes": 11189,
+          "sha256": "06b171f7f3433f0d1a19bc96f2eaf102390103a1e09468ebb196fe0a8ec5aef9"
+        },
+        {
+          "path": "logs/migrations.log",
+          "bytes": 767,
+          "sha256": "0c513a3c42de9b0d98bedaa24a92da14b2755356cfc135d7c8af9326a2e87d62"
+        },
+        {
+          "path": "logs/api.log",
+          "bytes": 49,
+          "sha256": "d530a20080d048566d55f35a1abe94e23603a3f7fce81f5c136501ac554ae84c"
+        },
+        {
+          "path": "logs/frontend.log",
+          "bytes": 72,
+          "sha256": "3f1503e6e195a378180fdcadf867c3939e28c51bc10a4cf7c33e7a241a50f821"
+        },
+        {
+          "path": "logs/postgres.log",
+          "bytes": 5982,
+          "sha256": "8ee3cb0f69a57079140feb474f08503f1b3d4aee260ea17f482011db8485dbdf"
+        },
+        {
+          "path": "logs/worker.log",
+          "bytes": 1575802,
+          "sha256": "ec73938c6ba8c3cd7feb88a3c34f69fd8807d192351e8b29aee917639770fbe9"
+        },
+        {
+          "path": "SHA256SUMS",
+          "bytes": 1627,
+          "sha256": "ca0556a91eae82abe32f26baa9fc0c549ee1cc5f1e384d36fda3f4f4883f272c"
+        },
+        {
+          "path": "README_HANDOFF.txt",
+          "bytes": 1091,
+          "sha256": "76f30a4a91b995674248f620eb55f3c78eac449f11d0c4f15eecd1b4dfd52267"
+        }
+      ],
+      "checksumPassed": 17,
+      "checksumTotal": 17,
+      "checksumResults": [
+        {
+          "path": "public/manifest.json",
+          "expected": "ab8f932c4f5d8a30eaee60877c754a38f4c1f42628225615bd292aaab1d255b4",
+          "actual": "ab8f932c4f5d8a30eaee60877c754a38f4c1f42628225615bd292aaab1d255b4",
+          "match": true
+        },
+        {
+          "path": "reports/source-provenance.json",
+          "expected": "d724e99e3e9f985b02dc06f82b22e9dc1880bbac26856e7ce472447a577ddaac",
+          "actual": "d724e99e3e9f985b02dc06f82b22e9dc1880bbac26856e7ce472447a577ddaac",
+          "match": true
+        },
+        {
+          "path": "reports/governance-seed.json",
+          "expected": "a4f982f6e163427183db3d4691482990baa5ecc29bd78ace88b1c43b7f7fe055",
+          "actual": "a4f982f6e163427183db3d4691482990baa5ecc29bd78ace88b1c43b7f7fe055",
+          "match": true
+        },
+        {
+          "path": "reports/up-report.md",
+          "expected": "634a9ee765e9cd391303d557dc5cd0bc7e9dbb6bfd5ae13af0610d9760f0d30c",
+          "actual": "634a9ee765e9cd391303d557dc5cd0bc7e9dbb6bfd5ae13af0610d9760f0d30c",
+          "match": true
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/report.md",
+          "expected": "df1bfefb0eaed5f862f3af22ec731f59c921a93318b76f65f31b03c3fb310610",
+          "actual": "df1bfefb0eaed5f862f3af22ec731f59c921a93318b76f65f31b03c3fb310610",
+          "match": true
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/results.json",
+          "expected": "d18f9038f55ebedb2bd840fb24b2586ef9f8162686779359de4b6633c4e740fe",
+          "actual": "d18f9038f55ebedb2bd840fb24b2586ef9f8162686779359de4b6633c4e740fe",
+          "match": true
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/frontend-api-live-test.log",
+          "expected": "f2ef4c1d9af853628081b2eb967a8290df248def38726ff97674ddca314d4ebc",
+          "actual": "f2ef4c1d9af853628081b2eb967a8290df248def38726ff97674ddca314d4ebc",
+          "match": true
+        },
+        {
+          "path": "reports/verify-20261121T165226Z-c65b835c/frontend-api-live-test.vitest.json",
+          "expected": "ffefb08dcee5bc340c3646e1192867e2b9f11cd05e49c43bdc30974e8d461489",
+          "actual": "ffefb08dcee5bc340c3646e1192867e2b9f11cd05e49c43bdc30974e8d461489",
+          "match": true
+        },
+        {
+          "path": "logs/setup.log",
+          "expected": "99dd5976d00c4840adbc2232792abf79e825b72e6c7f0beb9c87b5ddc1ce88ea",
+          "actual": "99dd5976d00c4840adbc2232792abf79e825b72e6c7f0beb9c87b5ddc1ce88ea",
+          "match": true
+        },
+        {
+          "path": "logs/deploy.log",
+          "expected": "5ba709273e5cb898c31457947494788b2c62574f937e8f98b4fcaf04f6a09003",
+          "actual": "5ba709273e5cb898c31457947494788b2c62574f937e8f98b4fcaf04f6a09003",
+          "match": true
+        },
+        {
+          "path": "logs/register.log",
+          "expected": "dbbb4bd9faea410574ad8ce46f91e14f0b69431391ce0436e7deacf2c08d2280",
+          "actual": "dbbb4bd9faea410574ad8ce46f91e14f0b69431391ce0436e7deacf2c08d2280",
+          "match": true
+        },
+        {
+          "path": "logs/role-check.log",
+          "expected": "06b171f7f3433f0d1a19bc96f2eaf102390103a1e09468ebb196fe0a8ec5aef9",
+          "actual": "06b171f7f3433f0d1a19bc96f2eaf102390103a1e09468ebb196fe0a8ec5aef9",
+          "match": true
+        },
+        {
+          "path": "logs/migrations.log",
+          "expected": "0c513a3c42de9b0d98bedaa24a92da14b2755356cfc135d7c8af9326a2e87d62",
+          "actual": "0c513a3c42de9b0d98bedaa24a92da14b2755356cfc135d7c8af9326a2e87d62",
+          "match": true
+        },
+        {
+          "path": "logs/api.log",
+          "expected": "d530a20080d048566d55f35a1abe94e23603a3f7fce81f5c136501ac554ae84c",
+          "actual": "d530a20080d048566d55f35a1abe94e23603a3f7fce81f5c136501ac554ae84c",
+          "match": true
+        },
+        {
+          "path": "logs/frontend.log",
+          "expected": "3f1503e6e195a378180fdcadf867c3939e28c51bc10a4cf7c33e7a241a50f821",
+          "actual": "3f1503e6e195a378180fdcadf867c3939e28c51bc10a4cf7c33e7a241a50f821",
+          "match": true
+        },
+        {
+          "path": "logs/postgres.log",
+          "expected": "8ee3cb0f69a57079140feb474f08503f1b3d4aee260ea17f482011db8485dbdf",
+          "actual": "8ee3cb0f69a57079140feb474f08503f1b3d4aee260ea17f482011db8485dbdf",
+          "match": true
+        },
+        {
+          "path": "logs/worker.log",
+          "expected": "ec73938c6ba8c3cd7feb88a3c34f69fd8807d192351e8b29aee917639770fbe9",
+          "actual": "ec73938c6ba8c3cd7feb88a3c34f69fd8807d192351e8b29aee917639770fbe9",
+          "match": true
+        }
+      ],
+      "sourceCommit": "e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0",
+      "gitBlobResults": [
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-local.sh",
+          "exitCode": 0,
+          "path": "scripts/be09-local.sh",
+          "expected": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+          "actual": "3486938647958e7a7b204eb89f5a0df90ad0cc753348d0f28db57f3e8e91401e",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-seed.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-seed.mjs",
+          "expected": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+          "actual": "b68a2488572bc053adc1bffaf3c255064ca1fb8e24206c9664252f8d43b2094c",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-register.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-register.mjs",
+          "expected": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+          "actual": "043a9e8e5a5e36466c241a39da26d2c8cbf6e2d28cf064e2d387524e51e6dd5e",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-diagnose.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-diagnose.mjs",
+          "expected": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+          "actual": "6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-verify.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-verify.mjs",
+          "expected": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+          "actual": "bf171264c14e0161c14b6d68afd56a4b75fa5881c122bd7ad132fbd6a3204aaf",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-live-test.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-live-test.mjs",
+          "expected": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+          "actual": "078f2b99e4f7bd87b4bc5e635fefcb18e2e525f5832a0c54d63bb947ed5c85f8",
+          "match": true
+        },
+        {
+          "command": "git show e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0:scripts/be09-provenance.mjs",
+          "exitCode": 0,
+          "path": "scripts/be09-provenance.mjs",
+          "expected": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+          "actual": "12e1132df57a68514ed5e5208eae47cfe82081b3ea2787b20ec8b1ba392805be",
+          "match": true
+        }
+      ],
+      "closureRecommended": false,
+      "status": "HISTORICAL TECHNICAL BYTES ACCEPTED; FULL RECEIVER/LIFECYCLE PARTIAL / IN REVIEW",
+      "runId": "20261121T164230Z-1d31cb975ecc",
+      "deploymentName": "be09-local-20261121T164230Z-eb6f2a6c4641",
+      "manifestSha256": "ab8f932c4f5d8a30eaee60877c754a38f4c1f42628225615bd292aaab1d255b4",
+      "context": {
+        "chainId": "31337",
+        "deploymentName": "be09-local-20261121T164230Z-eb6f2a6c4641",
+        "H": "24",
+        "hash": "0xa483bfc1262bf4bc7e814a5c5a77f507d8cfe0ffa1f2315ac52972b20d358687",
+        "revision": "9d40fcb0-586e-430f-8220-8223fb9628f0"
+      },
+      "recordedEndpoints": [
+        {
+          "endpoint": "/api/health",
+          "method": "GET",
+          "httpStatus": 200
+        },
+        {
+          "endpoint": "/api/proposals",
+          "method": "GET",
+          "httpStatus": 200
+        },
+        {
+          "endpoint": "/api/summary",
+          "method": "GET",
+          "httpStatus": 200
+        },
+        {
+          "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887",
+          "method": "GET",
+          "httpStatus": 200
+        },
+        {
+          "endpoint": "/api/proposals/85033959057062009095055709644487027886063896898440812188508422353819508755887/votes",
+          "method": "GET",
+          "httpStatus": 200
+        },
+        {
+          "endpoint": "/api/treasury/transfers",
+          "method": "GET",
+          "httpStatus": 200
+        }
+      ],
+      "contractComparison": {
+        "H": "24",
+        "hash": "0xa483bfc1262bf4bc7e814a5c5a77f507d8cfe0ffa1f2315ac52972b20d358687",
+        "revision": "9d40fcb0-586e-430f-8220-8223fb9628f0",
+        "proposalState": "Executed",
+        "votes": [
+          "0",
+          "700000000000000000000",
+          "0"
+        ],
+        "paidRequest": true,
+        "treasuryBalance": "9000000000000000000000",
+        "apiAndChainVoteRows": 2,
+        "apiAndChainTransfers": 2,
+        "totalIn": "10000000000000000000000",
+        "totalOut": "1000000000000000000000",
+        "result": "PASS"
+      },
+      "workerRestart": {
+        "oldPid": 845,
+        "newPid": 2493,
+        "databaseDigestUnchanged": true,
+        "publication": {
+          "block_number": "24",
+          "block_hash": "0xa483bfc1262bf4bc7e814a5c5a77f507d8cfe0ffa1f2315ac52972b20d358687",
+          "source_scope": "0xd4665dccef2680d744733612676a554ee194b6c8fc638b393487321c2cc8135a",
+          "snapshot_revision": "9d40fcb0-586e-430f-8220-8223fb9628f0",
+          "ignored_ancillary_events": 16
+        }
+      },
+      "cors": {
+        "preflightHttpStatus": 204,
+        "allowOrigin": "http://127.0.0.1:5173",
+        "expectedOrigin": "http://127.0.0.1:5173"
+      },
+      "liveTest": {
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "todo": 0
+        },
+        "exitCode": 0,
+        "vitestSuccess": true,
+        "command": "npm run test --prefix frontend -- src/data/api.live.test.ts --reporter=default --reporter=json --outputFile.json=/home/chung2k5/.local/state/dao-budget-be09-tv3-20261121/runs/20261121T164230Z-1d31cb975ecc/reports/verify-20261121T165226Z-c65b835c/frontend-api-live-test.vitest.json",
+        "rerunByTV4": false
+      },
+      "runtimeIdentityEvidence": {
+        "records": 5,
+        "height": "19",
+        "blockHash": "0x1133a603bd43632adea9a86ddee44d5f986142b31a2f04515472857ba1386f33",
+        "source": "logs/role-check.log == manifest.roleCheck (excluding manifest absolute path)",
+        "identities": {
+          "GOV": {
+            "address": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+            "deploymentBlock": "1",
+            "transactionHash": "0x517a91d1d9695a80d3a06de6b341a93d9bf2ef3fc957d54a272a009e9125e543",
+            "runtimeSha256": "b4335ef0b627c9ef43a0675543e7aa2306823b6d8cd96148d5d6070482d4ca33",
+            "normalizedRuntimeSha256": "4288884dbcf273ec62803c388ca8de32c194a052fc164239ab128c82089fcd29",
+            "abiSha256": "c68b32dce2c0d1fb6c417f33a4321f4a75c353815d93e3d2c30f058a49a6956b"
+          },
+          "BUD": {
+            "address": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+            "deploymentBlock": "2",
+            "transactionHash": "0x7bb076d05b4dc62337ab8258bef994fed95ff4219c16aa31f4ba30dacb4f351c",
+            "runtimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "normalizedRuntimeSha256": "1e6e091d233ad069b938ad71e87dbd1738e343625d37ba2fc116ae1e4df095cb",
+            "abiSha256": "91fb9d8c3c8a8d2fe89a61a0180b43660470f624f7f6910e744de956a26f4dc8"
+          },
+          "Treasury": {
+            "address": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+            "deploymentBlock": "3",
+            "transactionHash": "0x06ef9261acfefbce0b7bc026c2fa806e6859572a2a665d3a62526d19949c97ad",
+            "runtimeSha256": "e2f42f862585834650b2df672e4ea56db6a377cd48a0d0e0310d7e84ca56f5a6",
+            "normalizedRuntimeSha256": "5d54f627d935a4d2d963e1402f06eb3921dee859d7a5a18c975efc19e311e0b7",
+            "abiSha256": "e06071647de5758c4e3613643b58b013e3d60c30b1b94561ae4a32f7e99f774b"
+          },
+          "Timelock": {
+            "address": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+            "deploymentBlock": "4",
+            "transactionHash": "0xdf43ae1d251238b0d6a9315e44514ba35c842cd2b412846dd96c1ee066384fd4",
+            "runtimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "normalizedRuntimeSha256": "c4f345c1bb4a3b08056f2316fb50f4f7ee286cd12926ae335897ee0106d3aa91",
+            "abiSha256": "c77a58372f17bc25ec5eae09676e5f5349b5cc429708cb6a9361f35e1ff494aa"
+          },
+          "Governor": {
+            "address": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "deploymentBlock": "5",
+            "transactionHash": "0x68dcf82ac353f97a580d91e00baa61cb654cb8b2471760ab27a6dc1a94cb5f6f",
+            "runtimeSha256": "5d6d7ba79fc7d417d88fa079a78e5f678db9b8cabf9dd988d9b3d2e145d2d1ad",
+            "normalizedRuntimeSha256": "fb39ae95eefc75df6af17dcfbd3e5559ebc64c8df5e71034c2cbb8bf55857805",
+            "abiSha256": "40a0ad2f5a2eaa409e60888225b435565e85909131481e17364c641f92af3752"
+          }
+        },
+        "limitation": "H19 deployment runtime SHA-256/identity evidence, not raw Windows eth_getCode at verification H24; bytecodes not re-fetched."
+      },
+      "servicePorts": {
+        "frontend": 5173,
+        "api": 3300,
+        "rpc": 18545,
+        "postgresql": 55432
+      },
+      "recordedPids": {
+        "postgresql": 731,
+        "anvil": 755,
+        "workerBeforeVerify": 845,
+        "workerAfterVerify": 2493,
+        "api": 849,
+        "frontend": 907
+      },
+      "shutdownActualLogLines": [
+        "Foreground session active for /home/chung2k5/.local/state/dao-budget-be09-tv3-20261121/runs/20261121T164230Z-1d31cb975ecc. Keep this terminal open.",
+        "Use a second terminal for status/verify. Ctrl+C stops this run and preserves data/logs.",
+        "Vite: PID is not a live process owned by this run; left untouched (907)",
+        "API: sending SIGTERM to PID 849",
+        "API: stopped",
+        "Indexer worker: sending SIGTERM to PID 2493",
+        "Indexer worker: stopped",
+        "Anvil: PID is not a live process owned by this run; left untouched (755)",
+        "PostgreSQL: stopping this run isolated cluster",
+        "waiting for server to shut down.... done",
+        "server stopped"
+      ],
+      "shutdownPostgresqlEvidence": "logs/postgres.log: 2026-11-22 00:40:30.990 +07 [731] LOG: database system is shut down",
+      "reportedOnly": [
+        "status → verify → status all exit0 and final five services LIVE (no raw status outputs)",
+        "All five run PIDs absent and four WSL ports free (README/comments, no ps/ss audit output)",
+        "Windows Scheduled Task Running/Enabled and Vite PID24124/port5173 restored (README/comments, no raw task/process/HTTP audit)",
+        "Windows-specific API/RPC/CORS reachability and context match (comments, not Windows request/response captures)"
+      ],
+      "minimumMissing": [
+        "Sanitized existing post-stop exact-run PID/port audit; setup does not prove Vite/Anvil absence or port release.",
+        "Sanitized existing Windows transport/health/context/CORS and exact Scheduled Task/process/listener/HTTP200 restoration output.",
+        "Retained status-before/after verify output to bind historical five-service receiving/lifecycle claims."
+      ],
+      "foregroundServeExitCode": null,
+      "workerLog": {
+        "bytes": 1575802,
+        "records": 2929,
+        "allRecordsParsed": true,
+        "contexts": [
+          {
+            "H": "24",
+            "hash": "0xa483bfc1262bf4bc7e814a5c5a77f507d8cfe0ffa1f2315ac52972b20d358687",
+            "revision": "9d40fcb0-586e-430f-8220-8223fb9628f0",
+            "records": 2315
+          },
+          {
+            "H": "25",
+            "hash": "0xea2b07a21ed26ced2c8ec840ce7939282e310c497bf694125ae2a6be37be780f",
+            "revision": "9d40fcb0-586e-430f-8220-8223fb9628f0",
+            "records": 144
+          },
+          {
+            "H": "26",
+            "hash": "0x9885a75ee775c71030f4927c640ca24eb7e4bf289a50d05c28766db6184ab29d",
+            "revision": "9d40fcb0-586e-430f-8220-8223fb9628f0",
+            "records": 470
+          }
+        ],
+        "semanticCountsAndTreasuryUnchanged": true,
+        "unknownAncillaryTopics": 16
+      },
+      "additionalObservation": {
+        "postgresSerializationErrors": 2,
+        "statement": "DELETE FROM api_read_snapshots WHERE expires_at<=clock_timestamp()",
+        "timesLocal": [
+          "2026-11-22 00:07:58.200 +07",
+          "2026-11-22 00:35:34.447 +07"
+        ],
+        "causalRelationToHistoricalBrowser503": "Not established; no matched request/trace/timestamp evidence."
+      },
+      "limitations": [
+        "Historical stopped deployment; loopback URLs are not currently live endpoints.",
+        "16 unknown ancillary topics; health degraded statement retained, no raw health body in archive.",
+        "Transient browser 503 DATA_NOT_READY and recovery are historical TV3 observations; root cause/fix/bug status not established.",
+        "Results scope explicitly does not attest WSL receiver operation or browser/wallet E2E.",
+        "No foreground serve exit code; do not infer 130 or 0."
+      ],
+      "suggestedIssueComment": "TV4 đã tải đúng [bundle BE09 mới](https://github.com/user-attachments/files/35256884/TV3_BE09_20261121_Evidence.zip), 42,307 bytes, SHA-256 `c29d61992ff10041ddcb1479ed164279bec68e11c2c9cd32a5271502052d98d3`; ZIP CRC/path và 17/17 original checksums PASS (19 tệp gồm README/SHA256SUMS). Provenance/manifest/register/results cùng source `e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0`, 7/7 source hashes khớp Git. Run `20261121T164230Z-1d31cb975ecc`, deployment `be09-local-20261121T164230Z-eb6f2a6c4641`.\nChấp nhận offline technical evidence: 6 GET 200; CORS OPTIONS 204 đúng origin `http://127.0.0.1:5173`; contract/API comparison PASS, worker 845→2493/digest unchanged; live FE 1 PASS/0 SKIP/exit0. Results bind H24/hash `0xa483bfc1262bf4bc7e814a5c5a77f507d8cfe0ffa1f2315ac52972b20d358687`/revision `9d40fcb0-586e-430f-8220-8223fb9628f0`. Manifest/role-check có 5 code identity records tại H19; không phải raw Windows eth_getCode tại H24. Đây là run lịch sử, không service hiện đang live hay TV4 rerun.\nShutdown có bytes thật: setup.log ghi API849/worker2493 stopped và PostgreSQL stopped; postgres.log ghi database shut down. Tuy nhiên Vite907/Anvil755 được ghi “not a live process owned by this run; left untouched”, không tự chứng minh cả hai PID vắng mặt hay bốn port đã nhả. Bundle không có raw status→verify→status output, post-stop PID/listener audit, Windows task/process/restore/HTTP200 audit hoặc Windows transport/health/context/CORS output. Những mục đó hiện là TV3 statement trong README/comments, không nâng thành TV4 independently verified. Foreground serve exit code chưa được capture; không suy ra 130 hay 0.\nĐề nghị gửi riêng các output sanitized đã giữ của final owned PID/ports và Windows transport/task restoration, bind đúng run; không cần chạy lại campaign đã PASS hoặc đưa runtime.env/PID files có dữ liệu nhạy cảm. Giữ #40 PARTIAL/In review đến khi đủ receiver/lifecycle evidence. 16 unknown ancillary topics và transient browser 503/reload recovery giữ nguyên caveat, chưa xác định root cause/fix/bug; không thay wallet/governance E2E #19/#41."
+    }
+  }
+}

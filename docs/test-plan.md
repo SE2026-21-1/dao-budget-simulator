@@ -1,6 +1,11 @@
 # TV4 — Kế hoạch kiểm thử và ma trận nghiệm thu
 
-Ngày đối chiếu: 21/10/2026. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md), [SC01](contracts.md), [BE01 database](database.md), [BE01 API](api.md), [review SC03 TV4](sc03-review.md) và [BE02](indexer.md). Đây là **kế hoạch nghiệm thu**, không phải báo cáo toàn hệ thống đã đạt.
+> **Current Dev-merge handoff:** [r3 candidate/review/CI contract](evidence/2026-11-27-r3-dev-merge-handoff.md).
+> #42 independently PASS scoped at896f93e/H22; older NOT READY/R27 text below is historical.
+> Candidate union/admin integration is implemented and r2 runtime-verified; current PR CI/review is separate.
+> #19/#40/PR62-live/#20/#44 remain release/receiver scopes, not automatic Dev-merge blockers.
+
+Ngày đối chiếu hiện hành: **27/11/2026**; tiêu chí TC/setup và evidence 20–22/10 bên dưới giữ làm lịch sử, không phải trạng thái runtime hiện tại. Ma trận hiện hành ở §6. Nguồn chuẩn: [requirements v1.0](requirements/DAO_Budget_Simulator_Requirements_Nhom_4.md), [phân công TV4](TV4_Cong_viec_Testing_Deployment.md). Không coi toàn hệ thống đạt từ CI.
 
 TV1 sở hữu unit/fuzz contract và sửa contract; TV2 sở hữu SQL/indexer/API tests và sửa backend; TV3 sở hữu component/wallet/UI tests và sửa frontend. **TV4 là acceptance owner của mọi TC01–TC14, INV01–INV04**, sở hữu integration/E2E/attack/invariant, deploy/check-roles và tổng hợp evidence; không nhận thay unit tests của ba module. TV1 review deploy/attack, TV2 review replay/benchmark, TV3 review E2E.
 
@@ -148,7 +153,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Map:** FR03, FR08–FR09, FR13; BR03–BR05; NFR01; INV01. **Owner:** TV1 paid-request unit; TV2 linkage/dedup; TV4 attack/acceptance.
 - **Setup/reset:** R0+R1/F0; request chung=`keccak256(UTF8("tv4:TC10"))`; P1 chi1000U→R, P2 chi2000U→R2, descriptions khác nguyên bytes nên proposalId khác; cả hai A+B For700U và queue đúng delay, quỹ10000U. Nhánh khác reset rồi dùng bytes32(0), không mặc định cấm zero.
 - **Hành động/kỳ vọng:** execute P1 trước => quỹ9000U/R1000U, paid=true, P1 Executed. Execute P2 sau ETA revert vì request đã trả dù đủ9000U, P2 vẫn Queued/operation chưa done, R2=0, chỉ một Transfer/BudgetDisbursed thành công cho request. Reset rồi đảo thứ tự: P2 thành công2000U, P1 bị chặn => quỹ8000U/R2=2000U/R0. Phân biệt uniqueness proposalId với thanh toán requestId; không vô tình kiểm hai lần cùng operation thay cho TC10.
-- **Test/evidence:** E-SC04-L có proposalId/operationId khác nhau cùngrequest:7000 trả,2000 bị RequestAlreadyPaid dù quỹ còn3000. Attack regression còn refill để loại lý do thiếu tiền; invariant bao gồm request0. **CỤC BỘ TC10**, chưa chạy raw-receipt cả hai thứ tự với bytes32zero/reset từng biến thể; linkage/dedup API chưa có, không đánh toàn bộ PASS.
+- **Test/evidence:** E-SC04-L có distinct proposalId/operationId dùng chung request và trường hợp retry sau thiếu ngân sách. PR [#60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60) bổ sung kiểm tra thứ tự execute đảo ngược (`testSecondProposalCanWinSharedRequestWhenExecutedFirst`) và chống trả trùng bytes32(0) (`testZeroRequestIdCanBePaidOnlyOnceAcrossProposals`) trên Governor/Timelock/Treasury thật với final roles. `forge fmt --check tests/integration/TimelockGovernance.t.sol` và `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 forge test --match-path tests/integration/TimelockGovernance.t.sol -vv` đạt **40/40** trong worktree candidate cô lập. GitHub PR/push workflows trên exact PR head `9d1d05f305bd5ed51c8bbdc670523a9eb1dbac45` đều pass: [PR run](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924767566), [push run](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924760670). Đây chỉ mở rộng bằng chứng contract-level TC10; chưa có raw receipt/API/UI cho hai thứ tự và chưa phải nghiệm thu đầy đủ TC10.
 
 ### TC11 — Crash/restart, RPC lỗi và reorg
 
@@ -156,7 +161,7 @@ Mỗi mục ghi module owner; **TV4 acceptance owner** áp dụng riêng cho t�
 - **Setup/reset:** R1/F0+G(TC11,1000,R) trên chain local riêng; K=2, database sạch, headers mọi block kể cả rỗng; fix batch range/checkpoint trước batch và cửa sổ hash W đã chốt trong run config. Quỹ chain sau G9000U/R1000U. Thêm nhánh snapshot chain trước G để tạo reorg canonical thay thế không có chi.
 - **Hành động:** ngắt worker (i) sau raw logs trước projections, (ii) sau projections trước checkpoint/COMMIT, (iii) sau COMMIT trước acknowledge; restart cùng DB, scan lại batch. Tiêm lỗi RPC trước/giữa batch và decode lỗi. Reorg trong W bằng local fork/revert rồi mine nhánh thay; restart kiểm checkpoint hash, rollback đến common ancestor A rồi quét lại. Ca riêng vượt W phải không tìm được ancestor và yêu cầu rebuild.
 - **Kỳ vọng:** trước COMMIT batch rollback cả checkpoint/projection; sau COMMIT replay không trùng/mất. Key chainId+txHash+logIndex duy nhất, lưu blockHash/raw topics/data và kiểm conflict khác payload/hash, không DO NOTHING che reorg. Checkpoint không vượt dữ liệu đã commit hoặc head−2, kể cả block không event. RPC retry có backoff theo config ghi trong evidence, không hot-loop/advance giả. Nhánh bị thay không còn log/vote/payout/count; revision/cursor cũ bị invalid; số dư rebuilt trên nhánh thay=10000U/R0 nếu chi bị orphan. Vượt W: health not_ready/rebuild_required, ngừng phục vụ dữ liệu mới như canonical, không đoán checkpoint hay tiếp tục advance.
-- **Test/evidence:** E-BE02-C giữ synthetic RPC/storage/CLI proof lịch sử. E-RAWSQL-22 chứng minh scan nửa đầu chain thật, trigger SQL lỗi header thứ hai rollback batch và giữ prior committed batches; CLI quét phần còn lại hữu hạn, full scanner rerun và CLI fresh-process rerun idempotent. Không phải kill-point worker/checkpoint resume. **BỊ CHẶN** ba kill-points projection/checkpoint/ack, RPC retry/backoff runtime, reorg trong/vượtW, K-confirmations/API invalidation; evidence `docs/evidence/TC11/` cho các variant đó vẫn dự kiến. Chưa nghiệm thu TC11.
+- **Test/evidence:** E-BE02-C giữ synthetic RPC/storage/CLI proof lịch sử. E-RAWSQL-22 chứng minh scan nửa đầu chain thật, trigger SQL lỗi header thứ hai rollback batch và giữ prior committed batches; CLI quét phần còn lại hữu hạn, full scanner rerun và CLI fresh-process rerun idempotent. Không phải kill-point worker/checkpoint resume. BE08 push run [44929254569](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929254569) ghi lỗi test-oracle `rpc_outage`; artifact cho thấy retry ID interleave hợp lệ từ tối đa4 projection readers; PR event cùng SHA [44929259785](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929259785) pass. Helper đã được sửa để nhóm theo ID; regression `npm run test:be08` **11/11 PASS** và artifact thực replay đạt. Push/PR workflows sau sửa trên commit `e7eb2bae638b45b9eeec532adf0b431871c6d02c` đều PASS: [PR run 44931330317](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931330317), [push run 44931324667](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931324667); release publication skipped by condition. **BỊ CHẶN** ba kill-points projection/checkpoint/ack, RPC retry/backoff runtime, reorg trong/vượtW, K-confirmations/API invalidation; evidence `docs/evidence/TC11/` cho các variant đó vẫn dự kiến. Chưa nghiệm thu TC11.
 
 ### TC12 — DB trống và rebuild cùng H
 
@@ -216,41 +221,88 @@ Các bài dưới đây bổ sung TC, không đổi mã yêu cầu và không t�
 
 ## 6. Traceability đầy đủ FR/BR/NFR → TC/INV → evidence
 
-Các mã E chỉ là nguồn cục bộ ở §1. Mọi acceptance dưới đây **chưa đạt toàn bộ**; lý do/evidence còn thiếu nằm tại TC/Q tương ứng, không được chuyển PASS vì có tên bài test.
+### Revision và nguồn evidence hiện hành
 
-| Requirement | Coverage có tiêu chí thực thi | Evidence hiện tại / còn thiếu |
-|---|---|---|
-| FR01 | TC13, Q-UI: public read, address/network, chặn gửi sai mạng | Thiếu wallet/browser E2E thật. |
-| FR02 | TC01/TC04/TC05/TC13, INV04: balance/delegate/current/past votes, past checkpoint | E-SC02-H khác E-SC02-C; thiếu Governor/UI snapshot integration. |
-| FR03 | TC01/TC08/TC10/TC13: threshold past50, một action, text/requestId/description/hash nguyên bản, ProposalCreated | E-SC01 chỉ encode/fixture; thiếu propose thật và validator âm. |
-| FR04 | TC01/TC12, Q-READ/Q-UI:45→20/20/5, filter/ID/detail đủ trường cùng H | E-BE01-C offline; thiếu HTTP/chain/UI. |
-| FR05 | TC01–TC05/TC13, INV04: ba support, một phiếu, snapshot/time windows | Token có proof riêng; thiếu Governor VoteCast/receipt. |
-| FR06 | TC02/TC03/TC04/TC12, INV02/INV04:100 For fail,100+100 Abstain pass,200 hòa200 fail, sau deadline | E-BE01 mô phỏng; thiếu contract outcomes. |
-| FR07 | TC01–TC04/TC06/TC07/TC14, INV02: queue public qua Governor, state/quorum, operationId/ETA | Thiếu queue receipts/timelock. |
-| FR08 | TC01/TC06–TC10, INV01–INV03: ETA, đúng recipient/amount, replay | E-SC03-C/E-TV4-21 Treasury đạt cục bộ; thiếu Governor/Timelock execute. |
-| FR09 | TC01/TC09/TC11/TC12, INV03, Q-READ: ledger cùng H, thiếu tiền/retry | E-SC03-C có receipt/balance/ledger; thiếu projection/API, reorg/rebuild cùng H. |
-| FR10 | TC14/TC13: creator Pending only, Canceled history và mọi operation bị chặn | Thiếu cancel contract/UI/API proof. |
-| FR11 | TC01/TC09/TC11/TC12, Q-READ/Q-UI: totals cùng H, không revert/double count,4 màn hình/banner | Thiếu chain→API→UI proof. |
-| FR12 | TC07/TC09/TC13: wallet stages, receipt0/1, refusal giữ form, HTML-safe, sync/error | Thiếu wallet/receipt/browser proof. |
-| FR13 | TC01/TC09–TC12, INV03: deploy blocks/raw/hash/dedup/linkage | E-BE02-C/E-TV4-CI-21 có scanner/raw storage/CLI synthetic; E-SC03-C decode receipt thật. Chưa full pipeline/projection. |
-| FR14 | TC11, Q-FRESH/Q-RECOVER: K=2, batch atomic, restart hash/reorg/window | Chưa worker/runtime proof. |
-| FR15 | TC12, Q-RECOVER/Q-CLONE: DB mới từ chain, same-H data/state/balance | Chưa rebuild command/exports/historical calls. |
-| FR16 | TC01/TC11–TC13, Q-READ/Q-PERF: read endpoints/health/structured validation/pagination/asOfBlock, không ký | E-BE01 spec/fixture offline; thiếu HTTP server/tests. |
-| BR01 | TC01/TC04/TC05/TC12, INV04: delegated snapshot, transfer/delegate sau S bất biến | E-SC02-C token-only; thiếu proposal thật. |
-| BR02 | TC02–TC05, INV02/INV04: For+Abstain quorum, For>Against, một vote, ba support | Chưa Governor runtime. |
-| BR03 | TC01/TC07–TC10/TC14, INV01–INV03: đúng khoản chi, không double-pay | E-SC03-C/E-TV4-21 có Treasury-only; thiếu governance/payload acceptance. |
-| BR04 | TC06/TC08/TC14, INV02,Q-CONFIG: whitelist/native0/quyền | Có Treasury role negatives cục bộ; thiếu Governor whitelist và role graph cuối. |
-| BR05 | TC01/TC09/TC10, INV03: balance hiện tại, atomic retry | E-SC03-C có thiếu tiền/retry cùng request; thiếu retry Governor operation và API. |
-| BR06 | TC08/TC14, Q-CONFIG: creator Pending-only, không change role/params qua proposal, redeploy khi đổi config | Chưa cancel/role attack trace. |
-| BR07 | TC01/TC02/TC06/TC07, INV02: success không tự chi, queue+execute public Governor, ETA | Chưa Governor/Timelock integration. |
-| NFR01 | TC01–TC10/TC14, INV01–INV04, Q-CONFIG: on-chain safeguards, DB không quyền ký/override | Chưa full negative/invariant proof. |
-| NFR02 | Q-PERF:100proposal/1000vote,10clients/60s,p95<1s,cấu hình máy/cách đo | Chưa API/load results. |
-| NFR03 | TC11/TC13,Q-FRESH: K=2, đủ xác nhận→commit≤30s, UI cảnh báo>30s | Fixture health không phải latency runtime. |
-| NFR04 | TC11/TC12,Q-RECOVER: retry/backoff/atomic checkpoint/reorg/rebuild | Chưa worker/recovery/rebuild. |
-| NFR05 | Q-CLONE: clone sạch/versions/lockfile/README/demo/tests | E-SC01-H không phải clone sạch; thiếu clean-clone run. |
-| NFR06 | TC13,Q-UI: tiếng Việt,390/1366,labels/loading/empty/error/keyboard | Chưa browser visual/keyboard proof tích hợp. |
-| NFR07 | Safety negatives, CI đúng module, governance invariant≥100×50 không vacuous | E-TV4-CI-21 và Treasury-only invariant đã chạy; thiếu governance/frontend/peer approval, chưa nghiệm thu đầy đủ. |
-| NFR08 | TC06/TC14,Q-CONFIG/Q-CLONE: no secrets/env.example/manifest/roles exit code | Chưa whole-system deployment/scan; token smoke không đủ. |
+[Nghiệm thu27/11](evidence/2026-11-27-tv4-acceptance.md) thay trạng thái26/11 bên dưới:
+PR60 baseline d4d405f2ca64e1786b44c7d81354cbe2de18040f; Devd63842a được audit bằng Git objects,
+không nhập vào branch. [Conflict/patch](evidence/2026-11-27-pr60-pr61-integration.md) giữ fixes/security/clock/migrations.
+
+- **N19** = [review gói mới](evidence/2026-11-27-issue19-review.md), evidence887c5ec/product4cba99a:
+  B-active/draft/error-afterSubmit visual accepted; 7checksums PASS; no-send inference, provider boundary chưa instrument.
+  MetaMask13.58.0 chỉ lời khai run mới, H26 version UNKNOWN; proposals503 cause UNKNOWN, không E2E PASS.
+- **I27** = [merge-tree/patch review](evidence/2026-11-27-pr60-pr61-integration.md): PR60/61 đều conflict registry
+  với Devd63842a; patch hợp nhất ancillary ABI + frozen index chỉ để review, chưa applied/merged.
+- **P62** = [TV4 snapshot/workflow review](evidence/2026-11-27-pr62-tv4-review.md), source d4a0fb5:
+  144 narrow synthetic/unit PASS, không defect có reproduction; live EIP1898/archive/finality SKIP.
+- **R27** = [receiver readiness/checklist](evidence/2026-11-27-receiver-readiness.md):
+  TV3 NOT READY/source4cba99a/thiếuproposal+TTL; #42 và#40 runtime SKIP, không thay accepted BE06/pipeline.
+
+Đoạn26/11 sau đây giữ làm lịch sử source/review; N19/R27 cập nhật đúng các gap đã thay đổi.
+
+[Nghiệm thu26/11](evidence/tv4-20261126-acceptance.md) là trạng thái tại ngày26/11;
+PR60 baseline b92bef5409d6478de97efbc8209241620967d18a, không nhập Dev3d0f6ca trong lượt đó.
+TV3 [COMMENT6055560601](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
+đã xác nhận pinning P2 resolved, không phải whole-PR approval.
+TV2 BE08 approvals PR60 [0a5cc5c/6053195381](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381)
+và PR61 [cba8b6c/6053196499](https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6053196499)
+giữ đúng scope/source. Kết quả test nguồn bên dưới không phải các lần rerun26/11.
+
+- **A19** = [supplementary provenance review](evidence/2026-11-26-issue19-provenance-review.md):
+  run20261124T081807Z-tv3-account-switch/source6766e5e/manifest/handoff binding đạt.
+  Scoped functional support giữ; B-active sau Submit/exact H26 MetaMask version vẫn thiếu.
+  Chỉ narrow draft/account-switch/no-send run mới nếu capture cũ không còn.
+
+- **B** = [backend artifact đã TV4 kiểm bytes](evidence/tv4-20261123-backend.json), Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`, [CI 44922735121](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922735121). Đây là offline review CI lịch sử; giữ thiếu same-ID tail lifecycle của ID9398, không biến thành bug sản phẩm.
+- **C** = TC10/final-role integration 40/40, BE08 14/14, typecheck/build và release 4/4 thực chạy trên candidate `5c899976ac4de97434737493815e7ccbdcd13984`; ba file BE08 đúng `42518f7` (#61). [Báo cáo lệnh và release gate](evidence/tv4-20261123-acceptance.md).
+- **Q** = [browser harness](qa07-e2e.md), product source `5c89997` và source hashes trong raw report. Một proposal 11.000 BUD, A=400 For, thiếu quỹ/retry sau nạp 2.000; không phải exact TC01 1.000 BUD/A+B700 hoặc ví MetaMask.
+- **R** = [hai bundle TV3 đã TV4 kiểm độc lập](evidence/tv4-20261123-bundles.md): #42 source `4cba99a`, #40 source `e8e443c`; không chuyển evidence đó thành lượt chạy Dev hiện tại.
+- **S** = [Sepolia probe](evidence/tv4-20261123-sepolia.json) và [remote helpers/13 tests/probe cuối](evidence/tv4-20261123-sepolia-remote.json), source chung `5c89997` + file hashes riêng; không có testnet deployment.
+- **U** = [approved-source UI/E2E](evidence/tv4-20261123-approved-ui.json), product Dev `6766e5ee2d8c466542687cbeb09677c4d11e5463`, tooling SHA256 `2e17c4a4…7c1e`, keyboard helper `19aeec78…4dff`: full adapter lifecycle, actual reorg503/cursor409, form keyboard/focus1366/390. Không phải MetaMask.
+- **V** = [mười live views và frontend live API test](evidence/tv4-20261123-live-views.json), cùng Dev6766e5e: năm views×hai viewport, actual API200/no overflow/no browserErrors; `api.live.test.ts`1PASS/0skip, sáu endpoint cùng H/hash/revision.
+- **W** = [fresh actual MetaMask run](evidence/tv4-20261123-real-extension.json), cùng Dev6766e5e, official stable unpacked13.58.0.0/Chromium141: propose/vote/queue/receipt0 execute/topup/receipt1 retry cùng proposal, SQL/API/contract/UI H52/hash6be070…ba66. Hai actor extension do driver reset, không một session giả, không Chrome Web Store/TV3 human/testnet acceptance. [#19 historical bundle](evidence/tv4-20261123-wallet-review.md) giữ riêng, không gộp sourcee8e443c vào W.
+- **S2** = [receipt-binding security delta](evidence/tv4-20261123-sepolia-receipt-fix.json), base3166adc + recorded file hashes:21synthetic Sepolia/14BE08/typecheck/build exit0. Bảo vệ submitted hash ở hai reads/block/index/canonical membership; funding0descendants không được journalK2. TV1 đã xác nhận receipt-binding ở9e121c5; submission identity mới theo S3. Source13tests/six-file identity trong S là lịch sử, không deployment permission.
+- **S3** = [submission identity / ma trận delta24/11](evidence/tv4-20261124-submission-identity.md), fix `033e63d3d70408ee87563e8dc809f67fbde67c72`; local base9e121c5+fingerprints:44bootstrap/provenance/Sepolia PASS (28Sepolia). Signed raw→keccak256→disk journal trước send→response cùng identity; full funding-response substitution0descendants fail-stop/no-resend. [TV1 đã APPROVE security scope trên b186844](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6037012460); BE08 không thay các source/tests đã duyệt, không suy thành quyền deployment hoặc whole-release approval.
+- **T** = [sealed final-trace BE08](be08.md#final-worker-trace--tv2-review-24112026), PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c` → PR60 `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;18/18 synthetic/unit mỗi nhánh. Late fifth cùngID sau snapshot hoặc outage boundary làm final close/report FAIL; request mớiID khác hợp lệ. Native/CI phải đọc đúng revision, không suy từ unit.
+- **H** = [hai JSON worker/SQL H52 trích nguyên bytes](evidence/tv4-20261124-h52/provenance.md), evidence commit `7221c131f558a6566c715c371e58899acb05dccc`, product vẫnDev6766e5e. [TV2 receipt/API PASS](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7129225892), [worker/SQL PASS7155488965](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155488965) và [TV4 local pipeline ACCEPTED7155604461](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461). WorkerSQLid1/API nameqa07-e2e; query projectionH58 không đổi original disbursementH52. #41 còn documentary/lifecycle, không còn worker/SQL blocker.
+- **T verification** = [before/after logs, CI và local failure packet](evidence/be08-late-trace-20261124/report.md). PR61 CI45392235901 merge7962c6d gatePASS, local nativeFAIL ở normal-load publication30s trước outage. Không dùng greenCI xóa failure local; final documentation-head CI/nativePR60 gắn trong review replies.
+- **P** = [native bottleneck fix/raw proof](evidence/be08-native-performance-20261124/report.md), PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60 `7141d731c10d1e64c81cc1736d21ba8dac16e2ea`: topic index + set-based publication, giữ raw replay/canonical/K/recovery và transaction rollback. Native PR61 sourcea672fd2:13suites PASS,20freshness PASS,9850HTTP/0lỗi,p95 235,910ms,load max16.161,502ms. Không đổi30s/10clients/60s/100+1000; CI45403269468 của PR60 source7141d73 SUCCESS. PR61 clock follow-upcba8b6c giữ đúng fix96e4601; code-head và delivery-head CI ghi riêng trong review.
+- **P verification** = Native PR60 source7141d73:13suites/20freshness PASS,9830HTTP/0lỗi,p95 244,665ms,load max16.082,377ms; cả hai owned clusters đã cleanup. PR61 final code-headcba8b6c CI45403578782 SUCCESS. Các service-mode CI, local native và old diagnostic được tách trong P; không claim rerun H52 hoặc whole-release acceptance.
+
+| Requirement | TC / INV → test hiện có | Evidence / SHA | Kết luận đúng phạm vi |
+|---|---|---|---|
+| FR01 | TC13 → `frontend/src/chain/wallet.test.tsx`, U/W wrong-network | U/W / Dev6766e5e+tool hashes | Actual MetaMask wrong-network khóa ký; add-network/permission renewal đã chạy, không thay mọi account/session variant. |
+| FR02 | TC01/04/05/13, INV04 → token/Governor tests, wallet suite | C/Q; bounded INV lịch sử §4 | GOV/delegate/votes có source/tests; không nhận toàn bộ extension/snapshot variants. |
+| FR03 | TC01/08/10/13 → Governor unit, U/W browser form/propose | C/U/W | Actual MetaMask propose/IDs/description có receipt; không full actor/reset inventory. |
+| FR04 | TC01/12, Q-READ → API suite, `api.test.ts`, R receiver | B/R/Q | API/chain-backed detail đạt phạm vi; không claim 45 proposal browser campaign mới. |
+| FR05 | TC01–05/13, INV04 → Governor unit/integration, U/W castVote | C/U/W | Actual MetaMask400 For cùng proposal; mọi support/actor UI variants chưa full. |
+| FR06 | TC02/03/04/12, INV02/04 → Governor tests, BE04 reconciliation | B/C/Q | Contract/quorum tests và 400 For outcome có evidence; không full UI tie/defeat matrix. |
+| FR07 | TC01/06/07/14, INV02 → Timelock integration, U/W queue | C/U/W | Actual MetaMask queue; operation/ETA/receipt và API linkage cùng proposal đạt local. |
+| FR08 | TC01/06–10, INV01–03 → Timelock integration, U/W execute | C/U/W | Actual extension receipt0/retry receipt1/Done/paid/balances đạt local, không testnet PASS. |
+| FR09 | TC01/09/11/12, INV03 → BE04/BE07, U/W funding/ledger | B/U/W/H | Một disbursement11.000BUD đúng H52/hash/tx; receipt/API và worker/SQL TV2 PASS, TV4 scoped local pipeline ACCEPTED. |
+| FR10 | TC14/13 → Governor unit/integration, `governanceActions.test.ts` | C; bounded historical attacks | Pending-only contract coverage giữ; chưa browser cancel campaign mới. |
+| FR11 | TC01/09/11/12 → API suite, U/V/W rendered views, R historical TV3 | B/U/V/W/R | Năm live views390/1366 đúng scope hiện tại; không chuyển source/render lịch sử thành Dev rerun. |
+| FR12 | TC07/09/13 → `transactions.test.ts`, U/W refusal/revert/receipt | U/W / Dev6766e5e+tool hashes | Popup ký MetaMask Cancel thật giữ draft/nonce; receipt0 thiếu quỹ rồi receipt1 retry; không Governor.cancel campaign. |
+| FR13 | TC01/09–12, INV03 → storage/projection/live reconciliation | B/Q | Raw/dedup/linkage đạt backend; 16 unknown ancillary topics giữ nguyên. |
+| FR14 | TC11 → BE03/BE07 DB/live, U real reorg | B/U | Recovery gate, K2, rollback/replay, 503/409 có fresh Dev evidence. |
+| FR15 | TC12 → BE06 two-DB/live, R normalized exports | B / `6766e5e`; R / `4cba99a` | Backend same-H/hash equal; receiver API restart vẫn thiếu để đóng #42. |
+| FR16 | TC01/11–13 → `tests/api/server.test.mjs`, `api.live.test.ts`, U/V/W API | B/U/V/W/R | Sáu endpoint cùng pinned H/hash/revision có live1PASS/0skip; không thay toàn bộ acceptance variants. |
+| BR01 | TC01/04/05/12, INV04 → token/Governor/attack tests | C; §4 bounded evidence | Giữ bounded model và snapshot tests, không mở lại invariant không có regression. |
+| BR02 | TC02–05, INV02/04 → Governor unit/integration | C/Q | Contract outcome có coverage; không dùng một 400 For run thay toàn bộ tie/abstain variants. |
+| BR03 | TC01/07–10/14, INV01–03 → TC10 integration | C / `32c6e7c` giữ trong `5c89997` | Reverse-order và zero-ID protection 40/40 integration; raw/UI TC10 variants chưa full. |
+| BR04 | TC06/08/14, INV02 → Governor/access-control/bootstrap tests | C/B | Whitelist/final-role guards có tests; chỉ TV1 contract approval, không delivery approval. |
+| BR05 | TC01/09/10, INV03 → integration retry, Q underfunded execute | C/Q | Cùng operation sau revert nhận funding rồi execute; không trạng thái Failed giả. |
+| BR06 | TC08/14 → Governor unit/final-role integration | C | Contract Pending-only/no role change giữ; browser cancel chưa thuộc Q. |
+| BR07 | TC01/02/06/07, INV02 → queue/execute ETA integration | C/Q | Browser gửi Governor rồi Timelock/Treasury; không impersonation quyền đặc biệt. |
+| NFR01 | TC01–10/14, INV01–04 → contract/attack/bounded suites | C, §4 và TV1 scoped review #60 | Bounded/safety evidence giữ nguyên; không nâng thành security assurance vô hạn. |
+| NFR02 | Q-PERF → `benchmark_api.mjs`, 100 proposals/1000 votes | B lịch sử; P/source+raw hashes | Native P giữ10clients/60s và p95<1000ms từng endpoint/global, zero errors; số đo đúng từng source trong P, không dùng CI thay native. |
+| NFR03 | TC11/13,Q-FRESH → BE08 real CLI samples | B lịch sử; P | P/native sourcea672fd2:20/20 dưới30s, load max16.161,502ms; old T verification nativeFAIL vẫn giữ, không nới timeout. Q không là performance benchmark. |
+| NFR04 | TC11/12,Q-RECOVER → BE07/BE06 + final-trace BE08 | B/C/Q/T/P | Late fifth regression FAIL trước sửa/PASS sau sửa, gồm interleave/boundary; chỉ trace sau worker close+drain được PASS. TV2 BE08 đã APPROVED đúng SHA/scope; P giữ replay/K/reorg/recovery/rollback, không còn chờ review này. |
+| NFR05 | Q-CLONE → separate worktree/install, R receiving machine | R/Q | Cùng-máy local khác independent receiver; #40 lifecycle/#42 API restart còn mở. |
+| NFR06 | TC13,Q-UI → V live views, U keyboard, W real wallet, R historical TV3 | U/V/W/R / sources riêng |1366/390 và visible-focus/form traversal đạt scope đã đo; không physical-mobile/screen-reader hoặc mọi keyboard vote variant. |
+| NFR07 | Contract/invariant/backend/frontend CI, safety negatives | B/C/T/P và exact-head PR checks | TV1 security APPROVEDb186844; TV2 BE08 APPROVED0a5cc5c/cba8b6c; TV3 pinning resolved COMMENTb92bef5. Không whole-PR approval hoặc merge/release từ CI; final delivery-head checks theo PR. |
+| NFR08 | TC06/14,Q-CONFIG → deploy/check-roles, S/S2/S3 | C/S/S2/S3 | TV1 đã approve security b186844, các source/tests giữ nguyên khi sửaBE08; PR60 security/release51PASS. Owner map/custody/budget/broadcast và testnet receipts vẫn thiếu. |
+
+**Disposition giữ nguyên:** mười `TC06/{A,B,C,D,funding,deployer,caller,recipient,outsider,recipient2}/execute/Ready(single)` là **N/A — production-unreachable**, không phải PASS, theo [TV1 review](https://github.com/SE2026-21-1/dao-budget-simulator/pull/21#pullrequestreview-5901055037). Governor chỉ scheduleBatch trong audited role graph; single ID vẫn Unset. Giữ Ready(batch), ETA, replay và bootstrap negatives; không nhập source/evidence cá nhân của #21 hoặc gán campaign đó cho source sạch.
 
 ## 7. Gói evidence và điều kiện đóng acceptance
 
@@ -260,16 +312,14 @@ On-chain local/testnet evidence luôn có chainId, addresses, deployment blocks,
 
 TV4 chỉ đổi trạng thái một TC/INV/Q thành **ĐẠT** khi có actual evidence tái lập gắn đúng commit, đủ positive/negative và oracle độc lập. Nghiệm thu cuối cần mọi FR/BR/NFR có evidence đủ, không lỗi mở cho chi sai hoặc bypass; clone sạch chạy demo/test, testnet ít nhất một giải ngân và một thất bại, DB rebuild cùng H. Không khóa acceptance bằng CI xanh chỉ kiểm ABI/fixtures.
 
-## 8. Quyết định còn mở và phụ thuộc cần bàn giao
+## 8. Phụ thuộc nghiệm thu hiện hành — 27/11/2026
 
-| Owner quyết định | Nội dung cần chốt / bằng chứng mở khóa |
+| Owner | Việc còn lại / điều kiện tiếp tục |
 |---|---|
-| TV1 + TV4 | GOV/BUD/Treasury đã tích hợp. Còn constructor/role graph Governor–Timelock, ABI/errors/cancel, timestamp/quorum và boundary S/D/E; không tự suy ra từ ITreasury hoặc địa chỉ mock. |
-| TV1 + TV2 + TV3 | Description JSON v1, đếm Unicode code point hay quy tắc khác cho5–120/20–2000; CSPRNG requestId trước propose và giữ khi retry; xử lý NUL/UTF-8 hỏng mà không đổi bytes/hash; zero requestId không tự cấm. Giữ description nguyên bytes cho queue/execute/rebuild. |
-| TV1 + TV2 | Operation salt/predecessor từ Governor tích hợp và receipt thật, không dùng salt tự chọn của BE01 hay mặc định descriptionHash; quy tắc nối BudgetDisbursed↔Transfer để không double count. |
-| TV2 + TV4 | BE02 đã có finite reader/decoder/raw storage và PR #12. Còn checkpoint/K-confirmations/resume/reorg/projections/API/rebuild, hash window/backoff/cursor và historical same-H proof; TC11/TC12/freshness/performance vẫn bị chặn. |
-| TV2 + TV3 | API/schema BE01 còn chờ review; tích hợp fixture chung trước rồi HTTP thật, asOfBlock/hash/revision và sync warnings; UI hiện mock riêng chưa là BE01 integration. |
-| TV3 + TV4 | Frontend thực/lockfile/runner/module commands; bật wallet, form create thật và browser E2E; thống nhất boundary text và width/keyboard evidence. Không tạo framework chỉ để có đường test. |
-| TV4 + TV1 | Manifest/check-roles governance và testnet Osaka/RPC/faucet; E-TV4-CI-21 có Docker18.4 và local native SQL đã chạy riêng. Còn clean-clone/demo trên máy thành viên khác và peer approval. |
+| TV3 + TV2 → TV4 | #19: N19 đã nhận B-active visual; provider-boundary no-send chưa instrument, version13.58.0 chỉ producer khai báo lượt mới; H26 UNKNOWN/MISSING giữ nguyên. TV2 phân loại503 từ raw body/context/log tối thiểu nếu còn, không rerun toàn governance/provenance đã đạt. |
+| TV3; TV2 hỗ trợ → TV4 | [#40 chọn B](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7184789349): lifecycle run ID mới trên owned receiver, PID/listeners/shutdown/Windows transport/task/Vite/HTTP/raw foreground exit; giữ accepted BE09 offline. |
+| TV2 + TV3; lead khi đổi scope → TV4 | [R27 readiness](evidence/2026-11-27-receiver-readiness.md): TV3 báo source4cba99a khác approved896f93e, thiếu proposal/snapshot TTL. TV2 chốt receiver hoặc lead duyệt bootstrap mới riêng vì no-redeploy; sau đó #42 API-only trước#40 nếu chungstack, 5pinned data endpoints+health riêng/6status/raw/context/digest. Không worker/PG restart hoặc BE06 rerun trong phép đo. |
+| Owner do nhóm chỉ định; TV1/TV4 review | #20: full approved SHA,9public addresses,6signer custodians/signing path, numeric gas/fee budget/funder + explicit authorization; actual Sepolia manifest/roles/real-time Executed+Defeated receipts chưa có. Không mặc định TV1/TV2 giữ signer. |
+| Nhóm + TV4 | #44: chọn source/manifest demo/video/report và nghiệm thu các gate còn mở. #6/#7 In review/PARTIAL; #41 local pipeline accepted nhưng còn documentary/lifecycle. #18/#36 và bounded invariants không mở lại. #56 retired, không khôi phục server rollout. |
 
 Các tham số nghiệp vụ, TC01–TC14, INV01–INV04 và chỉ tiêu NFR trong requirements **không phải quyết định mở** để tùy ý giảm phạm vi. Khi đổi cấu hình demo được nhóm duyệt, cập nhật nhất quán requirements/config/deploy/test/evidence, không thêm shim hoặc báo đạt bằng dữ liệu giả.

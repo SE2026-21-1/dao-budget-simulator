@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "source": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "scope": "Only the fresh owned local PostgreSQL cluster; read-only queries",
+  "executedBoundary": {
+    "chainId": "31337",
+    "deploymentId": "qa07-e2e",
+    "asOfBlock": "52",
+    "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+    "asOfTimestamp": "1800002470",
+    "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "54",
+      "confirmedBlock": "52",
+      "indexedBlock": "52",
+      "publicationBlock": "52",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+      "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+      "recoveryStatus": "ready"
+    }
+  },
+  "query": "SELECT d.request_id,d.proposal_id::text,d.operation_id,d.amount::text,e.transaction_hash,e.block_hash FROM disbursements d JOIN raw_events e ON e.deployment_id=d.deployment_id AND e.raw_event_id=d.source_event_id WHERE d.deployment_id=$1 AND d.request_id=$2",
+  "rows": [
+    {
+      "request_id": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+      "proposal_id": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "operation_id": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+      "amount": "11000000000000000000000",
+      "transaction_hash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+      "block_hash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66"
+    }
+  ],
+  "projectionAtQuery": {
+    "height": "58",
+    "block_hash": "0xdd3c67c7d6fecd831564e7e78b6566843925a7fcedd21769460b8d86fbf9d0a3"
+  },
+  "note": "Projection can advance after the separate account-switch fixture; the unique disbursement still binds the original H52 canonical execute receipt."
+}

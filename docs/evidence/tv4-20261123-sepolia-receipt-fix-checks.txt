@@ -1,0 +1,75 @@
+
+COMMAND: node --test tests/smoke/sepolia.test.mjs
+✔ public role map locks chain, source, owner and distinct nonzero accounts (41.281126ms)
+✔ network identity rejects wrong chain and wrong genesis (5.011039ms)
+✔ local loopback and empty-unforked chain31337 guards remain intact (12.899792ms)
+✔ K2 uses two descendants and rejects reorganized receipt (5.076394ms)
+✔ K2 rejects inconsistent receipt binding: wrong initial transaction (4.541654ms)
+✔ K2 rejects inconsistent receipt binding: wrong final transaction (2.647448ms)
+✔ K2 rejects inconsistent receipt binding: changed final block number (1.319075ms)
+✔ K2 rejects inconsistent receipt binding: changed final transaction index (2.032546ms)
+✔ K2 rejects inconsistent receipt binding: wrong canonical block number (1.549908ms)
+✔ K2 rejects inconsistent receipt binding: wrong canonical transaction (1.543962ms)
+✔ K2 rejects inconsistent receipt binding: initial transaction index outside block (0.82388ms)
+✔ journal refuses overwrite and CLI rejects unknown or duplicate flags (166.030542ms)
+✔ already signal-exited owned child cleanup completes and retains failure evidence (323.745822ms)
+✔ real encrypted JSON keystore signs approved sender and rejects mismatches (21524.053055ms)
+✔ synthetic chain exercises full constructors/runtime/ABI, pre-renounce, final roles and funding (22838.248802ms)
+✔ unconfirmed final funding cannot borrow a confirmed receipt or journal false K2 success (13073.716036ms)
+✔ pre-renounce fails closed: unknownHistoricalHolder; no renounce/funding (3609.341626ms)
+✔ pre-renounce fails closed: omittedRoleLogs; no renounce/funding (4036.706579ms)
+✔ pre-renounce fails closed: missingExecutor; no renounce/funding (4948.868563ms)
+✔ pre-renounce fails closed: wrongRuntime; no renounce/funding (3605.064196ms)
+✔ pre-renounce fails closed: nonceRace; no renounce/funding (7342.540335ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82738.860153
+EXIT_STATUS=0
+
+COMMAND: npm run test:be08
+
+> dao-budget-simulator@0.0.0 test:be08
+> node --import tsx --test tests/indexer/be08-measurement.test.mjs tests/indexer/be08-postgres-identity.test.mjs tests/indexer/be08-rpc-outage.test.mjs
+
+✔ BE08 latency includes delayed body; wrong JSON content and timeouts are failed samples (361.978771ms)
+✔ BE08 exact nearest-rank p95 preserves the 20-sample tail boundary and empty results (3.017462ms)
+✔ BE08 forwarded CI service validates client loopback while PostgreSQL reports a container address and internal port (5.899242ms)
+✔ BE08 rejects non-loopback or unexpected client ports even when server metadata looks local (14.055886ms)
+✔ BE08 owned native cluster retains exact directory and server binding checks (8.103988ms)
+✔ projection failure and recovery check are separate bounded RPC calls (168.066596ms)
+✔ outage accounting groups interleaved retries from bounded projection fan-out (5.014761ms)
+✔ outage accounting accepts exhausted calls independently of worker stdout timing (2.190933ms)
+✔ outage recorder preserves same-ID attempts before and after the window (1.749587ms)
+✔ partial retries require same-ID attempts proving the call crossed an outage boundary (0.941738ms)
+✔ calls fully contained in the outage fail even when fewer retries sit within five seconds of a boundary (3.497055ms)
+✔ outage accounting rejects an over-budget call, missing retries, invalid windows and absent backoff (2.653245ms)
+✔ outage accounting rejects a reused call ID or changed method/params within a retry (4.646723ms)
+✔ concurrent identical RPC calls have distinct IDs while each retry keeps its ID (62.25364ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1331.114349
+EXIT_STATUS=0
+
+COMMAND: npm run typecheck
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+EXIT_STATUS=0
+
+COMMAND: npm run build
+
+> dao-budget-simulator@0.0.0 build
+> tsc -p tsconfig.build.json
+
+EXIT_STATUS=0

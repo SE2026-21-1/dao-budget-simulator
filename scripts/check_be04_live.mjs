@@ -144,6 +144,8 @@ try {
   );
   const { manifest, abis } = await deployGovernance(rpc, { root, accounts });
   report.manifest = manifest;
+  // Boundary phases reuse exact timestamps even when SQL/API work takes wall-clock seconds.
+  await rpc('anvil_setBlockTimestampInterval', [0]);
   const reorgSnapshot = withBe07 ? await rpc('evm_snapshot', []) : null;
   const reorgAncestor = withBe07 ? await rpc('eth_getBlockByNumber', ['latest', false]) : null;
   const abi = Object.fromEntries(Object.entries(abis).map(([k, v]) => [k, new Interface(v)]));
@@ -155,6 +157,10 @@ try {
     ]);
     const receipt = await waitForReceipt(rpc, transactionHash, { step: label });
     assertReceiptStatus(receipt, transactionHash, label, success);
+    if (at !== undefined) {
+      const header = await rpc('eth_getBlockByNumber', [receipt.blockNumber, false]);
+      assert.equal(BigInt(header.timestamp), at, `${label}: local timestamp drift`);
+    }
     if (!success) assert.deepEqual(receipt.logs, []);
     report.receipts.push({ ...receipt, label });
     return receipt;

@@ -46,7 +46,7 @@ jobs:
           mkdir -p reports
           bash scripts/ci.sh 2>&1 | tee reports/checks.log
       - name: Verify bootstrap authority and recursive dependency provenance
-        run: node --test tests/smoke/bootstrap.test.mjs tests/smoke/dependency-provenance.test.mjs
+        run: node --test tests/smoke/bootstrap.test.mjs tests/smoke/dependency-provenance.test.mjs tests/smoke/sepolia.test.mjs tests/smoke/qa07-snapshot.test.mjs
       - name: Verify historical SC06 provenance and fresh integration quorum mutations
         shell: bash
         run: |

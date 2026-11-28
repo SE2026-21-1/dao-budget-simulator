@@ -1,5 +1,5 @@
-# Deny by default: runtime JSON can contain RPC credentials just like .env.
-# Never send server/shared directories, deployments, backups or host metadata.
+# Deny by default: runtime JSON may contain RPC credentials.
+# Never send runtime configuration, secrets, or credentials into image builds.
 **
 !package.json
 !package-lock.json

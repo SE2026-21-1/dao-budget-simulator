@@ -1,22 +1,188 @@
 # TV4 — Tổng kết công việc đã thực hiện và tác dụng
 
+> **Current integration path:** `tv4/integration-20261127-r2` → Dev,
+> [r3 handoff](evidence/2026-11-27-r3-dev-merge-handoff.md); candidate already contains pinned PR60/61 histories.
+> #42 scoped independent PASS; old NOT READY/static-only statements below are historical snapshots.
+> PR60/61 stay open pending maintainer disposition. No merge/release/rollout/broadcast.
+
 Ngày tổng kết ban đầu: **20/10/2026**; cập nhật **21/10/2026** ở mục5–6 và **22/10/2026** ở mục7. Vai trò: kiểm thử bảo mật và vận hành. Các mục lịch sử giữ đúng source commit; kết quả candidate mới được ghi riêng.
 Repository: [DAO Budget Simulator](https://github.com/SE2026-21-1/dao-budget-simulator).
-Nhánh bàn giao: `feature/tv4-operation` → `Dev`, qua [PR #5](https://github.com/SE2026-21-1/dao-budget-simulator/pull/5).
+Nhánh bàn giao hiện hành: `feature/tv4-qa-completion-20261121` → `Dev`, qua
+[PR #60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60);
+`feature/tv4-operation`/PR5 là lịch sử, không nhập PR21/55/personal.
 
 Tài liệu này giải thích các thay đổi đã thực hiện, giá trị của chúng và bằng
 chứng đã kiểm tra. Không dùng tài liệu hoặc CI xanh để thay cho nghiệm thu các
 thành phần chưa được triển khai.
 
-## Phạm vi hiện hành — 24/11/2026
+## Phạm vi hiện hành — 27/11/2026
 
 Hạ tầng server đã rút khỏi phạm vi theo [issue #56](https://github.com/SE2026-21-1/dao-budget-simulator/issues/56),
 đóng ngày 23/11. Đã gỡ workflow deploy/SSH, script rollout/rollback và mẫu env
 server; giữ bước xác minh release và GHCR/Compose CI. Báo cáo kiểm thử lịch sử
 bên dưới chỉ áp dụng cho thời điểm và source đã ghi.
 
+## Trạng thái hiện hành — 27/11/2026
+
+[Báo cáo chung theo SHA](evidence/2026-11-27-tv4-acceptance.md) và
+[bản nháp bàn giao chưa đăng](evidence/2026-11-27-handoff-drafts.md):
+review gói #19 mới đã nhận B-active/error/draft visual, giữ no-send inference và503 UNKNOWN;
+không gán version/ảnh mới cho H26. [7checksums/63CRLF-source comparisons](evidence/2026-11-27-issue19-review.json)
+không được gọi raw LF Git byte equality hoặc served-frontend attestation.
+
+[Merge audit](evidence/2026-11-27-pr60-pr61-integration.md) xác định một conflict registry
+với Devd63842a; patch review giữ admin ABI và BE08 index, không actual merge.
+[PR62 review](evidence/2026-11-27-pr62-tv4-review.md) trên d4a0fb5 chạy144narrow tests PASS,
+không live archive/finality hoặc approval. [Receiver](evidence/2026-11-27-receiver-readiness.md)
+NOT READY theo TV3/TV2; checklist/lệnh API-only/Windows lifecycle đã bàn giao, không service action.
+Giữ #20 owner gates và #44 group demo blocked; không mở lại #18/#36/BE06/bounded invariants,
+không staging #56, Terraform/OpenStack/SSH rollout hoặc Sepolia broadcast.
+
+## Trạng thái 26/11/2026 — lịch sử, không thay kết luận mới ở trên
+
+[Báo cáo nghiệm thu mới](evidence/tv4-20261126-acceptance.md) ghi baseline PR60
+`b92bef5409d6478de97efbc8209241620967d18a`, Dev mới
+`3d0f6ca3f971ae6861b1a18160329bdfabe7ab8e` và giới hạn thay đổi chỉ tài liệu.
+Không nhập hạ tầng mới của Dev hoặc phục hồi staging #56.
+
+- TV3 [COMMENT6055560601](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6055560601)
+  xác nhận QA07 pinning P2 resolved ở b92bef5, không phải approval toàn PR.
+  TV1 security và TV2 BE08 approvals giữ exact-SHA/scope, không đòi review lại source không đổi.
+- [#19 supplement bytes](evidence/2026-11-26-issue19-provenance-review.md): SHA/CRC/path/
+  2checksums và run/source/manifest/handoff đạt; ảnh B-active sau Submit và exact
+  MetaMask version H26 vẫn thiếu. Không gán version từ profile khác hoặc ảnh mới cho run cũ.
+- [#40 chọn B](https://github.com/SE2026-21-1/dao-budget-simulator/issues/40#issuecomment-7184789349):
+  TV3 làm riêng lifecycle run mới, giữ BE09 offline đã nhận.
+  [#42 coordination](https://github.com/SE2026-21-1/dao-budget-simulator/issues/42#issuecomment-7184789885):
+  TV2 giải receiver readiness, TV3 API-only sau khi đủ điều kiện; không redeploy/rebuild ngầm.
+- [Receiver runbook](indexer.md#api-only-restart), [Sepolia owner checklist](sepolia-deployment.md)
+  và [demo](qa07-e2e.md) tách điều đã nghiệm thu local khỏi documentary/receiver/testnet/release.
+  Không chạy lại campaign đã đủ evidence, không đóng issue hoặc tự merge.
+
+[Native performance fix và bằng chứng nguyên bản](evidence/be08-native-performance-20261124/report.md):
+PR61 `a672fd229ed4ec1912fe11141d307fd0b1b9abaa` → PR60
+`7141d731c10d1e64c81cc1736d21ba8dac16e2ea`, cùng patch sáu file và tác giả.
+Frozen topic index tránh lookup/hash lặp; set-based SQL tránh per-row await.
+Giữ full replay/canonical/K/recovery/rollback, timeout30s và tải10clients/100+1000.
+Native PR61 sourcea672fd2:13suites/20freshness PASS,9850HTTP/0lỗi,p95 235,910ms,
+load max16.161,502ms. PR60 code-head7141d73 CI45403269468 SUCCESS/publish SKIP.
+PR61 CI đầu45401658170 chỉ FAIL BE05 owned-clock; follow-up`cba8b6c` đưa đúng
+fix96e4601 đã có trên PR60 sang PR61. Không dùng BE08 PASS để gọi whole CI PASS.
+Native PR60 source7141d73 cũng13suites/20freshness PASS,9830HTTP/0lỗi,
+load max16.082,377ms; PR61 final code-headcba8b6c CI45403578782 SUCCESS.
+Kết quả FAIL sau đây là lịch sử trước tối ưu, không sửa lại dữ liệu cũ.
+
+TV2 yêu cầu kiểm trace cuối vì snapshot bốn503 có thể bỏ attempt thứ năm cùngID.
+Fix PR61 `72d08940d63b99ec4d8e4d49f463251d7a0c714c`, port ba file bằng
+cherry-pick --no-commit + selective commit `375149a5d7e622bce7ad19b3eae39c9cb09536f1`;
+không nhập nhánh ngoài phạm vi. BE08 synthetic18/18 mỗi nhánh; PR60 security+
+release/operations51/51 sau forge build. Giữ nguyên signed identity/receipt/
+funding0descendants, BE07 clock,verify-release và ba test migration/manifest.
+[Report/log BE08 và scope CI](evidence/be08-late-trace-20261124/report.md)
+ghi PR61 CI45392235901 PASS trên merge7962c6d, nhưng local native **FAIL**
+tại load publication30s trước outage; giữ cả failure packet, không nới timeout.
+
+[H52 worker/SQL extraction](evidence/tv4-20261124-h52/provenance.md) tại
+`7221c131f558a6566c715c371e58899acb05dccc` giữ nguyên bytes và MANIFEST hashes.
+[TV2 đã nhận receipt/API](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7129225892);
+[bàn giao hai raw JSON/checksums](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7131321571)
+không chạy lại chain, không sửa SQLprojectionH58 thànhH52.
+[TV2 worker/SQL PASS7155488965](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155488965)
+và [TV4 local pipeline ACCEPTED7155604461](https://github.com/SE2026-21-1/dao-budget-simulator/issues/41#issuecomment-7155604461)
+đã có; #41 còn documentary #19/lifecycle #40, không còn chờ worker/SQL.
+TV1 security approvalb186844 giữ phạm vi, không yêu cầu re-review security sources không đổi.
+
+[Đợt đồng bộ Dev896f93e → nhánh PR60](evidence/tv4-20261124-pr60-dev-sync.md)
+tái hiện và giải đúng năm conflict; giữ ba test migration/manifest của Dev cùng
+release gate, workflow verify-only và staging removal. Local7release/operations,
+44deployment,14BE08, typecheck/build/static và BE07native10phases PASS.
+Đây là kết quả working tree merge trước commit; CI exact-SHA phải đọc riêng ở PR60.
+
+Fix chung `033e63d3d70408ee87563e8dc809f67fbde67c72` nối signed raw bytes với
+broadcast/receipt identity, lưu hash bền vững trước send và fail-stop khi RPC trả
+hash delegation khác funding. Không sửa lại receipt-binding đã được TV1 xác nhận.
+[Báo cáo, regression trước/sau, matrix và source fingerprints](evidence/tv4-20261124-submission-identity.md):
+44bootstrap/provenance/Sepolia,14BE08,4release,127frontend PASS;1live SKIP;
+typecheck/build/lint exit0, warnings và Docker-permission limit ghi rõ.
+Đã cập nhật runbook journal/reconciliation và kịch bản demo/failure chung;
+chưa claim browser rerun, testnet hoặc release acceptance. Project#1 đã cập nhật
+qua browser:4items×2fields, reload kiểm, giữ In review/Blocked; Project#2 không đổi.
+Follow-up clock96e4601 giữ boundary assertions, native BE07/PostgreSQL18.4
+10phases PASS; pushCI45341624946 success không thay PR merge-ref gate.
+TV2 đã APPROVED BE08 PR60 `0a5cc5cfda29a92df4ab4498e1cd72cd57023088`
+([6053195381](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#pullrequestreview-6053195381))
+và PR61 `cba8b6c9eda65959d82250441b8eed131a1a5044`
+([6053196499](https://github.com/SE2026-21-1/dao-budget-simulator/pull/61#pullrequestreview-6053196499)).
+Final-head CI/reviewer-owned threads vẫn riêng; không pushDev/bypass review.
+
+## Trạng thái theo bằng chứng — 23/11/2026
+
+[Báo cáo nghiệm thu, raw archive, lệnh/exit/SHA và giới hạn](evidence/tv4-20261123-acceptance.md)
+là báo cáo lịch sử23/11; pending reviews và account-switch/worker-SQL bên dưới không
+thay kết luận26/11. Không sửa lại source/ngày/kết quả cũ.
+
+- Tích hợp #61 vào #60 bằng `5c899976ac4de97434737493815e7ccbdcd13984`:
+  giữ TC10, thay ba file BE08 bằng same-ID lifecycle oracle, không miễn trừ5giây.
+  Local14BE08/40Timelock/4release, typecheck/build PASS; native BE08 release gate
+  cũng PASS,13.080request/0lỗi/p95 299,207ms,20freshness samples dưới30s.
+- Exact push CI5c89997 và PR merge-refb4b505d có22success/2publish skipped.
+  TV2 request-changes chưa tự dismiss; TV1 approval chỉ contract/TC10.
+- [Backend #18 đã TV4 nghiệm thu và đóng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/18#issuecomment-7093896813):
+  Dev6766e5e, raw artifact/digest/26source hashes/recovery/rebuild/performance
+  đã đối chiếu; corrected gate bổ sung lifecycle tail không làm đổi backend product.
+- [Fresh approved-source UI](evidence/tv4-20261123-approved-ui.json) chạy product
+  Dev6766e5e qua `--project-root`: keyboard/focus1366/390, full adapter workflow,
+  receipt0/retry1 và actual503/409 PASS; không gán tooling candidate thành product.
+- [MetaMask thật](evidence/tv4-20261123-real-extension.json) đã chạy riêng trên
+  cùng Dev: wrong-network, từ chối popup ký giữ draft/nonce, propose/vote/queue,
+  receipt0 thiếu quỹ rồi nạp2.000/retry receipt1, SQL/API/UI canonical H52.
+  Hai actor extension do driver reset; official unpacked, không user/Web Store
+  hoặc testnet. [Live views](evidence/tv4-20261123-live-views.json)10render,
+  frontend live API1PASS/0skip; [runbook](qa07-e2e.md) có mode bàn giao không inject ví.
+- [#19 consolidated ZIP](evidence/tv4-20261123-wallet-review.md) đã kiểm độc lập,
+  tiếp nhận happy-path lịch sử có giới hạn, không còn blocker thiếu ZIP/ảnh.
+- [Account-switch gap](evidence/tv4-20261123-account-switch.json) giữ PARTIAL:
+  actual revoke đã khóa signer cũ; site-authorized B/no-send cùng draft chưa đủ.
+  Runbook có fixture/observer/evidence checklist tối thiểu cho TV3, không yêu cầu
+  lặp lại governance đã chạy hoặc gọi UI automation failure là product bug.
+- [#36 browser/live UI đã đóng](https://github.com/SE2026-21-1/dao-budget-simulator/issues/36#issuecomment-7097573123),
+  không đóng #19/#41 theo đó. [TV1 receipt-binding Medium đã sửa/test](evidence/tv4-20261123-sepolia-receipt-fix.json):
+ 21synthetic/14BE08/typecheck/build exit0, funding0descendants không thể mượn receipt
+  cũ để ghiK2. Latest TV1 request-changes vẫn cần independent re-review;0broadcast.
+- [#40/#42 ZIP đã kiểm bytes](evidence/tv4-20261123-bundles.md): không còn blocker
+  thiếu exports/checksums. Giữ thiếu APIrestart máyTV3 và final receiver/Windows
+  lifecycle outputs, không đòi chạy lại campaign đủ evidence.
+- [Sepolia preparation](sepolia-deployment.md): tái tạo riêng sáu file chung remote
+  đã review,13local tests và publicread-only probe PASS; không nhập original
+  #21/#55/personal ancestry. Owner/SHA/map/signers/budget/authorization và current
+  TV1 delta review còn thiếu;0broadcast, không testnetPASS.
+- Bỏ SSH rollout không bỏ contract Sepolia scope. Sau yêu cầu xóa staging mới,
+  đã xóa project `dao-staging-se2026-t16` và default SG, xác minh không còn;
+  public network/image/flavor dùng chung giữ nguyên. [Retirement evidence](evidence/tv4-staging-retirement-20261123.json).
+  Không provisioning, không đổi workspace cá nhân hoặc database/process đang phục vụ.
+- [Ma trận FR/BR/NFR hiện hành](test-plan.md#6-traceability-đầy-đủ-frbrnfr--tcinv--evidence)
+  giữ10Ready(single) N/A và bounded invariant đã chốt. #7/#36/#40/#41/#42/#44
+  còn scope riêng; không promote main hoặc tạo release cuối.
+
+
+## Tích hợp và review — 21/11/2026
+
+PR [#58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58) đã merge vào `Dev` qua merge commit `6766e5ee2d8c466542687cbeb09677c4d11e5463` từ head `227a0c9b4967ca5c78ca609600fa8e2845891418`. TV1 và TV2 đều APPROVED đúng head, review threads đã resolve; GitHub trả `reviewDecision=APPROVED` và các check CI thành công. PR #59 đã merge trước đó tại `3a1221d`.
+
+PR [#57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57) còn OPEN/`CHANGES_REQUESTED`; không thuộc phạm vi CI/container hiện tại và không tích hợp.
+PR [#60](https://github.com/SE2026-21-1/dao-budget-simulator/pull/60) gửi hai regression TC10 đảo thứ tự execute/bytes32(0) từ commit `32c6e7c64dc9a481d499ab3f350127278f5e373b`, target `Dev`. Foundry/governance, các checks BE01, BE02, BE04–BE08, PostgreSQL, frontend và Container/Compose đều PASS trên head `9d1d05f305bd5ed51c8bbdc670523a9eb1dbac45` trong [run PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924767566) và [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44924760670); publish job được skip theo release condition. Vẫn chờ TV1 review/approval; review chưa có và issue #7/#16 vẫn mở, không dùng PR này để nhận full acceptance.
+
+Lượt này chỉ merge PR #58; PR #60 chưa merge. Không merge/sửa PR hoặc branch personal/individual, không đổi `main`/`master`, không push trực tiếp vào `Dev`, force-push hay bypass review/CI. Checkout cá nhân đang dirty được giữ nguyên; kiểm tra local chạy trong worktree riêng `/tmp/dao-budget-simulator-tv4-completion`.
+
+### BE08 retry assertion correction — 22/11/2026
+
+Push workflow [44929254569](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929254569) failed at `rpc_outage` on head `826657ad43e032009ab799dba215ccf331ba9771`; the PR-event run [44929259785](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44929259785) passed on the same SHA. The failure artifact recorded interleaved retries for distinct `eth_call` IDs. This is valid bounded fan-out: `indexer/projection/chain.ts` checks proposals with at most four concurrent readers. The test helper incorrectly treated attempts as contiguous and mistook an in-flight retry for reuse after completion; `HttpRpc` allocates each logical call ID before awaiting.
+
+Updated `scripts/be08_rpc_outage.mjs` to group by logical call ID, preserve method/params and backoff checks, and reject attempts beyond four. Added an interleaving regression in `tests/indexer/be08-rpc-outage.test.mjs`. Local `npm run test:be08` passed **11/11**; replaying the actual CI artifact summarized 18 logical calls (17 with four attempts, one boundary call with one). Push and PR workflows on fix commit `e7eb2bae638b45b9eeec532adf0b431871c6d02c` both PASS: [run PR](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931330317), [run push](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44931324667); release publication skipped by condition. This does not close full TC11/reorg acceptance.
+
 ## Xử lý review kỹ thuật — 20/11/2026
 
+Ghi nhận lịch sử, không phải kết quả của revision đồng bộ PR60 mới.
 Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/dao-budget-simulator/pull/58)
 `ea2ce3ec91441803b52aa2f36b4c94e720a7a503`; installer riêng
 [PR #59](https://github.com/SE2026-21-1/dao-budget-simulator/pull/59)
@@ -24,7 +190,8 @@ Phạm vi: source ứng dụng sạch [PR #58](https://github.com/SE2026-21-1/da
 [PR #57](https://github.com/SE2026-21-1/dao-budget-simulator/pull/57)
 `91f5b239af8e424cd44147b02e89ea91f12b662e`.
 Giữ nguyên checkout cá nhân đang dirty; không merge Dev, self-approve hoặc gửi
-request nhờ thành viên khác. Đây là khắc phục source và evidence, không ký thay peer.
+request nhờ thành viên khác trong lượt 20/11. Đây là khắc phục source và evidence,
+không ký thay peer.
 
 | Yêu cầu / lỗi | Khắc phục và kiểm chứng thực chạy |
 | --- | --- |
@@ -48,6 +215,19 @@ Các lượt lỗi được giữ đúng nghĩa: binary PostgreSQL npm không c�
 outputs nên thay bằng real-provider/synthetic-HTTP tests, không đổi guard cho mock;
 harness rollback đầu timeout; sau sửa control pipe lifecycle, lượt chạy mới đạt
 6/6. Không tính lượt lỗi hoặc frontend live SKIP thành PASS.
+
+## Kiểm chứng sau merge — `Dev` `6766e5ee2d8c466542687cbeb09677c4d11e5463`
+
+- Trước khi thêm hai ca TC10 mới, `FOUNDRY_PROFILE=ci FOUNDRY_FUZZ_SEED=0x20261021 bash scripts/ci.sh` đạt **180/180**, không lỗi/skip; `SC01 OK`. Sau khi thêm, `forge fmt --check tests/integration/TimelockGovernance.t.sol` và toàn bộ integration file đạt **40/40** trong worktree candidate cô lập.
+- Node24.15.0: `npm run typecheck`, `npm run build` and suites `test:be02`, `test:be03`, `test:be04`, `test:be06`, `test:be07`, `test:be08` passed before deployment removal. `node --test scripts/cd/release.test.mjs`: **4/4 PASS**. Push and PR workflows on `80dc9ff68074c83ecf84e94f35ba0e7a0fc282a0` passed, including container build and Compose smoke ([push 44934756293](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44934756293), [PR 44934759771](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44934759771)); Foundry fallback passed in runs 44934756477/44934759604. Publish skipped by condition.
+- Frontend: lint exit0 với 8 warning hiện hữu; Vitest **127 PASS / 1 opt-in live SKIP**; build PASS, chunk 753.81 kB có cảnh báo kích thước.
+- [Post-merge TV4 CI](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740231): **10 jobs success**, publish job skipped theo điều kiện release. [Forced Foundry fallback](https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/44922740366): success. Cả hai trên SHA `6766e5e`.
+- Chrome headless đã render UI local fixture ở 1280×900; đây chỉ là kiểm tra hiển thị offline, không dùng API thật hoặc extension wallet.
+- Local `npm run test:api` dừng tại isolation guard vì không có `BE05_TEST_ISOLATED=1`/URL database mới; phân loại **BLOCKED/NOT RUN**, không phải test assertion failure. Máy không có PostgreSQL binaries hoặc Docker daemon. Không đặt biến giả để vượt guard; các job PostgreSQL/API thực tế đã PASS trong GitHub CI.
+
+**Gate còn mở:** #19/#41 cần ví extension thật, #20 thiếu signer/gas/broadcast được ủy quyền và receipt testnet, #36/#40/#42 cần evidence từ môi trường nhận tương ứng; #44 chưa release-ready. CI/Compose smoke không thay thế live/testnet acceptance.
+
+### Điều kiện bàn giao — 20/11/2026 (lịch sử)
 
 **Gate còn mở:** source đã push không đồng nghĩa đã merge/được peer approve;
 CI ứng dụng mới phải đọc đúng final HEAD. #19/#41 cần ví extension thật,

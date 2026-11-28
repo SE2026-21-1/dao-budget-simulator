@@ -1,0 +1,4082 @@
+{
+  "format": "tv4-real-extension-continuation-v1",
+  "status": "PASS_SCOPED_TWO_REAL_EXTENSION_ACTORS",
+  "startedAt": "2026-11-23T08:59:19.847Z",
+  "handoff": {
+    "format": "qa07-public-handoff-v1",
+    "sourceCommit": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+    "chainId": "31337",
+    "deploymentId": "qa07-e2e",
+    "confirmations": 2,
+    "frontendUrl": "http://127.0.0.1:32935",
+    "apiUrl": "http://127.0.0.1:45811",
+    "rpcUrl": "http://127.0.0.1:42061",
+    "contracts": {
+      "GOV": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "BUD": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "Treasury": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "Timelock": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "Governor": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+    },
+    "accounts": {
+      "A": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "B": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "C": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "D": "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
+      "funding": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "deployer": "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
+      "caller": "0x976ea74026e726554db657fa54763abd0c3a0aa9",
+      "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+      "outsider": "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f"
+    },
+    "manifestSha256": "5acefc8305aabb6fb4a2a699294058b8180282366a55067ce46dc8c231c30ee7"
+  },
+  "productSource": "6766e5ee2d8c466542687cbeb09677c4d11e5463",
+  "manifestSha256": "5acefc8305aabb6fb4a2a699294058b8180282366a55067ce46dc8c231c30ee7",
+  "extension": {
+    "version": "13.58.0.0",
+    "release": "https://github.com/MetaMask/metamask-extension/releases/tag/v13.58.0",
+    "assetSha256": "35d1594d25e8eb0fc51f9a08ffcc3c8bf18965ce2e7d9026e3022a530a57f215",
+    "installation": "Official stable unpacked extension, isolated Chromium141; not Chrome Web Store/user profile",
+    "id": "knjoiknioniilpkdjegomanfllgblipj"
+  },
+  "identity": {
+    "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+    "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+    "chainId": "31337",
+    "deploymentId": "qa07-e2e"
+  },
+  "actions": [
+    {
+      "at": "2026-11-23T08:59:38.726Z",
+      "surface": "real MetaMask UI",
+      "attemptedControl": "Unlock"
+    },
+    {
+      "at": "2026-11-23T09:00:10.321Z",
+      "observedErrorText": "Đến nội dung chính\nDAO Budget Simulator\nTổng quan\nĐề xuất\nTạo đề xuất\nTreasury\nGovernance\nĐã kết nối\n0xd183…94a5\nDAO Budget Simulator\nQA07 isolated Local Anvil\nTổng quan\nĐề xuất\nTạo đề xuất\nTreasury\nGovernance\n\nVí & quyền biểu quyết\n\nVí: MetaMask\n\n0xd1839…b94a5\n\nChain: 31337 ✓\n\nSố dư: 0 GOV\n\nVoting power: 0 GOV\n\nDelegate: 0x00000…00000\n\nSelf-delegate\nẨn tài khoản\nDAO\nMinh bạch từng đề xuất.\n\nKhám phá ngân sách và cùng cộng đồng đưa ra quyết định.\n\nDữ liệu API\nĐang đọc API TV2 theo deployment đã cấu hình.\nSystem status\n\nAPI, dữ liệu xuất bản và kết nối ví\n\nKiểm tra lại\nAPI\nDegraded\nDatabase\nup\nIndexer\nlagging\nPublication\nready\nWallet\nConnected\nNetwork\nCorrect\n\nĐộ trễ indexer: 2 block. Độ trễ projection: 2 block.\n\nDữ liệu có thể đã cũ: pipeline chưa xác minh hoặc publication đang trễ. Độ trễ theo dõi: 0 giây. Trang tự kiểm tra lại để cập nhật khi indexer phục hồi.\n\nCó raw event chưa giải mã đầy đủ; kiểm tra indexer trước khi dùng số liệu.\n\nPipeline có cảnh báo. Health BE05 không thăm dò RPC; không đồng nghĩa RPC đang down.\n\nKhông tải được đề xuất.\n\nDATA_NOT_READY: Không thể đọc publication PostgreSQL nhất quán.\n\nThử lại\nDAO Budget Simulator · Giao diện đang phát triển"
+    },
+    {
+      "at": "2026-11-23T09:00:19.094Z",
+      "surface": "real MetaMask UI",
+      "attemptedControl": "Confirm"
+    },
+    {
+      "at": "2026-11-23T09:00:26.428Z",
+      "screenshot": "real-queue-ui.png",
+      "url": "http://127.0.0.1:32935/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742"
+    },
+    {
+      "at": "2026-11-23T09:00:36.980Z",
+      "screenshot": "real-underfunded-prompt.png",
+      "url": "chrome-extension://knjoiknioniilpkdjegomanfllgblipj/sidepanel.html#/confirm-transaction/56568f90-e71c-11f1-b300-dd8ba9e5ee81"
+    },
+    {
+      "at": "2026-11-23T09:00:37.012Z",
+      "surface": "real MetaMask UI",
+      "attemptedControl": "Confirm"
+    },
+    {
+      "at": "2026-11-23T09:00:39.576Z",
+      "screenshot": "real-underfunded-error-ui.png",
+      "url": "http://127.0.0.1:32935/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742"
+    },
+    {
+      "at": "2026-11-23T09:00:45.170Z",
+      "surface": "real MetaMask UI",
+      "attemptedControl": "Confirm"
+    },
+    {
+      "at": "2026-11-23T09:00:48.982Z",
+      "screenshot": "real-execute-ui.png",
+      "url": "http://127.0.0.1:32935/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742"
+    },
+    {
+      "at": "2026-11-23T09:00:52.787Z",
+      "screenshot": "real-executed-same-hash-ui.png",
+      "url": "http://127.0.0.1:32935/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742"
+    }
+  ],
+  "rpcTrace": [
+    {
+      "at": "2026-11-23T09:00:14.119Z",
+      "id": 1,
+      "phase": "request",
+      "method": "eth_chainId"
+    },
+    {
+      "at": "2026-11-23T09:00:14.146Z",
+      "id": 1,
+      "phase": "response",
+      "method": "eth_chainId",
+      "result": "0x7a69"
+    },
+    {
+      "at": "2026-11-23T09:00:14.158Z",
+      "id": 2,
+      "phase": "request",
+      "method": "eth_sendTransaction",
+      "params": [
+        {
+          "data": "0x160cbed7000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100e0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+          "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+          "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-23T09:00:20.579Z",
+      "id": 2,
+      "phase": "response",
+      "method": "eth_sendTransaction",
+      "result": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2"
+    },
+    {
+      "at": "2026-11-23T09:00:31.511Z",
+      "id": 3,
+      "phase": "request",
+      "method": "eth_chainId"
+    },
+    {
+      "at": "2026-11-23T09:00:31.545Z",
+      "id": 3,
+      "phase": "response",
+      "method": "eth_chainId",
+      "result": "0x7a69"
+    },
+    {
+      "at": "2026-11-23T09:00:31.565Z",
+      "id": 4,
+      "phase": "request",
+      "method": "eth_sendTransaction",
+      "params": [
+        {
+          "data": "0x2656227d000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100e0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+          "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+          "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-23T09:00:37.125Z",
+      "id": 4,
+      "phase": "response",
+      "method": "eth_sendTransaction",
+      "result": "0x2e0610c586bd41c93e72f7e43afdc6ed4c06c4655b6150b181e59d93a4ab3438"
+    },
+    {
+      "at": "2026-11-23T09:00:43.028Z",
+      "id": 5,
+      "phase": "request",
+      "method": "eth_chainId"
+    },
+    {
+      "at": "2026-11-23T09:00:43.061Z",
+      "id": 5,
+      "phase": "response",
+      "method": "eth_chainId",
+      "result": "0x7a69"
+    },
+    {
+      "at": "2026-11-23T09:00:43.072Z",
+      "id": 6,
+      "phase": "request",
+      "method": "eth_sendTransaction",
+      "params": [
+        {
+          "data": "0x2656227d000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100e0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+          "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+          "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+        }
+      ]
+    },
+    {
+      "at": "2026-11-23T09:00:45.294Z",
+      "id": 6,
+      "phase": "response",
+      "method": "eth_sendTransaction",
+      "result": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c"
+    }
+  ],
+  "apiResponses": [
+    {
+      "at": "2026-11-23T08:59:59.326Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 08:59:59 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "37",
+          "asOfBlockHash": "0x7d59bae8a3968a8a547282894bfd7e1b4817bcb8e9abc1c0f9fcb1dc9b1afb90",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "39",
+            "confirmedBlock": "37",
+            "indexedBlock": "37",
+            "publicationBlock": "37",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:59:58.803Z",
+            "lastRpcCheckAt": "2026-11-23T15:59:58.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "37",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T08:59:59.330Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 503,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 08:59:59 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": null,
+        "error": {
+          "code": "DATA_NOT_READY",
+          "message": "Không thể đọc publication PostgreSQL nhất quán.",
+          "details": {},
+          "retryable": true
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T08:59:59.660Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 08:59:59 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "37",
+          "asOfBlockHash": "0x7d59bae8a3968a8a547282894bfd7e1b4817bcb8e9abc1c0f9fcb1dc9b1afb90",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "39",
+            "confirmedBlock": "37",
+            "indexedBlock": "37",
+            "publicationBlock": "37",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T08:59:58.803Z",
+            "lastRpcCheckAt": "2026-11-23T15:59:58.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "37",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:04.714Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:04 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "37",
+          "asOfBlockHash": "0x7d59bae8a3968a8a547282894bfd7e1b4817bcb8e9abc1c0f9fcb1dc9b1afb90",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "39",
+            "confirmedBlock": "37",
+            "indexedBlock": "37",
+            "publicationBlock": "37",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:04.595Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:04.597+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "37",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:09.798Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:09 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "37",
+          "asOfBlockHash": "0x7d59bae8a3968a8a547282894bfd7e1b4817bcb8e9abc1c0f9fcb1dc9b1afb90",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "lagging",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "37",
+            "lagBlocks": "2",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:09.362Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:09.364+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "lagging",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "lagging",
+          "publicationBlock": "37",
+          "projectionLagBlocks": "2",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:10.773Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:10 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:10.326Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:10.337+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Succeeded",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": null,
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": null,
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": null
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:10.946Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=39&asOfBlockHash=0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:10 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:10.326Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:10.337+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Succeeded",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": null,
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": null,
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": null
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:11.093Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=39&asOfBlockHash=0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:11 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:10.326Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:10.337+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 0,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:11.127Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=39&asOfBlockHash=0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:11 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:10.326Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:10.337+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:14.838Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:14 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:14.806Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:14.371+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "39",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:19.939Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:19 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "39",
+          "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+          "asOfTimestamp": "1800002023",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "41",
+            "confirmedBlock": "39",
+            "indexedBlock": "39",
+            "publicationBlock": "39",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:19.170Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:19.174+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "39",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:22.608Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:22 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "40",
+          "asOfBlockHash": "0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+          "asOfTimestamp": "1800002321",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "42",
+            "confirmedBlock": "40",
+            "indexedBlock": "40",
+            "publicationBlock": "40",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:21.085Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:21.089+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Succeeded",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": null,
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": null,
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": null
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:23.088Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=40&asOfBlockHash=0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:23 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "40",
+          "asOfBlockHash": "0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+          "asOfTimestamp": "1800002321",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "42",
+            "confirmedBlock": "40",
+            "indexedBlock": "40",
+            "publicationBlock": "40",
+            "lagBlocks": "0",
+            "lagSeconds": "1",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:21.933Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:21.949+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Succeeded",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": null,
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": null,
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": null
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:23.410Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=40&asOfBlockHash=0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:23 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "40",
+          "asOfBlockHash": "0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+          "asOfTimestamp": "1800002321",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "42",
+            "confirmedBlock": "40",
+            "indexedBlock": "40",
+            "publicationBlock": "40",
+            "lagBlocks": "0",
+            "lagSeconds": "1",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:21.933Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:21.949+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:23.491Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=40&asOfBlockHash=0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:23 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "40",
+          "asOfBlockHash": "0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+          "asOfTimestamp": "1800002321",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "42",
+            "confirmedBlock": "40",
+            "indexedBlock": "40",
+            "publicationBlock": "40",
+            "lagBlocks": "0",
+            "lagSeconds": "1",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:21.933Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:21.949+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 0,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:25.014Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:25 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "40",
+          "asOfBlockHash": "0x4e2c5cb37b4c43128fa8dde710c452492a96d9478c092d1ac1395035c9d9dd68",
+          "asOfTimestamp": "1800002321",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "42",
+            "confirmedBlock": "40",
+            "indexedBlock": "40",
+            "publicationBlock": "40",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:24.727Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:24.744+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "40",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:28.952Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:28 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:28.805Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:28.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Queued",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": {
+              "eta": "1800002453",
+              "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+              "status": "Ready",
+              "queuedAt": "1800002333",
+              "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": null
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:29.099Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=45&asOfBlockHash=0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:29 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:28.805Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:28.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Queued",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800002453",
+            "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "status": "Ready",
+            "queuedAt": "1800002333",
+            "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": null
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:29.175Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=45&asOfBlockHash=0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:29 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:28.805Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:28.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 0,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:29.176Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=45&asOfBlockHash=0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:29 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:28.805Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:28.807+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:30.065Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:30 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:29.741Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:29.743+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "45",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:35.121Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:35 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "45",
+          "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+          "asOfTimestamp": "1800002453",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "47",
+            "confirmedBlock": "45",
+            "indexedBlock": "45",
+            "publicationBlock": "45",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:35.054Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:35.062+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "45",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:40.174Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:39.898Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:39.899+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "49",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:40.337Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:40.288Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:40.291+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Queued",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": {
+              "eta": "1800002453",
+              "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+              "status": "Ready",
+              "queuedAt": "1800002333",
+              "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": null
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:40.446Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:40.288Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:40.291+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Queued",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800002453",
+            "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "status": "Ready",
+            "queuedAt": "1800002333",
+            "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": null
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:40.461Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:40.288Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:40.291+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:40.495Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:40.288Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:40.291+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 0,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:45.222Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:45 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:44.799Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:44.8+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "49",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:45.474Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:45 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:45.222Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:45.228+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Queued",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": {
+              "eta": "1800002453",
+              "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+              "status": "Ready",
+              "queuedAt": "1800002333",
+              "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": null
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:45.646Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:45 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:45.222Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:45.228+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 0,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:45.657Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:45 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:45.222Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:45.228+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Queued",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800002453",
+            "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "status": "Ready",
+            "queuedAt": "1800002333",
+            "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": null
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:45.682Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=49&asOfBlockHash=0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:45 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "49",
+          "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "asOfTimestamp": "1800002464",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "51",
+            "confirmedBlock": "49",
+            "indexedBlock": "49",
+            "publicationBlock": "49",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:45.222Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:45.228+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:49.662Z",
+      "url": "http://127.0.0.1:45811/api/proposals?chainId=31337&deploymentId=qa07-e2e&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+            "state": "Executed",
+            "title": "QA07 actual MetaMask negative and recovery",
+            "votes": {
+              "for": "400000000000000000000",
+              "quorum": "200000000000000000000",
+              "abstain": "0",
+              "against": "0"
+            },
+            "amount": "11000000000000000000000",
+            "values": [
+              "0"
+            ],
+            "created": {
+              "logIndex": "0",
+              "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+              "blockNumber": "29",
+              "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "transactionIndex": "0"
+            },
+            "targets": [
+              "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+            ],
+            "deadline": "1800002022",
+            "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "snapshot": "1800001722",
+            "calldatas": [
+              "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+            ],
+            "operation": {
+              "eta": "1800002453",
+              "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+              "status": "Done",
+              "queuedAt": "1800002333",
+              "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+            "stateSource": "contract",
+            "transactions": {
+              "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+              "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+              "canceled": null,
+              "executed": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c"
+            },
+            "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:49.715Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Executed",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800002453",
+            "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "status": "Done",
+            "queuedAt": "1800002333",
+            "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c"
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:49.739Z",
+      "url": "http://127.0.0.1:45811/api/proposals/80473439291238266157620742991282647983838392855857342276874399640497195595742/votes?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "voter": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+            "reason": "",
+            "weight": "400000000000000000000",
+            "support": 1,
+            "logIndex": "0",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "36",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:49.740Z",
+      "url": "http://127.0.0.1:45811/api/treasury/transfers?chainId=31337&deploymentId=qa07-e2e&asOfBlock=52&asOfBlockHash=0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66&limit=20&proposalId=80473439291238266157620742991282647983838392855857342276874399640497195595742",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "11000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "direction": "out",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "52",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    {
+      "at": "2026-11-23T09:00:50.244Z",
+      "url": "http://127.0.0.1:45811/api/health?chainId=31337&deploymentId=qa07-e2e",
+      "status": 200,
+      "headers": {
+        "connection": "keep-alive",
+        "date": "Mon, 23 Nov 2026 09:00:50 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked",
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "content-type": "application/json"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:50.138Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:50.143+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "status": "degraded",
+          "database": "up",
+          "indexer": "synced",
+          "publication": "ready",
+          "recoveryStatus": "ready",
+          "projectionStatus": "current",
+          "publicationBlock": "52",
+          "projectionLagBlocks": "0",
+          "rawDecodeComplete": false,
+          "rawDecodeIssues": {
+            "unknownTopics": 16,
+            "decodeErrors": 0
+          },
+          "ignoredAncillaryEvents": 16
+        }
+      }
+    }
+  ],
+  "publications": [
+    {
+      "label": "real-succeeded-or-queued",
+      "target": {
+        "height": "39",
+        "hash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:32935",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Mon, 23 Nov 2026 09:00:10 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": {
+          "context": {
+            "chainId": "31337",
+            "deploymentId": "qa07-e2e",
+            "asOfBlock": "39",
+            "asOfBlockHash": "0x1452010a27ba9241db0c11a388adc401364bd1a8f65e89ffe788ece0ce7daca9",
+            "asOfTimestamp": "1800002023",
+            "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+            "dataKind": "chain",
+            "sync": {
+              "status": "synced",
+              "headBlock": "41",
+              "confirmedBlock": "39",
+              "indexedBlock": "39",
+              "publicationBlock": "39",
+              "lagBlocks": "0",
+              "lagSeconds": "0",
+              "confirmations": "2",
+              "lastIndexedAt": "2026-11-23T09:00:09.362Z",
+              "lastRpcCheckAt": "2026-11-23T16:00:09.364+07:00",
+              "recoveryStatus": "ready"
+            }
+          },
+          "data": {
+            "treasury": {
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": {
+                "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "symbol": "BUD",
+                "decimals": 18
+              },
+              "balance": "10000000000000000000000",
+              "totalIn": "10000000000000000000000",
+              "totalOut": "0"
+            },
+            "proposalCounts": {
+              "total": 1,
+              "byState": {
+                "Pending": 0,
+                "Active": 0,
+                "Succeeded": 1,
+                "Defeated": 0,
+                "Queued": 0,
+                "Executed": 0,
+                "Canceled": 0
+              }
+            },
+            "governance": {
+              "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "govToken": {
+                "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                "symbol": "GOV",
+                "decimals": 18
+              },
+              "clockMode": "mode=timestamp",
+              "proposalThreshold": "50000000000000000000",
+              "votingDelay": "60",
+              "votingPeriod": "300",
+              "timelockDelay": "120",
+              "quorumNumerator": "20",
+              "quorumDenominator": "100",
+              "totalSupply": "1000000000000000000000"
+            },
+            "recentActivity": [
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "10000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "19",
+                "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                "transactionIndex": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "label": "real-queued",
+      "target": {
+        "height": "42",
+        "hash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:32935",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Mon, 23 Nov 2026 09:00:27 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": {
+          "context": {
+            "chainId": "31337",
+            "deploymentId": "qa07-e2e",
+            "asOfBlock": "42",
+            "asOfBlockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+            "asOfTimestamp": "1800002333",
+            "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+            "dataKind": "chain",
+            "sync": {
+              "status": "synced",
+              "headBlock": "44",
+              "confirmedBlock": "42",
+              "indexedBlock": "42",
+              "publicationBlock": "42",
+              "lagBlocks": "0",
+              "lagSeconds": "0",
+              "confirmations": "2",
+              "lastIndexedAt": "2026-11-23T09:00:27.410Z",
+              "lastRpcCheckAt": "2026-11-23T16:00:27.416+07:00",
+              "recoveryStatus": "ready"
+            }
+          },
+          "data": {
+            "treasury": {
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": {
+                "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "symbol": "BUD",
+                "decimals": 18
+              },
+              "balance": "10000000000000000000000",
+              "totalIn": "10000000000000000000000",
+              "totalOut": "0"
+            },
+            "proposalCounts": {
+              "total": 1,
+              "byState": {
+                "Pending": 0,
+                "Active": 0,
+                "Succeeded": 0,
+                "Defeated": 0,
+                "Queued": 1,
+                "Executed": 0,
+                "Canceled": 0
+              }
+            },
+            "governance": {
+              "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "govToken": {
+                "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                "symbol": "GOV",
+                "decimals": 18
+              },
+              "clockMode": "mode=timestamp",
+              "proposalThreshold": "50000000000000000000",
+              "votingDelay": "60",
+              "votingPeriod": "300",
+              "timelockDelay": "120",
+              "quorumNumerator": "20",
+              "quorumDenominator": "100",
+              "totalSupply": "1000000000000000000000"
+            },
+            "recentActivity": [
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "10000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "19",
+                "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                "transactionIndex": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "label": "real-ready",
+      "target": {
+        "height": "45",
+        "hash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:32935",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Mon, 23 Nov 2026 09:00:28 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": {
+          "context": {
+            "chainId": "31337",
+            "deploymentId": "qa07-e2e",
+            "asOfBlock": "45",
+            "asOfBlockHash": "0x65b671016b4ec5c064174b8120a1a168ed0c3bc0ad6cc73448a3fe2a4289eca3",
+            "asOfTimestamp": "1800002453",
+            "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+            "dataKind": "chain",
+            "sync": {
+              "status": "synced",
+              "headBlock": "47",
+              "confirmedBlock": "45",
+              "indexedBlock": "45",
+              "publicationBlock": "45",
+              "lagBlocks": "0",
+              "lagSeconds": "0",
+              "confirmations": "2",
+              "lastIndexedAt": "2026-11-23T09:00:28.212Z",
+              "lastRpcCheckAt": "2026-11-23T16:00:28.215+07:00",
+              "recoveryStatus": "ready"
+            }
+          },
+          "data": {
+            "treasury": {
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": {
+                "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "symbol": "BUD",
+                "decimals": 18
+              },
+              "balance": "10000000000000000000000",
+              "totalIn": "10000000000000000000000",
+              "totalOut": "0"
+            },
+            "proposalCounts": {
+              "total": 1,
+              "byState": {
+                "Pending": 0,
+                "Active": 0,
+                "Succeeded": 0,
+                "Defeated": 0,
+                "Queued": 1,
+                "Executed": 0,
+                "Canceled": 0
+              }
+            },
+            "governance": {
+              "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "govToken": {
+                "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                "symbol": "GOV",
+                "decimals": 18
+              },
+              "clockMode": "mode=timestamp",
+              "proposalThreshold": "50000000000000000000",
+              "votingDelay": "60",
+              "votingPeriod": "300",
+              "timelockDelay": "120",
+              "quorumNumerator": "20",
+              "quorumDenominator": "100",
+              "totalSupply": "1000000000000000000000"
+            },
+            "recentActivity": [
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "10000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "19",
+                "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                "transactionIndex": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "label": "real-topup",
+      "target": {
+        "height": "49",
+        "hash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:32935",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Mon, 23 Nov 2026 09:00:40 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": {
+          "context": {
+            "chainId": "31337",
+            "deploymentId": "qa07-e2e",
+            "asOfBlock": "49",
+            "asOfBlockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+            "asOfTimestamp": "1800002464",
+            "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+            "dataKind": "chain",
+            "sync": {
+              "status": "synced",
+              "headBlock": "51",
+              "confirmedBlock": "49",
+              "indexedBlock": "49",
+              "publicationBlock": "49",
+              "lagBlocks": "0",
+              "lagSeconds": "0",
+              "confirmations": "2",
+              "lastIndexedAt": "2026-11-23T09:00:39.898Z",
+              "lastRpcCheckAt": "2026-11-23T16:00:39.899+07:00",
+              "recoveryStatus": "ready"
+            }
+          },
+          "data": {
+            "treasury": {
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": {
+                "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "symbol": "BUD",
+                "decimals": 18
+              },
+              "balance": "12000000000000000000000",
+              "totalIn": "12000000000000000000000",
+              "totalOut": "0"
+            },
+            "proposalCounts": {
+              "total": 1,
+              "byState": {
+                "Pending": 0,
+                "Active": 0,
+                "Succeeded": 0,
+                "Defeated": 0,
+                "Queued": 1,
+                "Executed": 0,
+                "Canceled": 0
+              }
+            },
+            "governance": {
+              "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "govToken": {
+                "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                "symbol": "GOV",
+                "decimals": 18
+              },
+              "clockMode": "mode=timestamp",
+              "proposalThreshold": "50000000000000000000",
+              "votingDelay": "60",
+              "votingPeriod": "300",
+              "timelockDelay": "120",
+              "quorumNumerator": "20",
+              "quorumDenominator": "100",
+              "totalSupply": "1000000000000000000000"
+            },
+            "recentActivity": [
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "2000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "49",
+                "transactionHash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+                "transactionIndex": "0"
+              },
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "10000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "19",
+                "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                "transactionIndex": "0"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "label": "real-executed",
+      "target": {
+        "height": "52",
+        "hash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "access-control-allow-origin": "http://127.0.0.1:32935",
+          "connection": "keep-alive",
+          "content-type": "application/json",
+          "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "body": {
+          "context": {
+            "chainId": "31337",
+            "deploymentId": "qa07-e2e",
+            "asOfBlock": "52",
+            "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "asOfTimestamp": "1800002470",
+            "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+            "dataKind": "chain",
+            "sync": {
+              "status": "synced",
+              "headBlock": "54",
+              "confirmedBlock": "52",
+              "indexedBlock": "52",
+              "publicationBlock": "52",
+              "lagBlocks": "0",
+              "lagSeconds": "0",
+              "confirmations": "2",
+              "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+              "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+              "recoveryStatus": "ready"
+            }
+          },
+          "data": {
+            "treasury": {
+              "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": {
+                "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "symbol": "BUD",
+                "decimals": 18
+              },
+              "balance": "1000000000000000000000",
+              "totalIn": "12000000000000000000000",
+              "totalOut": "11000000000000000000000"
+            },
+            "proposalCounts": {
+              "total": 1,
+              "byState": {
+                "Pending": 0,
+                "Active": 0,
+                "Succeeded": 0,
+                "Defeated": 0,
+                "Queued": 0,
+                "Executed": 1,
+                "Canceled": 0
+              }
+            },
+            "governance": {
+              "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+              "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+              "govToken": {
+                "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+                "symbol": "GOV",
+                "decimals": 18
+              },
+              "clockMode": "mode=timestamp",
+              "proposalThreshold": "50000000000000000000",
+              "votingDelay": "60",
+              "votingPeriod": "300",
+              "timelockDelay": "120",
+              "quorumNumerator": "20",
+              "quorumDenominator": "100",
+              "totalSupply": "1000000000000000000000"
+            },
+            "recentActivity": [
+              {
+                "type": "Transfer",
+                "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+                "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "11000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+                "direction": "out",
+                "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+                "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+                "blockNumber": "52",
+                "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+                "transactionIndex": "0"
+              },
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "2000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "49",
+                "transactionHash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+                "transactionIndex": "0"
+              },
+              {
+                "type": "Transfer",
+                "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+                "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+                "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+                "amount": "10000000000000000000000",
+                "logIndex": "0",
+                "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+                "direction": "in",
+                "requestId": null,
+                "proposalId": null,
+                "blockNumber": "19",
+                "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+                "transactionIndex": "0"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "checks": [
+    "Same proposal: actual MetaMask propose/vote by first UI-created actor, queue/execute by second UI-created actor; receipt→worker→API→UI at canonical H/hash, all invariants reconciled"
+  ],
+  "priorSession": {
+    "actor": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+    "runtime": "Eval driver VM lost at 45-second cell deadline; original browser exited. Existing screenshots and public chain state retained; original in-memory RPC trace lost.",
+    "observed": [
+      {
+        "case": "wrong-network",
+        "result": "PASS",
+        "actual": "0x1",
+        "expected": "0x7a69",
+        "signButtonDisabled": true,
+        "screenshot": "02-real-wrong-network-disabled.png"
+      },
+      {
+        "case": "real proposal signature refusal",
+        "result": "PASS",
+        "nonceBefore": "0x1",
+        "nonceAfter": "0x1",
+        "requestIdRetained": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+        "screenshots": [
+          "07-real-proposal-signature-refusal.png",
+          "08-real-signature-refused-draft-retained.png"
+        ]
+      },
+      {
+        "case": "confirmed-not-indexed",
+        "result": "PASS",
+        "receiptConfirmed": true,
+        "detailAbsentUntilK2": true,
+        "screenshots": [
+          "10-real-proposal-confirmed-not-indexed.png",
+          "11-real-confirmed-not-indexed-detail.png"
+        ]
+      }
+    ],
+    "setup": "Initial 4100 after custom-chain addition cleared after explicit wallet_requestPermissions eth_accounts approval on current chain; actual delegation/proposal/vote UI then appeared. No product code changed.",
+    "discarded": "Earlier unfunded import diagnostic profile/private fixture destroyed before any funding; no seed/private key exported by either later UI-created wallet."
+  },
+  "limits": [
+    "Local unforked Anvil, not testnet/realtime governance acceptance",
+    "Two real-extension-created actors after first driver loss; one proposal and deployment, permissionless queue/execute by second actor",
+    "Not TV3 human/Chrome Web Store/physical mobile acceptance",
+    "Original in-memory RPC trace unavailable after VM reset; prior outcomes bound to screenshots, recorded session observations and independently retrieved chain receipts"
+  ],
+  "governorEvents": [
+    {
+      "event": "ProposalCreated",
+      "args": [
+        "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+        "0x5dC67Bdb87962d48138C7a321E8C6615691c7162",
+        [
+          "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd"
+        ],
+        [
+          "0"
+        ],
+        [
+          ""
+        ],
+        [
+          "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+        ],
+        "1800001722",
+        "1800002022",
+        "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}"
+      ],
+      "log": {
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "topics": [
+          "0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0"
+        ],
+        "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de0000000000000000000000005dc67bdb87962d48138c7a321e8c6615691c71620000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000001a00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000006b49d8ba000000000000000000000000000000000000000000000000000000006b49d9e600000000000000000000000000000000000000000000000000000000000002e000000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000af7b2276657273696f6e223a312c227469746c65223a22514130372061637475616c204d6574614d61736b206e6567617469766520616e64207265636f76657279222c22626f6479223a225265616c2069736f6c61746564204d6574614d61736b20657874656e73696f6e207369676e696e672c207265667573616c2c206e6574776f726b20616e64206163636f756e742068616e646c696e67206f6e20617070726f76656420736f757263652e227d0000000000000000000000000000000000",
+        "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+        "blockNumber": "0x1d",
+        "blockTimestamp": "0x6b49d87e",
+        "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+        "transactionIndex": "0x0",
+        "logIndex": "0x0",
+        "removed": false
+      }
+    },
+    {
+      "event": "VoteCast",
+      "args": [
+        "0x5dC67Bdb87962d48138C7a321E8C6615691c7162",
+        "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+        "1",
+        "400000000000000000000",
+        ""
+      ],
+      "log": {
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "topics": [
+          "0xb8e138887d0aa13bab447e82de9d5c1777041ecd21ca36ba824ff1e6c07ddda4",
+          "0x0000000000000000000000005dc67bdb87962d48138c7a321e8c6615691c7162"
+        ],
+        "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000015af1d78b58c40000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+        "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+        "blockNumber": "0x24",
+        "blockTimestamp": "0x6b49d911",
+        "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+        "transactionIndex": "0x0",
+        "logIndex": "0x0",
+        "removed": false
+      }
+    },
+    {
+      "event": "ProposalQueued",
+      "args": [
+        "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+        "1800002453"
+      ],
+      "log": {
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "topics": [
+          "0x9a2e42fd6722813d69113e7d0079d3d940171428df7373df9c7f7617cfda2892"
+        ],
+        "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de000000000000000000000000000000000000000000000000000000006b49db95",
+        "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+        "blockNumber": "0x2a",
+        "blockTimestamp": "0x6b49db1d",
+        "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+        "transactionIndex": "0x0",
+        "logIndex": "0x2",
+        "removed": false
+      }
+    },
+    {
+      "event": "ProposalExecuted",
+      "args": [
+        "80473439291238266157620742991282647983838392855857342276874399640497195595742"
+      ],
+      "log": {
+        "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "topics": [
+          "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f"
+        ],
+        "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de",
+        "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+        "blockNumber": "0x34",
+        "blockTimestamp": "0x6b49dba6",
+        "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+        "transactionIndex": "0x0",
+        "logIndex": "0x3",
+        "removed": false
+      }
+    }
+  ],
+  "governorTransactions": [
+    {
+      "method": "propose",
+      "args": [
+        [
+          "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd"
+        ],
+        [
+          "0"
+        ],
+        [
+          "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+        ],
+        "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}"
+      ],
+      "transaction": {
+        "type": "0x2",
+        "chainId": "0x7a69",
+        "nonce": "0x1",
+        "gas": "0x1a012",
+        "maxFeePerGas": "0x3d27cbf4",
+        "maxPriorityFeePerGas": "0x3d27cbf4",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "value": "0x0",
+        "accessList": [],
+        "input": "0x7d5e81e2000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001e000000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000af7b2276657273696f6e223a312c227469746c65223a22514130372061637475616c204d6574614d61736b206e6567617469766520616e64207265636f76657279222c22626f6479223a225265616c2069736f6c61746564204d6574614d61736b20657874656e73696f6e207369676e696e672c207265667573616c2c206e6574776f726b20616e64206163636f756e742068616e646c696e67206f6e20617070726f76656420736f757263652e227d0000000000000000000000000000000000",
+        "r": "0x43041046efbf4a5295d923a96bf0a76a9f4aa426d8dc8c4774380a2fa95a3aa",
+        "s": "0x2a6615fac23c2387833dee33fe0dfafc0bcdf06d53a9ab5fd6cbeb49351d60c8",
+        "yParity": "0x1",
+        "v": "0x1",
+        "hash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+        "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+        "blockNumber": "0x1d",
+        "transactionIndex": "0x0",
+        "from": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+        "gasPrice": "0x3d27cbf4",
+        "blockTimestamp": "0x6b49d87e"
+      },
+      "receipt": {
+        "type": "0x2",
+        "status": "0x1",
+        "cumulativeGasUsed": "0x1a012",
+        "logs": [
+          {
+            "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "topics": [
+              "0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0"
+            ],
+            "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de0000000000000000000000005dc67bdb87962d48138c7a321e8c6615691c71620000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000001a00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000006b49d8ba000000000000000000000000000000000000000000000000000000006b49d9e600000000000000000000000000000000000000000000000000000000000002e000000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000af7b2276657273696f6e223a312c227469746c65223a22514130372061637475616c204d6574614d61736b206e6567617469766520616e64207265636f76657279222c22626f6479223a225265616c2069736f6c61746564204d6574614d61736b20657874656e73696f6e207369676e696e672c207265667573616c2c206e6574776f726b20616e64206163636f756e742068616e646c696e67206f6e20617070726f76656420736f757263652e227d0000000000000000000000000000000000",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "0x1d",
+            "blockTimestamp": "0x6b49d87e",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0x0",
+            "logIndex": "0x0",
+            "removed": false
+          }
+        ],
+        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000",
+        "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+        "transactionIndex": "0x0",
+        "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+        "blockNumber": "0x1d",
+        "gasUsed": "0x1a012",
+        "effectiveGasPrice": "0x3d27cbf4",
+        "from": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "contractAddress": null,
+        "blockTimestamp": 1800001662
+      }
+    },
+    {
+      "method": "castVote",
+      "args": [
+        "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+        "1"
+      ],
+      "transaction": {
+        "type": "0x2",
+        "chainId": "0x7a69",
+        "nonce": "0x2",
+        "gas": "0x145c9",
+        "maxFeePerGas": "0x3c669fda",
+        "maxPriorityFeePerGas": "0x3c669fda",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "value": "0x0",
+        "accessList": [],
+        "input": "0x56781388b1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de0000000000000000000000000000000000000000000000000000000000000001",
+        "r": "0x3ae975317cc1c997008664c3d27256f46f3390b2acf4fa1cd1b0488708d3d70f",
+        "s": "0x719b11df4a43052a20df9abb4b8d3cf1444a8da191c71f652533ad833dd52b6a",
+        "yParity": "0x1",
+        "v": "0x1",
+        "hash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+        "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+        "blockNumber": "0x24",
+        "transactionIndex": "0x0",
+        "from": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+        "gasPrice": "0x3c669fda",
+        "blockTimestamp": "0x6b49d911"
+      },
+      "receipt": {
+        "type": "0x2",
+        "status": "0x1",
+        "cumulativeGasUsed": "0x145c9",
+        "logs": [
+          {
+            "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "topics": [
+              "0xb8e138887d0aa13bab447e82de9d5c1777041ecd21ca36ba824ff1e6c07ddda4",
+              "0x0000000000000000000000005dc67bdb87962d48138c7a321e8c6615691c7162"
+            ],
+            "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000015af1d78b58c40000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+            "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+            "blockNumber": "0x24",
+            "blockTimestamp": "0x6b49d911",
+            "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+            "transactionIndex": "0x0",
+            "logIndex": "0x0",
+            "removed": false
+          }
+        ],
+        "logsBloom": "0x00008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080100000000000000000000000000000000000000000000000000000008000000000000000000040000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000001000000000000000",
+        "transactionHash": "0xd859ab387be8f3042ffef5210219d20c99e921e8ad2f4d3226a8286529e083c6",
+        "transactionIndex": "0x0",
+        "blockHash": "0x91cc9456665e140e8b1d234294af7bbb91ef8a97b5079b60ab96e5ef0586052f",
+        "blockNumber": "0x24",
+        "gasUsed": "0x145c9",
+        "effectiveGasPrice": "0x3c669fda",
+        "from": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "contractAddress": null,
+        "blockTimestamp": 1800001809
+      }
+    },
+    {
+      "method": "queue",
+      "args": [
+        [
+          "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd"
+        ],
+        [
+          "0"
+        ],
+        [
+          "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+        ],
+        "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+      ],
+      "transaction": {
+        "type": "0x2",
+        "chainId": "0x7a69",
+        "nonce": "0x0",
+        "gas": "0x23bdc",
+        "maxFeePerGas": "0x3be0e266",
+        "maxPriorityFeePerGas": "0x3be0e266",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "value": "0x0",
+        "accessList": [],
+        "input": "0x160cbed7000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100e0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+        "r": "0x976468c4e8f3e9cc407e8d9933d751099f44adb3bdaec9c85cd4cdd08a0adb50",
+        "s": "0x52df6aff882efcc1b8b70a23bd9aba1aa09516140b9a4a1c4b180ac2c56f0548",
+        "yParity": "0x0",
+        "v": "0x0",
+        "hash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+        "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+        "blockNumber": "0x2a",
+        "transactionIndex": "0x0",
+        "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+        "gasPrice": "0x3be0e266",
+        "blockTimestamp": "0x6b49db1d"
+      },
+      "receipt": {
+        "type": "0x2",
+        "status": "0x1",
+        "cumulativeGasUsed": "0x23bdc",
+        "logs": [
+          {
+            "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "topics": [
+              "0x4cf4410cc57040e44862ef0f45f3dd5a5e02db8eb8add648d4b0e236f1d07dca",
+              "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "0x0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "data": "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007800000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+            "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+            "blockNumber": "0x2a",
+            "blockTimestamp": "0x6b49db1d",
+            "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "transactionIndex": "0x0",
+            "logIndex": "0x0",
+            "removed": false
+          },
+          {
+            "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "topics": [
+              "0x20fda5fd27a1ea7bf5b9567f143ac5470bb059374a27e8f67cb44f946f6d0387",
+              "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c"
+            ],
+            "data": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+            "blockNumber": "0x2a",
+            "blockTimestamp": "0x6b49db1d",
+            "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "transactionIndex": "0x0",
+            "logIndex": "0x1",
+            "removed": false
+          },
+          {
+            "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "topics": [
+              "0x9a2e42fd6722813d69113e7d0079d3d940171428df7373df9c7f7617cfda2892"
+            ],
+            "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de000000000000000000000000000000000000000000000000000000006b49db95",
+            "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+            "blockNumber": "0x2a",
+            "blockTimestamp": "0x6b49db1d",
+            "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "transactionIndex": "0x0",
+            "logIndex": "0x2",
+            "removed": false
+          }
+        ],
+        "logsBloom": "0x00200000000000000000000040000000000000400000000000000000000000000000000000000000000000000000000100000000800200000100000000000000000000000000000200000000002000000000000000000008000000000000000000000000020000000000000000000800000080000000000000000000000000000008000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000010000000000400000000000000020008000000000000000000000000000000000000000000000001000000000000000",
+        "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+        "transactionIndex": "0x0",
+        "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+        "blockNumber": "0x2a",
+        "gasUsed": "0x23bdc",
+        "effectiveGasPrice": "0x3be0e266",
+        "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "contractAddress": null,
+        "blockTimestamp": 1800002333
+      }
+    },
+    {
+      "method": "execute",
+      "args": [
+        [
+          "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd"
+        ],
+        [
+          "0"
+        ],
+        [
+          "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+        ],
+        "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+      ],
+      "transaction": {
+        "type": "0x2",
+        "chainId": "0x7a69",
+        "nonce": "0x2",
+        "gas": "0x26336",
+        "maxFeePerGas": "0x3bad4709",
+        "maxPriorityFeePerGas": "0x3bad4709",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "value": "0x0",
+        "accessList": [],
+        "input": "0x2656227d000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100e0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+        "r": "0x22f1dba3463a0379cb147e34100e73a6ca4b42bbdae62a3d50bacb35d9af381e",
+        "s": "0xb179868817c489833a1e04bd2f3c37d123092b0488c05ce0be48939748aab0a",
+        "yParity": "0x1",
+        "v": "0x1",
+        "hash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+        "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+        "blockNumber": "0x34",
+        "transactionIndex": "0x0",
+        "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+        "gasPrice": "0x3bad4709",
+        "blockTimestamp": "0x6b49dba6"
+      },
+      "receipt": {
+        "type": "0x2",
+        "status": "0x1",
+        "cumulativeGasUsed": "0x25076",
+        "logs": [
+          {
+            "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "topics": [
+              "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+              "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "0x00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d9955"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000002544faa778090e00000",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "blockNumber": "0x34",
+            "blockTimestamp": "0x6b49dba6",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0x0",
+            "logIndex": "0x0",
+            "removed": false
+          },
+          {
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "topics": [
+              "0xed831073041168fde3787985861235c1f42621a21918a64a309a17903e0e10db",
+              "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+              "0x00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d9955"
+            ],
+            "data": "0x0000000000000000000000000000000000000000000002544faa778090e00000",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "blockNumber": "0x34",
+            "blockTimestamp": "0x6b49dba6",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0x0",
+            "logIndex": "0x1",
+            "removed": false
+          },
+          {
+            "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "topics": [
+              "0xc2617efa69bab66782fa219543714338489c4e9e178271560a91b82c3f612b58",
+              "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+              "0x0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "data": "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "blockNumber": "0x34",
+            "blockTimestamp": "0x6b49dba6",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0x0",
+            "logIndex": "0x2",
+            "removed": false
+          },
+          {
+            "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "topics": [
+              "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f"
+            ],
+            "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "blockNumber": "0x34",
+            "blockTimestamp": "0x6b49dba6",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0x0",
+            "logIndex": "0x3",
+            "removed": false
+          }
+        ],
+        "logsBloom": "0x00300000000000000000000000000000000000400000000000000000000020000000000000000000000000000000000000000000000a00000000000000040000000000000000012200000008000000000000004000000400000000000000002000000000020000001000000104000800000000000000000000000010000000000008000000000000000000000000000000000000040000000000000000000000000000000020000000000000000000002000000000000000000020000000010000100002000000080000080000000000050000000000000000800000000020008000000000000000000000000000000000000000100000001000000040000000",
+        "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+        "transactionIndex": "0x0",
+        "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+        "blockNumber": "0x34",
+        "gasUsed": "0x25076",
+        "effectiveGasPrice": "0x3bad4709",
+        "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+        "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+        "contractAddress": null,
+        "blockTimestamp": 1800002470
+      }
+    }
+  ],
+  "browser": "141.0.7390.37",
+  "continuationActor": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+  "observer": "Pass-through RPC observation only; original request payloads, results/errors unchanged; no adapter, unlocked signer or impersonation for Governor actions.",
+  "real-queue": {
+    "hash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+    "receipt": {
+      "type": "0x2",
+      "status": "0x1",
+      "cumulativeGasUsed": "0x23bdc",
+      "logs": [
+        {
+          "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+          "topics": [
+            "0x4cf4410cc57040e44862ef0f45f3dd5a5e02db8eb8add648d4b0e236f1d07dca",
+            "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          "data": "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007800000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+          "blockNumber": "0x2a",
+          "blockTimestamp": "0x6b49db1d",
+          "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+          "transactionIndex": "0x0",
+          "logIndex": "0x0",
+          "removed": false
+        },
+        {
+          "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+          "topics": [
+            "0x20fda5fd27a1ea7bf5b9567f143ac5470bb059374a27e8f67cb44f946f6d0387",
+            "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c"
+          ],
+          "data": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+          "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+          "blockNumber": "0x2a",
+          "blockTimestamp": "0x6b49db1d",
+          "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+          "transactionIndex": "0x0",
+          "logIndex": "0x1",
+          "removed": false
+        },
+        {
+          "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+          "topics": [
+            "0x9a2e42fd6722813d69113e7d0079d3d940171428df7373df9c7f7617cfda2892"
+          ],
+          "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de000000000000000000000000000000000000000000000000000000006b49db95",
+          "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+          "blockNumber": "0x2a",
+          "blockTimestamp": "0x6b49db1d",
+          "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+          "transactionIndex": "0x0",
+          "logIndex": "0x2",
+          "removed": false
+        }
+      ],
+      "logsBloom": "0x00200000000000000000000040000000000000400000000000000000000000000000000000000000000000000000000100000000800200000100000000000000000000000000000200000000002000000000000000000008000000000000000000000000020000000000000000000800000080000000000000000000000000000008000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000010000000000400000000000000020008000000000000000000000000000000000000000000000001000000000000000",
+      "transactionHash": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+      "transactionIndex": "0x0",
+      "blockHash": "0xcf43b40230fde28ada5b4ad9c897fffe98601c075361760a500c88b69165c947",
+      "blockNumber": "0x2a",
+      "gasUsed": "0x23bdc",
+      "effectiveGasPrice": "0x3be0e266",
+      "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+      "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "contractAddress": null,
+      "blockTimestamp": 1800002333
+    }
+  },
+  "underfunded": {
+    "kind": "RECEIPT_REVERT",
+    "hash": "0x2e0610c586bd41c93e72f7e43afdc6ed4c06c4655b6150b181e59d93a4ab3438",
+    "receipt": {
+      "type": "0x2",
+      "status": "0x0",
+      "cumulativeGasUsed": "0x16854",
+      "logs": [],
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "transactionHash": "0x2e0610c586bd41c93e72f7e43afdc6ed4c06c4655b6150b181e59d93a4ab3438",
+      "transactionIndex": "0x0",
+      "blockHash": "0xd0d6a2fcdbc80bf9e55c27e86678564c29a914aafd9a9f30e4aea179c5c408ab",
+      "blockNumber": "0x30",
+      "gasUsed": "0x16854",
+      "effectiveGasPrice": "0x3bba4a9a",
+      "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+      "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "contractAddress": null,
+      "blockTimestamp": 1800002462
+    },
+    "treasuryBalance": "10000000000000000000000",
+    "paid": false
+  },
+  "topUp": {
+    "hash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+    "receipt": {
+      "type": "0x2",
+      "status": "0x1",
+      "cumulativeGasUsed": "0x86dd",
+      "logs": [
+        {
+          "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x00000000000000000000000015d34aaf54267db7d7c367839aaf71a00a2c6a65",
+            "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "data": "0x00000000000000000000000000000000000000000000006c6b935b8bbd400000",
+          "blockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+          "blockNumber": "0x31",
+          "blockTimestamp": "0x6b49dba0",
+          "transactionHash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+          "transactionIndex": "0x0",
+          "logIndex": "0x0",
+          "removed": false
+        }
+      ],
+      "logsBloom": "0x00000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000104000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000010000100002000000000000000000000000010000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000",
+      "transactionHash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+      "transactionIndex": "0x0",
+      "blockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+      "blockNumber": "0x31",
+      "gasUsed": "0x86dd",
+      "effectiveGasPrice": "0x3bb660ba",
+      "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+      "to": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+      "contractAddress": null,
+      "blockTimestamp": 1800002464
+    }
+  },
+  "real-execute": {
+    "hash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+    "receipt": {
+      "type": "0x2",
+      "status": "0x1",
+      "cumulativeGasUsed": "0x25076",
+      "logs": [
+        {
+          "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+          "topics": [
+            "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "0x00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d9955"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000002544faa778090e00000",
+          "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "blockNumber": "0x34",
+          "blockTimestamp": "0x6b49dba6",
+          "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+          "transactionIndex": "0x0",
+          "logIndex": "0x0",
+          "removed": false
+        },
+        {
+          "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+          "topics": [
+            "0xed831073041168fde3787985861235c1f42621a21918a64a309a17903e0e10db",
+            "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "0x00000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d9955"
+          ],
+          "data": "0x0000000000000000000000000000000000000000000002544faa778090e00000",
+          "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "blockNumber": "0x34",
+          "blockTimestamp": "0x6b49dba6",
+          "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+          "transactionIndex": "0x0",
+          "logIndex": "0x1",
+          "removed": false
+        },
+        {
+          "address": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+          "topics": [
+            "0xc2617efa69bab66782fa219543714338489c4e9e178271560a91b82c3f612b58",
+            "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "0x0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          "data": "0x0000000000000000000000001eb835eb7beeee9e6bbfe08f16a2d2ef668204bd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000646664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e0000000000000000000000000000000000000000000000000000000000000",
+          "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "blockNumber": "0x34",
+          "blockTimestamp": "0x6b49dba6",
+          "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+          "transactionIndex": "0x0",
+          "logIndex": "0x2",
+          "removed": false
+        },
+        {
+          "address": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+          "topics": [
+            "0x712ae1383f79ac853f8d882153778e0260ef8f03b504e2866e0593e04d2b291f"
+          ],
+          "data": "0xb1ea5a3fdc3dc9be625156607df1c4b252665dd917b692f4ab944b7d2f1c37de",
+          "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "blockNumber": "0x34",
+          "blockTimestamp": "0x6b49dba6",
+          "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+          "transactionIndex": "0x0",
+          "logIndex": "0x3",
+          "removed": false
+        }
+      ],
+      "logsBloom": "0x00300000000000000000000000000000000000400000000000000000000020000000000000000000000000000000000000000000000a00000000000000040000000000000000012200000008000000000000004000000400000000000000002000000000020000001000000104000800000000000000000000000010000000000008000000000000000000000000000000000000040000000000000000000000000000000020000000000000000000002000000000000000000020000000010000100002000000080000080000000000050000000000000000800000000020008000000000000000000000000000000000000000100000001000000040000000",
+      "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+      "transactionIndex": "0x0",
+      "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+      "blockNumber": "0x34",
+      "gasUsed": "0x25076",
+      "effectiveGasPrice": "0x3bad4709",
+      "from": "0xd1839f6d670c75d2490d6d479f91e695cfdb94a5",
+      "to": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+      "contractAddress": null,
+      "blockTimestamp": 1800002470
+    }
+  },
+  "reconciliation": {
+    "summary": {
+      "status": 200,
+      "headers": {
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "connection": "keep-alive",
+        "content-type": "application/json",
+        "date": "Mon, 23 Nov 2026 09:00:49 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:49.350Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:49.351+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "treasury": {
+            "address": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": {
+              "address": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "symbol": "BUD",
+              "decimals": 18
+            },
+            "balance": "1000000000000000000000",
+            "totalIn": "12000000000000000000000",
+            "totalOut": "11000000000000000000000"
+          },
+          "proposalCounts": {
+            "total": 1,
+            "byState": {
+              "Pending": 0,
+              "Active": 0,
+              "Succeeded": 0,
+              "Defeated": 0,
+              "Queued": 0,
+              "Executed": 1,
+              "Canceled": 0
+            }
+          },
+          "governance": {
+            "governor": "0x2706a171ecb68e0038378d40dd1d136361d0cb7d",
+            "timelock": "0x31a65c6d4eb07ad51e7afc890ac3b7be84df2ead",
+            "govToken": {
+              "address": "0x0116686e2291dbd5e317f47fadbfb43b599786ef",
+              "symbol": "GOV",
+              "decimals": 18
+            },
+            "clockMode": "mode=timestamp",
+            "proposalThreshold": "50000000000000000000",
+            "votingDelay": "60",
+            "votingPeriod": "300",
+            "timelockDelay": "120",
+            "quorumNumerator": "20",
+            "quorumDenominator": "100",
+            "totalSupply": "1000000000000000000000"
+          },
+          "recentActivity": [
+            {
+              "type": "Transfer",
+              "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+              "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "11000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+              "direction": "out",
+              "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+              "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+              "blockNumber": "52",
+              "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "2000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0x98ed403309ddec8a3d69f309734fd61487b1dd9672e21e244cbace7f34d40690",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "49",
+              "transactionHash": "0x1ae88a708dbb49ebad325180edc9294d82e67501106982b2bfdde679d35334b0",
+              "transactionIndex": "0"
+            },
+            {
+              "type": "Transfer",
+              "to": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+              "from": "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
+              "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+              "amount": "10000000000000000000000",
+              "logIndex": "0",
+              "blockHash": "0xec03d3c5c955136e0dbb4c03cc768839e0e36f4b23fd0932604268c6039c1559",
+              "direction": "in",
+              "requestId": null,
+              "proposalId": null,
+              "blockNumber": "19",
+              "transactionHash": "0xa834d96905b91f4c40f1b85b4bf1e4199475fdfb294786e11593c23a9e5e4283",
+              "transactionIndex": "0"
+            }
+          ]
+        }
+      }
+    },
+    "detail": {
+      "status": 200,
+      "headers": {
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "connection": "keep-alive",
+        "content-type": "application/json",
+        "date": "Mon, 23 Nov 2026 09:00:52 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:52.434Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:52.435+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": {
+          "body": "Real isolated MetaMask extension signing, refusal, network and account handling on approved source.",
+          "state": "Executed",
+          "title": "QA07 actual MetaMask negative and recovery",
+          "votes": {
+            "for": "400000000000000000000",
+            "quorum": "200000000000000000000",
+            "abstain": "0",
+            "against": "0"
+          },
+          "amount": "11000000000000000000000",
+          "values": [
+            "0"
+          ],
+          "created": {
+            "logIndex": "0",
+            "blockHash": "0x185217d1182f266b6eddba323ced24e72d82bc81a0e957d26e8e7763843b3a86",
+            "blockNumber": "29",
+            "transactionHash": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "transactionIndex": "0"
+          },
+          "targets": [
+            "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd"
+          ],
+          "deadline": "1800002022",
+          "proposer": "0x5dc67bdb87962d48138c7a321e8c6615691c7162",
+          "snapshot": "1800001722",
+          "calldatas": [
+            "0x6664ac91e27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab400000000000000000000000014dc79964da2c08b23698b3d3cc7ca32193d99550000000000000000000000000000000000000000000002544faa778090e00000"
+          ],
+          "operation": {
+            "eta": "1800002453",
+            "salt": "0xc7c03a5a4b64e6a562c4e8ade4eecd71f96fdfd6e6ca81857631284486b6b6de",
+            "status": "Done",
+            "queuedAt": "1800002333",
+            "operationId": "0xb22c7cbd699601e46d9531d013a1da4dc679f76d311fbe2add89992ef163cb1c",
+            "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "recipient": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+          "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+          "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+          "description": "{\"version\":1,\"title\":\"QA07 actual MetaMask negative and recovery\",\"body\":\"Real isolated MetaMask extension signing, refusal, network and account handling on approved source.\"}",
+          "stateSource": "contract",
+          "transactions": {
+            "queued": "0x3312ab269b4fc72df78c47bf78c01891aa86c1cfcd8eed318b05fe8a58b23ae2",
+            "created": "0xc8e4ab279dd819f4b3716d2d650df1936194fb011278d0480a1d057ea1d9fae2",
+            "canceled": null,
+            "executed": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c"
+          },
+          "descriptionHash": "0xe0c69b2ba7d268a55af365ed39f3de1298bf14abe6ca81857631284486b6b6de"
+        }
+      }
+    },
+    "transfers": {
+      "status": 200,
+      "headers": {
+        "access-control-allow-origin": "http://127.0.0.1:32935",
+        "connection": "keep-alive",
+        "content-type": "application/json",
+        "date": "Mon, 23 Nov 2026 09:00:52 GMT",
+        "keep-alive": "timeout=5",
+        "transfer-encoding": "chunked"
+      },
+      "body": {
+        "context": {
+          "chainId": "31337",
+          "deploymentId": "qa07-e2e",
+          "asOfBlock": "52",
+          "asOfBlockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+          "asOfTimestamp": "1800002470",
+          "snapshotRevision": "ae1ae7f2-48f8-4847-af12-b20988a382c9",
+          "dataKind": "chain",
+          "sync": {
+            "status": "synced",
+            "headBlock": "54",
+            "confirmedBlock": "52",
+            "indexedBlock": "52",
+            "publicationBlock": "52",
+            "lagBlocks": "0",
+            "lagSeconds": "0",
+            "confirmations": "2",
+            "lastIndexedAt": "2026-11-23T09:00:52.434Z",
+            "lastRpcCheckAt": "2026-11-23T16:00:52.435+07:00",
+            "recoveryStatus": "ready"
+          }
+        },
+        "data": [
+          {
+            "to": "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
+            "from": "0x1eb835eb7beeee9e6bbfe08f16a2d2ef668204bd",
+            "token": "0x9baab117304f7d6517048e371025db8f89a8dbe5",
+            "amount": "11000000000000000000000",
+            "logIndex": "0",
+            "blockHash": "0x6be070601e941fd721fe0c25e584215f31fed12342d3b9736f6746512146ba66",
+            "direction": "out",
+            "requestId": "0xe27c8bbb52745c8a7636d106ba15a005b7f55d4084293bdfd415dfe06d557ab4",
+            "proposalId": "80473439291238266157620742991282647983838392855857342276874399640497195595742",
+            "blockNumber": "52",
+            "transactionHash": "0xd7ba6c7f1582def7b9e9d04c72168156128cc599bad7577e083bc0d4f2661d2c",
+            "transactionIndex": "0"
+          }
+        ],
+        "pagination": {
+          "limit": 20,
+          "totalCount": 1,
+          "nextCursor": null
+        }
+      }
+    },
+    "treasuryBalance": "1000000000000000000000",
+    "recipientBalance": "11000000000000000000000",
+    "paid": true,
+    "governorState": "7",
+    "operationDone": true
+  },
+  "finishedAt": "2026-11-23T09:00:53.760Z"
+}

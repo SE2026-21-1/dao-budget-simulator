@@ -1,0 +1,71 @@
+{
+  "format": "tv4-sepolia-receipt-binding-fix-v1",
+  "baseCommit": "3166adcb3e9ebd9599a26e79b374791a20bde395",
+  "review": {
+    "id": 6018122562,
+    "reviewedCommit": "c0d0b26a4b3978eb724a0b253dd8eb7c62d1b789",
+    "thread": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/60#discussion_r4663056902",
+    "severity": "Medium",
+    "scope": "Sepolia helper verification only, not a demonstrated public-RPC incident",
+    "reproduction": "TV1 reported both wrong-receipt and zero-descendant final-funding counterexamples. Treated as ground truth; baseline failures not rerun to reconfirm."
+  },
+  "fixedFileHashes": {
+    "scripts/governance_sepolia.mjs": "1486cd900fa119d8f5dae75915aa0cad1ae9c7717842a3884ebd1df188d8b38d",
+    "tests/smoke/sepolia.test.mjs": "1f35c4876cae6f0d7fca5c8e671f563e4b085d7074bc99772b7b041c42f18741"
+  },
+  "invariants": [
+    "Initial and final receipt transactionHash equals the submitted hash",
+    "Initial block hash is a32-byte hash; canonical header number/hash and receipt block number/hash agree",
+    "Canonical block transaction at receipt transactionIndex equals submitted hash; final index matches",
+    "Only verified same-transaction K2 return allows CONFIRMED_K2/receipt journal; mismatch fail-stops with funding SUBMITTED and no receipt attestation or auto-resend"
+  ],
+  "regressions": [
+    "wrong initial transaction",
+    "wrong final transaction",
+    "changed final block number",
+    "changed final transaction index",
+    "wrong canonical block number",
+    "wrong canonical transaction membership",
+    "out-of-range initial transaction index",
+    "full deployment: final funding mined with zero descendants; first two receipt lookups misrouted to prior genuinely confirmed delegation; no false DEPLOYED_K2 or CONFIRMED_K2 funding journal"
+  ],
+  "checks": [
+    {
+      "command": "node --test tests/smoke/sepolia.test.mjs",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "exitStatus": 0
+    },
+    {
+      "command": "npm run test:be08",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "exitStatus": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitStatus": 0
+    },
+    {
+      "command": "npm run build",
+      "exitStatus": 0
+    }
+  ],
+  "wallSeconds": 101.36,
+  "runtime": {
+    "node": "24.15.0",
+    "anvil": "1.8.5",
+    "scope": "Fresh owned loopback Anvil with explicit synthetic Sepolia identity adapter; not public network or fork acceptance"
+  },
+  "rawLog": "tv4-20261123-sepolia-receipt-fix-checks.txt",
+  "rawLogSha256": "5c243d6aefa0a6f894f2c0597291192eb19c214f05cf197e236baa6568e7031b",
+  "limits": [
+    "Timeout/poll/depth/gas/nonce/role guards unchanged; no source/contract/ABI/lockfile changes beyond remote helper and its regression tests",
+    "No public Sepolia broadcast, signer secrets or user database accessed",
+    "TV1 request-changes remains until independent re-review; this is not deployment permission",
+    "Old 13-test/six-file byte-identity evidence is historical, not the new patched helper"
+  ],
+  "remoteBroadcasts": 0
+}

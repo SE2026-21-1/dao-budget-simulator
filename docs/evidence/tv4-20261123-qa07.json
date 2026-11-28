@@ -1,0 +1,109 @@
+{
+  "kind": "actual-local-browser-adapter-execution",
+  "status": "PASS",
+  "productCheckout": "5c899976ac4de97434737493815e7ccbdcd13984",
+  "harnessSha256": "9334b7f355d31283d95a634ec1cf13dca4a1bbf5986a2d1a112653d07c625cfe",
+  "rawReportSha256": "19c95e4dad7b1be4d5363e6aa3462bdddd4e796a396a824443862df7d6044950",
+  "exitCode": 0,
+  "runtime": {
+    "node": "v24.15.0",
+    "executable": "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+    "postgresBinary": "postgres (PostgreSQL) 18.4",
+    "postgres": "PostgreSQL 18.4 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
+    "anvil": "anvil Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "forge": "forge Version: 1.8.5\nCommit SHA: 51a52c59cffd940f76eddd0b4bb1791aa4b5ac7f\nBuild Timestamp: 2026-10-05T17:18:54.332175693Z (1791220734)\nBuild Profile: dist",
+    "playwright": "1.56.1",
+    "chrome": "157.0.8103.38"
+  },
+  "command": [
+    "/home/ptdung/.nvm/versions/node/v24.15.0/bin/node",
+    "--import",
+    "tsx",
+    "/tmp/dao-tv4-integrated-20261123/scripts/check_qa07_e2e.mjs",
+    "--postgres-bin",
+    "/tmp/dao-tv4-pg18-20261123/node_modules/@embedded-postgres/linux-x64/native/bin",
+    "--output",
+    "/tmp/qa07-e2e-evidence-20261123-final"
+  ],
+  "identity": {
+    "requestId": "0xf8ea1e52c0b71dd1b4ae8fd0026b2a02053ba3d2808c58c1b8f6fe22dd7d0152",
+    "proposalId": "90707688329980159823894945967180366348968337209741854949864732845074955894595",
+    "deploymentId": "qa07-e2e",
+    "chainId": "31337",
+    "addresses": {
+      "GOV": "0x0116686E2291dbd5e317F47faDBFb43B599786Ef",
+      "BUD": "0x9bAaB117304f7D6517048e371025dB8f89a8DbE5",
+      "Treasury": "0x1Eb835EB7BEEEE9E6bbFe08F16a2d2eF668204bd",
+      "Timelock": "0x31A65C6d4EB07ad51E7afc890aC3b7bE84dF2Ead",
+      "Governor": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d"
+    }
+  },
+  "publication": {
+    "chainId": "31337",
+    "deploymentId": "qa07-e2e",
+    "asOfBlock": "44",
+    "asOfBlockHash": "0xb3cbe8d9dff9606bcc8a34d0515488924b3b9cfa77e1a62cca80c8e393af2b60",
+    "asOfTimestamp": "1800000508",
+    "snapshotRevision": "51600f9f-ca28-47f1-9e08-7c27bc0cb30d",
+    "dataKind": "chain",
+    "sync": {
+      "status": "synced",
+      "headBlock": "46",
+      "confirmedBlock": "44",
+      "indexedBlock": "44",
+      "publicationBlock": "44",
+      "lagBlocks": "0",
+      "lagSeconds": "0",
+      "confirmations": "2",
+      "lastIndexedAt": "2026-11-23T06:57:26.379Z",
+      "lastRpcCheckAt": "2026-11-23T13:57:26.382+07:00",
+      "recoveryStatus": "ready"
+    }
+  },
+  "operationId": "0x30c2c00ceb4034a93aac8bf7d92b7a0b926f9f640beba8f3317dcd32a2171c34",
+  "executeHash": "0x351eefb0d0b84b935e619806110448f4b16a92150996c25aba7a26f40d56cce0",
+  "treasuryBalance": "1000000000000000000000",
+  "recipientBalance": "11000000000000000000000",
+  "paid": true,
+  "transactions": [
+    {
+      "method": "propose",
+      "hash": "0x35fc3246e3743ff5e8fb69b1b595a6d7469233edbe83e9fa9a18f538bb10439e",
+      "status": "0x1"
+    },
+    {
+      "method": "castVote",
+      "hash": "0x30c06ba7a6cb9158e3df15a6bb137c52aa6e7b2b591612e37e11bc92770053f9",
+      "status": "0x1"
+    },
+    {
+      "method": "queue",
+      "hash": "0x507461a7e360224b66aeaeed2755208a71ce86f7bccb645f3b385bdb6c12ee36",
+      "status": "0x1"
+    },
+    {
+      "method": "execute",
+      "hash": "0xf3cce725c7f9f606f23623c086a57e3a5f83bf213f80283051b2bb14e94cbe0e",
+      "status": "0x0"
+    },
+    {
+      "method": "execute",
+      "hash": "0x351eefb0d0b84b935e619806110448f4b16a92150996c25aba7a26f40d56cce0",
+      "status": "0x1"
+    }
+  ],
+  "checks": [
+    "same browser-created proposal: propose/vote/queue/reverted-execute/funded-execute; receipts, worker, API, UI and canonical H/hash reconciled",
+    "adapter wrong-network locks signing; adapter code4001 rejection with no tx; confirmed-not-indexed; real receipt revert; loading/network error/retry; actual worker recovering503 and cursor409 with canonical recovery",
+    "desktop 1366x900 and mobile 390x844 screenshots captured from real rendered pages"
+  ],
+  "browserErrors": [],
+  "cleanupErrors": [],
+  "screenshots": 14,
+  "limits": [
+    "MetaMask extension popup permission/signature rejection",
+    "MetaMask add/switch network and account events",
+    "External signing, public testnet and explorer confirmation"
+  ],
+  "rawEvidenceArchive": "tv4-20261123-raw.tar.gz"
+}

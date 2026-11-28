@@ -229,6 +229,49 @@ describe('BE04 atomic projection on isolated real PostgreSQL (RPC oracle is synt
         .every((c) => (c.params[1] as { blockHash: string }).blockHash === hash(10)),
     );
   });
+  test('multi-row publication preserves exact fields and rolls back a rejected vote row', async () => {
+    const s = new Scenario();
+    s.fund();
+    const descriptions = ['  Ngân sách 🗳️ "\\\\x"\\n  ', 'Batch thứ hai — giữ nguyên bytes'];
+    const proposals = descriptions.map((description, i) => s.propose(hash(710 + i), description));
+    proposals.forEach((p, i) => {
+      s.vote(p, 1, 700n, actor, BigInt(4 + i));
+      s.queue(p, BigInt(8 + i));
+      s.execute(p, BigInt(10 + i));
+    });
+    const { config, rpc, storage } = await fixture(s);
+    rpc.head = 13n; rpc.clock = 1481n; rpc.state = 7n;
+    rpc.balance = 8000n; rpc.weights = [0n, 700n, 0n]; rpc.operationTimestamp = 1n;
+    await sync(config, rpc, storage);
+    const result = await project(config, rpc, pool);
+    assert.deepEqual(result.counts, { proposals: 2, votes: 2, operations: 2, transfers: 3, disbursements: 2 });
+    assert.deepEqual(result.treasury, { totalIn: '10000', totalOut: '2000', balance: '8000' });
+    const rows = (await pool.query(`SELECT proposal_id::text,description,convert_from(description_bytes,'UTF8') AS bytes,
+      targets::text[],native_values::text[],calldatas::text[],canceled_event_id FROM proposals WHERE deployment_id=$1`,
+    [config.deploymentId])).rows;
+    for (const [i, p] of proposals.entries()) {
+      const row = rows.find(r => r.proposal_id === p.id);
+      assert.ok(row);
+      assert.deepEqual(row, { proposal_id: p.id, description: descriptions[i], bytes: descriptions[i],
+        targets: p.targets, native_values: p.values, calldatas: p.calldatas, canceled_event_id: null });
+    }
+    const votes = (await pool.query(`SELECT proposal_id::text,voter,support,weight::text,reason,params
+      FROM votes WHERE deployment_id=$1 ORDER BY proposal_id`, [config.deploymentId])).rows;
+    assert.deepEqual(votes, proposals.map(p => ({ proposal_id: p.id, voter: actor, support: 1, weight: '700',
+      reason: 'Lý do 🗳️', params: '0x0001ff00' })).sort((a, b) => BigInt(a.proposal_id) < BigInt(b.proposal_id) ? -1 : 1));
+    const before = await snapshot(config.deploymentId);
+    await project(config, rpc, pool);
+    assert.deepEqual(await snapshot(config.deploymentId), before);
+    await pool.query(`CREATE FUNCTION be04_batch_fail() RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN IF NEW.proposal_id=${proposals[1]!.id} THEN RAISE EXCEPTION 'rejected batch row'; END IF; RETURN NEW; END $$;
+      CREATE TRIGGER be04_batch_fail BEFORE INSERT ON votes FOR EACH ROW EXECUTE FUNCTION be04_batch_fail()`);
+    try {
+      await assert.rejects(project(config, rpc, pool), { code: 'PROJECTION_DATABASE_ERROR' });
+      assert.deepEqual(await snapshot(config.deploymentId), before);
+    } finally {
+      await pool.query('DROP TRIGGER be04_batch_fail ON votes; DROP FUNCTION be04_batch_fail()');
+    }
+  });
   test('RPC state/balance mismatch preserves old publication while raw checkpoint advances', async () => {
     const s = new Scenario();
     s.fund();

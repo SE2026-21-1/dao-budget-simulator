@@ -1,0 +1,879 @@
+{
+  "reviewedHead": "a9539786467f4246472f728b841622ba925738d2",
+  "previousReviewedHead": "08c693ec433e6dd66be2293bdb2e8d07938ab471",
+  "actualDev": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "mergeCheckout": "6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+  "headAndMergeTree": "20d53d07bb39c0b7292046f24370ca5b3dd552a8",
+  "observerFixedSha256": "d93cad7afa618a7ad6dfb6ea83c7a8755873e56a47e47f07e611ec7fecd12490",
+  "producerEvidenceInventory": [
+    {
+      "path": "README.md",
+      "bytes": 6080,
+      "sha256": "0f978e960d47642f78504935014cc1efb61200b181206eb9e15a511dfc7bebd7"
+    },
+    {
+      "path": "before-fix.txt",
+      "bytes": 1419,
+      "sha256": "3921b3e5f9420fb9bfb7760e305f73f73c3bf542f4320a6100c51f6bb96e1207"
+    },
+    {
+      "path": "capture-syntax.txt",
+      "bytes": 88,
+      "sha256": "3b943e496d5f3f0a4090c3d938399a14a7b8cc4d58e9d805ad5458cc13f3c19d"
+    },
+    {
+      "path": "frontend-build.txt",
+      "bytes": 1490,
+      "sha256": "e34c10cf135b7ff0cf3ebbf92ed89929230f7f0f9596bbeed4fd4e42c760897e"
+    },
+    {
+      "path": "frontend-lint.txt",
+      "bytes": 1956,
+      "sha256": "81ced6a47aadfafe755139f5f80c967eac46aeb2f6623da53f8389235696dcc5"
+    },
+    {
+      "path": "frontend-targeted.txt",
+      "bytes": 788,
+      "sha256": "06d0afb840d68e8ce0deefaba4cb17afb714c8d6fa637acc8420cd18d3b9a223"
+    },
+    {
+      "path": "historical-checksums.txt",
+      "bytes": 1548,
+      "sha256": "0f891fbb72470d047c1fe2c391d7c1e550f3c2282d5747194fc86b617bd857a3"
+    },
+    {
+      "path": "hygiene.txt",
+      "bytes": 1041,
+      "sha256": "8e20fff1da9821a3acfd23c8e426112fe61211c2e6bcb40ee6edb2526d3fd4ab"
+    },
+    {
+      "path": "observer-tests.txt",
+      "bytes": 2559,
+      "sha256": "70c6b10634e5022bc14565b9a8a4d693d8ed8415c15823dd05a8ae8036bc1de8"
+    },
+    {
+      "path": "qa07-snapshot-tests.txt",
+      "bytes": 2298,
+      "sha256": "f06829eac5128418117aed7cf40be87ed213c43194e7cb11ada13a7c04061aac"
+    },
+    {
+      "path": "root-typecheck.txt",
+      "bytes": 119,
+      "sha256": "317be9038bb4e802db304a743717a887b4b14cb5f081559ae3862aa6ae2c13c1"
+    }
+  ],
+  "historicalPacketsGitUnchanged": true,
+  "independentVerification": {
+    "node": "v24.15.0",
+    "command": "node --test tests/smoke/qa07-provider-observer.test.mjs tests/smoke/qa07-observer-failures.test.mjs",
+    "pass": 24,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0,
+    "directP2": {
+      "originalProviderCalls": 1,
+      "sameProviderError": true
+    },
+    "captureConsumer": {
+      "command": "node --check scripts/qa07_live_capture.mjs",
+      "exit": 0,
+      "liveRun": false
+    }
+  },
+  "ci": [
+    {
+      "id": 46145093593,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46145093593",
+      "event": "pull_request",
+      "head": "a9539786467f4246472f728b841622ba925738d2",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 140979267508,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout BE02 implementation",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Typecheck BE02 source and tests",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build BE02",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check BE02 synthetic RPC and decoder behavior",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check BE02 storage and host CLI against isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record BE02 scope, exact revision and tool versions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE02 evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout BE02 implementation",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267751,
+          "name": "Container build, release validation and Compose smoke",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci && forge build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify release rejection cases",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build all application images without deployment secrets",
+              "conclusion": "success"
+            },
+            {
+              "name": "Smoke real services and preserve PostgreSQL data across recreation",
+              "conclusion": "success"
+            },
+            {
+              "name": "Save the exact tested image set",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "skipped"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267756,
+          "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck && npm run build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:api:db",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge test --match-path tests/unit/OperationAbiCompatibility.t.sol",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run fresh Anvil, PostgreSQL and HTTP API integration",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE05 live evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267773,
+          "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install pinned Foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js for live receipt verification",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked smoke dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build, format, tests and ABI fixture",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify bootstrap authority and recursive dependency provenance",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify historical SC06 provenance and fresh integration quorum mutations",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify interrupted smoke cleans owned processes and files",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exercise Treasury transactions and BE02 live receipt decoding",
+              "conclusion": "success"
+            },
+            {
+              "name": "Exercise final roles, live governance ingestion, restart and raw replay",
+              "conclusion": "success"
+            },
+            {
+              "name": "Reconcile BE04 projections with live governance at confirmed H",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record scope of checks",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload check evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js for live receipt verification",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Install pinned Foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267778,
+          "name": "Frontend lint and production build",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout integrated frontend and canonical BE01 fixtures",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install locked frontend dependencies",
+              "conclusion": "success"
+            },
+            {
+              "name": "Lint frontend",
+              "conclusion": "success"
+            },
+            {
+              "name": "Typecheck and build production frontend",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record frontend scope and versions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload frontend build and evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout integrated frontend and canonical BE01 fixtures",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267779,
+          "name": "BE06 pinned-H rebuild and normalized compare",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Build and test BE06",
+              "conclusion": "success"
+            },
+            {
+              "name": "Create disposable BE06 databases",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test BE06 against isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run fresh Anvil and PostgreSQL rebuild/compare acceptance",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE06 live evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267782,
+          "name": "BE04 projection semantics and atomic PostgreSQL publication",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run typecheck && npm run build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:be04",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm run test:be04:db",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267826,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout BE01 schema and fixtures",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check offline API fixtures",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check migration and constraints in isolated PostgreSQL",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record BE01 scope and versions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload BE01 evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Node.js",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout BE01 schema and fixtures",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979267849,
+          "name": "BE07 recovery, RPC failures and native database regressions",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run forge build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Test atomic rollback, SIGKILL restart, real Anvil reorg and BE06 compare",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140979268126,
+          "name": "be08-release-gate / be08",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Initialize containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/setup-python@v7.0.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run npm ci",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run mkdir -p reports && forge build",
+              "conclusion": "success"
+            },
+            {
+              "name": "Current migrations, DB/crash/reorg/rebuild, contracts and 10-client benchmark",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/upload-artifact@v7.0.2",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-python@v7.0.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run ./.github/actions/install-foundry",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/setup-node@v7.1.0",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v7.0.1",
+              "conclusion": "success"
+            },
+            {
+              "name": "Stop containers",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        },
+        {
+          "id": 140980833105,
+          "name": "Publish tested release image set",
+          "status": "completed",
+          "conclusion": "skipped",
+          "steps": []
+        }
+      ],
+      "sampleJobLog": {
+        "jobId": 140979267508,
+        "jobName": "BE02 TypeScript and isolated PostgreSQL storage",
+        "bytes": 43163,
+        "sha256": "a1f43627d8442f9f7051db45c6015f938c9881b64c4107cb6febe3eca77f3b70",
+        "actualCheckout": "6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+        "checkoutLines": [
+          "2026-11-28T12:31:39.4995403Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6e8bbf4487c5cf6a53e5d9161690f8440748845b:refs/remotes/pull/64/merge",
+          "2026-11-28T12:31:40.3395124Z  * [new ref]         6e8bbf4487c5cf6a53e5d9161690f8440748845b -> pull/64/merge",
+          "2026-11-28T12:31:40.5277566Z 6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+          "2026-11-28T12:32:09.2198362Z \u001b[36;1mprintf '%s\\n' '6e8bbf4487c5cf6a53e5d9161690f8440748845b' > reports/event-sha.txt\u001b[0m",
+          "2026-11-28T12:32:09.3954493Z   name: tv4-be02-6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+          "2026-11-28T12:32:09.7333035Z Uploading artifact: tv4-be02-6e8bbf4487c5cf6a53e5d9161690f8440748845b.zip",
+          "2026-11-28T12:32:10.1814065Z Artifact tv4-be02-6e8bbf4487c5cf6a53e5d9161690f8440748845b successfully finalized. Artifact ID 15263571133",
+          "2026-11-28T12:32:10.1814862Z Artifact tv4-be02-6e8bbf4487c5cf6a53e5d9161690f8440748845b has been successfully uploaded! Final size is 7209 bytes. Artifact ID is 15263571133"
+        ]
+      }
+    },
+    {
+      "id": 46145093559,
+      "url": "https://github.com/SE2026-21-1/dao-budget-simulator/actions/runs/46145093559",
+      "event": "pull_request",
+      "head": "a9539786467f4246472f728b841622ba925738d2",
+      "status": "completed",
+      "conclusion": "success",
+      "attempt": 1,
+      "jobs": [
+        {
+          "id": 140979266923,
+          "name": "Anonymous attestation, extraction and contract gates",
+          "status": "completed",
+          "conclusion": "success",
+          "steps": [
+            {
+              "name": "Set up job",
+              "conclusion": "success"
+            },
+            {
+              "name": "Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "name": "Check exact-version regression",
+              "conclusion": "success"
+            },
+            {
+              "name": "Install from the real public OCI fallback",
+              "conclusion": "success"
+            },
+            {
+              "name": "Record real fallback and installed versions",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run unchanged format, build, contract tests and ABI fixture gates",
+              "conclusion": "success"
+            },
+            {
+              "name": "Upload fallback evidence",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Install from the real public OCI fallback",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Set up Python",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Checkout with pinned submodules",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "sampleJobLog": {
+        "jobId": 140979266923,
+        "jobName": "Anonymous attestation, extraction and contract gates",
+        "bytes": 82790,
+        "sha256": "bbeef5d111f11d17679377f092326c815da661377afb84c064f207ed28e07a84",
+        "actualCheckout": "6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+        "checkoutLines": [
+          "2026-11-28T12:31:42.5645991Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +6e8bbf4487c5cf6a53e5d9161690f8440748845b:refs/remotes/pull/64/merge",
+          "2026-11-28T12:31:43.7035819Z  * [new ref]         6e8bbf4487c5cf6a53e5d9161690f8440748845b -> pull/64/merge",
+          "2026-11-28T12:31:50.3989052Z 6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+          "2026-11-28T12:32:08.6812011Z \u001b[36;1mprintf '%s\\n' '6e8bbf4487c5cf6a53e5d9161690f8440748845b' > reports/foundry-fallback/commit.txt\u001b[0m",
+          "2026-11-28T12:32:30.6798951Z   name: foundry-public-fallback-6e8bbf4487c5cf6a53e5d9161690f8440748845b",
+          "2026-11-28T12:32:31.2962806Z Uploading artifact: foundry-public-fallback-6e8bbf4487c5cf6a53e5d9161690f8440748845b.zip",
+          "2026-11-28T12:32:32.3213351Z Artifact foundry-public-fallback-6e8bbf4487c5cf6a53e5d9161690f8440748845b successfully finalized. Artifact ID 15263581358",
+          "2026-11-28T12:32:32.3214334Z Artifact foundry-public-fallback-6e8bbf4487c5cf6a53e5d9161690f8440748845b has been successfully uploaded! Final size is 14447 bytes. Artifact ID is 15263581358"
+        ]
+      }
+    }
+  ],
+  "review": {
+    "id": 6097871067,
+    "url": "https://github.com/SE2026-21-1/dao-budget-simulator/pull/64#pullrequestreview-6097871067",
+    "state": "APPROVED"
+  },
+  "supersedesReview": 6097608003,
+  "originalPacketsRehashed": false,
+  "runtimeActions": [],
+  "merged": false,
+  "issuesClosed": [],
+  "recordedAtUtc": "2026-11-28T12:58:14.740612+00:00",
+  "issueSummariesUpdated": [
+    19,
+    40,
+    41,
+    6,
+    7,
+    44
+  ],
+  "ownIssue19SignoffUpdated": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7238784522",
+  "projectUpdate": {
+    "status": "BLOCKED_NOT_UPDATED",
+    "fieldsUpdatedThisRereview": 0,
+    "reason": "Previously authenticated relay detached/canceled_by_user before code ran; one newly opened tab used unauthenticated shared headless Chromium and returned GitHub Page not found, selector timeout. No Project write performed.",
+    "previousSnapshot": "2026-11-28-pr64-issue40-tv4-review.json contains historical pre-fix readback, not a new update",
+    "authSettingsChanged": false
+  },
+  "newSourceFixByTV4": false,
+  "documentationVerification": "Final selected-doc whitespace/conflict/secret/relative-link/JSON-binding check after last doc edit; observed outcome in delivery chat.",
+  "limits": [
+    "approval supersedes own earlier CHANGES_REQUESTED without dismissing/resolving review history",
+    "APPROVED is tooling/evidence scope, not PR merge or release acceptance",
+    "historical live run remains evidence08c693e/producte17ef61/oldobserverhash",
+    "no historical packet rehash or live wallet/governance/receiver action",
+    "capture caller syntax/static review only; not a live browser run",
+    "two sampled CI job logs only; all job/step metadata read",
+    "legacy provider coverage and durable ordering/drain limits unchanged",
+    "Issue40 conditional design does not grant allocation/runtime permission"
+  ]
+}

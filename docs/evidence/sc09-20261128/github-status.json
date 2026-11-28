@@ -1,0 +1,116 @@
+{
+  "checkedAt": "2026-11-28T14:45:15.093Z",
+  "dev": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+  "main": "ad8c6cf17cced35c8ced5d6fcc5178b3f65892e4",
+  "pr64": {
+    "head": "a9539786467f4246472f728b841622ba925738d2",
+    "merge": "f15f19252957d9ca37b424facdbb13afc8da0b05",
+    "mergedAt": "2026-11-28T13:45:17Z",
+    "approvedReview": 6097871067
+  },
+  "issue19": {
+    "state": "closed",
+    "stateReason": "completed",
+    "dispositionUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/19#issuecomment-7240299717"
+  },
+  "issue20": {
+    "ownerOperator": "dung0611",
+    "sourcePreparationConfirmed": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+    "confirmationUrl": "https://github.com/SE2026-21-1/dao-budget-simulator/issues/20#issuecomment-7240590072",
+    "map": "MISSING",
+    "signerCustody": "NOT_CONFIRMED",
+    "nativeFunder": "UNKNOWN",
+    "actualMapEstimates": "MISSING",
+    "broadcastAuthorized": false
+  },
+  "whatIf": {
+    "pr": 62,
+    "draft": true,
+    "head": "d4a0fb563e66be951760167a6f62b246821dc17c",
+    "merged": false
+  },
+  "workflows": [
+    {
+      "runId": 46151182866,
+      "jobs": [
+        {
+          "id": 140997955872,
+          "name": "Foundry, governance invariants and live PostgreSQL acceptance",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956092,
+          "name": "BE02 TypeScript and isolated PostgreSQL storage",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956100,
+          "name": "BE07 recovery, RPC failures and native database regressions",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956216,
+          "name": "BE04 projection semantics and atomic PostgreSQL publication",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956257,
+          "name": "Frontend lint and production build",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956274,
+          "name": "Container build, release validation and Compose smoke",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956314,
+          "name": "BE05 HTTP API and immutable PostgreSQL snapshots",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956321,
+          "name": "BE01 fixtures and PostgreSQL constraints",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956463,
+          "name": "BE06 pinned-H rebuild and normalized compare",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140997956482,
+          "name": "be08-release-gate / be08",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 140999492798,
+          "name": "Publish tested release image set",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "runId": 46151182855,
+      "jobs": [
+        {
+          "id": 140997955642,
+          "name": "Anonymous attestation, extraction and contract gates",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

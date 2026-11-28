@@ -12,18 +12,23 @@ owner/signers/gas/broadcast authorization. Chưa promote `Dev`→`main` hoặc c
 
 ## Trạng thái các task TV1
 
+Cập nhật SC09 ngày 28/11/2026 trên reviewed Dev `f15f19252957d9ca37b424facdbb13afc8da0b05`:
+[tài liệu contract](docs/contracts.md), [review dữ liệu same-H/ledger](docs/reviews/sc09-backend-data-review.md),
+[phần báo cáo TV1](docs/report/tv1-smart-contracts.md), [8 slide kỹ thuật](docs/slides/tv1-smart-contracts.md).
+Các mục evidence có ngày/SHA cũ bên dưới là lịch sử, không là current task disposition.
+
 | Task | Trạng thái |
 |---|---|
-| SC01 — Nền tảng và chuẩn tích hợp | Đã triển khai, còn các mục review/tái lập trong docs/contracts.md |
+| SC01 — Nền tảng và chuẩn tích hợp | Đã tích hợp; ABI/compiler checks và historical checklist được phân biệt trong docs/contracts.md |
 | SC02 — Token và voting power | Đã tích hợp từ Dev qua PR #10; có unit test và review TV4 |
 | SC03 — Treasury và chống chi lặp | Đã tích hợp từ Dev qua PR #11; review độc lập TV4 được ghi riêng |
 | SC04 — Governor và giới hạn proposal | Đã merge `f57fcfd` qua PR #13; có unit/security tests |
 | SC05 — Timelock và quyền sau deploy | Final-role integration/audit đã có; TV1 review TC10 ở #60 chỉ thuộc contract, không thay backend/deployment/testnet approval |
 | SC06 — ABI và dữ liệu tích hợp | ABI Governor/Treasury chia sẻ, ABI token từ build; manifest/receipt local TV4 không thay testnet hay consumer acceptance |
 | SC07 — Hoàn thiện unit test và test biên | Có unit/security SC01–SC04 và QA TV4; còn peer review và nghiệm thu theo phạm vi |
-| SC08 — Tích hợp local | Có browser adapter propose→vote→queue→execute/retry→worker/API/UI cùng proposal; MetaMask Extension chưa nghiệm thu |
-| SC09 — Review dữ liệu và tài liệu contract | Chưa hoàn tất; đã có tài liệu nền tảng và token |
-| SC10 — Testnet và bàn giao | Có probe Sepolia read-only; chưa broadcast/deployment hoặc Executed/Defeated testnet |
+| SC08 — Tích hợp local | Browser adapter flow đã có; Issue19 CLOSED/COMPLETED với scoped MetaMask account-switch/guard acceptance và documented historical503 limitation; không suy thành full MetaMask governance campaign |
+| SC09 — Review dữ liệu và tài liệu contract | Architecture/roles/lifecycle, review FR13/FR15, report và slides đã bàn giao trong PR tài liệu; peer acceptance chờ TV2/TV4 |
+| SC10 — Testnet và bàn giao | TV4 dung0611 nhận owner/operator, pin chuẩn bị e17ef61; map/signers/funding/final packet/authorization pending, chưa deployment hoặc Executed/Defeated testnet |
 
 ## Môi trường Foundry — TV4 Operation
 
@@ -46,7 +51,7 @@ Dependency được khóa bằng Git submodule và `foundry.lock`. Cài Foundry 
 theo [hướng dẫn Foundry](https://getfoundry.sh/introduction/installation), rồi chạy:
 
 ```bash
-git clone --branch feature/tv4-operation https://github.com/SE2026-21-1/dao-budget-simulator.git
+git clone --branch Dev https://github.com/SE2026-21-1/dao-budget-simulator.git
 cd dao-budget-simulator
 git submodule update --init --recursive
 forge --version

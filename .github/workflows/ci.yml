@@ -58,7 +58,7 @@ jobs:
       - name: Verify BE09 RPC allocation, provenance and owned-process isolation
         shell: bash
         run: |
-          node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership,diagnostic-ownership}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs 2>&1 | tee reports/be09-ownership.log
+          node --test tests/be09-{rpc,registration,runner-allocation,metadata,status-safety,safety,ownership,diagnostic-ownership,postgres-startup}.test.mjs docs/evidence/be09-20261106/{local-status,toolchain-preflight,readiness,live-test-classification}.test.mjs 2>&1 | tee reports/be09-ownership.log
       - name: Exercise Treasury transactions and BE02 live receipt decoding
         shell: bash
         run: |

@@ -1,0 +1,7 @@
+2026-11-28T14:25:49Z
+COMMAND: scoped source/packet whitespace-conflict-limited-secret scan + source checksum verification
+PASS 3 source/test/CI + 9 existing payload files; raw log whitespace retained. Secret-pattern scan is limited.
+EXIT_STATUS=0
+scripts/be09-local.sh: OK
+tests/be09-postgres-startup.test.mjs: OK
+.github/workflows/ci.yml: OK

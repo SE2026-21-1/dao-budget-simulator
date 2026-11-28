@@ -1,0 +1,37 @@
+2026-11-28T14:21:52Z
+PARENT=dbedc9137ece2634d6439654c482f4fa5fe03d44
+TREE=0adba3342af64ebb104e83be902478dccb8211b9
+v24.15.0
+11.12.1
+a59b247b048ab57ef2768d8c8f559648ddc7c9fa0c2748d68de6fefe970bef79  scripts/be09-local.sh
+3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed  scripts/be09-safety.mjs
+9e9bef2d3240058c4c2853175b8f6beb15dd85f9878c0c3898f38935d1b7f772  tests/be09-postgres-startup.test.mjs
+COMMAND: node --test --test-name-pattern="F40-2 timeout with capturable" tests/be09-postgres-startup.test.mjs
+{"kind":"owned","pgCtlStatus":1,"startupStatus":1,"capturedBeforeExitCleanup":false,"stoppedByStartup":false,"continued":false,"explicitHarnessRecovery":true,"stdout":"Setup did not complete; stopping only processes created for this run. Data/logs retained at /tmp/dao-budget-issue40-lifecycle-f402-unit-NEcHtC/runs/unit\nVite: no PID file\nAPI: no PID file\nIndexer worker: no PID file\nAnvil: no PID file\nPostgreSQL: no authenticated live cluster; left untouched\n","stderr":"fixture: postmaster exists; pg_ctl wait result 1\n","networkConnections":0,"databaseConnections":0}
+✖ F40-2 timeout with capturable postmaster uses actual EXIT cleanup (284.418519ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 354.982224
+
+✖ failing tests:
+
+test at tests/be09-postgres-startup.test.mjs:107:1
+✖ F40-2 timeout with capturable postmaster uses actual EXIT cleanup (284.418519ms)
+  AssertionError [ERR_ASSERTION]: startup must capture the legitimately owned postmaster even after pg_ctl timeout
+      at exercise (file:///home/chung2k5/dao-issue40-rpc-isolation-20261128/tests/be09-postgres-startup.test.mjs:86:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+EXIT_STATUS=1

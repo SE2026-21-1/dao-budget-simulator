@@ -1,0 +1,4 @@
+2026-11-28T14:22:53Z
+COMMAND: bash -c bash\ -n\ scripts/be09-local.sh\ \&\&\ node\ --check\ tests/be09-postgres-startup.test.mjs
+
+EXIT_STATUS=0

@@ -1,0 +1,7 @@
+2026-11-28T14:23:40Z
+COMMAND: immutable parent evidence byte comparison; F40-1 and ownership helper hashes
+PASS 802/802 parent evidence files unchanged, 57915307 bytes, no exclusions.
+UNCHANGED 755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343 scripts/be09-diagnose.mjs
+UNCHANGED 3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed scripts/be09-safety.mjs
+UNCHANGED 1c6197efd411958770a0a02f72917c243ea87904e4d33e8961f088c3c671fe05 tests/be09-diagnostic-ownership.test.mjs
+EXIT_STATUS=0

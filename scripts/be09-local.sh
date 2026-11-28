@@ -262,11 +262,21 @@ command_up() {
   "$INITDB_BIN" -D "$pgdata" --username=be09 --auth-local=trust --auth-host=trust --encoding=UTF8 --no-instructions > "$RUN_DIR/logs/initdb.log" 2>&1 || {
     note "initdb failed; see $RUN_DIR/logs/initdb.log"; return 1;
   }
+  local pg_start_status=0
   "$PG_CTL_BIN" -D "$pgdata" -l "$RUN_DIR/logs/postgres.log" \
-    -o "-h 127.0.0.1 -p 55432 -k $socket_dir -c listen_addresses=127.0.0.1" -w start
-  head -n 1 "$pgdata/postmaster.pid" > "$RUN_DIR/pids/postgres.pid"
-  chmod 600 "$RUN_DIR/pids/postgres.pid"
-  capture_identity postgres "$(dirname -- "$PG_CTL_BIN")/postgres" "$pgdata"
+    -o "-h 127.0.0.1 -p 55432 -k $socket_dir -c listen_addresses=127.0.0.1" -w start || pg_start_status=$?
+  # A failed pg_ctl wait can leave a live postmaster. Authenticate it on both
+  # paths so the existing EXIT trap can stop only this run's proven process.
+  if ! { head -n 1 "$pgdata/postmaster.pid" > "$RUN_DIR/pids/postgres.pid" &&
+      chmod 600 "$RUN_DIR/pids/postgres.pid" &&
+      capture_identity postgres "$(dirname -- "$PG_CTL_BIN")/postgres" "$pgdata"; }; then
+    note 'PostgreSQL identity could not be captured; unverified processes are left untouched.'
+    [[ "$pg_start_status" != 0 ]] || return 1
+  fi
+  if [[ "$pg_start_status" != 0 ]]; then
+    note "PostgreSQL startup failed (exit $pg_start_status); preserving status for owned-process cleanup."
+    return "$pg_start_status"
+  fi
   owned postgres 55432
   note "Isolated PostgreSQL started at 127.0.0.1:55432; data directory: $pgdata"
   "$CREATEDB_BIN" -h 127.0.0.1 -p 55432 -U be09 dao_budget_be09

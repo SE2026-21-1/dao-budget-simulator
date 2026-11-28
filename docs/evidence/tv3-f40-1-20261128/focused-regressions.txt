@@ -1,0 +1,147 @@
+2026-11-28T14:11:06Z
+COMMAND: node --test tests/be09-rpc.test.mjs tests/be09-registration.test.mjs tests/be09-runner-allocation.test.mjs tests/be09-metadata.test.mjs tests/be09-status-safety.test.mjs tests/be09-safety.test.mjs tests/be09-ownership.test.mjs tests/be09-diagnostic-ownership.test.mjs docs/evidence/be09-20261106/local-status.test.mjs docs/evidence/be09-20261106/toolchain-preflight.test.mjs docs/evidence/be09-20261106/readiness.test.mjs docs/evidence/be09-20261106/live-test-classification.test.mjs
+✔ live environment comes from runtime metadata and deployment name, not inherited env or numeric database id (3.016901ms)
+✔ Vitest structured results distinguish complete pass, failure and skips (2.2022ms)
+✔ status passes all Node arguments and leaves run files and processes alone (662.888909ms)
+✔ registration uses first indexed source while retaining earlier governance-token metadata (3.4088ms)
+✔ diagnostic reports distinct metadata, source and header failures (0.4971ms)
+✔ registration CLI persists first indexed block and all five role records (157.497602ms)
+✔ preflight accepts a clean arbitrary HEAD and configurable toolchain, and rejects dirty or invalid inputs (1192.844917ms)
+✔ source provenance captures the actual revision and hashes all runnable BE09 scripts (190.679803ms)
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-odxmWG/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API identity missing: actual runner failure branch makes zero HTTP attempts (519.415107ms)
+{"api":"reclaimed","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-srLteq/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API reclaimed: actual failure branch never probes foreign/unowned listener (723.61251ms)
+{"api":"mismatch","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-QF4pG5/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API mismatch: actual failure branch never probes foreign/unowned listener (770.719111ms)
+{"api":"owned","postgres":true,"direct":false,"httpAttempts":2,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-qL6ANa/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 owned API diagnostics retain health/summary without frontend startup (661.87171ms)
+{"api":"missing","postgres":false,"direct":true,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct CLI with neither API nor PostgreSQL ownership stays offline (268.754304ms)
+{"api":"missing","postgres":false,"direct":false,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness diagnostic could not complete; logs retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-MLRnFg/runs/unit/reports/readiness-timeout\nReadiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-MLRnFg/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 runner preserves local logs and failure when PostgreSQL is unowned (134.937502ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct CLI cannot bypass API ownership with valid sealed metadata (200.036402ms)
+{"api":"owned","postgres":true,"direct":true,"httpAttempts":1,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 direct owned API stops probing after ownership changes during health (299.606305ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"","stderr":"BE09 readiness diagnostic failed; check runtime files and output path.\n","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 diagnostic write failure does not hide startup failure (190.628302ms)
+{"api":"missing","postgres":true,"direct":true,"httpAttempts":0,"dbAttempts":0,"signals":0,"unexpectedStarts":0,"exit":0,"stdout":"","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 diagnostic DB override cannot bypass private allocation (197.179703ms)
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness diagnostic could not complete; logs retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-DQYWrc/runs/unit/reports/readiness-timeout\nReadiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-DQYWrc/runs/unit/reports/readiness-timeout\n","stderr":"BE09 readiness diagnostic failed; check runtime files and output path.\n","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 actual runner keeps failure and local logs when diagnostic output fails (311.474905ms)
+✔ fresh terminal RPC override unset cannot replace persisted RPC (338.392704ms)
+✔ fresh terminal RPC override 18545 cannot replace persisted RPC (282.330804ms)
+✔ cross-run identity fails closed before fetch or process operations (138.344902ms)
+✔ source mismatch fails closed before fetch or process operations (165.692403ms)
+✔ malformed runtime fails closed before fetch or process operations (160.581202ms)
+✔ missing metadata fails closed before fetch or process operations (188.705303ms)
+✔ protected RPC fails closed before fetch or process operations (216.768803ms)
+✔ protected API fails closed before fetch or process operations (244.795803ms)
+✔ cross-run artifact fails closed before fetch or process operations (188.191503ms)
+✔ worker JSON RPC mismatch fails closed before fetch or process operations (183.552602ms)
+✔ worker env RPC mismatch fails closed before fetch or process operations (166.707803ms)
+✔ protected database fails closed before fetch or process operations (164.036502ms)
+✔ frontend mismatch fails closed before fetch or process operations (154.038502ms)
+✔ duplicate worker env fails closed before fetch or process operations (138.095702ms)
+✔ unsealed bytes fails closed before fetch or process operations (122.539602ms)
+✔ artifact symlink fails closed before fetch or process operations (105.036602ms)
+✔ stopped run with valid metadata cannot probe a reclaimed endpoint (134.228701ms)
+✔ runtime environment rejects malformed keys and duplicate overrides (1.3989ms)
+✔ source working-state mismatch prevents network before any ownership guard (79.007202ms)
+✔ verify rejects a stopped fixture before live tests, DB or report writes (608.284308ms)
+✔ down on an old run leaves a different run API and Vite alive (2893.248841ms)
+✔ registration CLI propagates explicit RPC URL to every output (166.944903ms)
+▶ registration rejects malformed flags before any database interaction
+  ✔ missing RPC flag (98.841601ms)
+  ✔ missing RPC value (92.679501ms)
+  ✔ empty RPC value (105.529702ms)
+  ✔ unknown flag (87.218701ms)
+  ✔ unknown replacement (86.560201ms)
+  ✔ duplicate RPC flag (92.366702ms)
+  ✔ duplicate manifest flag (83.929801ms)
+  ✔ flag instead of value (90.415001ms)
+  ✔ missing runtime flag (84.184401ms)
+  ✔ unexpected positional value (85.876702ms)
+✔ registration rejects malformed flags before any database interaction (914.637313ms)
+▶ registration rejects invalid RPC URLs and scopes before database interaction
+  ✔ protected default (87.486001ms)
+  ✔ protected API (94.930801ms)
+  ✔ protected PostgreSQL (99.170802ms)
+  ✔ unallocated port (103.506401ms)
+  ✔ API collision (114.191502ms)
+  ✔ database collision (97.175301ms)
+  ✔ frontend collision (99.398102ms)
+  ✔ trailing slash (88.182801ms)
+  ✔ zero padding (84.845701ms)
+  ✔ hostname (87.058801ms)
+  ✔ empty scope (89.496401ms)
+  ✔ unknown scope (88.226702ms)
+✔ registration rejects invalid RPC URLs and scopes before database interaction (1137.630416ms)
+▶ registration rejects noncanonical and symlink runtime paths before database interaction
+  ✔ symlink (97.233201ms)
+  ✔ dot segment (96.798901ms)
+  ✔ relative (101.007601ms)
+  ✔ missing (82.447501ms)
+✔ registration rejects noncanonical and symlink runtime paths before database interaction (378.478505ms)
+✔ ordinary registration accepts the explicit legacy RPC allocation (97.935601ms)
+✔ Issue40 registration rejects protected or inconsistent DB URLs before connection (259.220904ms)
+✔ RPC port defaults only when unset and normalizes leading zeros (1.6839ms)
+✔ RPC port rejects empty, nondecimal, out-of-range and service-collision values (1.1546ms)
+✔ RPC URL accepts only literal canonical loopback HTTP URLs (2.0436ms)
+✔ RPC allocation validates scope and fences issue40 to port 28545 (0.6462ms)
+✔ runner derives one canonical URL, scope=ordinary, input=unset (137.424802ms)
+✔ runner derives one canonical URL, scope=ordinary, input=00028545 (110.550801ms)
+✔ runner derives one canonical URL, scope=issue40, input=28545 (113.828602ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "" (96.975201ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: " " (105.523902ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "+28545" (95.374901ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "28545\n" (107.414202ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "0" (107.477501ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "65536" (119.745602ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "99999999999999999999" (117.741201ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "00000000000000000000" (114.216702ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "3300" (98.480901ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "55432" (96.947502ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "5173" (106.840801ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "18545" (97.398702ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "13300" (105.065801ms)
+✔ Issue40 invalid/protected RPC is refused before bootstrap: "55442" (92.028302ms)
+✔ Issue40 default18545 is refused, and generic state root cannot opt into Issue40 (118.155601ms)
+✔ Issue40 unset RPC refuses ordinary default before any state creation (97.961702ms)
+✔ foreground worker restart grace remains fail-closed: restart (28.1167ms)
+✔ foreground worker restart grace remains fail-closed: source-mismatch (29.9718ms)
+✔ foreground worker restart grace remains fail-closed: foreign-rpc (26.461001ms)
+✔ canonical paths validate future directories without creating anything (29.911101ms)
+✔ canonical paths reject state, run and PGDATA symlink components (10.185ms)
+✔ owned loopback socket is authenticated without a network request; capture is exclusive (165.456802ms)
+✔ unrelated same-chain listener is rejected before any request (382.954106ms)
+✔ wildcard socket is not a loopback ownership gate (156.820902ms)
+✔ conflicting unrelated loopback socket rejects even when expected process owns the port (292.959604ms)
+✔ failed child bind cannot authenticate the unrelated listener (157.315002ms)
+✔ capture rejects wrong executable, parent, and substring marker (153.384603ms)
+✔ reused PID, altered start time and every identity component prohibit signals (254.884003ms)
+✔ all service markers are exact canonical tokens and postgres checks both postmaster lines (420.814706ms)
+✔ cleanup works without runtime metadata and after the owned listener disappears (111.229102ms)
+✔ identity and PID symlinks cannot authorize cleanup (75.882301ms)
+✔ CLI paths, capture, owned failure and guarded signal use the same API (338.340905ms)
+✔ identity symlinks and redirected canonical service files cannot authorize signals (69.395801ms)
+✔ postgres capture refuses a postmaster data-directory mismatch (49.7668ms)
+✔ only reparenting to init after the recorded parent exits remains owned (57.983701ms)
+✔ an external state ancestor cannot place a run inside the checkout (3.7627ms)
+✔ an owned listener on another loopback address cannot authenticate 127.0.0.1 (79.109901ms)
+✔ private postgres fast shutdown signals only its authenticated PID (58.432201ms)
+{"terminalOverride":"unset","status":1,"requests":[]}
+✔ status refuses incomplete/stopped run before any network, terminal override=undefined (680.51651ms)
+{"terminalOverride":"18545","status":1,"requests":[]}
+✔ status refuses incomplete/stopped run before any network, terminal override=18545 (561.837408ms)
+ℹ tests 119
+ℹ suites 0
+ℹ pass 119
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4391.723163
+
+EXIT_STATUS=0

@@ -1,0 +1,19 @@
+2026-11-28T14:12:07Z
+Parent: ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26
+Parent tree: 9ef02abba03a1612a9b6ecfd2ac443214df326aa
+Baseline: e8e443c6986a17c46e9ac4fba41c4fe3fa88eff0
+Branch: tv3/issue40-rpc-isolation-20261128
+Initial working-tree status: clean (observed before edits)
+/home/chung2k5/.local/bin/node
+/home/chung2k5/.local/bin/npm
+/usr/bin/bash
+v24.15.0
+11.12.1
+GNU bash, version 5.3.9(1)-release (x86_64-pc-linux-gnu)
+Copyright (C) 2025 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+No dependency installation, actual lifecycle, candidate/protected endpoint operation, Windows control, receiver action or system/toolchain modification.

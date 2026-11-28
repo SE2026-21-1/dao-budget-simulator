@@ -1,0 +1,14 @@
+2026-11-28T14:11:06Z
+COMMAND: node --test --test-name-pattern=F40-1\ API\ identity\ missing: tests/be09-diagnostic-ownership.test.mjs
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":0,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-WMVeH8/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✔ F40-1 API identity missing: actual runner failure branch makes zero HTTP attempts (391.112806ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 476.538207
+
+EXIT_STATUS=0

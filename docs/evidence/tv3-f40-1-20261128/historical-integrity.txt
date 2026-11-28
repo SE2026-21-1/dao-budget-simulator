@@ -1,0 +1,7 @@
+2026-11-28T14:12:02Z
+COMMAND: immutable parent docs/evidence byte comparison and unchanged guard hashes
+PASS historical exact bytes: 790/790 parent evidence files, 57882497 bytes, no exclusions.
+UNCHANGED a59b247b048ab57ef2768d8c8f559648ddc7c9fa0c2748d68de6fefe970bef79 scripts/be09-local.sh
+UNCHANGED e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda scripts/be09-readiness.mjs
+UNCHANGED 3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed scripts/be09-safety.mjs
+EXIT_STATUS=0

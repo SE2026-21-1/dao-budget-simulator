@@ -1,0 +1,41 @@
+2026-11-28T14:08:17Z
+REVIEWED_PARENT=ba386dd6fa63eb55f2f9cc9e1c79696de5c9df26
+TREE=9ef02abba03a1612a9b6ecfd2ac443214df326aa
+v24.15.0
+11.12.1
+a59b247b048ab57ef2768d8c8f559648ddc7c9fa0c2748d68de6fefe970bef79  scripts/be09-local.sh
+6faad53b0aba6c5b8a5aef38b5e3b00e2e712431abb7b778ab9665352bc6f862  scripts/be09-diagnose.mjs
+e908ecf0265179c53167cc94247cfe59729e04ffbe5cea1421936e53069bdfda  scripts/be09-readiness.mjs
+3e5e580b82246835d6c63fb325478e259f93e7606f725172647235bb623318ed  scripts/be09-safety.mjs
+64f1fb7b30f445ea8a13513c67af004f3e9c91a7f1ee3fb154a80fac59de56da  tests/be09-diagnostic-ownership.test.mjs
+COMMAND: node --test --test-name-pattern="F40-1 API identity missing:" tests/be09-diagnostic-ownership.test.mjs
+{"api":"missing","postgres":true,"direct":false,"httpAttempts":2,"dbAttempts":2,"signals":0,"unexpectedStarts":0,"exit":1,"stdout":"Readiness timeout evidence retained in /tmp/dao-budget-issue40-lifecycle-f40-unit-X8n4HL/runs/unit/reports/readiness-timeout\n","stderr":"","realNetworkConnections":0,"realDatabaseConnections":0}
+✖ F40-1 API identity missing: actual runner failure branch makes zero HTTP attempts (294.982204ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 375.037805
+
+✖ failing tests:
+
+test at tests/be09-diagnostic-ownership.test.mjs:153:1
+✖ F40-1 API identity missing: actual runner failure branch makes zero HTTP attempts (294.982204ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 0
+  
+      at TestContext.<anonymous> (file:///home/chung2k5/dao-issue40-rpc-isolation-20261128/tests/be09-diagnostic-ownership.test.mjs:155:10)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+EXIT_STATUS=1

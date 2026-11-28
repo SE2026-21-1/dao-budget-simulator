@@ -1,0 +1,3 @@
+755f7422af7371cf7ab68651465d013dadf65bf15fc7cca7f9c32526097bef97  .github/workflows/ci.yml
+755cff9f4579103afe7ec8f9fc1056b630268d499e7e51d2544c5d58220fc343  scripts/be09-diagnose.mjs
+1c6197efd411958770a0a02f72917c243ea87904e4d33e8961f088c3c671fe05  tests/be09-diagnostic-ownership.test.mjs

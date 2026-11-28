@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { writeFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import pg from 'pg';
+import { validateRun } from './be09-metadata.mjs';
+import { assertOwnedProcess } from './be09-safety.mjs';
 
 const roles = { governor: 'oz-5.4.0-governor', timelock: 'oz-5.4.0-timelock',
   treasury: 'sc01-itreasury-v1', budget_token: 'oz-5.4.0-erc20', governance_token: 'sc02-governance-token-v1' };
@@ -54,7 +56,6 @@ export function assess(row, contractRows, config, runtime) {
   };
 }
 
-const envValue = (text, key) => text.split(/\r?\n/).find(line => line.startsWith(`${key}=`))?.slice(key.length + 1);
 async function identity(client) {
   const result = await client.query("SELECT current_database() AS database, inet_server_addr()::text AS host, inet_server_port() AS port, (pg_control_system()).system_identifier::text AS system_id");
   return result.rows[0];
@@ -64,17 +65,28 @@ async function main() {
   const [runtimeDirArg, outputArg] = process.argv.slice(2);
   if (!runtimeDirArg || !outputArg || process.argv.length !== 4) throw new Error('Usage: be09-diagnose.mjs <runtime-dir> <output.json>');
   const dir = resolve(runtimeDirArg), output = resolve(outputArg);
-  const runtime = JSON.parse(await readFile(resolve(dir, 'runtime.json'), 'utf8'));
-  const config = JSON.parse(await readFile(resolve(dir, 'indexer-config.json'), 'utf8'));
-  const workerEnv = await readFile(resolve(dir, 'worker.env'), 'utf8');
-  const apiEnv = await readFile(resolve(dir, 'runtime.env'), 'utf8');
-  const workerUrl = envValue(workerEnv, 'DATABASE_URL'), apiUrl = envValue(apiEnv, 'DATABASE_URL');
+  const root = resolve(new URL('..', import.meta.url).pathname);
+  const { runtime, config, env } = await validateRun({
+    root, stateRoot: process.env.BE09_STATE_ROOT ?? dirname(dirname(dir)), runDir: dir, scope: process.env.BE09_SCOPE,
+  });
+  const workerUrl = env.DATABASE_URL, apiUrl = env.DATABASE_URL;
   const override = process.env.BE09_DIAGNOSTIC_DATABASE_URL;
   const report = { format: 'dao-budget-be09-readiness-diagnostic-v1', runId: runtime.runId ?? null,
-    databaseSource: override ? 'diagnostic copy override' : 'configured runtime databases', conditions: {}, responses: {} };
+    databaseSource: 'validated private runtime databases', conditions: {}, responses: {} };
   report.conditions.configuredDatabase = check(!!workerUrl && workerUrl === apiUrl,
     { workerConfigured: !!workerUrl, apiConfigured: !!apiUrl, equal: !!workerUrl && workerUrl === apiUrl }, 'same configured database URL');
+  let apiOwned = true;
   for (const route of ['health', 'summary']) {
+    // Static URL/provenance equality cannot authenticate the current listener.
+    // Recheck before EACH request; after a mismatch do not continue probing.
+    if (apiOwned) {
+      try { await assertOwnedProcess({ runDir: dir, label: 'api', port: Number(new URL(runtime.urls.api).port) }); }
+      catch { apiOwned = false; }
+    }
+    if (!apiOwned) {
+      report.responses[route] = { status: null, skipped: 'exact-run API process/listener ownership unavailable' };
+      continue;
+    }
     try {
       const url = new URL(`/api/${route}`, runtime.urls.api);
       url.searchParams.set('chainId', runtime.chainId); url.searchParams.set('deploymentId', runtime.deploymentName);
@@ -85,11 +97,25 @@ async function main() {
       report.responses[route] = { status: response.status, body };
     } catch { report.responses[route] = { status: null, error: 'request failed or timed out' }; }
   }
-  const api = new pg.Client({ connectionString: override ?? apiUrl, connectionTimeoutMillis: 3000, statement_timeout: 5000 });
-  const worker = new pg.Client({ connectionString: override ?? workerUrl, connectionTimeoutMillis: 3000, statement_timeout: 5000 });
+  let api, worker;
+  const databaseOwned = async () => {
+    try {
+      if (override !== undefined && override !== apiUrl) throw new Error('Database override differs from validated private allocation');
+      await assertOwnedProcess({ runDir: dir, label: 'postgres', port: 55432 });
+    } catch (error) {
+      report.databaseDiagnostic = { status: 'SKIP', reason: 'private PostgreSQL ownership unavailable or database override differs from validated allocation' };
+      throw error;
+    }
+  };
   try {
-    if (!workerUrl || !apiUrl) throw new Error('missing database configuration');
-    await Promise.all([api.connect(), worker.connect()]);
+    await databaseOwned();
+    report.databaseDiagnostic = { status: 'ATTEMPTED' };
+    api = new pg.Client({ connectionString: apiUrl, connectionTimeoutMillis: 3000, statement_timeout: 5000 });
+    worker = new pg.Client({ connectionString: workerUrl, connectionTimeoutMillis: 3000, statement_timeout: 5000 });
+    await Promise.all([api, worker].map(async client => {
+      await databaseOwned();
+      await client.connect();
+    }));
     const [apiIdentity, workerIdentity] = await Promise.all([identity(api), identity(worker)]);
     report.conditions.databaseIdentity = check(JSON.stringify(apiIdentity) === JSON.stringify(workerIdentity),
       { api: apiIdentity, worker: workerIdentity }, 'same PostgreSQL cluster and database');
@@ -111,7 +137,7 @@ async function main() {
   } catch (error) {
     report.databaseError = { message: 'database connection or diagnostic query failed; conditions may be incomplete',
       code: typeof error?.code === 'string' && /^[A-Z0-9_]{1,32}$/.test(error.code) ? error.code : null };
-  } finally { await Promise.allSettled([api.end(), worker.end()]); }
+  } finally { await Promise.allSettled([api?.end(), worker?.end()]); }
   for (const name of ['databaseIdentity', 'scope', 'rawCheckpoint', 'projectionCheckpoint', 'recovery', 'syncStatus',
     'sourceScope', 'revision', 'heights', 'publicationHeader', 'projectionPrefix', 'rawPrefix', 'governance', 'roleCount', 'roles']) {
     report.conditions[name] ??= { status: 'UNKNOWN', actual: null, expected: 'database diagnostic completed' };

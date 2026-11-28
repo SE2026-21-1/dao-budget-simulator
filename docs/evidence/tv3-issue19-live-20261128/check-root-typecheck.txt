@@ -1,0 +1,10 @@
+Command: npm run typecheck
+StartedAt: 2026-11-28T10:25:24.411Z
+
+> dao-budget-simulator@0.0.0 typecheck
+> tsc --noEmit
+
+
+Exit code: 0
+Signal: none
+

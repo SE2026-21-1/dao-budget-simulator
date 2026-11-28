@@ -1,0 +1,21 @@
+{
+  "runId": "TV3-MM-boundary-20261128T100609709Z",
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "observations": [
+    {"phase":"bootstrap","result":"Initial managed Chromium launch failed code127: libnspr4.so missing. ldd also showed NSS/ALSA missing. sudo required interactive authentication.","resolution":"Downloaded/extracted libnspr4, libnss3, libasound2t64 into user-owned /tmp/issue19-browser-deps; launcher set LD_LIBRARY_PATH. No system package installation or personal Chrome restart."},
+    {"phase":"bootstrap","result":"Combined dependency/download command exit2 because unzip was not installed; official asset download had succeeded.","resolution":"Extracted the same original ZIP using Python zipfile after CRC/path-safety checks; no repeat download or modified extension."},
+    {"phase":"driver","result":"Eval JS import of externally installed puppeteer-core could not resolve dependencies; native Node resolution succeeded.","resolution":"A standalone Node capture service used the installed external module. No project manifest/lockfile changes."},
+    {"phase":"identity","result":"chrome.runtime evaluation inside MetaMask UI rejected by LavaMoat scuttling.","resolution":"Did not disable or bypass LavaMoat. Captured actual identity from chrome://extensions and chrome://version plus original installed public manifest."},
+    {"phase":"profile","result":"Custom browser wrapper launch omitted user-data-dir; actual Chrome for Testing profile was /home/chung2k5/.config/google-chrome-for-testing/Default.","directoryBirthUTC":"2026-11-28T10:00:26.972067686Z","resolution":"Recorded actual path, initial fresh onboarding and command line; no Windows personal profile accessed. Tool issue reported; future replay explicitly requires a new user-data-dir."},
+    {"phase":"wallet-UI","result":"Some popup adoptions closed their target; native Connect click and focus/Enter returned without completing permission.","resolution":"Used the existing extension notification/home UI and activated actual DOM button controls. Actual permission/account/chain/provider responses verified; no controller, storage, provider response or app-state edits. Tool issue reported."},
+    {"phase":"preparation","providerSequence":33,"result":"Self-delegate request returned real error4100 on new chain.","resolution":"Reconfirmed actual site permission through wallet_requestPermissions and MetaMask Connect UI, then confirmed local self-delegate. Request40 returned tx0x67da8c28577459b140faa3674b115a87b06ead143ff6b57596973ba23db364d1. Both requests precede measured interval52-77 and remain in raw trace."},
+    {"phase":"HTTP-startup","result":"Initial health and summary requests1/2 failed net::ERR_ABORTED; preserved in http.jsonl. Remaining158 response packets were200.","cause":"NOT_CLASSIFIED; not a historical503 explanation"},
+    {"phase":"measured-interval","result":"One browser.run full-page screenshot timed out after guard settle marker65 and B-blocked.json had been saved. Browser tool reattached without page reload.","resolution":"Did not repeat Submit. External append-only capture service retained sequences; observer stayed wrapped. Added recovery marker70, took separate actual B-blocked.webp screenshot, then returned A and ended interval77.","limitation":"Recovered screenshot is after settle, not an instant-click capture or uninterrupted video."},
+    {"phase":"teardown","result":"Capture and stack runner each completed graceful SIGINT with exit0. Owned frontend/API/RPC/PG/worker-proxy/CDP ports had no listeners in subsequent ss inventory. Only owned test browser closed; test profile retained, not archived or deleted."}
+  ],
+  "manualOperatorStepsRequiredForThisRun": [],
+  "historicalH26Version": "UNKNOWN",
+  "historical503Cause": "UNKNOWN",
+  "noGovernanceLifecycleRerun": true,
+  "noSepoliaBroadcast": true
+}

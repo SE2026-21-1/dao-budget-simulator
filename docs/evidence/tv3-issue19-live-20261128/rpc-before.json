@@ -1,0 +1,302 @@
+{
+  "sourceCommit": "e17ef61a8a51518005c38b0808cdc06fe7a68bbf",
+  "manifestSha256": "0a8637a9cda0de5a70f5b958a68c7f3010c3836a62f6c537ead2c6bf7df52a5c",
+  "capturedAt": "2026-11-28T10:15:50.384Z",
+  "chainId": "0x7a69",
+  "head": {
+    "number": "0x1a",
+    "hash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0"
+  },
+  "clock": "1800000808",
+  "threshold": "50000000000000000000",
+  "accounts": {
+    "A": {
+      "address": "0x9b524d3a18716b0607504761ed2eb061932c9527",
+      "latestNonce": "0x1",
+      "pendingNonce": "0x1",
+      "pastVotes": "400000000000000000000"
+    },
+    "B": {
+      "address": "0x729b025adae5aca996c1e13b091fbacf293b89d5",
+      "latestNonce": "0x0",
+      "pendingNonce": "0x0",
+      "pastVotes": "0"
+    }
+  },
+  "txpool": {
+    "pending": "0x0",
+    "queued": "0x0"
+  },
+  "exchanges": [
+    {
+      "startedAt": "2026-11-28T10:15:50.206Z",
+      "finishedAt": "2026-11-28T10:15:50.286Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "eth_chainId",
+        "params": []
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "42",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":\"0x7a69\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.286Z",
+      "finishedAt": "2026-11-28T10:15:50.299Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "eth_getBlockByNumber",
+        "params": [
+          "latest",
+          false
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "1754",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"hash\":\"0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0\",\"parentHash\":\"0x792fc5cc3aaa242fa278b8d2c8c8a76a4097a2ace293083f9a4295894d715928\",\"sha3Uncles\":\"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347\",\"miner\":\"0x0000000000000000000000000000000000000000\",\"stateRoot\":\"0xf6de99e555d440f339bc337cff9bb452b0361f626b833c30aa5d87d5314296fb\",\"transactionsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"receiptsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"difficulty\":\"0x0\",\"number\":\"0x1a\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x0\",\"timestamp\":\"0x6b49d528\",\"extraData\":\"0x\",\"mixHash\":\"0xc39f0e1c40168c154a5d0ef0ef4c6d9335266b36c2cf0b7935171e44abf2233b\",\"nonce\":\"0x0000000000000000\",\"baseFeePerGas\":\"0x250bc7d\",\"withdrawalsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"blobGasUsed\":\"0x0\",\"excessBlobGas\":\"0x0\",\"parentBeaconBlockRoot\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"requestsHash\":\"0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"totalDifficulty\":\"0x0\",\"size\":\"0x267\",\"uncles\":[],\"transactions\":[],\"withdrawals\":[]}}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.308Z",
+      "finishedAt": "2026-11-28T10:15:50.316Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "data": "0x91ddadf4"
+          },
+          {
+            "blockHash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0",
+            "requireCanonical": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "102",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":3,\"result\":\"0x000000000000000000000000000000000000000000000000000000006b49d528\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.319Z",
+      "finishedAt": "2026-11-28T10:15:50.327Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "data": "0xb58131b0"
+          },
+          {
+            "blockHash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0",
+            "requireCanonical": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "102",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":4,\"result\":\"0x000000000000000000000000000000000000000000000002b5e3af16b1880000\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.328Z",
+      "finishedAt": "2026-11-28T10:15:50.334Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "eth_getTransactionCount",
+        "params": [
+          "0x9b524d3a18716b0607504761ed2eb061932c9527",
+          "latest"
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "39",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":5,\"result\":\"0x1\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.334Z",
+      "finishedAt": "2026-11-28T10:15:50.339Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "method": "eth_getTransactionCount",
+        "params": [
+          "0x9b524d3a18716b0607504761ed2eb061932c9527",
+          "pending"
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "39",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":6,\"result\":\"0x1\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.343Z",
+      "finishedAt": "2026-11-28T10:15:50.350Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "data": "0xeb9019d40000000000000000000000009b524d3a18716b0607504761ed2eb061932c9527000000000000000000000000000000000000000000000000000000006b49d527"
+          },
+          {
+            "blockHash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0",
+            "requireCanonical": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "102",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":7,\"result\":\"0x000000000000000000000000000000000000000000000015af1d78b58c400000\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.351Z",
+      "finishedAt": "2026-11-28T10:15:50.355Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 8,
+        "method": "eth_getTransactionCount",
+        "params": [
+          "0x729b025adae5aca996c1e13b091fbacf293b89d5",
+          "latest"
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "39",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":8,\"result\":\"0x0\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.355Z",
+      "finishedAt": "2026-11-28T10:15:50.363Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 9,
+        "method": "eth_getTransactionCount",
+        "params": [
+          "0x729b025adae5aca996c1e13b091fbacf293b89d5",
+          "pending"
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "39",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":9,\"result\":\"0x0\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.365Z",
+      "finishedAt": "2026-11-28T10:15:50.370Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 10,
+        "method": "eth_call",
+        "params": [
+          {
+            "to": "0x2706A171ECb68E0038378D40Dd1d136361d0cB7d",
+            "data": "0xeb9019d4000000000000000000000000729b025adae5aca996c1e13b091fbacf293b89d5000000000000000000000000000000000000000000000000000000006b49d527"
+          },
+          {
+            "blockHash": "0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0",
+            "requireCanonical": true
+          }
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "103",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":10,\"result\":\"0x0000000000000000000000000000000000000000000000000000000000000000\"}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.370Z",
+      "finishedAt": "2026-11-28T10:15:50.380Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 11,
+        "method": "txpool_status",
+        "params": []
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "67",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":11,\"result\":{\"pending\":\"0x0\",\"queued\":\"0x0\"}}"
+    },
+    {
+      "startedAt": "2026-11-28T10:15:50.380Z",
+      "finishedAt": "2026-11-28T10:15:50.383Z",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 12,
+        "method": "eth_getBlockByNumber",
+        "params": [
+          "latest",
+          false
+        ]
+      },
+      "httpStatus": 200,
+      "headers": {
+        "access-control-allow-origin": "*",
+        "content-length": "1755",
+        "content-type": "application/json",
+        "date": "Sat, 28 Nov 2026 10:15:50 GMT"
+      },
+      "responseBody": "{\"jsonrpc\":\"2.0\",\"id\":12,\"result\":{\"hash\":\"0x0065513d2936fe49adc7632a89aa9aa7899521b8cbe86b1024c7465fac82b9f0\",\"parentHash\":\"0x792fc5cc3aaa242fa278b8d2c8c8a76a4097a2ace293083f9a4295894d715928\",\"sha3Uncles\":\"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347\",\"miner\":\"0x0000000000000000000000000000000000000000\",\"stateRoot\":\"0xf6de99e555d440f339bc337cff9bb452b0361f626b833c30aa5d87d5314296fb\",\"transactionsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"receiptsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\"difficulty\":\"0x0\",\"number\":\"0x1a\",\"gasLimit\":\"0x1c9c380\",\"gasUsed\":\"0x0\",\"timestamp\":\"0x6b49d528\",\"extraData\":\"0x\",\"mixHash\":\"0xc39f0e1c40168c154a5d0ef0ef4c6d9335266b36c2cf0b7935171e44abf2233b\",\"nonce\":\"0x0000000000000000\",\"baseFeePerGas\":\"0x250bc7d\",\"withdrawalsRoot\":\"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\"blobGasUsed\":\"0x0\",\"excessBlobGas\":\"0x0\",\"parentBeaconBlockRoot\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"requestsHash\":\"0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"totalDifficulty\":\"0x0\",\"size\":\"0x267\",\"uncles\":[],\"transactions\":[],\"withdrawals\":[]}}"
+    }
+  ]
+}
